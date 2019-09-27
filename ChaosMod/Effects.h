@@ -51,6 +51,9 @@ enum EffectType
 	EFFECT_TP_MOUNTCHILLIAD,
 	EFFECT_NO_PHONE,
 	EFFECT_SET_INTO_CLOSEST_VEH,
+	//EFFECT_EXIT_CURRENT_VEH,
+	EFFECT_GAMESPEED_X06,
+	EFFECT_GAMESPEED_X02,
 	_EFFECT_ENUM_MAX
 };
 
@@ -90,7 +93,10 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_TP_FORTZANCUDO, {"Teleport To Fort Zancudo"}},
 	{EFFECT_TP_MOUNTCHILLIAD, {"Teleport To Mount Chilliad"}},
 	{EFFECT_NO_PHONE, {"No Phone", true}},
-	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle"}}
+	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle"}},
+	//{EFFECT_EXIT_CURRENT_VEH, {"Kick Out Of Vehicle"}},
+	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", true}},
+	{EFFECT_GAMESPEED_X06, {"x0.6 Gamespeed", true}},
 };
 
 class Effects

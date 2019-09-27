@@ -27,6 +27,8 @@ void Effects::StartEffect(EffectType effectType)
 	float playerHeading = ENTITY::GET_ENTITY_HEADING(playerPed);
 	bool isPlayerInVeh = PED::IS_PED_IN_ANY_VEHICLE(playerPed, false);
 	Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vector3 playerVehPos = ENTITY::GET_ENTITY_COORDS(playerVeh, false);
+	float playerVehHeading = ENTITY::GET_ENTITY_HEADING(playerVeh);
 	Ped allPeds[128] = { 0 };
 	worldGetAllPeds(allPeds, sizeof(allPeds));
 	Vehicle allVehs[128] = { 0 };
@@ -210,6 +212,13 @@ void Effects::StartEffect(EffectType effectType)
 			PED::SET_PED_INTO_VEHICLE(playerPed, closestVeh, -1);
 		}
 		break;
+	/*case EFFECT_EXIT_CURRENT_VEH:
+		if (isPlayerInVeh)
+		{
+			AI::TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
+			//TeleportPlayer(playerVehPos.x + 10.f, playerVehPos.y + 10.f, playerVehPos.z, playerVehHeading);
+		}
+		break;*/
 	}
 }
 
@@ -230,6 +239,11 @@ void Effects::StopEffect(EffectType effectType)
 		}
 		invoke<Void>(0xE81651AD79516E48, (char*)"cellphone_controller", 1424); // START_NEW_SCRIPT
 		SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED((char*)"cellphone_controller");
+		break;
+	case EFFECT_GAMESPEED_X02:
+	case EFFECT_GAMESPEED_X06:
+		GAMEPLAY::SET_TIME_SCALE(1.f);
+		break;
 	}
 }
 
@@ -238,5 +252,13 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_NO_PHONE])
 	{
 		invoke<Void>(0x9DC711BC69C548DF, "cellphone_controller"); // TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME
+	}
+	if (m_effectActive[EFFECT_GAMESPEED_X02])
+	{
+		GAMEPLAY::SET_TIME_SCALE(.2f);
+	}
+	if (m_effectActive[EFFECT_GAMESPEED_X06])
+	{
+		GAMEPLAY::SET_TIME_SCALE(.6f);
 	}
 }

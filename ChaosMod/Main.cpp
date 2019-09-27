@@ -25,7 +25,10 @@ void Main::Init()
 		{
 			m_effectDispatcher->UpdateTimer();
 			m_effectDispatcher->UpdateEffects();
-			m_effectDispatcher->Draw();
+			if (!UI::IS_PAUSE_MENU_ACTIVE())
+			{
+				m_effectDispatcher->Draw();
+			}
 		}
 	}
 }

@@ -79,7 +79,7 @@ void EffectDispatcher::UpdateEffects()
 				m_effects->StopEffect(effect.EffectType);
 				it = m_activeEffects.erase(it);
 			}
-			else if (effect.Timer <= -180)
+			else if (effect.Timer < -180)
 			{
 				it = m_activeEffects.erase(it);
 			}
