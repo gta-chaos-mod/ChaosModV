@@ -24,7 +24,7 @@ void Main::Init()
 		if (!DLC2::GET_IS_LOADING_SCREEN_ACTIVE())
 		{
 			m_effectDispatcher->UpdateTimer();
-			m_effectDispatcher->UpdateDisplayedTexts();
+			m_effectDispatcher->UpdateEffects();
 			m_effectDispatcher->Draw();
 		}
 	}
@@ -55,6 +55,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	}
 	else if (key == VK_OEM_MINUS && CTRLpressed && !wasDownBefore)
 	{
+		m_effectDispatcher->ClearEffects();
 		m_effectDispatcher->DispatchRandomEffect();
 	}
 #endif

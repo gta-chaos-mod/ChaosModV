@@ -1,7 +1,6 @@
 #pragma once
+#include "Effects.h"
 #include <vector>
-
-class Effects;
 
 class EffectDispatcher
 {
@@ -12,39 +11,24 @@ public:
 public:
 	void Draw();
 	void UpdateTimer();
-	void UpdateDisplayedTexts();
+	void UpdateEffects();
 	void DispatchRandomEffect();
+	void ClearEffects();
 
 private:
 	float m_percentage;
 	Effects* m_effects;
 
-	class DisplayedEffect
+	class ActiveEffect
 	{
 	public:
-		DisplayedEffect(const char* name, int timer) : Name(name), IsActive(true), Timer(timer), ShouldDisplay(true) {}
+		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Name(name), Timer(timer) {}
 
 	public:
-		inline void Update()
-		{
-			Timer--;
-			if (Timer < 0)
-			{
-				IsActive = false;
-			}
-			if (Timer < -15)
-			{
-				ShouldDisplay = false;
-				Timer = -15;
-			}
-		}
-
-	public:
+		EffectType EffectType;
 		const char* Name;
-		bool IsActive;
 		int Timer;
-		bool ShouldDisplay;
 	};
 
-	std::vector<DisplayedEffect> m_displayedEffects;
+	std::vector<ActiveEffect> m_activeEffects;
 };
