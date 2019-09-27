@@ -23,6 +23,11 @@ void Effects::StartEffect(EffectType effectType)
 	Vehicle allVehs[128] = { 0 };
 	worldGetAllVehicles(allVehs, sizeof(allVehs));
 
+	if (Effect.at(effectType).IsTimed)
+	{
+		m_effectActive[effectType] = true;
+	}
+
 	switch (effectType)
 	{
 	case EFFECT_KILL:
@@ -121,6 +126,11 @@ void Effects::StartEffect(EffectType effectType)
 
 void Effects::StopEffect(EffectType effectType)
 {
+	if (Effect.at(effectType).IsTimed)
+	{
+		m_effectActive[effectType] = false;
+	}
+
 	switch (effectType)
 	{
 

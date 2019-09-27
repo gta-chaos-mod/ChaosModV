@@ -71,5 +71,5 @@ public:
 	void UpdateEffects();
 
 private:
-	bool m_activeEffects[_EFFECT_ENUM_MAX] = { false };
+	bool m_effectActive[_EFFECT_ENUM_MAX] = { false };
 };
