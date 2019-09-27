@@ -20,7 +20,6 @@ void Effects::StartEffect(EffectType effectType)
 	Vehicle playerVeh = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 	Ped allPeds[128] = { 0 };
 	worldGetAllPeds(allPeds, sizeof(allPeds));
-	Ped ped;
 	Vehicle allVehs[128] = { 0 };
 	worldGetAllVehicles(allVehs, sizeof(allVehs));
 
@@ -55,6 +54,9 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_GIVE_MINIGUN:
 		WEAPON::GIVE_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char*)"WEAPON_MINIGUN"), 9999, false, true);
 		break;
+	case EFFECT_GIVE_PARACHUTE:
+		WEAPON::GIVE_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char*)"WEAPON_PARACHUTE"), 9999, false, true);
+		break;
 	case EFFECT_HEAL:
 		ENTITY::SET_ENTITY_HEALTH(playerPed, PED::GET_PED_MAX_HEALTH(playerPed));
 		break;
@@ -64,14 +66,15 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_IGNITE:
 		FIRE::START_ENTITY_FIRE(playerPed);
 		break;
-	case EFFECT_ANGRY_JESUS:
+	/*case EFFECT_ANGRY_JESUS:
 		LoadModel(-835930287);
-		ped = (Ped) PED::CREATE_PED(4, -835930287, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false);
+		Ped ped;
+		ped = (Ped)PED::CREATE_PED(4, -835930287, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false);
 		WEAPON::GIVE_WEAPON_TO_PED(ped, GAMEPLAY::GET_HASH_KEY((char*)"WEAPON_RAILGUN"), 9999, false, true);
 		AI::TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(-835930287);
 		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&ped);
-		break;
+		break;*/
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : allPeds)
 		{
@@ -103,6 +106,14 @@ void Effects::StartEffect(EffectType effectType)
 		if (isPlayerInVeh)
 		{
 			VEHICLE::SET_VEHICLE_DOORS_LOCKED_FOR_PLAYER(playerVeh, player, true);
+		}
+		break;
+	case EFFECT_NOTHING:
+		break;
+	case EFFECT_KILL_ENGINE:
+		if (isPlayerInVeh)
+		{
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(playerVeh, 0.f);
 		}
 		break;
 	}
