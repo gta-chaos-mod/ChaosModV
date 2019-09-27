@@ -10,6 +10,7 @@ EffectDispatcher::EffectDispatcher() : m_percentage(.0f), m_effects(new Effects(
 
 EffectDispatcher::~EffectDispatcher()
 {
+	ClearEffects();
 	delete m_effects;
 }
 
@@ -76,6 +77,7 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0)
 			{
 				m_effects->StopEffect(effect.EffectType);
+				it = m_activeEffects.erase(it);
 			}
 			else if (effect.Timer <= -180)
 			{
@@ -124,6 +126,10 @@ void EffectDispatcher::DispatchRandomEffect()
 
 void EffectDispatcher::ClearEffects()
 {
-	// TODO: Clear timed effects
+	for (ActiveEffect effect : m_activeEffects)
+	{
+		m_effects->StopEffect(effect.EffectType);
+	}
+
 	m_activeEffects.clear();
 }

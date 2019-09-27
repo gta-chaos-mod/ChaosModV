@@ -19,7 +19,7 @@ private:
 	float m_percentage;
 	Effects* m_effects;
 
-	class ActiveEffect
+	struct ActiveEffect
 	{
 	public:
 		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Name(name), Timer(timer) {}
