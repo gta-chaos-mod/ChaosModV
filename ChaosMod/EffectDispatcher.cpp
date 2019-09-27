@@ -91,7 +91,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	EffectType effectType = EFFECT_ANGRY_JESUS; //(EffectType)GAMEPLAY::GET_RANDOM_INT_IN_RANGE(0, _EFFECT_ENUM_MAX - 1);
+	EffectType effectType = (EffectType)GAMEPLAY::GET_RANDOM_INT_IN_RANGE(0, _EFFECT_ENUM_MAX - 1);
 	EffectInfo effectInfo = Effect.at(effectType);
 #ifdef _DEBUG
 	static std::ofstream log("effectsLog.txt");
