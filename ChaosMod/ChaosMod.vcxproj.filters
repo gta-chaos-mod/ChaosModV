@@ -47,5 +47,8 @@
     <ClInclude Include="Effects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nativesNoNamespaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -21,11 +21,11 @@ void Main::Init()
 	{
 		scriptWait(0);
 
-		if (!DLC2::GET_IS_LOADING_SCREEN_ACTIVE())
+		if (!GET_IS_LOADING_SCREEN_ACTIVE())
 		{
 			m_effectDispatcher->UpdateTimer();
 			m_effectDispatcher->UpdateEffects();
-			if (!UI::IS_PAUSE_MENU_ACTIVE())
+			if (!IS_PAUSE_MENU_ACTIVE())
 			{
 				m_effectDispatcher->Draw();
 			}
