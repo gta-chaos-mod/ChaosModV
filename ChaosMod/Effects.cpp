@@ -57,6 +57,14 @@ void TeleportPlayer(float x, float y, float z, float heading)
 	SET_ENTITY_HEADING(isInVeh ? playerVeh : playerPed, heading);
 }
 
+void CreateTempVehicle(Hash model, float x, float y, float z, float heading)
+{
+	LoadModel(model);
+	Vehicle veh = CREATE_VEHICLE(model, x, y, z, heading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
+}
+
 void Effects::StartEffect(EffectType effectType)
 {
 	Player player = PLAYER_ID();
@@ -107,6 +115,15 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_GIVE_PARACHUTE:
 		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_PARACHUTE"), 9999, false, true);
 		break;
+	case EFFECT_GIVE_PISTOL:
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_PISTOL"), 9999, false, true);
+		break;
+	case EFFECT_GIVE_TAZER:
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_TAZER"), 9999, false, true);
+		break;
+	case EFFECT_GIVE_RAILGUN:
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, false, true);
+		break;
 	case EFFECT_HEAL:
 		SET_ENTITY_HEALTH(playerPed, GET_PED_MAX_HEALTH(playerPed), 0);
 		break;
@@ -116,9 +133,9 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_IGNITE:
 		if (isPlayerInVeh)
 		{
-			SET_VEHICLE_ENGINE_HEALTH(playerVeh, .0f);
-			SET_VEHICLE_PETROL_TANK_HEALTH(playerVeh, .0f);
-			SET_VEHICLE_BODY_HEALTH(playerVeh, .0f);
+			SET_VEHICLE_ENGINE_HEALTH(playerVeh, -1.f);
+			SET_VEHICLE_PETROL_TANK_HEALTH(playerVeh, -1.f);
+			SET_VEHICLE_BODY_HEALTH(playerVeh, -1.f);
 		}
 		else
 		{
@@ -212,7 +229,7 @@ void Effects::StartEffect(EffectType effectType)
 		TeleportPlayer(-75.7f, -818.62f, 326.16f, 228.09f);
 		break;
 	case EFFECT_TP_FORTZANCUDO:
-		TeleportPlayer(-2118.89f, -3151.08f, 32.81f, 151.56f);
+		TeleportPlayer(-2360.3f, 3244.83f, 92.9f, 150.23f);
 		break;
 	case EFFECT_TP_MOUNTCHILLIAD:
 		TeleportPlayer(501.77f, 5604.85f, 797.91f, 174.7f);
@@ -255,6 +272,32 @@ void Effects::StartEffect(EffectType effectType)
 		Hash groupHash;
 		ADD_RELATIONSHIP_GROUP("_RIOT", &groupHash);
 		break;
+	case EFFECT_SPAWN_TANK:
+		CreateTempVehicle(GET_HASH_KEY("RHINO"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_ADDER:
+		CreateTempVehicle(GET_HASH_KEY("ADDER"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_DUMP:
+		CreateTempVehicle(GET_HASH_KEY("DUMP"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_MONSTER:
+		CreateTempVehicle(GET_HASH_KEY("MONSTER"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_BMX:
+		CreateTempVehicle(GET_HASH_KEY("BMX"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_TUG:
+		CreateTempVehicle(GET_HASH_KEY("TUG"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_CARGO:
+		CreateTempVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_EXPLODE_CUR_VEH:
+		if (isPlayerInVeh)
+		{
+			EXPLODE_VEHICLE(playerVeh, true, false);
+		}
 	}
 }
 
@@ -279,6 +322,60 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_GAMESPEED_X02:
 	case EFFECT_GAMESPEED_X05:
 		SET_TIME_SCALE(1.f);
+		break;
+	case EFFECT_SLIPPERY_VEHS:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_REDUCE_GRIP(veh, false);
+			}
+		}
+		break;
+	case EFFECT_NO_GRAV_VEHS:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_GRAVITY(veh, true);
+			}
+		}
+		break;
+	case EFFECT_PLAYER_INVINCIBLE:
+		SET_PLAYER_INVINCIBLE(PLAYER_ID(), false);
+		break;
+	case EFFECT_2XENGINE_VEHS:
+	case EFFECT_10XENGINE_VEHS:
+	case EFFECT_05XENGINE_VEHS:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 1.f);
+				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.f);
+			}
+		}
+		break;
+	case EFFECT_PEDS_INVISIBLE:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				RESET_ENTITY_ALPHA(ped);
+			}
+		}
+		break;
+	case EFFECT_VEHS_INVISIBLE:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				RESET_ENTITY_ALPHA(veh);
+			}
+		}
+		break;
+	case EFFECT_SUPER_RUN:
+		SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(PLAYER_ID(), 1.f);
 		break;
 	}
 }
@@ -312,5 +409,175 @@ void Effects::UpdateEffects()
 				SET_PED_RELATIONSHIP_GROUP_HASH(ped, riotGroupHash);
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_RED_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
+				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_BLUE_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
+				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_GREEN_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
+				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_RAINBOW_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				static ULONG cnt = 0;
+				static float freq = .01f;
+				int r = (int)std::sin(freq * cnt) * 127 + 128;
+				int g = (int)std::sin(freq * cnt + 2) * 127 + 128;
+				int b = (int)std::sin(freq * cnt + 4) * 127 + 128;
+				if (++cnt >= (ULONG)-1)
+				{
+					cnt = 0;
+				}
+				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
+				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_FORCED_FP])
+	{
+		SET_FOLLOW_PED_CAM_VIEW_MODE(4);
+		SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(4);
+	}
+	if (m_effectActive[EFFECT_SLIPPERY_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			static bool toggle = true;
+			if (veh)
+			{
+				SET_VEHICLE_REDUCE_GRIP(veh, toggle);
+				toggle = !toggle;
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_NO_GRAV_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_GRAVITY(veh, false);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_PLAYER_INVINCIBLE])
+	{
+		SET_PLAYER_INVINCIBLE(PLAYER_ID(), true);
+	}
+	if (m_effectActive[EFFECT_2XENGINE_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 2.f);
+				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 2.f);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_10XENGINE_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 10.f);
+				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 10.f);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_05XENGINE_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, .5f);
+				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, .5f);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_NEVER_WANTED])
+	{
+		SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
+		SET_PLAYER_WANTED_LEVEL_NOW(PLAYER_ID(), true);
+	}
+	if (m_effectActive[EFFECT_NO_VEHS])
+	{
+		SET_AMBIENT_VEHICLE_RANGE_MULTIPLIER_THIS_FRAME(.0f);
+		SET_PARKED_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(.0f);
+		SET_RANDOM_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(.0f);
+		SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME(.0f);
+	}
+	if (m_effectActive[EFFECT_NO_PEDS])
+	{
+		SET_PED_DENSITY_MULTIPLIER_THIS_FRAME(.0f);
+		SET_SCENARIO_PED_DENSITY_MULTIPLIER_THIS_FRAME(.0f, .0f);
+	}
+	if (m_effectActive[EFFECT_PEDS_INVISIBLE])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				SET_ENTITY_ALPHA(ped, 0, 0);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_VEHS_INVISIBLE])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_ENTITY_ALPHA(veh, 0, 0);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_NO_RADAR])
+	{
+		_DISABLE_RADAR_THIS_FRAME();
+	}
+	if (m_effectActive[EFFECT_NO_HUD])
+	{
+		HIDE_HUD_AND_RADAR_THIS_FRAME();
+	}
+	if (m_effectActive[EFFECT_SUPER_RUN])
+	{
+		SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(PLAYER_ID(), 1.49f);
+	}
+	if (m_effectActive[EFFECT_SUPER_JUMP])
+	{
+		SET_SUPER_JUMP_THIS_FRAME(PLAYER_ID());
 	}
 }
