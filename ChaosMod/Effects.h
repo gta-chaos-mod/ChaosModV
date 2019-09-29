@@ -94,6 +94,11 @@ enum EffectType : int
 	EFFECT_NO_HUD,
 	EFFECT_SUPER_RUN,
 	EFFECT_SUPER_JUMP,
+	EFFECT_PLAYER_RAGDOLL,
+	EFFECT_PEDS_RAGDOLL_ON_TOUCH,
+	EFFECT_PLUS_100K,
+	EFFECT_MINUS_100K,
+	EFFECT_PEDS_FOLLOW_PLAYER,
 	_EFFECT_ENUM_MAX
 };
 
@@ -169,6 +174,11 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_NO_HUD, {"No HUD", true, { EFFECT_NO_RADAR } }},
 	{EFFECT_SUPER_RUN, {"Super Run", true }},
 	{EFFECT_SUPER_JUMP, {"Super Jump", true }},
+	{EFFECT_PLAYER_RAGDOLL, {"Ragdoll"}},
+	{EFFECT_PEDS_RAGDOLL_ON_TOUCH, {"Sensitive Touch", true}},
+	{EFFECT_PLUS_100K, {"+$100.000"}},
+	{EFFECT_MINUS_100K, {"-$100.000"}},
+	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous"}},
 };
 
 class Effects

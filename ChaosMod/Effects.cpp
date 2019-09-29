@@ -2,7 +2,7 @@
 #include "Effects.h"
 #include "Main.h"
 
-std::array<Ped, 256> GetAllPeds()
+inline std::array<Ped, 256> GetAllPeds()
 {
 	static std::array<Ped, 256> peds;
 
@@ -19,7 +19,7 @@ std::array<Ped, 256> GetAllPeds()
 	return peds;
 }
 
-std::array<Vehicle, 256> GetAllVehs()
+inline std::array<Vehicle, 256> GetAllVehs()
 {
 	static std::array<Vehicle, 256> vehs;
 
@@ -36,7 +36,7 @@ std::array<Vehicle, 256> GetAllVehs()
 	return vehs;
 }
 
-void LoadModel(Hash model)
+inline void LoadModel(Hash model)
 {
 	if (IS_MODEL_VALID(model))
 	{
@@ -48,7 +48,7 @@ void LoadModel(Hash model)
 	}
 }
 
-void TeleportPlayer(float x, float y, float z, float heading)
+inline void TeleportPlayer(float x, float y, float z, float heading)
 {
 	Ped playerPed = PLAYER_PED_ID();
 	bool isInVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false);
@@ -57,7 +57,7 @@ void TeleportPlayer(float x, float y, float z, float heading)
 	SET_ENTITY_HEADING(isInVeh ? playerVeh : playerPed, heading);
 }
 
-void CreateTempVehicle(Hash model, float x, float y, float z, float heading)
+inline void CreateTempVehicle(Hash model, float x, float y, float z, float heading)
 {
 	LoadModel(model);
 	Vehicle veh = CREATE_VEHICLE(model, x, y, z, heading, true, false, false);
@@ -298,6 +298,44 @@ void Effects::StartEffect(EffectType effectType)
 		{
 			EXPLODE_VEHICLE(playerVeh, true, false);
 		}
+		break;
+	case EFFECT_PLAYER_RAGDOLL:
+		if (!isPlayerInVeh)
+		{
+			SET_PED_TO_RAGDOLL(playerPed, 10000.f, 10000.f, 0, true, true, false);
+		}
+		break;
+	case EFFECT_PLUS_100K:
+		for (int i = 0; i < 3; i++)
+		{
+			char statNameFull[32];
+			sprintf_s(statNameFull, "SP%d_TOTAL_CASH", i);
+			Hash hash = GET_HASH_KEY(statNameFull);
+			int money;
+			STAT_GET_INT(hash, &money, -1);
+			STAT_SET_INT(hash, money + 100000, 1);
+		}
+		break;
+	case EFFECT_MINUS_100K:
+		for (int i = 0; i < 3; i++)
+		{
+			char statNameFull[32];
+			sprintf_s(statNameFull, "SP%d_TOTAL_CASH", i);
+			Hash hash = GET_HASH_KEY(statNameFull);
+			int money;
+			STAT_GET_INT(hash, &money, -1);
+			STAT_SET_INT(hash, money - 100000, 1);
+		}
+		break;
+	case EFFECT_PEDS_FOLLOW_PLAYER:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, PLAYER_PED_ID(), .0f, .0f, .0f, 9999.f, -1, .0f, true);
+				SET_PED_KEEP_TASK(ped, true);
+			}
+		}
 	}
 }
 
@@ -376,6 +414,15 @@ void Effects::StopEffect(EffectType effectType)
 		break;
 	case EFFECT_SUPER_RUN:
 		SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(PLAYER_ID(), 1.f);
+		break;
+	case EFFECT_PEDS_RAGDOLL_ON_TOUCH:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				SET_PED_RAGDOLL_ON_COLLISION(ped, false);
+			}
+		}
 		break;
 	}
 }
@@ -579,5 +626,15 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_SUPER_JUMP])
 	{
 		SET_SUPER_JUMP_THIS_FRAME(PLAYER_ID());
+	}
+	if (m_effectActive[EFFECT_PEDS_RAGDOLL_ON_TOUCH])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				SET_PED_RAGDOLL_ON_COLLISION(ped, true);
+			}
+		}
 	}
 }
