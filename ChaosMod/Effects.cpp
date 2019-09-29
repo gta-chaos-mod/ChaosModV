@@ -119,7 +119,7 @@ void Effects::StartEffect(EffectType effectType)
 		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_PISTOL"), 9999, false, true);
 		break;
 	case EFFECT_GIVE_TAZER:
-		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_TAZER"), 9999, false, true);
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_STUNGUN"), 9999, false, true);
 		break;
 	case EFFECT_GIVE_RAILGUN:
 		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, false, true);

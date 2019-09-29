@@ -108,7 +108,7 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_GIVE_MINIGUN, {"Give Minigun"}},
 	{EFFECT_GIVE_PARACHUTE, {"Give Parachute"}},
 	{EFFECT_GIVE_PISTOL, {"Give Pistol"}},
-	{EFFECT_GIVE_TAZER, {"Give Tazer"}},
+	{EFFECT_GIVE_TAZER, {"Give Stungun"}},
 	{EFFECT_GIVE_RAILGUN, {"Give Railgun"}},
 	{EFFECT_HEAL, {"Player Heal"}},
 	{EFFECT_ARMOR, {"Player Armor"}},
