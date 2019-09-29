@@ -12,6 +12,7 @@ public:
 	void Draw();
 	void UpdateTimer();
 	void UpdateEffects();
+	void DispatchEffect(EffectType effectType);
 	void DispatchRandomEffect();
 	void ClearEffects();
 

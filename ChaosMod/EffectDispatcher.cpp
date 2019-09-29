@@ -90,10 +90,10 @@ void EffectDispatcher::UpdateEffects()
 	}
 }
 
-void EffectDispatcher::DispatchRandomEffect()
+void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
-	EffectType effectType = (EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
 	EffectInfo effectInfo = Effect.at(effectType);
+
 #ifdef _DEBUG
 	static std::ofstream log("effectsLog.txt");
 	log << effectInfo.Name << std::endl;
@@ -131,6 +131,11 @@ void EffectDispatcher::DispatchRandomEffect()
 	}
 
 	m_percentage = .0f;
+}
+
+void EffectDispatcher::DispatchRandomEffect()
+{
+	DispatchEffect((EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1));
 }
 
 void EffectDispatcher::ClearEffects()

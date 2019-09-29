@@ -47,7 +47,7 @@ void Main::Init()
 				m_forceDispatchEffectNextFrame = false;
 
 				m_effectDispatcher->ClearEffects();
-				m_effectDispatcher->DispatchRandomEffect();
+				m_effectDispatcher->DispatchEffect((EffectType)((int)_EFFECT_ENUM_MAX - 1));
 			}
 
 			m_effectDispatcher->UpdateTimer();

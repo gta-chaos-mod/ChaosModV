@@ -2,7 +2,7 @@
 #include <map>
 #include <vector>
 
-enum EffectType;
+enum EffectType : int;
 
 struct EffectInfo
 {
@@ -21,7 +21,7 @@ public:
 	const std::vector<EffectType> IncompatibleWith;
 };
 
-enum EffectType
+enum EffectType : int
 {
 	EFFECT_KILL,
 	EFFECT_PLUS_2_STARS,
