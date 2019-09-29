@@ -7,6 +7,7 @@ using namespace PED;
 using namespace VEHICLE;
 using namespace OBJECT;
 using namespace BRAIN;
+using namespace TASK;
 using namespace MISC;
 using namespace AUDIO;
 using namespace CUTSCENE;

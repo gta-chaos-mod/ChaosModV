@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "Effects.h"
+#include "Main.h"
 
 void LoadModel(Hash model)
 {
-	REQUEST_MODEL(model);
-	while (!HAS_MODEL_LOADED(model))
+	if (IS_MODEL_VALID(model))
 	{
-		scriptWait(0);
+		REQUEST_MODEL(model);
+		while (!HAS_MODEL_LOADED(model))
+		{
+			scriptWait(0);
+		}
 	}
 }
 
@@ -91,15 +95,17 @@ void Effects::StartEffect(EffectType effectType)
 			START_ENTITY_FIRE(playerPed);
 		}
 		break;
-	/*case EFFECT_ANGRY_JESUS:
-		LoadModel(-835930287);
+	case EFFECT_ANGRY_JESUS:
+		Hash modelHash;
+		modelHash = -835930287;
+		LoadModel(modelHash);
 		Ped ped;
-		ped = CREATE_PED(4, -835930287, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false);
-		GIVE_WEAPON_TO_PED(ped, GAMEPLAY::GET_HASH_KEY("WEAPON_RAILGUN"), 9999, false, true);
+		ped = CREATE_PED(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+		GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
-		SET_MODEL_AS_NO_LONGER_NEEDED(-835930287);
+		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-		break;*/
+		break;
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : allPeds)
 		{
@@ -210,13 +216,12 @@ void Effects::StartEffect(EffectType effectType)
 			SET_PED_INTO_VEHICLE(playerPed, closestVeh, -1);
 		}
 		break;
-	/*case EFFECT_EXIT_CURRENT_VEH:
+	case EFFECT_EXIT_CURRENT_VEH:
 		if (isPlayerInVeh)
 		{
-			TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
-			//TeleportPlayer(playerVehPos.x + 10.f, playerVehPos.y + 10.f, playerVehPos.z, playerVehHeading);
+			TASK_LEAVE_VEHICLE(playerPed, playerVeh, 4160);
 		}
-		break;*/
+		break;
 	}
 }
 

@@ -1,6 +1,10 @@
 #pragma once
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
+#include "../vendor/minhook/include/MinHook.h"
 #include "nativesNoNamespaces.h"
+#include "Random.h"
 #include <Windows.h>
 #include <Psapi.h>
+#include <fstream>
+#include <random>

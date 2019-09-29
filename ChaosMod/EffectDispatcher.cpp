@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "EffectDispatcher.h"
 #include "Effects.h"
-#include <fstream>
 
 EffectDispatcher::EffectDispatcher() : m_percentage(.0f), m_effects(new Effects())
 {
@@ -24,8 +23,8 @@ void EffectDispatcher::Draw()
 	float y = .2f;
 	for (ActiveEffect effect : m_activeEffects)
 	{
-		BEGIN_TEXT_COMMAND_DISPLAY_TEXT((char*)"STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME((char*)effect.Name);
+		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name);
 		SET_TEXT_SCALE(.5f, .5f);
 		SET_TEXT_COLOUR(255, 255, 255, 255);
 		SET_TEXT_OUTLINE();
@@ -35,8 +34,8 @@ void EffectDispatcher::Draw()
 
 		if (effect.Timer > 0)
 		{
-			GRAPHICS::DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			GRAPHICS::DRAW_RECT(.9f - effect.Timer / 180, y + .02f, .05f * effect.Timer / 180, .02f, 180, 180, 180, 255, false);
+			DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
+			DRAW_RECT(.9f - effect.Timer / 180, y + .02f, .05f * effect.Timer / 180, .02f, 180, 180, 180, 255, false);
 		}
 
 		y += .075f;
@@ -93,7 +92,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	EffectType effectType = (EffectType)GET_RANDOM_INT_IN_RANGE(0, _EFFECT_ENUM_MAX - 1);
+	EffectType effectType = (EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
 	EffectInfo effectInfo = Effect.at(effectType);
 #ifdef _DEBUG
 	static std::ofstream log("effectsLog.txt");
