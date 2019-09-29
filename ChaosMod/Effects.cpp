@@ -2,6 +2,40 @@
 #include "Effects.h"
 #include "Main.h"
 
+std::array<Ped, 256> GetAllPeds()
+{
+	static std::array<Ped, 256> peds;
+
+	static int lastFrame = 0;
+	int curFrame = GET_FRAME_COUNT();
+	if (lastFrame < curFrame)
+	{
+		lastFrame = curFrame;
+
+		peds.fill(0);
+		worldGetAllPeds(peds.data(), 256);
+	}
+
+	return peds;
+}
+
+std::array<Vehicle, 256> GetAllVehs()
+{
+	static std::array<Vehicle, 256> vehs;
+
+	static int lastFrame = 0;
+	int curFrame = GET_FRAME_COUNT();
+	if (lastFrame < curFrame)
+	{
+		lastFrame = curFrame;
+
+		vehs.fill(0);
+		worldGetAllVehicles(vehs.data(), 256);
+	}
+
+	return vehs;
+}
+
 void LoadModel(Hash model)
 {
 	if (IS_MODEL_VALID(model))
@@ -33,10 +67,6 @@ void Effects::StartEffect(EffectType effectType)
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	Vector3 playerVehPos = GET_ENTITY_COORDS(playerVeh, false);
 	float playerVehHeading = GET_ENTITY_HEADING(playerVeh);
-	Ped allPeds[256] = { 0 };
-	worldGetAllPeds(allPeds, 256);
-	Vehicle allVehs[256] = { 0 };
-	worldGetAllVehicles(allVehs, 256);
 
 	if (Effect.at(effectType).IsTimed)
 	{
@@ -60,7 +90,7 @@ void Effects::StartEffect(EffectType effectType)
 		CLEAR_PLAYER_WANTED_LEVEL(player);
 		break;
 	case EFFECT_STRIP_WEAPONS:
-		for (Ped ped : allPeds)
+		for (Ped ped : GetAllPeds())
 		{
 			if (ped)
 			{
@@ -107,7 +137,7 @@ void Effects::StartEffect(EffectType effectType)
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		break;
 	case EFFECT_IGNITE_PEDS:
-		for (Ped ped : allPeds)
+		for (Ped ped : GetAllPeds())
 		{
 			if (ped && !IS_PED_A_PLAYER(ped))
 			{
@@ -116,7 +146,7 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_EXPLODE_VEHS:
-		for (Vehicle veh : allVehs)
+		for (Vehicle veh : GetAllVehs())
 		{
 			if (veh && veh != playerVeh)
 			{
@@ -196,7 +226,7 @@ void Effects::StartEffect(EffectType effectType)
 		closestVeh = -1;
 		float closestDist;
 		closestDist = 9999.f;
-		for (Vehicle veh : allVehs)
+		for (Vehicle veh : GetAllVehs())
 		{
 			if (veh)
 			{
@@ -275,9 +305,7 @@ void Effects::UpdateEffects()
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, riotGroupHash);
 
-		Ped peds[256] = { 0 };
-		worldGetAllPeds(peds, 256);
-		for (Ped ped : peds)
+		for (Ped ped : GetAllPeds())
 		{
 			if (ped && !IS_PED_A_PLAYER(ped))
 			{

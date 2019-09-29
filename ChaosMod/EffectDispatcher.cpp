@@ -92,7 +92,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	EffectType effectType = EFFECT_PEDS_RIOT; //(EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
+	EffectType effectType = (EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
 	EffectInfo effectInfo = Effect.at(effectType);
 #ifdef _DEBUG
 	static std::ofstream log("effectsLog.txt");
