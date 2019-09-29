@@ -54,6 +54,7 @@ enum EffectType
 	EFFECT_EXIT_CURRENT_VEH,
 	EFFECT_GAMESPEED_X06,
 	EFFECT_GAMESPEED_X02,
+	EFFECT_PEDS_RIOT,
 	_EFFECT_ENUM_MAX
 };
 
@@ -97,6 +98,7 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_EXIT_CURRENT_VEH, {"Exit Current Vehicle"}},
 	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", true}},
 	{EFFECT_GAMESPEED_X06, {"x0.6 Gamespeed", true}},
+	{EFFECT_PEDS_RIOT, {"Peds Riot", true}}
 };
 
 class Effects

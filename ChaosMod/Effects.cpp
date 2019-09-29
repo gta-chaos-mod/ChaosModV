@@ -33,10 +33,10 @@ void Effects::StartEffect(EffectType effectType)
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	Vector3 playerVehPos = GET_ENTITY_COORDS(playerVeh, false);
 	float playerVehHeading = GET_ENTITY_HEADING(playerVeh);
-	Ped allPeds[128] = { 0 };
-	worldGetAllPeds(allPeds, sizeof(allPeds));
-	Vehicle allVehs[128] = { 0 };
-	worldGetAllVehicles(allVehs, sizeof(allVehs));
+	Ped allPeds[256] = { 0 };
+	worldGetAllPeds(allPeds, 256);
+	Vehicle allVehs[256] = { 0 };
+	worldGetAllVehicles(allVehs, 256);
 
 	if (Effect.at(effectType).IsTimed)
 	{
@@ -62,7 +62,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_STRIP_WEAPONS:
 		for (Ped ped : allPeds)
 		{
-			if (DOES_ENTITY_EXIST(ped))
+			if (ped)
 			{
 				REMOVE_ALL_PED_WEAPONS(ped, false);
 			}
@@ -109,7 +109,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : allPeds)
 		{
-			if (DOES_ENTITY_EXIST(ped) && !IS_PED_A_PLAYER(ped))
+			if (ped && !IS_PED_A_PLAYER(ped))
 			{
 				START_ENTITY_FIRE(ped);
 			}
@@ -118,7 +118,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_EXPLODE_VEHS:
 		for (Vehicle veh : allVehs)
 		{
-			if (DOES_ENTITY_EXIST(veh) && veh != playerVeh)
+			if (veh && veh != playerVeh)
 			{
 				EXPLODE_VEHICLE(veh, true, false);
 			}
@@ -198,7 +198,7 @@ void Effects::StartEffect(EffectType effectType)
 		closestDist = 9999.f;
 		for (Vehicle veh : allVehs)
 		{
-			if (DOES_ENTITY_EXIST(veh))
+			if (veh)
 			{
 				Vector3 coords;
 				coords = GET_ENTITY_COORDS(veh, false);
@@ -221,6 +221,9 @@ void Effects::StartEffect(EffectType effectType)
 		{
 			TASK_LEAVE_VEHICLE(playerPed, playerVeh, 4160);
 		}
+	case EFFECT_PEDS_RIOT:
+		Hash groupHash;
+		ADD_RELATIONSHIP_GROUP("_RIOT", &groupHash);
 		break;
 	}
 }
@@ -263,5 +266,23 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_GAMESPEED_X06])
 	{
 		SET_TIME_SCALE(.6f);
+	}
+	if (m_effectActive[EFFECT_PEDS_RIOT])
+	{
+		static Hash riotGroupHash = GET_HASH_KEY("_RIOT");
+		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, riotGroupHash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, playerGroupHash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, riotGroupHash);
+
+		Ped peds[256] = { 0 };
+		worldGetAllPeds(peds, 256);
+		for (Ped ped : peds)
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_RELATIONSHIP_GROUP_HASH(ped, riotGroupHash);
+			}
+		}
 	}
 }
