@@ -6,7 +6,7 @@
 Main* m_main = nullptr;
 EffectDispatcher* m_effectDispatcher = nullptr;
 
-bool m_forceDispatchEffectNextTick = false;
+bool m_forceDispatchEffectNextFrame = false;
 
 void Main::Init()
 {
@@ -31,11 +31,20 @@ void Main::Init()
 	{
 		scriptWait(0);
 
+		static int lastFrame = 0;
+		int curFrame = GET_FRAME_COUNT();
+		if (lastFrame >= curFrame)
+		{
+			continue;
+		}
+
+		lastFrame = curFrame;
+
 		if (!GET_IS_LOADING_SCREEN_ACTIVE())
 		{
-			if (m_forceDispatchEffectNextTick)
+			if (m_forceDispatchEffectNextFrame)
 			{
-				m_forceDispatchEffectNextTick = false;
+				m_forceDispatchEffectNextFrame = false;
 
 				m_effectDispatcher->ClearEffects();
 				m_effectDispatcher->DispatchRandomEffect();
@@ -84,7 +93,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	}
 	else if (key == VK_OEM_MINUS && CTRLpressed && !wasDownBefore)
 	{
-		m_forceDispatchEffectNextTick = true;
+		m_forceDispatchEffectNextFrame = true;
 	}
 #endif
 }
