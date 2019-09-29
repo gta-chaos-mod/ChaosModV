@@ -100,16 +100,26 @@ void EffectDispatcher::DispatchRandomEffect()
 #endif
 
 	// Check if timed effect already is active, reset timer if so
+	// Also check for incompatible effects
 	bool alreadyExists = false;
 	if (effectInfo.IsTimed)
 	{
+		const std::vector<EffectType> incompatibleEffects = effectInfo.IncompatibleWith;
+
 		for (ActiveEffect& effect : m_activeEffects)
 		{
 			if (effect.EffectType == effectType)
 			{
 				alreadyExists = true;
 				effect.Timer = 180;
-				break;
+			}
+
+			for (EffectType incompatibleEffect : incompatibleEffects)
+			{
+				if (effect.EffectType == incompatibleEffect)
+				{
+					effect.Timer = 0;
+				}
 			}
 		}
 	}

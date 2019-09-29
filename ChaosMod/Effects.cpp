@@ -277,7 +277,7 @@ void Effects::StopEffect(EffectType effectType)
 		SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");
 		break;
 	case EFFECT_GAMESPEED_X02:
-	case EFFECT_GAMESPEED_X06:
+	case EFFECT_GAMESPEED_X05:
 		SET_TIME_SCALE(1.f);
 		break;
 	}
@@ -293,9 +293,9 @@ void Effects::UpdateEffects()
 	{
 		SET_TIME_SCALE(.2f);
 	}
-	if (m_effectActive[EFFECT_GAMESPEED_X06])
+	if (m_effectActive[EFFECT_GAMESPEED_X05])
 	{
-		SET_TIME_SCALE(.6f);
+		SET_TIME_SCALE(.5f);
 	}
 	if (m_effectActive[EFFECT_PEDS_RIOT])
 	{

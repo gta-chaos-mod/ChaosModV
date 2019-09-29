@@ -1,16 +1,24 @@
 #pragma once
 #include <map>
+#include <vector>
+
+enum EffectType;
 
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, bool isTimed = false, uint duration = 180) : Name(name), IsTimed(isTimed), Duration(duration) {}
-	EffectInfo() : Name("???"), IsTimed(false), Duration(0) {}
+	EffectInfo(const char* name, bool isTimed, uint duration, std::vector<EffectType> incompatibleList = {})
+		: Name(name), IsTimed(isTimed), Duration(duration), IncompatibleWith(incompatibleList) {}
+	EffectInfo(const char* name, bool isTimed = false, std::vector<EffectType> incompatibleList = {})
+		: Name(name), IsTimed(isTimed), Duration(180), IncompatibleWith(incompatibleList)
+	{}
+	EffectInfo() : Name("???"), IsTimed(false), Duration(0), IncompatibleWith({}) {}
 
 public:
 	const char* Name;
 	const bool IsTimed;
 	const uint Duration;
+	const std::vector<EffectType> IncompatibleWith;
 };
 
 enum EffectType
@@ -52,7 +60,7 @@ enum EffectType
 	EFFECT_NO_PHONE,
 	EFFECT_SET_INTO_CLOSEST_VEH,
 	EFFECT_EXIT_CURRENT_VEH,
-	EFFECT_GAMESPEED_X06,
+	EFFECT_GAMESPEED_X05,
 	EFFECT_GAMESPEED_X02,
 	EFFECT_PEDS_RIOT,
 	_EFFECT_ENUM_MAX
@@ -96,8 +104,8 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_NO_PHONE, {"No Phone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle"}},
 	{EFFECT_EXIT_CURRENT_VEH, {"Exit Current Vehicle"}},
-	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", true}},
-	{EFFECT_GAMESPEED_X06, {"x0.6 Gamespeed", true}},
+	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", true, { EFFECT_GAMESPEED_X05 }}},
+	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", true, { EFFECT_GAMESPEED_X02 }}},
 	{EFFECT_PEDS_RIOT, {"Peds Riot", true}}
 };
 
