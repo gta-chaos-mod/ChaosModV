@@ -464,6 +464,38 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PEDS_IGNORE_PLAYER:
 		SET_EVERYONE_IGNORE_PLAYER(PLAYER_ID(), false);
 		break;
+	case EFFECT_MIN_DAMAGE:
+		RESET_AI_MELEE_WEAPON_DAMAGE_MODIFIER();
+		RESET_AI_WEAPON_DAMAGE_MODIFIER();
+		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f, true);
+		SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f);
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SUFFERS_CRITICAL_HITS(ped, true);
+				SET_PED_CONFIG_FLAG(ped, 281, false);
+			}
+		}
+		break;
+	case EFFECT_NO_HEADSHOTS:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SUFFERS_CRITICAL_HITS(ped, true);
+			}
+		}
+		break;
+	case EFFECT_PEDS_FROZEN:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_CONFIG_FLAG(ped, 292, false);
+			}
+		}
+		break;
 	}
 }
 
@@ -715,6 +747,41 @@ void Effects::UpdateEffects()
 			if (veh && IS_HORN_ACTIVE(veh))
 			{
 				APPLY_FORCE_TO_ENTITY(veh, 0, .0f, 50.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_MIN_DAMAGE])
+	{
+		SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(.1f);
+		SET_AI_WEAPON_DAMAGE_MODIFIER(.1f);
+		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), .1f, true);
+		SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), .1f);
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+				SET_PED_CONFIG_FLAG(ped, 281, true);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_NO_HEADSHOTS])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_PEDS_FROZEN])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_CONFIG_FLAG(ped, 292, true);
 			}
 		}
 	}

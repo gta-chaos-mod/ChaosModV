@@ -108,6 +108,9 @@ enum EffectType : int
 	EFFECT_SCREEN_LSD,
 	EFFECT_PEDS_IGNORE_PLAYER,
 	EFFECT_HONK_BOOSTING,
+	EFFECT_MIN_DAMAGE,
+	EFFECT_NO_HEADSHOTS,
+	EFFECT_PEDS_FROZEN,
 	_EFFECT_ENUM_MAX
 };
 
@@ -117,7 +120,7 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars"}},
 	{EFFECT_5_STARS, {"5 Wanted Stars"}},
 	{EFFECT_CLEAR_STARS, {"Clear Wanted Level"}},
-	{EFFECT_STRIP_WEAPONS, {"Remove Weapons From Anyone"}},
+	{EFFECT_STRIP_WEAPONS, {"Remove Weapons From All Peds"}},
 	{EFFECT_GIVE_RPG, {"Give RPG"}},
 	{EFFECT_GIVE_MINIGUN, {"Give Minigun"}},
 	{EFFECT_GIVE_PARACHUTE, {"Give Parachute"}},
@@ -197,6 +200,9 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_SCREEN_LSD, {"LSD", true, { EFFECT_SCREEN_BLOOM }}},
 	{EFFECT_PEDS_IGNORE_PLAYER, {"Peds Ignore Player", true}},
 	{EFFECT_HONK_BOOSTING, {"Honk Boosting", true}},
+	{EFFECT_MIN_DAMAGE, {"Minimal Damage", true, { EFFECT_NO_HEADSHOTS }}},
+	{EFFECT_NO_HEADSHOTS, {"No Headshots", true, { EFFECT_MIN_DAMAGE }}},
+	{EFFECT_PEDS_FROZEN, {"Peds Are Brainless", true}},
 };
 
 class Effects
