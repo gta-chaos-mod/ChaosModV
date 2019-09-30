@@ -496,6 +496,10 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_LOW_GRAV:
+	case EFFECT_VERY_LOW_GRAV:
+		SET_GRAVITY_LEVEL(0);
+		break;
 	}
 }
 
@@ -784,5 +788,13 @@ void Effects::UpdateEffects()
 				SET_PED_CONFIG_FLAG(ped, 292, true);
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_LOW_GRAV])
+	{
+		SET_GRAVITY_LEVEL(1);
+	}
+	if (m_effectActive[EFFECT_VERY_LOW_GRAV])
+	{
+		SET_GRAVITY_LEVEL(2);
 	}
 }
