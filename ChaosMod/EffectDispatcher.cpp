@@ -2,7 +2,8 @@
 #include "EffectDispatcher.h"
 #include "Effects.h"
 
-EffectDispatcher::EffectDispatcher() : m_percentage(.0f), m_effects(new Effects())
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, bool timedEffects) : m_percentage(.0f), m_effects(new Effects()),
+	m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_spawnTimedEffects(timedEffects)
 {
 	Reset();
 }
@@ -56,7 +57,7 @@ void EffectDispatcher::UpdateTimer()
 		thing = 0;
 	}
 
-	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / 60000.f) > 1.f)
+	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f)
 	{
 		DispatchRandomEffect();
 
@@ -104,7 +105,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
 	EffectInfo effectInfo = Effect.at(effectType);
 
-	static std::ofstream log("effectsLog.txt");
+	static std::ofstream log("chaosmod/effectsLog.txt");
 	log << effectInfo.Name << std::endl;
 
 	// Check if timed effect already is active, reset timer if so
@@ -119,7 +120,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 			if (effect.EffectType == effectType)
 			{
 				alreadyExists = true;
-				effect.Timer = 180;
+				effect.Timer = m_effectTimedDur;
 			}
 
 			for (EffectType incompatibleEffect : incompatibleEffects)
@@ -143,9 +144,19 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	int effect = Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
+	std::vector<EffectType> effects;
 
-	DispatchEffect((EffectType)effect);
+	for (const auto& pair : Effect)
+	{
+		if (m_spawnTimedEffects || !pair.second.IsTimed)
+		{
+			effects.push_back(pair.first);
+		}
+	}
+
+	int index = Random::GetRandomInt(0, effects.size() - 1);
+
+	DispatchEffect(effects[index]);
 }
 
 void EffectDispatcher::ClearEffects()

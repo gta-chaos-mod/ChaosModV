@@ -8,11 +8,58 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 
 bool m_forceDispatchEffectNextFrame = false;
 
-void Main::Init()
+int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedEffects)
+{
+	constexpr const char* filePath = "chaosmod/config.ini";
+
+	struct stat temp;
+	if (stat(filePath, &temp) == -1)
+	{
+		return -1;
+	}
+
+	std::ifstream config(filePath);
+
+	if (config.fail())
+	{
+		return -2;
+	}
+
+	char buffer[128];
+	while (config.getline(buffer, 128))
+	{
+		std::string line(buffer);
+		std::string key = line.substr(0, line.find("="));
+
+		if (line == key)
+		{
+			continue;
+		}
+
+		int value = std::stoi(line.substr(line.find("=") + 1));
+
+		if (key == "NewEffectSpawnTime")
+		{
+			*effectSpawnTime = value;
+		}
+		else if (key == "EffectTimedDur")
+		{
+			*effectTimedDur = value;
+		}
+		else if (key == "SpawnTimedEffects")
+		{
+			*spawnTimedEffects = value;
+		}
+	}
+
+	return 0;
+}
+
+bool Main::Init()
 {
 	if (m_main && m_effectDispatcher)
 	{
-		return;
+		return false;
 	}
 
 	if (!m_main)
@@ -20,12 +67,37 @@ void Main::Init()
 		m_main = new Main();
 	}
 
+	int effectSpawnTime;
+	int effectTimedDur;
+	bool spawnTimedEffects;
+
+	int result;
+	if ((result = ParseConfigFile(&effectSpawnTime, &effectTimedDur, &spawnTimedEffects)))
+	{
+		switch (result)
+		{
+		case -1:
+			MessageBox(NULL,
+				"Config File was not found or is invalid. Please make sure you've run the config tool at least once, otherwise try regenerating it.",
+				"ChaosModV Error", MB_OK | MB_ICONERROR);
+			break;
+		case -2:
+			MessageBox(NULL,
+				"Config File couldn't be opened for reading. Make sure there's no process running with a handle on chaosmod/config.ini",
+				"ChaosModV Error", MB_OK | MB_ICONERROR);
+			break;
+		}
+		return false;
+	}
+
 	if (!m_effectDispatcher)
 	{
-		m_effectDispatcher = new EffectDispatcher();
+		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, spawnTimedEffects);
 	}
 
 	MH_EnableHook(MH_ALL_HOOKS);
+
+	return true;
 }
 
 void Main::Loop()

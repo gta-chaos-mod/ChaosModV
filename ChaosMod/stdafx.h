@@ -5,6 +5,8 @@
 #include "nativesNoNamespaces.h"
 #include "Random.h"
 #include <Windows.h>
+#include <WinUser.h>
 #include <Psapi.h>
 #include <fstream>
 #include <array>
+#include <string>

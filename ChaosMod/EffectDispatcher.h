@@ -5,7 +5,7 @@
 class EffectDispatcher
 {
 public:
-	EffectDispatcher();
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, bool timedEffects);
 	~EffectDispatcher();
 
 public:
@@ -18,6 +18,10 @@ public:
 	void Reset();
 
 private:
+	const int m_effectSpawnTime;
+	const int m_effectTimedDur;
+	const bool m_spawnTimedEffects;
+
 	float m_percentage;
 	Effects* m_effects;
 

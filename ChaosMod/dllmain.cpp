@@ -10,7 +10,11 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		Memory::Init();
-		Main::Init();
+
+		if (!Main::Init())
+		{
+			return FALSE;
+		}
 
 		scriptRegister(hInstance, Main::Loop);
 
