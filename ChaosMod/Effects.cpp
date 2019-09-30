@@ -336,6 +336,10 @@ void Effects::StartEffect(EffectType effectType)
 				SET_PED_KEEP_TASK(ped, true);
 			}
 		}
+		break;
+	case EFFECT_PLAYER_DRUNK:
+		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
+		break;
 	}
 }
 
@@ -423,6 +427,12 @@ void Effects::StopEffect(EffectType effectType)
 				SET_PED_RAGDOLL_ON_COLLISION(ped, false);
 			}
 		}
+		break;
+	case EFFECT_PLAYER_DRUNK:
+		SET_PED_IS_DRUNK(PLAYER_PED_ID(), false);
+		RESET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), .0f);
+		REMOVE_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+		STOP_GAMEPLAY_CAM_SHAKING(true);
 		break;
 	}
 }
@@ -636,5 +646,11 @@ void Effects::UpdateEffects()
 				SET_PED_RAGDOLL_ON_COLLISION(ped, true);
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_PLAYER_DRUNK])
+	{
+		SET_PED_IS_DRUNK(PLAYER_PED_ID(), true);
+		REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+		SET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), "MOVE_M@DRUNK@VERYDRUNK", 1.f);
 	}
 }

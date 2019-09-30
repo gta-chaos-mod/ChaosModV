@@ -99,6 +99,7 @@ enum EffectType : int
 	EFFECT_PLUS_100K,
 	EFFECT_MINUS_100K,
 	EFFECT_PEDS_FOLLOW_PLAYER,
+	EFFECT_PLAYER_DRUNK,
 	_EFFECT_ENUM_MAX
 };
 
@@ -179,6 +180,7 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_PLUS_100K, {"+$100.000"}},
 	{EFFECT_MINUS_100K, {"-$100.000"}},
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous"}},
+	{EFFECT_PLAYER_DRUNK, {"Drunk", true}},
 };
 
 class Effects

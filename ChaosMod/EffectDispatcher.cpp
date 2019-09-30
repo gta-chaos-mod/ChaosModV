@@ -66,6 +66,7 @@ void EffectDispatcher::UpdateEffects()
 	{
 		pastUpdateTime = currentUpdateTime;
 
+		int activeEffectsSize = m_activeEffects.size();
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
@@ -78,7 +79,7 @@ void EffectDispatcher::UpdateEffects()
 				m_effects->StopEffect(effect.EffectType);
 				it = m_activeEffects.erase(it);
 			}
-			else if (effect.Timer < -180)
+			else if (effect.Timer < -180 + activeEffectsSize > 3 ? activeEffectsSize - 3 : 0) // Prevent too many effects displaying at once
 			{
 				it = m_activeEffects.erase(it);
 			}
