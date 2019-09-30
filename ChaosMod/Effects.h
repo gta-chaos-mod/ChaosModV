@@ -113,6 +113,7 @@ enum EffectType : int
 	EFFECT_PEDS_FROZEN,
 	EFFECT_LOW_GRAV,
 	EFFECT_VERY_LOW_GRAV,
+	EFFECT_VEH_REPAIR,
 	_EFFECT_ENUM_MAX
 };
 
@@ -206,7 +207,8 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_NO_HEADSHOTS, {"No Headshots", true, { EFFECT_MIN_DAMAGE }}},
 	{EFFECT_PEDS_FROZEN, {"Peds Are Brainless", true}},
 	{EFFECT_LOW_GRAV, {"Low Gravity", true, { EFFECT_VERY_LOW_GRAV }}},
-	{EFFECT_VERY_LOW_GRAV, {"Very Low Gravity", true, { EFFECT_LOW_GRAV }}}
+	{EFFECT_VERY_LOW_GRAV, {"Very Low Gravity", true, { EFFECT_LOW_GRAV }}},
+	{EFFECT_VEH_REPAIR, {"Repair Current Vehicle"}},
 };
 
 class Effects

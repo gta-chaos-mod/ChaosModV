@@ -354,6 +354,12 @@ void Effects::StartEffect(EffectType effectType)
 		SET_TIMECYCLE_MODIFIER("ArenaEMP");
 		PUSH_TIMECYCLE_MODIFIER();
 		break;
+	case EFFECT_VEH_REPAIR:
+		if (isPlayerInVeh)
+		{
+			SET_VEHICLE_FIXED(playerVeh);
+		}
+		break;
 	}
 }
 
