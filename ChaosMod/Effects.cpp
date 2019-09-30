@@ -293,6 +293,12 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_SPAWN_CARGO:
 		CreateTempVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
 		break;
+	case EFFECT_SPAWN_BUS:
+		CreateTempVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
+	case EFFECT_SPAWN_BLIMP:
+		CreateTempVehicle(GET_HASH_KEY("BLIMP"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
 	case EFFECT_EXPLODE_CUR_VEH:
 		if (isPlayerInVeh)
 		{
@@ -302,7 +308,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_PLAYER_RAGDOLL:
 		if (!isPlayerInVeh)
 		{
-			SET_PED_TO_RAGDOLL(playerPed, 10000.f, 10000.f, 0, true, true, false);
+			SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);
 		}
 		break;
 	case EFFECT_PLUS_100K:
@@ -339,6 +345,14 @@ void Effects::StartEffect(EffectType effectType)
 		break;
 	case EFFECT_PLAYER_DRUNK:
 		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
+		break;
+	case EFFECT_SCREEN_BLOOM:
+		SET_TIMECYCLE_MODIFIER("Bloom");
+		PUSH_TIMECYCLE_MODIFIER();
+		break;
+	case EFFECT_SCREEN_LSD:
+		SET_TIMECYCLE_MODIFIER("ArenaEMP");
+		PUSH_TIMECYCLE_MODIFIER();
 		break;
 	}
 }
@@ -433,6 +447,22 @@ void Effects::StopEffect(EffectType effectType)
 		RESET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), .0f);
 		REMOVE_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
 		STOP_GAMEPLAY_CAM_SHAKING(true);
+		break;
+	case EFFECT_PEDS_OHKO:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_DEAD_OR_DYING(ped, true))
+			{
+				SET_ENTITY_HEALTH(ped, GET_PED_MAX_HEALTH(ped), 0);
+			}
+		}
+		break;
+	case EFFECT_SCREEN_BLOOM:
+	case EFFECT_SCREEN_LSD:
+		CLEAR_TIMECYCLE_MODIFIER();
+		break;
+	case EFFECT_PEDS_IGNORE_PLAYER:
+		SET_EVERYONE_IGNORE_PLAYER(PLAYER_ID(), false);
 		break;
 	}
 }
@@ -652,5 +682,40 @@ void Effects::UpdateEffects()
 		SET_PED_IS_DRUNK(PLAYER_PED_ID(), true);
 		REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
 		SET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), "MOVE_M@DRUNK@VERYDRUNK", 1.f);
+	}
+	if (m_effectActive[EFFECT_PEDS_OHKO])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_DEAD_OR_DYING(ped, true))
+			{
+				SET_ENTITY_HEALTH(ped, 101, 0);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_PEDS_NO_FEAR])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+				SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_PEDS_IGNORE_PLAYER])
+	{
+		SET_EVERYONE_IGNORE_PLAYER(PLAYER_ID(), true);
+	}
+	if (m_effectActive[EFFECT_HONK_BOOSTING])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh && IS_HORN_ACTIVE(veh))
+			{
+				APPLY_FORCE_TO_ENTITY(veh, 0, .0f, 50.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
+			}
+		}
 	}
 }

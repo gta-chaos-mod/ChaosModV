@@ -84,6 +84,8 @@ enum EffectType : int
 	EFFECT_SPAWN_BMX,
 	EFFECT_SPAWN_TUG,
 	EFFECT_SPAWN_CARGO,
+	EFFECT_SPAWN_BUS,
+	EFFECT_SPAWN_BLIMP,
 	EFFECT_NEVER_WANTED,
 	EFFECT_NO_VEHS,
 	EFFECT_NO_PEDS,
@@ -100,6 +102,12 @@ enum EffectType : int
 	EFFECT_MINUS_100K,
 	EFFECT_PEDS_FOLLOW_PLAYER,
 	EFFECT_PLAYER_DRUNK,
+	EFFECT_PEDS_OHKO,
+	EFFECT_PEDS_NO_FEAR,
+	EFFECT_SCREEN_BLOOM,
+	EFFECT_SCREEN_LSD,
+	EFFECT_PEDS_IGNORE_PLAYER,
+	EFFECT_HONK_BOOSTING,
 	_EFFECT_ENUM_MAX
 };
 
@@ -165,6 +173,8 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_SPAWN_BMX, {"Spawn BMX"}},
 	{EFFECT_SPAWN_TUG, {"Spawn Tug"}},
 	{EFFECT_SPAWN_CARGO, {"Spawn Cargo Plane"}},
+	{EFFECT_SPAWN_BUS, {"Spawn Bus"}},
+	{EFFECT_SPAWN_BLIMP, {"Spawn Blimp"}},
 	{EFFECT_NEVER_WANTED, {"Never Wanted", true}},
 	{EFFECT_NO_VEHS, {"No Traffic", true}},
 	{EFFECT_NO_PEDS, {"No Pedestrians", true}},
@@ -181,6 +191,12 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_MINUS_100K, {"-$100.000"}},
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous"}},
 	{EFFECT_PLAYER_DRUNK, {"Drunk", true}},
+	{EFFECT_PEDS_OHKO, {"One Hit KO", true}},
+	{EFFECT_PEDS_NO_FEAR, {"Peds Always Fight", true}},
+	{EFFECT_SCREEN_BLOOM, {"Bloom", true, { EFFECT_SCREEN_LSD }}},
+	{EFFECT_SCREEN_LSD, {"LSD", true, { EFFECT_SCREEN_BLOOM }}},
+	{EFFECT_PEDS_IGNORE_PLAYER, {"Peds Ignore Player", true}},
+	{EFFECT_HONK_BOOSTING, {"Honk Boosting", true}},
 };
 
 class Effects

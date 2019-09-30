@@ -66,7 +66,7 @@ void EffectDispatcher::UpdateEffects()
 	{
 		pastUpdateTime = currentUpdateTime;
 
-		int activeEffectsSize = m_activeEffects.size();
+		int activeEffectsSize = (int)m_activeEffects.size();
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
@@ -79,7 +79,7 @@ void EffectDispatcher::UpdateEffects()
 				m_effects->StopEffect(effect.EffectType);
 				it = m_activeEffects.erase(it);
 			}
-			else if (effect.Timer < -180 + activeEffectsSize > 3 ? activeEffectsSize - 3 : 0) // Prevent too many effects displaying at once
+			else if (effect.Timer < -180 + (activeEffectsSize > 3 ? (activeEffectsSize - 3) * 10 : 0)) // Prevent too many non-timed effects from displaying at once
 			{
 				it = m_activeEffects.erase(it);
 			}
@@ -95,10 +95,8 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
 	EffectInfo effectInfo = Effect.at(effectType);
 
-#ifdef _DEBUG
 	static std::ofstream log("effectsLog.txt");
 	log << effectInfo.Name << std::endl;
-#endif
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -136,7 +134,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	DispatchEffect((EffectType)Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1));
+	int effect = Random::GetRandomInt(0, _EFFECT_ENUM_MAX - 1);
+
+	DispatchEffect((EffectType)effect);
 }
 
 void EffectDispatcher::ClearEffects()
