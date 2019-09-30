@@ -4,7 +4,7 @@
 
 EffectDispatcher::EffectDispatcher() : m_percentage(.0f), m_effects(new Effects())
 {
-
+	Reset();
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -44,14 +44,23 @@ void EffectDispatcher::Draw()
 
 void EffectDispatcher::UpdateTimer()
 {
-	static DWORD64 pastUpdateTime = GetTickCount64();
 	DWORD64 currentUpdateTime = GetTickCount64();
 
-	if ((m_percentage = (currentUpdateTime - pastUpdateTime) / 60000.f) > 1.f)
-	{
-		pastUpdateTime = currentUpdateTime;
+	float thing = currentUpdateTime - m_timerTimer;
 
+	if (thing > 1000.f)
+	{
+		m_timerTimerRuns++;
+
+		m_timerTimer = currentUpdateTime;
+		thing = 0;
+	}
+
+	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / 60000.f) > 1.f)
+	{
 		DispatchRandomEffect();
+
+		m_timerTimerRuns = 0;
 	}
 }
 
@@ -59,12 +68,11 @@ void EffectDispatcher::UpdateEffects()
 {
 	m_effects->UpdateEffects();
 
-	static DWORD64 pastUpdateTime = GetTickCount64();
 	DWORD64 currentUpdateTime = GetTickCount64();
 
-	if ((currentUpdateTime - pastUpdateTime) > 1000)
+	if ((currentUpdateTime - m_effectsTimer) > 1000)
 	{
-		pastUpdateTime = currentUpdateTime;
+		m_effectsTimer = currentUpdateTime;
 
 		int activeEffectsSize = (int)m_activeEffects.size();
 		std::vector<ActiveEffect>::iterator it;
@@ -79,7 +87,8 @@ void EffectDispatcher::UpdateEffects()
 				m_effects->StopEffect(effect.EffectType);
 				it = m_activeEffects.erase(it);
 			}
-			else if (effect.Timer < -180 + (activeEffectsSize > 3 ? (activeEffectsSize - 3) * 10 : 0)) // Prevent too many non-timed effects from displaying at once
+			// Prevent too many non-timed effects from displaying at once
+			else if (effect.Timer < -180 + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
 				it = m_activeEffects.erase(it);
 			}
@@ -147,4 +156,12 @@ void EffectDispatcher::ClearEffects()
 	}
 
 	m_activeEffects.clear();
+}
+
+void EffectDispatcher::Reset()
+{
+	ClearEffects();
+	m_timerTimer = GetTickCount64();
+	m_timerTimerRuns = 0;
+	m_effectsTimer = GetTickCount64();
 }

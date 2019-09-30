@@ -15,6 +15,7 @@ public:
 	void DispatchEffect(EffectType effectType);
 	void DispatchRandomEffect();
 	void ClearEffects();
+	void Reset();
 
 private:
 	float m_percentage;
@@ -32,4 +33,7 @@ private:
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;
+	DWORD64 m_timerTimer;
+	int m_timerTimerRuns;
+	DWORD64 m_effectsTimer;
 };

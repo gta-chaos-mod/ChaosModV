@@ -26,38 +26,32 @@ void Main::Init()
 	}
 
 	MH_EnableHook(MH_ALL_HOOKS);
+}
+
+void Main::Loop()
+{
+	m_effectDispatcher->Reset();
 
 	while (true)
 	{
 		scriptWait(0);
 
-		static int lastFrame = 0;
-		int curFrame = GET_FRAME_COUNT();
-		if (lastFrame >= curFrame)
+		if (IS_SCREEN_FADED_OUT())
 		{
 			continue;
 		}
 
-		lastFrame = curFrame;
-
-		if (!GET_IS_LOADING_SCREEN_ACTIVE())
+		if (m_forceDispatchEffectNextFrame)
 		{
-			if (m_forceDispatchEffectNextFrame)
-			{
-				m_forceDispatchEffectNextFrame = false;
+			m_forceDispatchEffectNextFrame = false;
 
-				m_effectDispatcher->ClearEffects();
-				m_effectDispatcher->DispatchEffect((EffectType)((int)_EFFECT_ENUM_MAX - 1));
-			}
-
-			m_effectDispatcher->UpdateTimer();
-			m_effectDispatcher->UpdateEffects();
-
-			if (!IS_PAUSE_MENU_ACTIVE())
-			{
-				m_effectDispatcher->Draw();
-			}
+			m_effectDispatcher->ClearEffects();
+			m_effectDispatcher->DispatchEffect((EffectType)((int)_EFFECT_ENUM_MAX - 1));
 		}
+
+		m_effectDispatcher->UpdateTimer();
+		m_effectDispatcher->UpdateEffects();
+		m_effectDispatcher->Draw();
 	}
 }
 

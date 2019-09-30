@@ -43,7 +43,7 @@ inline void LoadModel(Hash model)
 		REQUEST_MODEL(model);
 		while (!HAS_MODEL_LOADED(model))
 		{
-			scriptWait(0);
+			Sleep(0);
 		}
 	}
 }
@@ -370,9 +370,9 @@ void Effects::StopEffect(EffectType effectType)
 		REQUEST_SCRIPT("cellphone_controller");
 		while (!HAS_SCRIPT_LOADED("cellphone_controller"))
 		{
-			scriptWait(0);
+			Sleep(0);
 		}
-		START_NEW_SCRIPT("cellphone_controller", 1424); // START_NEW_SCRIPT
+		START_NEW_SCRIPT("cellphone_controller", 1424);
 		SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");
 		break;
 	case EFFECT_GAMESPEED_X02:

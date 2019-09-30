@@ -10,13 +10,13 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		Memory::Init();
+		Main::Init();
 
-		scriptRegister(hInstance, Main::Init);
+		scriptRegister(hInstance, Main::Loop);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
 		break;
-
 	case DLL_PROCESS_DETACH:
 		Main::Stop();
 		Memory::Stop();
@@ -27,5 +27,6 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		break;
 	}
+
 	return TRUE;
 }
