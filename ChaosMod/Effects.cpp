@@ -574,9 +574,9 @@ void Effects::UpdateEffects()
 			{
 				static ULONG cnt = 0;
 				static float freq = .01f;
-				int r = (int)std::sin(freq * cnt) * 127 + 128;
-				int g = (int)std::sin(freq * cnt + 2) * 127 + 128;
-				int b = (int)std::sin(freq * cnt + 4) * 127 + 128;
+				int r = std::sin(freq * cnt) * 127 + 128;
+				int g = std::sin(freq * cnt + 2) * 127 + 128;
+				int b = std::sin(freq * cnt + 4) * 127 + 128;
 				if (++cnt >= (ULONG)-1)
 				{
 					cnt = 0;
