@@ -8,7 +8,7 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 
 bool m_forceDispatchEffectNextFrame = false;
 
-int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedEffects)
+int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedEffects, int* seed)
 {
 	constexpr const char* filePath = "chaosmod/config.ini";
 
@@ -50,6 +50,10 @@ int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedE
 		{
 			*spawnTimedEffects = value;
 		}
+		else if (key == "Seed")
+		{
+			*seed = value;
+		}
 	}
 
 	return 0;
@@ -70,15 +74,16 @@ bool Main::Init()
 	int effectSpawnTime;
 	int effectTimedDur;
 	bool spawnTimedEffects;
+	int seed;
 
 	int result;
-	if ((result = ParseConfigFile(&effectSpawnTime, &effectTimedDur, &spawnTimedEffects)))
+	if ((result = ParseConfigFile(&effectSpawnTime, &effectTimedDur, &spawnTimedEffects, &seed)))
 	{
 		switch (result)
 		{
 		case -1:
 			MessageBox(NULL,
-				"Config File was not found or is invalid. Please make sure you've run the config tool at least once, otherwise try regenerating it.",
+				"Config File was either not found or is invalid. Please make sure you've run the config tool at least once, otherwise try regenerating it.",
 				"ChaosModV Error", MB_OK | MB_ICONERROR);
 			break;
 		case -2:
@@ -89,6 +94,8 @@ bool Main::Init()
 		}
 		return false;
 	}
+
+	Random::SetSeed(seed);
 
 	if (!m_effectDispatcher)
 	{

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -6,36 +8,35 @@ namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        const string ConfigFile = "config.ini";
+        private const string ConfigFile = "config.ini";
+        private Random random;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            while (!File.Exists(ConfigFile) || !ParseConfigFile())
+            random = new Random();
+
+            while (!ParseConfigFile())
             {
-                GenerateNewConfigFile();
+                WriteConfigFile();
             }
-        }
-
-        private void GenerateNewConfigFile()
-        {
-            string data = "";
-            data += "NewEffectSpawnTime=60\n";
-            data += "EffectTimedDur=180\n";
-            data += "SpawnTimedEffects=1\n";
-
-            File.WriteAllText(ConfigFile, data);
         }
 
         private bool ParseConfigFile()
         {
+            if (!File.Exists(ConfigFile))
+            {
+                return false;
+            }
+
             string data = File.ReadAllText(ConfigFile);
             if (data.Length == 0)
             {
                 return false;
             }
 
+            bool lazyFoundAll = false;
             foreach (string line in data.Split('\n'))
             {
                 string[] keyValue = line.Split('=');
@@ -51,8 +52,8 @@ namespace ConfigApp
                 {
                     return false;
                 }
-
-                switch (keyValue[0])
+                
+                switch (key)
                 {
                     case "NewEffectSpawnTime":
                         user_effects_spawn_dur.Text = $"{value}";
@@ -63,7 +64,21 @@ namespace ConfigApp
                     case "SpawnTimedEffects":
                         user_effects_allow_timed.IsChecked = value != 0;
                         break;
+                    case "Seed":
+                        lazyFoundAll = true;
+                        if (value >= 0)
+                        {
+                            user_effects_random_seed.Text = $"{value}";
+                        }
+                        break;
                 }
+            }
+
+            if (!lazyFoundAll)
+            {
+                MessageBox.Show("Your config file was incomplete and thus has been regenerated.", "ChaosModV",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
             }
 
             return true;
@@ -75,6 +90,8 @@ namespace ConfigApp
             data += $"NewEffectSpawnTime={(user_effects_spawn_dur.Text.Length > 0 ? user_effects_spawn_dur.Text : "60")}\n";
             data += $"EffectTimedDur={(user_effects_timed_dur.Text.Length > 0 ? user_effects_timed_dur.Text : "180")}\n";
             data += $"SpawnTimedEffects={(user_effects_allow_timed.IsChecked.Value ? "1" : "0")}\n";
+            data += $"Seed={(user_effects_random_seed.Text.Length > 0 ? user_effects_random_seed.Text : "-1")}\n";
+
             File.WriteAllText(ConfigFile, data);
         }
 
@@ -105,7 +122,7 @@ namespace ConfigApp
         private void user_save_Click(object sender, RoutedEventArgs e)
         {
             WriteConfigFile();
-            MessageBox.Show("Saved Config!");
+            MessageBox.Show("Saved Config!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

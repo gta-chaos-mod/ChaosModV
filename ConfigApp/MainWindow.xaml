@@ -28,6 +28,12 @@
             VerticalAlignment="Top" Width="120"/>
         <CheckBox x:Name="user_effects_allow_timed" Content="" HorizontalAlignment="Left" Margin="135,155,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <Button x:Name="user_save" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="475,155,0,0" VerticalAlignment="Top" Width="101" Height="41" Click="user_save_Click"/>
-        <Label Content="v0.1" Grid.Column="1" HorizontalAlignment="Left" Margin="545,8,0,0" VerticalAlignment="Top"/>
+        <Label Content="v0.1" Grid.Column="1" HorizontalAlignment="Left" Margin="426,170,0,0" VerticalAlignment="Top"/>
+        <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="210,0,0,0"
+            VerticalAlignment="Top" Width="317" Grid.Column="1"/>
+        <TextBox x:Name="user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="532,3,0,0" TextWrapping="Wrap"
+            VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+            MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Grid.Column="1"
+            Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
     </Grid>
 </Window>
