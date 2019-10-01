@@ -120,6 +120,7 @@ enum EffectType : int
 	EFFECT_IN_THE_HOOD,
 	EFFECT_FORCED_CINEMATIC,
 	EFFECT_PEDS_FLEE,
+	EFFECT_BREAK_VEH_DOORS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -220,7 +221,8 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_NO_SPECIAL_ABILITY, {"No Special Ability", true}},
 	{EFFECT_IN_THE_HOOD, {"In The Hood", true}},
 	{EFFECT_FORCED_CINEMATIC, {"Cinematic Vehicle Cam", true, { EFFECT_FORCED_FP }}},
-	{EFFECT_PEDS_FLEE, {"All Peds Are Fleeing"}}
+	{EFFECT_PEDS_FLEE, {"All Peds Are Fleeing"}},
+	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Current Vehicle"}},
 };
 
 class Effects

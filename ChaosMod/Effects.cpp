@@ -363,7 +363,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_VEH_POP_TIRES:
 		if (isPlayerInVeh)
 		{
-			for (int i = 0; i < 47; i++)
+			for (int i = 0; i < 48; i++)
 			{
 				SET_VEHICLE_TYRE_BURST(playerVeh, i, true, 1000.f);
 			}
@@ -378,6 +378,16 @@ void Effects::StartEffect(EffectType effectType)
 				SET_PED_KEEP_TASK(ped, true);
 			}
 		}
+		break;
+	case EFFECT_BREAK_VEH_DOORS:
+		if (isPlayerInVeh)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				SET_VEHICLE_DOOR_BROKEN(playerVeh, i, false);
+			}
+		}
+		break;
 	}
 }
 
@@ -842,7 +852,7 @@ void Effects::UpdateEffects()
 		{
 			if (veh)
 			{
-				for (int i = 0; i < 47; i++)
+				for (int i = 0; i < 48; i++)
 				{
 					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
 				}
