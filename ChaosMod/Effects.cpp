@@ -360,6 +360,24 @@ void Effects::StartEffect(EffectType effectType)
 			SET_VEHICLE_FIXED(playerVeh);
 		}
 		break;
+	case EFFECT_VEH_POP_TIRES:
+		if (isPlayerInVeh)
+		{
+			for (int i = 0; i < 47; i++)
+			{
+				SET_VEHICLE_TYRE_BURST(playerVeh, i, true, 1000.f);
+			}
+		}
+		break;
+	case EFFECT_PEDS_FLEE:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				TASK_REACT_AND_FLEE_PED(ped, playerPed);
+				SET_PED_KEEP_TASK(ped, true);
+			}
+		}
 	}
 }
 
@@ -505,6 +523,21 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_LOW_GRAV:
 	case EFFECT_VERY_LOW_GRAV:
 		SET_GRAVITY_LEVEL(0);
+		break;
+	case EFFECT_ALL_VEH_POP_TIRES:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				for (int i = 0; i < 47; i++)
+				{
+					SET_VEHICLE_TYRE_FIXED(veh, i);
+				}
+			}
+		}
+		break;
+	case EFFECT_IN_THE_HOOD:
+		REMOVE_ANIM_DICT("missfbi3_sniping");
 		break;
 	}
 }
@@ -802,5 +835,37 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_VERY_LOW_GRAV])
 	{
 		SET_GRAVITY_LEVEL(2);
+	}
+	if (m_effectActive[EFFECT_ALL_VEH_POP_TIRES])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				for (int i = 0; i < 47; i++)
+				{
+					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
+				}
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_NO_SPECIAL_ABILITY])
+	{
+		SPECIAL_ABILITY_DEPLETE_METER(PLAYER_ID(), true);
+	}
+	if (m_effectActive[EFFECT_IN_THE_HOOD])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped) && !IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3))
+			{
+				REQUEST_ANIM_DICT("missfbi3_sniping");
+				TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_FORCED_CINEMATIC])
+	{
+		SET_CINEMATIC_MODE_ACTIVE(true);
 	}
 }
