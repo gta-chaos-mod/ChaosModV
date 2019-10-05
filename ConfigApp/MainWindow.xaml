@@ -6,34 +6,44 @@
         xmlns:local="clr-namespace:ConfigApp"
         xmlns:Properties="clr-namespace:ConfigApp.Properties" x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="249" Width="800" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="94*"/>
             <ColumnDefinition Width="303*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="117.667,3,0,0" TextWrapping="Wrap"
-                 VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                 MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Grid.Column="1"
-                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
-        <Label Content="How often should a new effect start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
-               VerticalAlignment="Top" Width="291" Grid.ColumnSpan="2"/>
-        <Label Content="How long should timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,75,0,0"
-            VerticalAlignment="Top" Width="291" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="user_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="117.667,78,0,0" TextWrapping="Wrap"
-            VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-            MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Grid.Column="1"
-            Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
-        <Label Content="Allow timed effects?" HorizontalAlignment="Left" Margin="10,150,0,0"
-            VerticalAlignment="Top" Width="120"/>
-        <CheckBox x:Name="user_effects_allow_timed" Content="" HorizontalAlignment="Left" Margin="135,155,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Button x:Name="user_save" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="475,155,0,0" VerticalAlignment="Top" Width="101" Height="41" Click="user_save_Click"/>
-        <Label Content="v0.1" Grid.Column="1" HorizontalAlignment="Left" Margin="426,170,0,0" VerticalAlignment="Top"/>
-        <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="210,0,0,0"
-            VerticalAlignment="Top" Width="317" Grid.Column="1"/>
-        <TextBox x:Name="user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="532,3,0,0" TextWrapping="Wrap"
-            VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-            MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Grid.Column="1"
-            Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+        <TabControl Grid.ColumnSpan="2">
+            <!--<TabItem Header="Effects">
+                <Grid>
+                    <TreeView HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="1052"/>
+                </Grid>
+            </TabItem>-->
+            <TabItem Header="Misc">
+                <Grid>
+                    <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="297,3,0,0" TextWrapping="Wrap"
+                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                    <Label Content="How often should a new effect start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
+                        VerticalAlignment="Top" Width="282"/>
+                    <Label Content="How long should timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,70,0,0"
+                        VerticalAlignment="Top" Width="282"/>
+                    <TextBox x:Name="misc_user_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="297,73,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                    <Label Content="Allow timed effects?" HorizontalAlignment="Left" Margin="10,140,0,0"
+                        VerticalAlignment="Top" Width="120"/>
+                    <CheckBox x:Name="misc_user_effects_allow_timed" Content="" HorizontalAlignment="Left" Margin="135,146,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <Button x:Name="user_save" Content="Save" HorizontalAlignment="Left" Margin="931,395,0,0" VerticalAlignment="Top" Width="101" Height="41" Click="user_save_Click"/>
+                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
+                        VerticalAlignment="Top" Width="325"/>
+                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,213,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

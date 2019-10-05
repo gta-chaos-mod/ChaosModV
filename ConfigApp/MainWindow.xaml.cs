@@ -56,19 +56,19 @@ namespace ConfigApp
                 switch (key)
                 {
                     case "NewEffectSpawnTime":
-                        user_effects_spawn_dur.Text = $"{value}";
+                        misc_user_effects_spawn_dur.Text = $"{value}";
                         break;
                     case "EffectTimedDur":
-                        user_effects_timed_dur.Text = $"{value}";
+                        misc_user_effects_timed_dur.Text = $"{value}";
                         break;
                     case "SpawnTimedEffects":
-                        user_effects_allow_timed.IsChecked = value != 0;
+                        misc_user_effects_allow_timed.IsChecked = value != 0;
                         break;
                     case "Seed":
                         lazyFoundAll = true;
                         if (value >= 0)
                         {
-                            user_effects_random_seed.Text = $"{value}";
+                            misc_user_effects_random_seed.Text = $"{value}";
                         }
                         break;
                 }
@@ -87,10 +87,10 @@ namespace ConfigApp
         private void WriteConfigFile()
         {
             string data = "";
-            data += $"NewEffectSpawnTime={(user_effects_spawn_dur.Text.Length > 0 ? user_effects_spawn_dur.Text : "60")}\n";
-            data += $"EffectTimedDur={(user_effects_timed_dur.Text.Length > 0 ? user_effects_timed_dur.Text : "180")}\n";
-            data += $"SpawnTimedEffects={(user_effects_allow_timed.IsChecked.Value ? "1" : "0")}\n";
-            data += $"Seed={(user_effects_random_seed.Text.Length > 0 ? user_effects_random_seed.Text : "-1")}\n";
+            data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "60")}\n";
+            data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "180")}\n";
+            data += $"SpawnTimedEffects={(misc_user_effects_allow_timed.IsChecked.Value ? "1" : "0")}\n";
+            data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
 
             File.WriteAllText(ConfigFile, data);
         }
