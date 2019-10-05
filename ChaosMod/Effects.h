@@ -114,6 +114,13 @@ enum EffectType : int
 	EFFECT_LOW_GRAV,
 	EFFECT_VERY_LOW_GRAV,
 	EFFECT_VEH_REPAIR,
+	EFFECT_VEH_POP_TIRES,
+	EFFECT_ALL_VEH_POP_TIRES,
+	EFFECT_NO_SPECIAL_ABILITY,
+	EFFECT_IN_THE_HOOD,
+	EFFECT_FORCED_CINEMATIC,
+	EFFECT_PEDS_FLEE,
+	EFFECT_BREAK_VEH_DOORS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -165,7 +172,7 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_BLUE_VEHS, {"Blue Traffic", true, { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE }}},
 	{EFFECT_GREEN_VEHS, {"Green Traffic", true, { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE }}},
 	{EFFECT_RAINBOW_VEHS, {"Rainbow Traffic", true, { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_VEHS_INVISIBLE }}},
-	{EFFECT_FORCED_FP, {"Forced First Person", true}},
+	{EFFECT_FORCED_FP, {"First Person", true, { EFFECT_FORCED_CINEMATIC }}},
 	{EFFECT_SLIPPERY_VEHS, {"Slippery Vehicles", true}},
 	{EFFECT_NO_GRAV_VEHS, {"Vehicles Have No Gravity", true}},
 	{EFFECT_PLAYER_INVINCIBLE, {"Invincibility", true}},
@@ -209,6 +216,13 @@ const std::map<EffectType, EffectInfo> Effect =
 	{EFFECT_LOW_GRAV, {"Low Gravity", true, { EFFECT_VERY_LOW_GRAV }}},
 	{EFFECT_VERY_LOW_GRAV, {"Very Low Gravity", true, { EFFECT_LOW_GRAV }}},
 	{EFFECT_VEH_REPAIR, {"Repair Current Vehicle"}},
+	{EFFECT_VEH_POP_TIRES, {"Pop Tires Of Current Vehicle"}},
+	{EFFECT_ALL_VEH_POP_TIRES, {"Now This Is Some Tire Poppin'", true}},
+	{EFFECT_NO_SPECIAL_ABILITY, {"No Special Ability", true}},
+	{EFFECT_IN_THE_HOOD, {"In The Hood", true}},
+	{EFFECT_FORCED_CINEMATIC, {"Cinematic Vehicle Cam", true, { EFFECT_FORCED_FP }}},
+	{EFFECT_PEDS_FLEE, {"All Peds Are Fleeing"}},
+	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Current Vehicle"}},
 };
 
 class Effects
