@@ -99,14 +99,10 @@ void EffectDispatcher::UpdateEffects()
 
 			effect.Timer--;
 
-			if (effect.Timer == 0)
+			if (effect.Timer == 0
+				|| effect.Timer < -180 + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
 				m_effects->StopEffect(effect.EffectType);
-				it = m_activeEffects.erase(it);
-			}
-			// Prevent too many non-timed effects from displaying at once
-			else if (effect.Timer < -180 + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
-			{
 				it = m_activeEffects.erase(it);
 			}
 			else
