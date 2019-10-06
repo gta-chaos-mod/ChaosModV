@@ -8,16 +8,21 @@
         mc:Ignorable="d"
         Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="94*"/>
-            <ColumnDefinition Width="303*"/>
-        </Grid.ColumnDefinitions>
-        <TabControl Grid.ColumnSpan="2">
-            <!--<TabItem Header="Effects">
+        <TabControl Margin="0,0,0,66">
+            <TabItem Header="Effects">
                 <Grid>
-                    <TreeView HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="1052"/>
+                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Text}" Margin="5,0"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
                 </Grid>
-            </TabItem>-->
+            </TabItem>
             <TabItem Header="Misc">
                 <Grid>
                     <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="297,3,0,0" TextWrapping="Wrap"
@@ -32,18 +37,15 @@
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
-                    <Label Content="Allow timed effects?" HorizontalAlignment="Left" Margin="10,140,0,0"
-                        VerticalAlignment="Top" Width="120"/>
-                    <CheckBox x:Name="misc_user_effects_allow_timed" Content="" HorizontalAlignment="Left" Margin="135,146,0,0" VerticalAlignment="Top" IsChecked="True"/>
-                    <Button x:Name="user_save" Content="Save" HorizontalAlignment="Left" Margin="931,395,0,0" VerticalAlignment="Top" Width="101" Height="41" Click="user_save_Click"/>
-                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
+                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,140,0,0"
                         VerticalAlignment="Top" Width="325"/>
-                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,213,0,0" TextWrapping="Wrap"
+                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,144,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,430,13,13"/>
     </Grid>
 </Window>

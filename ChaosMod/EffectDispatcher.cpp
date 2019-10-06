@@ -2,8 +2,9 @@
 #include "EffectDispatcher.h"
 #include "Effects.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, bool timedEffects) : m_percentage(.0f), m_effects(new Effects()),
-	m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_spawnTimedEffects(timedEffects)
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects)
+	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
+	m_enabledEffects(enabledEffects)
 {
 	Reset();
 }
@@ -16,6 +17,11 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::Draw()
 {
+	if (m_enabledEffects.empty())
+	{
+		return;
+	}
+
 	// New Effect Bar
 	DRAW_RECT(.5f, .0f, 1.f, .05f, 0, 0, 0, 127, false);
 	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, 40, 40, 255, 255, false);
@@ -45,6 +51,11 @@ void EffectDispatcher::Draw()
 
 void EffectDispatcher::UpdateTimer()
 {
+	if (m_enabledEffects.empty())
+	{
+		return;
+	}
+
 	DWORD64 currentUpdateTime = GetTickCount64();
 
 	float thing = currentUpdateTime - m_timerTimer;
@@ -67,6 +78,11 @@ void EffectDispatcher::UpdateTimer()
 
 void EffectDispatcher::UpdateEffects()
 {
+	if (m_enabledEffects.empty())
+	{
+		return;
+	}
+
 	m_effects->UpdateEffects();
 
 	DWORD64 currentUpdateTime = GetTickCount64();
@@ -103,7 +119,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
-	EffectInfo effectInfo = Effect.at(effectType);
+	EffectInfo effectInfo = EffectsMap.at(effectType);
 
 	static std::ofstream log("chaosmod/effectsLog.txt");
 	log << effectInfo.Name << std::endl;
@@ -145,19 +161,16 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 
 void EffectDispatcher::DispatchRandomEffect()
 {
-	std::vector<EffectType> effects;
+	// Make sure we only dispatch enabled effects
 
-	for (const auto& pair : Effect)
+	if (m_enabledEffects.empty())
 	{
-		if (m_spawnTimedEffects || !pair.second.IsTimed)
-		{
-			effects.push_back(pair.first);
-		}
+		return;
 	}
 
-	int index = Random::GetRandomInt(0, effects.size() - 1);
+	int index = Random::GetRandomInt(0, m_enabledEffects.size() - 1);
 
-	DispatchEffect(effects[index]);
+	DispatchEffect(m_enabledEffects[index]);
 }
 
 void EffectDispatcher::ClearEffects()

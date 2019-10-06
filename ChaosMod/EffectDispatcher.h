@@ -5,7 +5,7 @@
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, bool timedEffects);
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects);
 	~EffectDispatcher();
 
 public:
@@ -20,7 +20,7 @@ public:
 private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
-	const bool m_spawnTimedEffects;
+	const std::vector<EffectType> m_enabledEffects;
 
 	float m_percentage;
 	Effects* m_effects;

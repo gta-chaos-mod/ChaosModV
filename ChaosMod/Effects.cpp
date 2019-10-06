@@ -76,7 +76,7 @@ void Effects::StartEffect(EffectType effectType)
 	Vector3 playerVehPos = GET_ENTITY_COORDS(playerVeh, false);
 	float playerVehHeading = GET_ENTITY_HEADING(playerVeh);
 
-	if (Effect.at(effectType).IsTimed)
+	if (EffectsMap.at(effectType).IsTimed)
 	{
 		m_effectActive[effectType] = true;
 	}
@@ -218,6 +218,9 @@ void Effects::StartEffect(EffectType effectType)
 		break;
 	case EFFECT_WEATHER_FOGGY:
 		SET_WEATHER_TYPE_NOW("FOGGY");
+		break;
+	case EFFECT_WEATHER_NEUTRAL:
+		SET_WEATHER_TYPE_NOW("NEUTRAL");
 		break;
 	case EFFECT_WEATHER_XMAS:
 		SET_WEATHER_TYPE_NOW("XMAS");
@@ -393,7 +396,7 @@ void Effects::StartEffect(EffectType effectType)
 
 void Effects::StopEffect(EffectType effectType)
 {
-	if (Effect.at(effectType).IsTimed)
+	if (EffectsMap.at(effectType).IsTimed)
 	{
 		m_effectActive[effectType] = false;
 	}

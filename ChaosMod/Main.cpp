@@ -8,7 +8,7 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 
 bool m_forceDispatchEffectNextFrame = false;
 
-int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedEffects, int* seed)
+int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
 {
 	constexpr const char* filePath = "chaosmod/config.ini";
 
@@ -40,19 +40,65 @@ int ParseConfigFile(int* effectSpawnTime, int* effectTimedDur, bool* spawnTimedE
 
 		if (key == "NewEffectSpawnTime")
 		{
-			*effectSpawnTime = value;
+			effectSpawnTime = value;
 		}
 		else if (key == "EffectTimedDur")
 		{
-			*effectTimedDur = value;
-		}
-		else if (key == "SpawnTimedEffects")
-		{
-			*spawnTimedEffects = value;
+			effectTimedDur = value;
 		}
 		else if (key == "Seed")
 		{
-			*seed = value;
+			seed = value;
+		}
+	}
+
+	return 0;
+}
+
+int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
+{
+	constexpr const char* filePath = "chaosmod/effects.ini";
+
+	struct stat temp;
+	if (stat(filePath, &temp) == -1)
+	{
+		return -1;
+	}
+
+	std::ifstream config(filePath);
+
+	if (config.fail())
+	{
+		return -2;
+	}
+
+	char buffer[128];
+	while (config.getline(buffer, 128))
+	{
+		std::string line(buffer);
+		std::string key = line.substr(0, line.find("="));
+
+		if (line == key)
+		{
+			continue;
+		}
+
+		int keyValue = std::stoi(key);
+		int value = std::stoi(line.substr(line.find("=") + 1));
+
+		if (!value)
+		{
+			continue;
+		}
+
+		// Map id to EffectType
+		for (const auto pair : EffectsMap)
+		{
+			if (pair.second.Id == keyValue)
+			{
+				enabledEffects.push_back(pair.first);
+				break;
+			}
 		}
 	}
 
@@ -73,11 +119,12 @@ bool Main::Init()
 
 	int effectSpawnTime;
 	int effectTimedDur;
-	bool spawnTimedEffects;
 	int seed;
+	std::vector<EffectType> enabledEffects;
 
 	int result;
-	if ((result = ParseConfigFile(&effectSpawnTime, &effectTimedDur, &spawnTimedEffects, &seed)))
+	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed))
+		|| (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -88,7 +135,7 @@ bool Main::Init()
 			break;
 		case -2:
 			MessageBox(NULL,
-				"Config File couldn't be opened for reading. Make sure there's no process running with a handle on chaosmod/config.ini",
+				"Config File couldn't be opened for reading. Make sure there's no process running with a handle on chaosmod/config.ini or chaosmod/effects.ini",
 				"ChaosModV Error", MB_OK | MB_ICONERROR);
 			break;
 		}
@@ -99,7 +146,7 @@ bool Main::Init()
 
 	if (!m_effectDispatcher)
 	{
-		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, spawnTimedEffects);
+		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects);
 	}
 
 	MH_EnableHook(MH_ALL_HOOKS);
