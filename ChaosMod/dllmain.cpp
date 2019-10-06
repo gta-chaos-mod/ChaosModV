@@ -4,7 +4,7 @@
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
-	static HANDLE threadHandle;
+	static bool isInitialized = false;
 
 	switch (reason)
 	{
@@ -20,14 +20,19 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
+		isInitialized = true;
+
 		break;
 	case DLL_PROCESS_DETACH:
 		Main::Stop();
 		Memory::Stop();
 
-		scriptUnregister(hInstance);
+		if (isInitialized)
+		{
+			scriptUnregister(hInstance);
 
-		keyboardHandlerUnregister(Main::OnKeyboardInput);
+			keyboardHandlerUnregister(Main::OnKeyboardInput);
+		}
 
 		break;
 	}
