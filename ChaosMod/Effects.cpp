@@ -391,6 +391,10 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_ZOMBIES:
+		Hash dummy;
+		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &dummy);
+		break;
 	}
 }
 
@@ -553,9 +557,14 @@ void Effects::StopEffect(EffectType effectType)
 		REMOVE_ANIM_DICT("missfbi3_sniping");
 		break;
 	case EFFECT_ZOMBIES:
-		Hash groupHash;
-		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &groupHash);
-		break;
+		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && GET_PED_RELATIONSHIP_GROUP_HASH(ped) == zombieGroupHash)
+			{
+				SET_PED_AS_NO_LONGER_NEEDED(&ped);
+			}
+		}
 	}
 }
 
@@ -563,7 +572,7 @@ void Effects::UpdateEffects()
 {
 	if (m_effectActive[EFFECT_NO_PHONE])
 	{
-		TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller"); // TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME
+		TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 	}
 	if (m_effectActive[EFFECT_GAMESPEED_X02])
 	{
@@ -829,10 +838,10 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
-			{
-				SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-			}
+		if (ped && !IS_PED_A_PLAYER(ped))
+		{
+			SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+		}
 		}
 	}
 	if (m_effectActive[EFFECT_PEDS_FROZEN])
@@ -887,7 +896,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
 	{
-		static constexpr int MAX_ZOMBIES = 5;
+		static constexpr int MAX_ZOMBIES = 10;
 		static constexpr Hash MODEL_HASH = -1404353274;
 		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
@@ -897,12 +906,12 @@ void Effects::UpdateEffects()
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
 
+		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+
 		if (zombiesAmount < MAX_ZOMBIES)
 		{
-			Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
-
 			Vector3 spawnPos;
-			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 4, &spawnPos, 0, 0, 0))
+			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + zombiesAmount, &spawnPos, 0, 0, 0))
 			{
 				LoadModel(MODEL_HASH);
 				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
@@ -912,18 +921,28 @@ void Effects::UpdateEffects()
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
 				SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
+				DISABLE_PED_PAIN_AUDIO(zombie, true);
 				TASK_COMBAT_PED(zombie, PLAYER_PED_ID(), 0, 16);
-				SET_PED_AS_NO_LONGER_NEEDED(&zombie);
 				SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 			}
 		}
 
 		for (Ped& zombie : zombies)
 		{
-			if (zombie && !DOES_ENTITY_EXIST(zombie))
+			if (zombie)
 			{
+				if (DOES_ENTITY_EXIST(zombie) && !IS_PED_DEAD_OR_DYING(zombie, false))
+				{
+					Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
+					if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z,
+						zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
+					{
+						continue;
+					}
+				}
+				
 				zombiesAmount--;
-				zombie = 0;
+				SET_PED_AS_NO_LONGER_NEEDED(&zombie);
 			}
 		}
 	}
