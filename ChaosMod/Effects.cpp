@@ -552,6 +552,10 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_IN_THE_HOOD:
 		REMOVE_ANIM_DICT("missfbi3_sniping");
 		break;
+	case EFFECT_ZOMBIES:
+		Hash groupHash;
+		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &groupHash);
+		break;
 	}
 }
 
@@ -880,5 +884,47 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_FORCED_CINEMATIC])
 	{
 		SET_CINEMATIC_MODE_ACTIVE(true);
+	}
+	if (m_effectActive[EFFECT_ZOMBIES])
+	{
+		static constexpr int MAX_ZOMBIES = 5;
+		static constexpr Hash MODEL_HASH = -1404353274;
+		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
+		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
+		static Ped zombies[MAX_ZOMBIES] = { 0 };
+		static int zombiesAmount = 0;
+
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
+
+		if (zombiesAmount < MAX_ZOMBIES)
+		{
+			Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+
+			Vector3 spawnPos;
+			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 4, &spawnPos, 0, 0, 0))
+			{
+				LoadModel(MODEL_HASH);
+				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+				zombies[zombiesAmount++] = zombie;
+
+				SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
+				SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
+				SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
+				SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
+				TASK_COMBAT_PED(zombie, PLAYER_PED_ID(), 0, 16);
+				SET_PED_AS_NO_LONGER_NEEDED(&zombie);
+				SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
+			}
+		}
+
+		for (Ped& zombie : zombies)
+		{
+			if (zombie && !DOES_ENTITY_EXIST(zombie))
+			{
+				zombiesAmount--;
+				zombie = 0;
+			}
+		}
 	}
 }

@@ -10,15 +10,15 @@ bool m_forceDispatchEffectNextFrame = false;
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
 {
-	constexpr const char* filePath = "chaosmod/config.ini";
+	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
 	struct stat temp;
-	if (stat(filePath, &temp) == -1)
+	if (stat(FILE_PATH, &temp) == -1)
 	{
 		return -1;
 	}
 
-	std::ifstream config(filePath);
+	std::ifstream config(FILE_PATH);
 
 	if (config.fail())
 	{
@@ -57,21 +57,28 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
 
 int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 {
-	constexpr const char* filePath = "chaosmod/effects.ini";
+	static constexpr const char* FILE_PATH = "chaosmod/effects.ini";
 
 	struct stat temp;
-	if (stat(filePath, &temp) == -1)
+	if (stat(FILE_PATH, &temp) == -1)
 	{
 		return -1;
 	}
 
-	std::ifstream config(filePath);
+	std::ifstream config(FILE_PATH);
 
 	if (config.fail())
 	{
 		return -2;
 	}
 
+	// Fill with all effecttypes first
+	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
+	{
+		enabledEffects.push_back((EffectType)i);
+	}
+
+	// Remove disabled effecttypes
 	char buffer[128];
 	while (config.getline(buffer, 128))
 	{
@@ -86,7 +93,7 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 		int keyValue = std::stoi(key);
 		int value = std::stoi(line.substr(line.find("=") + 1));
 
-		if (!value)
+		if (value)
 		{
 			continue;
 		}
@@ -96,7 +103,11 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 		{
 			if (pair.second.Id == keyValue)
 			{
-				enabledEffects.push_back(pair.first);
+				auto result = std::find(enabledEffects.begin(), enabledEffects.end(), pair.first);
+				if (result != enabledEffects.end())
+				{
+					enabledEffects.erase(result);
+				}
 				break;
 			}
 		}

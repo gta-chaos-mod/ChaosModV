@@ -128,6 +128,7 @@ namespace ConfigApp
             EFFECT_FORCED_CINEMATIC,
             EFFECT_PEDS_FLEE,
             EFFECT_BREAK_VEH_DOORS,
+            EFFECT_ZOMBIES,
             _EFFECT_ENUM_MAX
         }
 
@@ -231,6 +232,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_FORCED_CINEMATIC, new EffectInfo("Cinematic Vehicle Cam", EffectCategory.VEHICLE, 94)},
 	        {EffectType.EFFECT_PEDS_FLEE, new EffectInfo("All Peds Are Fleeing", EffectCategory.PEDS, 95)},
 	        {EffectType.EFFECT_BREAK_VEH_DOORS, new EffectInfo("Break All Doors Of Current Vehicle", EffectCategory.VEHICLE, 96)},
+            {EffectType.EFFECT_ZOMBIES, new EffectInfo("Zombies", EffectCategory.PEDS, 98)},
         };
     }
 }
