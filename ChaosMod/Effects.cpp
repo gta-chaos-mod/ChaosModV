@@ -36,6 +36,23 @@ inline std::array<Vehicle, 256> GetAllVehs()
 	return vehs;
 }
 
+inline std::array<Object, 256> GetAllProps()
+{
+	static std::array<Object, 256> props;
+
+	static int lastFrame = 0;
+	int curFrame = GET_FRAME_COUNT();
+	if (lastFrame < curFrame)
+	{
+		lastFrame = curFrame;
+
+		props.fill(0);
+		worldGetAllObjects(props.data(), 256);
+	}
+
+	return props;
+}
+
 inline void LoadModel(Hash model)
 {
 	if (IS_MODEL_VALID(model))
@@ -395,6 +412,9 @@ void Effects::StartEffect(EffectType effectType)
 		Hash dummy;
 		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &dummy);
 		break;
+	case EFFECT_METEOR_RAIN:
+		DECOR_REGISTER("_METEOR", 2);
+		break;
 	}
 }
 
@@ -565,6 +585,16 @@ void Effects::StopEffect(EffectType effectType)
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
+		break;
+	case EFFECT_METEOR_RAIN:
+		for (Object prop : GetAllProps())
+		{
+			if (prop && DECOR_EXIST_ON(prop, "_METEOR"))
+			{
+				SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
+			}
+		}
+		break;
 	}
 }
 
@@ -902,12 +932,9 @@ void Effects::UpdateEffects()
 		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
 		static Ped zombies[MAX_ZOMBIES] = { 0 };
 		static int zombiesAmount = 0;
-
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
-
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
-
 		if (zombiesAmount < MAX_ZOMBIES)
 		{
 			Vector3 spawnPos;
@@ -916,7 +943,6 @@ void Effects::UpdateEffects()
 				LoadModel(MODEL_HASH);
 				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 				zombies[zombiesAmount++] = zombie;
-
 				SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
@@ -926,7 +952,6 @@ void Effects::UpdateEffects()
 				SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 			}
 		}
-
 		for (Ped& zombie : zombies)
 		{
 			if (zombie)
@@ -934,15 +959,65 @@ void Effects::UpdateEffects()
 				if (DOES_ENTITY_EXIST(zombie) && !IS_PED_DEAD_OR_DYING(zombie, false))
 				{
 					Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
-					if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z,
-						zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
+					if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
 					{
 						continue;
 					}
 				}
-				
 				zombiesAmount--;
 				SET_PED_AS_NO_LONGER_NEEDED(&zombie);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_METEOR_RAIN])
+	{
+		// Thanks to menyoo for the prop names
+		static const char* propNames[] = { "prop_asteroid_01", "prop_test_boulder_01", "prop_test_boulder_02", "prop_test_boulder_03", "prop_test_boulder_04" };
+		static constexpr int MAX_METEORS = 20;
+		static Object meteors[MAX_METEORS] = { 0 };
+		static int meteorDespawnTime[MAX_METEORS];
+		static int meteorsAmount = 0;
+		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+		if (meteorsAmount < MAX_METEORS)
+		{
+			Vector3 spawnPos;
+			spawnPos.x = playerPos.x + Random::GetRandomInt(-150, 150);
+			spawnPos.y = playerPos.y + Random::GetRandomInt(-150, 150);
+			spawnPos.z = playerPos.z + Random::GetRandomInt(100, 150);
+			Hash choosenPropHash = GET_HASH_KEY(propNames[Random::GetRandomInt(0, 4)]);
+			LoadModel(choosenPropHash);
+			Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
+			meteors[meteorsAmount] = meteor;
+			meteorDespawnTime[meteorsAmount++] = 10;
+			DECOR_SET_BOOL(meteor, "_METEOR", true);
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -100.f, true, false, false, true);
+			SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
+		}
+		for (int i = 0; i < MAX_METEORS; i++)
+		{
+			Object& prop = meteors[i];
+			if (prop)
+			{
+				if (DOES_ENTITY_EXIST(prop) && meteorDespawnTime[i] > 0)
+				{
+					Vector3 propPos = GET_ENTITY_COORDS(prop, false);
+					if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, propPos.x, propPos.y, propPos.z, true) < 400.f)
+					{
+						if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(prop))
+						{
+							static DWORD64 lastTick = 0;
+							DWORD64 curTick = GetTickCount64();
+							if (lastTick + 1000 < curTick)
+							{
+								lastTick = curTick;
+								meteorDespawnTime[i]--;
+							}
+						}
+						continue;
+					}
+				}
+				meteorsAmount--;
+				SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
 			}
 		}
 	}

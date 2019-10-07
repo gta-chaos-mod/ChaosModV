@@ -34,6 +34,7 @@ namespace ConfigApp
             EFFECT_PLUS_2_STARS,
             EFFECT_5_STARS,
             EFFECT_CLEAR_STARS,
+            EFFECT_NEVER_WANTED,
             EFFECT_STRIP_WEAPONS,
             EFFECT_GIVE_RPG,
             EFFECT_GIVE_MINIGUN,
@@ -93,7 +94,6 @@ namespace ConfigApp
             EFFECT_SPAWN_CARGO,
             EFFECT_SPAWN_BUS,
             EFFECT_SPAWN_BLIMP,
-            EFFECT_NEVER_WANTED,
             EFFECT_NO_VEHS,
             EFFECT_NO_PEDS,
             EFFECT_EXPLODE_CUR_VEH,
@@ -129,6 +129,7 @@ namespace ConfigApp
             EFFECT_PEDS_FLEE,
             EFFECT_BREAK_VEH_DOORS,
             EFFECT_ZOMBIES,
+            EFFECT_METEOR_RAIN,
             _EFFECT_ENUM_MAX
         }
 
@@ -138,7 +139,8 @@ namespace ConfigApp
 	        {EffectType.EFFECT_PLUS_2_STARS, new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER, 1)},
 	        {EffectType.EFFECT_5_STARS, new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER, 2)},
 	        {EffectType.EFFECT_CLEAR_STARS, new EffectInfo("Clear Wanted Level", EffectCategory.PLAYER, 3)},
-	        {EffectType.EFFECT_STRIP_WEAPONS, new EffectInfo("Remove Weapons From Everyone", EffectCategory.PEDS, 4)},
+            {EffectType.EFFECT_NEVER_WANTED, new EffectInfo("Never Wanted", EffectCategory.PLAYER, 62)},
+            {EffectType.EFFECT_STRIP_WEAPONS, new EffectInfo("Remove Weapons From Everyone", EffectCategory.PEDS, 4)},
 	        {EffectType.EFFECT_GIVE_RPG, new EffectInfo("Give RPG", EffectCategory.PLAYER, 5)},
 	        {EffectType.EFFECT_GIVE_MINIGUN, new EffectInfo("Give Minigun", EffectCategory.PLAYER, 6)},
 	        {EffectType.EFFECT_GIVE_PARACHUTE, new EffectInfo("Give Parachute", EffectCategory.PLAYER, 7)},
@@ -197,7 +199,6 @@ namespace ConfigApp
 	        {EffectType.EFFECT_SPAWN_CARGO, new EffectInfo("Spawn Cargo Plane", EffectCategory.VEHICLE, 59)},
 	        {EffectType.EFFECT_SPAWN_BUS, new EffectInfo("Spawn Bus", EffectCategory.VEHICLE, 60)},
 	        {EffectType.EFFECT_SPAWN_BLIMP, new EffectInfo("Spawn Blimp", EffectCategory.VEHICLE, 61)},
-	        {EffectType.EFFECT_NEVER_WANTED, new EffectInfo("Never Wanted", EffectCategory.PLAYER, 62)},
 	        {EffectType.EFFECT_NO_VEHS, new EffectInfo("No Traffic", EffectCategory.VEHICLE, 63)},
 	        {EffectType.EFFECT_NO_PEDS, new EffectInfo("No Pedestrians", EffectCategory.PEDS, 64)},
 	        {EffectType.EFFECT_EXPLODE_CUR_VEH, new EffectInfo("Explode Current Vehicle", EffectCategory.VEHICLE, 65)},
@@ -233,6 +234,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_PEDS_FLEE, new EffectInfo("All Peds Are Fleeing", EffectCategory.PEDS, 95)},
 	        {EffectType.EFFECT_BREAK_VEH_DOORS, new EffectInfo("Break All Doors Of Current Vehicle", EffectCategory.VEHICLE, 96)},
             {EffectType.EFFECT_ZOMBIES, new EffectInfo("Zombies", EffectCategory.PEDS, 98)},
+            {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, 99)},
         };
     }
 }

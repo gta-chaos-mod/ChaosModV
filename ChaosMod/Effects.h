@@ -26,6 +26,7 @@ enum EffectType : int
 	EFFECT_PLUS_2_STARS,
 	EFFECT_5_STARS,
 	EFFECT_CLEAR_STARS,
+	EFFECT_NEVER_WANTED,
 	EFFECT_STRIP_WEAPONS,
 	EFFECT_GIVE_RPG,
 	EFFECT_GIVE_MINIGUN,
@@ -85,7 +86,6 @@ enum EffectType : int
 	EFFECT_SPAWN_CARGO,
 	EFFECT_SPAWN_BUS,
 	EFFECT_SPAWN_BLIMP,
-	EFFECT_NEVER_WANTED,
 	EFFECT_NO_VEHS,
 	EFFECT_NO_PEDS,
 	EFFECT_EXPLODE_CUR_VEH,
@@ -121,6 +121,7 @@ enum EffectType : int
 	EFFECT_PEDS_FLEE,
 	EFFECT_BREAK_VEH_DOORS,
 	EFFECT_ZOMBIES,
+	EFFECT_METEOR_RAIN,
 	_EFFECT_ENUM_MAX
 };
 
@@ -130,6 +131,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", 1}},
 	{EFFECT_5_STARS, {"5 Wanted Stars", 2}},
 	{EFFECT_CLEAR_STARS, {"Clear Wanted Level", 3}},
+	{EFFECT_NEVER_WANTED, {"Never Wanted", 62, true}},
 	{EFFECT_STRIP_WEAPONS, {"Remove Weapons From Everyone", 4}},
 	{EFFECT_GIVE_RPG, {"Give RPG", 5}},
 	{EFFECT_GIVE_MINIGUN, {"Give Minigun", 6}},
@@ -189,7 +191,6 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_SPAWN_CARGO, {"Spawn Cargo Plane", 59}},
 	{EFFECT_SPAWN_BUS, {"Spawn Bus", 60}},
 	{EFFECT_SPAWN_BLIMP, {"Spawn Blimp", 61}},
-	{EFFECT_NEVER_WANTED, {"Never Wanted", 62, true}},
 	{EFFECT_NO_VEHS, {"No Traffic", 63, true}},
 	{EFFECT_NO_PEDS, {"No Pedestrians", 64, true}},
 	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", 65}},
@@ -225,6 +226,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_PEDS_FLEE, {"All Peds Are Fleeing", 95}},
 	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Current Vehicle", 96}},
 	{EFFECT_ZOMBIES, {"Zombies", 98, true}},
+	{EFFECT_METEOR_RAIN, {"Meteor Shower", 99, true}},
 };
 
 class Effects
