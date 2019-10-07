@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
-        <TabControl Margin="0,0,0,66">
+        <TabControl Margin="0,0,0,66" Background="White">
             <TabItem Header="Effects">
                 <Grid>
-                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052">
+                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" Background="White" BorderBrush="White">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal">
