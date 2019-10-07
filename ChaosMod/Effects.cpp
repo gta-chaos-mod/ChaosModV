@@ -668,7 +668,7 @@ void Effects::UpdateEffects()
 			if (veh)
 			{
 				static ULONG cnt = 0;
-				static float freq = .01f;
+				static float freq = .001f;
 				int r = std::sin(freq * cnt) * 127 + 128;
 				int g = std::sin(freq * cnt + 2) * 127 + 128;
 				int b = std::sin(freq * cnt + 4) * 127 + 128;
