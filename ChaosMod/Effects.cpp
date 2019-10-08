@@ -197,6 +197,15 @@ void Effects::StartEffect(EffectType effectType)
 			SET_ENTITY_VELOCITY(playerVeh, .0f, .0f, 10000.f);
 		}
 		break;
+	case EFFECT_VEHS_LAUNCH:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_ENTITY_VELOCITY(veh, .0f, .0f, 10000.f);
+			}
+		}
+		break;
 	case EFFECT_PLAYER_VEH_LOCK:
 		if (isPlayerInVeh)
 		{
@@ -434,7 +443,7 @@ void Effects::StopEffect(EffectType effectType)
 			scriptWait(0);
 		}
 		START_NEW_SCRIPT("cellphone_controller", 1424);
-		SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");
+		SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");
 		break;
 	case EFFECT_GAMESPEED_X02:
 	case EFFECT_GAMESPEED_X05:
