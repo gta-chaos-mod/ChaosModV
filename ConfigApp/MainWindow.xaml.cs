@@ -304,5 +304,22 @@ namespace ConfigApp
 
             MessageBox.Show("Saved Config!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void user_reset_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your Config?", "ChaosModV",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                File.WriteAllText(ConfigFile, "");
+                File.WriteAllText(EffectsFile, "");
+
+                MessageBox.Show("Resetted Config!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
+        }
     }
 }

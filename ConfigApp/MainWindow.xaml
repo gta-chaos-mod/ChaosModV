@@ -47,5 +47,6 @@
             </TabItem>
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
+        <Button x:Name="user_reset" Content="Reset" Click="user_reset_Click" Margin="844,418,113,13"/>
     </Grid>
 </Window>
