@@ -668,7 +668,7 @@ void Effects::UpdateEffects()
 			if (veh)
 			{
 				static ULONG cnt = 0;
-				static float freq = .001f;
+				static constexpr float freq = .001f;
 				int r = std::sin(freq * cnt) * 127 + 128;
 				int g = std::sin(freq * cnt + 2) * 127 + 128;
 				int b = std::sin(freq * cnt + 4) * 127 + 128;
@@ -942,7 +942,15 @@ void Effects::UpdateEffects()
 			{
 				LoadModel(MODEL_HASH);
 				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
-				zombies[zombiesAmount++] = zombie;
+				for (Ped& ped : zombies)
+				{
+					if (!ped)
+					{
+						ped = zombie;
+						zombiesAmount++;
+						break;
+					}
+				}
 				SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
 				SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
@@ -978,17 +986,29 @@ void Effects::UpdateEffects()
 		static int meteorDespawnTime[MAX_METEORS];
 		static int meteorsAmount = 0;
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
-		if (meteorsAmount < MAX_METEORS)
+		static DWORD64 lastTick = 0;
+		DWORD64 curTick = GetTickCount64();
+		if (meteorsAmount < MAX_METEORS && lastTick + 500 < curTick)
 		{
+			lastTick = curTick;
 			Vector3 spawnPos;
 			spawnPos.x = playerPos.x + Random::GetRandomInt(-150, 150);
 			spawnPos.y = playerPos.y + Random::GetRandomInt(-150, 150);
-			spawnPos.z = playerPos.z + Random::GetRandomInt(100, 150);
+			spawnPos.z = playerPos.z + Random::GetRandomInt(75, 200);
 			Hash choosenPropHash = GET_HASH_KEY(propNames[Random::GetRandomInt(0, 4)]);
 			LoadModel(choosenPropHash);
 			Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
-			meteors[meteorsAmount] = meteor;
-			meteorDespawnTime[meteorsAmount++] = 10;
+			for (int i = 0; i < MAX_METEORS; i++)
+			{
+				Object& prop = meteors[i];
+				if (!prop)
+				{
+					prop = meteor;
+					meteorDespawnTime[i] = 10;
+					meteorsAmount++;
+					break;
+				}
+			}
 			DECOR_SET_BOOL(meteor, "_METEOR", true);
 			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -100.f, true, false, false, true);
 			SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
@@ -1009,7 +1029,10 @@ void Effects::UpdateEffects()
 							DWORD64 curTick = GetTickCount64();
 							if (lastTick + 1000 < curTick)
 							{
-								lastTick = curTick;
+								if (i == MAX_METEORS - 1)
+								{
+									lastTick = curTick;
+								}
 								meteorDespawnTime[i]--;
 							}
 						}
