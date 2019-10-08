@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
-        <TabControl Margin="0,0,0,66" Background="White">
-            <TabItem Header="Effects">
+        <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
+            <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
-                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" Background="White" BorderBrush="White">
+                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal">
@@ -23,7 +23,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
                     <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="297,3,0,0" TextWrapping="Wrap"
                          VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
@@ -46,6 +46,6 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,430,13,13"/>
+        <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
     </Grid>
 </Window>

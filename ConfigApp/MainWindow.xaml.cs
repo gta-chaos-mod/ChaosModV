@@ -118,8 +118,7 @@ namespace ConfigApp
 
                 string key = keyValue[0];
 
-                int value;
-                if (!int.TryParse(keyValue[1], out value))
+                if (!int.TryParse(keyValue[1], out int value))
                 {
                     return false;
                 }
@@ -183,14 +182,12 @@ namespace ConfigApp
                     continue;
                 }
 
-                int key;
-                if (!int.TryParse(keyValue[0], out key))
+                if (!int.TryParse(keyValue[0], out int key))
                 {
                     return false;
                 }
 
-                int value;
-                if (!int.TryParse(keyValue[1], out value))
+                if (!int.TryParse(keyValue[1], out int value))
                 {
                     return false;
                 }
