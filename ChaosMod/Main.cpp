@@ -6,7 +6,8 @@
 Main* m_main = nullptr;
 EffectDispatcher* m_effectDispatcher = nullptr;
 
-bool m_forceDispatchEffectNextFrame = false;
+bool m_forceDispatchLastEffectNextFrame;
+bool m_pauseTimer;
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
 {
@@ -169,6 +170,9 @@ void Main::Loop()
 {
 	m_effectDispatcher->Reset();
 
+	m_forceDispatchLastEffectNextFrame = false;
+	m_pauseTimer = false;
+
 	while (true)
 	{
 		scriptWait(0);
@@ -178,15 +182,19 @@ void Main::Loop()
 			continue;
 		}
 
-		if (m_forceDispatchEffectNextFrame)
+		if (m_forceDispatchLastEffectNextFrame)
 		{
-			m_forceDispatchEffectNextFrame = false;
+			m_forceDispatchLastEffectNextFrame = false;
 
 			m_effectDispatcher->ClearEffects();
 			m_effectDispatcher->DispatchEffect((EffectType)((int)_EFFECT_ENUM_MAX - 1));
 		}
 
-		m_effectDispatcher->UpdateTimer();
+		if (!m_pauseTimer)
+		{
+			m_effectDispatcher->UpdateTimer();
+		}
+
 		m_effectDispatcher->UpdateEffects();
 		m_effectDispatcher->Draw();
 	}
@@ -222,9 +230,16 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	{
 		CTRLpressed = !isUpNow;
 	}
-	else if (key == VK_OEM_MINUS && CTRLpressed && !wasDownBefore)
+	else if (CTRLpressed && !wasDownBefore)
 	{
-		m_forceDispatchEffectNextFrame = true;
+		if (key == VK_OEM_MINUS)
+		{
+			m_forceDispatchLastEffectNextFrame = true;
+		}
+		else if (key == VK_OEM_PERIOD)
+		{
+			m_pauseTimer = !m_pauseTimer;
+		}
 	}
 #endif
 }
