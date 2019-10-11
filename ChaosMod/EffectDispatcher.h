@@ -28,12 +28,14 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Name(name), Timer(timer) {}
+		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Name(name), Timer(timer),
+			MaxTime(Timer) {}
 
 	public:
 		EffectType EffectType;
 		const char* Name;
 		int Timer;
+		int MaxTime;
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;

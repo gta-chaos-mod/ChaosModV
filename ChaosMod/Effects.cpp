@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Effects.h"
 #include "Main.h"
+#include "Memory.h"
 
 inline std::array<Ped, 256> GetAllPeds()
 {
@@ -568,6 +569,7 @@ void Effects::StopEffect(EffectType effectType)
 		break;
 	case EFFECT_LOW_GRAV:
 	case EFFECT_VERY_LOW_GRAV:
+	case EFFECT_INSANE_GRAV:
 		SET_GRAVITY_LEVEL(0);
 		break;
 	case EFFECT_ALL_VEH_POP_TIRES:
@@ -900,6 +902,37 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_VERY_LOW_GRAV])
 	{
 		SET_GRAVITY_LEVEL(2);
+	}
+	if (m_effectActive[EFFECT_INSANE_GRAV])
+	{
+		static float* gravAddr = nullptr;
+		static void(__cdecl* someFunc1)(float grav);
+		static void(__cdecl* someFunc2)();
+		static void(__cdecl* someFunc3)();
+		if (!gravAddr)
+		{
+			auto addr = Memory::FindPattern("\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05\x00\x00\x00\x00", "xxxx????xxxx????");
+			gravAddr = (float*)(addr + 8 + *(DWORD*)(addr + 4));
+			someFunc1 = (void(__cdecl*)(float))Memory::FindPattern("\x0F\x2E\x05\x00\x00\x00\x00\x75\x08\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05",
+				"xxx????xxxxxx????xxxx");
+			addr = Memory::FindPattern("\xE9\x00\x00\x00\x00\x83\xF9\x08\x75\x23", "x????xxxxx");
+			addr += 5 + *(DWORD*)(addr + 1);
+			addr += 0x4A8;
+			someFunc2 = (void(__cdecl*)())(addr + 5 + *(DWORD*)(addr + 1));
+			someFunc3 = (void(__cdecl*)())Memory::FindPattern("\x48\x83\xEC\x48\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x29\x74\x24", "xxxxxxxx????xxxx");
+		}
+		*gravAddr = 200.f;
+		someFunc1(*gravAddr);
+		someFunc2();
+		someFunc3();
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_IN_ANY_VEHICLE(ped, false))
+			{
+				SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
+				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, -500.f, false, false, true, false);
+			}
+		}
 	}
 	if (m_effectActive[EFFECT_ALL_VEH_POP_TIRES])
 	{

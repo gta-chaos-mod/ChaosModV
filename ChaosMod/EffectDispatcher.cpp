@@ -42,7 +42,7 @@ void EffectDispatcher::Draw()
 		if (effect.Timer > 0)
 		{
 			DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.9f - effect.Timer / m_effectTimedDur, y + .02f, .05f * effect.Timer / m_effectTimedDur, .02f, 180, 180, 180, 255, false);
+			DRAW_RECT(.9f - effect.Timer / effect.MaxTime, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, 180, 180, 180, 255, false);
 		}
 
 		y += .075f;
@@ -132,7 +132,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 			if (effect.EffectType == effectType)
 			{
 				alreadyExists = true;
-				effect.Timer = m_effectTimedDur;
+				effect.Timer = effect.MaxTime;
 			}
 
 			for (EffectType incompatibleEffect : incompatibleEffects)
@@ -149,7 +149,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 	{
 		m_effects->StartEffect(effectType);
 		m_activeEffects.emplace_back(effectType, effectInfo.Name,
-			effectInfo.IsTimed ? effectInfo.Duration + m_effectTimedDur - effectInfo.Duration: -1);
+			effectInfo.IsTimed ? (effectInfo.Duration ? effectInfo.Duration : m_effectTimedDur) : -1);
 	}
 
 	m_percentage = .0f;
