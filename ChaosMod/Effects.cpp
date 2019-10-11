@@ -607,6 +607,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_BLACKOUT:
+		SET_ARTIFICIAL_LIGHTS_STATE(false);
+		break;
 	}
 }
 
@@ -1107,5 +1110,9 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_BLIND])
 	{
 		DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, 255, false);
+	}
+	if (m_effectActive[EFFECT_BLACKOUT])
+	{
+		SET_ARTIFICIAL_LIGHTS_STATE(true);
 	}
 }

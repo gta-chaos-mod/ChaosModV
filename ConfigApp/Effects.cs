@@ -134,6 +134,7 @@ namespace ConfigApp
             EFFECT_ZOMBIES,
             EFFECT_METEOR_RAIN,
             EFFECT_BLIND,
+            EFFECT_BLACKOUT,
             _EFFECT_ENUM_MAX
         }
 
@@ -243,6 +244,7 @@ namespace ConfigApp
             {EffectType.EFFECT_ZOMBIES, new EffectInfo("Zombies", EffectCategory.PEDS, 98)},
             {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, 99)},
             {EffectType.EFFECT_BLIND, new EffectInfo("Blind", EffectCategory.PLAYER, 103)},
+            {EffectType.EFFECT_BLACKOUT, new EffectInfo("Blackout", EffectCategory.MISC, 104)},
         };
     }
 }

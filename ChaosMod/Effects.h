@@ -126,6 +126,7 @@ enum EffectType : int
 	EFFECT_ZOMBIES,
 	EFFECT_METEOR_RAIN,
 	EFFECT_BLIND,
+	EFFECT_BLACKOUT,
 	_EFFECT_ENUM_MAX
 };
 
@@ -235,6 +236,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_ZOMBIES, {"Zombies", 98, true}},
 	{EFFECT_METEOR_RAIN, {"Meteor Shower", 99, true}},
 	{EFFECT_BLIND, {"Blind", 103, true, {}, true}},
+	{EFFECT_BLACKOUT, {"Blackout", 104, true}},
 };
 
 class Effects
