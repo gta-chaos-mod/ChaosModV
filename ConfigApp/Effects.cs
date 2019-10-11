@@ -133,6 +133,7 @@ namespace ConfigApp
             EFFECT_BREAK_VEH_DOORS,
             EFFECT_ZOMBIES,
             EFFECT_METEOR_RAIN,
+            EFFECT_BLIND,
             _EFFECT_ENUM_MAX
         }
 
@@ -241,6 +242,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_BREAK_VEH_DOORS, new EffectInfo("Break All Doors Of Current Vehicle", EffectCategory.VEHICLE, 96)},
             {EffectType.EFFECT_ZOMBIES, new EffectInfo("Zombies", EffectCategory.PEDS, 98)},
             {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, 99)},
+            {EffectType.EFFECT_BLIND, new EffectInfo("Blind", EffectCategory.PLAYER, 103)},
         };
     }
 }

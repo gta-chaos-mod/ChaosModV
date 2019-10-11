@@ -7,8 +7,8 @@ enum EffectType : int;
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, int id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, int customDur = 0)
-		: Name(name), Id(id), IsTimed(isTimed), Duration(customDur), IncompatibleWith(incompatibleList)
+	EffectInfo(const char* name, int id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
+		: Name(name), Id(id), IsTimed(isTimed), Duration(shortDur ? 15 : 0), IncompatibleWith(incompatibleList)
 	{}
 	EffectInfo() : Name("???"), Id(-1), IsTimed(false), Duration(0), IncompatibleWith({}) {}
 
@@ -125,6 +125,7 @@ enum EffectType : int
 	EFFECT_BREAK_VEH_DOORS,
 	EFFECT_ZOMBIES,
 	EFFECT_METEOR_RAIN,
+	EFFECT_BLIND,
 	_EFFECT_ENUM_MAX
 };
 
@@ -222,7 +223,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_PEDS_FROZEN, {"Peds Are Brainless", 86, true}},
 	{EFFECT_LOW_GRAV, {"Low Gravity", 87, true, { EFFECT_VERY_LOW_GRAV }}},
 	{EFFECT_VERY_LOW_GRAV, {"Very Low Gravity", 88, true, { EFFECT_LOW_GRAV }}},
-	{EFFECT_INSANE_GRAV, {"Insane Gravity", 101, true, {}, 10}},
+	{EFFECT_INSANE_GRAV, {"Insane Gravity", 101, true, {}, true}},
 	{EFFECT_VEH_REPAIR, {"Repair Current Vehicle", 89}},
 	{EFFECT_VEH_POP_TIRES, {"Pop Tires Of Current Vehicle", 90}},
 	{EFFECT_ALL_VEH_POP_TIRES, {"Now This Is Some Tire Poppin'", 91, true}},
@@ -233,6 +234,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Current Vehicle", 96}},
 	{EFFECT_ZOMBIES, {"Zombies", 98, true}},
 	{EFFECT_METEOR_RAIN, {"Meteor Shower", 99, true}},
+	{EFFECT_BLIND, {"Blind", 103, true, {}, true}},
 };
 
 class Effects

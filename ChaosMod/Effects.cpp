@@ -1104,4 +1104,8 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_BLIND])
+	{
+		DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, 255, false);
+	}
 }
