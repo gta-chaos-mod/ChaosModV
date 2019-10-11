@@ -448,6 +448,7 @@ void Effects::StopEffect(EffectType effectType)
 		break;
 	case EFFECT_GAMESPEED_X02:
 	case EFFECT_GAMESPEED_X05:
+	case EFFECT_GAMESPEED_LAG:
 		SET_TIME_SCALE(1.f);
 		break;
 	case EFFECT_SLIPPERY_VEHS:
@@ -623,6 +624,25 @@ void Effects::UpdateEffects()
 	{
 		SET_TIME_SCALE(.5f);
 	}
+	if (m_effectActive[EFFECT_GAMESPEED_LAG])
+	{
+		static int state = 0;
+		static DWORD64 lastTick = 0;
+		DWORD64 curTick = GetTickCount64();
+		if (curTick > lastTick + 500)
+		{
+			lastTick = curTick;
+			if (++state == 3)
+			{
+				state = 0;
+			}
+		}
+		SET_TIME_SCALE(state < 2 ? 1.f : 0.f);
+		if (state == 2)
+		{
+			DISABLE_ALL_CONTROL_ACTIONS(1);
+		}
+	}
 	if (m_effectActive[EFFECT_PEDS_RIOT])
 	{
 		static Hash riotGroupHash = GET_HASH_KEY("_RIOT");
@@ -630,7 +650,6 @@ void Effects::UpdateEffects()
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, riotGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, riotGroupHash);
-
 		for (Ped ped : GetAllPeds())
 		{
 			if (ped && !IS_PED_A_PLAYER(ped))
@@ -916,8 +935,7 @@ void Effects::UpdateEffects()
 			someFunc1 = (void(__cdecl*)(float))Memory::FindPattern("\x0F\x2E\x05\x00\x00\x00\x00\x75\x08\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05",
 				"xxx????xxxxxx????xxxx");
 			addr = Memory::FindPattern("\xE9\x00\x00\x00\x00\x83\xF9\x08\x75\x23", "x????xxxxx");
-			addr += 5 + *(DWORD*)(addr + 1);
-			addr += 0x4A8;
+			addr += 5 + *(DWORD*)(addr + 1) + 0x4A8;
 			someFunc2 = (void(__cdecl*)())(addr + 5 + *(DWORD*)(addr + 1));
 			someFunc3 = (void(__cdecl*)())Memory::FindPattern("\x48\x83\xEC\x48\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x29\x74\x24", "xxxxxxxx????xxxx");
 		}
@@ -1030,7 +1048,7 @@ void Effects::UpdateEffects()
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 		static DWORD64 lastTick = 0;
 		DWORD64 curTick = GetTickCount64();
-		if (meteorsAmount < MAX_METEORS && lastTick + 500 < curTick)
+		if (meteorsAmount < MAX_METEORS && curTick > lastTick + 500)
 		{
 			lastTick = curTick;
 			Vector3 spawnPos;
@@ -1069,7 +1087,7 @@ void Effects::UpdateEffects()
 						{
 							static DWORD64 lastTick = 0;
 							DWORD64 curTick = GetTickCount64();
-							if (lastTick + 1000 < curTick)
+							if (curTick > lastTick + 1000)
 							{
 								if (i == MAX_METEORS - 1)
 								{
