@@ -141,6 +141,10 @@ namespace ConfigApp
             EFFECT_MOV_NO_UD,
             EFFECT_MOV_NO_LR,
             EFFECT_BREAK,
+            EFFECT_EVERYONE_RPG,
+            EFFECT_EVERYONE_TAZER,
+            EFFECT_EVERYONE_MINIGUN,
+            EFFECT_PEDS_FAST_FIRING,
             _EFFECT_ENUM_MAX
         }
 
@@ -257,6 +261,10 @@ namespace ConfigApp
             {EffectType.EFFECT_MOV_NO_UD, new EffectInfo("Disable Forwards / Backwards Movement", EffectCategory.PLAYER, 108)},
             {EffectType.EFFECT_MOV_NO_LR, new EffectInfo("Disable Left / Right Movement", EffectCategory.PLAYER, 109)},
             {EffectType.EFFECT_BREAK, new EffectInfo("It's Time For A Break", EffectCategory.PLAYER, 110)},
+            {EffectType.EFFECT_EVERYONE_RPG, new EffectInfo("Give Everyone A RPG", EffectCategory.PEDS, 111)},
+            {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stungun", EffectCategory.PEDS, 112)},
+            {EffectType.EFFECT_EVERYONE_MINIGUN, new EffectInfo("Give Everyone A Minigun", EffectCategory.PEDS, 113)},
+            {EffectType.EFFECT_PEDS_FAST_FIRING, new EffectInfo("Peds Shoot Fast", EffectCategory.PEDS, 114)},
         };
     }
 }

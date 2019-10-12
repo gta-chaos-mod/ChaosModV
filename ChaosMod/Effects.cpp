@@ -428,6 +428,33 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_METEOR_RAIN:
 		DECOR_REGISTER("_METEOR", 2);
 		break;
+	case EFFECT_EVERYONE_RPG:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && IS_PED_HUMAN(ped))
+			{
+				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RPG"), 9999, true, true);
+			}
+		}
+		break;
+	case EFFECT_EVERYONE_TAZER:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && IS_PED_HUMAN(ped))
+			{
+				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_STUNGUN"), 9999, true, true);
+			}
+		}
+		break;
+	case EFFECT_EVERYONE_MINIGUN:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && IS_PED_HUMAN(ped))
+			{
+				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_MINIGUN"), 9999, true, true);
+			}
+		}
+		break;
 	}
 }
 
@@ -1140,5 +1167,15 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_BREAK])
 	{
 		DISABLE_ALL_CONTROL_ACTIONS(0);
+	}
+	if (m_effectActive[EFFECT_PEDS_FAST_FIRING])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped && !IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+			}
+		}
 	}
 }

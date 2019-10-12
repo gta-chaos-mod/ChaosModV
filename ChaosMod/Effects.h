@@ -133,6 +133,10 @@ enum EffectType : int
 	EFFECT_MOV_NO_UD,
 	EFFECT_MOV_NO_LR,
 	EFFECT_BREAK,
+	EFFECT_EVERYONE_RPG,
+	EFFECT_EVERYONE_TAZER,
+	EFFECT_EVERYONE_MINIGUN,
+	EFFECT_PEDS_FAST_FIRING,
 	_EFFECT_ENUM_MAX
 };
 
@@ -249,6 +253,10 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_MOV_NO_UD, {"Disable Forwards / Backwards Movement", 108, true}},
 	{EFFECT_MOV_NO_LR, {"Disable Left / Right Movement", 109, true}},
 	{EFFECT_BREAK, {"It's Time For A Break", 110, true, {}, true}},
+	{EFFECT_EVERYONE_RPG, {"Give Everyone An RPG", 111}},
+	{EFFECT_EVERYONE_TAZER, {"Give Everyone A Stungun", 112}},
+	{EFFECT_EVERYONE_MINIGUN, {"Give Everyone A Minigun", 113}},
+	{EFFECT_PEDS_FAST_FIRING, {"Peds Shoot Fast", 114, true}},
 };
 
 class Effects
