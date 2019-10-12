@@ -132,11 +132,14 @@ namespace ConfigApp
                         misc_user_effects_timed_dur.Text = $"{value}";
                         break;
                     case "Seed":
-                        lazyFoundAll = true;
                         if (value >= 0)
                         {
                             misc_user_effects_random_seed.Text = $"{value}";
                         }
+                        break;
+                    case "EffectTimedShortDur":
+                        lazyFoundAll = true;
+                        misc_user_effects_timed_short_dur.Text = $"{value}";
                         break;
                 }
             }
@@ -157,6 +160,7 @@ namespace ConfigApp
             data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "60")}\n";
             data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "180")}\n";
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
+            data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "15")}\n";
 
             File.WriteAllText(ConfigFile, data);
         }

@@ -9,7 +9,7 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 bool m_forceDispatchLastEffectNextFrame;
 bool m_pauseTimer;
 
-int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
+int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -50,6 +50,10 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed)
 		else if (key == "Seed")
 		{
 			seed = value;
+		}
+		else if (key == "EffectTimedShortDur")
+		{
+			effectTimedShortDur = value;
 		}
 	}
 
@@ -142,13 +146,14 @@ bool Main::Init()
 		m_main = new Main();
 	}
 
-	int effectSpawnTime;
-	int effectTimedDur;
-	int seed;
+	int effectSpawnTime = 180;
+	int effectTimedDur = 60;
+	int seed = -1;
+	int effectTimedShortDur = 15;
 	std::vector<EffectType> enabledEffects;
 
 	int result;
-	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed))
+	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur))
 		|| (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
@@ -171,7 +176,7 @@ bool Main::Init()
 
 	if (!m_effectDispatcher)
 	{
-		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects);
+		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur);
 	}
 
 	MH_EnableHook(MH_ALL_HOOKS);

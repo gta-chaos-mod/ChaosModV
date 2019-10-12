@@ -37,9 +37,15 @@
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
-                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,140,0,0"
+                    <Label Content="How long should short timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,140,0,0"
+                        VerticalAlignment="Top" Width="314"/>
+                    <TextBox x:Name="misc_user_effects_timed_short_dur" HorizontalAlignment="Left" Height="23" Margin="329,144,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
                         VerticalAlignment="Top" Width="325"/>
-                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,144,0,0" TextWrapping="Wrap"
+                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,214,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>

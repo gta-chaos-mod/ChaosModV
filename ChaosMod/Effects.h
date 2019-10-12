@@ -8,15 +8,15 @@ struct EffectInfo
 {
 public:
 	EffectInfo(const char* name, int id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
-		: Name(name), Id(id), IsTimed(isTimed), Duration(shortDur ? 15 : 0), IncompatibleWith(incompatibleList)
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList)
 	{}
-	EffectInfo() : Name("???"), Id(-1), IsTimed(false), Duration(0), IncompatibleWith({}) {}
+	EffectInfo() : Name("???"), Id(-1), IsTimed(false), IsShortDuration(false), IncompatibleWith({}) {}
 
 public:
 	const char* Name;
 	const int Id;
 	const bool IsTimed;
-	const uint Duration;
+	const bool IsShortDuration;
 	const std::vector<EffectType> IncompatibleWith;
 };
 

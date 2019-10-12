@@ -2,9 +2,9 @@
 #include "EffectDispatcher.h"
 #include "Effects.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects)
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects, int effectTimedShortDur)
 	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
-	m_enabledEffects(enabledEffects)
+		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur)
 {
 	Reset();
 }
@@ -149,7 +149,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 	{
 		m_effects->StartEffect(effectType);
 		m_activeEffects.emplace_back(effectType, effectInfo.Name,
-			effectInfo.IsTimed ? (effectInfo.Duration ? effectInfo.Duration : m_effectTimedDur) : -1);
+			effectInfo.IsTimed ? (effectInfo.IsShortDuration ? m_effectTimedShortDur : m_effectTimedDur) : -1);
 	}
 
 	m_percentage = .0f;
