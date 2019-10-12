@@ -47,7 +47,7 @@
                         VerticalAlignment="Top" Width="325"/>
                     <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,214,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        MaxLength="8" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
                 </Grid>
             </TabItem>
