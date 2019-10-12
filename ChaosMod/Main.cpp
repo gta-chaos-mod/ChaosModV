@@ -41,11 +41,11 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 
 		if (key == "NewEffectSpawnTime")
 		{
-			effectSpawnTime = value;
+			effectSpawnTime = value > 0 ? value : 1;
 		}
 		else if (key == "EffectTimedDur")
 		{
-			effectTimedDur = value;
+			effectTimedDur = value > 0 ? value : 1;
 		}
 		else if (key == "Seed")
 		{
@@ -53,7 +53,7 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 		}
 		else if (key == "EffectTimedShortDur")
 		{
-			effectTimedShortDur = value;
+			effectTimedShortDur = value > 0 ? value : 1;
 		}
 	}
 
