@@ -128,6 +128,9 @@ enum EffectType : int
 	EFFECT_METEOR_RAIN,
 	EFFECT_BLIND,
 	EFFECT_BLACKOUT,
+	EFFECT_QUICK_TIME,
+	EFFECT_PAUSE_TIME,
+	EFFECT_MOV_NO_FORWARDS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -239,6 +242,9 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_METEOR_RAIN, {"Meteor Shower", 99, true}},
 	{EFFECT_BLIND, {"Blind", 103, true, {}, true}},
 	{EFFECT_BLACKOUT, {"Blackout", 104, true}},
+	{EFFECT_QUICK_TIME, {"Speedy Time", 106, true, { EFFECT_PAUSE_TIME }}},
+	{EFFECT_PAUSE_TIME, {"Pause Time", 107, true, { EFFECT_QUICK_TIME }}},
+	{EFFECT_MOV_NO_FORWARDS, {"Disable Forwards Movement", 108, true}},
 };
 
 class Effects

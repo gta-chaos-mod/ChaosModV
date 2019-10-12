@@ -613,6 +613,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_BLACKOUT:
 		SET_ARTIFICIAL_LIGHTS_STATE(false);
 		break;
+	case EFFECT_PAUSE_TIME:
+		PAUSE_CLOCK(false);
+		break;
 	}
 }
 
@@ -1117,5 +1120,25 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_BLACKOUT])
 	{
 		SET_ARTIFICIAL_LIGHTS_STATE(true);
+	}
+	if (m_effectActive[EFFECT_QUICK_TIME])
+	{
+		ADD_TO_CLOCK_TIME(0, 1, 0);
+	}
+	if (m_effectActive[EFFECT_PAUSE_TIME])
+	{
+		PAUSE_CLOCK(true);
+	}
+	if (m_effectActive[EFFECT_MOV_NO_FORWARDS])
+	{
+		// Doesn't disable player ped movement yet :(
+		DISABLE_CONTROL_ACTION(0, 32, true);
+		DISABLE_CONTROL_ACTION(0, 71, true);
+		DISABLE_CONTROL_ACTION(0, 87, true);
+		DISABLE_CONTROL_ACTION(0, 129, true);
+		DISABLE_CONTROL_ACTION(0, 136, true);
+		DISABLE_CONTROL_ACTION(0, 150, true);
+		DISABLE_CONTROL_ACTION(0, 232, true);
+
 	}
 }

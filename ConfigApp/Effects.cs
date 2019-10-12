@@ -136,6 +136,8 @@ namespace ConfigApp
             EFFECT_METEOR_RAIN,
             EFFECT_BLIND,
             EFFECT_BLACKOUT,
+            EFFECT_QUICK_TIME,
+            EFFECT_PAUSE_TIME,
             _EFFECT_ENUM_MAX
         }
 
@@ -247,6 +249,8 @@ namespace ConfigApp
             {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, 99)},
             {EffectType.EFFECT_BLIND, new EffectInfo("Blind", EffectCategory.PLAYER, 103)},
             {EffectType.EFFECT_BLACKOUT, new EffectInfo("Blackout", EffectCategory.MISC, 104)},
+            {EffectType.EFFECT_QUICK_TIME, new EffectInfo("Speedy Time", EffectCategory.TIME, 106)},
+            {EffectType.EFFECT_PAUSE_TIME, new EffectInfo("Pause Time", EffectCategory.TIME, 107)},
         };
     }
 }
