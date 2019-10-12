@@ -137,6 +137,8 @@ enum EffectType : int
 	EFFECT_EVERYONE_TAZER,
 	EFFECT_EVERYONE_MINIGUN,
 	EFFECT_PEDS_FAST_FIRING,
+	EFFECT_NO_SPRINT,
+	EFFECT_NO_JUMP,
 	_EFFECT_ENUM_MAX
 };
 
@@ -257,6 +259,8 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_EVERYONE_TAZER, {"Give Everyone A Stungun", 112}},
 	{EFFECT_EVERYONE_MINIGUN, {"Give Everyone A Minigun", 113}},
 	{EFFECT_PEDS_FAST_FIRING, {"Peds Shoot Fast", 114, true}},
+	{EFFECT_NO_SPRINT, {"No Sprint", 115, true}},
+	{EFFECT_NO_JUMP, {"No Jump", 116, true}},
 };
 
 class Effects

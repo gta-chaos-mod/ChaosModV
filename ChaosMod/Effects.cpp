@@ -1178,4 +1178,12 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_NO_SPRINT])
+	{
+		DISABLE_CONTROL_ACTION(0, 21, true);
+	}
+	if (m_effectActive[EFFECT_NO_JUMP])
+	{
+		DISABLE_CONTROL_ACTION(0, 22, true);
+	}
 }

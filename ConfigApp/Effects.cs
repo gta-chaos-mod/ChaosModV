@@ -145,6 +145,8 @@ namespace ConfigApp
             EFFECT_EVERYONE_TAZER,
             EFFECT_EVERYONE_MINIGUN,
             EFFECT_PEDS_FAST_FIRING,
+            EFFECT_NO_SPRINT,
+            EFFECT_NO_JUMP,
             _EFFECT_ENUM_MAX
         }
 
@@ -265,6 +267,8 @@ namespace ConfigApp
             {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stungun", EffectCategory.PEDS, 112)},
             {EffectType.EFFECT_EVERYONE_MINIGUN, new EffectInfo("Give Everyone A Minigun", EffectCategory.PEDS, 113)},
             {EffectType.EFFECT_PEDS_FAST_FIRING, new EffectInfo("Peds Shoot Fast", EffectCategory.PEDS, 114)},
+            {EffectType.EFFECT_NO_SPRINT, new EffectInfo("No Sprint", EffectCategory.PLAYER, 115)},
+            {EffectType.EFFECT_NO_JUMP, new EffectInfo("No Jump", EffectCategory.PLAYER, 116)},
         };
     }
 }
