@@ -130,7 +130,9 @@ enum EffectType : int
 	EFFECT_BLACKOUT,
 	EFFECT_QUICK_TIME,
 	EFFECT_PAUSE_TIME,
-	EFFECT_MOV_NO_FORWARDS,
+	EFFECT_MOV_NO_UD,
+	EFFECT_MOV_NO_LR,
+	EFFECT_BREAK,
 	_EFFECT_ENUM_MAX
 };
 
@@ -244,7 +246,9 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_BLACKOUT, {"Blackout", 104, true}},
 	{EFFECT_QUICK_TIME, {"Speedy Time", 106, true, { EFFECT_PAUSE_TIME }}},
 	{EFFECT_PAUSE_TIME, {"Pause Time", 107, true, { EFFECT_QUICK_TIME }}},
-	{EFFECT_MOV_NO_FORWARDS, {"Disable Forwards Movement", 108, true}},
+	{EFFECT_MOV_NO_UD, {"Disable Forwards / Backwards Movement", 108, true}},
+	{EFFECT_MOV_NO_LR, {"Disable Left / Right Movement", 109, true}},
+	{EFFECT_BREAK, {"It's Time For A Break", 110, true, {}, true}},
 };
 
 class Effects

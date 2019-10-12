@@ -1129,16 +1129,16 @@ void Effects::UpdateEffects()
 	{
 		PAUSE_CLOCK(true);
 	}
-	if (m_effectActive[EFFECT_MOV_NO_FORWARDS])
+	if (m_effectActive[EFFECT_MOV_NO_UD])
 	{
-		// Doesn't disable player ped movement yet :(
-		DISABLE_CONTROL_ACTION(0, 32, true);
-		DISABLE_CONTROL_ACTION(0, 71, true);
-		DISABLE_CONTROL_ACTION(0, 87, true);
-		DISABLE_CONTROL_ACTION(0, 129, true);
-		DISABLE_CONTROL_ACTION(0, 136, true);
-		DISABLE_CONTROL_ACTION(0, 150, true);
-		DISABLE_CONTROL_ACTION(0, 232, true);
-
+		SET_INPUT_EXCLUSIVE(0, 32);
+	}
+	if (m_effectActive[EFFECT_MOV_NO_LR])
+	{
+		SET_INPUT_EXCLUSIVE(0, 34);
+	}
+	if (m_effectActive[EFFECT_BREAK])
+	{
+		DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
 }

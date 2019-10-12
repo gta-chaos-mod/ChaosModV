@@ -138,6 +138,9 @@ namespace ConfigApp
             EFFECT_BLACKOUT,
             EFFECT_QUICK_TIME,
             EFFECT_PAUSE_TIME,
+            EFFECT_MOV_NO_UD,
+            EFFECT_MOV_NO_LR,
+            EFFECT_BREAK,
             _EFFECT_ENUM_MAX
         }
 
@@ -251,6 +254,9 @@ namespace ConfigApp
             {EffectType.EFFECT_BLACKOUT, new EffectInfo("Blackout", EffectCategory.MISC, 104)},
             {EffectType.EFFECT_QUICK_TIME, new EffectInfo("Speedy Time", EffectCategory.TIME, 106)},
             {EffectType.EFFECT_PAUSE_TIME, new EffectInfo("Pause Time", EffectCategory.TIME, 107)},
+            {EffectType.EFFECT_MOV_NO_UD, new EffectInfo("Disable Forwards / Backwards Movement", EffectCategory.PLAYER, 108)},
+            {EffectType.EFFECT_MOV_NO_LR, new EffectInfo("Disable Left / Right Movement", EffectCategory.PLAYER, 109)},
+            {EffectType.EFFECT_BREAK, new EffectInfo("It's Time For A Break", EffectCategory.PLAYER, 110)},
         };
     }
 }
