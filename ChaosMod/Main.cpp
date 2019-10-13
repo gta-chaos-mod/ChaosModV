@@ -9,7 +9,8 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 bool m_forceDispatchLastEffectNextFrame;
 bool m_pauseTimer;
 
-int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur)
+int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, std::array<int, 3>& timerColor,
+	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -37,23 +38,52 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			continue;
 		}
 
-		int value = std::stoi(line.substr(line.find("=") + 1));
+		std::string value = line.substr(line.find("=") + 1);
+		try
+		{
+			int _value = std::stoi(value);
 
-		if (key == "NewEffectSpawnTime")
-		{
-			effectSpawnTime = value > 0 ? value : 1;
+			if (key == "NewEffectSpawnTime")
+			{
+				effectSpawnTime = _value > 0 ? _value : 1;
+			}
+			else if (key == "EffectTimedDur")
+			{
+				effectTimedDur = _value > 0 ? _value : 1;
+			}
+			else if (key == "Seed")
+			{
+				seed = _value;
+			}
+			else if (key == "EffectTimedShortDur")
+			{
+				effectTimedShortDur = _value > 0 ? _value : 1;
+			}
 		}
-		else if (key == "EffectTimedDur")
+		catch (std::invalid_argument)
 		{
-			effectTimedDur = value > 0 ? value : 1;
-		}
-		else if (key == "Seed")
-		{
-			seed = value;
-		}
-		else if (key == "EffectTimedShortDur")
-		{
-			effectTimedShortDur = value > 0 ? value : 1;
+			// For now it's probably a hex color
+			// Also the WPF color picker stores colors in argb instead of rgba apparently, lol
+			std::array<int, 3> colors;
+
+			int j = 0;
+			for (int i = 3; i < 9; i += 2)
+			{
+				colors[j++] = std::strtol(value.substr(i, 2).c_str(), nullptr, 16);
+			}
+
+			if (key == "EffectTimerColor")
+			{
+				timerColor = colors;
+			}
+			else if (key == "EffectTextColor")
+			{
+				textColor = colors;
+			}
+			else if (key == "EffectTimedTimerColor")
+			{
+				effectTimerColor = colors;
+			}
 		}
 	}
 
@@ -150,10 +180,13 @@ bool Main::Init()
 	int effectTimedDur = 60;
 	int seed = -1;
 	int effectTimedShortDur = 15;
+	std::array<int, 3> timerColor = { 40, 40, 255 };
+	std::array<int, 3> textColor = { 255, 255, 255 };
+	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
 	std::vector<EffectType> enabledEffects;
 
 	int result;
-	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur))
+	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, timerColor, textColor, effectTimerColor))
 		|| (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
@@ -176,7 +209,8 @@ bool Main::Init()
 
 	if (!m_effectDispatcher)
 	{
-		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur);
+		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur,
+			timerColor, textColor, effectTimerColor);
 	}
 
 	MH_EnableHook(MH_ALL_HOOKS);

@@ -2,9 +2,11 @@
 #include "EffectDispatcher.h"
 #include "Effects.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects, int effectTimedShortDur)
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects, int effectTimedShortDur,
+	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
 	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
-		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur)
+		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_timerColor(timerColor), m_textColor(textColor),
+		m_effectTimerColor(effectTimerColor)
 {
 	Reset();
 }
@@ -24,7 +26,7 @@ void EffectDispatcher::Draw()
 
 	// New Effect Bar
 	DRAW_RECT(.5f, .0f, 1.f, .05f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, 40, 40, 255, 255, false);
+	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 
 	// Effect Texts
 	float y = .2f;
@@ -33,7 +35,7 @@ void EffectDispatcher::Draw()
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name);
 		SET_TEXT_SCALE(.5f, .5f);
-		SET_TEXT_COLOUR(255, 255, 255, 255);
+		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
 		SET_TEXT_OUTLINE();
 		SET_TEXT_WRAP(.0f, .86f);
 		SET_TEXT_RIGHT_JUSTIFY(true);
@@ -42,7 +44,8 @@ void EffectDispatcher::Draw()
 		if (effect.Timer > 0)
 		{
 			DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.9f - effect.Timer / effect.MaxTime, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, 180, 180, 180, 255, false);
+			DRAW_RECT(.9f - effect.Timer / effect.MaxTime, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0],
+				m_effectTimerColor[1], m_effectTimerColor[2], 255, false);
 		}
 
 		y += .075f;

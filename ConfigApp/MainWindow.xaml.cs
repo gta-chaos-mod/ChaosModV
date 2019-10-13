@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -118,29 +119,42 @@ namespace ConfigApp
 
                 string key = keyValue[0];
 
-                if (!int.TryParse(keyValue[1], out int value))
+                if (int.TryParse(keyValue[1], out int value))
                 {
-                    return false;
+                    switch (key)
+                    {
+                        case "NewEffectSpawnTime":
+                            misc_user_effects_spawn_dur.Text = $"{value}";
+                            break;
+                        case "EffectTimedDur":
+                            misc_user_effects_timed_dur.Text = $"{value}";
+                            break;
+                        case "Seed":
+                            if (value >= 0)
+                            {
+                                misc_user_effects_random_seed.Text = $"{value}";
+                            }
+                            break;
+                        case "EffectTimedShortDur":
+                            misc_user_effects_timed_short_dur.Text = $"{value}";
+                            break;
+                    }
                 }
-                
-                switch (key)
+                else
                 {
-                    case "NewEffectSpawnTime":
-                        misc_user_effects_spawn_dur.Text = $"{value}";
-                        break;
-                    case "EffectTimedDur":
-                        misc_user_effects_timed_dur.Text = $"{value}";
-                        break;
-                    case "Seed":
-                        if (value >= 0)
-                        {
-                            misc_user_effects_random_seed.Text = $"{value}";
-                        }
-                        break;
-                    case "EffectTimedShortDur":
-                        lazyFoundAll = true;
-                        misc_user_effects_timed_short_dur.Text = $"{value}";
-                        break;
+                    switch (key)
+                    {
+                        case "EffectTimerColor":
+                            misc_user_effects_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
+                            break;
+                        case "EffectTextColor":
+                            misc_user_effects_text_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
+                            break;
+                        case "EffectTimedTimerColor":
+                            lazyFoundAll = true;
+                            misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
+                            break;
+                    }
                 }
             }
 
@@ -161,6 +175,9 @@ namespace ConfigApp
             data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "180")}\n";
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
             data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "15")}\n";
+            data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
+            data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
+            data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";
 
             File.WriteAllText(ConfigFile, data);
         }
