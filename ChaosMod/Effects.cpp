@@ -643,6 +643,24 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PAUSE_TIME:
 		PAUSE_CLOCK(false);
 		break;
+	case EFFECT_EVERYONE_INVINCIBLE:
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				SET_ENTITY_INVINCIBLE(ped, false);
+			}
+		}
+		break;
+	case EFFECT_VEHS_INVINCIBLE:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_ENTITY_INVINCIBLE(veh, false);
+			}
+		}
+		break;
 	}
 }
 
@@ -1185,5 +1203,25 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_NO_JUMP])
 	{
 		DISABLE_CONTROL_ACTION(0, 22, true);
+	}
+	if (m_effectActive[EFFECT_EVERYONE_INVINCIBLE])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (ped)
+			{
+				SET_ENTITY_INVINCIBLE(ped, true);
+			}
+		}
+	}
+	if (m_effectActive[EFFECT_VEHS_INVINCIBLE])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_ENTITY_INVINCIBLE(veh, true);
+			}
+		}
 	}
 }

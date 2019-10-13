@@ -147,6 +147,8 @@ namespace ConfigApp
             EFFECT_PEDS_FAST_FIRING,
             EFFECT_NO_SPRINT,
             EFFECT_NO_JUMP,
+            EFFECT_EVERYONE_INVINCIBLE,
+            EFFECT_VEHS_INVINCIBLE,
             _EFFECT_ENUM_MAX
         }
 
@@ -269,6 +271,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_FAST_FIRING, new EffectInfo("Peds Shoot Fast", EffectCategory.PEDS, 114)},
             {EffectType.EFFECT_NO_SPRINT, new EffectInfo("No Sprint", EffectCategory.PLAYER, 115)},
             {EffectType.EFFECT_NO_JUMP, new EffectInfo("No Jump", EffectCategory.PLAYER, 116)},
+            {EffectType.EFFECT_EVERYONE_INVINCIBLE, new EffectInfo("Everyone Is Invincible", EffectCategory.PEDS, 117)},
+            {EffectType.EFFECT_VEHS_INVINCIBLE, new EffectInfo("All Vehicles Are Invulnerable", EffectCategory.VEHICLE, 118)},
         };
     }
 }
