@@ -198,7 +198,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_RAINBOW_VEHS, {"Rainbow Traffic", 45, true, { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_VEHS_INVISIBLE }}},
 	{EFFECT_FORCED_FP, {"First Person", 46, true, { EFFECT_FORCED_CINEMATIC }}},
 	{EFFECT_SLIPPERY_VEHS, {"Slippery Vehicles", 47, true}},
-	{EFFECT_NO_GRAV_VEHS, {"Vehicles Have No Gravity", 48, true}},
+	{EFFECT_NO_GRAV_VEHS, {"Vehicles Have No Gravity", 48, true, {}, true}},
 	{EFFECT_PLAYER_INVINCIBLE, {"Invincibility", 49, true}},
 	{EFFECT_2XENGINE_VEHS, {"2x Vehicle Engine Speed", 50, true, { EFFECT_10XENGINE_VEHS, EFFECT_05XENGINE_VEHS }}},
 	{EFFECT_10XENGINE_VEHS, {"10x Vehicle Engine Speed", 51, true, { EFFECT_2XENGINE_VEHS, EFFECT_05XENGINE_VEHS }}},
