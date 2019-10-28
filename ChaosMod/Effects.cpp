@@ -745,6 +745,17 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_BLACK_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 0);
+				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 0);
+			}
+		}
+	}
 	if (m_effectActive[EFFECT_RAINBOW_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
