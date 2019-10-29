@@ -157,6 +157,7 @@ namespace ConfigApp
             EFFECT_LOCK_VEHS,
             EFFECT_TOTAL_CHAOS,
             EFFECT_NO_RAGDOLL,
+            EFFECT_VEHS_HORN,
             _EFFECT_ENUM_MAX
         }
 
@@ -289,6 +290,7 @@ namespace ConfigApp
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, 124)},
             {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, 125)},
             {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PLAYER, 126)},
+            {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, 127)},
         };
     }
 }

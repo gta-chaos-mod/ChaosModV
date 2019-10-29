@@ -1332,4 +1332,14 @@ void Effects::UpdateEffects()
 	{
 		SET_PED_CAN_RAGDOLL(PLAYER_PED_ID(), false);
 	}
+	if (m_effectActive[EFFECT_VEHS_HORN])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
+			}
+		}
+	}
 }

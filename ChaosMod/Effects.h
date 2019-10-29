@@ -149,6 +149,7 @@ enum EffectType : int
 	EFFECT_LOCK_VEHS,
 	EFFECT_TOTAL_CHAOS,
 	EFFECT_NO_RAGDOLL,
+	EFFECT_VEHS_HORN,
 	_EFFECT_ENUM_MAX
 };
 
@@ -281,6 +282,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_LOCK_VEHS, {"Lock All Vehicles", 124}},
 	{EFFECT_TOTAL_CHAOS, {"Doomsday", 125, true}},
 	{EFFECT_NO_RAGDOLL, {"No Ragdoll", 126, true, { EFFECT_PLAYER_SHOT_RAGDOLL }}},
+	{EFFECT_VEHS_HORN, {"All Vehicles Honk", 127, true}},
 };
 
 class Effects
