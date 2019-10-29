@@ -156,6 +156,7 @@ namespace ConfigApp
             EFFECT_JUMPY_VEHS,
             EFFECT_LOCK_VEHS,
             EFFECT_TOTAL_CHAOS,
+            EFFECT_NO_RAGDOLL,
             _EFFECT_ENUM_MAX
         }
 
@@ -287,6 +288,7 @@ namespace ConfigApp
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, 121)},
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, 124)},
             {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, 125)},
+            {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PLAYER, 126)},
         };
     }
 }

@@ -684,6 +684,9 @@ void Effects::StopEffect(EffectType effectType)
 		CLEAR_WEATHER_TYPE_PERSIST();
 		SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 		break;
+	case EFFECT_NO_RAGDOLL:
+		SET_PED_CAN_RAGDOLL(PLAYER_PED_ID(), true);
+		break;
 	}
 }
 
@@ -1324,5 +1327,9 @@ void Effects::UpdateEffects()
 			Vector3 pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, x, y, z);
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 8, 1.f, false, true, .2f, false);
 		}
+	}
+	if (m_effectActive[EFFECT_NO_RAGDOLL])
+	{
+		SET_PED_CAN_RAGDOLL(PLAYER_PED_ID(), false);
 	}
 }
