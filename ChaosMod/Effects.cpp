@@ -142,6 +142,12 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_GIVE_RAILGUN:
 		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, false, true);
 		break;
+	case EFFECT_GIVE_KNIFE:
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_KNIFE"), 9999, false, true);
+		break;
+	case EFFECT_GIVE_BATTLEAXE:
+		GIVE_WEAPON_TO_PED(playerPed, GET_HASH_KEY("WEAPON_BATTLEAXE"), 9999, false, true);
+		break;
 	case EFFECT_HEAL:
 		SET_ENTITY_HEALTH(playerPed, GET_PED_MAX_HEALTH(playerPed), 0);
 		break;
