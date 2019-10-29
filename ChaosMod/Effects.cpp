@@ -1272,4 +1272,14 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_JUMPY_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh && !IS_ENTITY_IN_AIR(veh))
+			{
+				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 50.f, true, false, true, true);
+			}
+		}
+	}
 }

@@ -143,6 +143,7 @@ enum EffectType : int
 	EFFECT_EVERYONE_INVINCIBLE,
 	EFFECT_VEHS_INVINCIBLE,
 	EFFECT_PLAYER_SHOT_RAGDOLL,
+	EFFECT_JUMPY_VEHS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -269,6 +270,7 @@ const std::map<EffectType, EffectInfo> EffectsMap =
 	{EFFECT_EVERYONE_INVINCIBLE, {"Everyone Is Invincible", 117, true}},
 	{EFFECT_VEHS_INVINCIBLE, {"All Vehicles Are Invulnerable", 118, true}},
 	{EFFECT_PLAYER_SHOT_RAGDOLL, {"Player Ragdolls When Shot", 120, true}},
+	{EFFECT_JUMPY_VEHS, {"Jumpy Vehicles", 121, true}},
 };
 
 class Effects
