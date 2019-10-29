@@ -470,6 +470,9 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_TOTAL_CHAOS:
+		SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
+		break;
 	}
 }
 
@@ -676,6 +679,10 @@ void Effects::StopEffect(EffectType effectType)
 				SET_ENTITY_INVINCIBLE(veh, false);
 			}
 		}
+		break;
+	case EFFECT_TOTAL_CHAOS:
+		CLEAR_WEATHER_TYPE_PERSIST();
+		SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 		break;
 	}
 }
@@ -1295,6 +1302,27 @@ void Effects::UpdateEffects()
 			{
 				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 50.f, true, false, true, true);
 			}
+		}
+	}
+	if (m_effectActive[EFFECT_TOTAL_CHAOS])
+	{
+		static constexpr int EXPLOSIONS_PER_SEC = 5;
+		Ped playerPed = PLAYER_PED_ID();
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh && veh != playerVeh)
+			{
+				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, 50.f, .0f, .0f, true, true, true, true);
+			}
+		}
+		for (int i = 0; i < EXPLOSIONS_PER_SEC; i++)
+		{
+			float x = GET_RANDOM_INT_IN_RANGE(0, 1) ? GET_RANDOM_FLOAT_IN_RANGE(20.f, 50.f) : GET_RANDOM_FLOAT_IN_RANGE(-50.f, -20.f);
+			float y = GET_RANDOM_FLOAT_IN_RANGE(-50.f, 50.f);
+			float z = GET_RANDOM_FLOAT_IN_RANGE(.0f, 50.f);
+			Vector3 pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, x, y, z);
+			ADD_EXPLOSION(pos.x, pos.y, pos.z, 8, 1.f, false, true, .2f, false);
 		}
 	}
 }

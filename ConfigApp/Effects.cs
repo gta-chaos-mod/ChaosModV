@@ -155,6 +155,7 @@ namespace ConfigApp
             EFFECT_PLAYER_SHOT_RAGDOLL,
             EFFECT_JUMPY_VEHS,
             EFFECT_LOCK_VEHS,
+            EFFECT_TOTAL_CHAOS,
             _EFFECT_ENUM_MAX
         }
 
@@ -285,6 +286,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_SHOT_RAGDOLL, new EffectInfo("Player Ragdolls When Shot", EffectCategory.PLAYER, 120)},
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, 121)},
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, 124)},
+            {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, 125)},
         };
     }
 }
