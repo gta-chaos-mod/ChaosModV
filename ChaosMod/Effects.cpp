@@ -461,6 +461,15 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_LOCK_VEHS:
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (veh)
+			{
+				SET_VEHICLE_DOORS_LOCKED(veh, 2);
+			}
+		}
+		break;
 	}
 }
 

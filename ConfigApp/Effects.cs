@@ -154,6 +154,7 @@ namespace ConfigApp
             EFFECT_VEHS_INVINCIBLE,
             EFFECT_PLAYER_SHOT_RAGDOLL,
             EFFECT_JUMPY_VEHS,
+            EFFECT_LOCK_VEHS,
             _EFFECT_ENUM_MAX
         }
 
@@ -283,6 +284,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_INVINCIBLE, new EffectInfo("All Vehicles Are Invulnerable", EffectCategory.VEHICLE, 118)},
             {EffectType.EFFECT_PLAYER_SHOT_RAGDOLL, new EffectInfo("Player Ragdolls When Shot", EffectCategory.PLAYER, 120)},
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, 121)},
+            {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, 124)},
         };
     }
 }
