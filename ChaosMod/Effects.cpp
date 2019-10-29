@@ -551,6 +551,7 @@ void Effects::StopEffect(EffectType effectType)
 		STOP_GAMEPLAY_CAM_SHAKING(true);
 		break;
 	case EFFECT_PEDS_OHKO:
+		SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), 1.f);
 		for (Ped ped : GetAllPeds())
 		{
 			if (ped && !IS_PED_DEAD_OR_DYING(ped, true))
@@ -911,9 +912,11 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_PEDS_OHKO])
 	{
+		SET_PED_ARMOUR(PLAYER_PED_ID(), 0);
+		SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_DEAD_OR_DYING(ped, true))
+			if (ped && !IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
 			{
 				SET_ENTITY_HEALTH(ped, 101, 0);
 			}
