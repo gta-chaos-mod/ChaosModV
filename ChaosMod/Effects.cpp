@@ -3,9 +3,9 @@
 #include "Main.h"
 #include "Memory.h"
 
-inline std::array<Ped, 256> GetAllPeds()
+inline std::array<Ped, 1024> GetAllPeds()
 {
-	static std::array<Ped, 256> peds;
+	static std::array<Ped, 1024> peds;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -14,15 +14,15 @@ inline std::array<Ped, 256> GetAllPeds()
 		lastFrame = curFrame;
 
 		peds.fill(0);
-		worldGetAllPeds(peds.data(), 256);
+		worldGetAllPeds(peds.data(), 1024);
 	}
 
 	return peds;
 }
 
-inline std::array<Vehicle, 256> GetAllVehs()
+inline std::array<Vehicle, 1024> GetAllVehs()
 {
-	static std::array<Vehicle, 256> vehs;
+	static std::array<Vehicle, 1024> vehs;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -31,15 +31,15 @@ inline std::array<Vehicle, 256> GetAllVehs()
 		lastFrame = curFrame;
 
 		vehs.fill(0);
-		worldGetAllVehicles(vehs.data(), 256);
+		worldGetAllVehicles(vehs.data(), 1024);
 	}
 
 	return vehs;
 }
 
-inline std::array<Object, 256> GetAllProps()
+inline std::array<Object, 1024> GetAllProps()
 {
-	static std::array<Object, 256> props;
+	static std::array<Object, 1024> props;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -48,7 +48,7 @@ inline std::array<Object, 256> GetAllProps()
 		lastFrame = curFrame;
 
 		props.fill(0);
-		worldGetAllObjects(props.data(), 256);
+		worldGetAllObjects(props.data(), 1024);
 	}
 
 	return props;
