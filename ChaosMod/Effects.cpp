@@ -1083,7 +1083,7 @@ void Effects::UpdateEffects()
 		static constexpr Hash MODEL_HASH = -1404353274;
 		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
-		static Ped zombies[MAX_ZOMBIES] = { 0 };
+		static Ped zombies[MAX_ZOMBIES] = {};
 		static int zombiesAmount = 0;
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
@@ -1091,16 +1091,17 @@ void Effects::UpdateEffects()
 		if (zombiesAmount <= MAX_ZOMBIES)
 		{
 			Vector3 spawnPos;
-			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + zombiesAmount, &spawnPos, 0, 0, 0))
+			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + zombiesAmount, &spawnPos, 0, 0, 0)
+				&& GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z, false) < 300.f)
 			{
 				LoadModel(MODEL_HASH);
 				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+				zombiesAmount++;
 				for (Ped& ped : zombies)
 				{
 					if (!ped)
 					{
 						ped = zombie;
-						zombiesAmount++;
 						break;
 					}
 				}
@@ -1117,7 +1118,7 @@ void Effects::UpdateEffects()
 		{
 			if (zombie)
 			{
-				if (DOES_ENTITY_EXIST(zombie) && !IS_PED_DEAD_OR_DYING(zombie, false))
+				if (DOES_ENTITY_EXIST(zombie) && !IS_PED_DEAD_OR_DYING(zombie, true))
 				{
 					Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 					if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
@@ -1127,6 +1128,7 @@ void Effects::UpdateEffects()
 				}
 				zombiesAmount--;
 				SET_PED_AS_NO_LONGER_NEEDED(&zombie);
+				zombie = 0;
 			}
 		}
 	}
@@ -1135,7 +1137,7 @@ void Effects::UpdateEffects()
 		// Thanks to menyoo for the prop names
 		static const char* propNames[] = { "prop_asteroid_01", "prop_test_boulder_01", "prop_test_boulder_02", "prop_test_boulder_03", "prop_test_boulder_04" };
 		static constexpr int MAX_METEORS = 20;
-		static Object meteors[MAX_METEORS] = { 0 };
+		static Object meteors[MAX_METEORS] = {};
 		static int meteorDespawnTime[MAX_METEORS];
 		static int meteorsAmount = 0;
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
@@ -1151,6 +1153,7 @@ void Effects::UpdateEffects()
 			Hash choosenPropHash = GET_HASH_KEY(propNames[Random::GetRandomInt(0, 4)]);
 			LoadModel(choosenPropHash);
 			Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
+			meteorsAmount++;
 			for (int i = 0; i < MAX_METEORS; i++)
 			{
 				Object& prop = meteors[i];
@@ -1158,7 +1161,6 @@ void Effects::UpdateEffects()
 				{
 					prop = meteor;
 					meteorDespawnTime[i] = 10;
-					meteorsAmount++;
 					break;
 				}
 			}
@@ -1194,6 +1196,7 @@ void Effects::UpdateEffects()
 				}
 				meteorsAmount--;
 				SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
+				prop = 0;
 			}
 		}
 	}
