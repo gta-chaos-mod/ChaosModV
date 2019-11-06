@@ -1088,7 +1088,7 @@ void Effects::UpdateEffects()
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
-		if (zombiesAmount < MAX_ZOMBIES)
+		if (zombiesAmount <= MAX_ZOMBIES)
 		{
 			Vector3 spawnPos;
 			if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + zombiesAmount, &spawnPos, 0, 0, 0))
@@ -1141,7 +1141,7 @@ void Effects::UpdateEffects()
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 		static DWORD64 lastTick = 0;
 		DWORD64 curTick = GetTickCount64();
-		if (meteorsAmount < MAX_METEORS && curTick > lastTick + 500)
+		if (meteorsAmount <= MAX_METEORS && curTick > lastTick + 500)
 		{
 			lastTick = curTick;
 			Vector3 spawnPos;
