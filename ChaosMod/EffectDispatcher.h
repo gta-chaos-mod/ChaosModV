@@ -1,6 +1,7 @@
 #pragma once
 #include "Effects.h"
 #include <vector>
+#include <array>
 
 class EffectDispatcher
 {

@@ -153,7 +153,7 @@ enum EffectType : int
 	_EFFECT_ENUM_MAX
 };
 
-const std::map<EffectType, EffectInfo> EffectsMap =
+const std::map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_KILL, {"Player Suicide", 0}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", 1}},

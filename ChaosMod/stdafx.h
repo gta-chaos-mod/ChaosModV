@@ -4,6 +4,7 @@
 #include "../vendor/minhook/include/MinHook.h"
 #include "nativesNoNamespaces.h"
 #include "Random.h"
+#include "DebugMenu.h"
 #include <Windows.h>
 #include <WinUser.h>
 #include <Psapi.h>
@@ -12,3 +13,4 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <memory>

@@ -61,7 +61,7 @@ inline void LoadModel(Hash model)
 		REQUEST_MODEL(model);
 		while (!HAS_MODEL_LOADED(model))
 		{
-			scriptWait(0);
+			WAIT(0);
 		}
 	}
 }
@@ -94,7 +94,7 @@ void Effects::StartEffect(EffectType effectType)
 	Vector3 playerVehPos = GET_ENTITY_COORDS(playerVeh, false);
 	float playerVehHeading = GET_ENTITY_HEADING(playerVeh);
 
-	if (EffectsMap.at(effectType).IsTimed)
+	if (g_effectsMap.at(effectType).IsTimed)
 	{
 		m_effectActive[effectType] = true;
 	}
@@ -478,7 +478,7 @@ void Effects::StartEffect(EffectType effectType)
 
 void Effects::StopEffect(EffectType effectType)
 {
-	if (EffectsMap.at(effectType).IsTimed)
+	if (g_effectsMap.at(effectType).IsTimed)
 	{
 		m_effectActive[effectType] = false;
 	}
@@ -489,7 +489,7 @@ void Effects::StopEffect(EffectType effectType)
 		REQUEST_SCRIPT("cellphone_controller");
 		while (!HAS_SCRIPT_LOADED("cellphone_controller"))
 		{
-			scriptWait(0);
+			WAIT(0);
 		}
 		START_NEW_SCRIPT("cellphone_controller", 1424);
 		SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");

@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DebugMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EffectDispatcher.cpp" />
     <ClCompile Include="Effects.cpp" />
@@ -145,8 +146,10 @@
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects.h" />
+    <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="nativesNoNamespaces.h" />

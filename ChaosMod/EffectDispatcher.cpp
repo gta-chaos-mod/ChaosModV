@@ -118,7 +118,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
-	EffectInfo effectInfo = EffectsMap.at(effectType);
+	EffectInfo effectInfo = g_effectsMap.at(effectType);
 
 	static std::ofstream log("chaosmod/effectsLog.txt");
 	log << effectInfo.Name << std::endl;

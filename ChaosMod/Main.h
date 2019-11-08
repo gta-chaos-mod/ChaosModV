@@ -1,5 +1,8 @@
 #pragma once
 #include <Windows.h>
+#include <memory>
+
+class DebugMenu;
 
 class Main
 {

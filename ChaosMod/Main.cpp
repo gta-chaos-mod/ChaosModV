@@ -6,8 +6,9 @@
 Main* m_main = nullptr;
 EffectDispatcher* m_effectDispatcher = nullptr;
 
-bool m_forceDispatchLastEffectNextFrame;
-bool m_pauseTimer;
+std::unique_ptr<DebugMenu> m_debugMenu;
+bool m_clearAllEffects = false;
+bool m_pauseTimer = false;
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, std::array<int, 3>& timerColor,
 	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
@@ -147,7 +148,7 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 		}
 
 		// Map id to EffectType
-		for (const auto pair : EffectsMap)
+		for (const auto pair : g_effectsMap)
 		{
 			if (pair.second.Id == keyValue)
 			{
@@ -213,6 +214,10 @@ bool Main::Init()
 			timerColor, textColor, effectTimerColor);
 	}
 
+#ifdef _DEBUG
+	m_debugMenu = std::make_unique<DebugMenu>(enabledEffects, m_effectDispatcher);
+#endif
+
 	MH_EnableHook(MH_ALL_HOOKS);
 
 	return true;
@@ -222,24 +227,20 @@ void Main::Loop()
 {
 	m_effectDispatcher->Reset();
 
-	m_forceDispatchLastEffectNextFrame = false;
-	m_pauseTimer = false;
-
 	while (true)
 	{
-		scriptWait(0);
+		WAIT(0);
 
 		if (IS_SCREEN_FADED_OUT())
 		{
 			continue;
 		}
 
-		if (m_forceDispatchLastEffectNextFrame)
+		if (m_clearAllEffects)
 		{
-			m_forceDispatchLastEffectNextFrame = false;
+			m_clearAllEffects = false;
 
-			m_effectDispatcher->ClearEffects();
-			m_effectDispatcher->DispatchEffect((EffectType)((int)_EFFECT_ENUM_MAX - 1));
+			m_effectDispatcher->Reset();
 		}
 
 		if (!m_pauseTimer)
@@ -249,6 +250,33 @@ void Main::Loop()
 
 		m_effectDispatcher->UpdateEffects();
 		m_effectDispatcher->Draw();
+
+#ifdef _DEBUG
+		if (m_debugMenu->IsVisible())
+		{
+			// Arrow Up
+			DISABLE_CONTROL_ACTION(1, 27, true);
+			DISABLE_CONTROL_ACTION(1, 127, true);
+			DISABLE_CONTROL_ACTION(1, 188, true);
+			DISABLE_CONTROL_ACTION(1, 300, true);
+			// Arrow Down
+			DISABLE_CONTROL_ACTION(1, 173, true);
+			DISABLE_CONTROL_ACTION(1, 187, true);
+			DISABLE_CONTROL_ACTION(1, 299, true);
+			// Enter
+			DISABLE_CONTROL_ACTION(1, 18, true);
+			DISABLE_CONTROL_ACTION(1, 176, true);
+			DISABLE_CONTROL_ACTION(1, 191, true);
+			DISABLE_CONTROL_ACTION(1, 201, true);
+			DISABLE_CONTROL_ACTION(1, 215, true);
+			// Backspace
+			DISABLE_CONTROL_ACTION(1, 177, true);
+			DISABLE_CONTROL_ACTION(1, 194, true);
+			DISABLE_CONTROL_ACTION(1, 202, true);
+
+			m_debugMenu->Tick();
+		}
+#endif
 	}
 }
 
@@ -267,7 +295,7 @@ void Main::Stop()
 
 	if (m_effectDispatcher)
 	{
-		delete m_effectDispatcher;
+		delete m_main;
 		m_effectDispatcher = nullptr;
 	}
 
@@ -278,6 +306,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 {
 #ifdef _DEBUG
 	static bool CTRLpressed = false;
+
 	if (key == VK_CONTROL)
 	{
 		CTRLpressed = !isUpNow;
@@ -286,12 +315,21 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	{
 		if (key == VK_OEM_MINUS)
 		{
-			m_forceDispatchLastEffectNextFrame = true;
+			m_clearAllEffects = true;
 		}
 		else if (key == VK_OEM_PERIOD)
 		{
 			m_pauseTimer = !m_pauseTimer;
 		}
+		else if (key == VK_OEM_COMMA)
+		{
+			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
+		}
+	}
+
+	if (m_debugMenu->IsVisible())
+	{
+		m_debugMenu->HandleInput(key, wasDownBefore);
 	}
 #endif
 }
