@@ -1302,11 +1302,17 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_JUMPY_VEHS])
 	{
-		for (Vehicle veh : GetAllVehs())
+		static DWORD64 lastTick = GetTickCount64();
+		DWORD64 curTick = GetTickCount64();
+		if (lastTick < curTick - 200)
 		{
-			if (veh && !IS_ENTITY_IN_AIR(veh))
+			lastTick = curTick;
+			for (Vehicle veh : GetAllVehs())
 			{
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 50.f, true, false, true, true);
+				if (veh && !IS_ENTITY_IN_AIR(veh))
+				{
+					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 100.f, true, false, true, true);
+				}
 			}
 		}
 	}
