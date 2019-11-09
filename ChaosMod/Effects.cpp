@@ -3,9 +3,25 @@
 #include "Main.h"
 #include "Memory.h"
 
-inline std::array<Ped, 1024> GetAllPeds()
+struct ReturnedEntities
 {
-	static std::array<Ped, 1024> peds;
+	Entity* begin()
+	{
+		return Entities;
+	}
+
+	Entity* end()
+	{
+		return Entities + Size - 1;
+	}
+
+	int Size;
+	Entity Entities[512];
+};
+
+inline ReturnedEntities GetAllPeds()
+{
+	static ReturnedEntities returnedEntities;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -13,16 +29,15 @@ inline std::array<Ped, 1024> GetAllPeds()
 	{
 		lastFrame = curFrame;
 
-		peds.fill(0);
-		worldGetAllPeds(peds.data(), 1024);
+		returnedEntities.Size = worldGetAllPeds(returnedEntities.Entities, 512);
 	}
 
-	return peds;
+	return returnedEntities;
 }
 
-inline std::array<Vehicle, 1024> GetAllVehs()
+inline ReturnedEntities GetAllVehs()
 {
-	static std::array<Vehicle, 1024> vehs;
+	static ReturnedEntities returnedEntities;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -30,16 +45,15 @@ inline std::array<Vehicle, 1024> GetAllVehs()
 	{
 		lastFrame = curFrame;
 
-		vehs.fill(0);
-		worldGetAllVehicles(vehs.data(), 1024);
+		returnedEntities.Size = worldGetAllVehicles(returnedEntities.Entities, 512);
 	}
 
-	return vehs;
+	return returnedEntities;
 }
 
-inline std::array<Object, 1024> GetAllProps()
+inline ReturnedEntities GetAllProps()
 {
-	static std::array<Object, 1024> props;
+	static ReturnedEntities returnedEntities;
 
 	static int lastFrame = 0;
 	int curFrame = GET_FRAME_COUNT();
@@ -47,11 +61,10 @@ inline std::array<Object, 1024> GetAllProps()
 	{
 		lastFrame = curFrame;
 
-		props.fill(0);
-		worldGetAllObjects(props.data(), 1024);
+		returnedEntities.Size = worldGetAllObjects(returnedEntities.Entities, 512);
 	}
 
-	return props;
+	return returnedEntities;
 }
 
 inline void LoadModel(Hash model)
