@@ -131,10 +131,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_STRIP_WEAPONS:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				REMOVE_ALL_PED_WEAPONS(ped, false);
-			}
+			REMOVE_ALL_PED_WEAPONS(ped, false);
 		}
 		break;
 	case EFFECT_GIVE_RPG:
@@ -193,7 +190,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				START_ENTITY_FIRE(ped);
 			}
@@ -202,7 +199,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_EXPLODE_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh && veh != playerVeh)
+			if (veh != playerVeh)
 			{
 				EXPLODE_VEHICLE(veh, true, false);
 			}
@@ -220,10 +217,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_VEHS_LAUNCH:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_ENTITY_VELOCITY(veh, .0f, .0f, 10000.f);
-			}
+			SET_ENTITY_VELOCITY(veh, .0f, .0f, 10000.f);
 		}
 		break;
 	case EFFECT_PLAYER_VEH_LOCK:
@@ -294,17 +288,14 @@ void Effects::StartEffect(EffectType effectType)
 		closestDist = 9999.f;
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
+			Vector3 coords;
+			coords = GET_ENTITY_COORDS(veh, false);
+			float dist;
+			dist = GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
+			if (dist < closestDist)
 			{
-				Vector3 coords;
-				coords = GET_ENTITY_COORDS(veh, false);
-				float dist;
-				dist = GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
-				if (dist < closestDist)
-				{
-					closestVeh = veh;
-					closestDist = dist;
-				}
+				closestVeh = veh;
+				closestDist = dist;
 			}
 		}
 		if (closestVeh != -1)
@@ -317,6 +308,7 @@ void Effects::StartEffect(EffectType effectType)
 		{
 			TASK_LEAVE_VEHICLE(playerPed, playerVeh, 4160);
 		}
+		break;
 	case EFFECT_PEDS_RIOT:
 		Hash groupHash;
 		ADD_RELATIONSHIP_GROUP("_RIOT", &groupHash);
@@ -388,7 +380,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_PEDS_FOLLOW_PLAYER:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, PLAYER_PED_ID(), .0f, .0f, .0f, 9999.f, -1, .0f, true);
 				SET_PED_KEEP_TASK(ped, true);
@@ -421,7 +413,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_PEDS_FLEE:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				TASK_REACT_AND_FLEE_PED(ped, playerPed);
 				SET_PED_KEEP_TASK(ped, true);
@@ -447,7 +439,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_EVERYONE_RPG:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && IS_PED_HUMAN(ped))
+			if (IS_PED_HUMAN(ped))
 			{
 				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RPG"), 9999, true, true);
 			}
@@ -456,7 +448,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_EVERYONE_TAZER:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && IS_PED_HUMAN(ped))
+			if (IS_PED_HUMAN(ped))
 			{
 				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_STUNGUN"), 9999, true, true);
 			}
@@ -465,7 +457,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_EVERYONE_MINIGUN:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && IS_PED_HUMAN(ped))
+			if (IS_PED_HUMAN(ped))
 			{
 				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_MINIGUN"), 9999, true, true);
 			}
@@ -474,10 +466,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_LOCK_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_DOORS_LOCKED(veh, 2);
-			}
+			SET_VEHICLE_DOORS_LOCKED(veh, 2);
 		}
 		break;
 	case EFFECT_TOTAL_CHAOS:
@@ -512,19 +501,13 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_SLIPPERY_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_REDUCE_GRIP(veh, false);
-			}
+			SET_VEHICLE_REDUCE_GRIP(veh, false);
 		}
 		break;
 	case EFFECT_NO_GRAV_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_GRAVITY(veh, true);
-			}
+			SET_VEHICLE_GRAVITY(veh, true);
 		}
 		break;
 	case EFFECT_PLAYER_INVINCIBLE:
@@ -535,29 +518,20 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_05XENGINE_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 1.f);
-				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.f);
-			}
+			_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 1.f);
+			_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.f);
 		}
 		break;
 	case EFFECT_PEDS_INVISIBLE:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				RESET_ENTITY_ALPHA(ped);
-			}
+			RESET_ENTITY_ALPHA(ped);
 		}
 		break;
 	case EFFECT_VEHS_INVISIBLE:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				RESET_ENTITY_ALPHA(veh);
-			}
+			RESET_ENTITY_ALPHA(veh);
 		}
 		break;
 	case EFFECT_NO_RADAR:
@@ -569,10 +543,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PEDS_RAGDOLL_ON_TOUCH:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				SET_PED_RAGDOLL_ON_COLLISION(ped, false);
-			}
+			SET_PED_RAGDOLL_ON_COLLISION(ped, false);
 		}
 		break;
 	case EFFECT_PLAYER_DRUNK:
@@ -585,7 +556,7 @@ void Effects::StopEffect(EffectType effectType)
 		SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), 1.f);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_DEAD_OR_DYING(ped, true))
+			if (!IS_PED_DEAD_OR_DYING(ped, true))
 			{
 				SET_ENTITY_HEALTH(ped, GET_PED_MAX_HEALTH(ped), 0);
 			}
@@ -605,7 +576,7 @@ void Effects::StopEffect(EffectType effectType)
 		SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_SUFFERS_CRITICAL_HITS(ped, true);
 				SET_PED_CONFIG_FLAG(ped, 281, false);
@@ -615,7 +586,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_NO_HEADSHOTS:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_SUFFERS_CRITICAL_HITS(ped, true);
 			}
@@ -624,7 +595,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PEDS_FROZEN:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_CONFIG_FLAG(ped, 292, false);
 			}
@@ -638,12 +609,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_ALL_VEH_POP_TIRES:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
+			for (int i = 0; i < 47; i++)
 			{
-				for (int i = 0; i < 47; i++)
-				{
-					SET_VEHICLE_TYRE_FIXED(veh, i);
-				}
+				SET_VEHICLE_TYRE_FIXED(veh, i);
 			}
 		}
 		break;
@@ -654,7 +622,7 @@ void Effects::StopEffect(EffectType effectType)
 		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && GET_PED_RELATIONSHIP_GROUP_HASH(ped) == zombieGroupHash)
+			if (GET_PED_RELATIONSHIP_GROUP_HASH(ped) == zombieGroupHash)
 			{
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);
 			}
@@ -663,7 +631,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_METEOR_RAIN:
 		for (Object prop : GetAllProps())
 		{
-			if (prop && DECOR_EXIST_ON(prop, "_METEOR"))
+			if (DECOR_EXIST_ON(prop, "_METEOR"))
 			{
 				SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
 			}
@@ -678,19 +646,13 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_EVERYONE_INVINCIBLE:
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				SET_ENTITY_INVINCIBLE(ped, false);
-			}
+			SET_ENTITY_INVINCIBLE(ped, false);
 		}
 		break;
 	case EFFECT_VEHS_INVINCIBLE:
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_ENTITY_INVINCIBLE(veh, false);
-			}
+			SET_ENTITY_INVINCIBLE(veh, false);
 		}
 		break;
 	case EFFECT_TOTAL_CHAOS:
@@ -745,7 +707,7 @@ void Effects::UpdateEffects()
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, riotGroupHash);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_RELATIONSHIP_GROUP_HASH(ped, riotGroupHash);
 			}
@@ -755,64 +717,49 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
-				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
-			}
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
 		}
 	}
 	if (m_effectActive[EFFECT_BLUE_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
-				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
-			}
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
 		}
 	}
 	if (m_effectActive[EFFECT_GREEN_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
-				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
-			}
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
 		}
 	}
 	if (m_effectActive[EFFECT_BLACK_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 0);
-				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 0);
-			}
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 0);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 0);
 		}
 	}
 	if (m_effectActive[EFFECT_RAINBOW_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
+			static ULONG cnt = 0;
+			static constexpr float freq = .001f;
+			int r = std::sin(freq * cnt) * 127 + 128;
+			int g = std::sin(freq * cnt + 2) * 127 + 128;
+			int b = std::sin(freq * cnt + 4) * 127 + 128;
+			if (++cnt >= (ULONG)-1)
 			{
-				static ULONG cnt = 0;
-				static constexpr float freq = .001f;
-				int r = std::sin(freq * cnt) * 127 + 128;
-				int g = std::sin(freq * cnt + 2) * 127 + 128;
-				int b = std::sin(freq * cnt + 4) * 127 + 128;
-				if (++cnt >= (ULONG)-1)
-				{
-					cnt = 0;
-				}
-				SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
-				SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+				cnt = 0;
 			}
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
 		}
 	}
 	if (m_effectActive[EFFECT_FORCED_FP])
@@ -825,21 +772,15 @@ void Effects::UpdateEffects()
 		for (Vehicle veh : GetAllVehs())
 		{
 			static bool toggle = true;
-			if (veh)
-			{
-				SET_VEHICLE_REDUCE_GRIP(veh, toggle);
-				toggle = !toggle;
-			}
+			SET_VEHICLE_REDUCE_GRIP(veh, toggle);
+			toggle = !toggle;
 		}
 	}
 	if (m_effectActive[EFFECT_NO_GRAV_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_VEHICLE_GRAVITY(veh, false);
-			}
+			SET_VEHICLE_GRAVITY(veh, false);
 		}
 	}
 	if (m_effectActive[EFFECT_PLAYER_INVINCIBLE])
@@ -850,33 +791,24 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 2.f);
-				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 2.f);
-			}
+			_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 2.f);
+			_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 2.f);
 		}
 	}
 	if (m_effectActive[EFFECT_10XENGINE_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 10.f);
-				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 10.f);
-			}
+			_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 10.f);
+			_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 10.f);
 		}
 	}
 	if (m_effectActive[EFFECT_05XENGINE_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, .5f);
-				_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, .5f);
-			}
+			_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, .5f);
+			_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, .5f);
 		}
 	}
 	if (m_effectActive[EFFECT_NEVER_WANTED])
@@ -900,20 +832,14 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				SET_ENTITY_ALPHA(ped, 0, 0);
-			}
+			SET_ENTITY_ALPHA(ped, 0, 0);
 		}
 	}
 	if (m_effectActive[EFFECT_VEHS_INVISIBLE])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_ENTITY_ALPHA(veh, 0, 0);
-			}
+			SET_ENTITY_ALPHA(veh, 0, 0);
 		}
 	}
 	if (m_effectActive[EFFECT_NO_RADAR])
@@ -936,10 +862,7 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				SET_PED_RAGDOLL_ON_COLLISION(ped, true);
-			}
+			SET_PED_RAGDOLL_ON_COLLISION(ped, true);
 		}
 	}
 	if (m_effectActive[EFFECT_PLAYER_DRUNK])
@@ -958,7 +881,7 @@ void Effects::UpdateEffects()
 		SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
+			if (!IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
 			{
 				SET_ENTITY_HEALTH(ped, 101, 0);
 			}
@@ -968,7 +891,7 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 				SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
@@ -983,7 +906,7 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh && IS_HORN_ACTIVE(veh))
+			if (IS_HORN_ACTIVE(veh))
 			{
 				APPLY_FORCE_TO_ENTITY(veh, 0, .0f, 50.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
 			}
@@ -997,7 +920,7 @@ void Effects::UpdateEffects()
 		SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), .1f);
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 				SET_PED_CONFIG_FLAG(ped, 281, true);
@@ -1008,17 +931,17 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-		if (ped && !IS_PED_A_PLAYER(ped))
-		{
-			SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-		}
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+			}
 		}
 	}
 	if (m_effectActive[EFFECT_PEDS_FROZEN])
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_CONFIG_FLAG(ped, 292, true);
 			}
@@ -1055,7 +978,7 @@ void Effects::UpdateEffects()
 		someFunc3();
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_IN_ANY_VEHICLE(ped, false))
+			if (!IS_PED_IN_ANY_VEHICLE(ped, false))
 			{
 				SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, -500.f, false, false, true, false);
@@ -1066,12 +989,9 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
+			for (int i = 0; i < 48; i++)
 			{
-				for (int i = 0; i < 48; i++)
-				{
-					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
-				}
+				SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
 			}
 		}
 	}
@@ -1083,7 +1003,7 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped) && !IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3))
+			if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3))
 			{
 				REQUEST_ANIM_DICT("missfbi3_sniping");
 				TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
@@ -1249,7 +1169,7 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped && !IS_PED_A_PLAYER(ped))
+			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 			}
@@ -1267,20 +1187,14 @@ void Effects::UpdateEffects()
 	{
 		for (Ped ped : GetAllPeds())
 		{
-			if (ped)
-			{
-				SET_ENTITY_INVINCIBLE(ped, true);
-			}
+			SET_ENTITY_INVINCIBLE(ped, true);
 		}
 	}
 	if (m_effectActive[EFFECT_VEHS_INVINCIBLE])
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				SET_ENTITY_INVINCIBLE(veh, true);
-			}
+			SET_ENTITY_INVINCIBLE(veh, true);
 		}
 	}
 	if (m_effectActive[EFFECT_PLAYER_SHOT_RAGDOLL])
@@ -1326,7 +1240,7 @@ void Effects::UpdateEffects()
 			lastTick = curTick;
 			for (Vehicle veh : GetAllVehs())
 			{
-				if (veh && !IS_ENTITY_IN_AIR(veh))
+				if (!IS_ENTITY_IN_AIR(veh))
 				{
 					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 100.f, true, false, true, true);
 				}
@@ -1340,7 +1254,7 @@ void Effects::UpdateEffects()
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh && veh != playerVeh)
+			if (veh != playerVeh)
 			{
 				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, 50.f, .0f, .0f, true, true, true, true);
 			}
@@ -1362,10 +1276,7 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (veh)
-			{
-				_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
-			}
+			_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
 		}
 	}
 }
