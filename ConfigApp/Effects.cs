@@ -163,6 +163,8 @@ namespace ConfigApp
             EFFECT_TP_WAYPOINT,
             EFFECT_PEDS_SAY_HI,
             EFFECT_PEDS_INSULT,
+            EFFECT_EXPLOSIVE_BULLETS,
+            EFFECT_EXPLOSIVE_PUNCH,
             _EFFECT_ENUM_MAX
         }
 
@@ -301,6 +303,8 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, 129)},
             {EffectType.EFFECT_PEDS_SAY_HI, new EffectInfo("Friendly Neighborhood", EffectCategory.PEDS, 130)},
             {EffectType.EFFECT_PEDS_INSULT, new EffectInfo("Unfriendly Neighborhood", EffectCategory.PEDS, 131)},
+            {EffectType.EFFECT_EXPLOSIVE_BULLETS, new EffectInfo("Explosive Bullets", EffectCategory.PLAYER, 133)},
+            {EffectType.EFFECT_EXPLOSIVE_PUNCH, new EffectInfo("Explosive Punch", EffectCategory.PLAYER, 134)},
         };
     }
 }

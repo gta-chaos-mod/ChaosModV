@@ -155,6 +155,8 @@ enum EffectType : int
 	EFFECT_TP_WAYPOINT,
 	EFFECT_PEDS_SAY_HI,
 	EFFECT_PEDS_INSULT,
+	EFFECT_EXPLOSIVE_BULLETS,
+	EFFECT_EXPLOSIVE_PUNCH,
 	_EFFECT_ENUM_MAX
 };
 
@@ -293,6 +295,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_TP_WAYPOINT, {"Teleport To Waypoint", 129}},
 	{EFFECT_PEDS_SAY_HI, {"Friendly Neighborhood", 130, true, { EFFECT_PEDS_INSULT }}},
 	{EFFECT_PEDS_INSULT, {"Unfriendly Neighborhood", 131, true, { EFFECT_PEDS_SAY_HI }}},
+	{EFFECT_EXPLOSIVE_BULLETS, {"Explosive Bullets", 133, true}},
+	{EFFECT_EXPLOSIVE_PUNCH, {"Explosive Punch", 134, true}},
 };
 
 class Effects

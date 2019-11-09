@@ -1345,4 +1345,12 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_EXPLOSIVE_BULLETS])
+	{
+		SET_EXPLOSIVE_AMMO_THIS_FRAME(PLAYER_ID());
+	}
+	if (m_effectActive[EFFECT_EXPLOSIVE_PUNCH])
+	{
+		SET_EXPLOSIVE_MELEE_THIS_FRAME(PLAYER_ID());
+	}
 }
