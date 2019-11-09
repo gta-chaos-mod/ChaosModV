@@ -163,7 +163,7 @@ namespace ConfigApp
 
         public static readonly Dictionary<EffectType, EffectInfo> EffectsMap = new Dictionary<EffectType, EffectInfo>()
         {
-            {EffectType.EFFECT_KILL, new EffectInfo("Player Suicide", EffectCategory.PLAYER, 0)},
+            {EffectType.EFFECT_KILL, new EffectInfo("Suicide", EffectCategory.PLAYER, 0)},
 	        {EffectType.EFFECT_PLUS_2_STARS, new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER, 1)},
 	        {EffectType.EFFECT_5_STARS, new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER, 2)},
 	        {EffectType.EFFECT_CLEAR_STARS, new EffectInfo("Clear Wanted Level", EffectCategory.PLAYER, 3)},
@@ -181,7 +181,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_ARMOR, new EffectInfo("Give Armor", EffectCategory.PLAYER, 12)},
 	        {EffectType.EFFECT_IGNITE, new EffectInfo("Ignite Player", EffectCategory.PLAYER, 13)},
 	        {EffectType.EFFECT_ANGRY_JESUS, new EffectInfo("Spawn Griefer Jesus", EffectCategory.MISC, 14)},
-	        {EffectType.EFFECT_IGNITE_PEDS, new EffectInfo("Ignite All Peds", EffectCategory.PEDS, 15)},
+	        {EffectType.EFFECT_IGNITE_PEDS, new EffectInfo("Ignite All Nearby Peds", EffectCategory.PEDS, 15)},
 	        {EffectType.EFFECT_EXPLODE_VEHS, new EffectInfo("Explode All Nearby Vehicles", EffectCategory.VEHICLE, 16)},
 	        {EffectType.EFFECT_PLAYER_LAUNCH, new EffectInfo("Launch Player Up", EffectCategory.PLAYER, 17)},
 	        {EffectType.EFFECT_PLAYER_VEH_LAUNCH, new EffectInfo("Launch Current Vehicle Up", EffectCategory.VEHICLE, 18)},
@@ -249,7 +249,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_PEDS_FOLLOW_PLAYER, new EffectInfo("You Are Famous", EffectCategory.PEDS, 76)},
 	        {EffectType.EFFECT_PLAYER_DRUNK, new EffectInfo("Drunk", EffectCategory.PLAYER, 77)},
 	        {EffectType.EFFECT_PEDS_OHKO, new EffectInfo("One Hit KO", EffectCategory.PEDS, 78)},
-	        {EffectType.EFFECT_PEDS_NO_FEAR, new EffectInfo("Peds Never Flee", EffectCategory.PEDS, 79)},
+	        {EffectType.EFFECT_PEDS_NO_FEAR, new EffectInfo("Peds Have No Fear", EffectCategory.PEDS, 79)},
 	        {EffectType.EFFECT_SCREEN_BLOOM, new EffectInfo("Bloom", EffectCategory.MISC, 80)},
 	        {EffectType.EFFECT_SCREEN_LSD, new EffectInfo("LSD", EffectCategory.PLAYER, 81)},
 	        {EffectType.EFFECT_PEDS_IGNORE_PLAYER, new EffectInfo("Peds Ignore Player", EffectCategory.PEDS, 82)},

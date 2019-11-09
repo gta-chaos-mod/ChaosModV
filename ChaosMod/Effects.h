@@ -155,7 +155,7 @@ enum EffectType : int
 
 const std::map<EffectType, EffectInfo> g_effectsMap =
 {
-	{EFFECT_KILL, {"Player Suicide", 0}},
+	{EFFECT_KILL, {"Suicide", 0}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", 1}},
 	{EFFECT_5_STARS, {"5 Wanted Stars", 2}},
 	{EFFECT_CLEAR_STARS, {"Clear Wanted Level", 3}},
@@ -173,7 +173,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_ARMOR, {"Give Armor", 12}},
 	{EFFECT_IGNITE, {"Ignite Player", 13}},
 	{EFFECT_ANGRY_JESUS, {"Spawn Griefer Jesus", 14}},
-	{EFFECT_IGNITE_PEDS, {"Ignite All Peds", 15}},
+	{EFFECT_IGNITE_PEDS, {"Ignite All Nearby Peds", 15}},
 	{EFFECT_EXPLODE_VEHS, {"Explode All Nearby Vehicles", 16}},
 	{EFFECT_PLAYER_LAUNCH, {"Launch Player Up", 17}},
 	{EFFECT_PLAYER_VEH_LAUNCH, {"Launch Current Vehicle Up", 18}},
@@ -241,7 +241,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous", 76}},
 	{EFFECT_PLAYER_DRUNK, {"Drunk", 77, true}},
 	{EFFECT_PEDS_OHKO, {"One Hit KO", 78, true}},
-	{EFFECT_PEDS_NO_FEAR, {"Peds Never Flee", 79, true}},
+	{EFFECT_PEDS_NO_FEAR, {"Peds Have No Fear", 79, true}},
 	{EFFECT_SCREEN_BLOOM, {"Bloom", 80, true, { EFFECT_SCREEN_LSD }}},
 	{EFFECT_SCREEN_LSD, {"LSD", 81, true, { EFFECT_SCREEN_BLOOM }}},
 	{EFFECT_PEDS_IGNORE_PLAYER, {"Peds Ignore Player", 82, true}},
