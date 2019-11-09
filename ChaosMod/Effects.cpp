@@ -1316,4 +1316,21 @@ void Effects::UpdateEffects()
 			_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
 		}
 	}
+	if (m_effectActive[EFFECT_PEDS_SAY_HI])
+	{
+		static DWORD64 lastTick = 0;
+		DWORD64 curTick = GetTickCount64();
+		if (lastTick < curTick - 1000)
+		{
+			lastTick = curTick;
+			for (Ped ped : GetAllPeds())
+			{
+				if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
+				{
+					constexpr const char* speeches[3]{ "GENERIC_HI", "GENERIC_HOWS_IT_GOING", "GENERIC_THANKS" };
+					_PLAY_AMBIENT_SPEECH1(ped, speeches[Random::GetRandomInt(0, 2)], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
+				}
+			}
+		}
+	}
 }
