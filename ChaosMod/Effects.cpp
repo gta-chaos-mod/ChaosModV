@@ -745,6 +745,13 @@ void Effects::UpdateEffects()
 			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 0);
 		}
 	}
+	if (m_effectActive[EFFECT_CHROME_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			SET_VEHICLE_COLOURS(veh, 120, 120);
+		}
+	}
 	if (m_effectActive[EFFECT_RAINBOW_VEHS])
 	{
 		for (Vehicle veh : GetAllVehs())
