@@ -504,6 +504,12 @@ void Effects::StartEffect(EffectType effectType)
 			TeleportPlayer(coords.x, coords.y, z, GET_ENTITY_HEADING(playerPed));
 		}
 		break;
+	case EFFECT_GIVE_ALL_WEPS:
+		for (Hash weapon : Memory::GetAllWeapons())
+		{
+			GIVE_WEAPON_TO_PED(playerPed, weapon, 9999, true, false);
+		}
+		break;
 	}
 }
 
@@ -1246,29 +1252,11 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_PLAYER_SHOT_RAGDOLL])
 	{
-		static WORD* something1; // dword_7FF6D9EF9748
-		static DWORD64* something2; // qword_7FF6D9EF9740
-		static bool firstTime = true;
-		if (firstTime)
-		{
-			firstTime = false;
-			DWORD64 addr;
-			// Thanks sigmaker for these memes
-			addr = Memory::FindPattern("\x0F\xB7\x15\x00\x00\x00\x00\x45\x33\xD2\xFF\xCA\x78\x29\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C", "xxx????xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-			something1 = (WORD*)(addr + 7 + *(DWORD*)(addr + 3));
-			addr = Memory::FindPattern("\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C", "xxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-			something2 = (DWORD64*)(addr + 7 + *(DWORD*)(addr + 3));
-		}
-		int v3;
-		DWORD64 v4;
-		DWORD64 v5;
 		Ped playerPed = PLAYER_PED_ID();
 		int curTime = GET_GAME_TIMER();
-		for (v3 = *something1 - 1; v3 >= 0; v3 = v4 - 1)
+		for (Hash weapon : Memory::GetAllWeapons())
 		{
-			v4 = (DWORD)(v3);
-			v5 = *((DWORD64*)*something2 + v4);
-			int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, *(Hash*)(v5 + 16));
+			int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, weapon);
 			if (timeSinceDmg && curTime - timeSinceDmg < 200)
 			{
 				SET_PED_TO_RAGDOLL(playerPed, 500, 1000, 0, true, true, false);

@@ -165,6 +165,7 @@ namespace ConfigApp
             EFFECT_PEDS_INSULT,
             EFFECT_EXPLOSIVE_BULLETS,
             EFFECT_EXPLOSIVE_PUNCH,
+            EFFECT_GIVE_ALL_WEPS,
             _EFFECT_ENUM_MAX
         }
 
@@ -305,6 +306,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_INSULT, new EffectInfo("Unfriendly Neighborhood", EffectCategory.PEDS, 131)},
             {EffectType.EFFECT_EXPLOSIVE_BULLETS, new EffectInfo("Explosive Bullets", EffectCategory.PLAYER, 133)},
             {EffectType.EFFECT_EXPLOSIVE_PUNCH, new EffectInfo("Explosive Punch", EffectCategory.PLAYER, 134)},
+            {EffectType.EFFECT_GIVE_ALL_WEPS, new EffectInfo("Give All Weapons", EffectCategory.PLAYER, 135)},
         };
     }
 }

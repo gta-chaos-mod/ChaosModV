@@ -1,4 +1,7 @@
 #pragma once
+#include <vector>
+
+typedef DWORD Hash;
 
 class Memory
 {
@@ -11,6 +14,7 @@ public:
 	static DWORD64 GetBaseAddr();
 	static DWORD64 GetEndAddr();
 	static DWORD64 FindPattern(const char* pattern, const char* mask);
+	static std::vector<Hash> GetAllWeapons();
 
 private:
 	const DWORD64 m_base;
