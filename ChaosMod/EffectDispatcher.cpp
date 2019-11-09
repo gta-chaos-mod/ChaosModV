@@ -130,20 +130,34 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 	{
 		const std::vector<EffectType> incompatibleEffects = effectInfo.IncompatibleWith;
 
-		for (ActiveEffect& effect : m_activeEffects)
+		std::vector<ActiveEffect>::iterator it;
+		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
+			ActiveEffect& effect = *it;
+
 			if (effect.EffectType == effectType)
 			{
 				alreadyExists = true;
 				effect.Timer = effect.MaxTime;
 			}
 
+			bool found = false;
 			for (EffectType incompatibleEffect : incompatibleEffects)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
-					effect.Timer = -180;
+					m_effects->StopEffect(effect.EffectType);
+					it = m_activeEffects.erase(it);
+
+					found = true;
+
+					break;
 				}
+			}
+
+			if (!found)
+			{
+				it++;
 			}
 		}
 	}
