@@ -594,6 +594,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_SCREEN_REALLSD:
+		ANIMPOSTFX_STOP("DrugsDrivingIn");
+		break;
 	case EFFECT_SCREEN_BLOOM:
 	case EFFECT_SCREEN_LSD:
 		CLEAR_TIMECYCLE_MODIFIER();
@@ -935,6 +938,13 @@ void Effects::UpdateEffects()
 				SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 				SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 			}
+		}
+	}
+	if (m_effectActive[EFFECT_SCREEN_REALLSD])
+	{
+		if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
+		{
+			ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
 		}
 	}
 	if (m_effectActive[EFFECT_PEDS_IGNORE_PLAYER])
