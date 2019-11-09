@@ -1016,7 +1016,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
 	{
-		static constexpr int MAX_ZOMBIES = 10;
+		static constexpr int MAX_ZOMBIES = 20;
 		static constexpr Hash MODEL_HASH = -1404353274;
 		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
