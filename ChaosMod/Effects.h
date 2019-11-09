@@ -153,6 +153,7 @@ enum EffectType : int
 	EFFECT_VEHS_HORN,
 	EFFECT_TP_WAYPOINT,
 	EFFECT_PEDS_SAY_HI,
+	EFFECT_PEDS_INSULT,
 	_EFFECT_ENUM_MAX
 };
 
@@ -288,7 +289,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NO_RAGDOLL, {"No Ragdoll", 126, true, { EFFECT_PLAYER_SHOT_RAGDOLL }}},
 	{EFFECT_VEHS_HORN, {"All Vehicles Honk", 127, true}},
 	{EFFECT_TP_WAYPOINT, {"Teleport To Waypoint", 129}},
-	{EFFECT_PEDS_SAY_HI, {"Friendly Neighborhood", 130, true}},
+	{EFFECT_PEDS_SAY_HI, {"Friendly Neighborhood", 130, true, { EFFECT_PEDS_INSULT }}},
+	{EFFECT_PEDS_INSULT, {"Unfriendly Neighborhood", 131, true, { EFFECT_PEDS_SAY_HI }}},
 };
 
 class Effects

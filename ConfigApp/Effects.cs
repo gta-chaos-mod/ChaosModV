@@ -161,6 +161,7 @@ namespace ConfigApp
             EFFECT_VEHS_HORN,
             EFFECT_TP_WAYPOINT,
             EFFECT_PEDS_SAY_HI,
+            EFFECT_PEDS_INSULT,
             _EFFECT_ENUM_MAX
         }
 
@@ -297,6 +298,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, 127)},
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, 129)},
             {EffectType.EFFECT_PEDS_SAY_HI, new EffectInfo("Friendly Neighborhood", EffectCategory.PEDS, 130)},
+            {EffectType.EFFECT_PEDS_INSULT, new EffectInfo("Unfriendly Neighborhood", EffectCategory.PEDS, 131)},
         };
     }
 }
