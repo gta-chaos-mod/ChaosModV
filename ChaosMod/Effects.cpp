@@ -382,9 +382,6 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
-	case EFFECT_PLAYER_DRUNK:
-		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
-		break;
 	case EFFECT_SCREEN_BLOOM:
 		SET_TIMECYCLE_MODIFIER("Bloom");
 		PUSH_TIMECYCLE_MODIFIER();
@@ -931,6 +928,10 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_PLAYER_DRUNK])
 	{
+		if (!IS_GAMEPLAY_CAM_SHAKING())
+		{
+			SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
+		}
 		SET_PED_IS_DRUNK(PLAYER_PED_ID(), true);
 		REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
 		SET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), "MOVE_M@DRUNK@VERYDRUNK", 1.f);
