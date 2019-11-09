@@ -472,6 +472,38 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_TOTAL_CHAOS:
 		SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
 		break;
+	case EFFECT_TP_WAYPOINT:
+		Vector3 coords;
+		bool found;
+		found = false;
+		if (IS_WAYPOINT_ACTIVE())
+		{
+			coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+			found = true;
+		}
+		else
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+				if (DOES_BLIP_EXIST(blip))
+				{
+					coords = GET_BLIP_COORDS(blip);
+					found = true;
+					break;
+				}
+			}
+		}
+		if (found)
+		{
+			float z;
+			if (!GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, 1000.f, &z, false, false))
+			{
+				z = playerPos.z;
+			}
+			TeleportPlayer(coords.x, coords.y, z, GET_ENTITY_HEADING(playerPed));
+		}
+		break;
 	}
 }
 

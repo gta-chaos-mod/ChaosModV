@@ -159,6 +159,7 @@ namespace ConfigApp
             EFFECT_TOTAL_CHAOS,
             EFFECT_NO_RAGDOLL,
             EFFECT_VEHS_HORN,
+            EFFECT_TP_WAYPOINT,
             _EFFECT_ENUM_MAX
         }
 
@@ -293,6 +294,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, 125)},
             {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PLAYER, 126)},
             {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, 127)},
+            {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, 129)},
         };
     }
 }
