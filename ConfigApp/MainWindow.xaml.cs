@@ -171,10 +171,10 @@ namespace ConfigApp
         private void WriteConfigFile()
         {
             string data = "";
-            data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "60")}\n";
-            data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "180")}\n";
+            data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "30")}\n";
+            data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "90")}\n";
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
-            data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "15")}\n";
+            data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "30")}\n";
             data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
             data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
             data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";

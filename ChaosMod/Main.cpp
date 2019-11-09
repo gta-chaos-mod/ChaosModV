@@ -177,10 +177,10 @@ bool Main::Init()
 		m_main = new Main();
 	}
 
-	int effectSpawnTime = 180;
-	int effectTimedDur = 60;
+	int effectSpawnTime = 30;
+	int effectTimedDur = 90;
 	int seed = -1;
-	int effectTimedShortDur = 15;
+	int effectTimedShortDur = 30;
 	std::array<int, 3> timerColor = { 40, 40, 255 };
 	std::array<int, 3> textColor = { 255, 255, 255 };
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
