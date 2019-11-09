@@ -1102,7 +1102,8 @@ void Effects::UpdateEffects()
 				}
 			}
 			DECOR_SET_BOOL(meteor, "_METEOR", true);
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -100.f, true, false, false, true);
+			SET_OBJECT_PHYSICS_PARAMS(meteor, 10000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -1000.f, true, false, true, true);
 			SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 		}
 		for (int i = 0; i < MAX_METEORS; i++)
@@ -1119,12 +1120,9 @@ void Effects::UpdateEffects()
 						{
 							static DWORD64 lastTick = 0;
 							DWORD64 curTick = GetTickCount64();
-							if (curTick > lastTick + 1000)
+							if (lastTick < curTick - 1000)
 							{
-								if (i == MAX_METEORS - 1)
-								{
-									lastTick = curTick;
-								}
+								lastTick = curTick;
 								meteorDespawnTime[i]--;
 							}
 						}
