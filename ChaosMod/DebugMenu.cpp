@@ -22,15 +22,17 @@ DebugMenu::DebugMenu(std::vector<EffectType> effects, EffectDispatcher* effectDi
 
 	std::sort(m_effects.begin(), m_effects.end(), [](DebugEffect a, DebugEffect b)
 	{
-		for (int i = 0; i < b.EffectName.size(); i++)
+		for (int i = 0; ; i++)
 		{
 			if (i >= a.EffectName.size() || std::toupper(a.EffectName[i]) < std::toupper(b.EffectName[i]))
 			{
 				return true;
 			}
+			else if (i >= b.EffectName.size() || std::toupper(b.EffectName[i]) < std::toupper(a.EffectName[i]))
+			{
+				return false;
+			}
 		}
-
-		return false;
 	});
 }
 
