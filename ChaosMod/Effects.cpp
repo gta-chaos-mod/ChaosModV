@@ -547,6 +547,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_NO_RADAR:
+		DISPLAY_RADAR(true);
+		break;
 	case EFFECT_SUPER_RUN:
 		SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(PLAYER_ID(), 1.f);
 		break;
@@ -902,7 +905,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_NO_RADAR])
 	{
-		_DISABLE_RADAR_THIS_FRAME();
+		DISPLAY_RADAR(false);
 	}
 	if (m_effectActive[EFFECT_NO_HUD])
 	{
