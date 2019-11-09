@@ -44,8 +44,8 @@ void EffectDispatcher::Draw()
 		if (effect.Timer > 0)
 		{
 			DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.9f - effect.Timer / effect.MaxTime, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0],
-				m_effectTimerColor[1], m_effectTimerColor[2], 255, false);
+			DRAW_RECT(.9f, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0], m_effectTimerColor[1],
+				m_effectTimerColor[2], 255, false);
 		}
 
 		y += .075f;
