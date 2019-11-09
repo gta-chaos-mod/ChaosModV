@@ -33,4 +33,5 @@ private:
 	bool m_visible = false;
 	EffectDispatcher* m_effectDispatcher;
 	DWORD m_repeatTime = 0;
+	bool m_dispatchEffect = false;
 };

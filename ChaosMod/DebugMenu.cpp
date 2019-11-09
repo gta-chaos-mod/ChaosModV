@@ -43,6 +43,13 @@ void DebugMenu::Tick()
 		return;
 	}
 
+	if (m_dispatchEffect)
+	{
+		m_dispatchEffect = false;
+
+		m_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
+	}
+
 	float y = .1f;
 	int remainingDrawItems = MAX_VIS_ITEMS;
 
@@ -117,7 +124,7 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 		}
 		break;
 	case VK_RETURN:
-		m_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
+		m_dispatchEffect = true;
 		break;
 	case VK_BACK:
 		m_visible = false;
