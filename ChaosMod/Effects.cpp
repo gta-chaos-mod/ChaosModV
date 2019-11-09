@@ -925,13 +925,13 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_PEDS_OHKO])
 	{
-		SET_PED_ARMOUR(PLAYER_PED_ID(), 0);
 		SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 		for (Ped ped : GetAllPeds())
 		{
 			if (!IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
 			{
 				SET_ENTITY_HEALTH(ped, 101, 0);
+				SET_PED_ARMOUR(ped, 0);
 			}
 		}
 	}
