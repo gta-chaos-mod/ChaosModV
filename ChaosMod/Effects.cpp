@@ -656,6 +656,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_FORCED_CINEMATIC:
+		SET_PLAYER_CAN_DO_DRIVE_BY(PLAYER_ID(), true);
+		break;
 	case EFFECT_IN_THE_HOOD:
 		REMOVE_ANIM_DICT("missfbi3_sniping");
 		break;
@@ -791,6 +794,14 @@ void Effects::UpdateEffects()
 		for (Vehicle veh : GetAllVehs())
 		{
 			SET_VEHICLE_COLOURS(veh, 120, 120);
+		}
+	}
+	if (m_effectActive[EFFECT_PINK_VEHS])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
 		}
 	}
 	if (m_effectActive[EFFECT_RAINBOW_VEHS])
@@ -1067,6 +1078,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_FORCED_CINEMATIC])
 	{
+		SET_PLAYER_CAN_DO_DRIVE_BY(PLAYER_ID(), false);
 		SET_CINEMATIC_MODE_ACTIVE(true);
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
