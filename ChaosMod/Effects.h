@@ -8,9 +8,7 @@ struct EffectInfo
 {
 public:
 	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList)
-	{}
-	//EffectInfo() : Name("???"), Id("???"), IsTimed(false), IsShortDuration(false), IncompatibleWith({}) {}
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList) {}
 
 public:
 	const char* Name;

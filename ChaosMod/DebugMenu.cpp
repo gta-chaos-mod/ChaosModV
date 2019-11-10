@@ -6,6 +6,12 @@
 
 DebugMenu::DebugMenu(std::vector<EffectType> effects, EffectDispatcher* effectDispatcher) : m_effectDispatcher(effectDispatcher)
 {
+	if (effects.empty())
+	{
+		m_effects.emplace_back(static_cast<EffectType>(-1), "No active effects :(");
+		return;
+	}
+
 	m_effects.reserve(effects.size());
 
 	for (EffectType effectType : effects)
@@ -124,7 +130,10 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 		}
 		break;
 	case VK_RETURN:
-		m_dispatchEffect = true;
+		if (m_effects[m_selected].EffectType != -1)
+		{
+			m_dispatchEffect = true;
+		}
 		break;
 	case VK_BACK:
 		m_visible = false;
