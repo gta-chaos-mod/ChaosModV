@@ -160,6 +160,7 @@ enum EffectType : int
 	EFFECT_EXPLOSIVE_BULLETS,
 	EFFECT_EXPLOSIVE_PUNCH,
 	EFFECT_GIVE_ALL_WEPS,
+	EFFECT_PEDS_AIMBOT,
 	_EFFECT_ENUM_MAX
 };
 
@@ -305,6 +306,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLOSIVE_BULLETS, {"Explosive Bullets", "player_explosivebullets", true}},
 	{EFFECT_EXPLOSIVE_PUNCH, {"Explosive Punch", "player_explosivepunch", true}},
 	{EFFECT_GIVE_ALL_WEPS, {"Give All Weapons", "player_allweps"}},
+	{EFFECT_PEDS_AIMBOT, {"Peds Have Aimbot", "peds_aimbot", true}},
 };
 
 class Effects

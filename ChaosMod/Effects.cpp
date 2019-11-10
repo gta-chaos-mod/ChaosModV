@@ -1372,4 +1372,14 @@ void Effects::UpdateEffects()
 	{
 		SET_EXPLOSIVE_MELEE_THIS_FRAME(PLAYER_ID());
 	}
+	if (m_effectActive[EFFECT_PEDS_AIMBOT])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_ACCURACY(ped, 100);
+			}
+		}
+	}
 }
