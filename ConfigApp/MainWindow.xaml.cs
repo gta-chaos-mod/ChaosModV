@@ -203,10 +203,7 @@ namespace ConfigApp
                     continue;
                 }
 
-                if (!int.TryParse(keyValue[0], out int key))
-                {
-                    return false;
-                }
+                string key = keyValue[0];
 
                 if (!int.TryParse(keyValue[1], out int value))
                 {

@@ -94,7 +94,7 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/effects.ini";
-	std::vector<int> goneThroughIds;
+	std::vector<std::string> goneThroughIds;
 
 	struct stat temp;
 	if (stat(FILE_PATH, &temp) == -1)
@@ -127,20 +127,19 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 			continue;
 		}
 
-		int keyValue = std::stoi(key);
 		int value = std::stoi(line.substr(line.find("=") + 1));
 
-		if (std::find(goneThroughIds.begin(), goneThroughIds.end(), keyValue) != goneThroughIds.end())
+		if (std::find(goneThroughIds.begin(), goneThroughIds.end(), key) != goneThroughIds.end())
 		{
 			std::ostringstream oss;
-			oss << "Multiple entries for id " << keyValue << " in " << FILE_PATH << " found! Try regenerating the file maybe?";
+			oss << "Multiple entries for id " << key << " in " << FILE_PATH << " found! Try regenerating the file maybe?";
 
 			MessageBox(NULL, oss.str().c_str(), "ChaosModV Error", MB_OK | MB_ICONERROR);
 
 			return -3;
 		}
 
-		goneThroughIds.push_back(keyValue);
+		goneThroughIds.push_back(key);
 
 		if (value)
 		{
@@ -150,7 +149,7 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 		// Map id to EffectType
 		for (const auto pair : g_effectsMap)
 		{
-			if (pair.second.Id == keyValue)
+			if (pair.second.Id == key)
 			{
 				auto result = std::find(enabledEffects.begin(), enabledEffects.end(), pair.first);
 				if (result != enabledEffects.end())
