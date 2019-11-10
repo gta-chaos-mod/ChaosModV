@@ -115,7 +115,10 @@ void Effects::StartEffect(EffectType effectType)
 	switch (effectType)
 	{
 	case EFFECT_KILL:
-		SET_ENTITY_HEALTH(playerPed, 0, 0);
+		if (!m_effectActive[EFFECT_PLAYER_INVINCIBLE] && !m_effectActive[EFFECT_EVERYONE_INVINCIBLE])
+		{
+			SET_ENTITY_HEALTH(playerPed, 0, 0);
+		}
 		break;
 	case EFFECT_PLUS_2_STARS:
 		SET_PLAYER_WANTED_LEVEL(player, PLAYER::GET_PLAYER_WANTED_LEVEL(player) + 2, false);
