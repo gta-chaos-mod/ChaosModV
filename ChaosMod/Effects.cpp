@@ -404,6 +404,18 @@ void Effects::StartEffect(EffectType effectType)
 		SET_TIMECYCLE_MODIFIER("ArenaEMP");
 		PUSH_TIMECYCLE_MODIFIER();
 		break;
+	case EFFECT_SCREEN_RENDERDIST:
+		SET_TIMECYCLE_MODIFIER("Mp_apart_mid");
+		PUSH_TIMECYCLE_MODIFIER();
+		break;
+	case EFFECT_SCREEN_FOG:
+		SET_TIMECYCLE_MODIFIER("prologue_ending_fog");
+		PUSH_TIMECYCLE_MODIFIER();
+		break;
+	case EFFECT_SCREEN_BRIGHT:
+		SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
+		PUSH_TIMECYCLE_MODIFIER();
+		break;
 	case EFFECT_VEH_REPAIR:
 		if (isPlayerInVeh)
 		{
@@ -615,6 +627,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_SCREEN_CHOPVISION:
 		ANIMPOSTFX_STOP("ChopVision");
 		break;
+	case EFFECT_SCREEN_BRIGHT:
+	case EFFECT_SCREEN_FOG:
+	case EFFECT_SCREEN_RENDERDIST:
 	case EFFECT_SCREEN_BLOOM:
 	case EFFECT_SCREEN_LSD:
 		CLEAR_TIMECYCLE_MODIFIER();
