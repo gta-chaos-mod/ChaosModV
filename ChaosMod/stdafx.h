@@ -14,3 +14,4 @@
 #include <sstream>
 #include <stdexcept>
 #include <memory>
+#include <numeric>

@@ -171,6 +171,7 @@ namespace ConfigApp
             EFFECT_EXPLOSIVE_PUNCH,
             EFFECT_GIVE_ALL_WEPS,
             EFFECT_PEDS_AIMBOT,
+            EFFECT_PEDS_BLIND,
             _EFFECT_ENUM_MAX
         }
 
@@ -317,6 +318,7 @@ namespace ConfigApp
             {EffectType.EFFECT_EXPLOSIVE_PUNCH, new EffectInfo("Explosive Punch", EffectCategory.PLAYER, "player_explosivepunch")},
             {EffectType.EFFECT_GIVE_ALL_WEPS, new EffectInfo("Give All Weapons", EffectCategory.PLAYER, "player_allweps")},
             {EffectType.EFFECT_PEDS_AIMBOT, new EffectInfo("Peds Have Aimbot", EffectCategory.PEDS, "peds_aimbot")},
+            {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Peds Don't See Very Well", EffectCategory.PEDS, "peds_blind")},
         };
     }
 }

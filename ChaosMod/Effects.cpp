@@ -718,6 +718,16 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_NO_RAGDOLL:
 		SET_PED_CAN_RAGDOLL(PLAYER_PED_ID(), true);
 		break;
+	case EFFECT_PEDS_BLIND:
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SEEING_RANGE(ped, 1000.f);
+				SET_PED_HEARING_RANGE(ped, 1000.f);
+			}
+		}
+		break;
 	}
 }
 
@@ -1379,6 +1389,53 @@ void Effects::UpdateEffects()
 			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_ACCURACY(ped, 100);
+			}
+		}
+	}
+	/*if (m_effectActive[EFFECT_EVERYTHING_FACE_PLAYER])
+	{
+		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+		int playerPosLength = playerPos.x + playerPos.y + playerPos.z;
+		Entity entities[1024];
+		int size = 0;
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				entities[size++] = ped;
+			}
+		}
+		for (Vehicle veh : GetAllVehs())
+		{
+			entities[size++] = veh;
+		}
+		for (Object object : GetAllProps())
+		{
+			entities[size++] = object;
+		}
+		for (int i = 0; i < size; i++)
+		{
+			Entity entity = entities[i];
+			Vector3 entityPos = GET_ENTITY_COORDS(entity, false);
+			float x = GET_ENTITY_PITCH(entity), y = GET_ENTITY_HEADING(entity), z = GET_ENTITY_ROLL(entity);
+			float angle = std::acos(std::inner_product(&entityPos.x, &entityPos.z, &playerPos.x, .0f)
+				/ ((entityPos.x + entityPos.y + entityPos.z) * playerPosLength));
+			float heading = std::atan2(y * std::sin(angle) - x * z * (1 - std::cos(angle)),
+				1 - (std::pow(y, 2) + std::pow(z, 2)) * (1 - std::cos(angle)));
+			if (!std::isnan(heading))
+			{
+				SET_ENTITY_HEADING(entity, heading);
+			}
+		}
+	}*/
+	if (m_effectActive[EFFECT_PEDS_BLIND])
+	{
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_SEEING_RANGE(ped, .0f);
+				SET_PED_HEARING_RANGE(ped, .0f);
 			}
 		}
 	}
