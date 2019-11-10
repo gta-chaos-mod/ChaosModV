@@ -609,6 +609,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_SCREEN_REALLSD:
 		ANIMPOSTFX_STOP("DrugsDrivingIn");
 		break;
+	case EFFECT_SCREEN_CHOPVISION:
+		ANIMPOSTFX_STOP("ChopVision");
+		break;
 	case EFFECT_SCREEN_BLOOM:
 	case EFFECT_SCREEN_LSD:
 		CLEAR_TIMECYCLE_MODIFIER();
@@ -968,6 +971,13 @@ void Effects::UpdateEffects()
 		if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
 		{
 			ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
+		}
+	}
+	if (m_effectActive[EFFECT_SCREEN_CHOPVISION])
+	{
+		if (!ANIMPOSTFX_IS_RUNNING("ChopVision"))
+		{
+			ANIMPOSTFX_PLAY("ChopVision", -1, true);
 		}
 	}
 	if (m_effectActive[EFFECT_PEDS_IGNORE_PLAYER])
