@@ -737,16 +737,16 @@ void Effects::UpdateEffects()
 		static int state = 0;
 		static DWORD64 lastTick = 0;
 		DWORD64 curTick = GetTickCount64();
-		if (curTick > lastTick + 500)
+		if (curTick > lastTick + 250)
 		{
 			lastTick = curTick;
-			if (++state == 3)
+			if (++state == 6)
 			{
 				state = 0;
 			}
 		}
-		SET_TIME_SCALE(state < 2 ? 1.f : 0.f);
-		if (state == 2)
+		SET_TIME_SCALE(state < 5 ? 1.f : 0.f);
+		if (state == 5)
 		{
 			DISABLE_ALL_CONTROL_ACTIONS(1);
 		}
