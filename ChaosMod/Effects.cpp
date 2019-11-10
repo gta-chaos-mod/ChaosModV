@@ -346,6 +346,9 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_SPAWN_FAGGIO:
 		CreateTempVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
 		break;
+	case EFFECT_SPAWN_RUINER3:
+		CreateTempVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
 	case EFFECT_EXPLODE_CUR_VEH:
 		if (isPlayerInVeh)
 		{
@@ -385,7 +388,7 @@ void Effects::StartEffect(EffectType effectType)
 		{
 			if (!IS_PED_A_PLAYER(ped))
 			{
-				TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, PLAYER_PED_ID(), .0f, .0f, .0f, 9999.f, -1, .0f, true);
+				TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, playerPed, .0f, .0f, .0f, 9999.f, -1, .0f, true);
 				SET_PED_KEEP_TASK(ped, true);
 			}
 		}
