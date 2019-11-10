@@ -343,6 +343,9 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_SPAWN_BUZZARD:
 		CreateTempVehicle(GET_HASH_KEY("BUZZARD"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
 		break;
+	case EFFECT_SPAWN_FAGGIO:
+		CreateTempVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		break;
 	case EFFECT_EXPLODE_CUR_VEH:
 		if (isPlayerInVeh)
 		{
