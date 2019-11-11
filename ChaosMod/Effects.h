@@ -176,6 +176,7 @@ enum EffectType : int
 	EFFECT_VEH_MAXARMOR,
 	EFFECT_VEH_BULLETPROOFTIRES,
 	EFFECT_VEH_RAINBOWHEADLIGHTS,
+	EFFECT_VEH_TPRANDOMPEDS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -337,6 +338,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_MAXARMOR, {"Add Armor To Current Vehicle", "playerveh_maxarmor"}},
 	{EFFECT_VEH_BULLETPROOFTIRES, {"Make Tires Of Current Vehicle Bulletproof", "playerveh_bulletprooftires"}},
 	{EFFECT_VEH_RAINBOWHEADLIGHTS, {"Rainbow Headlights", "veh_rainbowheadlights", true}},
+	{EFFECT_VEH_TPRANDOMPEDS, {"Teleport Random Peds Into Current Vehicle", "playerveh_tprandompeds"}},
 };
 
 class Effects

@@ -185,6 +185,7 @@ namespace ConfigApp
             EFFECT_VEH_MAXARMOR,
             EFFECT_VEH_BULLETPROOFTIRES,
             EFFECT_VEH_RAINBOWHEADLIGHTS,
+            EFFECT_VEH_TPRANDOMPEDS,
             _EFFECT_ENUM_MAX
         }
 
@@ -345,6 +346,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_MAXARMOR, new EffectInfo("Add Armor To Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxarmor")},
             {EffectType.EFFECT_VEH_BULLETPROOFTIRES, new EffectInfo("Make Tires Of Current Vehicle Bulletproof", EffectCategory.VEHICLE, "playerveh_bulletprooftires")},
             {EffectType.EFFECT_VEH_RAINBOWHEADLIGHTS, new EffectInfo("Rainbow Headlights", EffectCategory.VEHICLE, "veh_rainbowheadlights")},
+            {EffectType.EFFECT_VEH_TPRANDOMPEDS, new EffectInfo("Teleport Random Peds Into Current Vehicle", EffectCategory.PEDS, "playerveh_tprandompeds")},
         };
     }
 }
