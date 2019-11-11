@@ -566,6 +566,30 @@ void Effects::StartEffect(EffectType effectType)
 		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	}
 		break;
+	case EFFECT_VEH_MAXENGINE:
+		if (isPlayerInVeh)
+		{
+			SET_VEHICLE_MOD(playerVeh, 11, 3, false);
+		}
+		break;
+	case EFFECT_VEH_NITRO:
+		if (isPlayerInVeh)
+		{
+			TOGGLE_VEHICLE_MOD(playerVeh, 18, true);
+		}
+		break;
+	case EFFECT_VEH_MAXARMOR:
+		if (isPlayerInVeh)
+		{
+			SET_VEHICLE_MOD(playerVeh, 16, 4, false);
+		}
+		break;
+	case EFFECT_VEH_BULLETPROOFTIRES:
+		if (isPlayerInVeh)
+		{
+			SET_VEHICLE_TYRES_CAN_BURST(playerVeh, true);
+		}
+		break;
 	}
 }
 
@@ -1513,5 +1537,24 @@ void Effects::UpdateEffects()
 		REQUEST_MODEL(model);
 		CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_MONEY_SECURITY_CASE"), playerPos.x + Random::GetRandomInt(-20, 20),
 			playerPos.y + Random::GetRandomInt(-20, 20), playerPos.z + Random::GetRandomInt(5, 10), 0, 1000, model, false, true);
+	}
+	if (m_effectActive[EFFECT_VEH_RAINBOWHEADLIGHTS])
+	{
+		static int i = 0;
+		for (Vehicle veh : GetAllVehs())
+		{
+			TOGGLE_VEHICLE_MOD(veh, 22, true);
+			_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, i);
+		}
+		static DWORD64 lastTick = GetTickCount64();
+		DWORD64 curTick = GetTickCount64();
+		if (lastTick < curTick - 50)
+		{
+			lastTick = curTick;
+			if (++i >= 13)
+			{
+				i = 0;
+			}
+		}
 	}
 }

@@ -180,6 +180,11 @@ namespace ConfigApp
             EFFECT_PLAYER_NIGHTVISION,
             EFFECT_PLAYER_HEATVISION,
             EFFECT_PLAYER_MONEYDROPS,
+            EFFECT_VEH_MAXENGINE,
+            EFFECT_VEH_NITRO,
+            EFFECT_VEH_MAXARMOR,
+            EFFECT_VEH_BULLETPROOFTIRES,
+            EFFECT_VEH_RAINBOWHEADLIGHTS,
             _EFFECT_ENUM_MAX
         }
 
@@ -335,6 +340,11 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision")},
             {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heatvision", EffectCategory.MISC, "player_heatvision")},
             {EffectType.EFFECT_PLAYER_MONEYDROPS, new EffectInfo("Money Rain", EffectCategory.MISC, "player_moneydrops")},
+            {EffectType.EFFECT_VEH_MAXENGINE, new EffectInfo("Upgrade Engine Of Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxengine")},
+            {EffectType.EFFECT_VEH_NITRO, new EffectInfo("Install Turbo On Current Vehicle", EffectCategory.VEHICLE, "playerveh_nitro")},
+            {EffectType.EFFECT_VEH_MAXARMOR, new EffectInfo("Add Armor To Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxarmor")},
+            {EffectType.EFFECT_VEH_BULLETPROOFTIRES, new EffectInfo("Make Tires Of Current Vehicle Bulletproof", EffectCategory.VEHICLE, "playerveh_bulletprooftires")},
+            {EffectType.EFFECT_VEH_RAINBOWHEADLIGHTS, new EffectInfo("Rainbow Headlights", EffectCategory.VEHICLE, "veh_rainbowheadlights")},
         };
     }
 }
