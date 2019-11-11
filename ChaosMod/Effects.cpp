@@ -778,6 +778,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_PLAYER_NIGHTVISION:
+		SET_NIGHTVISION(false);
+		break;
 	}
 }
 
@@ -1488,5 +1491,9 @@ void Effects::UpdateEffects()
 				SET_PED_HEARING_RANGE(ped, .0f);
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_PLAYER_NIGHTVISION])
+	{
+		SET_NIGHTVISION(true);
 	}
 }
