@@ -531,6 +531,21 @@ void Effects::StartEffect(EffectType effectType)
 			GIVE_WEAPON_TO_PED(playerPed, weapon, 9999, true, false);
 		}
 		break;
+	case EFFECT_SPAWN_COMPANION_CHOP:
+		Hash _modelHash;
+		modelHash = GET_HASH_KEY("a_c_chop");
+		LoadModel(modelHash);
+		Hash relationshipGroup;
+		ADD_RELATIONSHIP_GROUP("_COMPANION_CHOP", &relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+		Ped _ped;
+		_ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+		SET_PED_RELATIONSHIP_GROUP_HASH(_ped, relationshipGroup);
+		SET_PED_AS_GROUP_MEMBER(_ped, GET_PLAYER_GROUP(player));
+		//SET_PED_AS_NO_LONGER_NEEDED(&_ped);
+		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+		break;
 	}
 }
 

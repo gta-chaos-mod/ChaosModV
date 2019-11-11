@@ -175,6 +175,7 @@ namespace ConfigApp
             EFFECT_GIVE_ALL_WEPS,
             EFFECT_PEDS_AIMBOT,
             EFFECT_PEDS_BLIND,
+            EFFECT_SPAWN_COMPANION_CHOP,
             _EFFECT_ENUM_MAX
         }
 
@@ -325,6 +326,7 @@ namespace ConfigApp
             {EffectType.EFFECT_GIVE_ALL_WEPS, new EffectInfo("Give All Weapons", EffectCategory.PLAYER, "player_allweps")},
             {EffectType.EFFECT_PEDS_AIMBOT, new EffectInfo("Peds Have Aimbot", EffectCategory.PEDS, "peds_aimbot")},
             {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Peds Don't See Very Well", EffectCategory.PEDS, "peds_blind")},
+            {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
         };
     }
 }
