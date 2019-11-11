@@ -176,6 +176,7 @@ namespace ConfigApp
             EFFECT_PEDS_AIMBOT,
             EFFECT_PEDS_BLIND,
             EFFECT_SPAWN_COMPANION_CHOP,
+            EFFECT_SPAWN_COMPANION_CHIMP,
             _EFFECT_ENUM_MAX
         }
 
@@ -327,6 +328,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_AIMBOT, new EffectInfo("Peds Have Aimbot", EffectCategory.PEDS, "peds_aimbot")},
             {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Peds Don't See Very Well", EffectCategory.PEDS, "peds_blind")},
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
+            {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
         };
     }
 }

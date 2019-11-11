@@ -167,6 +167,7 @@ enum EffectType : int
 	//EFFECT_EVERYTHING_FACE_PLAYER,
 	EFFECT_PEDS_BLIND,
 	EFFECT_SPAWN_COMPANION_CHOP,
+	EFFECT_SPAWN_COMPANION_CHIMP,
 	_EFFECT_ENUM_MAX
 };
 
@@ -319,6 +320,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	//{EFFECT_EVERYTHING_FACE_PLAYER, {"Everything Faces Player", "everythingfacesplayer", true}},
 	{EFFECT_PEDS_BLIND, {"Peds Don't See Very Well", "peds_blind", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
+	{EFFECT_SPAWN_COMPANION_CHIMP, {"Spawn Companion Chimp", "spawn_chimp"}},
 };
 
 class Effects
