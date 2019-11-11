@@ -784,6 +784,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PLAYER_HEATVISION:
 		SET_SEETHROUGH(false);
 		break;
+	case EFFECT_PLAYER_MONEYDROPS:
+		SET_MODEL_AS_NO_LONGER_NEEDED(GET_HASH_KEY("prop_money_bag_01"));
+		break;
 	}
 }
 
@@ -1502,5 +1505,13 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_PLAYER_HEATVISION])
 	{
 		SET_SEETHROUGH(true);
+	}
+	if (m_effectActive[EFFECT_PLAYER_MONEYDROPS])
+	{
+		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+		Hash model = GET_HASH_KEY("prop_money_bag_01");
+		REQUEST_MODEL(model);
+		CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_MONEY_SECURITY_CASE"), playerPos.x + Random::GetRandomInt(-20, 20),
+			playerPos.y + Random::GetRandomInt(-20, 20), playerPos.z + Random::GetRandomInt(5, 10), 0, 1000, model, false, true);
 	}
 }

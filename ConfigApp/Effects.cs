@@ -179,6 +179,7 @@ namespace ConfigApp
             EFFECT_SPAWN_COMPANION_CHIMP,
             EFFECT_PLAYER_NIGHTVISION,
             EFFECT_PLAYER_HEATVISION,
+            EFFECT_PLAYER_MONEYDROPS,
             _EFFECT_ENUM_MAX
         }
 
@@ -333,6 +334,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision")},
             {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heatvision", EffectCategory.MISC, "player_heatvision")},
+            {EffectType.EFFECT_PLAYER_MONEYDROPS, new EffectInfo("Money Rain", EffectCategory.MISC, "player_moneydrops")},
         };
     }
 }
