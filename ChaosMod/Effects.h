@@ -169,6 +169,7 @@ enum EffectType : int
 	EFFECT_SPAWN_COMPANION_CHOP,
 	EFFECT_SPAWN_COMPANION_CHIMP,
 	EFFECT_PLAYER_NIGHTVISION,
+	EFFECT_PLAYER_HEATVISION,
 	_EFFECT_ENUM_MAX
 };
 
@@ -323,6 +324,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
 	{EFFECT_SPAWN_COMPANION_CHIMP, {"Spawn Companion Chimp", "spawn_chimp"}},
 	{EFFECT_PLAYER_NIGHTVISION, {"Night Vision", "player_nightvision", true}},
+	{EFFECT_PLAYER_HEATVISION, {"Heatvision", "player_heatvision", true, {}, true}},
 };
 
 class Effects

@@ -781,6 +781,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PLAYER_NIGHTVISION:
 		SET_NIGHTVISION(false);
 		break;
+	case EFFECT_PLAYER_HEATVISION:
+		SET_SEETHROUGH(false);
+		break;
 	}
 }
 
@@ -1495,5 +1498,9 @@ void Effects::UpdateEffects()
 	if (m_effectActive[EFFECT_PLAYER_NIGHTVISION])
 	{
 		SET_NIGHTVISION(true);
+	}
+	if (m_effectActive[EFFECT_PLAYER_HEATVISION])
+	{
+		SET_SEETHROUGH(true);
 	}
 }

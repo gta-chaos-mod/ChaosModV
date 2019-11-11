@@ -178,6 +178,7 @@ namespace ConfigApp
             EFFECT_SPAWN_COMPANION_CHOP,
             EFFECT_SPAWN_COMPANION_CHIMP,
             EFFECT_PLAYER_NIGHTVISION,
+            EFFECT_PLAYER_HEATVISION,
             _EFFECT_ENUM_MAX
         }
 
@@ -331,6 +332,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
             {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision")},
+            {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heatvision", EffectCategory.MISC, "player_heatvision")},
         };
     }
 }
