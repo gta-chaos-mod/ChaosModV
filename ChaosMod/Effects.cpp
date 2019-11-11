@@ -416,6 +416,10 @@ void Effects::StartEffect(EffectType effectType)
 		SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
 		PUSH_TIMECYCLE_MODIFIER();
 		break;
+	case EFFECT_SCREEN_MEXICO:
+		SET_TIMECYCLE_MODIFIER("trevorspliff");
+		PUSH_TIMECYCLE_MODIFIER();
+		break;
 	case EFFECT_VEH_REPAIR:
 		if (isPlayerInVeh)
 		{
@@ -713,6 +717,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_SCREEN_CHOPVISION:
 		ANIMPOSTFX_STOP("ChopVision");
 		break;
+	case EFFECT_SCREEN_MEXICO:
 	case EFFECT_SCREEN_BRIGHT:
 	case EFFECT_SCREEN_FOG:
 	case EFFECT_SCREEN_RENDERDIST:
