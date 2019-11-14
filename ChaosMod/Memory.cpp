@@ -75,7 +75,7 @@ std::vector<Hash> Memory::GetAllWeapons()
 	static WORD* something1; // dword_7FF6D9EF9748
 	static DWORD64* something2; // qword_7FF6D9EF9740
 
-	std::vector<Hash> weapons;
+	static std::vector<Hash> weapons;
 
 	if (weapons.empty())
 	{
