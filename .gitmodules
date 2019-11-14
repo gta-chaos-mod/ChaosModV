@@ -1,0 +1,8 @@
+[submodule "vendor/minhook"]
+	path = vendor/minhook
+	url = git@github.com:TsudaKageyu/minhook.git
+	ignore = dirty
+[submodule "vendor/twitchxx"]
+	path = vendor/twitchxx
+	url = git@github.com:burannah/TwitchXX.git
+	ignore = dirty
