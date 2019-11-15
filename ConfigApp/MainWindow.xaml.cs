@@ -93,6 +93,11 @@ namespace ConfigApp
             {
                 WriteEffectsFile();
             }
+
+            if (File.Exists(".twitchmode"))
+            {
+                twitch_tab.Visibility = Visibility.Visible;
+            }
         }
 
         private bool ParseConfigFile()
