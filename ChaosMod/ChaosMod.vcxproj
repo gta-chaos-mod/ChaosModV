@@ -142,7 +142,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\vendor\minhook\lib\libMinHook.x64-v142.lib" />
+    <Library Include="..\vendor\minhook\build\VC15\lib\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
