@@ -94,10 +94,7 @@ namespace ConfigApp
                 WriteEffectsFile();
             }
 
-            if (!File.Exists(".twitchmode"))
-            {
-                twitch_tab.Visibility = Visibility.Hidden;
-            }
+            InitTwitchTab();
         }
 
         private bool ParseConfigFile()
@@ -143,6 +140,16 @@ namespace ConfigApp
                         case "EffectTimedShortDur":
                             misc_user_effects_timed_short_dur.Text = $"{value}";
                             break;
+                        case "EnableTwitchVoting":
+                            twitch_user_agreed.IsChecked = value != 0;
+                            break;
+                        case "TwitchVotingStartTime":
+                            twitch_user_effects_new_voting_time.Text = $"{value}";
+                            break;
+                        case "TwitchVotingNoVoteChance":
+                            lazyFoundAll = true;
+                            twitch_user_effects_chance_no_voting_round.Text = $"{(value >= 0 ? value <= 100 ? value : 100 : 0)}";
+                            break;
                     }
                 }
                 else
@@ -156,7 +163,6 @@ namespace ConfigApp
                             misc_user_effects_text_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
                             break;
                         case "EffectTimedTimerColor":
-                            lazyFoundAll = true;
                             misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
                             break;
                     }
@@ -176,10 +182,14 @@ namespace ConfigApp
         private void WriteConfigFile()
         {
             string data = "";
+
             data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "30")}\n";
             data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "90")}\n";
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
             data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "30")}\n";
+            data += $"EnableTwitchVoting={(twitch_user_agreed.IsChecked.GetValueOrDefault() ? "1" : "0")}\n";
+            data += $"TwitchVotingStartTime={(twitch_user_effects_new_voting_time.Text.Length > 0 ? twitch_user_effects_new_voting_time.Text : "30")}\n";
+            data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
             data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
             data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
             data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";
@@ -296,6 +306,24 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(miscParentItem);
         }
 
+        void InitTwitchTab()
+        {
+            if (!File.Exists(".twitchmode"))
+            {
+                twitch_tab.Visibility = Visibility.Hidden;
+            }
+
+            TwitchTabHandleAgreed();
+        }
+
+        void TwitchTabHandleAgreed()
+        {
+            bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault();
+
+            twitch_user_effects_new_voting_time.IsEnabled = agreed;
+            twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
+        }
+
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!char.IsDigit(e.Text[0]))
@@ -343,6 +371,11 @@ namespace ConfigApp
                 System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
                 Application.Current.Shutdown();
             }
+        }
+
+        private void twitch_user_agreed_Clicked(object sender, RoutedEventArgs e)
+        {
+            TwitchTabHandleAgreed();
         }
     }
 }
