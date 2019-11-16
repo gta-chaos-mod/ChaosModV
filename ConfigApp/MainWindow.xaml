@@ -69,6 +69,8 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out. There are specific options you can configure below.&#xD;&#xA;&#xD;&#xA;Please note that this is still an experimental feature and stability is not guaranteed.&#xD;&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,0,0,0"
+                    VerticalAlignment="Top" Width="1037" Height="75"/>
             </TabItem>
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
