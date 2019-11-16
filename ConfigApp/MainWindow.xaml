@@ -69,8 +69,27 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out. There are specific options you can configure below.&#xD;&#xA;&#xD;&#xA;Please note that this is still an experimental feature and stability is not guaranteed.&#xD;&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,0,0,0"
-                    VerticalAlignment="Top" Width="1037" Height="75"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="12*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out by making use of Twitch's poll feature. There are specific options you can configure below.&#xA;&#xA;Please note that this is still an experimental feature and stability is not guaranteed.&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!&#xA;&#xA;It's also recommended to increase the default new effect timer duration and experiment with different values (60s is a great starting point).&#xA;" HorizontalAlignment="Left" Margin="10,0,0,0"
+                    VerticalAlignment="Top" Width="1037" Height="135" Grid.RowSpan="2"/>
+                    <CheckBox x:Name="twitch_user_agreed" Content="I've read and understood the above; enable the feature" Margin="15,110,695,215" Grid.Row="1" />
+                    <TextBox x:Name="twitch_user_effects_new_voting_time" HorizontalAlignment="Left" Height="23" Margin="642,178,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
+                    <Label Content="Time before new effect to start the voting process (in seconds, leave empty to start it immediately after new effect)" HorizontalAlignment="Left" Margin="10,175,0,0"
+                        VerticalAlignment="Top" Width="627" Grid.Row="1"/>
+                    <Label Content="Chance to get a random effect round (no voting enabled for that round, chance as %)" HorizontalAlignment="Left" Margin="10,245,0,0"
+                        VerticalAlignment="Top" Width="627" Grid.Row="1"/>
+                    <xctk:IntegerUpDown x:Name="twitch_user_effects_chance_no_voting_round" HorizontalAlignment="Left" Height="23" Margin="642,248,0,0"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Minimum="0" Maximum="100"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
+                </Grid>
             </TabItem>
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
