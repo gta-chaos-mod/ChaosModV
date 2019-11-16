@@ -94,9 +94,9 @@ namespace ConfigApp
                 WriteEffectsFile();
             }
 
-            if (File.Exists(".twitchmode"))
+            if (!File.Exists(".twitchmode"))
             {
-                twitch_tab.Visibility = Visibility.Visible;
+                twitch_tab.Visibility = Visibility.Hidden;
             }
         }
 

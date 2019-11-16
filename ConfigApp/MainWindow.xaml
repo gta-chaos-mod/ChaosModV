@@ -68,7 +68,7 @@
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray" Visibility="Hidden">
+            <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
             </TabItem>
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
