@@ -1426,14 +1426,14 @@ void Effects::UpdateEffects()
 	{
 		static DWORD64 lastTick = GetTickCount64();
 		DWORD64 curTick = GetTickCount64();
-		if (lastTick < curTick - 200)
+		if (lastTick < curTick - 100)
 		{
 			lastTick = curTick;
 			for (Vehicle veh : GetAllVehs())
 			{
 				if (!IS_ENTITY_IN_AIR(veh))
 				{
-					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 100.f, true, false, true, true);
+					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 200.f, true, false, true, true);
 				}
 			}
 		}
