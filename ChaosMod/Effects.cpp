@@ -12,7 +12,7 @@ struct ReturnedEntities
 
 	Entity* end()
 	{
-		return Entities + Size - 1;
+		return Entities + Size;
 	}
 
 	int Size;
