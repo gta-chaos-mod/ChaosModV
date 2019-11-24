@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:ConfigApp"
-        xmlns:Properties="clr-namespace:ConfigApp.Properties" x:Class="ConfigApp.MainWindow"
+        x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
         Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
@@ -15,9 +15,10 @@
                     <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Height="21">
                                     <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Text}" Margin="5,0"/>
+                                    <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center"/>
+                                    <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="20" Margin="10,0" VerticalAlignment="Center" Click="effect_user_config_Click"/>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeView.Resources>

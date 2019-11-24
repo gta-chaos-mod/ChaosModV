@@ -2,12 +2,17 @@
 #include "EffectDispatcher.h"
 #include "Effects.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects, int effectTimedShortDur,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects, int effectTimedShortDur,
 	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
 	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_timerColor(timerColor), m_textColor(textColor),
 		m_effectTimerColor(effectTimerColor)
 {
+	for (auto pair : m_enabledEffects)
+	{
+		m_effectsTotalWeight += pair.second[2];
+	}
+
 	Reset();
 }
 
@@ -119,9 +124,12 @@ void EffectDispatcher::UpdateEffects()
 void EffectDispatcher::DispatchEffect(EffectType effectType)
 {
 	EffectInfo effectInfo = g_effectsMap.at(effectType);
+	std::array<int, 3> effectData = m_enabledEffects.at(effectType);
 
-	static std::ofstream log("chaosmod/effectsLog.txt");
-	log << effectInfo.Name << std::endl;
+	int effectTime = effectInfo.IsTimed ? effectData[1] >= 0 ? effectData[1] : effectData[0] == 1 ? m_effectTimedShortDur : m_effectTimedDur : -1;
+
+	static std::ofstream log("chaosmod/effectslog.txt");
+	log << effectInfo.Name << " | " << effectTime << " | " << effectData[2] << std::endl;
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -165,8 +173,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 	if (!alreadyExists)
 	{
 		m_effects->StartEffect(effectType);
-		m_activeEffects.emplace_back(effectType, effectInfo.Name,
-			effectInfo.IsTimed ? (effectInfo.IsShortDuration ? m_effectTimedShortDur : m_effectTimedDur) : -1);
+		m_activeEffects.emplace_back(effectType, effectInfo.Name, effectTime);
 	}
 
 	m_percentage = .0f;
@@ -181,9 +188,25 @@ void EffectDispatcher::DispatchRandomEffect()
 		return;
 	}
 
-	int index = Random::GetRandomInt(0, m_enabledEffects.size() - 1);
+	int index = Random::GetRandomInt(0, m_effectsTotalWeight);
 
-	DispatchEffect(m_enabledEffects[index]);
+	int addedUpWeight = 0;
+	EffectType targetEffectType = _EFFECT_ENUM_MAX;
+	for (auto pair : m_enabledEffects)
+	{
+		addedUpWeight += pair.second[2];
+
+		if (index <= addedUpWeight)
+		{
+			targetEffectType = pair.first;
+			break;
+		}
+	}
+
+	if (targetEffectType != _EFFECT_ENUM_MAX)
+	{
+		DispatchEffect(targetEffectType);
+	}
 }
 
 void EffectDispatcher::ClearEffects()

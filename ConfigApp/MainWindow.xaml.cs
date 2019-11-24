@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using static ConfigApp.Effects;
@@ -10,14 +12,6 @@ namespace ConfigApp
 {
     public class TreeMenuItem : INotifyPropertyChanged
     {
-        public TreeMenuItem(string text, TreeMenuItem parent = null)
-        {
-            Text = text;
-            Parent = parent;
-            Children = new List<TreeMenuItem>();
-            _IsChecked = true;
-        }
-
         public string Text { get; private set; }
         public TreeMenuItem Parent;
         public List<TreeMenuItem> Children { get; private set; }
@@ -33,7 +27,7 @@ namespace ConfigApp
             {
                 _IsChecked = value;
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
+                _NotifyFieldsUpdated();
 
                 foreach (TreeMenuItem menuItem in Children)
                 {
@@ -42,6 +36,28 @@ namespace ConfigApp
 
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
+        }
+        public string IsConfigVisible
+        {
+            get
+            {
+                return Children.Count == 0 ? "Visible" : "Hidden";
+            }
+        }
+        public bool IsConfigEnabled
+        {
+            get
+            {
+                return IsChecked;
+            }
+        }
+
+        public TreeMenuItem(string text, TreeMenuItem parent = null)
+        {
+            Text = text;
+            Parent = parent;
+            Children = new List<TreeMenuItem>();
+            _IsChecked = true;
         }
 
         public void AddChild(TreeMenuItem menuItem)
@@ -67,7 +83,28 @@ namespace ConfigApp
 
             _IsChecked = shouldBeChecked;
 
+            _NotifyFieldsUpdated();
+        }
+
+        private void _NotifyFieldsUpdated()
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigVisible"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigEnabled"));
+        }
+    }
+
+    public class EffectData
+    {
+        public EffectTimedType EffectTimedType;
+        public int EffectCustomTime;
+        public int EffectWeight;
+
+        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, int effectWeight)
+        {
+            EffectTimedType = effectTimedType;
+            EffectCustomTime = effectCustomTime;
+            EffectWeight = effectWeight;
         }
     }
 
@@ -77,6 +114,7 @@ namespace ConfigApp
         private const string EffectsFile = "effects.ini";
 
         private Dictionary<EffectType, TreeMenuItem> TreeMenuItemsMap;
+        private Dictionary<EffectType, EffectData> EffectDataMap;
 
         public MainWindow()
         {
@@ -219,8 +257,11 @@ namespace ConfigApp
                 }
 
                 string key = keyValue[0];
+                string value = keyValue[1];
 
-                if (!int.TryParse(keyValue[1], out int value))
+                string[] values = value.Split(',');
+
+                if (!int.TryParse(values[0], out int enabled))
                 {
                     return false;
                 }
@@ -236,9 +277,32 @@ namespace ConfigApp
                     }
                 }
 
+                EffectInfo effectInfo = EffectsMap[effectType];
+                EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                int effectTimedTime = -1;
+                int effectWeight = 5;
+
+                if (values.Length >= 4)
+                {
+                    if (!Enum.TryParse(values[1], out effectTimedType))
+                    {
+                        return false;
+                    }
+                    if (!int.TryParse(values[2], out effectTimedTime))
+                    {
+                        return false;
+                    }
+                    if (!int.TryParse(values[3], out effectWeight))
+                    {
+                        return false;
+                    }
+                }
+
                 if (effectType != EffectType._EFFECT_ENUM_MAX)
                 {
-                    TreeMenuItemsMap[effectType].IsChecked = value != 0 ? true : false;
+                    TreeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
+
+                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight));
                 }
             }
 
@@ -251,7 +315,16 @@ namespace ConfigApp
 
             for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
             {
-                data += $"{EffectsMap[effectType].Id}={(TreeMenuItemsMap[effectType].IsChecked ? 1 : 0)}\n";
+                EffectInfo effectInfo = EffectsMap[effectType];
+
+                EffectDataMap.TryGetValue(effectType, out EffectData effectData);
+                if (effectData == null)
+                {
+                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5);
+                }
+
+                data += $"{EffectsMap[effectType].Id}={(TreeMenuItemsMap[effectType].IsChecked ? 1 : 0)}" +
+                    $",{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)},{effectData.EffectCustomTime},{effectData.EffectWeight}\n";
             }
 
             File.WriteAllText(EffectsFile, data);
@@ -260,6 +333,7 @@ namespace ConfigApp
         private void InitEffectsTreeView()
         {
             TreeMenuItemsMap = new Dictionary<EffectType, TreeMenuItem>();
+            EffectDataMap = new Dictionary<EffectType, EffectData>();
 
             TreeMenuItem playerParentItem = new TreeMenuItem("Player");
             TreeMenuItem vehicleParentItem = new TreeMenuItem("Vehicle");
@@ -326,26 +400,17 @@ namespace ConfigApp
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (!char.IsDigit(e.Text[0]))
-            {
-                e.Handled = true;
-            }
+            Utils.HandleOnlyNumbersPreviewTextInput(e);
         }
 
-        private void NoSpacePreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void NoSpacePreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Space)
-            {
-                e.Handled = true;
-            }
+            Utils.HandleNoSpacePreviewKeyDown(e);
         }
 
         private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (e.Command == ApplicationCommands.Copy || e.Command == ApplicationCommands.Cut || e.Command == ApplicationCommands.Paste)
-            {
-                e.Handled = true;
-            }
+            Utils.HandleNoCopyPastePreviewExecuted(e);
         }
 
         private void user_save_Click(object sender, RoutedEventArgs e)
@@ -376,6 +441,41 @@ namespace ConfigApp
         private void twitch_user_agreed_Clicked(object sender, RoutedEventArgs e)
         {
             TwitchTabHandleAgreed();
+        }
+
+        private void effect_user_config_Click(object sender, RoutedEventArgs e)
+        {
+            TreeMenuItem curTreeMenuItem = (TreeMenuItem)((TreeViewItem)((Grid)((Border)((ContentPresenter)((StackPanel)((Button)sender).Parent).TemplatedParent).Parent).Parent).TemplatedParent).DataContext;
+
+            EffectType effectType = EffectType._EFFECT_ENUM_MAX;
+            foreach (var pair in TreeMenuItemsMap)
+            {
+                if (pair.Value == curTreeMenuItem)
+                {
+                    effectType = pair.Key;
+
+                    break;
+                }
+            }
+
+            if (effectType != EffectType._EFFECT_ENUM_MAX)
+            {
+                EffectInfo effectInfo = EffectsMap[effectType];
+                EffectData effectData = EffectDataMap[effectType];
+
+                EffectConfig effectConfig = new EffectConfig(effectInfo.IsTimed, effectData.EffectTimedType, effectInfo, effectData.EffectCustomTime, effectData.EffectWeight);
+                effectConfig.Title = effectInfo.Name;
+                effectConfig.ShowDialog();
+
+                if (effectConfig.IsSaved)
+                {
+                    effectData.EffectTimedType = effectConfig.effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectConfig.effectconf_timer_type.SelectedIndex
+                        : effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                    effectData.EffectCustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
+                        ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
+                    effectData.EffectWeight = effectConfig.effectconf_effect_weight.SelectedIndex + 1;
+                }
+            }
         }
     }
 }

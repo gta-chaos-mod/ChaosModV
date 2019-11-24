@@ -6,7 +6,7 @@
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::vector<EffectType> enabledEffects, int effectTimedShortDur,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects, int effectTimedShortDur,
 		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor);
 	~EffectDispatcher();
 
@@ -22,7 +22,8 @@ public:
 private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
-	const std::vector<EffectType> m_enabledEffects;
+	const std::map<EffectType, std::array<int, 3>> m_enabledEffects;
+	int m_effectsTotalWeight = 0;
 	const int m_effectTimedShortDur;
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;

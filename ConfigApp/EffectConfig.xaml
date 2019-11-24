@@ -1,0 +1,20 @@
+﻿<Window x:Class="ConfigApp.EffectConfig"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Effect Config" Height="319.342" Width="600.617" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+    <Grid>
+        <Label Content="Override Timed Effect Type" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Override Timed Effect Timer Length (Seconds)" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="effectconf_timer_type" HorizontalAlignment="Left" Height="23" Margin="296,13,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <CheckBox Name="effectconf_timer_type_enable" HorizontalAlignment="Left" Margin="271,17,0,0" VerticalAlignment="Top" Height="18" RenderTransformOrigin="0.4,0.111" Checked="OnChecked"/>
+        <TextBox Name="effectconf_timer_time" HorizontalAlignment="Left" Height="23" Margin="296,53,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" IsEnabled="False" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"/>
+        <CheckBox Name="effectconf_timer_time_enable" HorizontalAlignment="Left" Margin="271,57,0,0" VerticalAlignment="Top" Height="18" Checked="OnChecked"/>
+        <Label Content="Set Effect Weight&#xD;&#xA;(Affects chances of this effect occuring, lower weight: lower chances&#xD;&#xA; higher weight: higher chances, default is 5)" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="effectconf_effect_weight" HorizontalAlignment="Left" Height="23" Margin="383,151,0,0" VerticalAlignment="Top" Width="45"/>
+        <Button Content="Save" Margin="481,224,13,13" Click="OnSave"/>
+    </Grid>
+</Window>

@@ -91,7 +91,7 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 	return 0;
 }
 
-int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
+int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/effects.ini";
 	std::vector<std::string> goneThroughIds;
@@ -112,7 +112,7 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.push_back((EffectType)i);
+		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, {}));
 	}
 
 	// Remove disabled effecttypes
@@ -121,13 +121,34 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 	{
 		std::string line(buffer);
 		std::string key = line.substr(0, line.find("="));
-
 		if (line == key)
 		{
 			continue;
 		}
 
-		int value = std::stoi(line.substr(line.find("=") + 1));
+		std::string value = line.substr(line.find("=") + 1);
+		std::array<int, 4> values {1, -1, -1, 5 };
+
+		int splitIndex = value.find(",");
+		if (splitIndex == value.npos)
+		{
+			values[0] = std::stoi(value);
+		}
+		else
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				values[i] = std::stoi(value.substr(0, splitIndex));
+				value = value.substr(splitIndex + 1);
+
+				if (splitIndex == value.npos)
+				{
+					break;
+				}
+
+				splitIndex = value.find(",");
+			}
+		}
 
 		if (std::find(goneThroughIds.begin(), goneThroughIds.end(), key) != goneThroughIds.end())
 		{
@@ -141,20 +162,28 @@ int ParseEffectsFile(std::vector<EffectType>& enabledEffects)
 
 		goneThroughIds.push_back(key);
 
-		if (value)
-		{
-			continue;
-		}
-
 		// Map id to EffectType
 		for (const auto pair : g_effectsMap)
 		{
 			if (pair.second.Id == key)
 			{
-				auto result = std::find(enabledEffects.begin(), enabledEffects.end(), pair.first);
+				auto result = enabledEffects.find(pair.first);
 				if (result != enabledEffects.end())
 				{
-					enabledEffects.erase(result);
+					if (!values[0])
+					{
+						enabledEffects.erase(result);
+						break;
+					}
+
+					EffectInfo effectInfo = g_effectsMap.at(result->first);
+
+					result->second[0] = values[1] == -1 ? effectInfo.IsShortDuration : values[1];
+					result->second[1] = values[2];
+					result->second[2] = values[3];
+
+					static std::ofstream log("chaosmod/enabledeffectslog.txt");
+					log << effectInfo.Name << " " << result->second[0] << " " << result->second[1] << " " << result->second[2] << std::endl;
 				}
 				break;
 			}
@@ -183,7 +212,7 @@ bool Main::Init()
 	std::array<int, 3> timerColor = { 40, 40, 255 };
 	std::array<int, 3> textColor = { 255, 255, 255 };
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
-	std::vector<EffectType> enabledEffects;
+	std::map<EffectType, std::array<int, 3>> enabledEffects;
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, timerColor, textColor, effectTimerColor))
@@ -214,7 +243,13 @@ bool Main::Init()
 	}
 
 #ifdef _DEBUG
-	m_debugMenu = std::make_unique<DebugMenu>(enabledEffects, m_effectDispatcher);
+	std::vector<EffectType> enabledEffectTypes;
+	for (auto pair : enabledEffects)
+	{
+		enabledEffectTypes.push_back(pair.first);
+	}
+
+	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
 #endif
 
 	MH_EnableHook(MH_ALL_HOOKS);
