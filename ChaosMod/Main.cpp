@@ -122,7 +122,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, {}));
+		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, { -1, -1, 5 }));
 	}
 
 	// Remove disabled effecttypes
@@ -137,7 +137,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 		}
 
 		std::string value = line.substr(line.find("=") + 1);
-		std::array<int, 4> values {1, -1, -1, 5 };
+		std::array<int, 4> values { 1, -1, -1, 5 };
 
 		int splitIndex = value.find(",");
 		if (splitIndex == value.npos)
