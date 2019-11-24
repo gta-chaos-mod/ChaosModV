@@ -188,10 +188,12 @@ void Effects::StartEffect(EffectType effectType)
 		LoadModel(modelHash);
 		Ped ped;
 		ped = CREATE_PED(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 		GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
-		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		//SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		break;
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : GetAllPeds())
