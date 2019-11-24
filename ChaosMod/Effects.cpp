@@ -170,9 +170,12 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_IGNITE:
 		if (isPlayerInVeh)
 		{
-			SET_VEHICLE_ENGINE_HEALTH(playerVeh, -1.f);
-			SET_VEHICLE_PETROL_TANK_HEALTH(playerVeh, -1.f);
-			SET_VEHICLE_BODY_HEALTH(playerVeh, -1.f);
+			if (!m_effectActive[EFFECT_VEHS_INVINCIBLE])
+			{
+				SET_VEHICLE_ENGINE_HEALTH(playerVeh, -1.f);
+				SET_VEHICLE_PETROL_TANK_HEALTH(playerVeh, -1.f);
+				SET_VEHICLE_BODY_HEALTH(playerVeh, -1.f);
+			}
 		}
 		else
 		{
@@ -230,7 +233,7 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_KILL_ENGINE:
-		if (isPlayerInVeh)
+		if (isPlayerInVeh && !m_effectActive[EFFECT_VEHS_INVINCIBLE])
 		{
 			SET_VEHICLE_ENGINE_HEALTH(playerVeh, 0.f);
 		}
@@ -353,7 +356,7 @@ void Effects::StartEffect(EffectType effectType)
 		CreateTempVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
 		break;
 	case EFFECT_EXPLODE_CUR_VEH:
-		if (isPlayerInVeh)
+		if (isPlayerInVeh && !m_effectActive[EFFECT_VEHS_INVINCIBLE])
 		{
 			EXPLODE_VEHICLE(playerVeh, true, false);
 		}
