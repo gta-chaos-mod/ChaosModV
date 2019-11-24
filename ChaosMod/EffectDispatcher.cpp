@@ -3,16 +3,11 @@
 #include "Effects.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects, int effectTimedShortDur,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
+	bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
 	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
-		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_timerColor(timerColor), m_textColor(textColor),
-		m_effectTimerColor(effectTimerColor)
+		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
+		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
-	for (auto pair : m_enabledEffects)
-	{
-		m_effectsTotalWeight += pair.second[2];
-	}
-
 	Reset();
 }
 
@@ -188,11 +183,23 @@ void EffectDispatcher::DispatchRandomEffect()
 		return;
 	}
 
-	int index = Random::GetRandomInt(0, m_effectsTotalWeight);
+	std::map<EffectType, std::array<int, 3>> choosableEffects = m_enabledEffects;
+	if (m_disableTwiceInRow)
+	{
+		choosableEffects.erase(m_lastEffect);
+	}
+
+	int effectsTotalWeight = 0;
+	for (auto pair : choosableEffects)
+	{
+		effectsTotalWeight += pair.second[2];
+	}
+
+	int index = Random::GetRandomInt(0, effectsTotalWeight);
 
 	int addedUpWeight = 0;
 	EffectType targetEffectType = _EFFECT_ENUM_MAX;
-	for (auto pair : m_enabledEffects)
+	for (auto pair : choosableEffects)
 	{
 		addedUpWeight += pair.second[2];
 
@@ -205,6 +212,11 @@ void EffectDispatcher::DispatchRandomEffect()
 
 	if (targetEffectType != _EFFECT_ENUM_MAX)
 	{
+		if (m_disableTwiceInRow)
+		{
+			m_lastEffect = targetEffectType;
+		}
+
 		DispatchEffect(targetEffectType);
 	}
 }

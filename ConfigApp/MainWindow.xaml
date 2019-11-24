@@ -55,18 +55,22 @@
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="8" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.RowSpan="2"/>
-                    <xctk:ColorPicker Name="misc_user_effects_timer_color" HorizontalAlignment="Left" Height="23" Margin="125,61,0,0"
+                    <xctk:ColorPicker Name="misc_user_effects_timer_color" HorizontalAlignment="Left" Height="23" Margin="125,135,0,0"
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False"/>
-                    <Label Content="Timer Bar Color" HorizontalAlignment="Left" Margin="10,58,0,0"
+                    <Label Content="Timer Bar Color" HorizontalAlignment="Left" Margin="10,132,0,0"
                         VerticalAlignment="Top" Width="110" Grid.Row="1"/>
-                    <Label Content="Effect Text Color" Margin="200,58,742,0"
+                    <Label Content="Effect Text Color" Margin="200,132,742,0"
                         VerticalAlignment="Top" Grid.Row="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_text_color" HorizontalAlignment="Left" Height="23" Margin="315,61,0,0"
+                    <xctk:ColorPicker x:Name="misc_user_effects_text_color" HorizontalAlignment="Left" Height="23" Margin="315,135,0,0"
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False"/>
-                    <Label Content="Effect Timer Bar Color" Margin="390,58,520,0"
+                    <Label Content="Effect Timer Bar Color" Margin="390,132,520,0"
                         VerticalAlignment="Top" Grid.Row="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" HorizontalAlignment="Left" Height="23" Margin="537,61,0,0"
+                    <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" HorizontalAlignment="Left" Height="23" Margin="537,135,0,0"
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False"/>
+                    <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1"/>
+                    <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="340,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+                    <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="446,65,0,68" Width="325" Grid.Row="1"/>
+                    <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="776,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">

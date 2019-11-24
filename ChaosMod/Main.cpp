@@ -9,9 +9,11 @@ EffectDispatcher* m_effectDispatcher = nullptr;
 std::unique_ptr<DebugMenu> m_debugMenu;
 bool m_clearAllEffects = false;
 bool m_pauseTimer = false;
+bool m_clearEffectsShortcutEnabled = false;
+int m_clearEffectsTextTime = 0;
 
-int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, std::array<int, 3>& timerColor,
-	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
+int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
+	bool& disableEffectsTwiceInRow, std::array<int, 3>& timerColor, std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -59,6 +61,14 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			else if (key == "EffectTimedShortDur")
 			{
 				effectTimedShortDur = _value > 0 ? _value : 1;
+			}
+			else if (key == "EnableClearEffectsShortcut")
+			{
+				enableClearEffectsShortcut = _value;
+			}
+			else if (key == "DisableEffectTwiceInRow")
+			{
+				disableEffectsTwiceInRow = _value;
 			}
 		}
 		catch (std::invalid_argument)
@@ -209,14 +219,15 @@ bool Main::Init()
 	int effectTimedDur = 90;
 	int seed = -1;
 	int effectTimedShortDur = 30;
+	bool disableEffectsTwiceInRow = false;
 	std::array<int, 3> timerColor = { 40, 40, 255 };
 	std::array<int, 3> textColor = { 255, 255, 255 };
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
 	std::map<EffectType, std::array<int, 3>> enabledEffects;
 
 	int result;
-	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, timerColor, textColor, effectTimerColor))
-		|| (result = ParseEffectsFile(enabledEffects)))
+	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
+		timerColor, textColor, effectTimerColor)) || (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -238,7 +249,7 @@ bool Main::Init()
 
 	if (!m_effectDispatcher)
 	{
-		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur,
+		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
 			timerColor, textColor, effectTimerColor);
 	}
 
@@ -275,6 +286,23 @@ void Main::Loop()
 			m_clearAllEffects = false;
 
 			m_effectDispatcher->Reset();
+		}
+
+		if (m_clearEffectsTextTime > 0)
+		{
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Effects Cleared!");
+			SET_TEXT_SCALE(.8f, .8f);
+			SET_TEXT_COLOUR(255, 100, 100, 255);
+			SET_TEXT_CENTRE(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .86f, 0);
+
+			static DWORD64 lastTick = GetTickCount64();
+			DWORD64 curTick = GetTickCount64();
+			
+			m_clearEffectsTextTime -= curTick - lastTick;
+
+			lastTick = curTick;
 		}
 
 		if (!m_pauseTimer)
@@ -338,7 +366,6 @@ void Main::Stop()
 
 void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
-#ifdef _DEBUG
 	static bool CTRLpressed = false;
 
 	if (key == VK_CONTROL)
@@ -347,10 +374,12 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	}
 	else if (CTRLpressed && !wasDownBefore)
 	{
-		if (key == VK_OEM_MINUS)
+		if (key == VK_OEM_MINUS && m_clearEffectsShortcutEnabled)
 		{
 			m_clearAllEffects = true;
+			m_clearEffectsTextTime = 5000;
 		}
+#ifdef _DEBUG
 		else if (key == VK_OEM_PERIOD)
 		{
 			m_pauseTimer = !m_pauseTimer;
@@ -359,8 +388,10 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 		{
 			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
 		}
+#endif
 	}
 
+#ifdef _DEBUG
 	if (m_debugMenu->IsVisible())
 	{
 		m_debugMenu->HandleInput(key, wasDownBefore);

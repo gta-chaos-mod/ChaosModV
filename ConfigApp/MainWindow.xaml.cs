@@ -148,7 +148,6 @@ namespace ConfigApp
                 return false;
             }
 
-            bool lazyFoundAll = false;
             foreach (string line in data.Split('\n'))
             {
                 string[] keyValue = line.Split('=');
@@ -185,8 +184,13 @@ namespace ConfigApp
                             twitch_user_effects_new_voting_time.Text = $"{value}";
                             break;
                         case "TwitchVotingNoVoteChance":
-                            lazyFoundAll = true;
                             twitch_user_effects_chance_no_voting_round.Text = $"{(value >= 0 ? value <= 100 ? value : 100 : 0)}";
+                            break;
+                        case "EnableClearEffectsShortcut":
+                            misc_user_effects_clear_enable.IsChecked = value != 0;
+                            break;
+                        case "DisableEffectTwiceInRow":
+                            misc_user_effects_twice_disable.IsChecked = value != 0;
                             break;
                     }
                 }
@@ -207,13 +211,6 @@ namespace ConfigApp
                 }
             }
 
-            if (!lazyFoundAll)
-            {
-                MessageBox.Show("Your config file was incomplete and thus has been regenerated.", "ChaosModV",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-
             return true;
         }
 
@@ -225,9 +222,11 @@ namespace ConfigApp
             data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "90")}\n";
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
             data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "30")}\n";
-            data += $"EnableTwitchVoting={(twitch_user_agreed.IsChecked.GetValueOrDefault() ? "1" : "0")}\n";
+            data += $"EnableTwitchVoting={(twitch_user_agreed.IsChecked.Value ? "1" : "0")}\n";
             data += $"TwitchVotingStartTime={(twitch_user_effects_new_voting_time.Text.Length > 0 ? twitch_user_effects_new_voting_time.Text : "30")}\n";
             data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
+            data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
+            data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
             data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
             data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";
