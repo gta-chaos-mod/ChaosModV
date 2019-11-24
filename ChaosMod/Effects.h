@@ -273,7 +273,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous", "player_famous"}},
 	{EFFECT_PLAYER_DRUNK, {"Drunk", "player_drunk", true}},
 	{EFFECT_PEDS_OHKO, {"One Hit KO", "player_ohko", true}},
-	{EFFECT_PEDS_NO_FEAR, {"Peds Have No Fear", "peds_nofear", true}},
+	{EFFECT_PEDS_NO_FEAR, {"Peds Are Easily Provoked", "peds_nofear", true}},
 	{EFFECT_SCREEN_BLOOM, {"Bloom", "screen_bloom", true, { EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO }}},
 	{EFFECT_SCREEN_LSD, {"LSD", "screen_lsd", true, { EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO }}},
 	{EFFECT_SCREEN_REALLSD, {"Actual LSD", "screen_lsd2", true}},

@@ -292,7 +292,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_PEDS_FOLLOW_PLAYER, new EffectInfo("You Are Famous", EffectCategory.PEDS, "player_famous")},
 	        {EffectType.EFFECT_PLAYER_DRUNK, new EffectInfo("Drunk", EffectCategory.PLAYER, "player_drunk", true)},
 	        {EffectType.EFFECT_PEDS_OHKO, new EffectInfo("One Hit KO", EffectCategory.PEDS, "player_ohko", true)},
-	        {EffectType.EFFECT_PEDS_NO_FEAR, new EffectInfo("Peds Have No Fear", EffectCategory.PEDS, "peds_nofear", true)},
+	        {EffectType.EFFECT_PEDS_NO_FEAR, new EffectInfo("Peds Are Easily Provoked", EffectCategory.PEDS, "peds_nofear", true)},
 	        {EffectType.EFFECT_SCREEN_BLOOM, new EffectInfo("Bloom", EffectCategory.MISC, "screen_bloom", true)},
 	        {EffectType.EFFECT_SCREEN_LSD, new EffectInfo("LSD", EffectCategory.PLAYER, "screen_lsd", true)},
             {EffectType.EFFECT_SCREEN_REALLSD, new EffectInfo("Actual LSD", EffectCategory.PLAYER, "screen_lsd2", true)},
