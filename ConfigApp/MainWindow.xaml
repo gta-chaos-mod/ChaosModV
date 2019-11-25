@@ -71,6 +71,12 @@
                     <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="340,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                     <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="446,65,0,68" Width="325" Grid.Row="1"/>
                     <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="776,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+                    <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="446,211,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2"/>
+                    <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="446,140,0,0"
+                        VerticalAlignment="Top" Width="325"/>
+                    <CheckBox x:Name="misc_user_effects_drawtext_disable" HorizontalAlignment="Left" Margin="776,218,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
+                    <CheckBox x:Name="misc_user_effects_drawtimer_disable" HorizontalAlignment="Left" Margin="776,147,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">

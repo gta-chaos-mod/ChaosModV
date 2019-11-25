@@ -17,7 +17,7 @@ EffectDispatcher::~EffectDispatcher()
 	delete m_effects;
 }
 
-void EffectDispatcher::Draw()
+void EffectDispatcher::DrawTimerBar()
 {
 	if (m_enabledEffects.empty())
 	{
@@ -27,6 +27,14 @@ void EffectDispatcher::Draw()
 	// New Effect Bar
 	DRAW_RECT(.5f, .0f, 1.f, .05f, 0, 0, 0, 127, false);
 	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+}
+
+void EffectDispatcher::DrawEffectTexts()
+{
+	if (m_enabledEffects.empty())
+	{
+		return;
+	}
 
 	// Effect Texts
 	float y = .2f;

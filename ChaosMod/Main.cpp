@@ -11,9 +11,12 @@ bool m_clearAllEffects = false;
 bool m_pauseTimer = false;
 bool m_clearEffectsShortcutEnabled = false;
 int m_clearEffectsTextTime = 0;
+bool m_disableDrawTimerBar = false;
+bool m_disableDrawEffectTexts = false;
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
-	bool& disableEffectsTwiceInRow, std::array<int, 3>& timerColor, std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
+	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
+	std::array<int, 3>& effectTimerColor)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -69,6 +72,14 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			else if (key == "DisableEffectTwiceInRow")
 			{
 				disableEffectsTwiceInRow = _value;
+			}
+			else if (key == "DisableTimerBarDraw")
+			{
+				disableTimerDrawing = _value;
+			}
+			else if (key == "DisableEffectTextDraw")
+			{
+				disableEffectTextDrawing = _value;
 			}
 		}
 		catch (std::invalid_argument)
@@ -227,7 +238,7 @@ bool Main::Init()
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
-		timerColor, textColor, effectTimerColor)) || (result = ParseEffectsFile(enabledEffects)))
+		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor)) || (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -311,7 +322,15 @@ void Main::Loop()
 		}
 
 		m_effectDispatcher->UpdateEffects();
-		m_effectDispatcher->Draw();
+
+		if (!m_disableDrawTimerBar)
+		{
+			m_effectDispatcher->DrawTimerBar();
+		}
+		if (!m_disableDrawEffectTexts)
+		{
+			m_effectDispatcher->DrawEffectTexts();
+		}
 
 #ifdef _DEBUG
 		if (m_debugMenu->IsVisible())

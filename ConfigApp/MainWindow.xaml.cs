@@ -192,6 +192,12 @@ namespace ConfigApp
                         case "DisableEffectTwiceInRow":
                             misc_user_effects_twice_disable.IsChecked = value != 0;
                             break;
+                        case "DisableTimerBarDraw":
+                            misc_user_effects_drawtimer_disable.IsChecked = value != 0;
+                            break;
+                        case "DisableEffectTextDraw":
+                            misc_user_effects_drawtext_disable.IsChecked = value != 0;
+                            break;
                     }
                 }
                 else
@@ -227,6 +233,8 @@ namespace ConfigApp
             data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
+            data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
+            data += $"DisableEffectTextDraw={(misc_user_effects_drawtext_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
             data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
             data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";

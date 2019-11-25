@@ -11,7 +11,8 @@ public:
 	~EffectDispatcher();
 
 public:
-	void Draw();
+	void DrawTimerBar();
+	void DrawEffectTexts();
 	void UpdateTimer();
 	void UpdateEffects();
 	void DispatchEffect(EffectType effectType);
