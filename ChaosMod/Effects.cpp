@@ -1420,16 +1420,6 @@ void Effects::UpdateEffects()
 	{
 		DISABLE_ALL_CONTROL_ACTIONS(0);
 	}
-	if (m_effectActive[EFFECT_PEDS_FAST_FIRING])
-	{
-		for (Ped ped : GetAllPeds())
-		{
-			if (!IS_PED_A_PLAYER(ped))
-			{
-				SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
-			}
-		}
-	}
 	if (m_effectActive[EFFECT_NO_SPRINT])
 	{
 		DISABLE_CONTROL_ACTION(0, 21, true);
@@ -1550,6 +1540,7 @@ void Effects::UpdateEffects()
 			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_ACCURACY(ped, 100);
+				SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 			}
 		}
 	}
