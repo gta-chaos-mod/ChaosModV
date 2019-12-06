@@ -325,7 +325,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLOSIVE_BULLETS, {"Explosive Bullets", "player_explosivebullets", true}},
 	{EFFECT_EXPLOSIVE_PUNCH, {"Explosive Punch", "player_explosivepunch", true}},
 	{EFFECT_GIVE_ALL_WEPS, {"Give All Weapons", "player_allweps"}},
-	{EFFECT_PEDS_AIMBOT, {"Peds Have Aimbot", "peds_aimbot", true}},
+	{EFFECT_PEDS_AIMBOT, {"Aimbot Peds", "peds_aimbot", true}},
 	//{EFFECT_EVERYTHING_FACE_PLAYER, {"Everything Faces Player", "everythingfacesplayer", true}},
 	{EFFECT_PEDS_BLIND, {"Peds Don't See Very Well", "peds_blind", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
