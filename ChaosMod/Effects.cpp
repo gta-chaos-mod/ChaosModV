@@ -112,10 +112,7 @@ void Effects::StartEffect(EffectType effectType)
 	Vector3 playerVehPos = GET_ENTITY_COORDS(playerVeh, false);
 	float playerVehHeading = GET_ENTITY_HEADING(playerVeh);
 
-	if (g_effectsMap.at(effectType).IsTimed)
-	{
-		m_effectActive[effectType] = true;
-	}
+	m_effectActive[effectType] = true;
 
 	switch (effectType)
 	{
@@ -650,10 +647,7 @@ void Effects::StartEffect(EffectType effectType)
 
 void Effects::StopEffect(EffectType effectType)
 {
-	if (g_effectsMap.at(effectType).IsTimed)
-	{
-		m_effectActive[effectType] = false;
-	}
+	m_effectActive[effectType] = false;
 
 	switch (effectType)
 	{
