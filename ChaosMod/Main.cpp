@@ -217,7 +217,7 @@ Main::Main(std::shared_ptr<Memory> memory) : m_memory(memory)
 
 Main::~Main()
 {
-	MH_DisableHook(MH_ALL_HOOKS);
+	
 }
 
 bool Main::Init()

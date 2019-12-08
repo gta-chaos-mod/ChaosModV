@@ -14,6 +14,7 @@ Memory::Memory()
 
 Memory::~Memory()
 {
+	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 }
 

@@ -197,6 +197,7 @@ namespace ConfigApp
             EFFECT_VEH_BULLETPROOFTIRES,
             EFFECT_VEH_RAINBOWHEADLIGHTS,
             EFFECT_VEH_TPRANDOMPEDS,
+            EFFECT_PEDS_REVIVE,
             _EFFECT_ENUM_MAX
         }
 
@@ -359,6 +360,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_BULLETPROOFTIRES, new EffectInfo("Make Tires Of Current Vehicle Bulletproof", EffectCategory.VEHICLE, "playerveh_bulletprooftires")},
             {EffectType.EFFECT_VEH_RAINBOWHEADLIGHTS, new EffectInfo("Rainbow Headlights", EffectCategory.VEHICLE, "veh_rainbowheadlights", true)},
             {EffectType.EFFECT_VEH_TPRANDOMPEDS, new EffectInfo("Teleport Random Peds Into Current Vehicle", EffectCategory.PEDS, "playerveh_tprandompeds")},
+            {EffectType.EFFECT_PEDS_REVIVE, new EffectInfo("Revive Dead Peds", EffectCategory.PEDS, "peds_revive")},
         };
     }
 }
