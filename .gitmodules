@@ -5,3 +5,4 @@
 [submodule "vendor/libcurl"]
 	path = vendor/libcurl
 	url = git@github.com:curl/curl.git
+	ignore = dirty

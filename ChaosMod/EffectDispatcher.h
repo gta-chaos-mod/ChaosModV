@@ -1,13 +1,15 @@
 #pragma once
 #include "Effects.h"
+#include "Memory.h"
 #include <vector>
 #include <array>
+#include <memory>
 
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects, int effectTimedShortDur,
-		bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor);
+	EffectDispatcher(std::shared_ptr<Memory> memory, int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
+		int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor);
 	~EffectDispatcher();
 
 public:
@@ -21,6 +23,7 @@ public:
 	void Reset();
 
 private:
+	const std::shared_ptr<Memory> m_memory;
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
 	const std::map<EffectType, std::array<int, 3>> m_enabledEffects;
@@ -32,7 +35,7 @@ private:
 	const std::array<int, 3> m_effectTimerColor;
 
 	float m_percentage;
-	Effects* m_effects;
+	const std::unique_ptr<Effects> m_effects;
 
 	struct ActiveEffect
 	{

@@ -1,37 +1,43 @@
 #include "stdafx.h"
 #include "Main.h"
 #include "Memory.h"
+#include <memory>
+
+std::shared_ptr<Memory> m_memory;
+std::unique_ptr<Main> m_main;
+bool m_isInitialized = false;
+
+void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+{
+	m_main->OnKeyboardInput(key, repeats, scanCode, isExtended, isWithAlt, wasDownBefore, isUpNow);
+}
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
-	static bool isInitialized = false;
-
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Memory::Init();
+		m_memory = std::make_shared<Memory>();
 
-		if (!Main::Init())
+		m_main = std::make_unique<Main>(m_memory);
+		if (!m_main->Init())
 		{
 			return FALSE;
 		}
 
-		scriptRegister(hInstance, Main::Loop);
+		scriptRegister(hInstance, []() { m_main->Loop(); });
 
-		keyboardHandlerRegister(Main::OnKeyboardInput);
+		keyboardHandlerRegister(OnKeyboardInput);
 
-		isInitialized = true;
+		m_isInitialized = true;
 
 		break;
 	case DLL_PROCESS_DETACH:
-		Main::Stop();
-		Memory::Stop();
-
-		if (isInitialized)
+		if (m_isInitialized)
 		{
 			scriptUnregister(hInstance);
 
-			keyboardHandlerUnregister(Main::OnKeyboardInput);
+			keyboardHandlerUnregister(OnKeyboardInput);
 		}
 
 		break;

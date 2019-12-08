@@ -4,7 +4,7 @@
 
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu(std::vector<EffectType> effects, EffectDispatcher* effectDispatcher) : m_effectDispatcher(effectDispatcher)
+DebugMenu::DebugMenu(std::vector<EffectType> effects, std::shared_ptr<EffectDispatcher> effectDispatcher) : m_effectDispatcher(effectDispatcher)
 {
 	if (effects.empty())
 	{

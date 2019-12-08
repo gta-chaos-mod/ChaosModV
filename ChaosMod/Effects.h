@@ -1,6 +1,8 @@
 #pragma once
+#include "Memory.h"
 #include <map>
 #include <vector>
+#include <memory>
 
 enum EffectType : int;
 
@@ -344,13 +346,13 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 class Effects
 {
 public:
-	Effects() {}
+	Effects(std::shared_ptr<Memory> memory);
 
-public:
 	void StartEffect(EffectType effectType);
 	void StopEffect(EffectType effectType);
 	void UpdateEffects();
 
 private:
+	const std::shared_ptr<Memory> m_memory;
 	bool m_effectActive[_EFFECT_ENUM_MAX] = { false };
 };

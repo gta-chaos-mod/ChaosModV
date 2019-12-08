@@ -1,6 +1,7 @@
 #pragma once
-#include <vector>
 #include "EffectDispatcher.h"
+#include <vector>
+#include <memory>
 
 enum EffectType : int;
 
@@ -17,7 +18,7 @@ struct DebugEffect
 class DebugMenu
 {
 public:
-	DebugMenu(std::vector<EffectType> effects, EffectDispatcher* effectDispatcher);
+	DebugMenu(std::vector<EffectType> effects, std::shared_ptr<EffectDispatcher> effectDispatcher);
 
 	void Tick();
 	void HandleInput(DWORD key, bool onRepeat);
@@ -29,9 +30,9 @@ public:
 
 private:
 	std::vector<DebugEffect> m_effects;
+	const std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	int m_selected = 0;
 	bool m_visible = false;
-	EffectDispatcher* m_effectDispatcher;
 	DWORD m_repeatTime = 0;
 	bool m_dispatchEffect = false;
 };

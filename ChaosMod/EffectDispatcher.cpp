@@ -1,10 +1,9 @@
 #include "stdafx.h"
 #include "EffectDispatcher.h"
-#include "Effects.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects, int effectTimedShortDur,
-	bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
-	: m_percentage(.0f), m_effects(new Effects()), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
+EffectDispatcher::EffectDispatcher(std::shared_ptr<Memory> memory, int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
+	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
+	: m_memory(memory), m_percentage(.0f), m_effects(std::make_unique<Effects>(memory)), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
@@ -14,7 +13,6 @@ EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std:
 EffectDispatcher::~EffectDispatcher()
 {
 	ClearEffects();
-	delete m_effects;
 }
 
 void EffectDispatcher::DrawTimerBar()

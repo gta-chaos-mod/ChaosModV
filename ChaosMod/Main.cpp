@@ -3,10 +3,6 @@
 #include "EffectDispatcher.h"
 #include "Memory.h"
 
-Main* m_main = nullptr;
-EffectDispatcher* m_effectDispatcher = nullptr;
-
-std::unique_ptr<DebugMenu> m_debugMenu;
 bool m_clearAllEffects = false;
 bool m_pauseTimer = false;
 bool m_clearEffectsShortcutEnabled = false;
@@ -214,18 +210,18 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 	return 0;
 }
 
+Main::Main(std::shared_ptr<Memory> memory) : m_memory(memory)
+{
+
+}
+
+Main::~Main()
+{
+	MH_DisableHook(MH_ALL_HOOKS);
+}
+
 bool Main::Init()
 {
-	if (m_main && m_effectDispatcher)
-	{
-		return false;
-	}
-
-	if (!m_main)
-	{
-		m_main = new Main();
-	}
-
 	int effectSpawnTime = 30;
 	int effectTimedDur = 90;
 	int seed = -1;
@@ -258,11 +254,8 @@ bool Main::Init()
 
 	Random::SetSeed(seed);
 
-	if (!m_effectDispatcher)
-	{
-		m_effectDispatcher = new EffectDispatcher(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
-			timerColor, textColor, effectTimerColor);
-	}
+	m_effectDispatcher = std::make_shared<EffectDispatcher>(m_memory, effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
+		timerColor, textColor, effectTimerColor);
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;
@@ -359,28 +352,6 @@ void Main::Loop()
 		}
 #endif
 	}
-}
-
-void Main::Stop()
-{
-	if (!m_main && !m_effectDispatcher)
-	{
-		return;
-	}
-
-	if (m_main)
-	{
-		delete m_main;
-		m_main = nullptr;
-	}
-
-	if (m_effectDispatcher)
-	{
-		delete m_main;
-		m_effectDispatcher = nullptr;
-	}
-
-	MH_DisableHook(MH_ALL_HOOKS);
 }
 
 void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)

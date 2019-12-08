@@ -96,6 +96,11 @@ inline void CreateTempVehicle(Hash model, float x, float y, float z, float headi
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
+Effects::Effects(std::shared_ptr<Memory> memory) : m_memory(memory)
+{
+
+}
+
 void Effects::StartEffect(EffectType effectType)
 {
 	Player player = PLAYER_ID();
@@ -535,7 +540,7 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_GIVE_ALL_WEPS:
-		for (Hash weapon : Memory::GetAllWeapons())
+		for (Hash weapon : m_memory->GetAllWeapons())
 		{
 			GIVE_WEAPON_TO_PED(playerPed, weapon, 9999, true, false);
 		}
@@ -1180,14 +1185,14 @@ void Effects::UpdateEffects()
 		static void(__cdecl* someFunc3)();
 		if (!gravAddr)
 		{
-			auto addr = Memory::FindPattern("\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05\x00\x00\x00\x00", "xxxx????xxxx????");
-			gravAddr = (float*)(addr + 8 + *(DWORD*)(addr + 4));
-			someFunc1 = (void(__cdecl*)(float))Memory::FindPattern("\x0F\x2E\x05\x00\x00\x00\x00\x75\x08\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05",
-				"xxx????xxxxxx????xxxx");
-			addr = Memory::FindPattern("\xE9\x00\x00\x00\x00\x83\xF9\x08\x75\x23", "x????xxxxx");
-			addr += 5 + *(DWORD*)(addr + 1) + 0x4A8;
-			someFunc2 = (void(__cdecl*)())(addr + 5 + *(DWORD*)(addr + 1));
-			someFunc3 = (void(__cdecl*)())Memory::FindPattern("\x48\x83\xEC\x48\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x29\x74\x24", "xxxxxxxx????xxxx");
+			auto addr = m_memory->FindPattern("\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05\x00\x00\x00\x00", "xxxx????xxxx????");
+			gravAddr = reinterpret_cast<float*>(addr + 8 + *reinterpret_cast<DWORD*>(addr + 4));
+			someFunc1 = reinterpret_cast<void(__cdecl*)(float)>(m_memory->FindPattern("\x0F\x2E\x05\x00\x00\x00\x00\x75\x08\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05",
+				"xxx????xxxxxx????xxxx"));
+			addr = m_memory->FindPattern("\xE9\x00\x00\x00\x00\x83\xF9\x08\x75\x23", "x????xxxxx");
+			addr += 5 + *reinterpret_cast<DWORD*>(addr + 1) + 0x4A8;
+			someFunc2 = reinterpret_cast<void(__cdecl*)()>(addr + 5 + *(DWORD*)(addr + 1));
+			someFunc3 = reinterpret_cast<void(__cdecl*)()>(m_memory->FindPattern("\x48\x83\xEC\x48\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x29\x74\x24", "xxxxxxxx????xxxx"));
 		}
 		*gravAddr = 200.f;
 		someFunc1(*gravAddr);
@@ -1446,7 +1451,7 @@ void Effects::UpdateEffects()
 	{
 		Ped playerPed = PLAYER_PED_ID();
 		int curTime = GET_GAME_TIMER();
-		for (Hash weapon : Memory::GetAllWeapons())
+		for (Hash weapon : m_memory->GetAllWeapons())
 		{
 			int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, weapon);
 			if (timeSinceDmg && curTime - timeSinceDmg < 200)
