@@ -14,7 +14,8 @@ public:
 	~Main();
 
 	bool Init();
-	void Loop();
+	void MainLoop();
+	void RunEffectLoop();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
 
 private:

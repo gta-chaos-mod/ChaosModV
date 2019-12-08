@@ -25,7 +25,8 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 			return FALSE;
 		}
 
-		scriptRegister(hInstance, []() { m_main->Loop(); });
+		scriptRegister(hInstance, []() { m_main->MainLoop(); });
+		scriptRegisterAdditionalThread(hInstance, []() { m_main->RunEffectLoop(); });
 
 		keyboardHandlerRegister(OnKeyboardInput);
 

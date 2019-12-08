@@ -272,10 +272,8 @@ bool Main::Init()
 	return true;
 }
 
-void Main::Loop()
+void Main::MainLoop()
 {
-	m_effectDispatcher->Reset();
-
 	while (true)
 	{
 		WAIT(0);
@@ -283,13 +281,6 @@ void Main::Loop()
 		if (IS_SCREEN_FADED_OUT())
 		{
 			continue;
-		}
-
-		if (m_clearAllEffects)
-		{
-			m_clearAllEffects = false;
-
-			m_effectDispatcher->Reset();
 		}
 
 		if (m_clearEffectsTextTime > 0)
@@ -308,13 +299,6 @@ void Main::Loop()
 
 			lastTick = curTick;
 		}
-
-		if (!m_pauseTimer)
-		{
-			m_effectDispatcher->UpdateTimer();
-		}
-
-		m_effectDispatcher->UpdateEffects();
 
 		if (!m_disableDrawTimerBar)
 		{
@@ -351,6 +335,35 @@ void Main::Loop()
 			m_debugMenu->Tick();
 		}
 #endif
+	}
+}
+
+void Main::RunEffectLoop()
+{
+	m_effectDispatcher->Reset();
+
+	while (true)
+	{
+		WAIT(0);
+
+		if (IS_SCREEN_FADED_OUT())
+		{
+			continue;
+		}
+
+		if (m_clearAllEffects)
+		{
+			m_clearAllEffects = false;
+
+			m_effectDispatcher->Reset();
+		}
+
+		if (!m_pauseTimer)
+		{
+			m_effectDispatcher->UpdateTimer();
+		}
+
+		m_effectDispatcher->UpdateEffects();
 	}
 }
 
