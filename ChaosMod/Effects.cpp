@@ -95,11 +95,6 @@ inline void CreateTempVehicle(Hash model, float x, float y, float z, float headi
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
-Effects::Effects(std::shared_ptr<Memory> memory) : m_memory(memory)
-{
-
-}
-
 void Effects::StartEffect(EffectType effectType)
 {
 	Player player = PLAYER_ID();
@@ -536,7 +531,7 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_GIVE_ALL_WEPS:
-		for (Hash weapon : m_memory->GetAllWeapons())
+		for (Hash weapon : Memory::GetAllWeapons())
 		{
 			GIVE_WEAPON_TO_PED(playerPed, weapon, 9999, true, false);
 		}
@@ -859,6 +854,9 @@ void Effects::StopEffect(EffectType effectType)
 		break;
 	case EFFECT_PLAYER_MONEYDROPS:
 		SET_MODEL_AS_NO_LONGER_NEEDED(GET_HASH_KEY("prop_money_bag_01"));
+		break;
+	case EFFECT_SNOW:
+		Memory::SetSnow(false);
 		break;
 	}
 }
@@ -1186,7 +1184,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_INSANE_GRAV])
 	{
-		m_memory->SetGravityLevel(200.f);
+		Memory::SetGravityLevel(200.f);
 		for (Ped ped : GetAllPeds())
 		{
 			if (!IS_PED_IN_ANY_VEHICLE(ped, false))
@@ -1444,7 +1442,7 @@ void Effects::UpdateEffects()
 	{
 		Ped playerPed = PLAYER_PED_ID();
 		int curTime = GET_GAME_TIMER();
-		for (Hash weapon : m_memory->GetAllWeapons())
+		for (Hash weapon : Memory::GetAllWeapons())
 		{
 			int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, weapon);
 			if (timeSinceDmg && curTime - timeSinceDmg < 200)
@@ -1623,5 +1621,9 @@ void Effects::UpdateEffects()
 				i = 0;
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_SNOW])
+	{
+		Memory::SetSnow(true);
 	}
 }

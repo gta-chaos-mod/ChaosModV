@@ -192,16 +192,6 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 	return 0;
 }
 
-Main::Main(std::shared_ptr<Memory> memory) : m_memory(memory)
-{
-
-}
-
-Main::~Main()
-{
-	
-}
-
 bool Main::Init()
 {
 	int effectSpawnTime = 30;
@@ -236,7 +226,7 @@ bool Main::Init()
 
 	Random::SetSeed(seed);
 
-	m_effectDispatcher = std::make_shared<EffectDispatcher>(m_memory, effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
+	m_effectDispatcher = std::make_shared<EffectDispatcher>(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
 		timerColor, textColor, effectTimerColor);
 
 #ifdef _DEBUG
@@ -249,13 +239,18 @@ bool Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
 #endif
 
-	MH_EnableHook(MH_ALL_HOOKS);
+	m_twitchVoting = std::make_unique<TwitchVoting>();
 
 	return true;
 }
 
 void Main::MainLoop()
 {
+	bool twitchVotingEnabled = m_twitchVoting->IsEnabled();
+	int twitchVotingWarningTextTime = 15000;
+
+	DWORD64 lastTick = GetTickCount64();
+
 	while (true)
 	{
 		WAIT(0);
@@ -265,6 +260,8 @@ void Main::MainLoop()
 			continue;
 		}
 
+		DWORD64 curTick = GetTickCount64();
+
 		if (m_clearEffectsTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -273,14 +270,23 @@ void Main::MainLoop()
 			SET_TEXT_COLOUR(255, 100, 100, 255);
 			SET_TEXT_CENTRE(true);
 			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .86f, 0);
-
-			static DWORD64 lastTick = GetTickCount64();
-			DWORD64 curTick = GetTickCount64();
 			
 			m_clearEffectsTextTime -= curTick - lastTick;
-
-			lastTick = curTick;
 		}
+
+		if (twitchVotingEnabled && twitchVotingWarningTextTime > 0)
+		{
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
+			SET_TEXT_SCALE(.8f, .8f);
+			SET_TEXT_COLOUR(255, 100, 100, 255);
+			SET_TEXT_CENTRE(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .7f, 0);
+
+			twitchVotingWarningTextTime -= curTick - lastTick;
+		}
+
+		lastTick = curTick;
 
 		if (!m_disableDrawTimerBar)
 		{

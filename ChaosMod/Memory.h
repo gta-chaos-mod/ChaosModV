@@ -3,19 +3,19 @@
 
 typedef DWORD Hash;
 
-class Memory
+namespace Memory
 {
-public:
-	Memory();
-	~Memory();
+	void Init();
+	void Stop();
 
-	DWORD64 GetBaseAddr();
-	DWORD64 GetEndAddr();
 	DWORD64 FindPattern(const char* pattern, const char* mask);
 	std::vector<Hash> GetAllWeapons();
 	void SetGravityLevel(float gravity);
+	void SetSnow(bool state);
 
-private:
-	DWORD64 m_base;
-	DWORD64 m_end;
+	namespace
+	{
+		DWORD64 m_base;
+		DWORD64 m_end;
+	}
 };

@@ -3,9 +3,9 @@
 #include "Effects.h"
 #include "Memory.h"
 
-EffectDispatcher::EffectDispatcher(std::shared_ptr<Memory> memory, int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
 	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
-	: m_memory(memory), m_percentage(.0f), m_effects(std::make_unique<Effects>(memory)), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
+	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
@@ -94,7 +94,7 @@ void EffectDispatcher::UpdateEffects()
 		return;
 	}
 
-	m_effects->UpdateEffects();
+	m_effects.UpdateEffects();
 
 	DWORD64 currentUpdateTime = GetTickCount64();
 
@@ -113,7 +113,7 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -180 + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				m_effects->StopEffect(effect.EffectType);
+				m_effects.StopEffect(effect.EffectType);
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -157,7 +157,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
-					m_effects->StopEffect(effect.EffectType);
+					m_effects.StopEffect(effect.EffectType);
 					it = m_activeEffects.erase(it);
 
 					found = true;
@@ -175,7 +175,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 
 	if (!alreadyExists)
 	{
-		m_effects->StartEffect(effectType);
+		m_effects.StartEffect(effectType);
 		m_activeEffects.emplace_back(effectType, effectInfo.Name, effectTime);
 	}
 
@@ -233,7 +233,7 @@ void EffectDispatcher::ClearEffects()
 {
 	for (ActiveEffect effect : m_activeEffects)
 	{
-		m_effects->StopEffect(effect.EffectType);
+		m_effects.StopEffect(effect.EffectType);
 	}
 
 	m_activeEffects.clear();

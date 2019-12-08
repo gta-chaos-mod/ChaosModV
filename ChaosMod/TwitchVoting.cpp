@@ -3,7 +3,7 @@
 
 #define URL "https://ducky.rivinshosting.com"
 
-bool TwitchVoting::IsEnabled()
+bool TwitchVoting::IsEnabled() const
 {
 	return true;
 }

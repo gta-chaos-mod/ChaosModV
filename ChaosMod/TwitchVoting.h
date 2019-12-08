@@ -3,6 +3,6 @@
 class TwitchVoting
 {
 public:
-	bool IsEnabled();
+	bool IsEnabled() const;
 	
 };

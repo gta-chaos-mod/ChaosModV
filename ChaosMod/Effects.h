@@ -3,8 +3,6 @@
 #include <vector>
 #include <memory>
 
-class Memory;
-
 enum EffectType : int;
 
 struct EffectInfo
@@ -181,6 +179,7 @@ enum EffectType : int
 	EFFECT_VEH_RAINBOWHEADLIGHTS,
 	EFFECT_VEH_TPRANDOMPEDS,
 	EFFECT_PEDS_REVIVE,
+	EFFECT_SNOW,
 	_EFFECT_ENUM_MAX
 };
 
@@ -344,18 +343,16 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_RAINBOWHEADLIGHTS, {"Rainbow Headlights", "veh_rainbowheadlights", true}},
 	{EFFECT_VEH_TPRANDOMPEDS, {"Teleport Random Peds Into Current Vehicle", "playerveh_tprandompeds"}},
 	{EFFECT_PEDS_REVIVE, {"Revive Dead Peds", "peds_revive"}},
+	{EFFECT_SNOW, {"Snow", "world_snow"}},
 };
 
 class Effects
 {
 public:
-	Effects(std::shared_ptr<Memory> memory);
-
 	void StartEffect(EffectType effectType);
 	void StopEffect(EffectType effectType);
 	void UpdateEffects();
 
 private:
-	const std::shared_ptr<Memory> m_memory;
 	bool m_effectActive[_EFFECT_ENUM_MAX] = { false };
 };
