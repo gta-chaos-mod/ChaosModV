@@ -58,30 +58,12 @@ namespace ConfigApp
                 effectconf_timer_type_enable.IsEnabled = false;
                 effectconf_timer_time_enable.IsEnabled = false;
             }
-            if (effectconf_timer_type_enable.IsChecked.Value)
-            {
-                effectconf_timer_type_enable.IsEnabled = true;
-                effectconf_timer_type.IsEnabled = true;
 
-                effectconf_timer_time_enable.IsChecked = false;
-                effectconf_timer_time.IsEnabled = false;
-            }
-            else if (effectconf_timer_time_enable.IsChecked.Value)
-            {
-                effectconf_timer_time_enable.IsChecked = true;
-                effectconf_timer_time.IsEnabled = true;
-
-                effectconf_timer_type_enable.IsChecked = false;
-                effectconf_timer_type.IsEnabled = false;
-            }
-            else
-            {
-                effectconf_timer_type.IsEnabled = false;
-                effectconf_timer_time.IsEnabled = false;
-            }
+            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.Value;
+            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsChecked.Value;
         }
 
-        private void OnChecked(object sender, RoutedEventArgs e)
+        private void OnClicked(object sender, RoutedEventArgs e)
         {
             if (((CheckBox)sender).IsChecked.Value)
             {
