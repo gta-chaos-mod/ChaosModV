@@ -351,7 +351,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
             {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision", true)},
-            {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heatvision", EffectCategory.MISC, "player_heatvision", true, true)},
+            {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heat Vision", EffectCategory.MISC, "player_heatvision", true, true)},
             {EffectType.EFFECT_PLAYER_MONEYDROPS, new EffectInfo("Money Rain", EffectCategory.MISC, "player_moneydrops", true)},
             {EffectType.EFFECT_VEH_MAXENGINE, new EffectInfo("Upgrade Engine Of Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxengine")},
             {EffectType.EFFECT_VEH_NITRO, new EffectInfo("Install Turbo On Current Vehicle", EffectCategory.VEHICLE, "playerveh_nitro")},

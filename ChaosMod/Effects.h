@@ -333,7 +333,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
 	{EFFECT_SPAWN_COMPANION_CHIMP, {"Spawn Companion Chimp", "spawn_chimp"}},
 	{EFFECT_PLAYER_NIGHTVISION, {"Night Vision", "player_nightvision", true}},
-	{EFFECT_PLAYER_HEATVISION, {"Heatvision", "player_heatvision", true, {}, true}},
+	{EFFECT_PLAYER_HEATVISION, {"Heat Vision", "player_heatvision", true, {}, true}},
 	{EFFECT_PLAYER_MONEYDROPS, {"Money Rain", "player_moneydrops", true}},
 	{EFFECT_VEH_MAXENGINE, {"Upgrade Engine Of Current Vehicle", "playerveh_maxengine"}},
 	{EFFECT_VEH_NITRO, {"Install Turbo On Current Vehicle", "playerveh_nitro"}},
