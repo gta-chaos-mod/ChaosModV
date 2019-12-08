@@ -1,9 +1,11 @@
 #pragma once
 #include "Effects.h"
-#include "Memory.h"
 #include <vector>
 #include <array>
 #include <memory>
+#include <map>
+
+class Memory;
 
 class EffectDispatcher
 {

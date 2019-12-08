@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Effects.h"
-#include "Main.h"
 #include "Memory.h"
 
 struct ReturnedEntities

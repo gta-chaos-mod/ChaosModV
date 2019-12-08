@@ -1,11 +1,11 @@
 #pragma once
-#include "Memory.h"
-#include "DebugMenu.h"
 #include <Windows.h>
 #include <memory>
 
 class DebugMenu;
 class EffectDispatcher;
+class Memory;
+class TwitchVoting;
 
 class Main
 {
@@ -22,4 +22,5 @@ private:
 	const std::shared_ptr<Memory> m_memory;
 	std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	std::unique_ptr<DebugMenu> m_debugMenu;
+	std::unique_ptr<TwitchVoting> m_twitchVotingMgr;
 };

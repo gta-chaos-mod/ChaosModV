@@ -1,7 +1,8 @@
 #pragma once
-#include "EffectDispatcher.h"
 #include <vector>
 #include <memory>
+
+class EffectDispatcher;
 
 enum EffectType : int;
 

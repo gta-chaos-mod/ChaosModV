@@ -2,6 +2,8 @@
 #include "Main.h"
 #include "EffectDispatcher.h"
 #include "Memory.h"
+#include "TwitchVoting.h"
+#include "DebugMenu.h"
 
 bool m_clearAllEffects = false;
 bool m_pauseTimer = false;

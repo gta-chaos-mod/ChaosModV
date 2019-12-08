@@ -36,7 +36,7 @@
     <ClCompile Include="DebugMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TwitchVotingMgr.cpp">
+    <ClCompile Include="TwitchVoting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,7 +73,7 @@
     <ClInclude Include="DebugMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TwitchVotingMgr.h">
+    <ClInclude Include="TwitchVoting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

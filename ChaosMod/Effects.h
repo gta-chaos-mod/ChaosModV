@@ -1,8 +1,9 @@
 #pragma once
-#include "Memory.h"
 #include <map>
 #include <vector>
 #include <memory>
+
+class Memory;
 
 enum EffectType : int;
 

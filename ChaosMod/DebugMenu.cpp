@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DebugMenu.h"
 #include "Effects.h"
+#include "EffectDispatcher.h"
 
 #define MAX_VIS_ITEMS 15
 

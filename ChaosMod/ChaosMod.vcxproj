@@ -89,7 +89,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TwitchVotingMgr.cpp" />
+    <ClCompile Include="TwitchVoting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\libcurl\build\Win64\VC15\LIB Release\libcurl.lib" />
@@ -106,7 +106,7 @@
     <ClInclude Include="nativesNoNamespaces.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TwitchVotingMgr.h" />
+    <ClInclude Include="TwitchVoting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

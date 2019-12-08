@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "EffectDispatcher.h"
+#include "Effects.h"
+#include "Memory.h"
 
 EffectDispatcher::EffectDispatcher(std::shared_ptr<Memory> memory, int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
 	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
