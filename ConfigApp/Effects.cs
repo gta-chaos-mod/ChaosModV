@@ -207,7 +207,7 @@ namespace ConfigApp
 	        {EffectType.EFFECT_PLUS_2_STARS, new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER, "player_plus2stars")},
 	        {EffectType.EFFECT_5_STARS, new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER, "player_5stars")},
 	        {EffectType.EFFECT_CLEAR_STARS, new EffectInfo("Clear Wanted Level", EffectCategory.PLAYER, "player_clearwanted")},
-            {EffectType.EFFECT_NEVER_WANTED, new EffectInfo("Never Wanted", EffectCategory.PLAYER, "player_neverwanted")},
+            {EffectType.EFFECT_NEVER_WANTED, new EffectInfo("Never Wanted", EffectCategory.PLAYER, "player_neverwanted", true)},
             {EffectType.EFFECT_STRIP_WEAPONS, new EffectInfo("Remove Weapons From Everyone", EffectCategory.PEDS, "peds_remweps")},
 	        {EffectType.EFFECT_GIVE_RPG, new EffectInfo("Give RPG", EffectCategory.PLAYER, "player_giverpg")},
 	        {EffectType.EFFECT_GIVE_MINIGUN, new EffectInfo("Give Minigun", EffectCategory.PLAYER, "player_giveminigun")},
