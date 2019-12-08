@@ -909,6 +909,8 @@ void Effects::UpdateEffects()
 			if (!IS_PED_A_PLAYER(ped))
 			{
 				SET_PED_RELATIONSHIP_GROUP_HASH(ped, riotGroupHash);
+				SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+				SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 			}
 		}
 	}
