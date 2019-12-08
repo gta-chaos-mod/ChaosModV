@@ -89,3 +89,26 @@ std::vector<Hash> Memory::GetAllWeapons()
 
 	return weapons;
 }
+
+void Memory::SetGravityLevel(float gravity)
+{
+	static float* gravAddr = nullptr;
+	static void(__cdecl * someFunc1)(float grav);
+	static void(__cdecl * someFunc2)();
+	static void(__cdecl * someFunc3)();
+	if (!gravAddr)
+	{
+		auto addr = FindPattern("\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05\x00\x00\x00\x00", "xxxx????xxxx????");
+		gravAddr = reinterpret_cast<float*>(addr + 8 + *reinterpret_cast<DWORD*>(addr + 4));
+		someFunc1 = reinterpret_cast<void(__cdecl*)(float)>(FindPattern("\x0F\x2E\x05\x00\x00\x00\x00\x75\x08\xF3\x0F\x10\x05\x00\x00\x00\x00\xF3\x0F\x59\x05",
+			"xxx????xxxxxx????xxxx"));
+		addr = FindPattern("\xE9\x00\x00\x00\x00\x83\xF9\x08\x75\x23", "x????xxxxx");
+		addr += 5 + *reinterpret_cast<DWORD*>(addr + 1) + 0x4A8;
+		someFunc2 = reinterpret_cast<void(__cdecl*)()>(addr + 5 + *(DWORD*)(addr + 1));
+		someFunc3 = reinterpret_cast<void(__cdecl*)()>(FindPattern("\x48\x83\xEC\x48\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x29\x74\x24", "xxxxxxxx????xxxx"));
+	}
+	*gravAddr = gravity;
+	someFunc1(*gravAddr);
+	someFunc2();
+	someFunc3();
+}
