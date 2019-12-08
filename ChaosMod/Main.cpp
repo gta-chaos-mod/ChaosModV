@@ -5,13 +5,6 @@
 #include "TwitchVoting.h"
 #include "DebugMenu.h"
 
-bool m_clearAllEffects = false;
-bool m_pauseTimer = false;
-bool m_clearEffectsShortcutEnabled = false;
-int m_clearEffectsTextTime = 0;
-bool m_disableDrawTimerBar = false;
-bool m_disableDrawEffectTexts = false;
-
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
 	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
 	std::array<int, 3>& effectTimerColor)
