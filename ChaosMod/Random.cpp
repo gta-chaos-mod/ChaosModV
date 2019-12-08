@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Random.h"
 
+std::default_random_engine m_random;
+int m_seed = -1;
+
 namespace Random
 {
 	void SetSeed(int seed)

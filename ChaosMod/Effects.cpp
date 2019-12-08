@@ -855,9 +855,9 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PLAYER_MONEYDROPS:
 		SET_MODEL_AS_NO_LONGER_NEEDED(GET_HASH_KEY("prop_money_bag_01"));
 		break;
-	case EFFECT_SNOW:
+	/*case EFFECT_SNOW:
 		Memory::SetSnow(false);
-		break;
+		break;*/
 	}
 }
 
@@ -1622,8 +1622,8 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
-	if (m_effectActive[EFFECT_SNOW])
+	/*if (m_effectActive[EFFECT_SNOW])
 	{
 		Memory::SetSnow(true);
-	}
+	}*/
 }

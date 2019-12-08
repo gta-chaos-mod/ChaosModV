@@ -12,10 +12,4 @@ namespace Memory
 	std::vector<Hash> GetAllWeapons();
 	void SetGravityLevel(float gravity);
 	void SetSnow(bool state);
-
-	namespace
-	{
-		DWORD64 m_base;
-		DWORD64 m_end;
-	}
 };

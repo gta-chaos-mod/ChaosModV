@@ -1,13 +1,8 @@
 #include "stdafx.h"
 #include "Memory.h"
 
-bool m_setSnow = false;
-int* m_currentWeather;
-int(*GetWeatherByName)(void*, const char*);
-int Hook_GetWeatherByName(void* a1, const char* a2)
-{
-	return m_setSnow ? *m_currentWeather : GetWeatherByName(a1, a2);
-}
+DWORD64 m_base;
+DWORD64 m_end;
 
 namespace Memory
 {
@@ -20,14 +15,6 @@ namespace Memory
 		m_end = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll) + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
-
-		DWORD64 addr;
-
-		addr = FindPattern("\xC6\x45\x20\x00\xE8\x00\x00\x00\x00\x48\x8D\x15", "xxxxx????xxx");
-		MH_CreateHook(reinterpret_cast<void*>(*reinterpret_cast<char*>(addr + 23)), Hook_GetWeatherByName,
-			reinterpret_cast<void**>(&GetWeatherByName));
-
-		m_currentWeather = reinterpret_cast<int*>(addr + 30);
 
 		MH_EnableHook(MH_ALL_HOOKS);
 	}
@@ -126,6 +113,23 @@ namespace Memory
 
 	void SetSnow(bool state)
 	{
-		m_setSnow = state;
+		/*struct Something
+		{
+			struct Something2
+			{
+				char padding[1506];
+				BYTE* a1 = &someVal;
+				BYTE someVal = 2;
+			};
+
+			char padding[1224];
+			Something2* a1 = new Something2();
+		};
+
+		static auto someFunc = reinterpret_cast<__int64(*)(Something)>(Memory::FindPattern("\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x55\x57\x41\x57\x48\x8B\xEC\x48\x83\xEC\x40\x48\x8B\x81\x00\x00\x00\x00",
+			"xxxx?xxxx?xxxxxxxxxxxxxx????"));
+		Something something;
+		someFunc(something);
+		delete something.a1;*/
 	}
 }
