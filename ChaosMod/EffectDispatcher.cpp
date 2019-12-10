@@ -79,12 +79,17 @@ void EffectDispatcher::UpdateTimer()
 		thing = 0;
 	}
 
-	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f)
+	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f && m_dispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
 		m_timerTimerRuns = 0;
 	}
+}
+
+void EffectDispatcher::OverrideTimerDontDispatch(bool state)
+{
+	m_dispatchEffectsOnTimer = !state;
 }
 
 void EffectDispatcher::UpdateEffects()
@@ -242,6 +247,11 @@ void EffectDispatcher::ClearEffects()
 void EffectDispatcher::Reset()
 {
 	ClearEffects();
+	ResetTimer();
+}
+
+void EffectDispatcher::ResetTimer()
+{
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();

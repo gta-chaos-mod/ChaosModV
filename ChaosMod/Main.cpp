@@ -7,7 +7,7 @@
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
 	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
-	std::array<int, 3>& effectTimerColor)
+	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -55,6 +55,14 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			else if (key == "EffectTimedShortDur")
 			{
 				effectTimedShortDur = _value > 0 ? _value : 1;
+			}
+			else if (key == "EnableTwitchVoting")
+			{
+				enableTwitchVoting = _value;
+			}
+			else if (key == "TwitchVotingNoVoteChance")
+			{
+				twitchVotingNoVoteChance = _value >= 0 ? _value <= 100 ? _value : 100 : 0;
 			}
 			else if (key == "EnableClearEffectsShortcut")
 			{
@@ -203,10 +211,12 @@ bool Main::Init()
 	std::array<int, 3> textColor = { 255, 255, 255 };
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
 	std::map<EffectType, std::array<int, 3>> enabledEffects;
+	bool enableTwitchVoting = false;
+	int twitchVotingNoVoteChance = 5;
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
-		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor)) || (result = ParseEffectsFile(enabledEffects)))
+		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance)) || (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -239,7 +249,7 @@ bool Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
 #endif
 
-	m_twitchVoting = std::make_unique<TwitchVoting>();
+	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, m_effectDispatcher, enabledEffects);
 
 	return true;
 }
@@ -344,6 +354,11 @@ void Main::RunEffectLoop()
 			m_clearAllEffects = false;
 
 			m_effectDispatcher->Reset();
+		}
+
+		if (m_twitchVoting->IsEnabled())
+		{
+			m_twitchVoting->Tick();
 		}
 
 		if (!m_pauseTimer)

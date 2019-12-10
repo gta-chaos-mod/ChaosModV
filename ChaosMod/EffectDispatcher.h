@@ -16,11 +16,21 @@ public:
 	void DrawTimerBar();
 	void DrawEffectTexts();
 	void UpdateTimer();
+	void OverrideTimerDontDispatch(bool state);
+	inline bool ShouldDispatchEffectNow() const
+	{
+		return GetRemainingTimerTime() == 0;
+	}
+	inline int GetRemainingTimerTime() const
+	{
+		return m_effectSpawnTime - m_timerTimerRuns;
+	}
 	void UpdateEffects();
 	void DispatchEffect(EffectType effectType);
 	void DispatchRandomEffect();
 	void ClearEffects();
 	void Reset();
+	void ResetTimer();
 
 private:
 	const int m_effectSpawnTime;
@@ -53,4 +63,5 @@ private:
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
+	bool m_dispatchEffectsOnTimer = true;
 };
