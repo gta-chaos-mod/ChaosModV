@@ -1338,8 +1338,8 @@ void Effects::UpdateEffects()
 				}
 			}
 			DECOR_SET_BOOL(meteor, "_METEOR", true);
-			SET_OBJECT_PHYSICS_PARAMS(meteor, 10000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -1000.f, true, false, true, true);
+			SET_OBJECT_PHYSICS_PARAMS(meteor, 50000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 50.f, 0, -1000.f, true, false, true, true);
 			SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 		}
 		static DWORD64 lastTick2 = 0;
