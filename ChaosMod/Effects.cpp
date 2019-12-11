@@ -1333,6 +1333,7 @@ void Effects::UpdateEffects()
 			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 35.f, 0, -1000.f, true, false, true, true);
 			SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 		}
+		static DWORD64 lastTick2 = 0;
 		for (int i = 0; i < MAX_METEORS; i++)
 		{
 			Object& prop = meteors[i];
@@ -1345,11 +1346,8 @@ void Effects::UpdateEffects()
 					{
 						if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(prop))
 						{
-							static DWORD64 lastTick = 0;
-							DWORD64 curTick = GetTickCount64();
-							if (lastTick < curTick - 1000)
+							if (lastTick2 < curTick - 1000)
 							{
-								lastTick = curTick;
 								meteorDespawnTime[i]--;
 							}
 						}
@@ -1360,6 +1358,10 @@ void Effects::UpdateEffects()
 				SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
 				prop = 0;
 			}
+		}
+		if (lastTick2 < curTick - 1000)
+		{
+			lastTick2 = curTick;
 		}
 	}
 	if (m_effectActive[EFFECT_BLIND])
