@@ -199,6 +199,7 @@ namespace ConfigApp
             EFFECT_VEH_TPRANDOMPEDS,
             EFFECT_PEDS_REVIVE,
             EFFECT_SNOW,
+            EFFECT_WHALE_RAIN,
             _EFFECT_ENUM_MAX
         }
 
@@ -362,7 +363,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_RAINBOWHEADLIGHTS, new EffectInfo("Rainbow Headlights", EffectCategory.VEHICLE, "veh_rainbowheadlights", true)},
             {EffectType.EFFECT_VEH_TPRANDOMPEDS, new EffectInfo("Teleport Random Peds Into Current Vehicle", EffectCategory.PEDS, "playerveh_tprandompeds")},
             {EffectType.EFFECT_PEDS_REVIVE, new EffectInfo("Revive Dead Peds", EffectCategory.PEDS, "peds_revive")},
-            {EffectType.EFFECT_SNOW, new EffectInfo("Snow", EffectCategory.MISC, "world_snow")},
+            {EffectType.EFFECT_SNOW, new EffectInfo("Snow", EffectCategory.MISC, "world_snow", true)},
+            {EffectType.EFFECT_WHALE_RAIN, new EffectInfo("Whale Rain", EffectCategory.MISC, "world_whalerain", true)},
         };
     }
 }
