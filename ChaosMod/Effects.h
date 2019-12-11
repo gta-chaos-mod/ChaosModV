@@ -179,7 +179,7 @@ enum EffectType : int
 	EFFECT_VEH_RAINBOWHEADLIGHTS,
 	EFFECT_VEH_TPRANDOMPEDS,
 	EFFECT_PEDS_REVIVE,
-	//EFFECT_SNOW,
+	EFFECT_SNOW,
 	_EFFECT_ENUM_MAX
 };
 
@@ -343,7 +343,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_RAINBOWHEADLIGHTS, {"Rainbow Headlights", "veh_rainbowheadlights", true}},
 	{EFFECT_VEH_TPRANDOMPEDS, {"Teleport Random Peds Into Current Vehicle", "playerveh_tprandompeds"}},
 	{EFFECT_PEDS_REVIVE, {"Revive Dead Peds", "peds_revive"}},
-	//{EFFECT_SNOW, {"Snow", "world_snow", true}},
+	{EFFECT_SNOW, {"Snow", "world_snow", true}},
 };
 
 class Effects

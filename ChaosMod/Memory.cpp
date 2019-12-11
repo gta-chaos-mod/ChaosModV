@@ -60,10 +60,12 @@ namespace Memory
 		{
 			DWORD64 addr;
 			// Thanks sigmaker for these memes
-			addr = FindPattern("\x0F\xB7\x15\x00\x00\x00\x00\x45\x33\xD2\xFF\xCA\x78\x29\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C", "xxx????xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-			something1 = (WORD*)(addr + 7 + *(DWORD*)(addr + 3));
-			addr = FindPattern("\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C", "xxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-			something2 = (DWORD64*)(addr + 7 + *(DWORD*)(addr + 3));
+			addr = FindPattern("\x0F\xB7\x15\x00\x00\x00\x00\x45\x33\xD2\xFF\xCA\x78\x29\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C",
+				"xxx????xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			something1 = reinterpret_cast<WORD*>(addr + 7 + *reinterpret_cast<DWORD*>(addr + 3));
+			addr = FindPattern("\x4C\x8B\x1D\x00\x00\x00\x00\x46\x8D\x04\x12\x41\xD1\xF8\x4B\x8B\x0C\xC3\x44\x3B\x49\x10\x74\x13\x73\x06\x41\x8D\x50\xFF\xEB\x04\x45\x8D\x50\x01\x44\x3B\xD2\x7E\xDE\x33\xC9\x48\x85\xC9\x74\x04\x8B\x41\x1C",
+				"xxx????xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			something2 = reinterpret_cast<DWORD64*>(addr + 7 + *reinterpret_cast<DWORD*>(addr + 3));
 
 			int v3;
 			DWORD64 v4;
@@ -71,11 +73,11 @@ namespace Memory
 
 			for (v3 = *something1 - 1; v3 >= 0; v3 = v4 - 1)
 			{
-				v4 = (DWORD)(v3);
+				v4 = static_cast<DWORD>(v3);
 
-				v5 = *((DWORD64*)*something2 + v4);
+				v5 = *(reinterpret_cast<DWORD64*>(*something2) + v4);
 
-				Hash weapon = *(Hash*)(v5 + 16);
+				Hash weapon = *reinterpret_cast<Hash*>(v5 + 16);
 
 				// Filter out the weird invalid weapons
 				if (GET_WEAPONTYPE_MODEL(weapon))
@@ -113,23 +115,67 @@ namespace Memory
 
 	void SetSnow(bool state)
 	{
-		/*struct Something
+		/* Thanks to menyoo! */
+
+		static bool init = false;
+
+		static DWORD64 addr1 = FindPattern("\x80\x3D\x00\x00\x00\x00\x00\x74\x25\xB9\x40\x00\x00\x00", "xx????xxxxxxxx");
+		static BYTE orig1[13];
+
+		if (!init && addr1)
 		{
-			struct Something2
+			memcpy(orig1, reinterpret_cast<void*>(addr1), 13);
+		}
+
+		static DWORD64 addr2 = FindPattern("\x44\x38\x3D\x00\x00\x00\x00\x74\x1D\xB9\x40\x00\x00\x00", "xxx????xxxxxxx");
+		static BYTE orig2[14];
+
+		if (!init && addr2)
+		{
+			memcpy(orig2, reinterpret_cast<void*>(addr2), 14);
+		}
+
+		init = true;
+
+		if (state)
+		{
+			if (addr1)
 			{
-				char padding[1506];
-				BYTE* a1 = &someVal;
-				BYTE someVal = 2;
-			};
+				BYTE* from = reinterpret_cast<BYTE*>(addr1);
+				DWORD protect;
+				VirtualProtect(from, 16, PAGE_EXECUTE_READWRITE, &protect);
+				from[0] = 0x48;  // mov rax, func
+				from[1] = 0xB8;
+				*reinterpret_cast<BYTE**>(&from[2]) = reinterpret_cast<BYTE*>(addr1 + 0x1B);
+				from[10] = 0x50; // push rax
+				from[11] = 0xC3; // ret
+				VirtualProtect(from, 16, protect, &protect);
+			}
 
-			char padding[1224];
-			Something2* a1 = new Something2();
-		};
+			if (addr2)
+			{
+				BYTE* from = reinterpret_cast<BYTE*>(addr2);
+				DWORD protect;
+				VirtualProtect(from, 16, PAGE_EXECUTE_READWRITE, &protect);
+				from[0] = 0x48;  // mov rax, func
+				from[1] = 0xB8;
+				*reinterpret_cast<BYTE**>(&from[2]) = reinterpret_cast<BYTE*>(addr2 + 0x1C);
+				from[10] = 0x50; // push rax
+				from[11] = 0xC3; // ret
+				VirtualProtect(from, 16, protect, &protect);
+			}
+		}
+		else
+		{
+			if (addr1)
+			{
+				memcpy(reinterpret_cast<void*>(addr1), orig1, 13);
+			}
 
-		static auto someFunc = reinterpret_cast<__int64(*)(Something)>(Memory::FindPattern("\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x55\x57\x41\x57\x48\x8B\xEC\x48\x83\xEC\x40\x48\x8B\x81\x00\x00\x00\x00",
-			"xxxx?xxxx?xxxxxxxxxxxxxx????"));
-		Something something;
-		someFunc(something);
-		delete something.a1;*/
+			if (addr2)
+			{
+				memcpy(reinterpret_cast<void*>(addr2), orig2, 14);
+			}
+		}
 	}
 }
