@@ -143,26 +143,22 @@ namespace Memory
 			{
 				BYTE* from = reinterpret_cast<BYTE*>(addr1);
 				DWORD protect;
-				VirtualProtect(from, 16, PAGE_EXECUTE_READWRITE, &protect);
 				from[0] = 0x48;  // mov rax, func
 				from[1] = 0xB8;
 				*reinterpret_cast<BYTE**>(&from[2]) = reinterpret_cast<BYTE*>(addr1 + 0x1B);
 				from[10] = 0x50; // push rax
 				from[11] = 0xC3; // ret
-				VirtualProtect(from, 16, protect, &protect);
 			}
 
 			if (addr2)
 			{
 				BYTE* from = reinterpret_cast<BYTE*>(addr2);
 				DWORD protect;
-				VirtualProtect(from, 16, PAGE_EXECUTE_READWRITE, &protect);
 				from[0] = 0x48;  // mov rax, func
 				from[1] = 0xB8;
 				*reinterpret_cast<BYTE**>(&from[2]) = reinterpret_cast<BYTE*>(addr2 + 0x1C);
 				from[10] = 0x50; // push rax
 				from[11] = 0xC3; // ret
-				VirtualProtect(from, 16, protect, &protect);
 			}
 		}
 		else
