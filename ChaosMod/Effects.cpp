@@ -1518,7 +1518,6 @@ void Effects::UpdateEffects()
 			Vector3 pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, x, y, z);
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 8, 1.f, false, true, .2f, false);
 		}
-		SET_WEATHER_TYPE_NOW_PERSIST("THUNDER");
 	}
 	if (m_effectActive[EFFECT_NO_RAGDOLL])
 	{
