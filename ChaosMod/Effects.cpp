@@ -95,6 +95,15 @@ inline void CreateTempVehicle(Hash model, float x, float y, float z, float headi
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
+inline void CreateTempVehicleOnPlayerPos(Hash model, float heading)
+{
+	LoadModel(model);
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	Vehicle veh = CREATE_VEHICLE(model, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
+}
+
 void Effects::StartEffect(EffectType effectType)
 {
 	Player player = PLAYER_ID();
@@ -318,40 +327,40 @@ void Effects::StartEffect(EffectType effectType)
 		ADD_RELATIONSHIP_GROUP("_RIOT", &groupHash);
 		break;
 	case EFFECT_SPAWN_TANK:
-		CreateTempVehicle(GET_HASH_KEY("RHINO"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("RHINO"), playerHeading);
 		break;
 	case EFFECT_SPAWN_ADDER:
-		CreateTempVehicle(GET_HASH_KEY("ADDER"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("ADDER"), playerHeading);
 		break;
 	case EFFECT_SPAWN_DUMP:
-		CreateTempVehicle(GET_HASH_KEY("DUMP"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("DUMP"), playerHeading);
 		break;
 	case EFFECT_SPAWN_MONSTER:
-		CreateTempVehicle(GET_HASH_KEY("MONSTER"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("MONSTER"), playerHeading);
 		break;
 	case EFFECT_SPAWN_BMX:
-		CreateTempVehicle(GET_HASH_KEY("BMX"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("BMX"), playerHeading);
 		break;
 	case EFFECT_SPAWN_TUG:
-		CreateTempVehicle(GET_HASH_KEY("TUG"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("TUG"), playerHeading);
 		break;
 	case EFFECT_SPAWN_CARGO:
-		CreateTempVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("CARGOPLANE"), playerHeading);
 		break;
 	case EFFECT_SPAWN_BUS:
-		CreateTempVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("BUS"), playerHeading);
 		break;
 	case EFFECT_SPAWN_BLIMP:
-		CreateTempVehicle(GET_HASH_KEY("BLIMP"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("BLIMP"), playerHeading);
 		break;
 	case EFFECT_SPAWN_BUZZARD:
-		CreateTempVehicle(GET_HASH_KEY("BUZZARD"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("BUZZARD"), playerHeading);
 		break;
 	case EFFECT_SPAWN_FAGGIO:
-		CreateTempVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("FAGGIO"), playerHeading);
 		break;
 	case EFFECT_SPAWN_RUINER3:
-		CreateTempVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z, playerHeading);
+		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("RUINER3"), playerHeading);
 		break;
 	case EFFECT_EXPLODE_CUR_VEH:
 		if (isPlayerInVeh && !m_effectActive[EFFECT_VEHS_INVINCIBLE])
