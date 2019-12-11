@@ -977,6 +977,7 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_FORCED_FP])
 	{
+		SET_CINEMATIC_MODE_ACTIVE(false);
 		SET_FOLLOW_PED_CAM_VIEW_MODE(4);
 		SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(4);
 	}
