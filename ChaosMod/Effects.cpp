@@ -362,6 +362,12 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_SPAWN_RUINER3:
 		CreateTempVehicleOnPlayerPos(GET_HASH_KEY("RUINER3"), playerHeading);
 		break;
+	case EFFECT_SPAWN_RANDOM:
+	{
+		std::vector<Hash> vehModels = Memory::GetAllVehModels();
+		CreateTempVehicleOnPlayerPos(vehModels[Random::GetRandomInt(0, vehModels.size() - 1)], playerHeading);
+	}
+		break;
 	case EFFECT_EXPLODE_CUR_VEH:
 		if (isPlayerInVeh && !m_effectActive[EFFECT_VEHS_INVINCIBLE])
 		{

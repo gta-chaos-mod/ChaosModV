@@ -174,4 +174,28 @@ namespace Memory
 			}
 		}
 	}
+
+	std::vector<Hash> GetAllVehModels()
+	{
+		static std::vector<Hash> vehModels;
+
+		if (vehModels.empty())
+		{
+			DWORD64 addr;
+			addr = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\x14\xD0\xEB\x0D\x44\x3B\x12", "xxx????xxxxxxxxx");
+			addr += 7 + *reinterpret_cast<DWORD*>(addr + 3);
+
+			for (DWORD64 i = *reinterpret_cast<DWORD64*>(*reinterpret_cast<DWORD64*>(addr) + 16); ; i = *reinterpret_cast<DWORD64*>(i + 8))
+			{
+				if (!i)
+				{
+					break;
+				}
+
+				vehModels.push_back(*reinterpret_cast<Hash*>(i));
+			}
+		}
+
+		return vehModels;
+	}
 }

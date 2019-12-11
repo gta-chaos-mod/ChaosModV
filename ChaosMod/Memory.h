@@ -12,4 +12,5 @@ namespace Memory
 	std::vector<Hash> GetAllWeapons();
 	void SetGravityLevel(float gravity);
 	void SetSnow(bool state);
+	std::vector<Hash> GetAllVehModels();
 };
