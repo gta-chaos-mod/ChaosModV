@@ -201,6 +201,7 @@ namespace ConfigApp
             EFFECT_SNOW,
             EFFECT_WHALE_RAIN,
             EFFECT_VEH_MAX_UPGRADES,
+            EFFECT_VEH_RANDOM_UPGRADES,
             _EFFECT_ENUM_MAX
         }
 
@@ -366,7 +367,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_REVIVE, new EffectInfo("Revive Dead Peds", EffectCategory.PEDS, "peds_revive")},
             {EffectType.EFFECT_SNOW, new EffectInfo("Snow", EffectCategory.MISC, "world_snow", true)},
             {EffectType.EFFECT_WHALE_RAIN, new EffectInfo("Whale Rain", EffectCategory.MISC, "world_whalerain", true)},
-            {EffectType.EFFECT_VEH_MAX_UPGRADES, new EffectInfo("Max Upgrades Of Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxupgrades")},
+            {EffectType.EFFECT_VEH_MAX_UPGRADES, new EffectInfo("Add Max Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxupgrades")},
+            {EffectType.EFFECT_VEH_RANDOM_UPGRADES, new EffectInfo("Add Random Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_randupgrades")},
         };
     }
 }
