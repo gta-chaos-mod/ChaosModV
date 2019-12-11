@@ -1506,6 +1506,10 @@ void Effects::UpdateEffects()
 				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, 50.f, .0f, .0f, true, true, true, true);
 			}
 		}
+		for (Object prop : GetAllProps())
+		{
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(prop, 0, 50.f, .0f, .0f, true, true, true, true);
+		}
 		for (int i = 0; i < EXPLOSIONS_PER_SEC; i++)
 		{
 			float x = GET_RANDOM_INT_IN_RANGE(0, 1) ? GET_RANDOM_FLOAT_IN_RANGE(20.f, 50.f) : GET_RANDOM_FLOAT_IN_RANGE(-50.f, -20.f);
@@ -1514,6 +1518,7 @@ void Effects::UpdateEffects()
 			Vector3 pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, x, y, z);
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 8, 1.f, false, true, .2f, false);
 		}
+		SET_WEATHER_TYPE_NOW_PERSIST("THUNDER");
 	}
 	if (m_effectActive[EFFECT_NO_RAGDOLL])
 	{
