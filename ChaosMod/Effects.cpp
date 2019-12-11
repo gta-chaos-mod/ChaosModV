@@ -648,6 +648,20 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_WHALE_RAIN:
 		DECOR_REGISTER("_WHALE", 2);
 		break;
+	case EFFECT_VEH_MAX_UPGRADES:
+		if (isPlayerInVeh)
+		{
+			SET_VEHICLE_MOD_KIT(playerVeh, 0);
+			for (int i = 0; i < 50; i++)
+			{
+				int max = GET_NUM_VEHICLE_MODS(playerVeh, i);
+				SET_VEHICLE_MOD(playerVeh, i, max - 1, true);
+				TOGGLE_VEHICLE_MOD(playerVeh, i, true);
+			}
+			SET_VEHICLE_TYRES_CAN_BURST(playerVeh, false);
+			SET_VEHICLE_WINDOW_TINT(playerVeh, 1);
+		}
+		break;
 	}
 }
 

@@ -181,6 +181,7 @@ enum EffectType : int
 	EFFECT_PEDS_REVIVE,
 	EFFECT_SNOW,
 	EFFECT_WHALE_RAIN,
+	EFFECT_VEH_MAX_UPGRADES,
 	_EFFECT_ENUM_MAX
 };
 
@@ -345,7 +346,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_TPRANDOMPEDS, {"Teleport Random Peds Into Current Vehicle", "playerveh_tprandompeds"}},
 	{EFFECT_PEDS_REVIVE, {"Revive Dead Peds", "peds_revive"}},
 	{EFFECT_SNOW, {"Snow", "world_snow", true}},
-	{EFFECT_WHALE_RAIN, {"Whale Rain", "world_whalerain", true}}
+	{EFFECT_WHALE_RAIN, {"Whale Rain", "world_whalerain", true}},
+	{EFFECT_VEH_MAX_UPGRADES, {"Max Upgrades Of Current Vehicle", "playerveh_maxupgrades"}},
 };
 
 class Effects
