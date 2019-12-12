@@ -184,6 +184,7 @@ enum EffectType : int
 	EFFECT_WHALE_RAIN,
 	EFFECT_VEH_MAX_UPGRADES,
 	EFFECT_VEH_RANDOM_UPGRADES,
+	EFFECT_INTENSE_MUSIC,
 	_EFFECT_ENUM_MAX
 };
 
@@ -352,6 +353,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_WHALE_RAIN, {"Whale Rain", "world_whalerain", true}},
 	{EFFECT_VEH_MAX_UPGRADES, {"Add Max Upgrades To Current Vehicle", "playerveh_maxupgrades"}},
 	{EFFECT_VEH_RANDOM_UPGRADES, {"Add Random Upgrades To Current Vehicle", "playerveh_randupgrades"}},
+	{EFFECT_INTENSE_MUSIC, {"Play Arena Wars Theme", "player_arenawarstheme"}},
 };
 
 class Effects

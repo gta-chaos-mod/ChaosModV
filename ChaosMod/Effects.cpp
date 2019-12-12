@@ -682,6 +682,9 @@ void Effects::StartEffect(EffectType effectType)
 			SET_VEHICLE_WINDOW_TINT(playerVeh, Random::GetRandomInt(0, 6));
 		}
 		break;
+	case EFFECT_INTENSE_MUSIC:
+		TRIGGER_MUSIC_EVENT("AW_LOBBY_MUSIC_START");
+		break;
 	}
 }
 

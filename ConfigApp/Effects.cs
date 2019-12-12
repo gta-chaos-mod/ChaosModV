@@ -203,6 +203,7 @@ namespace ConfigApp
             EFFECT_WHALE_RAIN,
             EFFECT_VEH_MAX_UPGRADES,
             EFFECT_VEH_RANDOM_UPGRADES,
+            EFFECT_INTENSE_MUSIC,
             _EFFECT_ENUM_MAX
         }
 
@@ -371,6 +372,7 @@ namespace ConfigApp
             {EffectType.EFFECT_WHALE_RAIN, new EffectInfo("Whale Rain", EffectCategory.MISC, "world_whalerain", true)},
             {EffectType.EFFECT_VEH_MAX_UPGRADES, new EffectInfo("Add Max Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxupgrades")},
             {EffectType.EFFECT_VEH_RANDOM_UPGRADES, new EffectInfo("Add Random Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_randupgrades")},
+            {EffectType.EFFECT_INTENSE_MUSIC, new EffectInfo("Play Arena Wars Theme", EffectCategory.MISC, "player_arenawarstheme")},
         };
     }
 }
