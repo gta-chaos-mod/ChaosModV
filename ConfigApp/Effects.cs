@@ -204,6 +204,7 @@ namespace ConfigApp
             EFFECT_VEH_MAX_UPGRADES,
             EFFECT_VEH_RANDOM_UPGRADES,
             EFFECT_INTENSE_MUSIC,
+            EFFECT_PEDS_DRIVEBY,
             _EFFECT_ENUM_MAX
         }
 
@@ -373,6 +374,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_MAX_UPGRADES, new EffectInfo("Add Max Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_maxupgrades")},
             {EffectType.EFFECT_VEH_RANDOM_UPGRADES, new EffectInfo("Add Random Upgrades To Current Vehicle", EffectCategory.VEHICLE, "playerveh_randupgrades")},
             {EffectType.EFFECT_INTENSE_MUSIC, new EffectInfo("Play Arena Wars Theme", EffectCategory.MISC, "player_arenawarstheme")},
+            {EffectType.EFFECT_PEDS_DRIVEBY, new EffectInfo("Peds Drive-By Player", EffectCategory.PEDS, "peds_driveby", true)},
         };
     }
 }
