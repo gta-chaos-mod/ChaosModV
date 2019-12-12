@@ -184,15 +184,26 @@ namespace Memory
 			DWORD64 addr;
 			addr = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\x14\xD0\xEB\x0D\x44\x3B\x12", "xxx????xxxxxxxxx");
 			addr += 7 + *reinterpret_cast<DWORD*>(addr + 3);
+			DWORD64 modelList = *reinterpret_cast<DWORD64*>(addr);
 
-			for (DWORD64 i = *reinterpret_cast<DWORD64*>(*reinterpret_cast<DWORD64*>(addr) + 16); ; i = *reinterpret_cast<DWORD64*>(i + 8))
+			addr = FindPattern("\x0F\xB7\x05\x00\x00\x00\x00\x44\x8B\x49\x18\x45\x33\xD2\x48\x8B\xF1", "xxx????xxxxxxxxxx");
+			addr += 7 + *reinterpret_cast<DWORD*>(addr + 3);
+			WORD maxModels = *reinterpret_cast<WORD*>(addr);
+
+			for (WORD i = 0; i < maxModels + 1; i++)
 			{
-				if (!i)
+				DWORD64 entry = *reinterpret_cast<DWORD64*>(modelList + 8 * i);
+				if (!entry)
 				{
-					break;
+					continue;
 				}
 
-				vehModels.push_back(*reinterpret_cast<Hash*>(i));
+				Hash model = *reinterpret_cast<Hash*>(entry);
+
+				if (IS_MODEL_VALID(model) && IS_MODEL_A_VEHICLE(model))
+				{
+					vehModels.push_back(model);
+				}
 			}
 		}
 
