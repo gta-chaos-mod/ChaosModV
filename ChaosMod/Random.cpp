@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Random.h"
 
-std::default_random_engine m_random;
 int m_seed = -1;
 
 namespace Random
@@ -13,23 +12,27 @@ namespace Random
 
 	int GetRandomInt(int lower, int upper)
 	{
+		static std::default_random_engine random1;
+		static std::random_device random_device;
+		static std::mt19937 random2(random_device());
+
 		static bool firstTime = true;
+		static bool useNewRandom = false;
 		if (firstTime)
 		{
 			firstTime = false;
 
 			if (m_seed >= 0)
 			{
-				m_random.seed(m_seed);
+				random1.seed(m_seed);
 			}
 			else
 			{
-				srand(time(nullptr));
-				m_random.seed(rand());
+				useNewRandom = true;
 			}
 		}
 
 		std::uniform_int_distribution<> distr(lower, upper);
-		return distr(m_random);
+		return distr(useNewRandom ? random2 : random1);
 	}
 }
