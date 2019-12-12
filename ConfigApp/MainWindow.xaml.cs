@@ -195,6 +195,9 @@ namespace ConfigApp
                         case "DisableEffectTextDraw":
                             misc_user_effects_drawtext_disable.IsChecked = value != 0;
                             break;
+                        case "EnableToggleModShortcut":
+                            misc_user_toggle_mod_shortcut.IsChecked = value != 0;
+                            break;
                     }
                 }
                 else
@@ -231,6 +234,7 @@ namespace ConfigApp
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTextDraw={(misc_user_effects_drawtext_disable.IsChecked.Value ? "1" : "0")}\n";
+            data += $"EnableToggleModShortcut={(misc_user_toggle_mod_shortcut.IsChecked.Value ? "1" : "0")}\n";
             data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
             data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
             data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";

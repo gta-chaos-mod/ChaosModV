@@ -720,6 +720,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_GAMESPEED_X02:
 	case EFFECT_GAMESPEED_X05:
 	case EFFECT_GAMESPEED_LAG:
+		SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", false);
 		SET_TIME_SCALE(1.f);
 		break;
 	case EFFECT_SLIPPERY_VEHS:
@@ -941,10 +942,12 @@ void Effects::UpdateEffects()
 	}
 	if (m_effectActive[EFFECT_GAMESPEED_X02])
 	{
+		SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 		SET_TIME_SCALE(.2f);
 	}
 	if (m_effectActive[EFFECT_GAMESPEED_X05])
 	{
+		SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 		SET_TIME_SCALE(.5f);
 	}
 	if (m_effectActive[EFFECT_GAMESPEED_LAG])

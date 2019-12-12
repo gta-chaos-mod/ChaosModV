@@ -7,7 +7,7 @@
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
 	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
-	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance)
+	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance, bool& enableToggleModShortcut)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -79,6 +79,10 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			else if (key == "DisableEffectTextDraw")
 			{
 				disableEffectTextDrawing = _value;
+			}
+			else if (key == "EnableToggleModShortcut")
+			{
+				enableToggleModShortcut = _value;
 			}
 		}
 		catch (std::invalid_argument)
@@ -216,7 +220,7 @@ bool Main::Init()
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
-		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance)) || (result = ParseEffectsFile(enabledEffects)))
+		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, m_toggleModShortcutEnabled)) || (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -265,7 +269,7 @@ void Main::MainLoop()
 	{
 		WAIT(0);
 
-		if (IS_SCREEN_FADED_OUT())
+		if (IS_SCREEN_FADED_OUT() || m_disableMod)
 		{
 			continue;
 		}
@@ -349,6 +353,11 @@ void Main::RunEffectLoop()
 			continue;
 		}
 
+		if (m_disableMod)
+		{
+			m_effectDispatcher->Reset();
+		}
+
 		if (m_clearAllEffects)
 		{
 			m_clearAllEffects = false;
@@ -395,6 +404,10 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
 		}
 #endif
+		else if (key == 0x4C && m_toggleModShortcutEnabled	) // L
+		{
+			m_disableMod = !m_disableMod;
+		}
 	}
 
 #ifdef _DEBUG

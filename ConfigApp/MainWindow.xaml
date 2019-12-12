@@ -77,6 +77,9 @@
                         VerticalAlignment="Top" Width="325"/>
                     <CheckBox x:Name="misc_user_effects_drawtext_disable" HorizontalAlignment="Left" Margin="776,218,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
                     <CheckBox x:Name="misc_user_effects_drawtimer_disable" HorizontalAlignment="Left" Margin="776,147,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Enable toggle mod shortcut (CTRL + L)" HorizontalAlignment="Left" Margin="446,74,0,0"
+                        VerticalAlignment="Top" Width="325"/>
+                    <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="776,81,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">

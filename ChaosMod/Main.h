@@ -24,4 +24,6 @@ private:
 	int m_clearEffectsTextTime = 0;
 	bool m_disableDrawTimerBar = false;
 	bool m_disableDrawEffectTexts = false;
+	bool m_toggleModShortcutEnabled = false;
+	bool m_disableMod = false;
 };
