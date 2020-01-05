@@ -1305,6 +1305,10 @@ void Effects::UpdateEffects()
 		SET_PLAYER_CAN_DO_DRIVE_BY(PLAYER_ID(), false);
 		SET_CINEMATIC_MODE_ACTIVE(true);
 		DISABLE_CONTROL_ACTION(0, 80, true);
+		if (IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
+		{
+			DISABLE_CONTROL_ACTION(0, 27, true);
+		}
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
 	{
