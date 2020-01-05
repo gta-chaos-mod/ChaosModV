@@ -1055,6 +1055,7 @@ void Effects::UpdateEffects()
 		SET_CINEMATIC_MODE_ACTIVE(false);
 		SET_FOLLOW_PED_CAM_VIEW_MODE(4);
 		SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(4);
+		DISABLE_CONTROL_ACTION(0, 0, true);
 	}
 	if (m_effectActive[EFFECT_SLIPPERY_VEHS])
 	{
@@ -1303,6 +1304,7 @@ void Effects::UpdateEffects()
 	{
 		SET_PLAYER_CAN_DO_DRIVE_BY(PLAYER_ID(), false);
 		SET_CINEMATIC_MODE_ACTIVE(true);
+		DISABLE_CONTROL_ACTION(0, 80, true);
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
 	{
