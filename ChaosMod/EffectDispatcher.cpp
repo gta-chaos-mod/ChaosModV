@@ -107,7 +107,7 @@ void EffectDispatcher::UpdateEffects()
 	{
 		m_effectsTimer = currentUpdateTime;
 
-		int activeEffectsSize = (int)m_activeEffects.size();
+		int activeEffectsSize = m_activeEffects.size();
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
@@ -205,7 +205,7 @@ void EffectDispatcher::DispatchRandomEffect()
 	int effectsTotalWeight = 0;
 	for (auto pair : choosableEffects)
 	{
-		effectsTotalWeight += pair.second[2];
+		effectsTotalWeight += pair.second[2] * 10;
 	}
 
 	int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -214,7 +214,7 @@ void EffectDispatcher::DispatchRandomEffect()
 	EffectType targetEffectType = _EFFECT_ENUM_MAX;
 	for (auto pair : choosableEffects)
 	{
-		addedUpWeight += pair.second[2];
+		addedUpWeight += pair.second[2] * 10;
 
 		if (index <= addedUpWeight)
 		{
