@@ -1337,7 +1337,7 @@ void Effects::UpdateEffects()
 				&& GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z, false) < 300.f)
 			{
 				LoadModel(MODEL_HASH);
-				Ped zombie = CREATE_PED(4, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+				Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 				zombiesAmount++;
 				for (Ped& ped : zombies)
 				{
