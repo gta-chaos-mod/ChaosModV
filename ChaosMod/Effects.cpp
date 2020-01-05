@@ -1308,6 +1308,7 @@ void Effects::UpdateEffects()
 		if (IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
 		{
 			DISABLE_CONTROL_ACTION(0, 27, true);
+			DISABLE_CONTROL_ACTION(0, 0, true);
 		}
 	}
 	if (m_effectActive[EFFECT_ZOMBIES])
