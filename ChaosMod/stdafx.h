@@ -7,6 +7,7 @@
 #include "Random.h"
 #include "DebugMenu.h"
 #include <Windows.h>
+#define WINDOWS_LEAN_AND_MEAN
 #include <WinUser.h>
 #include <Psapi.h>
 #include <fstream>

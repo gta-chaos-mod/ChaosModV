@@ -87,27 +87,30 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 		}
 		catch (std::invalid_argument)
 		{
-			// For now it's probably a hex color
-			// Also the WPF color picker stores colors in argb instead of rgba apparently, lol
-			std::array<int, 3> colors;
+			if (key == "EffectTimerColor" || key == "EffectTextColor" || key == "EffectTimedTimerColor")
+			{
+				// argb
 
-			int j = 0;
-			for (int i = 3; i < 9; i += 2)
-			{
-				colors[j++] = std::strtol(value.substr(i, 2).c_str(), nullptr, 16);
-			}
+				std::array<int, 3> colors;
 
-			if (key == "EffectTimerColor")
-			{
-				timerColor = colors;
-			}
-			else if (key == "EffectTextColor")
-			{
-				textColor = colors;
-			}
-			else if (key == "EffectTimedTimerColor")
-			{
-				effectTimerColor = colors;
+				int j = 0;
+				for (int i = 3; i < 9; i += 2)
+				{
+					colors[j++] = std::strtol(value.substr(i, 2).c_str(), nullptr, 16);
+				}
+
+				if (key == "EffectTimerColor")
+				{
+					timerColor = colors;
+				}
+				else if (key == "EffectTextColor")
+				{
+					textColor = colors;
+				}
+				else if (key == "EffectTimedTimerColor")
+				{
+					effectTimerColor = colors;
+				}
 			}
 		}
 	}
@@ -220,7 +223,8 @@ bool Main::Init()
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
-		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, m_toggleModShortcutEnabled)) || (result = ParseEffectsFile(enabledEffects)))
+		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, m_toggleModShortcutEnabled))
+		|| (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{

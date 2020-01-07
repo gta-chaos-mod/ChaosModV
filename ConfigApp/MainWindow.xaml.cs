@@ -213,6 +213,15 @@ namespace ConfigApp
                         case "EffectTimedTimerColor":
                             misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
                             break;
+                        case "TwitchChannelName":
+                            twitch_user_channel_name.Text = keyValue[1];
+                            break;
+                        case "TwitchUserName":
+                            twitch_user_user_name.Text = keyValue[1];
+                            break;
+                        case "TwitchChannelOAuth":
+                            twitch_user_channel_oauth.Text = keyValue[1];
+                            break;
                     }
                 }
             }
@@ -229,6 +238,9 @@ namespace ConfigApp
             data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
             data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "30")}\n";
             data += $"EnableTwitchVoting={(twitch_user_agreed.IsChecked.Value ? "1" : "0")}\n";
+            data += $"TwitchChannelName={(twitch_user_channel_name.Text)}\n";
+            data += $"TwitchUserName={(twitch_user_user_name.Text)}\n";
+            data += $"TwitchChannelOAuth={(twitch_user_channel_oauth.Text)}\n";
             data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
