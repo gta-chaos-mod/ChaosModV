@@ -4,20 +4,22 @@ using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
-using TwitchLib.Api.Models.v5.Channels;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Models;
 
 namespace TwitchChatVotingProxy
 {
     class TwitchChatVotingProxy
     {
-        static StreamReader _StreamReader;
-        static StreamWriter _StreamWriter;
-        static TwitchClient _TwitchClient;
+        private static StreamReader _StreamReader;
+        private static StreamWriter _StreamWriter;
+        private static TwitchClient _TwitchClient;
+        private static string _TwitchChannelName;
+        private static bool _VoteRunning = false;
+        private static int[] _Votes = new int[3];
+        private static List<string> _AlreadyVotedUsers = new List<string>();
 
         private static void Main(string[] args)
         {
@@ -62,7 +64,6 @@ namespace TwitchChatVotingProxy
 
         private static bool TwitchLogin()
         {
-            string twitchChannelName = null;
             string twitchUsername = null;
             string twitchOAuth = null;
 
@@ -78,18 +79,18 @@ namespace TwitchChatVotingProxy
                 switch (text[0])
                 {
                     case "TwitchChannelName":
-                        twitchChannelName = text[1];
+                        _TwitchChannelName = text[1].Trim();
                         break;
                     case "TwitchUserName":
-                        twitchUsername = text[1];
+                        twitchUsername = text[1].Trim();
                         break;
                     case "TwitchChannelOAuth":
-                        twitchOAuth = text[1];
+                        twitchOAuth = text[1].Trim();
                         break;
                 }
             }
 
-            if (twitchChannelName == null || twitchUsername == null || twitchOAuth == null)
+            if (_TwitchChannelName == null || twitchUsername == null || twitchOAuth == null)
             {
                 _StreamWriter.Write("invalid_login\0");
 
@@ -100,26 +101,106 @@ namespace TwitchChatVotingProxy
             WebSocketClient webSocketClient = new WebSocketClient();
 
             _TwitchClient = new TwitchClient(webSocketClient);
-            _TwitchClient.AutoReListenOnException = true;
-            _TwitchClient.Initialize(credentials, twitchChannelName);
+            _TwitchClient.Initialize(credentials, _TwitchChannelName);
 
             _TwitchClient.OnMessageReceived += OnMessageRecieved;
 
+            bool failed = false;
+            bool done = false;
             _TwitchClient.Connect();
-            
-            if (!_TwitchClient.IsConnected)
+
+            _TwitchClient.OnConnectionError += (object sender, OnConnectionErrorArgs e) =>
+            {
+                failed = true;
+                done = true;
+            };
+
+            _TwitchClient.OnConnected += (object sender, OnConnectedArgs e) =>
+            {
+                done = true;
+            };
+
+            while (!done)
+            {
+
+            }
+
+            if (failed)
             {
                 _StreamWriter.Write("invalid_login\0");
 
                 return false;
             }
 
+            Console.WriteLine("Logged into Twitch Account!");
+
+            done = false;
+
+            _TwitchClient.OnJoinedChannel += (object sender, OnJoinedChannelArgs e) =>
+            {
+                if (e.Channel.ToLower() == _TwitchChannelName.ToLower())
+                {
+                    done = true;
+                }
+            };
+
+            int lastTick = Environment.TickCount;
+            while (!done)
+            {
+                if (lastTick < Environment.TickCount - 1500)
+                {
+                    failed = true;
+                    done = true;
+                }
+            }
+
+            if (failed)
+            {
+                _StreamWriter.Write("invalid_channel\0");
+
+                return false;
+            }
+
+            Console.WriteLine("Connected to Twitch Channel!");
+
             return true;
         }
 
         private static void OnMessageRecieved(object sender, OnMessageReceivedArgs e)
         {
-            
+            if (_VoteRunning)
+            {
+                ChatMessage chatMessage = e.ChatMessage;
+                string userId = chatMessage.UserId;
+
+                if (_AlreadyVotedUsers.Contains(userId))
+                {
+                    return;
+                }
+
+                string msg = chatMessage.Message;
+                bool successfulVote = true;
+                switch (msg.Trim())
+                {
+                    case "1":
+                        _Votes[0]++;
+                        break;
+                    case "2":
+                        _Votes[1]++;
+                        break;
+                    case "3":
+                        _Votes[2]++;
+                        break;
+                    default:
+                        successfulVote = false;
+                        break;
+                }
+
+                if (successfulVote)
+                {
+                    _AlreadyVotedUsers.Add(userId);
+                }
+            }
         }
 
         static Task<string> _LineReadTask = null;
@@ -134,17 +215,68 @@ namespace TwitchChatVotingProxy
                 string line = _LineReadTask.Result;
                 _LineReadTask = null;
 
+                Console.WriteLine(line);
+
                 if (line.StartsWith("vote:"))
                 {
+                    if (_VoteRunning)
+                    {
+                        return;
+                    }
+
                     string[] data = line.Split(':');
 
-                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], "Time for a new effect! Vote between:");
-                    Thread.Sleep(1000);
-                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"1: {data[1]}");
-                    Thread.Sleep(1000);
-                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"2: {data[2]}");
-                    Thread.Sleep(1000);
-                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"3: {data[3]}");
+                    _Votes[0] = 0;
+                    _Votes[1] = 0;
+                    _Votes[2] = 0;
+                    _AlreadyVotedUsers.Clear();
+                    _VoteRunning = true;
+
+                    _TwitchClient.SendMessage(_TwitchChannelName, "Time for a new effect! Vote between:");
+                    _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
+                    _TwitchClient.SendMessage(_TwitchChannelName, $"2: {data[2]}");
+                    _TwitchClient.SendMessage(_TwitchChannelName, $"3: {data[3]}");
+                }
+                else if (line == "getvoteresult")
+                {
+                    if (!_VoteRunning)
+                    {
+                        return;
+                    }
+
+                    List<int> chosenEffects = new List<int>();
+                    int highestVotes = 0;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        int votes = _Votes[i];
+                        if (votes > highestVotes)
+                        {
+                            chosenEffects.Clear();
+                            chosenEffects.Add(i);
+
+                            highestVotes = votes;
+                        }
+                        else if (votes == highestVotes)
+                        {
+                            chosenEffects.Add(i);
+                        }
+                    }
+
+                    int count = chosenEffects.Count;
+                    if (count > 1)
+                    {
+                        int chosen = new Random().Next(0, count);
+                        chosenEffects.Clear();
+                        chosenEffects.Add(chosen);
+                    }
+
+                    _StreamWriter.Write("voteresults:" + chosenEffects[0] + "\0");
+
+                    _VoteRunning = false;
+                }
+                else if (line == "novoteround")
+                {
+                    _TwitchClient.SendMessage(_TwitchChannelName, "No voting this time! Chaos Mod will decide for an effect itself.");
                 }
             }
         }

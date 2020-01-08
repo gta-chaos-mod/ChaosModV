@@ -104,11 +104,16 @@
                     <Label Content="OAuth Token" HorizontalAlignment="Left" Margin="559,149,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_channel_oauth" HorizontalAlignment="Left" Height="23" Margin="666,152,0,0"
-                        VerticalAlignment="Top" Width="372" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
+                        VerticalAlignment="Top" Width="271" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
                     <Label Content="Username" HorizontalAlignment="Left" Margin="278,149,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_user_name" HorizontalAlignment="Left" Height="23" Margin="378,152,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
+                    <Label Content="Only enable chat voting X seconds before new effect triggers (Keep at 0 to enable chat voting instantly, can't be 1)" HorizontalAlignment="Left" Margin="10,243,0,0"
+                        VerticalAlignment="Top" Width="627" Grid.Row="1"/>
+                    <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" HorizontalAlignment="Left" Height="23" Margin="642,245,0,0"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
                 </Grid>
             </TabItem>
         </TabControl>

@@ -183,6 +183,9 @@ namespace ConfigApp
                         case "TwitchVotingNoVoteChance":
                             twitch_user_effects_chance_no_voting_round.Text = $"{(value >= 0 ? value <= 100 ? value : 100 : 0)}";
                             break;
+                        case "TwitchVotingSecsBeforeVoting":
+                            twitch_user_effects_secs_before_chat_voting.Text = $"{(value >= 0 ? value == 1 ? 2 : value : 0)}";
+                            break;
                         case "EnableClearEffectsShortcut":
                             misc_user_effects_clear_enable.IsChecked = value != 0;
                             break;
@@ -242,6 +245,7 @@ namespace ConfigApp
             data += $"TwitchUserName={(twitch_user_user_name.Text)}\n";
             data += $"TwitchChannelOAuth={(twitch_user_channel_oauth.Text)}\n";
             data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
+            data += $"TwitchVotingSecsBeforeVoting={(twitch_user_effects_secs_before_chat_voting.Text.Length > 0 ? twitch_user_effects_secs_before_chat_voting.Text : "0")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
@@ -413,7 +417,11 @@ namespace ConfigApp
         {
             bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault();
 
+            twitch_user_channel_name.IsEnabled = agreed;
+            twitch_user_channel_oauth.IsEnabled = agreed;
+            twitch_user_user_name.IsEnabled = agreed;
             twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
+            twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

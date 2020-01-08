@@ -3,8 +3,10 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, bool twitchVotingNoVoteChance, std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 3>> enabledEffects)
-	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
+TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, std::shared_ptr<EffectDispatcher> effectDispatcher,
+	std::map<EffectType, std::array<int, 3>> enabledEffects)
+	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
+	m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -56,7 +58,7 @@ TwitchVoting::~TwitchVoting()
 void TwitchVoting::Tick()
 {
 	// Check if there's been no ping for too long and error out
-	if (m_lastPing < GetTickCount64() - 2000)
+	if (m_lastPing < GetTickCount64() - 10000)
 	{
 		ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
 
@@ -87,17 +89,56 @@ void TwitchVoting::Tick()
 		{
 			m_isVotingRunning = false;
 
-			// TODO: Get Result
+			if (!m_noVoteRound)
+			{
+				SendToPipe("getvoteresult");
+			}
 		}
 	}
 	else if (m_effectDispatcher->ShouldDispatchEffectNow())
 	{
-		m_effectDispatcher->DispatchRandomEffect();
-		m_effectDispatcher->ResetTimer();
+		if (m_noVoteRound)
+		{
+			m_effectDispatcher->DispatchRandomEffect();
+			m_effectDispatcher->ResetTimer();
+
+			m_noVoteRound = false;
+			m_isVotingRunning = false;
+		}
+		else if (m_chosenEffectType != _EFFECT_ENUM_MAX)
+		{
+			m_effectDispatcher->DispatchEffect(m_chosenEffectType);
+			m_effectDispatcher->ResetTimer();
+
+			m_isVotingRunning = false;
+		}
 	}
-	else if (!m_isVotingRunning)
+	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || m_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
 	{
 		m_isVotingRunning = true;
+		m_chosenEffectType = _EFFECT_ENUM_MAX;
+
+		if (m_twitchVotingNoVoteChance > 0)
+		{
+			if (m_twitchVotingNoVoteChance == 100)
+			{
+				m_noVoteRound = true;
+			}
+			else
+			{
+				if (Random::GetRandomInt(0, 100) <= m_twitchVotingNoVoteChance)
+				{
+					m_noVoteRound = true;
+				}
+			}
+
+			if (m_noVoteRound)
+			{
+				SendToPipe("novoteround");
+
+				return;
+			}
+		}
 
 		std::map<EffectType, std::array<int, 3>> choosableEffects;
 		for (auto pair : m_enabledEffects)
@@ -132,8 +173,8 @@ void TwitchVoting::Tick()
 		}
 
 		std::ostringstream oss;
-		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name << "\0";
-		WriteFile(m_pipeHandle, oss.str().c_str(), oss.str().length(), NULL, NULL);
+		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name;
+		SendToPipe(oss.str());
 	}
 }
 
@@ -142,6 +183,7 @@ bool TwitchVoting::HandleMsg(std::string msg)
 	if (msg == "ping")
 	{
 		m_lastPing = GetTickCount64();
+		m_receivedFirstPing = true;
 	}
 	else if (msg == "invalid_login")
 	{
@@ -149,8 +191,24 @@ bool TwitchVoting::HandleMsg(std::string msg)
 
 		return false;
 	}
+	else if (msg == "invalid_channel")
+	{
+		ErrorOutWithMsg("Invalid Twitch Channel. Please verify your config. Reverting to normal mode.");
+
+		return false;
+	}
+	else if (msg._Starts_with("voteresults"))
+	{
+		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))];
+	}
 
 	return true;
+}
+
+void TwitchVoting::SendToPipe(std::string msg)
+{
+	msg += "\n";
+	WriteFile(m_pipeHandle, msg.c_str(), msg.length(), NULL, NULL);
 }
 
 void TwitchVoting::ErrorOutWithMsg(const char* msg)
