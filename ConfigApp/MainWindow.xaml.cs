@@ -300,7 +300,11 @@ namespace ConfigApp
                     }
                 }
 
-                EffectInfo effectInfo = EffectsMap[effectType];
+                if (!EffectsMap.TryGetValue(effectType, out EffectInfo effectInfo))
+                {
+                    continue;
+                }
+
                 EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
                 int effectTimedTime = -1;
                 int effectWeight = 5;
