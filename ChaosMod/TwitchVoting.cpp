@@ -58,11 +58,18 @@ TwitchVoting::~TwitchVoting()
 void TwitchVoting::Tick()
 {
 	// Check if there's been no ping for too long and error out
-	if (m_lastPing < GetTickCount64() - 5000)
+	DWORD64 curTick = GetTickCount64();
+	if (m_lastPing < curTick - 1000)
 	{
-		ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
+		if (m_noPingRuns == 5)
+		{
+			ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
 
-		return;
+			return;
+		}
+
+		m_noPingRuns++;
+		m_lastPing = curTick;
 	}
 
 	char buffer[BUFFER_SIZE];
@@ -184,6 +191,7 @@ bool TwitchVoting::HandleMsg(std::string msg)
 	if (msg == "ping")
 	{
 		m_lastPing = GetTickCount64();
+		m_noPingRuns = 0;
 		m_receivedFirstPing = true;
 	}
 	else if (msg == "invalid_login")

@@ -25,6 +25,7 @@ private:
 	const std::map<EffectType, std::array<int, 3>> m_enabledEffects;
 	HANDLE m_pipeHandle = INVALID_HANDLE_VALUE;
 	DWORD64 m_lastPing = GetTickCount64();
+	int m_noPingRuns = 0;
 	bool m_receivedFirstPing = false;
 	bool m_noVoteRound = false;
 

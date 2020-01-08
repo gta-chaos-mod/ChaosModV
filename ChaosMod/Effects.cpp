@@ -859,6 +859,7 @@ void Effects::StopEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_FORCED_CINEMATIC:
+		SET_CINEMATIC_MODE_ACTIVE(false);
 		SET_PLAYER_CAN_DO_DRIVE_BY(PLAYER_ID(), true);
 		break;
 	case EFFECT_IN_THE_HOOD:
