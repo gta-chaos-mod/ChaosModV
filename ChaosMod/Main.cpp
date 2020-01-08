@@ -357,6 +357,11 @@ void Main::RunEffectLoop()
 	{
 		WAIT(0);
 
+		if (m_twitchVoting->IsEnabled())
+		{
+			m_twitchVoting->Tick();
+		}
+
 		if (IS_SCREEN_FADED_OUT())
 		{
 			WAIT(100);
@@ -373,11 +378,6 @@ void Main::RunEffectLoop()
 			m_clearAllEffects = false;
 
 			m_effectDispatcher->Reset();
-		}
-
-		if (m_twitchVoting->IsEnabled())
-		{
-			m_twitchVoting->Tick();
 		}
 
 		if (!m_pauseTimer)
