@@ -58,7 +58,7 @@ TwitchVoting::~TwitchVoting()
 void TwitchVoting::Tick()
 {
 	// Check if there's been no ping for too long and error out
-	if (m_lastPing < GetTickCount64() - 10000)
+	if (m_lastPing < GetTickCount64() - 5000)
 	{
 		ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
 
