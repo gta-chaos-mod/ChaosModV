@@ -279,6 +279,7 @@ void Main::MainLoop()
 
 		if (IS_SCREEN_FADED_OUT() || m_disableMod)
 		{
+			WAIT(100);
 			continue;
 		}
 
@@ -358,6 +359,7 @@ void Main::RunEffectLoop()
 
 		if (IS_SCREEN_FADED_OUT())
 		{
+			WAIT(100);
 			continue;
 		}
 
