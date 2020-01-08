@@ -39,7 +39,7 @@ namespace TwitchChatVotingProxy
 
             if (!pipe.IsConnected)
             {
-                Console.WriteLine("Error while connecting to pipe!");
+                Console.WriteLine("Error whilst connecting to pipe!");
 
                 return;
             }
@@ -50,7 +50,13 @@ namespace TwitchChatVotingProxy
             _StreamWriter = new StreamWriter(pipe);
             _StreamWriter.AutoFlush = true;
 
-            if (!TwitchLogin())
+            Task<bool> loginTask = TwitchLogin();
+            while (!loginTask.IsCompleted)
+            {
+
+            }
+
+            if (!loginTask.Result)
             {
                 return;
             }
@@ -62,7 +68,7 @@ namespace TwitchChatVotingProxy
             }
         }
 
-        private static bool TwitchLogin()
+        private static async Task<bool> TwitchLogin()
         {
             string twitchUsername = null;
             string twitchOAuth = null;
@@ -90,7 +96,7 @@ namespace TwitchChatVotingProxy
                 }
             }
 
-            if (_TwitchChannelName == null || twitchUsername == null || twitchOAuth == null)
+            if (string.IsNullOrWhiteSpace(_TwitchChannelName) || string.IsNullOrWhiteSpace(twitchUsername) || string.IsNullOrWhiteSpace(twitchOAuth))
             {
                 _StreamWriter.Write("invalid_login\0");
 
@@ -107,7 +113,6 @@ namespace TwitchChatVotingProxy
 
             bool failed = false;
             bool done = false;
-            _TwitchClient.Connect();
 
             _TwitchClient.OnConnectionError += (object sender, OnConnectionErrorArgs e) =>
             {
@@ -120,9 +125,20 @@ namespace TwitchChatVotingProxy
                 done = true;
             };
 
+            _TwitchClient.Connect();
+
+            int lastTick = Environment.TickCount;
             while (!done)
             {
+                await Task.Delay(100);
 
+                if (lastTick < Environment.TickCount - 3000)
+                {
+                    failed = true;
+                    done = true;
+
+                    break;
+                }
             }
 
             if (failed)
@@ -144,9 +160,11 @@ namespace TwitchChatVotingProxy
                 }
             };
 
-            int lastTick = Environment.TickCount;
+            lastTick = Environment.TickCount;
             while (!done)
             {
+                await Task.Delay(100);
+
                 if (lastTick < Environment.TickCount - 1500)
                 {
                     failed = true;
