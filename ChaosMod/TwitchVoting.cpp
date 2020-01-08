@@ -130,6 +130,10 @@ void TwitchVoting::Tick()
 
 			m_effectChoices[i] = targetEffectType;
 		}
+
+		std::ostringstream oss;
+		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name << "\0";
+		WriteFile(m_pipeHandle, oss.str().c_str(), oss.str().length(), NULL, NULL);
 	}
 }
 

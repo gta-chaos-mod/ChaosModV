@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading;
 using System.Threading.Tasks;
+using TwitchLib.Api.Models.v5.Channels;
 using TwitchLib.Client;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
+using TwitchLib.Communication.Models;
 
 namespace TwitchChatVotingProxy
 {
@@ -14,7 +19,7 @@ namespace TwitchChatVotingProxy
         static StreamWriter _StreamWriter;
         static TwitchClient _TwitchClient;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             NamedPipeClientStream pipe = new NamedPipeClientStream(".", "ChaosModVTwitchChatPipe", PipeDirection.InOut, PipeOptions.Asynchronous);
             try
@@ -55,10 +60,10 @@ namespace TwitchChatVotingProxy
             }
         }
 
-        static bool TwitchLogin()
+        private static bool TwitchLogin()
         {
             string twitchChannelName = null;
-            string twitchUserName = null;
+            string twitchUsername = null;
             string twitchOAuth = null;
 
             string data = File.ReadAllText("chaosmod/config.ini");
@@ -75,8 +80,8 @@ namespace TwitchChatVotingProxy
                     case "TwitchChannelName":
                         twitchChannelName = text[1];
                         break;
-                    case "twitchUserName":
-                        twitchUserName = text[1];
+                    case "TwitchUserName":
+                        twitchUsername = text[1];
                         break;
                     case "TwitchChannelOAuth":
                         twitchOAuth = text[1];
@@ -84,18 +89,23 @@ namespace TwitchChatVotingProxy
                 }
             }
 
-            if (twitchChannelName == null || twitchUserName == null || twitchOAuth == null)
+            if (twitchChannelName == null || twitchUsername == null || twitchOAuth == null)
             {
                 _StreamWriter.Write("invalid_login\0");
 
                 return false;
             }
 
-            ConnectionCredentials credentials = new ConnectionCredentials(twitchUserName, twitchOAuth);
+            ConnectionCredentials credentials = new ConnectionCredentials(twitchUsername, twitchOAuth);
             WebSocketClient webSocketClient = new WebSocketClient();
 
             _TwitchClient = new TwitchClient(webSocketClient);
+            _TwitchClient.AutoReListenOnException = true;
             _TwitchClient.Initialize(credentials, twitchChannelName);
+
+            _TwitchClient.OnMessageReceived += OnMessageRecieved;
+
+            _TwitchClient.Connect();
             
             if (!_TwitchClient.IsConnected)
             {
@@ -107,24 +117,40 @@ namespace TwitchChatVotingProxy
             return true;
         }
 
+        private static void OnMessageRecieved(object sender, OnMessageReceivedArgs e)
+        {
+            
+        }
+
         static Task<string> _LineReadTask = null;
-        static void PipeStreamReadTick()
+        private static void PipeStreamReadTick()
         {
             if (_LineReadTask == null)
             {
                 _LineReadTask = _StreamReader.ReadLineAsync();
             }
-            else if (_LineReadTask.Status == TaskStatus.RanToCompletion)
+            else if (_LineReadTask.IsCompleted)
             {
                 string line = _LineReadTask.Result;
                 _LineReadTask = null;
 
-                Console.WriteLine("Read line!");
+                if (line.StartsWith("vote:"))
+                {
+                    string[] data = line.Split(':');
+
+                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], "Time for a new effect! Vote between:");
+                    Thread.Sleep(1000);
+                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"1: {data[1]}");
+                    Thread.Sleep(1000);
+                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"2: {data[2]}");
+                    Thread.Sleep(1000);
+                    _TwitchClient.SendMessage(_TwitchClient.JoinedChannels[0], $"3: {data[3]}");
+                }
             }
         }
 
         static int _LastTick = Environment.TickCount;
-        static void PipeStreamWriteTick()
+        private static void PipeStreamWriteTick()
         {
             int curTick = Environment.TickCount;
 
@@ -133,8 +159,6 @@ namespace TwitchChatVotingProxy
                 _LastTick = curTick;
 
                 _StreamWriter.Write("ping\0");
-
-                Console.WriteLine("Sent ping!");
             }
         }
     }
