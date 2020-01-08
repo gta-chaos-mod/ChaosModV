@@ -170,6 +170,7 @@ void TwitchVoting::Tick()
 			}
 
 			m_effectChoices[i] = targetEffectType;
+			choosableEffects.erase(targetEffectType);
 		}
 
 		std::ostringstream oss;
