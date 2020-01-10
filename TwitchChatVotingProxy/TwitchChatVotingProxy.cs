@@ -283,7 +283,7 @@ namespace TwitchChatVotingProxy
                     int count = chosenEffects.Count;
                     if (count > 1)
                     {
-                        int chosen = new Random().Next(0, count);
+                        int chosen = chosenEffects[new Random().Next(0, count)];
                         chosenEffects.Clear();
                         chosenEffects.Add(chosen);
                     }
