@@ -223,7 +223,7 @@ bool Main::Init()
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
 	std::map<EffectType, std::array<int, 3>> enabledEffects;
 	bool enableTwitchVoting = false;
-	int twitchVotingNoVoteChance = 5;
+	int twitchVotingNoVoteChance = 50;
 	int twitchSecsBeforeChatVoting = 0;
 
 	int result;

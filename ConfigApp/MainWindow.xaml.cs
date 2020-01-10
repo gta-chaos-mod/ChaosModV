@@ -244,7 +244,7 @@ namespace ConfigApp
             data += $"TwitchChannelName={(twitch_user_channel_name.Text)}\n";
             data += $"TwitchUserName={(twitch_user_user_name.Text)}\n";
             data += $"TwitchChannelOAuth={(twitch_user_channel_oauth.Text)}\n";
-            data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "5")}\n";
+            data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "50")}\n";
             data += $"TwitchVotingSecsBeforeVoting={(twitch_user_effects_secs_before_chat_voting.Text.Length > 0 ? twitch_user_effects_secs_before_chat_voting.Text : "0")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
