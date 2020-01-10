@@ -225,6 +225,9 @@ namespace ConfigApp
                         case "TwitchChannelOAuth":
                             twitch_user_channel_oauth.Text = keyValue[1];
                             break;
+                        case "TwitchVotingPollPass":
+                            twitch_user_poll_passphrase.Text = keyValue[1];
+                            break;
                     }
                 }
             }
@@ -246,6 +249,7 @@ namespace ConfigApp
             data += $"TwitchChannelOAuth={(twitch_user_channel_oauth.Text)}\n";
             data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "50")}\n";
             data += $"TwitchVotingSecsBeforeVoting={(twitch_user_effects_secs_before_chat_voting.Text.Length > 0 ? twitch_user_effects_secs_before_chat_voting.Text : "0")}\n";
+            data += $"TwitchVotingPollPass={(twitch_user_poll_passphrase.Text)}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
@@ -412,6 +416,17 @@ namespace ConfigApp
             if (!File.Exists(".twitchmode"))
             {
                 twitch_tab.Visibility = Visibility.Hidden;
+            }
+
+            if (File.Exists(".twitchpoll"))
+            {
+                twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;
+                twitch_user_poll_passphrase.Visibility = Visibility.Visible;
+
+                twitch_user_user_name_label.Visibility = Visibility.Hidden;
+                twitch_user_user_name.Visibility = Visibility.Hidden;
+                twitch_user_channel_oauth_label.Visibility = Visibility.Hidden;
+                twitch_user_channel_oauth.Visibility = Visibility.Hidden;
             }
 
             TwitchTabHandleAgreed();
