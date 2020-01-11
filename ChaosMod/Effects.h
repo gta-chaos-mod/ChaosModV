@@ -356,7 +356,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_WHALE_RAIN, {"Whale Rain", "world_whalerain", true}},
 	{EFFECT_VEH_MAX_UPGRADES, {"Add Max Upgrades To Current Vehicle", "playerveh_maxupgrades"}},
 	{EFFECT_VEH_RANDOM_UPGRADES, {"Add Random Upgrades To Current Vehicle", "playerveh_randupgrades"}},
-	{EFFECT_INTENSE_MUSIC, {"Play Arena Wars Theme", "player_arenawarstheme"}},
+	{EFFECT_INTENSE_MUSIC, {"Play Arena Wars Theme", "player_arenawarstheme", true}},
 	{EFFECT_PEDS_DRIVEBY, {"Peds Drive-By Player", "peds_driveby", true}},
 	{EFFECT_PLAYER_RANDOMCLOTHES, {"Randomize Player Clothes", "player_randclothes"}},
 	{EFFECT_PEDS_RAINBOWWEPS, {"Rainbow Weapons", "peds_rainbowweps", true}},

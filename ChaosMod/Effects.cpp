@@ -948,6 +948,9 @@ void Effects::StopEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_INTENSE_MUSIC:
+		TRIGGER_MUSIC_EVENT("MP_MC_CMH_IAA_FINALE_START");
+		break;
 	}
 }
 
