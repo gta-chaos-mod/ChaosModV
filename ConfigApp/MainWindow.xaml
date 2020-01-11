@@ -82,13 +82,13 @@
                     <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="776,81,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="twitch_tab" Header="Twitch (BETA)" Background="#FFF0F0F0" BorderBrush="LightGray">
+            <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="12*"/>
                     </Grid.RowDefinitions>
-                    <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out by making use of Twitch's chat (and potentially extensions later on) feature.&#xD;&#xA;There are specific options you can / must configure below.&#xA;&#xA;Please note that this is still an experimental feature and stability is not guaranteed.&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!" HorizontalAlignment="Left" Margin="10,0,0,0"
+                    <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;&#xA;Please note that this is still an experimental feature and issues might occur.&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!" HorizontalAlignment="Left" Margin="10,0,0,0"
                     VerticalAlignment="Top" Width="1037" Height="135" Grid.RowSpan="2"/>
                     <CheckBox x:Name="twitch_user_agreed" Content="I've read and understood the above; enable the feature" Margin="15,110,695,215" Grid.Row="1" Click="twitch_user_agreed_Clicked" />
                     <Label Content="Chance to get a random effect round (no voting enabled for that round, chance as %)" HorizontalAlignment="Left" Margin="10,195,0,0"
