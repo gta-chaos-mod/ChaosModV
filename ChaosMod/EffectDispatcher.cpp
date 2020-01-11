@@ -129,7 +129,7 @@ void EffectDispatcher::UpdateEffects()
 	}
 }
 
-void EffectDispatcher::DispatchEffect(EffectType effectType)
+void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 {
 	EffectInfo effectInfo = g_effectsMap.at(effectType);
 	std::array<int, 3> effectData = m_enabledEffects.at(effectType);
@@ -181,13 +181,24 @@ void EffectDispatcher::DispatchEffect(EffectType effectType)
 	if (!alreadyExists)
 	{
 		m_effects.StartEffect(effectType);
-		m_activeEffects.emplace_back(effectType, effectInfo.Name, effectTime);
+
+		std::ostringstream oss;
+		oss << effectInfo.Name;
+
+		if (suffix && strlen(suffix) > 0)
+		{
+			oss << " " << suffix;
+		}
+
+		oss << std::endl;
+
+		m_activeEffects.emplace_back(effectType, oss.str().c_str(), effectTime);
 	}
 
 	m_percentage = .0f;
 }
 
-void EffectDispatcher::DispatchRandomEffect()
+void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 {
 	// Make sure we only dispatch enabled effects
 
@@ -230,7 +241,7 @@ void EffectDispatcher::DispatchRandomEffect()
 			m_lastEffect = targetEffectType;
 		}
 
-		DispatchEffect(targetEffectType);
+		DispatchEffect(targetEffectType, suffix);
 	}
 }
 

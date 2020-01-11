@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Fleck;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Threading;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -17,6 +19,11 @@ namespace TwitchChatVotingProxy
         private static StreamWriter _StreamWriter;
         private static TwitchClient _TwitchClient;
         private static string _TwitchChannelName;
+        private static bool _TwitchPollMode = false;
+        private static int _TwitchPollDur;
+        private static string _TwitchPollUUID = null;
+        private static WebSocketServer _TwitchSocketServer;
+        private static List<IWebSocketConnection> _TwitchPollClients;
         private static bool _VoteRunning = false;
         private static int[] _Votes = new int[3];
         private static List<string> _AlreadyVotedUsers = new List<string>();
@@ -72,6 +79,7 @@ namespace TwitchChatVotingProxy
         {
             string twitchUsername = null;
             string twitchOAuth = null;
+            string twitchPollPass = null;
 
             string data = File.ReadAllText("chaosmod/config.ini");
             foreach (string line in data.Split('\n'))
@@ -93,7 +101,83 @@ namespace TwitchChatVotingProxy
                     case "TwitchChannelOAuth":
                         twitchOAuth = text[1].Trim();
                         break;
+                    case "TwitchVotingPollPass":
+                        twitchPollPass = text[1].Trim();
+                        break;
+                    case "NewEffectSpawnTime":
+                        _TwitchPollDur = int.Parse(text[1]) - 1;
+
+                        if (_TwitchPollDur < 15 || _TwitchPollDur > 180)
+                        {
+                            _StreamWriter.Write("invalid_poll_dur\0");
+
+                            return false;
+                        }
+
+                        break;
                 }
+            }
+
+            if (File.Exists("chaosmod/.twitchpoll") && !string.IsNullOrWhiteSpace(_TwitchChannelName))
+            {
+                _TwitchPollClients = new List<IWebSocketConnection>();
+
+                _TwitchSocketServer = new WebSocketServer("ws://0.0.0.0:31337");
+                _TwitchSocketServer.RestartAfterListenError = true;
+                _TwitchSocketServer.Start(socket =>
+                {
+                    socket.OnOpen += () =>
+                    {
+                        Console.WriteLine($"New client! ({socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort})");
+
+                        socket.Send($"{{\"type\":\"auth\",\"data\":\"{twitchPollPass}\"}}");
+
+                        _TwitchPollClients.Add(socket);
+                    };
+
+                    socket.OnMessage += (msg) =>
+                    {
+                        Console.WriteLine(msg);
+
+                        dynamic json = DeserializeJson(msg);
+                        if (json == null)
+                        {
+                            return;
+                        }
+
+                        switch (json.type)
+                        {
+                            case "created":
+                                _TwitchPollUUID = json.id;
+
+                                break;
+                            case "update":
+                                if (json.poll.ended)
+                                {
+                                    dynamic choices = json.poll.choices;
+
+                                    _Votes[0] = choices[0].votes;
+                                    _Votes[1] = choices[1].votes;
+                                    _Votes[2] = choices[2].votes;
+
+                                    _TwitchPollUUID = null;
+                                }
+
+                                break;
+                        }
+                    };
+
+                    socket.OnClose += () =>
+                    {
+                        Console.WriteLine($"Connection to client {socket.ConnectionInfo.ClientIpAddress}:{socket.ConnectionInfo.ClientPort} closed.");
+
+                        _TwitchPollClients.Remove(socket);
+                    };
+                });
+
+                _TwitchPollMode = true;
+
+                return true;
             }
 
             if (string.IsNullOrWhiteSpace(_TwitchChannelName) || string.IsNullOrWhiteSpace(twitchUsername) || string.IsNullOrWhiteSpace(twitchOAuth))
@@ -250,10 +334,25 @@ namespace TwitchChatVotingProxy
                     _AlreadyVotedUsers.Clear();
                     _VoteRunning = true;
 
-                    _TwitchClient.SendMessage(_TwitchChannelName, "Time for a new effect! Vote between:");
-                    _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
-                    _TwitchClient.SendMessage(_TwitchChannelName, $"2: {data[2]}");
-                    _TwitchClient.SendMessage(_TwitchChannelName, $"3: {data[3]}");
+                    if (_TwitchPollMode)
+                    {
+                        SendPollJson($"{{\"type\":\"create\",\"title\":\"[Chaos Mod V] Next Effect Vote!\",\"duration\":{_TwitchPollDur}," +
+                            $"\"choices\":[\"{data[1]}\",\"{data[2]}\",\"{data[3]}\"]}}");
+
+                        while (_TwitchPollUUID == null)
+                        {
+
+                        }
+
+                        SendPollJson($"{{\"type\":\"listen\",\"id\":\"{_TwitchPollUUID}\"}}");
+                    }
+                    else
+                    {
+                        _TwitchClient.SendMessage(_TwitchChannelName, "Time for a new effect! Vote between:");
+                        _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
+                        _TwitchClient.SendMessage(_TwitchChannelName, $"2: {data[2]}");
+                        _TwitchClient.SendMessage(_TwitchChannelName, $"3: {data[3]}");
+                    }
                 }
                 else if (line == "getvoteresult")
                 {
@@ -262,37 +361,11 @@ namespace TwitchChatVotingProxy
                         return;
                     }
 
-                    List<int> chosenEffects = new List<int>();
-                    int highestVotes = 0;
-                    for (int i = 0; i < 3; i++)
-                    {
-                        int votes = _Votes[i];
-                        if (votes > highestVotes)
-                        {
-                            chosenEffects.Clear();
-                            chosenEffects.Add(i);
-
-                            highestVotes = votes;
-                        }
-                        else if (votes == highestVotes)
-                        {
-                            chosenEffects.Add(i);
-                        }
-                    }
-
-                    int count = chosenEffects.Count;
-                    if (count > 1)
-                    {
-                        int chosen = chosenEffects[new Random().Next(0, count)];
-                        chosenEffects.Clear();
-                        chosenEffects.Add(chosen);
-                    }
-
-                    _StreamWriter.Write("voteresults:" + chosenEffects[0] + "\0");
+                    _StreamWriter.Write($"voteresult:{GetHighestVoteItem()}\0");
 
                     _VoteRunning = false;
                 }
-                else if (line == "novoteround")
+                else if (line == "novoteround" && !_TwitchPollMode)
                 {
                     _TwitchClient.SendMessage(_TwitchChannelName, "No voting this time! Chaos Mod will decide for an effect itself.");
                 }
@@ -310,6 +383,50 @@ namespace TwitchChatVotingProxy
 
                 _StreamWriter.Write("ping\0");
             }
+        }
+
+        private static dynamic DeserializeJson(string json)
+        {
+            return (dynamic)JsonConvert.DeserializeObject(json);
+        }
+
+        private static void SendPollJson(string json)
+        {
+            foreach (IWebSocketConnection client in _TwitchPollClients)
+            {
+                client.Send(json);
+            }
+        }
+
+        private static int GetHighestVoteItem()
+        {
+            List<int> chosenEffects = new List<int>();
+            int highestVotes = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                int votes = _Votes[i];
+                if (votes > highestVotes)
+                {
+                    chosenEffects.Clear();
+                    chosenEffects.Add(i);
+
+                    highestVotes = votes;
+                }
+                else if (votes == highestVotes)
+                {
+                    chosenEffects.Add(i);
+                }
+            }
+
+            int count = chosenEffects.Count;
+            if (count > 1)
+            {
+                int chosen = chosenEffects[new Random().Next(0, count)];
+                chosenEffects.Clear();
+                chosenEffects.Add(chosen);
+            }
+
+            return chosenEffects[0];
         }
     }
 }

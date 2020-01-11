@@ -7,7 +7,8 @@
 
 int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
 	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
-	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableToggleModShortcut)
+	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator,
+	bool& enableToggleModShortcut)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
 
@@ -67,6 +68,10 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 			else if (key == "TwitchVotingSecsBeforeVoting")
 			{
 				twitchSecsBeforeVoting = _value >= 0 ? _value == 1 ? 2 : _value : 0;
+			}
+			else if (key == "TwitchVotingVoterIndicator")
+			{
+				enableTwitchVoterIndicator = _value;
 			}
 			else if (key == "EnableClearEffectsShortcut")
 			{
@@ -225,11 +230,12 @@ bool Main::Init()
 	bool enableTwitchVoting = false;
 	int twitchVotingNoVoteChance = 50;
 	int twitchSecsBeforeChatVoting = 0;
+	bool enableTwitchVoterIndicator = false;
 
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
 		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting,
-		m_toggleModShortcutEnabled)) || (result = ParseEffectsFile(enabledEffects)))
+		enableTwitchVoterIndicator, m_toggleModShortcutEnabled)) || (result = ParseEffectsFile(enabledEffects)))
 	{
 		switch (result)
 		{
@@ -262,7 +268,8 @@ bool Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
 #endif
 
-	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, m_effectDispatcher, enabledEffects);
+	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator,
+		m_effectDispatcher, enabledEffects);
 
 	return true;
 }

@@ -3,10 +3,10 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, std::shared_ptr<EffectDispatcher> effectDispatcher,
-	std::map<EffectType, std::array<int, 3>> enabledEffects)
+TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchVoterIndicator,
+	std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 3>> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
+	m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -106,7 +106,7 @@ void TwitchVoting::Tick()
 	{
 		if (m_noVoteRound)
 		{
-			m_effectDispatcher->DispatchRandomEffect();
+			m_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
 			m_effectDispatcher->ResetTimer();
 
 			m_noVoteRound = false;
@@ -114,7 +114,7 @@ void TwitchVoting::Tick()
 		}
 		else if (m_chosenEffectType != _EFFECT_ENUM_MAX)
 		{
-			m_effectDispatcher->DispatchEffect(m_chosenEffectType);
+			m_effectDispatcher->DispatchEffect(m_chosenEffectType, m_enableTwitchVoterIndicator ? "(Chat)" : nullptr);
 			m_effectDispatcher->ResetTimer();
 
 			m_isVotingRunning = false;
@@ -200,13 +200,19 @@ bool TwitchVoting::HandleMsg(std::string msg)
 
 		return false;
 	}
+	else if (msg == "invalid_poll_dur")
+	{
+		ErrorOutWithMsg("Invalid duration. Duration has to be above 15 and below 180 seconds to make use of the poll system. Returning to normal mode.");
+
+		return false;
+	}
 	else if (msg == "invalid_channel")
 	{
 		ErrorOutWithMsg("Invalid Twitch Channel. Please verify your config. Reverting to normal mode.");
 
 		return false;
 	}
-	else if (msg._Starts_with("voteresults"))
+	else if (msg._Starts_with("voteresult"))
 	{
 		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))];
 	}

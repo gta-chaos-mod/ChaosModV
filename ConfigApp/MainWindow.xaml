@@ -118,6 +118,9 @@
                         VerticalAlignment="Top" Width="102" Grid.Row="1" Visibility="Hidden" />
                     <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="378,152,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
+                    <Label Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,293,0,0"
+                        VerticalAlignment="Top" Width="347" Grid.Row="1"/>
+                    <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,299,605,25" Grid.Row="1" />
                 </Grid>
             </TabItem>
         </TabControl>

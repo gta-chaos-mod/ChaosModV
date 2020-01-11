@@ -26,8 +26,8 @@ public:
 		return m_effectSpawnTime - m_timerTimerRuns;
 	}
 	void UpdateEffects();
-	void DispatchEffect(EffectType effectType);
-	void DispatchRandomEffect();
+	void DispatchEffect(EffectType effectType, const char* suffix = nullptr);
+	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
 	void Reset();
 	void ResetTimer();
@@ -49,12 +49,15 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Name(name), Timer(timer),
-			MaxTime(Timer) {}
+		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Timer(timer),
+			MaxTime(Timer)
+		{
+			strcpy_s(Name, name);
+		}
 
 	public:
 		EffectType EffectType;
-		const char* Name;
+		char Name[128] = {};
 		int Timer;
 		int MaxTime;
 	};
