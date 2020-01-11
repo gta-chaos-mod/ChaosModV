@@ -707,6 +707,10 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_INTENSE_MUSIC:
 		TRIGGER_MUSIC_EVENT("AW_LOBBY_MUSIC_START");
 		break;
+	case EFFECT_PLAYER_RANDOMCLOTHES:
+		SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, 0);
+		SET_PED_RANDOM_PROPS(playerPed);
+		break;
 	}
 }
 
