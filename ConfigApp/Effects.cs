@@ -376,7 +376,7 @@ namespace ConfigApp
             {EffectType.EFFECT_INTENSE_MUSIC, new EffectInfo("Play Arena Wars Theme", EffectCategory.MISC, "player_arenawarstheme")},
             {EffectType.EFFECT_PEDS_DRIVEBY, new EffectInfo("Peds Drive-By Player", EffectCategory.PEDS, "peds_driveby", true)},
             {EffectType.EFFECT_PLAYER_RANDOMCLOTHES, new EffectInfo("Randomize Player Clothes", EffectCategory.PLAYER, "player_randclothes")},
-            {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps")},
+            {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
         };
     }
 }
