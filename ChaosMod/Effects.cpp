@@ -1820,4 +1820,26 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_PEDS_RAINBOWWEPS])
+	{
+		static DWORD64 lastTick = GetTickCount64();
+		DWORD64 curTick = GetTickCount64();
+		if (lastTick < curTick - 100)
+		{
+			lastTick = curTick;
+			Hash weaponHash;
+			for (Ped ped : GetAllPeds())
+			{
+				GET_CURRENT_PED_WEAPON(ped, &weaponHash, false);
+				SET_PED_WEAPON_TINT_INDEX(ped, weaponHash, Random::GetRandomInt(1, 7));
+			}
+			for (Object prop : GetAllProps())
+			{
+				if (IS_PICKUP_WEAPON_OBJECT_VALID(prop))
+				{
+					SET_WEAPON_OBJECT_TINT_INDEX(prop, Random::GetRandomInt(1, 7));
+				}
+			}
+		}
+	}
 }

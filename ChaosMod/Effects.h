@@ -187,6 +187,7 @@ enum EffectType : int
 	EFFECT_INTENSE_MUSIC,
 	EFFECT_PEDS_DRIVEBY,
 	EFFECT_PLAYER_RANDOMCLOTHES,
+	EFFECT_PEDS_RAINBOWWEPS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -358,6 +359,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_INTENSE_MUSIC, {"Play Arena Wars Theme", "player_arenawarstheme"}},
 	{EFFECT_PEDS_DRIVEBY, {"Peds Drive-By Player", "peds_driveby", true}},
 	{EFFECT_PLAYER_RANDOMCLOTHES, {"Randomize Player Clothes", "player_randclothes"}},
+	{EFFECT_PEDS_RAINBOWWEPS, {"Rainbow Weapons", "peds_rainbowweps", true}},
 
 };
 
