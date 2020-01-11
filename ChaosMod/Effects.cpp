@@ -735,6 +735,10 @@ void Effects::StopEffect(EffectType effectType)
 		SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", false);
 		SET_TIME_SCALE(1.f);
 		break;
+	case EFFECT_FORCED_FP:
+		SET_FOLLOW_PED_CAM_VIEW_MODE(1);
+		SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(1);
+		break;
 	case EFFECT_SLIPPERY_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
@@ -1068,6 +1072,7 @@ void Effects::UpdateEffects()
 		SET_CINEMATIC_MODE_ACTIVE(false);
 		SET_FOLLOW_PED_CAM_VIEW_MODE(4);
 		SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(4);
+		SET_FOLLOW_VEHICLE_CAM_ZOOM_LEVEL(4);
 		DISABLE_CONTROL_ACTION(0, 0, true);
 	}
 	if (m_effectActive[EFFECT_SLIPPERY_VEHS])
