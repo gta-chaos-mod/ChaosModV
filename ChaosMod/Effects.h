@@ -188,6 +188,7 @@ enum EffectType : int
 	EFFECT_PEDS_DRIVEBY,
 	EFFECT_PLAYER_RANDOMCLOTHES,
 	EFFECT_PEDS_RAINBOWWEPS,
+	EFFECT_SPAWN_IMPOTENTRAGE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -360,7 +361,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_DRIVEBY, {"Peds Drive-By Player", "peds_driveby", true}},
 	{EFFECT_PLAYER_RANDOMCLOTHES, {"Randomize Player Clothes", "player_randclothes"}},
 	{EFFECT_PEDS_RAINBOWWEPS, {"Rainbow Weapons", "peds_rainbowweps", true}},
-
+	{EFFECT_SPAWN_IMPOTENTRAGE, {"Spawn Impotent Rage", "peds_spawnimrage"}}
 };
 
 class Effects
