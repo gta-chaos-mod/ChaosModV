@@ -3,10 +3,10 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchVoterIndicator,
+TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
 	std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 3>> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
+	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -109,7 +109,11 @@ void TwitchVoting::Tick()
 			m_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
 			m_effectDispatcher->ResetTimer();
 
-			m_noVoteRound = false;
+			if (!m_enableTwitchPollVoting)
+			{
+				m_noVoteRound = false;
+			}
+
 			m_isVotingRunning = false;
 		}
 		else if (m_chosenEffectType != _EFFECT_ENUM_MAX)
@@ -125,7 +129,11 @@ void TwitchVoting::Tick()
 		m_isVotingRunning = true;
 		m_chosenEffectType = _EFFECT_ENUM_MAX;
 
-		if (m_twitchVotingNoVoteChance > 0)
+		if (m_enableTwitchPollVoting)
+		{
+			m_noVoteRound = !m_noVoteRound;
+		}
+		else if (m_twitchVotingNoVoteChance > 0)
 		{
 			if (m_twitchVotingNoVoteChance == 100)
 			{
@@ -138,13 +146,13 @@ void TwitchVoting::Tick()
 					m_noVoteRound = true;
 				}
 			}
+		}
 
-			if (m_noVoteRound)
-			{
-				SendToPipe("novoteround");
+		if (m_noVoteRound)
+		{
+			SendToPipe("novoteround");
 
-				return;
-			}
+			return;
 		}
 
 		std::map<EffectType, std::array<int, 3>> choosableEffects;
@@ -202,7 +210,7 @@ bool TwitchVoting::HandleMsg(std::string msg)
 	}
 	else if (msg == "invalid_poll_dur")
 	{
-		ErrorOutWithMsg("Invalid duration. Duration has to be above 15 and below 180 seconds to make use of the poll system. Returning to normal mode.");
+		ErrorOutWithMsg("Invalid duration. Duration has to be above 15 and at most 181 seconds to make use of the poll system. Returning to normal mode.");
 
 		return false;
 	}

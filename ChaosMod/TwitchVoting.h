@@ -7,7 +7,7 @@
 class TwitchVoting
 {
 public:
-	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchVoterIndicator,
+	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
 		std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 3>> enabledEffects);
 	~TwitchVoting();
 
@@ -21,6 +21,7 @@ private:
 	bool m_enableTwitchVoting;
 	const int m_twitchVotingNoVoteChance;
 	const int m_twitchSecsBeforeVoting;
+	const bool m_enableTwitchPollVoting;
 	const bool m_enableTwitchVoterIndicator;
 	const std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	const std::map<EffectType, std::array<int, 3>> m_enabledEffects;

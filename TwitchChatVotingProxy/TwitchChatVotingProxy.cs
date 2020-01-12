@@ -145,25 +145,21 @@ namespace TwitchChatVotingProxy
                             return;
                         }
 
-                        switch (json.type)
+                        string type = json.type;
+
+                        if (type == "created")
                         {
-                            case "created":
-                                _TwitchPollUUID = json.id;
+                            _TwitchPollUUID = json.id;
+                        }
+                        else if (type == "update")
+                        {
+                            dynamic choices = json.poll.choices;
 
-                                break;
-                            case "update":
-                                if (json.poll.ended)
-                                {
-                                    dynamic choices = json.poll.choices;
+                            _Votes[0] = (int)choices[0].votes;
+                            _Votes[1] = (int)choices[1].votes;
+                            _Votes[2] = (int)choices[2].votes;
 
-                                    _Votes[0] = choices[0].votes;
-                                    _Votes[1] = choices[1].votes;
-                                    _Votes[2] = choices[2].votes;
-
-                                    _TwitchPollUUID = null;
-                                }
-
-                                break;
+                            _TwitchPollUUID = null;
                         }
                     };
 
@@ -338,13 +334,6 @@ namespace TwitchChatVotingProxy
                     {
                         SendPollJson($"{{\"type\":\"create\",\"title\":\"[Chaos Mod V] Next Effect Vote!\",\"duration\":{_TwitchPollDur}," +
                             $"\"choices\":[\"{data[1]}\",\"{data[2]}\",\"{data[3]}\"]}}");
-
-                        while (_TwitchPollUUID == null)
-                        {
-
-                        }
-
-                        SendPollJson($"{{\"type\":\"listen\",\"id\":\"{_TwitchPollUUID}\"}}");
                     }
                     else
                     {
@@ -359,6 +348,11 @@ namespace TwitchChatVotingProxy
                     if (!_VoteRunning)
                     {
                         return;
+                    }
+
+                    if (_TwitchPollMode && _TwitchPollUUID != null)
+                    {
+                        SendPollJson($"{{\"type\":\"end\",\"id\":\"{_TwitchPollUUID}\"}}");
                     }
 
                     _StreamWriter.Write($"voteresult:{GetHighestVoteItem()}\0");

@@ -232,6 +232,9 @@ bool Main::Init()
 	int twitchSecsBeforeChatVoting = 0;
 	bool enableTwitchVoterIndicator = false;
 
+	struct stat temp;
+	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
+
 	int result;
 	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
 		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting,
@@ -268,7 +271,7 @@ bool Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
 #endif
 
-	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator,
+	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
 		m_effectDispatcher, enabledEffects);
 
 	return true;
