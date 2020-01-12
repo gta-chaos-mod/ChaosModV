@@ -256,6 +256,11 @@ bool Main::Init()
 		return false;
 	}
 
+	if (enableTwitchVoting && stat("chaosmod/.twitchmode", &temp) == -1)
+	{
+		enableTwitchVoting = false;
+	}
+
 	Random::SetSeed(seed);
 
 	m_effectDispatcher = std::make_shared<EffectDispatcher>(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,

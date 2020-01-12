@@ -427,10 +427,14 @@ namespace ConfigApp
                 twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;
                 twitch_user_poll_passphrase.Visibility = Visibility.Visible;
 
+                twitch_user_channel_name_label.Visibility = Visibility.Hidden;
+                twitch_user_channel_name.Visibility = Visibility.Hidden;
                 twitch_user_user_name_label.Visibility = Visibility.Hidden;
                 twitch_user_user_name.Visibility = Visibility.Hidden;
                 twitch_user_channel_oauth_label.Visibility = Visibility.Hidden;
                 twitch_user_channel_oauth.Visibility = Visibility.Hidden;
+                twitch_user_effects_chance_no_voting_round_label.Visibility = Visibility.Hidden;
+                twitch_user_effects_chance_no_voting_round.Visibility = Visibility.Hidden;
             }
 
             TwitchTabHandleAgreed();

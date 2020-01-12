@@ -91,13 +91,13 @@
                     <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;&#xA;Please note that this is still an experimental feature and issues might occur.&#xA;If you encounter any issues, please message the author of this mod (preferably with some information and a way to consistently replicate the issue)!" HorizontalAlignment="Left" Margin="10,0,0,0"
                     VerticalAlignment="Top" Width="1037" Height="135" Grid.RowSpan="2"/>
                     <CheckBox x:Name="twitch_user_agreed" Content="I've read and understood the above; enable the feature" Margin="15,110,695,215" Grid.Row="1" Click="twitch_user_agreed_Clicked" />
-                    <Label Content="Chance to get a random effect round (no voting enabled for that round, chance as %)" HorizontalAlignment="Left" Margin="10,195,0,0"
+                    <Label x:Name="twitch_user_effects_chance_no_voting_round_label" Content="Chance to get a random effect round (no voting enabled for that round, chance as %)" HorizontalAlignment="Left" Margin="10,195,0,0"
                         VerticalAlignment="Top" Width="627" Grid.Row="1"/>
                     <xctk:IntegerUpDown x:Name="twitch_user_effects_chance_no_voting_round" HorizontalAlignment="Left" Height="23" Margin="642,198,0,0"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Minimum="0" Maximum="100"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
-                    <Label Content="Channel Name" HorizontalAlignment="Left" Margin="10,149,0,0"
+                    <Label x:Name="twitch_user_channel_name_label" Content="Channel Name" HorizontalAlignment="Left" Margin="10,149,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_channel_name" HorizontalAlignment="Left" Height="23" Margin="117,152,0,0"
                         VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
@@ -114,9 +114,9 @@
                     <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" HorizontalAlignment="Left" Height="23" Margin="642,245,0,0"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
-                    <Label x:Name="twitch_user_poll_passphrase_label" Content="Passphrase" HorizontalAlignment="Left" Margin="278,149,0,0"
+                    <Label x:Name="twitch_user_poll_passphrase_label" Content="Passphrase" HorizontalAlignment="Left" Margin="11,149,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1" Visibility="Hidden" />
-                    <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="378,152,0,0"
+                    <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="111,152,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
                     <Label Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,293,0,0"
                         VerticalAlignment="Top" Width="347" Grid.Row="1"/>

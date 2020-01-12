@@ -118,7 +118,7 @@ namespace TwitchChatVotingProxy
                 }
             }
 
-            if (File.Exists("chaosmod/.twitchpoll") && !string.IsNullOrWhiteSpace(_TwitchChannelName))
+            if (File.Exists("chaosmod/.twitchpoll"))
             {
                 _TwitchPollClients = new List<IWebSocketConnection>();
 
