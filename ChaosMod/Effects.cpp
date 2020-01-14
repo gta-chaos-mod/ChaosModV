@@ -314,6 +314,9 @@ void Effects::StartEffect(EffectType effectType)
 			TeleportPlayer(503.33f, 5531.91f, 777.45f, 190.5f);
 		}
 		break;
+	case EFFECT_TP_SKYFALL:
+		TeleportPlayer(935.f, 3800.f, 2300.f, 165.f);
+		break;
 	case EFFECT_SET_INTO_CLOSEST_VEH:
 		if (isPlayerInVeh)
 		{
