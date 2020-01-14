@@ -208,6 +208,7 @@ namespace ConfigApp
             EFFECT_PEDS_RAINBOWWEPS,
             EFFECT_SPAWN_IMPOTENTRAGE,
             EFFECT_GTAO_TRAFFIC,
+            EFFECT_SPAWN_IE_SULTAN,
             _EFFECT_ENUM_MAX
         }
 
@@ -381,6 +382,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
             {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("GTA Online Traffic", EffectCategory.PEDS, "traffic_gtao", true)},
+            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan", true)},
         };
     }
 }

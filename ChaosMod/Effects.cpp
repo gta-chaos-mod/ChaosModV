@@ -87,21 +87,27 @@ inline void TeleportPlayer(float x, float y, float z, float heading)
 	SET_ENTITY_HEADING(isInVeh ? playerVeh : playerPed, heading);
 }
 
-inline void CreateTempVehicle(Hash model, float x, float y, float z, float heading)
+inline Vehicle CreateTempVehicle(Hash model, float x, float y, float z, float heading)
 {
 	LoadModel(model);
 	Vehicle veh = CREATE_VEHICLE(model, x, y, z, heading, true, false, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(model);
-	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
+	Vehicle dummy = veh;
+	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
+
+	return veh;
 }
 
-inline void CreateTempVehicleOnPlayerPos(Hash model, float heading)
+inline Vehicle CreateTempVehicleOnPlayerPos(Hash model, float heading)
 {
 	LoadModel(model);
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	Vehicle veh = CREATE_VEHICLE(model, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(model);
-	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
+	Vehicle dummy = veh;
+	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
+
+	return veh;
 }
 
 void Effects::StartEffect(EffectType effectType)
@@ -748,6 +754,35 @@ void Effects::StartEffect(EffectType effectType)
 			PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
 		}
 		RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
+	}
+		break;
+	case EFFECT_SPAWN_IE_SULTAN:
+	{
+		Vehicle veh = CreateTempVehicleOnPlayerPos(GET_HASH_KEY("SULTAN"), playerHeading);
+		SET_VEHICLE_COLOURS(veh, 64, 64);
+		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+		static Hash model = GET_HASH_KEY("g_m_m_armboss_01");
+		LoadModel(model);
+		static Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
+		Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, model, -1, true, false);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
+		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+		GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
+		SET_PED_ACCURACY(ped, 50);
+		SET_PED_KEEP_TASK(ped, true);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		WAIT(0);
+		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, model, 0, true, false);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
+		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+		GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
+		SET_PED_ACCURACY(ped, 50);
+		SET_PED_KEEP_TASK(ped, true);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		WAIT(0);
+		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		SET_MODEL_AS_NO_LONGER_NEEDED(model);
 	}
 		break;
 	}
