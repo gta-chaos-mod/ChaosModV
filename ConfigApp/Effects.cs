@@ -216,6 +216,7 @@ namespace ConfigApp
             EFFECT_SPAWN_UFO,
             EFFECT_EXPLOSIVE_PEDS,
             EFFECT_PEDS_ONEPUNCH,
+            EFFECT_INVERTVELOCITY,
             _EFFECT_ENUM_MAX
         }
 
@@ -397,6 +398,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_UFO, new EffectInfo("Spawn Ufo", EffectCategory.MISC, "misc_spawnufo")},
             {EffectType.EFFECT_EXPLOSIVE_PEDS, new EffectInfo("Explosive Peds", EffectCategory.PEDS, "peds_explosive", true)},
             {EffectType.EFFECT_PEDS_ONEPUNCH, new EffectInfo("One Punch Man", EffectCategory.PEDS, "peds_onepunch", true)},
+            {EffectType.EFFECT_INVERTVELOCITY, new EffectInfo("Invert Current Velocity", EffectCategory.MISC, "invertvelocity")},
         };
     }
 }

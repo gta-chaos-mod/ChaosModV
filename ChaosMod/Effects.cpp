@@ -757,8 +757,8 @@ void Effects::StartEffect(EffectType effectType)
 			PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
 		}
 		RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
-	}
 		break;
+	}
 	case EFFECT_SPAWN_IE_SULTAN:
 	{
 		Vehicle veh = CreateTempVehicleOnPlayerPos(GET_HASH_KEY("SULTAN"), playerHeading);
@@ -786,8 +786,8 @@ void Effects::StartEffect(EffectType effectType)
 		WAIT(0);
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		SET_MODEL_AS_NO_LONGER_NEEDED(model);
-	}
 		break;
+	}
 	case EFFECT_SPAWN_COMPANION_BRAD:
 	{
 		static Hash model = GET_HASH_KEY("ig_brad");
@@ -807,8 +807,8 @@ void Effects::StartEffect(EffectType effectType)
 		GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RPG"), 9999, true, true);
 		SET_PED_ACCURACY(ped, 100);
 		SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
-	}
 		break;
+	}
 	case EFFECT_PLAYER_SETINTORANDVEH:
 	{
 		std::vector<Vehicle> vehs;
@@ -824,8 +824,8 @@ void Effects::StartEffect(EffectType effectType)
 				SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 			}
 		}
-	}
 		break;
+	}
 	case EFFECT_SPAWN_UFO:
 	{
 		static Hash model = GET_HASH_KEY("p_spinning_anus_s");
@@ -833,8 +833,30 @@ void Effects::StartEffect(EffectType effectType)
 		Object prop = CREATE_OBJECT(model, playerPos.x, playerPos.y, playerPos.z, true, false, true);
 		SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
 		SET_MODEL_AS_NO_LONGER_NEEDED(model);
-	}
 		break;
+	}
+	case EFFECT_INVERTVELOCITY:
+	{
+		std::vector<Entity> entities;
+		for (Ped ped : GetAllPeds())
+		{
+			entities.push_back(ped);
+		}
+		for (Vehicle veh : GetAllVehs())
+		{
+			entities.push_back(veh);
+		}
+		for (Object prop : GetAllProps())
+		{
+			entities.push_back(prop);
+		}
+		for (Entity entity : entities)
+		{
+			Vector3 vel = GET_ENTITY_VELOCITY(entity);
+			SET_ENTITY_VELOCITY(entity, -vel.x, -vel.y, -vel.z);
+		}
+		break;
+	}
 	}
 }
 
