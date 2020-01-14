@@ -2018,4 +2018,9 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_PEDS_ONEPUNCH])
+	{
+		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 9999.f, false);
+		SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(9999.f);
+	}
 }
