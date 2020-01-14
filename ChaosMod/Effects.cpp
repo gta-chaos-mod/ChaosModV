@@ -734,14 +734,15 @@ void Effects::StartEffect(EffectType effectType)
 			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
 		}
 		SET_MODEL_AS_NO_LONGER_NEEDED(model);
-		REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/CASINO_GENERAL", true, 0);
-		REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/CASINO_SLOT_MACHINES_01", true, 0);
-		REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/CASINO_SLOT_MACHINES_02", true, 0);
-		REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/CASINO_SLOT_MACHINES_03", true, 0);
-		for (int i = 0; i < 10; i++)
+		while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
 		{
-			PLAY_SOUND_FROM_ENTITY(-1, "jackpot", playerPed, "dlc_vw_casino_slot_machine_ir_player_sounds", false, 0);
+			WAIT(0);
 		}
+		for (int i = 0; i < 3; i++)
+		{
+			PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
+		}
+		RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
 	}
 		break;
 	}
