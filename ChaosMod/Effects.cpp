@@ -596,6 +596,15 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_EVERYONE_UPNATOMIZER:
+		for (Ped ped : GetAllPeds())
+		{
+			if (IS_PED_HUMAN(ped))
+			{
+				GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true);
+			}
+		}
+		break;
 	case EFFECT_LOCK_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
