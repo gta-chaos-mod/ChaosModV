@@ -214,6 +214,7 @@ namespace ConfigApp
             EFFECT_PLAYER_SETINTORANDVEH,
             EFFECT_VEHS_FULLACCEL,
             EFFECT_SPAWN_UFO,
+            EFFECT_EXPLOSIVE_PEDS,
             _EFFECT_ENUM_MAX
         }
 
@@ -393,6 +394,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")},
             {EffectType.EFFECT_VEHS_FULLACCEL, new EffectInfo("Full Acceleration", EffectCategory.VEHICLE, "traffic_fullaccel", true, true)},
             {EffectType.EFFECT_SPAWN_UFO, new EffectInfo("Spawn Ufo", EffectCategory.MISC, "misc_spawnufo")},
+            {EffectType.EFFECT_EXPLOSIVE_PEDS, new EffectInfo("Explosive Peds", EffectCategory.PEDS, "peds_explosive", true)},
         };
     }
 }
