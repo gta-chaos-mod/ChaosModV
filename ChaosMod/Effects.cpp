@@ -605,6 +605,18 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
+	case EFFECT_EVERYONE_RANDOMWEP:
+	{
+		std::vector<Hash> weps = Memory::GetAllWeapons();
+		for (Ped ped : GetAllPeds())
+		{
+			if (IS_PED_HUMAN(ped))
+			{
+				GIVE_WEAPON_TO_PED(ped, weps[Random::GetRandomInt(0, weps.size() - 1)], 9999, true, true);
+			}
+		}
+		break;
+	}
 	case EFFECT_LOCK_VEHS:
 		for (Vehicle veh : GetAllVehs())
 		{
