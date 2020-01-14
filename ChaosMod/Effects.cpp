@@ -806,6 +806,20 @@ void Effects::StartEffect(EffectType effectType)
 		SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 	}
 		break;
+	case EFFECT_PLAYER_SETINTORANDVEH:
+		std::vector<Vehicle> vehs;
+		for (Vehicle veh : GetAllVehs())
+		{
+			vehs.push_back(veh);
+		}
+		if (!vehs.empty())
+		{
+			Vehicle veh = vehs[Random::GetRandomInt(0, vehs.size() - 1)];
+			
+			{
+				SET_PED_INTO_VEHICLE(playerPed, veh, -1);
+			}
+		}
 	}
 }
 

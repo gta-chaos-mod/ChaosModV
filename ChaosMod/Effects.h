@@ -192,6 +192,7 @@ enum EffectType : int
 	EFFECT_SPAWN_IMPOTENTRAGE,
 	EFFECT_GTAO_TRAFFIC,
 	EFFECT_SPAWN_IE_SULTAN,
+	EFFECT_PLAYER_SETINTORANDVEH,
 	_EFFECT_ENUM_MAX
 };
 
@@ -367,7 +368,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_RAINBOWWEPS, {"Rainbow Weapons", "peds_rainbowweps", true}},
 	{EFFECT_SPAWN_IMPOTENTRAGE, {"Spawn Impotent Rage", "peds_spawnimrage"}},
 	{EFFECT_GTAO_TRAFFIC, {"GTA Online Traffic", "traffic_gtao", true}},
-	{EFFECT_SPAWN_IE_SULTAN, {"Spawn Blue Sultan", "spawn_bluesultan"}}
+	{EFFECT_SPAWN_IE_SULTAN, {"Spawn Blue Sultan", "spawn_bluesultan"}},
+	{EFFECT_PLAYER_SETINTORANDVEH, {"Set Player Into Random Vehicle", "player_setintorandveh"}},
 };
 
 class Effects
