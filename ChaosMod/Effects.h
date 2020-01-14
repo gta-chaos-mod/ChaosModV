@@ -203,6 +203,7 @@ enum EffectType : int
 	EFFECT_PEDS_ONEPUNCH,
 	EFFECT_INVERTVELOCITY,
 	EFFECT_PLAYER_TPEVERYTHING,
+	EFFECT_WEATHER_RANDOMWEATHER,
 	_EFFECT_ENUM_MAX
 };
 
@@ -390,6 +391,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_ONEPUNCH, {"One Punch Man", "peds_onepunch", true}},
 	{EFFECT_INVERTVELOCITY, {"Invert Current Velocity", "invertvelocity"}},
 	{EFFECT_PLAYER_TPEVERYTHING, {"Teleport Everything To Player", "player_tpeverything"}},
+	{EFFECT_WEATHER_RANDOMWEATHER, {"Modder Stop Changing Weather Plz", "weather_randomizer", true}},
 };
 
 class Effects

@@ -2125,4 +2125,16 @@ void Effects::UpdateEffects()
 		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 9999.f, false);
 		SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(9999.f);
 	}
+	if (m_effectActive[EFFECT_WEATHER_RANDOMWEATHER])
+	{
+		static constexpr const char* weathers[] = { "CLEAR", "EXTRASUNNY" , "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "XMAS", "SNOWLIGHT", "BLIZZARD" };
+		static constexpr int weatherSize = 12;
+		static DWORD64 lastTick = GetTickCount64();
+		DWORD64 curTick = GetTickCount64();
+		if (lastTick < curTick - 150)
+		{
+			lastTick = curTick;
+			SET_WEATHER_TYPE_NOW(weathers[Random::GetRandomInt(0, weatherSize - 1)]);
+		}
+	}
 }

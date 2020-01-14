@@ -221,6 +221,7 @@ namespace ConfigApp
             EFFECT_PEDS_ONEPUNCH,
             EFFECT_INVERTVELOCITY,
             EFFECT_PLAYER_TPEVERYTHING,
+            EFFECT_WEATHER_RANDOMWEATHER,
             _EFFECT_ENUM_MAX
         }
 
@@ -407,6 +408,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_ONEPUNCH, new EffectInfo("One Punch Man", EffectCategory.PEDS, "peds_onepunch", true)},
             {EffectType.EFFECT_INVERTVELOCITY, new EffectInfo("Invert Current Velocity", EffectCategory.MISC, "invertvelocity")},
             {EffectType.EFFECT_PLAYER_TPEVERYTHING, new EffectInfo("Teleport Everything To Player", EffectCategory.PLAYER, "player_tpeverything")},
+            {EffectType.EFFECT_WEATHER_RANDOMWEATHER, new EffectInfo("Modder Stop Changing Weather Plz", EffectCategory.WEATHER, "weather_randomizer")},
         };
     }
 }
