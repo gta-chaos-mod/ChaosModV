@@ -194,11 +194,10 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_ANGRY_JESUS:
-		Hash modelHash;
-		modelHash = -835930287;
+	{
+		static Hash modelHash = -835930287;
 		LoadModel(modelHash);
-		Ped ped;
-		ped = CREATE_PED(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+		Ped ped = CREATE_PED(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
 		if (isPlayerInVeh)
 		{
 			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
@@ -208,8 +207,69 @@ void Effects::StartEffect(EffectType effectType)
 		GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
-		//SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		break;
+	}
+	case EFFECT_SPAWN_IMPOTENTRAGE:
+	{
+		Hash relGroup;
+		ADD_RELATIONSHIP_GROUP("_IM_RAGE", &relGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("CIVMALE"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("CIVFEMALE"));
+		Hash model = GET_HASH_KEY("u_m_y_imporage");
+		LoadModel(model);
+		Ped ped = CREATE_PED(4, model, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false);
+		SET_ENTITY_HEALTH(ped, 1000, 0);
+		SET_PED_ARMOUR(ped, 1000);
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relGroup);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+		SET_RAGDOLL_BLOCKING_FLAGS(ped, 1);
+		SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		if (isPlayerInVeh)
+		{
+			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
+		}
+		SET_MODEL_AS_NO_LONGER_NEEDED(model);
+		while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
+		{
+			WAIT(0);
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
+		}
+		RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
+		break;
+	}
+	case EFFECT_ANGRY_JESUS2:
+	{
+		static Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
+		LoadModel(oppressorHash);
+		Vehicle veh = CREATE_VEHICLE(oppressorHash, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false, false);
+		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+		SET_VEHICLE_MOD_KIT(veh, 0);
+		for (int i = 0; i < 50; i++)
+		{
+			int max = GET_NUM_VEHICLE_MODS(veh, i);
+			SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, false);
+		}
+		SET_MODEL_AS_NO_LONGER_NEEDED(oppressorHash);
+		static Hash modelHash = -835930287;
+		LoadModel(modelHash);
+		Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
+		if (isPlayerInVeh)
+		{
+			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
+		}
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+		break;
+	}
 	case EFFECT_IGNITE_PEDS:
 		for (Ped ped : GetAllPeds())
 		{
@@ -601,8 +661,7 @@ void Effects::StartEffect(EffectType effectType)
 		break;
 	case EFFECT_SPAWN_COMPANION_CHIMP:
 	{
-		Hash _modelHash;
-		modelHash = GET_HASH_KEY("a_c_chimp");
+		Hash modelHash = GET_HASH_KEY("a_c_chimp");
 		LoadModel(modelHash);
 		Hash relationshipGroup;
 		ADD_RELATIONSHIP_GROUP("_COMPANION_CHIMP", &relationshipGroup);
@@ -725,40 +784,6 @@ void Effects::StartEffect(EffectType effectType)
 		SET_PED_RANDOM_COMPONENT_VARIATION(playerPed, 0);
 		SET_PED_RANDOM_PROPS(playerPed);
 		break;
-	case EFFECT_SPAWN_IMPOTENTRAGE:
-	{
-		Hash relGroup;
-		ADD_RELATIONSHIP_GROUP("_IM_RAGE", &relGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("CIVMALE"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, GET_HASH_KEY("CIVFEMALE"));
-		Hash model = GET_HASH_KEY("u_m_y_imporage");
-		LoadModel(model);
-		Ped ped = CREATE_PED(4, model, playerPos.x, playerPos.y, playerPos.z, playerHeading, true, false);
-		SET_ENTITY_HEALTH(ped, 1000, 0);
-		SET_PED_ARMOUR(ped, 1000);
-		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relGroup);
-		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
-		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
-		SET_RAGDOLL_BLOCKING_FLAGS(ped, 1);
-		SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-		TASK_COMBAT_PED(ped, playerPed, 0, 16);
-		if (isPlayerInVeh)
-		{
-			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
-		}
-		SET_MODEL_AS_NO_LONGER_NEEDED(model);
-		while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
-		{
-			WAIT(0);
-		}
-		for (int i = 0; i < 3; i++)
-		{
-			PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
-		}
-		RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
-		break;
-	}
 	case EFFECT_SPAWN_IE_SULTAN:
 	{
 		Vehicle veh = CreateTempVehicleOnPlayerPos(GET_HASH_KEY("SULTAN"), playerHeading);
@@ -1096,6 +1121,10 @@ void Effects::StopEffect(EffectType effectType)
 		break;
 	case EFFECT_INTENSE_MUSIC:
 		TRIGGER_MUSIC_EVENT("MP_MC_CMH_IAA_FINALE_START");
+		break;
+	case EFFECT_PEDS_ONEPUNCH:
+		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f, false);
+		SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(1.f);
 		break;
 	}
 }
