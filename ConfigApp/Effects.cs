@@ -207,6 +207,7 @@ namespace ConfigApp
             EFFECT_PLAYER_RANDOMCLOTHES,
             EFFECT_PEDS_RAINBOWWEPS,
             EFFECT_SPAWN_IMPOTENTRAGE,
+            EFFECT_GTAO_TRAFFIC,
             _EFFECT_ENUM_MAX
         }
 
@@ -378,7 +379,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_DRIVEBY, new EffectInfo("Peds Drive-By Player", EffectCategory.PEDS, "peds_driveby", true)},
             {EffectType.EFFECT_PLAYER_RANDOMCLOTHES, new EffectInfo("Randomize Player Clothes", EffectCategory.PLAYER, "player_randclothes")},
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
-            {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")}
+            {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")},
+            {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("GTA Online Traffic", EffectCategory.PEDS, "traffic_gtao", true)},
         };
     }
 }
