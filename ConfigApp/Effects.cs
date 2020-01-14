@@ -188,6 +188,7 @@ namespace ConfigApp
             EFFECT_PEDS_BLIND,
             EFFECT_SPAWN_COMPANION_CHOP,
             EFFECT_SPAWN_COMPANION_CHIMP,
+            EFFECT_SPAWN_COMPANION_BRAD,
             EFFECT_PLAYER_NIGHTVISION,
             EFFECT_PLAYER_HEATVISION,
             EFFECT_PLAYER_MONEYDROPS,
@@ -362,6 +363,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Peds Don't See Very Well", EffectCategory.PEDS, "peds_blind", true)},
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
             {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
+            {EffectType.EFFECT_SPAWN_COMPANION_BRAD, new EffectInfo("Spawn Companion Brad", EffectCategory.PEDS, "spawn_compbbrad")},
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision", true)},
             {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heat Vision", EffectCategory.MISC, "player_heatvision", true, true)},
             {EffectType.EFFECT_PLAYER_MONEYDROPS, new EffectInfo("Money Rain", EffectCategory.MISC, "player_moneydrops", true)},
@@ -382,7 +384,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
             {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("GTA Online Traffic", EffectCategory.PEDS, "traffic_gtao", true)},
-            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan", true)},
+            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan")}
         };
     }
 }
