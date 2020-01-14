@@ -200,6 +200,7 @@ enum EffectType : int
 	EFFECT_EXPLOSIVE_PEDS,
 	EFFECT_PEDS_ONEPUNCH,
 	EFFECT_INVERTVELOCITY,
+	EFFECT_PLAYER_TPEVERYTHING,
 	_EFFECT_ENUM_MAX
 };
 
@@ -384,6 +385,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLOSIVE_PEDS, {"Explosive Peds", "peds_explosive", true}},
 	{EFFECT_PEDS_ONEPUNCH, {"One Punch Man", "peds_onepunch", true}},
 	{EFFECT_INVERTVELOCITY, {"Invert Current Velocity", "invertvelocity"}},
+	{EFFECT_PLAYER_TPEVERYTHING, {"Teleport Everything To Player", "player_tpeverything"}},
 };
 
 class Effects

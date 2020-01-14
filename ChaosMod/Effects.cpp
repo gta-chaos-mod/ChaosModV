@@ -882,6 +882,36 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	}
+	case EFFECT_PLAYER_TPEVERYTHING:
+	{
+		std::vector<Entity> entities;
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_A_MISSION_ENTITY(ped))
+			{
+				SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
+				entities.push_back(ped);
+			}
+		}
+		for (Vehicle veh : GetAllVehs())
+		{
+			if ((!isPlayerInVeh || veh != playerVeh) && !IS_ENTITY_A_MISSION_ENTITY(veh))
+			{
+				SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
+				entities.push_back(veh);
+			}
+		}
+		for (Entity entity : entities)
+		{
+			SET_ENTITY_COORDS(entity, playerPos.x, playerPos.y, playerPos.z, false, false, false, false);
+		}
+		WAIT(0);
+		for (Entity entity : entities)
+		{
+			SET_ENTITY_AS_MISSION_ENTITY(entity, false, false);
+		}
+		break;
+	}
 	}
 }
 
