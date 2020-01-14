@@ -211,6 +211,7 @@ namespace ConfigApp
             EFFECT_GTAO_TRAFFIC,
             EFFECT_SPAWN_IE_SULTAN,
             EFFECT_PLAYER_SETINTORANDVEH,
+            EFFECT_VEHS_FULLACCEL,
             _EFFECT_ENUM_MAX
         }
 
@@ -364,7 +365,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Peds Don't See Very Well", EffectCategory.PEDS, "peds_blind", true)},
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
             {EffectType.EFFECT_SPAWN_COMPANION_CHIMP, new EffectInfo("Spawn Companion Chimp", EffectCategory.PEDS, "spawn_chimp")},
-            {EffectType.EFFECT_SPAWN_COMPANION_BRAD, new EffectInfo("Spawn Companion Brad", EffectCategory.PEDS, "spawn_compbbrad")},
+            {EffectType.EFFECT_SPAWN_COMPANION_BRAD, new EffectInfo("Spawn Companion Brad", EffectCategory.PEDS, "spawn_compbrad")},
             {EffectType.EFFECT_PLAYER_NIGHTVISION, new EffectInfo("Night Vision", EffectCategory.MISC, "player_nightvision", true)},
             {EffectType.EFFECT_PLAYER_HEATVISION, new EffectInfo("Heat Vision", EffectCategory.MISC, "player_heatvision", true, true)},
             {EffectType.EFFECT_PLAYER_MONEYDROPS, new EffectInfo("Money Rain", EffectCategory.MISC, "player_moneydrops", true)},
@@ -386,7 +387,8 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("GTA Online Traffic", EffectCategory.PEDS, "traffic_gtao", true)},
             {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan")},
-            {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")}
+            {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")},
+            {EffectType.EFFECT_VEHS_FULLACCEL, new EffectInfo("Full Acceleration", EffectCategory.VEHICLE, "traffic_fullaccel", true, true)},
         };
     }
 }

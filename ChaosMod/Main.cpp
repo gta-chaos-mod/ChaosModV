@@ -147,7 +147,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, { -1, -1, 5 }));
+		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, 5 }));
 	}
 
 	// Remove disabled effecttypes

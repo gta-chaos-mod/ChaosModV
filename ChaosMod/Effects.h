@@ -193,6 +193,7 @@ enum EffectType : int
 	EFFECT_GTAO_TRAFFIC,
 	EFFECT_SPAWN_IE_SULTAN,
 	EFFECT_PLAYER_SETINTORANDVEH,
+	EFFECT_VEHS_FULLACCEL,
 	_EFFECT_ENUM_MAX
 };
 
@@ -347,7 +348,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_BLIND, {"Peds Don't See Very Well", "peds_blind", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
 	{EFFECT_SPAWN_COMPANION_CHIMP, {"Spawn Companion Chimp", "spawn_chimp"}},
-	{EFFECT_SPAWN_COMPANION_BRAD, {"Spawn Companion Brad", "spawn_compbbrad"}},
+	{EFFECT_SPAWN_COMPANION_BRAD, {"Spawn Companion Brad", "spawn_compbrad"}},
 	{EFFECT_PLAYER_NIGHTVISION, {"Night Vision", "player_nightvision", true}},
 	{EFFECT_PLAYER_HEATVISION, {"Heat Vision", "player_heatvision", true, {}, true}},
 	{EFFECT_PLAYER_MONEYDROPS, {"Money Rain", "player_moneydrops", true}},
@@ -370,6 +371,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_GTAO_TRAFFIC, {"GTA Online Traffic", "traffic_gtao", true}},
 	{EFFECT_SPAWN_IE_SULTAN, {"Spawn Blue Sultan", "spawn_bluesultan"}},
 	{EFFECT_PLAYER_SETINTORANDVEH, {"Set Player Into Random Vehicle", "player_setintorandveh"}},
+	{EFFECT_VEHS_FULLACCEL, {"Full Acceleration", "traffic_fullaccel", true, {}, true}},
 };
 
 class Effects

@@ -1981,4 +1981,14 @@ void Effects::UpdateEffects()
 			}
 		}
 	}
+	if (m_effectActive[EFFECT_VEHS_FULLACCEL])
+	{
+		for (Vehicle veh : GetAllVehs())
+		{
+			if (!IS_ENTITY_IN_AIR(veh))
+			{
+				SET_VEHICLE_FORWARD_SPEED(veh, 100.f);
+			}
+		}
+	}
 }
