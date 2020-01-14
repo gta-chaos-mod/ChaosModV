@@ -810,6 +810,7 @@ void Effects::StartEffect(EffectType effectType)
 	}
 		break;
 	case EFFECT_PLAYER_SETINTORANDVEH:
+	{
 		std::vector<Vehicle> vehs;
 		for (Vehicle veh : GetAllVehs())
 		{
@@ -818,11 +819,22 @@ void Effects::StartEffect(EffectType effectType)
 		if (!vehs.empty())
 		{
 			Vehicle veh = vehs[Random::GetRandomInt(0, vehs.size() - 1)];
-			
+
 			{
 				SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 			}
 		}
+	}
+		break;
+	case EFFECT_SPAWN_UFO:
+	{
+		static Hash model = GET_HASH_KEY("p_spinning_anus_s");
+		LoadModel(model);
+		Object prop = CREATE_OBJECT(model, playerPos.x, playerPos.y, playerPos.z, true, false, true);
+		SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
+		SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	}
+		break;
 	}
 }
 

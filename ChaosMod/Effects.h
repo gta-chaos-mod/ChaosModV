@@ -195,6 +195,7 @@ enum EffectType : int
 	EFFECT_SPAWN_IE_SULTAN,
 	EFFECT_PLAYER_SETINTORANDVEH,
 	EFFECT_VEHS_FULLACCEL,
+	EFFECT_SPAWN_UFO,
 	_EFFECT_ENUM_MAX
 };
 
@@ -374,6 +375,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_IE_SULTAN, {"Spawn Blue Sultan", "spawn_bluesultan"}},
 	{EFFECT_PLAYER_SETINTORANDVEH, {"Set Player Into Random Vehicle", "player_setintorandveh"}},
 	{EFFECT_VEHS_FULLACCEL, {"Full Acceleration", "traffic_fullaccel", true, {}, true}},
+	{EFFECT_SPAWN_UFO, {"Spawn Ufo", "misc_spawnufo"}},
 };
 
 class Effects
