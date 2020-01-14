@@ -489,8 +489,13 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		break;
 	case EFFECT_ZOMBIES:
-		Hash dummy;
-		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &dummy);
+	{
+		Hash groupHash;
+		ADD_RELATIONSHIP_GROUP("_ZOMBIES", &groupHash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, groupHash, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, groupHash, GET_HASH_KEY("CIVMALE"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, groupHash, GET_HASH_KEY("CIVFEMALE"));
+	}
 		break;
 	case EFFECT_METEOR_RAIN:
 		DECOR_REGISTER("_METEOR", 2);
@@ -1371,11 +1376,8 @@ void Effects::UpdateEffects()
 		static constexpr int MAX_ZOMBIES = 20;
 		static constexpr Hash MODEL_HASH = -1404353274;
 		static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
-		static Hash playerGroupHash = GET_HASH_KEY("PLAYER");
 		static Ped zombies[MAX_ZOMBIES] = {};
 		static int zombiesAmount = 0;
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, zombieGroupHash, playerGroupHash);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, zombieGroupHash);
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 		if (zombiesAmount <= MAX_ZOMBIES)
 		{
