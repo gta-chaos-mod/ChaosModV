@@ -259,10 +259,6 @@ void Effects::StartEffect(EffectType effectType)
 		static Hash modelHash = -835930287;
 		LoadModel(modelHash);
 		Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
-		if (isPlayerInVeh)
-		{
-			SET_PED_INTO_VEHICLE(ped, playerVeh, -2);
-		}
 		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
