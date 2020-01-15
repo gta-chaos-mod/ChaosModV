@@ -926,6 +926,7 @@ void Effects::StartEffect(EffectType effectType)
 		for (Entity entity : entities)
 		{
 			SET_ENTITY_AS_MISSION_ENTITY(entity, false, false);
+			SET_ENTITY_AS_NO_LONGER_NEEDED(&entity);
 		}
 		break;
 	}
