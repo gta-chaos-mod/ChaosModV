@@ -81,6 +81,8 @@ namespace TwitchChatVotingProxy
             string twitchOAuth = null;
             string twitchPollPass = null;
 
+            _TwitchPollMode = File.Exists("chaosmod/.twitchpoll");
+
             string data = File.ReadAllText("chaosmod/config.ini");
             foreach (string line in data.Split('\n'))
             {
@@ -105,20 +107,22 @@ namespace TwitchChatVotingProxy
                         twitchPollPass = text[1].Trim();
                         break;
                     case "NewEffectSpawnTime":
-                        _TwitchPollDur = int.Parse(text[1]) - 1;
-
-                        if (_TwitchPollDur < 15 || _TwitchPollDur > 180)
+                        if (_TwitchPollMode)
                         {
-                            _StreamWriter.Write("invalid_poll_dur\0");
+                            _TwitchPollDur = int.Parse(text[1]) - 1;
 
-                            return false;
+                            if (_TwitchPollDur < 15 || _TwitchPollDur > 180)
+                            {
+                                _StreamWriter.Write("invalid_poll_dur\0");
+
+                                return false;
+                            }
                         }
-
                         break;
                 }
             }
 
-            if (File.Exists("chaosmod/.twitchpoll"))
+            if (_TwitchPollMode)
             {
                 _TwitchPollClients = new List<IWebSocketConnection>();
 
@@ -170,8 +174,6 @@ namespace TwitchChatVotingProxy
                         _TwitchPollClients.Remove(socket);
                     };
                 });
-
-                _TwitchPollMode = true;
 
                 return true;
             }
