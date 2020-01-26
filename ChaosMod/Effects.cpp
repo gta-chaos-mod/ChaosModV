@@ -255,6 +255,7 @@ void Effects::StartEffect(EffectType effectType)
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, false);
 		}
+		SET_ENTITY_PROOFS(veh, false, true, true, false, false, false, false, false);
 		SET_MODEL_AS_NO_LONGER_NEEDED(oppressorHash);
 		static Hash modelHash = -835930287;
 		LoadModel(modelHash);
