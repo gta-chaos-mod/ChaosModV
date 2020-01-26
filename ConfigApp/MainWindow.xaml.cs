@@ -98,12 +98,14 @@ namespace ConfigApp
     {
         public EffectTimedType EffectTimedType;
         public int EffectCustomTime;
+        public bool EffectPermanent;
         public int EffectWeight;
 
-        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, int effectWeight)
+        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, bool effectPermanent, int effectWeight)
         {
             EffectTimedType = effectTimedType;
             EffectCustomTime = effectCustomTime;
+            EffectPermanent = effectPermanent;
             EffectWeight = effectWeight;
         }
     }
@@ -315,21 +317,30 @@ namespace ConfigApp
 
                 EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
                 int effectTimedTime = -1;
+                bool effectPermanent = false;
                 int effectWeight = 5;
 
-                if (values.Length >= 4)
+                if (values.Length >= 5)
                 {
-                    if (!Enum.TryParse(values[1], out effectTimedType))
+                    if (!bool.TryParse(values[4], out effectPermanent))
                     {
                         return false;
                     }
-                    if (!int.TryParse(values[2], out effectTimedTime))
+
+                    if (values.Length >= 4)
                     {
-                        return false;
-                    }
-                    if (!int.TryParse(values[3], out effectWeight))
-                    {
-                        return false;
+                        if (!Enum.TryParse(values[1], out effectTimedType))
+                        {
+                            return false;
+                        }
+                        if (!int.TryParse(values[2], out effectTimedTime))
+                        {
+                            return false;
+                        }
+                        if (!int.TryParse(values[3], out effectWeight))
+                        {
+                            return false;
+                        }
                     }
                 }
 
@@ -337,7 +348,7 @@ namespace ConfigApp
                 {
                     TreeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight));
+                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectPermanent, effectWeight));
                 }
             }
 
@@ -355,7 +366,7 @@ namespace ConfigApp
                 EffectDataMap.TryGetValue(effectType, out EffectData effectData);
                 if (effectData == null)
                 {
-                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5);
+                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, false, 5);
                 }
 
                 data += $"{EffectsMap[effectType].Id}={(TreeMenuItemsMap[effectType].IsChecked ? 1 : 0)}" +
@@ -518,7 +529,7 @@ namespace ConfigApp
                 EffectInfo effectInfo = EffectsMap[effectType];
                 EffectData effectData = EffectDataMap[effectType];
 
-                EffectConfig effectConfig = new EffectConfig(effectInfo.IsTimed, effectData.EffectTimedType, effectInfo, effectData.EffectCustomTime, effectData.EffectWeight);
+                EffectConfig effectConfig = new EffectConfig(effectData, effectInfo);
                 effectConfig.Title = effectInfo.Name;
                 effectConfig.ShowDialog();
 
@@ -528,6 +539,7 @@ namespace ConfigApp
                         : effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
                     effectData.EffectCustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
                         ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
+                    effectData.EffectPermanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
                     effectData.EffectWeight = effectConfig.effectconf_effect_weight.SelectedIndex + 1;
                 }
             }

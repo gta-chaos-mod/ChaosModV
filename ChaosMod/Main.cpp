@@ -127,7 +127,7 @@ int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& e
 	return 0;
 }
 
-int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
+int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
 {
 	static constexpr const char* FILE_PATH = "chaosmod/effects.ini";
 
@@ -147,7 +147,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 3>>((EffectType)i, { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, 5 }));
+		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 4>>((EffectType)i, { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, false, 5 }));
 	}
 
 	// Remove disabled effecttypes
@@ -162,7 +162,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 		}
 
 		std::string value = line.substr(line.find("=") + 1);
-		std::array<int, 4> values { 1, -1, -1, 5 };
+		std::array<int, 5> values { 1, -1, -1, false, 5 };
 
 		int splitIndex = value.find(",");
 		if (splitIndex == value.npos)
@@ -171,7 +171,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 		}
 		else
 		{
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				values[i] = std::stoi(value.substr(0, splitIndex));
 				value = value.substr(splitIndex + 1);
@@ -204,9 +204,10 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 3>>& enabledEffects)
 					result->second[0] = values[1] == -1 ? effectInfo.IsShortDuration : values[1];
 					result->second[1] = values[2];
 					result->second[2] = values[3];
+					result->second[3] = values[4];
 
 					static std::ofstream log("chaosmod/enabledeffectslog.txt");
-					log << effectInfo.Name << " " << result->second[0] << " " << result->second[1] << " " << result->second[2] << std::endl;
+					log << effectInfo.Name << " " << result->second[0] << " " << result->second[1] << " " << result->second[2] << " " << result->second[3] << std::endl;
 				}
 				break;
 			}
@@ -226,7 +227,7 @@ bool Main::Init()
 	std::array<int, 3> timerColor = { 40, 40, 255 };
 	std::array<int, 3> textColor = { 255, 255, 255 };
 	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
-	std::map<EffectType, std::array<int, 3>> enabledEffects;
+	std::map<EffectType, std::array<int, 4>> enabledEffects;
 	bool enableTwitchVoting = false;
 	int twitchVotingNoVoteChance = 50;
 	int twitchSecsBeforeChatVoting = 0;

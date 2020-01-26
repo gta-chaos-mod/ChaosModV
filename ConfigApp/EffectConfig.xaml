@@ -16,5 +16,7 @@
         <Label Content="Set Effect Weight&#xD;&#xA;(Affects chances of this effect occuring, lower weight: lower chances&#xD;&#xA; higher weight: higher chances, default is 5)" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="effectconf_effect_weight" HorizontalAlignment="Left" Height="23" Margin="383,151,0,0" VerticalAlignment="Top" Width="45"/>
         <Button Content="Save" Margin="481,224,13,13" Click="OnSave"/>
+        <Label Content="Make Permanent (Might not work well with every effect)" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="effectconf_timer_permanent_enable" HorizontalAlignment="Left" Margin="326,97,0,0" VerticalAlignment="Top" Height="18" Click="OnClicked"/>
     </Grid>
 </Window>

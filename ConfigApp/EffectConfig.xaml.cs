@@ -17,28 +17,30 @@ namespace ConfigApp
             }
         }
 
-        public EffectConfig(bool isTimed, EffectTimedType effectTimedType, EffectInfo effectInfo, int customTime, int weight)
+        public EffectConfig(EffectData effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
 
-            _IsTimedEffect = isTimed;
+            _IsTimedEffect = effectInfo.IsTimed;
 
-            if (isTimed)
+            if (_IsTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = effectTimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
+                effectconf_timer_type_enable.IsChecked = effectData.EffectTimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short"
                 };
-                effectconf_timer_type.SelectedIndex = effectTimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
+                effectconf_timer_type.SelectedIndex = effectData.EffectTimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
 
-                if (customTime >= 0)
+                if (effectData.EffectCustomTime >= 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
-                    effectconf_timer_time.Text = $"{customTime}";
+                    effectconf_timer_time.Text = $"{effectData.EffectCustomTime}";
                 }
             }
+
+            effectconf_timer_permanent_enable.IsChecked = effectData.EffectPermanent;
 
             int[] weightItems = new int[10];
             for (int i = 0; i < 10; i++)
@@ -46,7 +48,7 @@ namespace ConfigApp
                 weightItems[i] = i + 1;
             }
             effectconf_effect_weight.ItemsSource = weightItems;
-            effectconf_effect_weight.SelectedIndex = weight - 1;
+            effectconf_effect_weight.SelectedIndex = effectData.EffectWeight - 1;
 
             CheckEnableConfigurables();
         }
@@ -57,6 +59,7 @@ namespace ConfigApp
             {
                 effectconf_timer_type_enable.IsEnabled = false;
                 effectconf_timer_time_enable.IsEnabled = false;
+                effectconf_timer_permanent_enable.IsEnabled = false;
             }
 
             effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.Value;
@@ -70,10 +73,17 @@ namespace ConfigApp
                 if (sender == effectconf_timer_type_enable)
                 {
                     effectconf_timer_time_enable.IsChecked = false;
+                    effectconf_timer_permanent_enable.IsChecked = false;
                 }
-                else
+                else if (sender == effectconf_timer_time_enable)
                 {
                     effectconf_timer_type_enable.IsChecked = false;
+                    effectconf_timer_permanent_enable.IsChecked = false;
+                }
+                else if (sender == effectconf_timer_permanent_enable)
+                {
+                    effectconf_timer_type_enable.IsChecked = false;
+                    effectconf_timer_time_enable.IsChecked = false;
                 }
             }
 

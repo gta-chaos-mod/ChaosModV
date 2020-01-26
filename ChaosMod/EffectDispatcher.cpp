@@ -3,23 +3,45 @@
 #include "Effects.h"
 #include "Memory.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
 	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
 	Reset();
+
+	int effectAmount = m_enabledEffects.size();
+
+	for (auto pair : m_enabledEffects)
+	{
+		if (pair.second[2])
+		{
+			effectAmount--;
+
+			m_effects.StartEffect(pair.first);
+			m_permanentEffects.push_back(pair.first);
+		}
+	}
+
+	m_enabled = effectAmount > 0;
 }
 
 EffectDispatcher::~EffectDispatcher()
 {
 	ClearEffects();
+
+	for (auto effect : m_permanentEffects)
+	{
+		m_effects.StopEffect(effect);
+	}
+
+	m_permanentEffects.clear();
 }
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (m_enabledEffects.empty())
+	if (!m_enabled)
 	{
 		return;
 	}
@@ -31,7 +53,7 @@ void EffectDispatcher::DrawTimerBar()
 
 void EffectDispatcher::DrawEffectTexts()
 {
-	if (m_enabledEffects.empty())
+	if (!m_enabled)
 	{
 		return;
 	}
@@ -62,7 +84,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 void EffectDispatcher::UpdateTimer()
 {
-	if (m_enabledEffects.empty())
+	if (!m_enabled)
 	{
 		return;
 	}
@@ -132,7 +154,7 @@ void EffectDispatcher::UpdateEffects()
 void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 {
 	EffectInfo effectInfo = g_effectsMap.at(effectType);
-	std::array<int, 3> effectData = m_enabledEffects.at(effectType);
+	auto effectData = m_enabledEffects.at(effectType);
 
 	int effectTime = effectInfo.IsTimed ? effectData[1] >= 0 ? effectData[1] : effectData[0] == 1 ? m_effectTimedShortDur : m_effectTimedDur : -1;
 
@@ -202,12 +224,12 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 {
 	// Make sure we only dispatch enabled effects
 
-	if (m_enabledEffects.empty())
+	if (!m_enabled)
 	{
 		return;
 	}
 
-	std::map<EffectType, std::array<int, 3>> choosableEffects = m_enabledEffects;
+	auto choosableEffects = m_enabledEffects;
 	if (m_disableTwiceInRow)
 	{
 		choosableEffects.erase(m_lastEffect);
@@ -216,7 +238,10 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	int effectsTotalWeight = 0;
 	for (auto pair : choosableEffects)
 	{
-		effectsTotalWeight += pair.second[2] * 10;
+		if (!pair.second[2])
+		{
+			effectsTotalWeight += pair.second[3] * 10;
+		}
 	}
 
 	int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -225,7 +250,12 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	EffectType targetEffectType = _EFFECT_ENUM_MAX;
 	for (auto pair : choosableEffects)
 	{
-		addedUpWeight += pair.second[2] * 10;
+		if (pair.second[2])
+		{
+			continue;
+		}
+
+		addedUpWeight += pair.second[3] * 10;
 
 		if (index <= addedUpWeight)
 		{

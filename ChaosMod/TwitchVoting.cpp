@@ -4,7 +4,7 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 3>> enabledEffects)
+	std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
 	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
 {
@@ -155,7 +155,7 @@ void TwitchVoting::Tick()
 			return;
 		}
 
-		std::map<EffectType, std::array<int, 3>> choosableEffects;
+		std::map<EffectType, std::array<int, 4>> choosableEffects;
 		for (auto pair : m_enabledEffects)
 		{
 			choosableEffects.emplace(pair);
@@ -166,7 +166,10 @@ void TwitchVoting::Tick()
 			int effectsTotalWeight = 0;
 			for (auto pair : choosableEffects)
 			{
-				effectsTotalWeight += pair.second[2] * 10;
+				if (!pair.second[2])
+				{
+					effectsTotalWeight += pair.second[3] * 10;
+				}
 			}
 
 			int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -175,7 +178,12 @@ void TwitchVoting::Tick()
 			EffectType targetEffectType = _EFFECT_ENUM_MAX;
 			for (auto pair : choosableEffects)
 			{
-				addedUpWeight += pair.second[2] * 10;
+				if (pair.second[2])
+				{
+					continue;
+				}
+
+				addedUpWeight += pair.second[3] * 10;
 
 				if (index <= addedUpWeight)
 				{

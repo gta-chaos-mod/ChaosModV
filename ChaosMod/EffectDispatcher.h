@@ -8,7 +8,7 @@
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 3>> enabledEffects,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
 		int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor);
 	~EffectDispatcher();
 
@@ -35,7 +35,7 @@ public:
 private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
-	const std::map<EffectType, std::array<int, 3>> m_enabledEffects;
+	const std::map<EffectType, std::array<int, 4>> m_enabledEffects;
 	const int m_effectTimedShortDur;
 	const bool m_disableTwiceInRow;
 	EffectType m_lastEffect = _EFFECT_ENUM_MAX;
@@ -63,6 +63,8 @@ private:
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;
+	std::vector<EffectType> m_permanentEffects;
+	bool m_enabled;
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
