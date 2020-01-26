@@ -262,6 +262,7 @@ void Effects::StartEffect(EffectType effectType)
 		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+		SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(ped, 1);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 		break;
