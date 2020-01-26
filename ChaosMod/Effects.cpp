@@ -903,8 +903,14 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_PLAYER_TPEVERYTHING:
 	{
 		std::vector<Entity> entities;
+		int maxEntities = 30;
 		for (Ped ped : GetAllPeds())
 		{
+			if (maxEntities == 0)
+			{
+				break;
+			}
+			maxEntities--;
 			if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_A_MISSION_ENTITY(ped))
 			{
 				SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
@@ -913,6 +919,11 @@ void Effects::StartEffect(EffectType effectType)
 		}
 		for (Vehicle veh : GetAllVehs())
 		{
+			if (maxEntities == 0)
+			{
+				break;
+			}
+			maxEntities--;
 			if ((!isPlayerInVeh || veh != playerVeh) && !IS_ENTITY_A_MISSION_ENTITY(veh))
 			{
 				SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
