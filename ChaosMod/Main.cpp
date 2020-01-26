@@ -147,7 +147,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 4>>((EffectType)i, { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, false, 5 }));
+		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 4>>(static_cast<EffectType>(i), { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, 5, 0 }));
 	}
 
 	// Remove disabled effecttypes
@@ -162,7 +162,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
 		}
 
 		std::string value = line.substr(line.find("=") + 1);
-		std::array<int, 5> values { 1, -1, -1, false, 5 };
+		std::array<int, 5> values { 1, -1, -1, 5, 0 };
 
 		int splitIndex = value.find(",");
 		if (splitIndex == value.npos)
@@ -171,7 +171,7 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
 		}
 		else
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; ; i++)
 			{
 				values[i] = std::stoi(value.substr(0, splitIndex));
 				value = value.substr(splitIndex + 1);
@@ -288,6 +288,8 @@ void Main::MainLoop()
 	int twitchVotingWarningTextTime = 15000;
 
 	DWORD64 lastTick = GetTickCount64();
+
+	m_effectDispatcher->InitNewGame();
 
 	while (true)
 	{

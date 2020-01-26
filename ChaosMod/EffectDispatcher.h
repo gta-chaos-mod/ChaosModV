@@ -13,6 +13,7 @@ public:
 	~EffectDispatcher();
 
 public:
+	void InitNewGame();
 	void DrawTimerBar();
 	void DrawEffectTexts();
 	void UpdateTimer();

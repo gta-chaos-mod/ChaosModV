@@ -10,33 +10,29 @@ EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std:
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
 	Reset();
-
-	int effectAmount = m_enabledEffects.size();
-
-	for (auto pair : m_enabledEffects)
-	{
-		if (pair.second[2])
-		{
-			effectAmount--;
-
-			m_effects.StartEffect(pair.first);
-			m_permanentEffects.push_back(pair.first);
-		}
-	}
-
-	m_enabled = effectAmount > 0;
 }
 
 EffectDispatcher::~EffectDispatcher()
 {
 	ClearEffects();
+}
 
-	for (auto effect : m_permanentEffects)
+void EffectDispatcher::InitNewGame()
+{
+	m_enabled = false;
+
+	for (auto pair : m_enabledEffects)
 	{
-		m_effects.StopEffect(effect);
+		if (pair.second[3])
+		{
+			m_effects.StartEffect(pair.first);
+			m_permanentEffects.push_back(pair.first);
+		}
+		else
+		{
+			m_enabled = true;
+		}
 	}
-
-	m_permanentEffects.clear();
 }
 
 void EffectDispatcher::DrawTimerBar()
@@ -238,9 +234,9 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	int effectsTotalWeight = 0;
 	for (auto pair : choosableEffects)
 	{
-		if (!pair.second[2])
+		if (!pair.second[3])
 		{
-			effectsTotalWeight += pair.second[3] * 10;
+			effectsTotalWeight += pair.second[2] * 10;
 		}
 	}
 
@@ -250,12 +246,12 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	EffectType targetEffectType = _EFFECT_ENUM_MAX;
 	for (auto pair : choosableEffects)
 	{
-		if (pair.second[2])
+		if (pair.second[3])
 		{
 			continue;
 		}
 
-		addedUpWeight += pair.second[3] * 10;
+		addedUpWeight += pair.second[2] * 10;
 
 		if (index <= addedUpWeight)
 		{
@@ -277,6 +273,13 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
+	for (auto effect : m_permanentEffects)
+	{
+		m_effects.StopEffect(effect);
+	}
+
+	m_permanentEffects.clear();
+
 	for (ActiveEffect effect : m_activeEffects)
 	{
 		m_effects.StopEffect(effect.EffectType);

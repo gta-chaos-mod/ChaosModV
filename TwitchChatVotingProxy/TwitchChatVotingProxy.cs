@@ -27,6 +27,7 @@ namespace TwitchChatVotingProxy
         private static bool _VoteRunning = false;
         private static int[] _Votes = new int[3];
         private static List<string> _AlreadyVotedUsers = new List<string>();
+        private static bool _DisableNoVoteMsg = false;
 
         private static void Main(string[] args)
         {
@@ -118,6 +119,9 @@ namespace TwitchChatVotingProxy
                                 return false;
                             }
                         }
+                        break;
+                    case "TwitchVotingDisableNoVoteRoundMsg":
+                        _DisableNoVoteMsg = int.Parse(text[1]) != 0;
                         break;
                 }
             }
@@ -361,7 +365,7 @@ namespace TwitchChatVotingProxy
 
                     _VoteRunning = false;
                 }
-                else if (line == "novoteround" && !_TwitchPollMode)
+                else if (line == "novoteround" && !_TwitchPollMode && !_DisableNoVoteMsg)
                 {
                     _TwitchClient.SendMessage(_TwitchChannelName, "No voting this time! Chaos Mod will decide for an effect itself.");
                 }

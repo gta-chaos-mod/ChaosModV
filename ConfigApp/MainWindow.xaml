@@ -121,6 +121,9 @@
                     <Label Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,293,0,0"
                         VerticalAlignment="Top" Width="347" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,299,605,25" Grid.Row="1" />
+                    <Label x:Name="twitch_user_chat_no_vote_msg_disable_label" Content="Disable no voting round chat message" HorizontalAlignment="Left" Margin="447,293,0,0"
+                        VerticalAlignment="Top" Width="235" Grid.Row="1"/>
+                    <CheckBox x:Name="twitch_user_chat_no_vote_msg_disable" Margin="687,299,281,25" Grid.Row="1" />
                 </Grid>
             </TabItem>
         </TabControl>

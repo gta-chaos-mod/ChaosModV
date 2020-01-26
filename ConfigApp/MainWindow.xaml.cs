@@ -98,15 +98,15 @@ namespace ConfigApp
     {
         public EffectTimedType EffectTimedType;
         public int EffectCustomTime;
-        public bool EffectPermanent;
         public int EffectWeight;
+        public bool EffectPermanent;
 
-        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, bool effectPermanent, int effectWeight)
+        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, int effectWeight, bool effectPermanent)
         {
             EffectTimedType = effectTimedType;
             EffectCustomTime = effectCustomTime;
-            EffectPermanent = effectPermanent;
             EffectWeight = effectWeight;
+            EffectPermanent = effectPermanent;
         }
     }
 
@@ -188,6 +188,12 @@ namespace ConfigApp
                         case "TwitchVotingSecsBeforeVoting":
                             twitch_user_effects_secs_before_chat_voting.Text = $"{(value >= 0 ? value == 1 ? 2 : value : 0)}";
                             break;
+                        case "TwitchVotingVoterIndicator":
+                            twitch_user_voter_indicator_enabled.IsChecked = value != 0;
+                            break;
+                        case "TwitchVotingDisableNoVoteRoundMsg":
+                            twitch_user_chat_no_vote_msg_disable.IsChecked = value != 0;
+                            break;
                         case "EnableClearEffectsShortcut":
                             misc_user_effects_clear_enable.IsChecked = value != 0;
                             break;
@@ -230,9 +236,6 @@ namespace ConfigApp
                         case "TwitchVotingPollPass":
                             twitch_user_poll_passphrase.Text = keyValue[1];
                             break;
-                        case "TwitchVotingVoterIndicator":
-                            twitch_user_voter_indicator_enabled.IsChecked = value != 0;
-                            break;
                     }
                 }
             }
@@ -256,6 +259,7 @@ namespace ConfigApp
             data += $"TwitchVotingSecsBeforeVoting={(twitch_user_effects_secs_before_chat_voting.Text.Length > 0 ? twitch_user_effects_secs_before_chat_voting.Text : "0")}\n";
             data += $"TwitchVotingPollPass={(twitch_user_poll_passphrase.Text)}\n";
             data += $"TwitchVotingVoterIndicator={(twitch_user_voter_indicator_enabled.IsChecked.Value ? "1" : "0")}\n";
+            data += $"TwitchVotingDisableNoVoteRoundMsg={(twitch_user_chat_no_vote_msg_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
@@ -317,30 +321,18 @@ namespace ConfigApp
 
                 EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
                 int effectTimedTime = -1;
-                bool effectPermanent = false;
                 int effectWeight = 5;
+                int effectPermanent = 0;
 
-                if (values.Length >= 5)
+                if (values.Length >= 4)
                 {
-                    if (!bool.TryParse(values[4], out effectPermanent))
-                    {
-                        return false;
-                    }
+                    Enum.TryParse(values[1], out effectTimedType);
+                    int.TryParse(values[2], out effectTimedTime);
+                    int.TryParse(values[3], out effectWeight);
 
-                    if (values.Length >= 4)
+                    if (values.Length >= 5)
                     {
-                        if (!Enum.TryParse(values[1], out effectTimedType))
-                        {
-                            return false;
-                        }
-                        if (!int.TryParse(values[2], out effectTimedTime))
-                        {
-                            return false;
-                        }
-                        if (!int.TryParse(values[3], out effectWeight))
-                        {
-                            return false;
-                        }
+                        int.TryParse(values[4], out effectPermanent);
                     }
                 }
 
@@ -348,7 +340,7 @@ namespace ConfigApp
                 {
                     TreeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectPermanent, effectWeight));
+                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent != 0));
                 }
             }
 
@@ -366,11 +358,11 @@ namespace ConfigApp
                 EffectDataMap.TryGetValue(effectType, out EffectData effectData);
                 if (effectData == null)
                 {
-                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, false, 5);
+                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false);
                 }
 
                 data += $"{EffectsMap[effectType].Id}={(TreeMenuItemsMap[effectType].IsChecked ? 1 : 0)}" +
-                    $",{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)},{effectData.EffectCustomTime},{effectData.EffectWeight}\n";
+                    $",{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)},{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)}\n";
             }
 
             File.WriteAllText(EffectsFile, data);
@@ -446,6 +438,8 @@ namespace ConfigApp
                 twitch_user_channel_oauth.Visibility = Visibility.Hidden;
                 twitch_user_effects_chance_no_voting_round_label.Visibility = Visibility.Hidden;
                 twitch_user_effects_chance_no_voting_round.Visibility = Visibility.Hidden;
+                twitch_user_chat_no_vote_msg_disable_label.Visibility = Visibility.Hidden;
+                twitch_user_chat_no_vote_msg_disable.Visibility = Visibility.Hidden;
             }
 
             TwitchTabHandleAgreed();
@@ -462,6 +456,8 @@ namespace ConfigApp
             twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_voter_indicator_enabled.IsEnabled = agreed;
+            twitch_user_chat_no_vote_msg_disable_label.IsEnabled = agreed;
+            twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

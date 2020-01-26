@@ -166,9 +166,9 @@ void TwitchVoting::Tick()
 			int effectsTotalWeight = 0;
 			for (auto pair : choosableEffects)
 			{
-				if (!pair.second[2])
+				if (!pair.second[3])
 				{
-					effectsTotalWeight += pair.second[3] * 10;
+					effectsTotalWeight += pair.second[2] * 10;
 				}
 			}
 
@@ -178,12 +178,12 @@ void TwitchVoting::Tick()
 			EffectType targetEffectType = _EFFECT_ENUM_MAX;
 			for (auto pair : choosableEffects)
 			{
-				if (pair.second[2])
+				if (pair.second[3])
 				{
 					continue;
 				}
 
-				addedUpWeight += pair.second[3] * 10;
+				addedUpWeight += pair.second[2] * 10;
 
 				if (index <= addedUpWeight)
 				{
