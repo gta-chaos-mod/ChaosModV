@@ -1186,6 +1186,9 @@ void Effects::StopEffect(EffectType effectType)
 		SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f, false);
 		SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(1.f);
 		break;
+	case EFFECT_LOW_POLY:
+		_0xA76359FC80B2438E(1.f);
+		break;
 	}
 }
 
@@ -2145,5 +2148,9 @@ void Effects::UpdateEffects()
 			lastTick = curTick;
 			SET_WEATHER_TYPE_NOW(weathers[Random::GetRandomInt(0, weatherSize - 1)]);
 		}
+	}
+	if (m_effectActive[EFFECT_LOW_POLY])
+	{
+		_0xA76359FC80B2438E(0.04f);
 	}
 }

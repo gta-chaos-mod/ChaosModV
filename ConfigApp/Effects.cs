@@ -222,6 +222,7 @@ namespace ConfigApp
             EFFECT_INVERTVELOCITY,
             EFFECT_PLAYER_TPEVERYTHING,
             EFFECT_WEATHER_RANDOMWEATHER,
+            EFFECT_LOW_POLY,
             _EFFECT_ENUM_MAX
         }
 
@@ -409,6 +410,7 @@ namespace ConfigApp
             {EffectType.EFFECT_INVERTVELOCITY, new EffectInfo("Invert Current Velocity", EffectCategory.MISC, "invertvelocity")},
             {EffectType.EFFECT_PLAYER_TPEVERYTHING, new EffectInfo("Teleport Everything To Player", EffectCategory.PLAYER, "player_tpeverything")},
             {EffectType.EFFECT_WEATHER_RANDOMWEATHER, new EffectInfo("Modder Stop Changing Weather Plz", EffectCategory.WEATHER, "weather_randomizer", true)},
+            {EffectType.EFFECT_LOW_POLY, new EffectInfo("Low Render Distance", EffectCategory.MISC, "world_lowpoly", true)},
         };
     }
 }
