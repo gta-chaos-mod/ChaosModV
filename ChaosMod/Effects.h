@@ -388,7 +388,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEHS_FULLACCEL, {"Full Acceleration", "traffic_fullaccel", true, {}, true}},
 	{EFFECT_SPAWN_UFO, {"Spawn Ufo", "misc_spawnufo"}},
 	{EFFECT_EXPLOSIVE_PEDS, {"Explosive Peds", "peds_explosive", true}},
-	{EFFECT_PEDS_ONEPUNCH, {"One Punch Man", "peds_onepunch", true}},
+	{EFFECT_PEDS_ONEPUNCH, {"Deadly Punches", "peds_onepunch", true}},
 	{EFFECT_INVERTVELOCITY, {"Invert Current Velocity", "invertvelocity"}},
 	{EFFECT_PLAYER_TPEVERYTHING, {"Teleport Everything To Player", "player_tpeverything"}},
 	{EFFECT_WEATHER_RANDOMWEATHER, {"Modder Stop Changing Weather Plz", "weather_randomizer", true}},
