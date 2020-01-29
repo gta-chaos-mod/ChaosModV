@@ -903,7 +903,7 @@ void Effects::StartEffect(EffectType effectType)
 	case EFFECT_PLAYER_TPEVERYTHING:
 	{
 		std::vector<Entity> entities;
-		int maxEntities = 30;
+		int maxEntities = 20;
 		for (Ped ped : GetAllPeds())
 		{
 			if (maxEntities == 0)
