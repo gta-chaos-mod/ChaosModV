@@ -875,7 +875,6 @@ void Effects::StartEffect(EffectType effectType)
 		static Hash model = GET_HASH_KEY("p_spinning_anus_s");
 		LoadModel(model);
 		Object prop = CREATE_OBJECT(model, playerPos.x, playerPos.y, playerPos.z, true, false, true);
-		SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
 		SET_MODEL_AS_NO_LONGER_NEEDED(model);
 		break;
 	}
