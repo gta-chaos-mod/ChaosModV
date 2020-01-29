@@ -13,7 +13,6 @@ public:
 	~EffectDispatcher();
 
 public:
-	void InitNewGame();
 	void DrawTimerBar();
 	void DrawEffectTexts();
 	void UpdateTimer();
@@ -65,7 +64,7 @@ private:
 
 	std::vector<ActiveEffect> m_activeEffects;
 	std::vector<EffectType> m_permanentEffects;
-	bool m_enabled;
+	bool m_enableNormalEffectDispatch;
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;

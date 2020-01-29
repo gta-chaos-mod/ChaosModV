@@ -9,7 +9,7 @@ EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std:
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
-	Reset();
+	
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -17,27 +17,9 @@ EffectDispatcher::~EffectDispatcher()
 	ClearEffects();
 }
 
-void EffectDispatcher::InitNewGame()
-{
-	m_enabled = false;
-
-	for (auto pair : m_enabledEffects)
-	{
-		if (pair.second[3])
-		{
-			m_effects.StartEffect(pair.first);
-			m_permanentEffects.push_back(pair.first);
-		}
-		else
-		{
-			m_enabled = true;
-		}
-	}
-}
-
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_enabled)
+	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
@@ -49,7 +31,7 @@ void EffectDispatcher::DrawTimerBar()
 
 void EffectDispatcher::DrawEffectTexts()
 {
-	if (!m_enabled)
+	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
@@ -80,7 +62,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 void EffectDispatcher::UpdateTimer()
 {
-	if (!m_enabled)
+	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
@@ -220,7 +202,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 {
 	// Make sure we only dispatch enabled effects
 
-	if (!m_enabled)
+	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
@@ -292,6 +274,21 @@ void EffectDispatcher::Reset()
 {
 	ClearEffects();
 	ResetTimer();
+
+	m_enableNormalEffectDispatch = false;
+
+	for (auto pair : m_enabledEffects)
+	{
+		if (pair.second[3])
+		{
+			m_effects.StartEffect(pair.first);
+			m_permanentEffects.push_back(pair.first);
+		}
+		else
+		{
+			m_enableNormalEffectDispatch = true;
+		}
+	}
 }
 
 void EffectDispatcher::ResetTimer()

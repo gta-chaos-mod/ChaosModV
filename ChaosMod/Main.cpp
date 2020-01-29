@@ -289,8 +289,6 @@ void Main::MainLoop()
 
 	DWORD64 lastTick = GetTickCount64();
 
-	m_effectDispatcher->InitNewGame();
-
 	while (true)
 	{
 		WAIT(0);
@@ -385,8 +383,18 @@ void Main::RunEffectLoop()
 			continue;
 		}
 
+		static bool justReenabled = false;
 		if (m_disableMod)
 		{
+			justReenabled = true;
+
+			m_effectDispatcher->ClearEffects();
+			m_effectDispatcher->ResetTimer();
+		}
+		else if (justReenabled)
+		{
+			justReenabled = false;
+
 			m_effectDispatcher->Reset();
 		}
 
