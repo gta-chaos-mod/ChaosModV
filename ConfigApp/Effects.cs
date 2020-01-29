@@ -359,7 +359,7 @@ namespace ConfigApp
             {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stungun", EffectCategory.PEDS, "peds_stungun")},
             {EffectType.EFFECT_EVERYONE_MINIGUN, new EffectInfo("Give Everyone A Minigun", EffectCategory.PEDS, "peds_minigun")},
             {EffectType.EFFECT_EVERYONE_UPNATOMIZER, new EffectInfo("Give Everyone An Up-N-Atomizer", EffectCategory.PEDS, "peds_upnatomizer")},
-            {EffectType.EFFECT_EVERYONE_RANDOMWEP, new EffectInfo("GiGive Everyone A Random Weapon", EffectCategory.PEDS, "peds_randomwep")},
+            {EffectType.EFFECT_EVERYONE_RANDOMWEP, new EffectInfo("Give Everyone A Random Weapon", EffectCategory.PEDS, "peds_randomwep")},
             {EffectType.EFFECT_NO_SPRINT, new EffectInfo("No Sprint", EffectCategory.PLAYER, "player_nosprint", true)},
             {EffectType.EFFECT_NO_JUMP, new EffectInfo("No Jump", EffectCategory.PLAYER, "player_nojump", true)},
             {EffectType.EFFECT_EVERYONE_INVINCIBLE, new EffectInfo("Everyone Is Invincible", EffectCategory.PEDS, "peds_invincible", true)},
