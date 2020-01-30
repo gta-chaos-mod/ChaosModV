@@ -205,6 +205,7 @@ enum EffectType : int
 	EFFECT_PLAYER_TPEVERYTHING,
 	EFFECT_WEATHER_RANDOMWEATHER,
 	EFFECT_LOW_POLY,
+	EFFECT_NEARBY_PEDS_OBLITERATE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -394,6 +395,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_TPEVERYTHING, {"Teleport Everything To Player", "player_tpeverything"}},
 	{EFFECT_WEATHER_RANDOMWEATHER, {"Modder Stop Changing Weather Plz", "weather_randomizer", true}},
 	{EFFECT_LOW_POLY, {"Low Render Distance", "world_lowpoly", true}},
+	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
 };
 
 class Effects

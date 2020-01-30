@@ -223,6 +223,7 @@ namespace ConfigApp
             EFFECT_PLAYER_TPEVERYTHING,
             EFFECT_WEATHER_RANDOMWEATHER,
             EFFECT_LOW_POLY,
+            EFFECT_NEARBY_PEDS_OBLITERATE,
             _EFFECT_ENUM_MAX
         }
 
@@ -411,6 +412,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_TPEVERYTHING, new EffectInfo("Teleport Everything To Player", EffectCategory.PLAYER, "player_tpeverything")},
             {EffectType.EFFECT_WEATHER_RANDOMWEATHER, new EffectInfo("Modder Stop Changing Weather Plz", EffectCategory.WEATHER, "weather_randomizer", true)},
             {EffectType.EFFECT_LOW_POLY, new EffectInfo("Low Render Distance", EffectCategory.MISC, "world_lowpoly", true)},
+            {EffectType.EFFECT_NEARBY_PEDS_OBLITERATE, new EffectInfo("Obliterate All Nearby Peds", EffectCategory.PEDS, "peds_obliterate")},
         };
     }
 }
