@@ -497,30 +497,6 @@ void Effects::StartEffect(EffectType effectType)
 			}
 		}
 		break;
-	case EFFECT_SCREEN_BLOOM:
-		SET_TIMECYCLE_MODIFIER("Bloom");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
-	case EFFECT_SCREEN_LSD:
-		SET_TIMECYCLE_MODIFIER("ArenaEMP");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
-	case EFFECT_SCREEN_RENDERDIST:
-		SET_TIMECYCLE_MODIFIER("Mp_apart_mid");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
-	case EFFECT_SCREEN_FOG:
-		SET_TIMECYCLE_MODIFIER("prologue_ending_fog");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
-	case EFFECT_SCREEN_BRIGHT:
-		SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
-	case EFFECT_SCREEN_MEXICO:
-		SET_TIMECYCLE_MODIFIER("trevorspliff");
-		PUSH_TIMECYCLE_MODIFIER();
-		break;
 	case EFFECT_VEH_REPAIR:
 		if (isPlayerInVeh)
 		{
@@ -1261,6 +1237,36 @@ void Effects::UpdateEffects()
 				SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 			}
 		}
+	}
+	if (m_effectActive[EFFECT_SCREEN_BLOOM])
+	{
+		SET_TIMECYCLE_MODIFIER("Bloom");
+		PUSH_TIMECYCLE_MODIFIER();
+	}
+	if (m_effectActive[EFFECT_SCREEN_LSD])
+	{
+		SET_TIMECYCLE_MODIFIER("ArenaEMP");
+		PUSH_TIMECYCLE_MODIFIER();
+	}
+	if (m_effectActive[EFFECT_SCREEN_RENDERDIST])
+	{
+		SET_TIMECYCLE_MODIFIER("Mp_apart_mid");
+		PUSH_TIMECYCLE_MODIFIER();
+	}
+	if (m_effectActive[EFFECT_SCREEN_FOG])
+	{
+		SET_TIMECYCLE_MODIFIER("prologue_ending_fog");
+		PUSH_TIMECYCLE_MODIFIER();
+	}
+	if (m_effectActive[EFFECT_SCREEN_BRIGHT])
+	{
+		SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
+		PUSH_TIMECYCLE_MODIFIER();
+	}
+	if (m_effectActive[EFFECT_SCREEN_MEXICO])
+	{
+		SET_TIMECYCLE_MODIFIER("trevorspliff");
+		PUSH_TIMECYCLE_MODIFIER();
 	}
 	if (m_effectActive[EFFECT_RED_VEHS])
 	{
