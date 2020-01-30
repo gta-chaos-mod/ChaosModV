@@ -906,7 +906,7 @@ void Effects::StartEffect(EffectType effectType)
 		int maxEntities = 20;
 		for (Ped ped : GetAllPeds())
 		{
-			if (maxEntities == 0)
+			if (maxEntities == 10)
 			{
 				break;
 			}
