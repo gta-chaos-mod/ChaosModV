@@ -2133,9 +2133,9 @@ void Effects::UpdateEffects()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (!IS_ENTITY_IN_AIR(veh))
+			if (IS_VEHICLE_ON_ALL_WHEELS(veh))
 			{
-				SET_VEHICLE_FORWARD_SPEED(veh, 100.f);
+				SET_VEHICLE_FORWARD_SPEED(veh, _GET_VEHICLE_MODEL_MAX_SPEED(GET_ENTITY_MODEL(veh)) * 2);
 			}
 		}
 	}
