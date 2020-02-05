@@ -4,10 +4,11 @@
 #include "Memory.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
-	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor)
+	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
+	bool enableTwitchVoteablesOnscreen)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
-		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
+		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
 {
 	
 }
@@ -37,7 +38,7 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 
 	// Effect Texts
-	float y = .2f;
+	float y = m_enableTwitchVoteablesOnscreen ? .3f : .2f;
 	for (ActiveEffect effect : m_activeEffects)
 	{
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -45,14 +46,14 @@ void EffectDispatcher::DrawEffectTexts()
 		SET_TEXT_SCALE(.5f, .5f);
 		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
 		SET_TEXT_OUTLINE();
-		SET_TEXT_WRAP(.0f, .86f);
+		SET_TEXT_WRAP(.0f, .91f);
 		SET_TEXT_RIGHT_JUSTIFY(true);
-		END_TEXT_COMMAND_DISPLAY_TEXT(.86f, y, 0);
+		END_TEXT_COMMAND_DISPLAY_TEXT(.91f, y, 0);
 
 		if (effect.Timer > 0)
 		{
-			DRAW_RECT(.9f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.9f, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0], m_effectTimerColor[1],
+			DRAW_RECT(.95f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
+			DRAW_RECT(.95f, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
 		}
 

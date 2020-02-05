@@ -4,9 +4,10 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects)
+	bool enableTwitchVoteablesOnscreen, std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
+	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
+	m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -199,6 +200,27 @@ void TwitchVoting::Tick()
 		std::ostringstream oss;
 		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name;
 		SendToPipe(oss.str());
+	}
+
+	if (m_isVotingRunning && m_enableTwitchVoteablesOnscreen)
+	{
+		float y = .1f;
+		for (int i = 0; i < 3; i++)
+		{
+			std::ostringstream oss;
+			oss << i + 1 << ": " << g_effectsMap.at(m_effectChoices[i]).Name << std::endl;
+
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
+			SET_TEXT_SCALE(.42f, .42f);
+			SET_TEXT_COLOUR(200, 200, 200, 255);
+			SET_TEXT_OUTLINE();
+			SET_TEXT_WRAP(.0f, .95f);
+			SET_TEXT_RIGHT_JUSTIFY(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.95f, y, 0);
+
+			y += .05f;
+		}
 	}
 }
 

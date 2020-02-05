@@ -120,10 +120,13 @@
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
                     <Label Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,293,0,0"
                         VerticalAlignment="Top" Width="347" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,299,605,25" Grid.Row="1" />
-                    <Label x:Name="twitch_user_chat_no_vote_msg_disable_label" Content="Disable no voting round chat message" HorizontalAlignment="Left" Margin="447,293,0,0"
+                    <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,299,655,25" Grid.Row="1" />
+                    <Label x:Name="twitch_user_chat_no_vote_msg_disable_label" Content="Disable no voting round chat message" HorizontalAlignment="Left" Margin="417,293,0,0"
                         VerticalAlignment="Top" Width="235" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_chat_no_vote_msg_disable" Margin="687,299,281,25" Grid.Row="1" />
+                    <CheckBox x:Name="twitch_user_chat_no_vote_msg_disable" Margin="655,299,365,25" Grid.Row="1" />
+                    <Label x:Name="twitch_user_show_voteables_onscreen_enable_label" Content="Show voteables on-screen" HorizontalAlignment="Left" Margin="703,293,0,0"
+                        VerticalAlignment="Top" Width="154" Grid.Row="1"/>
+                    <CheckBox x:Name="twitch_user_show_voteables_onscreen_enable" Margin="876,299,92,25" Grid.Row="1" />
                 </Grid>
             </TabItem>
         </TabControl>

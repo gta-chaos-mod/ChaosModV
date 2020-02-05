@@ -9,7 +9,8 @@ class EffectDispatcher
 {
 public:
 	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
-		int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor);
+		int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
+		bool enableTwitchVoteablesOnscreen);
 	~EffectDispatcher();
 
 public:
@@ -69,4 +70,5 @@ private:
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
 	bool m_dispatchEffectsOnTimer = true;
+	bool m_enableTwitchVoteablesOnscreen = false;
 };

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -194,6 +195,9 @@ namespace ConfigApp
                         case "TwitchVotingDisableNoVoteRoundMsg":
                             twitch_user_chat_no_vote_msg_disable.IsChecked = value != 0;
                             break;
+                        case "TwitchVotingShowVoteablesOnscreen":
+                            twitch_user_show_voteables_onscreen_enable.IsChecked = value != 0;
+                            break;
                         case "EnableClearEffectsShortcut":
                             misc_user_effects_clear_enable.IsChecked = value != 0;
                             break;
@@ -260,6 +264,7 @@ namespace ConfigApp
             data += $"TwitchVotingPollPass={(twitch_user_poll_passphrase.Text)}\n";
             data += $"TwitchVotingVoterIndicator={(twitch_user_voter_indicator_enabled.IsChecked.Value ? "1" : "0")}\n";
             data += $"TwitchVotingDisableNoVoteRoundMsg={(twitch_user_chat_no_vote_msg_disable.IsChecked.Value ? "1" : "0")}\n";
+            data += $"TwitchVotingShowVoteablesOnscreen={(twitch_user_show_voteables_onscreen_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
             data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
@@ -440,6 +445,8 @@ namespace ConfigApp
                 twitch_user_effects_chance_no_voting_round.Visibility = Visibility.Hidden;
                 twitch_user_chat_no_vote_msg_disable_label.Visibility = Visibility.Hidden;
                 twitch_user_chat_no_vote_msg_disable.Visibility = Visibility.Hidden;
+                twitch_user_show_voteables_onscreen_enable_label.Visibility = Visibility.Hidden;
+                twitch_user_show_voteables_onscreen_enable.Visibility = Visibility.Hidden;
             }
 
             TwitchTabHandleAgreed();
@@ -458,6 +465,8 @@ namespace ConfigApp
             twitch_user_voter_indicator_enabled.IsEnabled = agreed;
             twitch_user_chat_no_vote_msg_disable_label.IsEnabled = agreed;
             twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
+            twitch_user_show_voteables_onscreen_enable_label.IsEnabled = agreed;
+            twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

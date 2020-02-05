@@ -8,7 +8,7 @@ class TwitchVoting
 {
 public:
 	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-		std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects);
+		bool enableTwitchVoteablesOnscreen, std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -30,6 +30,7 @@ private:
 	int m_noPingRuns = 0;
 	bool m_receivedFirstPing = false;
 	bool m_noVoteRound = false;
+	bool m_enableTwitchVoteablesOnscreen = false;
 
 	bool m_isVotingRunning = false;
 	std::array<EffectType, 3> m_effectChoices;
