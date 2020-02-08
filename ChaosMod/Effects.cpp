@@ -781,7 +781,7 @@ void Effects::StartEffect(EffectType effectType)
 		break;
 	case EFFECT_SPAWN_IE_SULTAN:
 	{
-		Vehicle veh = CreateTempVehicleOnPlayerPos(GET_HASH_KEY("SULTAN2"), playerHeading);
+		Vehicle veh = CreateTempVehicleOnPlayerPos(GET_HASH_KEY("SULTANRS"), playerHeading);
 		SET_VEHICLE_COLOURS(veh, 64, 64);
 		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 		static Hash model = GET_HASH_KEY("g_m_m_armboss_01");
