@@ -1071,10 +1071,7 @@ void Effects::StopEffect(EffectType effectType)
 	case EFFECT_PEDS_FROZEN:
 		for (Ped ped : GetAllPeds())
 		{
-			if (!IS_PED_A_PLAYER(ped))
-			{
-				SET_PED_CONFIG_FLAG(ped, 292, false);
-			}
+			SET_PED_CONFIG_FLAG(ped, 292, false);
 		}
 		break;
 	case EFFECT_LOW_GRAV:
@@ -1533,6 +1530,7 @@ void Effects::UpdateEffects()
 				SET_PED_CONFIG_FLAG(ped, 292, true);
 			}
 		}
+		SET_PED_CONFIG_FLAG(PLAYER_PED_ID(), 292, false);
 	}
 	if (m_effectActive[EFFECT_LOW_GRAV])
 	{
