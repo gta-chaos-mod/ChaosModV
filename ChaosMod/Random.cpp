@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Random.h"
 
 int m_seed = -1;

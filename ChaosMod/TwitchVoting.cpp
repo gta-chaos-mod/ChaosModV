@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "TwitchVoting.h"
 
 #define BUFFER_SIZE 256

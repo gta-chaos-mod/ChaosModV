@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "DebugMenu.h"
 #include "Effects.h"
 #include "EffectDispatcher.h"

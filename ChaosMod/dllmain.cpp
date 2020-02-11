@@ -1,7 +1,6 @@
 #include "stdafx.h"
+
 #include "Main.h"
-#include "Memory.h"
-#include <memory>
 
 Main m_main;
 bool m_isInitialized = false;
@@ -32,7 +31,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		break;
 	case DLL_PROCESS_DETACH:
-		Memory::Stop();
+		Memory::Uninit();
 
 		if (m_isInitialized)
 		{
