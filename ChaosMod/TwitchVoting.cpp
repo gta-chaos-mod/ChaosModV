@@ -5,17 +5,17 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	bool enableTwitchVoteablesOnscreen, std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects)
+	bool enableTwitchVoteablesOnscreen, std::map<EffectType, std::array<int, 4>> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
 	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
-	m_effectDispatcher(effectDispatcher), m_enabledEffects(enabledEffects)
+	m_enabledEffects(enabledEffects)
 {
 	if (!m_enableTwitchVoting)
 	{
 		return;
 	}
 
-	m_effectDispatcher->OverrideTimerDontDispatch(true);
+	g_effectDispatcher->OverrideTimerDontDispatch(true);
 
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
@@ -92,7 +92,7 @@ void TwitchVoting::Tick()
 		}
 	}
 
-	if (m_effectDispatcher->GetRemainingTimerTime() == 1)
+	if (g_effectDispatcher->GetRemainingTimerTime() == 1)
 	{
 		if (m_isVotingRunning)
 		{
@@ -104,12 +104,12 @@ void TwitchVoting::Tick()
 			}
 		}
 	}
-	else if (m_effectDispatcher->ShouldDispatchEffectNow())
+	else if (g_effectDispatcher->ShouldDispatchEffectNow())
 	{
 		if (m_noVoteRound)
 		{
-			m_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
-			m_effectDispatcher->ResetTimer();
+			g_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
+			g_effectDispatcher->ResetTimer();
 
 			if (!m_enableTwitchPollVoting)
 			{
@@ -120,13 +120,13 @@ void TwitchVoting::Tick()
 		}
 		else if (m_chosenEffectType != _EFFECT_ENUM_MAX)
 		{
-			m_effectDispatcher->DispatchEffect(m_chosenEffectType, m_enableTwitchVoterIndicator ? "(Chat)" : nullptr);
-			m_effectDispatcher->ResetTimer();
+			g_effectDispatcher->DispatchEffect(m_chosenEffectType, m_enableTwitchVoterIndicator ? "(Chat)" : nullptr);
+			g_effectDispatcher->ResetTimer();
 
 			m_isVotingRunning = false;
 		}
 	}
-	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || m_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
+	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
 	{
 		m_isVotingRunning = true;
 		m_chosenEffectType = _EFFECT_ENUM_MAX;
@@ -273,6 +273,6 @@ void TwitchVoting::ErrorOutWithMsg(const char* msg)
 	CloseHandle(m_pipeHandle);
 	m_pipeHandle = INVALID_HANDLE_VALUE;
 
-	m_effectDispatcher->OverrideTimerDontDispatch(false);
+	g_effectDispatcher->OverrideTimerDontDispatch(false);
 	m_enableTwitchVoting = false;
 }

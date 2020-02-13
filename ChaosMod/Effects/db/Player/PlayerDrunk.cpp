@@ -1,0 +1,27 @@
+#include <stdafx.h>
+
+static void OnStop()
+{
+	SET_PED_IS_DRUNK(PLAYER_PED_ID(), false);
+
+	RESET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), .0f);
+
+	REMOVE_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+
+	STOP_GAMEPLAY_CAM_SHAKING(true);
+}
+
+static void OnTick()
+{
+	if (!IS_GAMEPLAY_CAM_SHAKING())
+	{
+		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
+	}
+
+	SET_PED_IS_DRUNK(PLAYER_PED_ID(), true);
+
+	REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+	SET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), "MOVE_M@DRUNK@VERYDRUNK", 1.f);
+}
+
+static RegisterEffect registerEffect(EFFECT_PLAYER_DRUNK, nullptr, OnStop, OnTick);

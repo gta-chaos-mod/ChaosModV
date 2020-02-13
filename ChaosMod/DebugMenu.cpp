@@ -6,7 +6,7 @@
 
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu(std::vector<EffectType> effects, std::shared_ptr<EffectDispatcher> effectDispatcher) : m_effectDispatcher(effectDispatcher)
+DebugMenu::DebugMenu(std::vector<EffectType> effects)
 {
 	if (effects.empty())
 	{
@@ -55,7 +55,7 @@ void DebugMenu::Tick()
 	{
 		m_dispatchEffect = false;
 
-		m_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
+		g_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
 	}
 
 	float y = .1f;

@@ -63,7 +63,7 @@ namespace Memory
 		}
 
 		int count = 0;
-		for (DWORD64 addr = m_baseAddr; addr < m_endAddr; addr++)
+		for (auto addr = m_baseAddr; addr < m_endAddr; addr++)
 		{
 			if (bytes[count] == -1 || *reinterpret_cast<const BYTE*>(addr) == bytes[count])
 			{

@@ -1,5 +1,7 @@
 #pragma once
+
 #include "EffectDispatcher.h"
+
 #include <map>
 #include <array>
 #include <memory>
@@ -8,7 +10,7 @@ class TwitchVoting
 {
 public:
 	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-		bool enableTwitchVoteablesOnscreen, std::shared_ptr<EffectDispatcher> effectDispatcher, std::map<EffectType, std::array<int, 4>> enabledEffects);
+		bool enableTwitchVoteablesOnscreen, std::map<EffectType, std::array<int, 4>> enabledEffects);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -23,7 +25,6 @@ private:
 	const int m_twitchSecsBeforeVoting;
 	const bool m_enableTwitchPollVoting;
 	const bool m_enableTwitchVoterIndicator;
-	const std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	const std::map<EffectType, std::array<int, 4>> m_enabledEffects;
 	HANDLE m_pipeHandle = INVALID_HANDLE_VALUE;
 	DWORD64 m_lastPing = GetTickCount64();

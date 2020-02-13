@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
 #include "EffectDispatcher.h"
-#include "Effects.h"
-#include "Memory.h"
+#include "Effects/Effects.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
 	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
@@ -101,9 +100,12 @@ void EffectDispatcher::UpdateEffects()
 		return;
 	}
 
-	m_effects.UpdateEffects();
+	for (auto activeEffect : m_activeEffects)
+	{
+		activeEffect.RegisteredEffect->Tick();
+	}
 
-	DWORD64 currentUpdateTime = GetTickCount64();
+	auto currentUpdateTime = GetTickCount64();
 
 	if ((currentUpdateTime - m_effectsTimer) > 1000)
 	{
@@ -113,14 +115,14 @@ void EffectDispatcher::UpdateEffects()
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
-			ActiveEffect& effect = *it;
+			auto& effect = *it;
 
 			effect.Timer--;
 
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				m_effects.StopEffect(effect.EffectType);
+				effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -133,7 +135,7 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 {
-	EffectInfo effectInfo = g_effectsMap.at(effectType);
+	auto effectInfo = g_effectsMap.at(effectType);
 	auto effectData = m_enabledEffects.at(effectType);
 
 	int effectTime = effectInfo.IsTimed ? effectData[1] >= 0 ? effectData[1] : effectData[0] == 1 ? m_effectTimedShortDur : m_effectTimedDur : -1;
@@ -151,7 +153,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
-			ActiveEffect& effect = *it;
+			auto& effect = *it;
 
 			if (effect.EffectType == effectType)
 			{
@@ -160,11 +162,11 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			}
 
 			bool found = false;
-			for (EffectType incompatibleEffect : incompatibleEffects)
+			for (auto incompatibleEffect : incompatibleEffects)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
-					m_effects.StopEffect(effect.EffectType);
+					effect.RegisteredEffect->Stop();
 					it = m_activeEffects.erase(it);
 
 					found = true;
@@ -182,19 +184,24 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 	if (!alreadyExists)
 	{
-		m_effects.StartEffect(effectType);
+		auto registeredEffect = GetRegisteredEffect(effectType);
 
-		std::ostringstream oss;
-		oss << effectInfo.Name;
-
-		if (suffix && strlen(suffix) > 0)
+		if (registeredEffect)
 		{
-			oss << " " << suffix;
+			registeredEffect->Start();
+
+			std::ostringstream oss;
+			oss << effectInfo.Name;
+
+			if (suffix && strlen(suffix) > 0)
+			{
+				oss << " " << suffix;
+			}
+
+			oss << std::endl;
+
+			m_activeEffects.emplace_back(effectType, registeredEffect, oss.str().c_str(), effectTime);
 		}
-
-		oss << std::endl;
-
-		m_activeEffects.emplace_back(effectType, oss.str().c_str(), effectTime);
 	}
 
 	m_percentage = .0f;
@@ -227,7 +234,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	int index = Random::GetRandomInt(0, effectsTotalWeight);
 
 	int addedUpWeight = 0;
-	EffectType targetEffectType = _EFFECT_ENUM_MAX;
+	auto targetEffectType = _EFFECT_ENUM_MAX;
 	for (auto pair : choosableEffects)
 	{
 		if (pair.second[3])
@@ -259,16 +266,14 @@ void EffectDispatcher::ClearEffects()
 {
 	for (auto effect : m_permanentEffects)
 	{
-		m_effects.StopEffect(effect);
+		effect->Stop();
 	}
-
 	m_permanentEffects.clear();
 
-	for (ActiveEffect effect : m_activeEffects)
+	for (auto effect : m_activeEffects)
 	{
-		m_effects.StopEffect(effect.EffectType);
+		effect.RegisteredEffect->Stop();
 	}
-
 	m_activeEffects.clear();
 }
 
@@ -283,8 +288,13 @@ void EffectDispatcher::Reset()
 	{
 		if (pair.second[3])
 		{
-			m_effects.StartEffect(pair.first);
-			m_permanentEffects.push_back(pair.first);
+			auto registeredEffect = GetRegisteredEffect(pair.first);
+
+			if (registeredEffect)
+			{
+				registeredEffect->Start();
+				m_permanentEffects.push_back(registeredEffect);
+			}
 		}
 		else
 		{

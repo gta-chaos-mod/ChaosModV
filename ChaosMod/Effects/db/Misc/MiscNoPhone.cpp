@@ -1,0 +1,22 @@
+#include <stdafx.h>
+
+static void OnStop()
+{
+	REQUEST_SCRIPT("cellphone_controller");
+
+	while (!HAS_SCRIPT_LOADED("cellphone_controller"))
+	{
+		WAIT(0);
+	}
+
+	START_NEW_SCRIPT("cellphone_controller", 1424);
+
+	SET_SCRIPT_AS_NO_LONGER_NEEDED("cellphone_controller");
+}
+
+static void OnTick()
+{
+	TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
+}
+
+static RegisterEffect registerEffect(EFFECT_NO_PHONE, nullptr, OnStop, OnTick);

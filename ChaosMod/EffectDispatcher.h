@@ -1,5 +1,7 @@
 #pragma once
-#include "Effects.h"
+
+#include "Effects/Effects.h"
+
 #include <vector>
 #include <array>
 #include <memory>
@@ -45,26 +47,26 @@ private:
 	const std::array<int, 3> m_effectTimerColor;
 
 	float m_percentage;
-	Effects m_effects;
 
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, const char* name, int timer) : EffectType(effectType), Timer(timer),
-			MaxTime(Timer)
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const char* name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+			Timer(timer), MaxTime(Timer)
 		{
 			strcpy_s(Name, name);
 		}
 
 	public:
 		EffectType EffectType;
+		RegisteredEffect* RegisteredEffect;
 		char Name[128] = {};
 		int Timer;
 		int MaxTime;
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;
-	std::vector<EffectType> m_permanentEffects;
+	std::vector<RegisteredEffect*> m_permanentEffects;
 	bool m_enableNormalEffectDispatch;
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
@@ -72,3 +74,5 @@ private:
 	bool m_dispatchEffectsOnTimer = true;
 	bool m_enableTwitchVoteablesOnscreen = false;
 };
+
+inline std::unique_ptr<EffectDispatcher> g_effectDispatcher;

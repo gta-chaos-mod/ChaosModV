@@ -270,7 +270,7 @@ bool Main::Init()
 
 	Random::SetSeed(seed);
 
-	m_effectDispatcher = std::make_shared<EffectDispatcher>(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
+	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
 		timerColor, textColor, effectTimerColor, enableTwitchVoteablesOnscreen);
 
 #ifdef _DEBUG
@@ -280,11 +280,11 @@ bool Main::Init()
 		enabledEffectTypes.push_back(pair.first);
 	}
 
-	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes, m_effectDispatcher);
+	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);
 #endif
 
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
-		enableTwitchVoteablesOnscreen, m_effectDispatcher, enabledEffects);
+		enableTwitchVoteablesOnscreen, enabledEffects);
 
 	return true;
 }
@@ -336,11 +336,11 @@ void Main::MainLoop()
 
 		if (!m_disableDrawTimerBar)
 		{
-			m_effectDispatcher->DrawTimerBar();
+			g_effectDispatcher->DrawTimerBar();
 		}
 		if (!m_disableDrawEffectTexts)
 		{
-			m_effectDispatcher->DrawEffectTexts();
+			g_effectDispatcher->DrawEffectTexts();
 		}
 
 #ifdef _DEBUG
@@ -374,7 +374,7 @@ void Main::MainLoop()
 
 void Main::RunEffectLoop()
 {
-	m_effectDispatcher->Reset();
+	g_effectDispatcher->Reset();
 
 	while (true)
 	{
@@ -394,21 +394,21 @@ void Main::RunEffectLoop()
 		{
 			justReenabled = true;
 
-			m_effectDispatcher->ClearEffects();
-			m_effectDispatcher->ResetTimer();
+			g_effectDispatcher->ClearEffects();
+			g_effectDispatcher->ResetTimer();
 		}
 		else if (justReenabled)
 		{
 			justReenabled = false;
 
-			m_effectDispatcher->Reset();
+			g_effectDispatcher->Reset();
 		}
 
 		if (m_clearAllEffects)
 		{
 			m_clearAllEffects = false;
 
-			m_effectDispatcher->Reset();
+			g_effectDispatcher->Reset();
 		}
 
 		if (m_twitchVoting->IsEnabled())
@@ -418,10 +418,10 @@ void Main::RunEffectLoop()
 
 		if (!m_pauseTimer)
 		{
-			m_effectDispatcher->UpdateTimer();
+			g_effectDispatcher->UpdateTimer();
 		}
 
-		m_effectDispatcher->UpdateEffects();
+		g_effectDispatcher->UpdateEffects();
 	}
 }
 

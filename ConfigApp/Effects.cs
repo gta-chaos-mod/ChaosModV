@@ -40,7 +40,7 @@ namespace ConfigApp
 
         public enum EffectType
         {
-            EFFECT_KILL,
+            EFFECT_PLAYER_SUICIDE,
             EFFECT_PLUS_2_STARS,
             EFFECT_5_STARS,
             EFFECT_CLEAR_STARS,
@@ -229,7 +229,7 @@ namespace ConfigApp
 
         public static readonly Dictionary<EffectType, EffectInfo> EffectsMap = new Dictionary<EffectType, EffectInfo>()
         {
-            {EffectType.EFFECT_KILL, new EffectInfo("Suicide", EffectCategory.PLAYER, "player_suicide")},
+            {EffectType.EFFECT_PLAYER_SUICIDE, new EffectInfo("Suicide", EffectCategory.PLAYER, "player_suicide")},
 	        {EffectType.EFFECT_PLUS_2_STARS, new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER, "player_plus2stars")},
 	        {EffectType.EFFECT_5_STARS, new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER, "player_5stars")},
 	        {EffectType.EFFECT_CLEAR_STARS, new EffectInfo("Clear Wanted Level", EffectCategory.PLAYER, "player_clearwanted")},

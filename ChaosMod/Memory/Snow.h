@@ -1,17 +1,19 @@
 #pragma once
+
 #include "Memory.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace Memory
 {
-	static inline void SetSnow(bool state)
+	inline void SetSnow(bool state)
 	{
 		/* Thanks to menyoo! */
 
 		static bool init = false;
 
-		auto handle = FindPattern("80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00");
+		static auto handle = FindPattern("80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00");
 		if (!handle.IsValid())
 		{
 			return;
@@ -25,13 +27,13 @@ namespace Memory
 			memcpy(orig1, reinterpret_cast<void*>(addr1), 13);
 		}
 
-		handle = FindPattern("44 38 3D ?? ?? ?? ?? 74 1D B9 40 00 00 00");
-		if (!handle.IsValid())
+		static auto handle2 = FindPattern("44 38 3D ?? ?? ?? ?? 74 1D B9 40 00 00 00");
+		if (!handle2.IsValid())
 		{
 			return;
 		}
 
-		static DWORD64 addr2 = handle.Addr();
+		static DWORD64 addr2 = handle2.Addr();
 		static BYTE orig2[14];
 
 		if (!init && addr2)

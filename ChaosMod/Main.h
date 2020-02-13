@@ -1,7 +1,9 @@
 #pragma once
+
 #include "DebugMenu.h"
 #include "EffectDispatcher.h"
 #include "TwitchVoting.h"
+
 #include <Windows.h>
 #include <memory>
 
@@ -14,7 +16,6 @@ public:
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
 
 private:
-	std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	std::unique_ptr<DebugMenu> m_debugMenu;
 	std::unique_ptr<TwitchVoting> m_twitchVoting;
 

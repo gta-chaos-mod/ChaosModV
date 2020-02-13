@@ -1,9 +1,10 @@
 #pragma once
+
 #include "Memory.h"
 
 namespace Memory
 {
-	static inline void SetGravityLevel(float gravity)
+	inline void SetGravityLevel(float gravity)
 	{
 		static float* gravAddr = nullptr;
 		static void(__cdecl * someFunc1)(float grav);

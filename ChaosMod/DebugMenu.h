@@ -18,7 +18,7 @@ struct DebugEffect
 class DebugMenu
 {
 public:
-	DebugMenu(std::vector<EffectType> effects, std::shared_ptr<EffectDispatcher> effectDispatcher);
+	DebugMenu(std::vector<EffectType> effects);
 
 	void Tick();
 	void HandleInput(DWORD key, bool onRepeat);
@@ -30,7 +30,6 @@ public:
 
 private:
 	std::vector<DebugEffect> m_effects;
-	const std::shared_ptr<EffectDispatcher> m_effectDispatcher;
 	int m_selected = 0;
 	bool m_visible = false;
 	DWORD m_repeatTime = 0;
