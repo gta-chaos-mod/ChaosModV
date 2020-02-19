@@ -25,18 +25,16 @@ struct RegisteredEffect
 		return registeredEffect->m_effectType == effectType;
 	}
 
-	// BIG TODO: Investigate why m_isRunning is always false even when accessing the element directly in the g_registeredEffects vector, too tired for this shit right now
-
 	void Start()
 	{
 		if (m_onStart && !m_isRunning)
 		{
-			if (m_onTick)
-			{
-				m_isRunning = true;
-			}
-
 			m_onStart();
+		}
+
+		if (m_onTick)
+		{
+			m_isRunning = true;
 		}
 	}
 
