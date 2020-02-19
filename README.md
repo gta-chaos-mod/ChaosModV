@@ -24,3 +24,36 @@ git submodule update --recursive
 6. Open `ChaosMod.sln` in the root folder in Visual Studio
 
 7. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
+
+## Adding new effects
+
+1. Add your new effect info to `ChaosMod/Effects/EffectsInfo.h`
+
+2. Add the same info to `ConfigApp/Effects.cs`
+
+3. Create a new .cpp file in the appropriate folder under `ChaosMod/Effects/db/` with a fitting name
+
+Structure of the file should look roughly like this:
+
+```cpp
+#include <stdafx.h>
+
+static void OnStart()
+{
+	// Once the effect gets triggered
+}
+
+static void OnStop()
+{
+	// Once the effect stops
+}
+
+static void OnTick()
+{
+	// Runs in a loop for active timed effects
+}
+
+static RegisterEffect registerEffect(EFFECT_ENUM_ENTRY, OnStart, OnStop, OnTick);
+```
+
+Any of these functions can also be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration.
