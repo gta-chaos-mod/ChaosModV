@@ -1,8 +1,8 @@
 [submodule "vendor/minhook"]
 	path = vendor/minhook
-	url = git@github.com:TsudaKageyu/minhook.git
+	url = https://github.com/TsudaKageyu/minhook.git
 	ignore = dirty
 [submodule "vendor/libcurl"]
 	path = vendor/libcurl
-	url = git@github.com:curl/curl.git
+	url = https://github.com/curl/curl.git
 	ignore = dirty
