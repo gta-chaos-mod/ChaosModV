@@ -399,6 +399,9 @@
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />

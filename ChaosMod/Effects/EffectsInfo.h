@@ -190,6 +190,7 @@ enum EffectType
 	EFFECT_WEATHER_RANDOMWEATHER,
 	EFFECT_LOW_POLY,
 	EFFECT_NEARBY_PEDS_OBLITERATE,
+	EFFECT_VEHS_TRIGGER_ALARM,
 	_EFFECT_ENUM_MAX
 };
 
@@ -394,4 +395,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_WEATHER_RANDOMWEATHER, {"Modder Stop Changing Weather Plz", "weather_randomizer", true}},
 	{EFFECT_LOW_POLY, {"Low Render Distance", "world_lowpoly", true}},
 	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
+	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}}
 };

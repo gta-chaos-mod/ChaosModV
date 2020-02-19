@@ -190,6 +190,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsInvisible.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehBreakDoors.cpp" />

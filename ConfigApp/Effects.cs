@@ -224,6 +224,7 @@ namespace ConfigApp
             EFFECT_WEATHER_RANDOMWEATHER,
             EFFECT_LOW_POLY,
             EFFECT_NEARBY_PEDS_OBLITERATE,
+            EFFECT_VEHS_TRIGGER_ALARM,
             _EFFECT_ENUM_MAX
         }
 
@@ -413,6 +414,7 @@ namespace ConfigApp
             {EffectType.EFFECT_WEATHER_RANDOMWEATHER, new EffectInfo("Modder Stop Changing Weather Plz", EffectCategory.WEATHER, "weather_randomizer", true)},
             {EffectType.EFFECT_LOW_POLY, new EffectInfo("Low Render Distance", EffectCategory.MISC, "world_lowpoly", true)},
             {EffectType.EFFECT_NEARBY_PEDS_OBLITERATE, new EffectInfo("Obliterate All Nearby Peds", EffectCategory.PEDS, "peds_obliterate")},
+            {EffectType.EFFECT_VEHS_TRIGGER_ALARM, new EffectInfo("Alarmy Vehicles", EffectCategory.VEHICLE, "vehs_alarmloop", true)},
         };
     }
 }
