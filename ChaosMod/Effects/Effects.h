@@ -2,8 +2,6 @@
 
 #include "EffectsInfo.h"
 
-#include <vector>
-
 struct RegisteredEffect
 {
 	RegisteredEffect() : m_effectType(_EFFECT_ENUM_MAX), m_onStart(nullptr), m_onStop(nullptr), m_onTick(nullptr) {}
@@ -11,9 +9,20 @@ struct RegisteredEffect
 	RegisteredEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), void(*onTick)())
 		: m_effectType(effectType), m_onStart(onStart), m_onStop(onStop), m_onTick(onTick) {}
 
-	bool operator==(EffectType effectType)
+	RegisteredEffect& operator=(const RegisteredEffect& registeredEffect)
 	{
-		return m_effectType == effectType;
+		m_effectType = registeredEffect.m_effectType;
+		m_onStart = registeredEffect.m_onStart;
+		m_onStop = registeredEffect.m_onStop;
+		m_onTick = registeredEffect.m_onTick;
+		m_isRunning = registeredEffect.m_isRunning;
+
+		return *this;
+	}
+
+	friend bool operator==(const RegisteredEffect* registeredEffect, EffectType effectType)
+	{
+		return registeredEffect->m_effectType == effectType;
 	}
 
 	// BIG TODO: Investigate why m_isRunning is always false even when accessing the element directly in the g_registeredEffects vector, too tired for this shit right now
@@ -22,14 +31,18 @@ struct RegisteredEffect
 	{
 		if (m_onStart && !m_isRunning)
 		{
-			m_isRunning = true;
+			if (m_onTick)
+			{
+				m_isRunning = true;
+			}
+
 			m_onStart();
 		}
 	}
 
 	void Stop()
 	{
-		if (m_onStop && m_isRunning)
+		if (m_onStop && (!m_onTick || m_isRunning))
 		{
 			m_onStop();
 		}
@@ -50,21 +63,29 @@ struct RegisteredEffect
 		return m_isRunning;
 	}
 
+	RegisteredEffect* m_nextEffect = nullptr;
+
 private:
-	const EffectType m_effectType;
+	EffectType m_effectType;
 	void(*m_onStart)();
 	void(*m_onStop)();
 	void(*m_onTick)();
 	bool m_isRunning = false;
 };
 
-inline std::vector<RegisteredEffect> g_registeredEffects(_EFFECT_ENUM_MAX);
+inline RegisteredEffect* g_registeredEffects = nullptr;
 
 static RegisteredEffect* GetRegisteredEffect(EffectType effectType)
 {
-	auto result = std::find(g_registeredEffects.begin(), g_registeredEffects.end(), effectType);
+	for (auto registeredEffect = g_registeredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
+	{
+		if (registeredEffect == effectType)
+		{
+			return registeredEffect;
+		}
+	}
 
-	return result == g_registeredEffects.end() ? nullptr : &(*result);
+	return nullptr;
 }
 
 static bool IsEffectActive(EffectType effectType)
@@ -79,6 +100,16 @@ class RegisterEffect
 public:
 	RegisterEffect(EffectType effectType, void(*onStart)() = nullptr, void(*onStop)() = nullptr, void(*onTick)() = nullptr)
 	{
-		g_registeredEffects.emplace_back(effectType, onStart, onStop, onTick);
+		m_registeredEffect = RegisteredEffect(effectType, onStart, onStop, onTick);
+
+		if (g_registeredEffects)
+		{
+			m_registeredEffect.m_nextEffect = g_registeredEffects;
+		}
+
+		g_registeredEffects = &m_registeredEffect;
 	}
+
+private:
+	RegisteredEffect m_registeredEffect;
 };
