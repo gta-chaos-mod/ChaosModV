@@ -300,9 +300,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehKillEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLaunchUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

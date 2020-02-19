@@ -196,7 +196,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehBreakDoors.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehExplode.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehKillEngine.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLaunchUp.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehPopTires.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRepair.cpp" />
