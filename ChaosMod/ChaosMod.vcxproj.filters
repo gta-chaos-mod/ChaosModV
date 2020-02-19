@@ -399,8 +399,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
-    <Library Include="..\vendor\minhook\build\VC15\lib\libMinHook.x64.lib" />
-    <Library Include="..\vendor\libcurl\build\Win64\VC15\LIB Release\libcurl.lib" />
+    <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
