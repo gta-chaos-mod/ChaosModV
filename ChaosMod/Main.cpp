@@ -450,7 +450,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
 		}
 #endif
-		else if (key == 0x4C && m_toggleModShortcutEnabled	) // L
+		else if (key == 0x4C && m_toggleModShortcutEnabled) // L
 		{
 			m_disableMod = !m_disableMod;
 		}

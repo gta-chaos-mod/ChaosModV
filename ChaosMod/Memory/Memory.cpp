@@ -35,7 +35,7 @@ namespace Memory
 		MH_Uninitialize();
 	}
 
-	Handle FindPattern(std::string pattern)
+	Handle FindPattern(const std::string& pattern)
 	{
 		std::vector<int> bytes;
 
@@ -56,6 +56,11 @@ namespace Memory
 
 			sub = sub.substr(offset + 1);
 		}
+		if ((offset = pattern.rfind(' ')) != sub.npos)
+		{
+			std::string byteStr = pattern.substr(offset + 1);
+			bytes.push_back(std::stoi(byteStr, nullptr, 16));
+		}
 
 		if (bytes.empty())
 		{
@@ -65,7 +70,7 @@ namespace Memory
 		int count = 0;
 		for (auto addr = m_baseAddr; addr < m_endAddr; addr++)
 		{
-			if (bytes[count] == -1 || *reinterpret_cast<const BYTE*>(addr) == bytes[count])
+			if (bytes[count] == -1 || *reinterpret_cast<BYTE*>(addr) == bytes[count])
 			{
 				if (++count == bytes.size())
 				{

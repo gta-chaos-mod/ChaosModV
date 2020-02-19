@@ -6,6 +6,8 @@
 
 struct RegisteredEffect
 {
+	RegisteredEffect() : m_effectType(_EFFECT_ENUM_MAX), m_onStart(nullptr), m_onStop(nullptr), m_onTick(nullptr) {}
+
 	RegisteredEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), void(*onTick)())
 		: m_effectType(effectType), m_onStart(onStart), m_onStop(onStop), m_onTick(onTick) {}
 
@@ -18,7 +20,7 @@ struct RegisteredEffect
 
 	void Start()
 	{
-		if (m_onStart /*&& !m_isRunning*/)
+		if (m_onStart && !m_isRunning)
 		{
 			m_isRunning = true;
 			m_onStart();
@@ -27,7 +29,7 @@ struct RegisteredEffect
 
 	void Stop()
 	{
-		if (m_onStop /*&& m_isRunning*/)
+		if (m_onStop && m_isRunning)
 		{
 			m_onStop();
 		}
@@ -37,13 +39,13 @@ struct RegisteredEffect
 
 	void Tick()
 	{
-		if (m_onTick /*&& m_isRunning*/)
+		if (m_onTick && m_isRunning)
 		{
 			m_onTick();
 		}
 	}
 
-	bool IsRunning()
+	bool IsRunning() const
 	{
 		return m_isRunning;
 	}
@@ -56,16 +58,16 @@ private:
 	bool m_isRunning = false;
 };
 
-inline std::vector<RegisteredEffect> g_registeredEffects;
+inline std::vector<RegisteredEffect> g_registeredEffects(_EFFECT_ENUM_MAX);
 
-inline RegisteredEffect* GetRegisteredEffect(EffectType effectType)
+static RegisteredEffect* GetRegisteredEffect(EffectType effectType)
 {
 	auto result = std::find(g_registeredEffects.begin(), g_registeredEffects.end(), effectType);
 
-	return result == g_registeredEffects.end() ? nullptr : &*result;
+	return result == g_registeredEffects.end() ? nullptr : &(*result);
 }
 
-inline bool IsEffectActive(EffectType effectType)
+static bool IsEffectActive(EffectType effectType)
 {
 	auto registeredEffect = GetRegisteredEffect(effectType);
 

@@ -86,8 +86,6 @@ static RegisterEffect registerEffect12(EFFECT_SPAWN_RUINER3, OnStartRuiner3);
 
 static void OnStartRandom()
 {
-	// BIG TODO: Crashes mod rn!!!
-
 	static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 
 	if (!vehModels.empty())
