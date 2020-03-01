@@ -81,6 +81,7 @@ enum EffectType
 	EFFECT_SPAWN_BUZZARD,
 	EFFECT_SPAWN_FAGGIO,
 	EFFECT_SPAWN_RUINER3,
+	EFFECT_SPAWN_BALETRAILER,
 	EFFECT_SPAWN_RANDOM,
 	EFFECT_NO_VEHS,
 	EFFECT_EXPLODE_CUR_VEH,
@@ -91,6 +92,7 @@ enum EffectType
 	EFFECT_SUPER_RUN,
 	EFFECT_SUPER_JUMP,
 	EFFECT_PLAYER_RAGDOLL,
+	EFFECT_PEDS_RAGDOLL,
 	EFFECT_PEDS_RAGDOLL_ON_TOUCH,
 	EFFECT_PLUS_100K,
 	EFFECT_MINUS_100K,
@@ -185,6 +187,8 @@ enum EffectType
 	EFFECT_LOW_POLY,
 	EFFECT_NEARBY_PEDS_OBLITERATE,
 	EFFECT_VEHS_TRIGGER_ALARM,
+	EFFECT_VEH_SET_RANDOM_SEAT,
+	EFFECT_VEH_SET_TOPSPEED_30MPH,
 	_EFFECT_ENUM_MAX
 };
 
@@ -280,6 +284,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_BUZZARD, {"Spawn Buzzard", "spawn_buzzard"}},
 	{EFFECT_SPAWN_FAGGIO, {"Spawn Faggio", "spawn_faggio"}},
 	{EFFECT_SPAWN_RUINER3, {"Spawn Ruined Ruiner", "spawn_ruiner3"}},
+	{EFFECT_SPAWN_BALETRAILER, {"Spawn Bale Trailer", "spawn_baletrailer"}},
 	{EFFECT_SPAWN_RANDOM, {"Spawn Random Vehicle", "spawn_random"}},
 	{EFFECT_NO_VEHS, {"No Traffic", "notraffic", true}},
 	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", "playerveh_explode"}},
@@ -383,5 +388,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_WEATHER_RANDOMWEATHER, {"Modder Stop Changing Weather Plz", "weather_randomizer", true}},
 	{EFFECT_LOW_POLY, {"Low Render Distance", "world_lowpoly", true}},
 	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
-	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}}
+	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}},
+	{EFFECT_VEH_SET_RANDOM_SEAT, {"Teleport Into Random Seat", "veh_randomseat"}},
+	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true} },
+	{EFFECT_PEDS_RAGDOLL, {"All Peds Ragdoll", "peds_ragdoll"}}
 };

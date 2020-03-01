@@ -129,6 +129,7 @@
     <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOnePunch.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRiot.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
     <ClCompile Include="Effects\db\Time\TimeController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsAllHorn.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsAllVehsLaunchUp.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCinematicCam.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsInvisible.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRandomSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp" />

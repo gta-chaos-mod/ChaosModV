@@ -116,6 +116,7 @@ namespace ConfigApp
             EFFECT_SPAWN_BUZZARD,
             EFFECT_SPAWN_FAGGIO,
             EFFECT_SPAWN_RUINER3,
+            EFFECT_SPAWN_BALETRAILER,
             EFFECT_SPAWN_RANDOM,
             EFFECT_NO_VEHS,
             EFFECT_EXPLODE_CUR_VEH,
@@ -219,6 +220,9 @@ namespace ConfigApp
             EFFECT_LOW_POLY,
             EFFECT_NEARBY_PEDS_OBLITERATE,
             EFFECT_VEHS_TRIGGER_ALARM,
+            EFFECT_VEH_SET_RANDOM_SEAT,
+            EFFECT_VEH_SET_TOPSPEED_30MPH,
+            EFFECT_PEDS_RAGDOLL,
             _EFFECT_ENUM_MAX
         }
 
@@ -300,6 +304,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_BUZZARD, new EffectInfo("Spawn Buzzard", EffectCategory.VEHICLE, "spawn_buzzard")},
             {EffectType.EFFECT_SPAWN_FAGGIO, new EffectInfo("Spawn Faggio", EffectCategory.VEHICLE, "spawn_faggio")},
             {EffectType.EFFECT_SPAWN_RUINER3, new EffectInfo("Spawn Ruined Ruiner", EffectCategory.VEHICLE, "spawn_ruiner3")},
+            {EffectType.EFFECT_SPAWN_BALETRAILER, new EffectInfo("Spawn Bale Trailer", EffectCategory.VEHICLE, "spawn_baletrailer") },
             {EffectType.EFFECT_SPAWN_RANDOM, new EffectInfo("Spawn Random Vehicle", EffectCategory.VEHICLE, "spawn_random")},
             {EffectType.EFFECT_NO_VEHS, new EffectInfo("No Traffic", EffectCategory.VEHICLE, "notraffic", true)},
 	        {EffectType.EFFECT_EXPLODE_CUR_VEH, new EffectInfo("Explode Current Vehicle", EffectCategory.VEHICLE, "playerveh_explode")},
@@ -310,7 +315,8 @@ namespace ConfigApp
 	        {EffectType.EFFECT_SUPER_RUN, new EffectInfo("Super Run", EffectCategory.PLAYER, "player_superrun", true)},
 	        {EffectType.EFFECT_SUPER_JUMP, new EffectInfo("Super Jump", EffectCategory.PLAYER, "player_superjump", true)},
 	        {EffectType.EFFECT_PLAYER_RAGDOLL, new EffectInfo("Ragdoll", EffectCategory.PLAYER, "player_ragdoll")},
-	        {EffectType.EFFECT_PEDS_RAGDOLL_ON_TOUCH, new EffectInfo("Sensitive Touch", EffectCategory.PEDS, "peds_sensitivetouch", true)},
+            {EffectType.EFFECT_PEDS_RAGDOLL, new EffectInfo("All Peds Ragdoll", EffectCategory.PEDS, "peds_ragdoll")},
+            {EffectType.EFFECT_PEDS_RAGDOLL_ON_TOUCH, new EffectInfo("Sensitive Touch", EffectCategory.PEDS, "peds_sensitivetouch", true)},
 	        {EffectType.EFFECT_PLUS_100K, new EffectInfo("+$100.000", EffectCategory.PLAYER, "richboi")},
 	        {EffectType.EFFECT_MINUS_100K, new EffectInfo("-$100.000", EffectCategory.PLAYER, "poorboi")},
 	        {EffectType.EFFECT_PEDS_FOLLOW_PLAYER, new EffectInfo("You Are Famous", EffectCategory.PEDS, "player_famous")},
@@ -403,6 +409,8 @@ namespace ConfigApp
             {EffectType.EFFECT_LOW_POLY, new EffectInfo("Low Render Distance", EffectCategory.MISC, "world_lowpoly", true)},
             {EffectType.EFFECT_NEARBY_PEDS_OBLITERATE, new EffectInfo("Obliterate All Nearby Peds", EffectCategory.PEDS, "peds_obliterate")},
             {EffectType.EFFECT_VEHS_TRIGGER_ALARM, new EffectInfo("Alarmy Vehicles", EffectCategory.VEHICLE, "vehs_alarmloop", true)},
+            {EffectType.EFFECT_VEH_SET_RANDOM_SEAT, new EffectInfo("Teleport Into Random Seat", EffectCategory.VEHICLE, "veh_randomseat")},
+            {EffectType.EFFECT_VEH_SET_TOPSPEED_30MPH, new EffectInfo("30MPH Speed Limit", EffectCategory.VEHICLE, "veh_30mphlimit") }
         };
     }
 }
