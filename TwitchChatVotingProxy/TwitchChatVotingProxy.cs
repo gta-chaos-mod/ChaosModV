@@ -28,7 +28,6 @@ namespace TwitchChatVotingProxy
         private static int[] _Votes = new int[3];
         private static List<string> _AlreadyVotedUsers = new List<string>();
         private static bool _DisableNoVoteMsg = false;
-        private static bool _DisableVotablesMsg = false;
 
         private static void Main(string[] args)
         {
@@ -123,9 +122,6 @@ namespace TwitchChatVotingProxy
                         break;
                     case "TwitchVotingDisableNoVoteRoundMsg":
                         _DisableNoVoteMsg = int.Parse(text[1]) != 0;
-                        break;
-                    case "TwitchVotingShowVotablesOnscreen":
-                        _DisableVotablesMsg = int.Parse(text[1]) != 0;
                         break;
                 }
             }
@@ -345,7 +341,7 @@ namespace TwitchChatVotingProxy
                         SendPollJson($"{{\"type\":\"create\",\"title\":\"[Chaos Mod V] Next Effect Vote!\",\"duration\":{_TwitchPollDur}," +
                             $"\"choices\":[\"{data[1]}\",\"{data[2]}\",\"{data[3]}\"]}}");
                     }
-                    else if (!_DisableVotablesMsg)
+                    else
                     {
                         _TwitchClient.SendMessage(_TwitchChannelName, "Time for a new effect! Vote between:");
                         _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
