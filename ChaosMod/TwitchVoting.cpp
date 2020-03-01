@@ -203,7 +203,7 @@ void TwitchVoting::Tick()
 		SendToPipe(oss.str());
 	}
 
-	if (m_isVotingRunning && m_enableTwitchVoteablesOnscreen)
+	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen)
 	{
 		float y = .1f;
 		for (int i = 0; i < 3; i++)
