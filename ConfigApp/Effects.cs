@@ -223,6 +223,7 @@ namespace ConfigApp
             EFFECT_VEH_SET_RANDOM_SEAT,
             EFFECT_VEH_SET_TOPSPEED_30MPH,
             EFFECT_PEDS_RAGDOLL,
+            EFFECT_JESUS_TAKE_THE_WHEEL,
             _EFFECT_ENUM_MAX
         }
 
@@ -410,7 +411,8 @@ namespace ConfigApp
             {EffectType.EFFECT_NEARBY_PEDS_OBLITERATE, new EffectInfo("Obliterate All Nearby Peds", EffectCategory.PEDS, "peds_obliterate")},
             {EffectType.EFFECT_VEHS_TRIGGER_ALARM, new EffectInfo("Alarmy Vehicles", EffectCategory.VEHICLE, "vehs_alarmloop", true)},
             {EffectType.EFFECT_VEH_SET_RANDOM_SEAT, new EffectInfo("Teleport Into Random Seat", EffectCategory.VEHICLE, "veh_randomseat")},
-            {EffectType.EFFECT_VEH_SET_TOPSPEED_30MPH, new EffectInfo("30MPH Speed Limit", EffectCategory.VEHICLE, "veh_30mphlimit") }
+            {EffectType.EFFECT_VEH_SET_TOPSPEED_30MPH, new EffectInfo("30MPH Speed Limit", EffectCategory.VEHICLE, "veh_30mphlimit") },
+            {EffectType.EFFECT_JESUS_TAKE_THE_WHEEL, new EffectInfo("Jesus Take The Wheel", EffectCategory.VEHICLE, "veh_jesustakethewheel") }
         };
     }
 }
