@@ -90,8 +90,7 @@ static void OnStartRandom()
 
 	if (!vehModels.empty())
 	{
-		auto vehHash = vehModels[Random::GetRandomInt(0, vehModels.size() - 1)];
-		CreateTempVehicleOnPlayerPos(vehHash, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		CreateTempVehicleOnPlayerPos(vehModels[Random::GetRandomInt(0, vehModels.size() - 1)], GET_ENTITY_HEADING(PLAYER_PED_ID()));
 	}
 }
 
