@@ -91,11 +91,7 @@ static void OnStartRandom()
 	if (!vehModels.empty())
 	{
 		auto vehHash = vehModels[Random::GetRandomInt(0, vehModels.size() - 1)];
-		Vehicle veh = CreateTempVehicleOnPlayerPos(vehHash, GET_ENTITY_HEADING(PLAYER_PED_ID()));
-		if (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehHash) >= 1)
-		{
-			SET_PED_INTO_VEHICLE(PLAYER_PED_ID(), veh, -1);
-		}
+		CreateTempVehicleOnPlayerPos(vehHash, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 	}
 }
 

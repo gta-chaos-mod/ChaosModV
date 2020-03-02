@@ -391,7 +391,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
 	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}},
 	{EFFECT_VEH_SET_RANDOM_SEAT, {"Teleport Into Random Seat", "veh_randomseat"}},
-	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true} },
+	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},
 	{EFFECT_PEDS_RAGDOLL, {"All Peds Ragdoll", "peds_ragdoll"}},
 	{EFFECT_JESUS_TAKE_THE_WHEEL, {"Jesus Take The Wheel", "veh_jesustakethewheel"}}
 };

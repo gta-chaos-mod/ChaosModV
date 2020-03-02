@@ -14,6 +14,7 @@ static void OnStart()
 			SET_PED_INTO_VEHICLE(playerPed, veh, -2); // -1 = driver, -2 = First Free Passenger Seat
 			auto jesus = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
 			TASK_VEHICLE_DRIVE_WANDER(jesus, veh, 50, 1074528293); // 1074528293 = Rushed, 50 = 50 Meters per second = 111.847 MPH which i think is like the "target" speed.
+			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true); // makes ped not panic
 		}
 	}
 }
