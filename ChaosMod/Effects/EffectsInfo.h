@@ -190,7 +190,7 @@ enum EffectType
 	EFFECT_VEH_SET_RANDOM_SEAT,
 	EFFECT_VEH_SET_TOPSPEED_30MPH,
 	EFFECT_JESUS_TAKE_THE_WHEEL,
-	EFFECT_VEH_POP_TIRE,
+	EFFECT_VEH_POP_TIRE_LOOP,
 	_EFFECT_ENUM_MAX
 };
 
@@ -395,5 +395,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},
 	{EFFECT_PEDS_RAGDOLL, {"All Peds Ragdoll", "peds_ragdoll"}},
 	{EFFECT_JESUS_TAKE_THE_WHEEL, {"Jesus Take The Wheel", "veh_jesustakethewheel"}},
-	{EFFECT_VEH_POP_TIRE, {"Pop Random Tires", "veh_poptire"}}
+	{EFFECT_VEH_POP_TIRE_LOOP, {"Random Tire Popping", "veh_poptire", true, {}, true}}
 };
