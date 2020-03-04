@@ -9,7 +9,7 @@ static void OnStart()
 		auto seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 		if (seats >= 2)
 		{
-			SET_PED_INTO_VEHICLE(playerPed, veh, Random::GetRandomInt(-1, seats - 2));
+			SET_PED_INTO_VEHICLE(playerPed, veh, Random::GetRandomInt(0, seats - 2));
 		}
 	}
 }
