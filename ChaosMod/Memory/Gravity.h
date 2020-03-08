@@ -13,7 +13,7 @@ namespace Memory
 
 		if (!gravAddr)
 		{
-			auto handle = FindPattern("F3 0F 10 05 ?? ?? ?? ?? F3 0F 59 05 ?? ?? ?? ??");
+			auto handle = FindPattern("F3 0F 10 05 ?? ?? ?? ?? F3 0F 59 05");
 			if (!handle.IsValid())
 			{
 				return;
