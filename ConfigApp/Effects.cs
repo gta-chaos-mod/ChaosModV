@@ -225,6 +225,7 @@ namespace ConfigApp
             EFFECT_PEDS_RAGDOLL,
             EFFECT_JESUS_TAKE_THE_WHEEL,
             EFFECT_VEH_POP_TIRE_LOOP,
+            EFFECT_ANGRY_CLOWN,
             _EFFECT_ENUM_MAX
         }
 
@@ -414,7 +415,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_SET_RANDOM_SEAT, new EffectInfo("Teleport Into Random Seat", EffectCategory.VEHICLE, "veh_randomseat")},
             {EffectType.EFFECT_VEH_SET_TOPSPEED_30MPH, new EffectInfo("30MPH Speed Limit", EffectCategory.VEHICLE, "veh_30mphlimit", true, true) },
             {EffectType.EFFECT_JESUS_TAKE_THE_WHEEL, new EffectInfo("Jesus Take The Wheel", EffectCategory.VEHICLE, "veh_jesustakethewheel")},
-            {EffectType.EFFECT_VEH_POP_TIRE_LOOP, new EffectInfo("Random Tire Popping", EffectCategory.VEHICLE, "veh_poptire", true, true)}
+            {EffectType.EFFECT_VEH_POP_TIRE_LOOP, new EffectInfo("Random Tire Popping", EffectCategory.VEHICLE, "veh_poptire", true, true)},
+            {EffectType.EFFECT_ANGRY_CLOWN, new EffectInfo("Spawn Angry Clown", EffectCategory.PEDS, "peds_angryclown")}
         };
     }
 }
