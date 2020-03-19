@@ -20,7 +20,7 @@ static void OnStart()
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 0, true);
 	
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true); // give the clown a up n atomizer
+	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true); // give the clown an up n atomizer
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_MODEL_AS_NO_LONGER_NEEDED(clownHash);
