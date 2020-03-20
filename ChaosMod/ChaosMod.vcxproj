@@ -107,6 +107,7 @@
     <ClCompile Include="Effects\db\Misc\MiscSpawnUFO.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
@@ -133,6 +134,7 @@
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRiot.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryClown.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus2.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionBrad.cpp" />
@@ -192,7 +194,9 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRandomSeat.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPopTire.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp" />

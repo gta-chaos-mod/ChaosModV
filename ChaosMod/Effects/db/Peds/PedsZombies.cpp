@@ -2,6 +2,8 @@
 
 static void OnStart()
 {
+	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
+	SET_MAX_WANTED_LEVEL(0);
 	static const auto playerGroupHash = GET_HASH_KEY("PLAYER");
 	static const auto civMaleGroupHash = GET_HASH_KEY("CIVMALE");
 	static const auto civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
@@ -15,6 +17,7 @@ static void OnStart()
 
 static void OnStop()
 {
+	SET_MAX_WANTED_LEVEL(5);
 	static const auto zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 
 	for (Ped ped : GetAllPeds())
@@ -34,7 +37,6 @@ static void OnTick()
 	static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 	static Ped zombies[MAX_ZOMBIES] = {};
 	static int zombiesAmount = 0;
-
 	auto playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	if (zombiesAmount <= MAX_ZOMBIES)
 	{
