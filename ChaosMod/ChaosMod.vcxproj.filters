@@ -417,10 +417,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscScaleformHacking.cpp">
+    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp">
+    <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
