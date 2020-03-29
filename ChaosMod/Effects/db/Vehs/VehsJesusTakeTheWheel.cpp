@@ -14,6 +14,7 @@ static void OnStart()
 			SET_PED_INTO_VEHICLE(playerPed, veh, -2);
 			auto jesus = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
 			TASK_VEHICLE_DRIVE_WANDER(jesus, veh, 150, 4176732);
+			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true);
 		}
 	}
 }

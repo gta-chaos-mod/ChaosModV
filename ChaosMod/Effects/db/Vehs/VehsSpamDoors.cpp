@@ -5,7 +5,7 @@ static void OnTick()
 	static DWORD64 lastTick = GetTickCount64();
 	DWORD64 currentTick = GetTickCount64();
 
-	if (lastTick < currentTick - 500)
+	if (lastTick < currentTick - 500) //every second, half of second
 	{
 		for (auto veh : GetAllVehs())
 		{
@@ -16,12 +16,12 @@ static void OnTick()
 		}
 	}
 
-	if (lastTick < currentTick - 1000)
+	if (lastTick < currentTick - 1000) //every second, end of
 	{
 		lastTick = currentTick;
 		for (auto veh : GetAllVehs())
 		{
-			SET_VEHICLE_DOORS_SHUT(veh, false);
+			SET_VEHICLE_DOORS_SHUT(veh, false); // Closes ALL doors of vehicle
 		}
 	}
 }
