@@ -426,6 +426,9 @@
     <ClCompile Include="Effects\db\Vehs\VehsSpeedMin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />

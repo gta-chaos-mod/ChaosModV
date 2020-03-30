@@ -6,6 +6,8 @@
 #define MPH_TO_MS(mph) mph / 2.236936
 #define MS_TO_MPH(ms) ms * 2.236936
 
+static int sf = 0;
+
 static void OnTick()
 {
 	static DWORD64 lastTick = GetTickCount64();
@@ -26,6 +28,10 @@ static void OnTick()
 		auto overlaycolor = 0;
 		if (speedms < minSpeed)
 		{
+			//BEEP CODE
+			//if ()
+			//{
+			//}
 			overlaycolor = 75;
 			if (timeReserve < tickDelta)
 			{
