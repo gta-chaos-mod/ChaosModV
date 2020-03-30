@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#define WAIT_TIME 5500 // ms
+#define WAIT_TIME 6000 // ms
 #define SPEED_THRESHOLD 0.50 // % of max speed must be reached
 
 #define MPH_TO_MS(mph) mph / 2.236936
@@ -23,9 +23,10 @@ static void OnTick()
 		auto speedms = GET_ENTITY_SPEED(veh);
 		DWORD64 currentTick = GetTickCount64();
 		auto tickDelta = currentTick - lastTick;
-
+		auto overlaycolor = 0;
 		if (speedms < minSpeed)
 		{
+			overlaycolor = 75;
 			if (timeReserve < tickDelta)
 			{
 				EXPLODE_VEHICLE(veh, true, false);
@@ -39,6 +40,7 @@ static void OnTick()
 		}
 		else
 		{
+			overlaycolor = 25;
 			timeReserve += tickDelta;
 			if (timeReserve > WAIT_TIME)
 			{
@@ -67,7 +69,7 @@ static void OnTick()
 			sprintf_s(charBuf, "Minimum: %.1f mph", MS_TO_MPH(minSpeed));
 		}
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
-
+		SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(overlaycolor);
 		END_SCALEFORM_MOVIE_METHOD();
 		DRAW_SCALEFORM_MOVIE_FULLSCREEN(overlay, 255, 255, 255, 255, 0);
 	}
