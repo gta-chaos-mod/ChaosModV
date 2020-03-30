@@ -60,7 +60,7 @@ static void OnTick()
 
 		if (timeReserve != WAIT_TIME)
 		{
-			sprintf_s(charBuf, "Minimum: %.1f mph\n%.2f seconds to detonation", MS_TO_MPH(minSpeed), double(timeReserve) / 1000);
+			sprintf_s(charBuf, "Minimum: %.1f mph\n%.1f seconds to detonation", MS_TO_MPH(minSpeed), double(timeReserve) / 1000);
 		}
 		else
 		{
