@@ -1,4 +1,5 @@
 #include <stdafx.h>
+#include <cmath>
 
 #define WAIT_TIME 6000 // ms
 #define SPEED_THRESHOLD 0.50 // % of max speed must be reached
@@ -6,7 +7,10 @@
 #define MPH_TO_MS(mph) mph / 2.236936
 #define MS_TO_MPH(ms) ms * 2.236936
 
-static int sf = 0;
+inline bool Beepable(DWORD64 reserveValue)
+{
+	return std::remainder(std::log(double(reserveValue)) / std::log(1.0019), 100) < 20;
+}
 
 static void OnTick()
 {
@@ -28,10 +32,6 @@ static void OnTick()
 		auto overlaycolor = 0;
 		if (speedms < minSpeed)
 		{
-			//BEEP CODE
-			//if ()
-			//{
-			//}
 			overlaycolor = 75;
 			if (timeReserve < tickDelta)
 			{
@@ -39,10 +39,13 @@ static void OnTick()
 				timeReserve = WAIT_TIME;
 				return;
 			}
-			else
+			
+			if (Beepable(timeReserve - tickDelta) && !Beepable(timeReserve)) // 1 sec gotta open the darn game
 			{
-				timeReserve -= tickDelta;
+				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
 			}
+
+		    timeReserve -= tickDelta;
 		}
 		else
 		{

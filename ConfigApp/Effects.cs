@@ -426,7 +426,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_WAVEY, new EffectInfo("Things Are Getting Wavey", EffectCategory.MISC, "misc_waves", true)},
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spam Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.MISC, "veh_speed_goal", true, false)},
-            {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Hacked", EffectCategory.MISC, "misc_lester", true, false)}
+            {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, false)}
         };
     }
 }
