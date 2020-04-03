@@ -104,6 +104,7 @@
     <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNothing.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnUFO.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
