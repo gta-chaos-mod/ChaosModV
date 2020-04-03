@@ -409,5 +409,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_SPAM_DOORS, {"Spam Doors", "vehs_spamdoors", true}},
 	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, {EFFECT_VEH_SET_TOPSPEED_30MPH, EFFECT_05XENGINE_VEHS, EFFECT_2XENGINE_VEHS, EFFECT_10XENGINE_VEHS}}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, {EFFECT_VEH_SPEED_MINIMUM}}},
-	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true}}
+	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true}},
 };

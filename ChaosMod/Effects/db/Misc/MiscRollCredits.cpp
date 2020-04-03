@@ -1,17 +1,34 @@
 #include <stdafx.h>
-static void OnStart()
+
+bool hasStarted = false;
+
+static void OnTick()
 {
-	AUDIO::PLAY_END_CREDITS_MUSIC(1);
-	AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(1);
-	AUDIO::SET_MOBILE_PHONE_RADIO_STATE(1);
-	AUDIO::SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
-	AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
-	REQUEST_SCRIPT("finale_credits");
-	while (!HAS_SCRIPT_LOADED("finale_credits"))
+	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
+	DISABLE_ALL_CONTROL_ACTIONS(0);
+	if (!IS_CUTSCENE_PLAYING() && !hasStarted)
 	{
-		WAIT(0);
+		hasStarted = true;
+		AUDIO::PLAY_END_CREDITS_MUSIC(1);
+		AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(1);
+		AUDIO::SET_MOBILE_PHONE_RADIO_STATE(1);
+		AUDIO::SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
+		if (Random::GetRandomInt(0, 1))
+		{
+			AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
+		}
+		else 
+		{
+			AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_MICHAEL", 1);
+		}
+		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
+		REQUEST_SCRIPT("finale_credits");
+		while (!HAS_SCRIPT_LOADED("finale_credits"))
+		{
+			WAIT(0);
+		}
+		START_NEW_SCRIPT("finale_credits", 1424); // just took a guess on the int, no idea what it does.
 	}
-	START_NEW_SCRIPT("finale_credits", 1424); // just took a guess on the int, no idea what it does.
 }
 
 static void OnStop()
@@ -30,6 +47,7 @@ static void OnStop()
 	PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
 	HUD::DISPLAY_HUD(true);
 	HUD::DISPLAY_RADAR(true);
+	DO_SCREEN_FADE_IN(1);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, nullptr);
+static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, nullptr, OnStop, OnTick);
