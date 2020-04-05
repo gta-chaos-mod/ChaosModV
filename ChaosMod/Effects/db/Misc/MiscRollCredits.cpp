@@ -1,34 +1,41 @@
 #include <stdafx.h>
 
-bool hasStarted = false;
+static void OnStart()
+{
+	HUD::REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
+	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
+	{
+		WAIT(0);
+	}
+	AUDIO::PLAY_END_CREDITS_MUSIC(1);
+	MISC::SET_CREDITS_ACTIVE(1);
+	AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(1);
+	AUDIO::SET_MOBILE_PHONE_RADIO_STATE(1);
+	AUDIO::SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
+	//DO_SCREEN_FADE_OUT(2500);
+	auto song = Random::GetRandomInt(0, 2);
+	if (song == 0)
+	{
+		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
+	}
+	else if (song == 1)
+	{
+		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_MICHAEL", 1);
+	}
+	else
+	{
+		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_TREVOR", 1);
+	}
+}
 
 static void OnTick()
 {
+	static int alpha = 0;
 	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
-	DISABLE_ALL_CONTROL_ACTIONS(0);
-	if (!IS_CUTSCENE_PLAYING() && !hasStarted)
+	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false); // taken from PlayerBlind.cpp, DO_SCREEN_FADE_OUT causes effect to not end?
+	if (alpha < 255)
 	{
-		TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("finale_credits");
-		hasStarted = true;
-		AUDIO::PLAY_END_CREDITS_MUSIC(1);
-		AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(1);
-		AUDIO::SET_MOBILE_PHONE_RADIO_STATE(1);
-		AUDIO::SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
-		if (Random::GetRandomInt(0, 1))
-		{
-			AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
-		}
-		else 
-		{
-			AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_MICHAEL", 1);
-		}
-		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
-		REQUEST_SCRIPT("finale_credits");
-		while (!HAS_SCRIPT_LOADED("finale_credits"))
-		{
-			WAIT(0);
-		}
-		START_NEW_SCRIPT("finale_credits", 1424); // just took a guess on the int, no idea what it does.
+		alpha++;
 	}
 }
 
@@ -39,17 +46,8 @@ static void OnStop()
 	AUDIO::SET_MOBILE_PHONE_RADIO_STATE(0);
 	MISC::SET_CREDITS_ACTIVE(0);
 	AUDIO::PLAY_END_CREDITS_MUSIC(0);
-	TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("finale_credits");
 	//Reset everything finale_credits sets to restore playability.
-	ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
-	ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), true, 0);
-	ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
-	PED::SET_ENABLE_SCUBA(PLAYER::PLAYER_PED_ID(), false);
-	PLAYER::SET_MAX_WANTED_LEVEL(5);
-	PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
-	HUD::DISPLAY_HUD(true);
-	HUD::DISPLAY_RADAR(true);
-	DO_SCREEN_FADE_IN(1);
+	//DO_SCREEN_FADE_IN(2500);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, OnTick);

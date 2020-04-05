@@ -18,7 +18,7 @@ static void OnTick()
 	{
 		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(prop, 1, 0, 0, GET_RANDOM_FLOAT_IN_RANGE(-750.f, 500.f), true, false, false, true);
 	}
-	for (auto	 ped : GetAllPeds())
+	for (auto ped : GetAllPeds())
 	{
 		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 1, 0, 0, GET_RANDOM_FLOAT_IN_RANGE(-1000.f, 750.f), true, false, false, true);
 	}
