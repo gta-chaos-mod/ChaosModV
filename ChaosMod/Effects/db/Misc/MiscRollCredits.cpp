@@ -2,6 +2,7 @@
 
 static void OnStart()
 {
+
 	HUD::REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
 	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
 	{
@@ -27,10 +28,10 @@ static void OnStart()
 		AUDIO::SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_TREVOR", 1);
 	}
 }
-
+int alpha = 0;
 static void OnTick()
 {
-	static int alpha = 0;
+	DISABLE_ALL_CONTROL_ACTIONS(0);
 	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false); // taken from PlayerBlind.cpp, DO_SCREEN_FADE_OUT causes effect to not end?
 	if (alpha < 255)
@@ -41,6 +42,7 @@ static void OnTick()
 
 static void OnStop()
 {
+	alpha = 0;
 	AUDIO::PLAY_END_CREDITS_MUSIC(0);
 	AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(0);
 	AUDIO::SET_MOBILE_PHONE_RADIO_STATE(0);
