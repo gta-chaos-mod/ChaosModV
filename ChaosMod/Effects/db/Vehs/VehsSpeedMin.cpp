@@ -25,7 +25,7 @@ static void OnTick()
 	auto veh = GET_VEHICLE_PED_IS_IN(player, false);
 	if (IS_PED_IN_ANY_VEHICLE(player, false) && GET_IS_VEHICLE_ENGINE_RUNNING(veh))
 	{
-		auto minSpeed = GET_VEHICLE_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
+		auto minSpeed = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
 		auto speedms = GET_ENTITY_SPEED(veh);
 		DWORD64 currentTick = GetTickCount64();
 		auto tickDelta = currentTick - lastTick;
