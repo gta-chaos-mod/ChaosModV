@@ -7,6 +7,8 @@
 #define MPH_TO_MS(mph) mph / 2.236936
 #define MS_TO_MPH(ms) ms * 2.236936
 
+static int overlay = 0;
+
 inline bool Beepable(DWORD64 reserveValue)
 {
 	return std::remainder(std::log(double(reserveValue)) / std::log(1.0019), 100) < 20;
@@ -40,7 +42,7 @@ static void OnTick()
 				return;
 			}
 			
-			if (Beepable(timeReserve - tickDelta) && !Beepable(timeReserve)) // 1 sec gotta open the darn game
+			if (Beepable(timeReserve - tickDelta) && !Beepable(timeReserve))
 			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
 			}
@@ -58,12 +60,7 @@ static void OnTick()
 		}
 		lastTick = currentTick;
 
-		auto overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
-		while (!HAS_SCALEFORM_MOVIE_LOADED(overlay))
-		{
-			WAIT(0);
-		}
-		BEGIN_SCALEFORM_MOVIE_METHOD(overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
+		BEGIN_SCALEFORM_MOVIE_METHOD(overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE	");
 
 		char charBuf[64];
 		sprintf_s(charBuf, "%.1f mph", MS_TO_MPH(speedms));
@@ -96,6 +93,15 @@ static void OnTick()
 static void OnStop()
 {
 	static DWORD64 timeReserve = WAIT_TIME;
+}
+
+static void OnStart()
+{
+	overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
+	while (!HAS_SCALEFORM_MOVIE_LOADED(overlay))
+	{
+		WAIT(0);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_VEH_SPEED_MINIMUM, nullptr, OnStop, OnTick);
