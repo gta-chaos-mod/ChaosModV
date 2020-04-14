@@ -60,7 +60,7 @@ static void OnTick()
 		}
 		lastTick = currentTick;
 
-		BEGIN_SCALEFORM_MOVIE_METHOD(overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE	");
+		BEGIN_SCALEFORM_MOVIE_METHOD(overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 
 		char charBuf[64];
 		sprintf_s(charBuf, "%.1f mph", MS_TO_MPH(speedms));
@@ -104,4 +104,4 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_SPEED_MINIMUM, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_SPEED_MINIMUM, OnStart, OnStop, OnTick);
