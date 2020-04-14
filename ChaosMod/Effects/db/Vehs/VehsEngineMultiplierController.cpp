@@ -4,8 +4,8 @@ static void OnStop()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 1.f);
-		_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 1.f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, 1.f);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 1.f);
 	}
 }
 
@@ -13,8 +13,8 @@ static void OnTickX2()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 2.f);
-		_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 2.f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, 2.f);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 2.f);
 	}
 }
 
@@ -24,8 +24,8 @@ static void OnTickX10()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, 10.f);
-		_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, 10.f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, 10.f);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 10.f);
 	}
 }
 
@@ -35,8 +35,8 @@ static void OnTickX05()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SET_VEHICLE_ENGINE_POWER_MULTIPLIER(veh, .5f);
-		_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER(veh, .5f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, .5f);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, .5f);
 	}
 }
 

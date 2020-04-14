@@ -194,6 +194,11 @@ enum EffectType
 	EFFECT_ANGRY_CLOWN,
 	EFFECT_OHKO_VEHICLES,
 	EFFECT_MISC_WAVEY,
+	EFFECT_VEH_SPAM_DOORS,
+	EFFECT_VEH_SPEED_MINIMUM,
+	EFFECT_MISC_LESTER,
+	EFFECT_MISC_CREDITS,
+	EFFECT_MISC_EARTHQUAKE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -401,5 +406,10 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_POP_TIRE_LOOP, {"Random Tire Popping", "veh_poptire", true, {}, true}},
 	{EFFECT_ANGRY_CLOWN, {"Spawn Angry Clown", "peds_angryclown"}},
 	{EFFECT_OHKO_VEHICLES, {"One Hit KO Vehicles", "vehs_ohko", true}},
-	{EFFECT_MISC_WAVEY, {"Things Are Getting Wavey", "misc_waves", true}}
+	{EFFECT_MISC_WAVEY, {"Things Are Getting Wavey", "misc_waves", true}},
+	{EFFECT_VEH_SPAM_DOORS, {"Spam Doors", "vehs_spamdoors", true}},
+	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, {EFFECT_VEH_SET_TOPSPEED_30MPH, EFFECT_05XENGINE_VEHS, EFFECT_2XENGINE_VEHS, EFFECT_10XENGINE_VEHS}}},
+	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, {EFFECT_VEH_SPEED_MINIMUM}}},
+	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
+	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true}}
 };

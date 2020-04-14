@@ -228,6 +228,11 @@ namespace ConfigApp
             EFFECT_ANGRY_CLOWN,
             EFFECT_OHKO_VEHICLES,
             EFFECT_MISC_WAVEY,
+            EFFECT_VEH_SPAM_DOORS,
+            EFFECT_VEH_SPEED_MINIMUM,
+            EFFECT_MISC_LESTER,
+            EFFECT_MISC_CREDITS,
+            EFFECT_MISC_EARTHQUAKE,
             _EFFECT_ENUM_MAX
         }
 
@@ -420,7 +425,12 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_POP_TIRE_LOOP, new EffectInfo("Random Tire Popping", EffectCategory.VEHICLE, "veh_poptire", true, true)},
             {EffectType.EFFECT_ANGRY_CLOWN, new EffectInfo("Spawn Angry Clown", EffectCategory.PEDS, "peds_angryclown")},
             {EffectType.EFFECT_OHKO_VEHICLES, new EffectInfo("One Hit KO Vehicles", EffectCategory.VEHICLE, "vehs_ohko", true)},
-            {EffectType.EFFECT_MISC_WAVEY, new EffectInfo("Things Are Getting Wavey", EffectCategory.MISC, "misc_waves", true)}
+            {EffectType.EFFECT_MISC_WAVEY, new EffectInfo("Things Are Getting Wavey", EffectCategory.MISC, "misc_waves", true)},
+            {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spam Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
+            {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.MISC, "veh_speed_goal", true, false)},
+            {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, false)},
+            {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, false)},
+            {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, false)}
         };
     }
 }

@@ -417,10 +417,22 @@
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscScaleformHacking.cpp">
+    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp">
+    <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsSpeedMin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
