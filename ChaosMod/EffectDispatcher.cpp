@@ -166,16 +166,32 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
-					effect.RegisteredEffect->Stop();
-					it = m_activeEffects.erase(it);
-
 					found = true;
 
 					break;
 				}
 			}
 
+			// Check if current effect is marked as incompatible in active effect
 			if (!found)
+			{
+				for (auto incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
+				{
+					if (effect.EffectType == effectType)
+					{
+						found = true;
+
+						break;
+					}
+				}
+			}
+
+			if (found)
+			{
+				effect.RegisteredEffect->Stop();
+				it = m_activeEffects.erase(it);
+			}
+			else
 			{
 				it++;
 			}
