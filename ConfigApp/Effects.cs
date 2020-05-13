@@ -233,6 +233,7 @@ namespace ConfigApp
             EFFECT_MISC_LESTER,
             EFFECT_MISC_CREDITS,
             EFFECT_MISC_EARTHQUAKE,
+            EFFECT_TP_FRONT,
             _EFFECT_ENUM_MAX
         }
 
@@ -430,7 +431,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.MISC, "veh_speed_goal", true, false)},
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, false)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
-            {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, false)}
+            {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, false)},
+            {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player In Front", EffectCategory.PLAYER, "player_tpfront")}
         };
     }
 }
