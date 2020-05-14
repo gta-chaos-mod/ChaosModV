@@ -19,6 +19,9 @@ static void OnStart()
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 0, true);
+
+	SET_PED_CAN_RAGDOLL(ped, false);
+	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 	
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true); // give the clown an up n atomizer
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
