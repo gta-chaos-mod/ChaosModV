@@ -200,6 +200,7 @@ enum EffectType
 	EFFECT_MISC_CREDITS,
 	EFFECT_MISC_EARTHQUAKE,
 	EFFECT_TP_FRONT,
+	EFFECT_SPAWN_FAN_CATS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -369,6 +370,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_GIVE_ALL_WEPS, {"Give All Weapons", "player_allweps"}},
 	{EFFECT_PEDS_AIMBOT, {"Aimbot Peds", "peds_aimbot", true}},
 	{EFFECT_TP_FRONT, {"Teleport Player In Front", "player_tpfront"}},
+	{EFFECT_SPAWN_FAN_CATS, {"Spawn Fan Cats", "peds_spawnfancats"}},
 	//{EFFECT_EVERYTHING_FACE_PLAYER, {"Everything Faces Player", "everythingfacesplayer", true}},
 	{EFFECT_PEDS_BLIND, {"Peds Don't See Very Well", "peds_blind", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},

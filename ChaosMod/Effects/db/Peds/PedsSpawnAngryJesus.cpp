@@ -5,8 +5,8 @@ static void OnStart()
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
 
-	auto playerPed = PLAYER_PED_ID();
-	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped = CREATE_PED(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
