@@ -257,7 +257,7 @@ namespace ConfigApp
             {EffectType.EFFECT_HEAL, new EffectInfo("Heal Player", EffectCategory.PLAYER, "player_heal")},
 	        {EffectType.EFFECT_ARMOR, new EffectInfo("Give Armor", EffectCategory.PLAYER, "player_armor")},
 	        {EffectType.EFFECT_IGNITE, new EffectInfo("Ignite Player", EffectCategory.PLAYER, "player_ignite")},
-	        {EffectType.EFFECT_ANGRY_JESUS, new EffectInfo("Spawn Griefer Jesus", EffectCategory.MISC, "spawn_grieferjesus")},
+	        {EffectType.EFFECT_ANGRY_JESUS, new EffectInfo("Spawn Griefer Jesus", EffectCategory.PEDS, "spawn_grieferjesus")},
             {EffectType.EFFECT_SPAWN_IMPOTENTRAGE, new EffectInfo("Spawn Impotent Rage", EffectCategory.PEDS, "peds_spawnimrage")},
             {EffectType.EFFECT_ANGRY_JESUS2, new EffectInfo("Spawn Extreme Griefer Jesus", EffectCategory.PEDS, "spawn_grieferjesus2")},
             {EffectType.EFFECT_IGNITE_PEDS, new EffectInfo("Ignite All Nearby Peds", EffectCategory.PEDS, "peds_ignite")},
