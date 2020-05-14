@@ -2,15 +2,23 @@
 
 static void OnStart()
 {
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
-		SET_ENTITY_VELOCITY(GET_VEHICLE_PED_IS_IN(playerPed, false), .0f, .0f, 10000.f);
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vector3 playerVel = GET_ENTITY_VELOCITY(playerVeh);
+
+		SET_ENTITY_VELOCITY(playerVeh, playerVel.x, playerVel.y, 100.f);
 	}
 	else
 	{
-		SET_ENTITY_VELOCITY(playerPed, .0f, .0f, 10000.f);
+		Vector3 playerVel = GET_ENTITY_VELOCITY(playerPed);
+
+		SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);
+		WAIT(0);
+
+		SET_ENTITY_VELOCITY(playerPed, playerVel.x, playerVel.y, 100.f);
 	}
 }
 
