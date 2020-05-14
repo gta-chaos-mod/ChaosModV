@@ -431,7 +431,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.MISC, "veh_speed_goal", true, false)},
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, false)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
-            {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, false)},
+            {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, true)},
             {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player In Front", EffectCategory.PLAYER, "player_tpfront")},
             {EffectType.EFFECT_SPAWN_FAN_CATS, new EffectInfo("Spawn Fan Cats", EffectCategory.PEDS, "peds_spawnfancats")},
             {EffectType.EFFECT_PEDS_COPS, new EffectInfo("All Peds Are Cops", EffectCategory.PEDS, "peds_cops", true)},
