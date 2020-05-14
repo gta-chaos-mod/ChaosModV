@@ -234,6 +234,7 @@ namespace ConfigApp
             EFFECT_MISC_EARTHQUAKE,
             EFFECT_TP_FRONT,
             EFFECT_SPAWN_FAN_CATS,
+            EFFECT_PEDS_COPS,
             _EFFECT_ENUM_MAX
         }
 
@@ -433,6 +434,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, false)},
             {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player In Front", EffectCategory.PLAYER, "player_tpfront")},
             {EffectType.EFFECT_SPAWN_FAN_CATS, new EffectInfo("Spawn Fan Cats", EffectCategory.PEDS, "peds_spawnfancats")},
+            {EffectType.EFFECT_PEDS_COPS, new EffectInfo("All Peds Are Cops", EffectCategory.PEDS, "peds_cops", true)},
         };
     }
 }

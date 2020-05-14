@@ -200,6 +200,7 @@ enum EffectType
 	EFFECT_MISC_EARTHQUAKE,
 	EFFECT_TP_FRONT,
 	EFFECT_SPAWN_FAN_CATS,
+	EFFECT_PEDS_COPS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -401,6 +402,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_LOW_POLY, {"Low Render Distance", "world_lowpoly", true}},
 	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
 	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}},
+	{EFFECT_PEDS_COPS, {"All Peds Are Cops", "peds_cops", true}},
 	// Effects contributed by Lucas7yoshi
 	{EFFECT_VEH_SET_RANDOM_SEAT, {"Teleport Into Random Seat", "veh_randomseat"}},
 	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},

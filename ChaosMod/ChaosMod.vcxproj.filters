@@ -438,6 +438,9 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnFanCats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\db\Peds\PedsCops.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
