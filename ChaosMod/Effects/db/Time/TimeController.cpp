@@ -28,18 +28,6 @@ static void OnStartNight()
 
 static RegisterEffect registerEffect4(EFFECT_TIME_NIGHT, OnStartNight);
 
-static void OnStopPause()
-{
-	PAUSE_CLOCK(false);
-}
-
-static void OnTickPause()
-{
-	PAUSE_CLOCK(true);
-}
-
-static RegisterEffect registerEffect5(EFFECT_PAUSE_TIME, nullptr, OnStopPause, OnTickPause);
-
 static void OnTickTimelapse()
 {
 	ADD_TO_CLOCK_TIME(0, 1, 0);
