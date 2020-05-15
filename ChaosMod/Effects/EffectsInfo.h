@@ -369,8 +369,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLOSIVE_PUNCH, {"Explosive Punch", "player_explosivepunch", true}},
 	{EFFECT_GIVE_ALL_WEPS, {"Give All Weapons", "player_allweps"}},
 	{EFFECT_PEDS_AIMBOT, {"Aimbot Peds", "peds_aimbot", true}},
-	{EFFECT_TP_FRONT, {"Teleport Player In Front", "player_tpfront"}},
-	{EFFECT_SPAWN_FAN_CATS, {"Spawn Fan Cats", "peds_spawnfancats"}},
 	//{EFFECT_EVERYTHING_FACE_PLAYER, {"Everything Faces Player", "everythingfacesplayer", true}},
 	{EFFECT_PEDS_BLIND, {"Peds Don't See Very Well", "peds_blind", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
@@ -403,6 +401,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_LOW_POLY, {"Low Render Distance", "world_lowpoly", true}},
 	{EFFECT_NEARBY_PEDS_OBLITERATE, {"Obliterate All Nearby Peds", "peds_obliterate"}},
 	{EFFECT_VEHS_TRIGGER_ALARM, {"Alarmy Vehicles", "vehs_alarmloop", true}},
+	{EFFECT_TP_FRONT, {"Teleport Player A Few Meters", "player_tpfront"}},
+	{EFFECT_SPAWN_FAN_CATS, {"Spawn Fan Cats", "peds_spawnfancats"}},
 	{EFFECT_PEDS_COPS, {"All Peds Are Cops", "peds_cops", true}},
 	{EFFECT_ROT_ALL_VEHS, {"Flip All Vehicles", "vehs_rotall"}},
 	// Effects contributed by Lucas7yoshi

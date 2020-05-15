@@ -433,7 +433,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, false)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
             {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, true)},
-            {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player In Front", EffectCategory.PLAYER, "player_tpfront")},
+            {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player A Few Meters", EffectCategory.PLAYER, "player_tpfront")},
             {EffectType.EFFECT_SPAWN_FAN_CATS, new EffectInfo("Spawn Fan Cats", EffectCategory.PEDS, "peds_spawnfancats")},
             {EffectType.EFFECT_PEDS_COPS, new EffectInfo("All Peds Are Cops", EffectCategory.PEDS, "peds_cops", true)},
             {EffectType.EFFECT_ROT_ALL_VEHS, new EffectInfo("Flip All Vehicles", EffectCategory.VEHICLE, "vehs_rotall")}
