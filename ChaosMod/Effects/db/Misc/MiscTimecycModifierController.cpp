@@ -52,3 +52,13 @@ static void OnTickLSD()
 }
 
 static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStop, OnTickLSD);
+
+static void OnTickFullbright()
+{
+	SET_CLOCK_TIME(0, 0, 0);
+
+	SET_TIMECYCLE_MODIFIER("int_lesters");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, nullptr, OnStop, OnTickFullbright);
