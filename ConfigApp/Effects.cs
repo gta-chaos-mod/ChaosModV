@@ -239,6 +239,7 @@ namespace ConfigApp
             EFFECT_ROT_ALL_VEHS,
             EFFECT_LAUNCH_ALL_PEDS,
             EFFECT_PEDS_ATTACK_PLAYER,
+            EFFECT_CLONE_PLAYER,
             _EFFECT_ENUM_MAX
         }
 
@@ -443,6 +444,7 @@ namespace ConfigApp
             {EffectType.EFFECT_ROT_ALL_VEHS, new EffectInfo("Flip All Vehicles", EffectCategory.VEHICLE, "vehs_rotall")},
             {EffectType.EFFECT_LAUNCH_ALL_PEDS, new EffectInfo("Launch All Nearby Peds Up", EffectCategory.PEDS, "peds_launchnearby")},
             {EffectType.EFFECT_PEDS_ATTACK_PLAYER, new EffectInfo("All Peds Attack Player", EffectCategory.PEDS, "peds_attackplayer", true)},
+            {EffectType.EFFECT_CLONE_PLAYER, new EffectInfo("Clone Player", EffectCategory.PLAYER, "player_clone")},
         };
     }
 }

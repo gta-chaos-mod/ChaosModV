@@ -155,6 +155,7 @@
     <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBreak.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClearStars.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExitCurVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
