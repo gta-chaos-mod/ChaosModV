@@ -1,26 +1,17 @@
 #include <stdafx.h>
 
-static float VehicleHealth = 0;
-static Vehicle CurrentVehicle = 0;
-
 static void OnTick()
 {
-	auto playerPed = PLAYER_PED_ID();
+	static DWORD64 lastTick = GetTickCount64();
+	DWORD64 curTick = GetTickCount64();
 
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	if (lastTick < curTick - 1000)
 	{
-		auto veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-		if (CurrentVehicle == veh)
+		lastTick = curTick;
+
+		for (Vehicle veh : GetAllVehs())
 		{
-			if (VehicleHealth != GET_VEHICLE_BODY_HEALTH(veh))
-			{
-				EXPLODE_VEHICLE(veh, true, false);
-			}
-		}
-		else
-		{
-			CurrentVehicle = veh;
-			VehicleHealth = GET_VEHICLE_BODY_HEALTH(veh);
+			SET_VEHICLE_OUT_OF_CONTROL(veh, false, true);
 		}
 	}
 }
