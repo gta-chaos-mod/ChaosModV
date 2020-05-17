@@ -92,9 +92,9 @@ static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint);
 static void OnStartFront()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 5.f, 0.f);
+	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 50.f, 0.f);
 
-	SET_ENTITY_COORDS(playerPed, newPos.x, newPos.y, newPos.z, false, false, false, false);
+	TeleportPlayer(newPos.x, newPos.y, newPos.z, GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : PLAYER_PED_ID()));
 }
 
 static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront);
