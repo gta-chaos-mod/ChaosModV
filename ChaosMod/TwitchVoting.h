@@ -32,6 +32,7 @@ private:
 	bool m_receivedFirstPing = false;
 	bool m_noVoteRound = false;
 	bool m_enableTwitchVoteablesOnscreen = false;
+	bool m_alternatedVotingRound = false;
 
 	bool m_isVotingRunning = false;
 	std::array<EffectType, 3> m_effectChoices;

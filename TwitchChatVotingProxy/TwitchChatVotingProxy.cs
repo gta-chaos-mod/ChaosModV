@@ -27,6 +27,7 @@ namespace TwitchChatVotingProxy
         private static int[] _Votes = new int[3];
         private static List<string> _AlreadyVotedUsers = new List<string>();
         private static bool _DisableNoVoteMsg = false;
+        private static bool _AlternatedVotingRound;
 
         private static void Main(string[] args)
         {
@@ -283,20 +284,42 @@ namespace TwitchChatVotingProxy
 
                 string msg = chatMessage.Message;
                 bool successfulVote = true;
-                switch (msg.Trim())
+
+                if (!_AlternatedVotingRound)
                 {
-                    case "1":
-                        _Votes[0]++;
-                        break;
-                    case "2":
-                        _Votes[1]++;
-                        break;
-                    case "3":
-                        _Votes[2]++;
-                        break;
-                    default:
-                        successfulVote = false;
-                        break;
+                    switch (msg.Trim())
+                    {
+                        case "1":
+                            _Votes[0]++;
+                            break;
+                        case "2":
+                            _Votes[1]++;
+                            break;
+                        case "3":
+                            _Votes[2]++;
+                            break;
+                        default:
+                            successfulVote = false;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (msg.Trim())
+                    {
+                        case "4":
+                            _Votes[0]++;
+                            break;
+                        case "5":
+                            _Votes[1]++;
+                            break;
+                        case "6":
+                            _Votes[2]++;
+                            break;
+                        default:
+                            successfulVote = false;
+                            break;
+                    }
                 }
 
                 if (successfulVote)
@@ -343,9 +366,20 @@ namespace TwitchChatVotingProxy
                     else
                     {
                         _TwitchClient.SendMessage(_TwitchChannelName, "Time for a new effect! Vote between:");
-                        _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
-                        _TwitchClient.SendMessage(_TwitchChannelName, $"2: {data[2]}");
-                        _TwitchClient.SendMessage(_TwitchChannelName, $"3: {data[3]}");
+
+                        _AlternatedVotingRound = int.Parse(data[4]) != 0 ? true : false;
+                        if (!_AlternatedVotingRound)
+                        {
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"1: {data[1]}");
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"2: {data[2]}");
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"3: {data[3]}");
+                        }
+                        else
+                        {
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"4: {data[1]}");
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"5: {data[2]}");
+                            _TwitchClient.SendMessage(_TwitchChannelName, $"6: {data[3]}");
+                        }
                     }
                 }
                 else if (line == "getvoteresult")

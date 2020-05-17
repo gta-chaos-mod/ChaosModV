@@ -199,7 +199,7 @@ void TwitchVoting::Tick()
 		}
 
 		std::ostringstream oss;
-		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name;
+		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name << ":" << m_alternatedVotingRound;
 		SendToPipe(oss.str());
 	}
 
@@ -209,7 +209,7 @@ void TwitchVoting::Tick()
 		for (int i = 0; i < 3; i++)
 		{
 			std::ostringstream oss;
-			oss << i + 1 << ": " << g_effectsMap.at(m_effectChoices[i]).Name << std::endl;
+			oss << (!m_alternatedVotingRound ? i + 1 : i + 4) << ": " << g_effectsMap.at(m_effectChoices[i]).Name << std::endl;
 
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
@@ -254,6 +254,8 @@ bool TwitchVoting::HandleMsg(std::string msg)
 	else if (msg._Starts_with("voteresult"))
 	{
 		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))];
+
+		m_alternatedVotingRound = !m_alternatedVotingRound;
 	}
 
 	return true;
