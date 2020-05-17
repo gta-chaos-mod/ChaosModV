@@ -113,6 +113,7 @@
     <ClCompile Include="Effects\db\Misc\MiscWaves.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCops.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDrivebyPlayer.cpp" />

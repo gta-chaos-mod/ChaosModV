@@ -2,13 +2,13 @@
 //based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {
-	static const Hash clownHash = GET_HASH_KEY("s_m_m_movalien_01");
-	LoadModel(clownHash);
+	static const Hash alienHash = GET_HASH_KEY("s_m_m_movalien_01");
+	LoadModel(alienHash);
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped = CREATE_PED(4, clownHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+	Ped ped = CREATE_PED(4, alienHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
 
 	// thanks R*
 	SET_PED_COMPONENT_VARIATION(ped, 0, 0, 0, 0);
@@ -33,7 +33,7 @@ static void OnStart()
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true); // give the alien an up n atomizer
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
-	SET_MODEL_AS_NO_LONGER_NEEDED(clownHash);
+	SET_MODEL_AS_NO_LONGER_NEEDED(alienHash);
 }
 
 static RegisterEffect registerEffect(EFFECT_ANGRY_ALIEN, OnStart);

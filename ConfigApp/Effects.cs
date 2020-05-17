@@ -237,6 +237,7 @@ namespace ConfigApp
             EFFECT_PEDS_COPS,
             EFFECT_ROT_ALL_VEHS,
             EFFECT_LAUNCH_ALL_PEDS,
+            EFFECT_PEDS_ATTACK_PLAYER,
             _EFFECT_ENUM_MAX
         }
 
@@ -439,6 +440,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_COPS, new EffectInfo("All Peds Are Cops", EffectCategory.PEDS, "peds_cops", true)},
             {EffectType.EFFECT_ROT_ALL_VEHS, new EffectInfo("Flip All Vehicles", EffectCategory.VEHICLE, "vehs_rotall")},
             {EffectType.EFFECT_LAUNCH_ALL_PEDS, new EffectInfo("Launch All Nearby Peds Up", EffectCategory.PEDS, "peds_launchnearby")},
+            {EffectType.EFFECT_PEDS_ATTACK_PLAYER, new EffectInfo("All Peds Attack Player", EffectCategory.PEDS, "peds_attackplayer", true)},
         };
     }
 }
