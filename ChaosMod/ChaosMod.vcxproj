@@ -139,7 +139,7 @@
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRiot.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryClown.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryAlien.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus2.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionBrad.cpp" />
