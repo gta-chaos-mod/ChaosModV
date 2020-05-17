@@ -202,6 +202,7 @@ enum EffectType
 	EFFECT_SPAWN_FAN_CATS,
 	EFFECT_PEDS_COPS,
 	EFFECT_ROT_ALL_VEHS,
+	EFFECT_LAUNCH_ALL_PEDS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -405,6 +406,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_FAN_CATS, {"Spawn Fan Cats", "peds_spawnfancats"}},
 	{EFFECT_PEDS_COPS, {"All Peds Are Cops", "peds_cops", true}},
 	{EFFECT_ROT_ALL_VEHS, {"Flip All Vehicles", "vehs_rotall"}},
+	{EFFECT_LAUNCH_ALL_PEDS, {"Launch All Nearby Peds Up", "peds_launchnearby"}},
 	// Effects contributed by Lucas7yoshi
 	{EFFECT_VEH_SET_RANDOM_SEAT, {"Teleport Into Random Seat", "veh_randomseat"}},
 	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},

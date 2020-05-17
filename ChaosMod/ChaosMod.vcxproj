@@ -126,6 +126,7 @@
     <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInvinciblePeds.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInvisiblePeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsLaunchNearbyPeds.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNearbyFlee.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp" />
