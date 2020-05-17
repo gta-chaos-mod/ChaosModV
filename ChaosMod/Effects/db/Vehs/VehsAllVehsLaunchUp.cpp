@@ -4,7 +4,9 @@ static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
-		SET_ENTITY_VELOCITY(veh, .0f, .0f, 10000.f);
+		Vector3 vel = GET_ENTITY_VELOCITY(veh);
+
+		SET_ENTITY_VELOCITY(veh, vel.x, vel.y, 100.f);
 	}
 }
 
