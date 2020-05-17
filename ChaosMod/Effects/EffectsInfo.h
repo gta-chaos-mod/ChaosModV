@@ -428,7 +428,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_ANGRY_ALIEN, {"Spawn Angry Alien", "peds_angryalien"}},
 	{EFFECT_OHKO_VEHICLES, {"Vehicles Explode On Impact", "vehs_ohko", true}},
 	{EFFECT_MISC_WAVEY, {"Things Are Getting Wavey", "misc_waves", true}},
-	{EFFECT_VEH_SPAM_DOORS, {"Spam Doors", "vehs_spamdoors", true}},
+	{EFFECT_VEH_SPAM_DOORS, {"Spammy Vehicle Doors", "vehs_spamdoors", true}},
 	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, {EFFECT_VEH_SET_TOPSPEED_30MPH}}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, {EFFECT_VEH_SPEED_MINIMUM}}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
