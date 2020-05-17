@@ -10,11 +10,19 @@ static void OnStop()
 
 static void OnTick()
 {
-	for (auto ped : GetAllPeds())
+	static DWORD64 lastTick = GetTickCount64();
+	DWORD64 curTick = GetTickCount64();
+
+	if (lastTick < curTick - 1000)
 	{
-		if (!IS_PED_A_PLAYER(ped))
+		lastTick = curTick;
+
+		for (auto ped : GetAllPeds())
 		{
-			SET_PED_CONFIG_FLAG(ped, 292, true);
+			if (!IS_PED_A_PLAYER(ped))
+			{
+				SET_PED_CONFIG_FLAG(ped, 292, true);
+			}
 		}
 	}
 
