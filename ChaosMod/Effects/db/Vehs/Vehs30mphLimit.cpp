@@ -1,3 +1,7 @@
+/*
+	Effect by Lucas7yoshi
+*/
+
 #include <stdafx.h>
 
 static void OnTick()

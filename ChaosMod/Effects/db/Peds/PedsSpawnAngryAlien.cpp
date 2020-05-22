@@ -1,4 +1,9 @@
+/*
+	Effect by Lucas7yoshi
+*/
+
 #include <stdafx.h>
+
 //based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {

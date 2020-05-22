@@ -1,3 +1,7 @@
+/*
+	Effect by Lucas7yoshi
+*/
+
 #include <stdafx.h>
 
 #define ApplyForce(entity, force) APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, 1, 0, 0, force, true, false, true, true)

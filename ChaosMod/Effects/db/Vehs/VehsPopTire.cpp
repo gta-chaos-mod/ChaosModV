@@ -1,4 +1,9 @@
+/*
+	Effect by Lucas7yoshi
+*/
+
 #include <stdafx.h>
+
 // Each tire has a 50% chance of popping or being repaired every 2 seconds.
 static void OnStart()
 {
