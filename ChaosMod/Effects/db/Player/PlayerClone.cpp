@@ -2,10 +2,21 @@
 
 static void OnStart()
 {
+	bool friendly = Random::GetRandomInt(0, 1);
+
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	if (friendly)
+	{
+		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_FRIENDLY", &relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	}
+	else
+	{
+		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_HOSTILE", &relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	}
 
 	Ped playerPed = PLAYER_PED_ID();
 
@@ -20,7 +31,10 @@ static void OnStart()
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 
-	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+	if (friendly)
+	{
+		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+	}
 
 	GIVE_WEAPON_TO_PED(ped, GET_SELECTED_PED_WEAPON(playerPed), 9999, true, true);
 
