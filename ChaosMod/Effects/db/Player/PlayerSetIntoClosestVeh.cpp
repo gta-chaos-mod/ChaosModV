@@ -2,21 +2,22 @@
 
 static void OnStart()
 {
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
+	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
-		return;
-	}
-
-	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Vehicle closestVeh = -1;
 	float closestDist = 9999.f;
 	for (Vehicle veh : GetAllVehs())
 	{
-		auto coords = GET_ENTITY_COORDS(veh, false);
-		auto dist = GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
+		if (veh == playerVeh)
+		{
+			continue;
+		}
+
+		Vector3 coords = GET_ENTITY_COORDS(veh, false);
+		float dist = GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
 		if (dist < closestDist)
 		{
 			closestVeh = veh;
@@ -26,6 +27,12 @@ static void OnStart()
 
 	if (closestVeh != -1)
 	{
+		if (!IS_VEHICLE_SEAT_FREE(closestVeh, -1, false))
+		{
+			CLEAR_PED_TASKS_IMMEDIATELY(GET_PED_IN_VEHICLE_SEAT(closestVeh, -1, false));
+			WAIT(0);
+		}
+
 		SET_PED_INTO_VEHICLE(playerPed, closestVeh, -1);
 	}
 }
