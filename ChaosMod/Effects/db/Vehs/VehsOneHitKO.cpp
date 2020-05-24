@@ -13,9 +13,14 @@ static void OnTick()
 	{
 		lastTick = curTick;
 
+		Ped playerPed = PLAYER_PED_ID();
+
 		for (Vehicle veh : GetAllVehs())
 		{
-			SET_VEHICLE_OUT_OF_CONTROL(veh, false, true);
+			if (!IS_PED_IN_ANY_HELI(playerPed))
+			{
+				SET_VEHICLE_OUT_OF_CONTROL(veh, false, true);
+			}
 		}
 	}
 }
