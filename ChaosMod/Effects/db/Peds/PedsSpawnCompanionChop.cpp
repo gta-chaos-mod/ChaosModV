@@ -16,9 +16,6 @@ static void OnStart()
 	SET_PED_COMBAT_ATTRIBUTES(ped, 0, false);
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 
-	SET_PED_CAN_RAGDOLL(ped, false);
-	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 
 	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
