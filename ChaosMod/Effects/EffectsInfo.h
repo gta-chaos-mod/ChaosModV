@@ -209,6 +209,7 @@ enum EffectType
 	EFFECT_PEDS_ATTACK_PLAYER,
 	EFFECT_CLONE_PLAYER,
 	EFFECT_SLIDY_PEDS,
+	EFFECT_SPAWN_DANCING_APES,
 	_EFFECT_ENUM_MAX
 };
 
@@ -431,5 +432,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, {EFFECT_VEH_SET_TOPSPEED_30MPH}}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, {EFFECT_VEH_SPEED_MINIMUM}}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
-	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}}
+	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
+	{EFFECT_SPAWN_DANCING_APES, {"Spawn Dance Troop", "peds_spawndancingapes"}},
 };

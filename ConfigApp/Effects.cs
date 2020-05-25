@@ -243,6 +243,7 @@ namespace ConfigApp
             EFFECT_PEDS_ATTACK_PLAYER,
             EFFECT_CLONE_PLAYER,
             EFFECT_SLIDY_PEDS,
+            EFFECT_SPAWN_DANCING_APES,
             _EFFECT_ENUM_MAX
         }
 
@@ -451,6 +452,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_ATTACK_PLAYER, new EffectInfo("All Peds Attack Player", EffectCategory.PEDS, "peds_attackplayer", true)},
             {EffectType.EFFECT_CLONE_PLAYER, new EffectInfo("Clone Player", EffectCategory.PLAYER, "player_clone")},
             {EffectType.EFFECT_SLIDY_PEDS, new EffectInfo("Slidy Peds", EffectCategory.PEDS, "peds_slidy", true)},
+            {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troop", EffectCategory.PEDS, "peds_spawndancingapes")},
         };
     }
 }
