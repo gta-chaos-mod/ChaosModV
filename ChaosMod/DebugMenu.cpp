@@ -10,7 +10,7 @@ DebugMenu::DebugMenu(std::vector<EffectType> effects)
 {
 	if (effects.empty())
 	{
-		m_effects.emplace_back(static_cast<EffectType>(-1), "No active effects :(");
+		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
 		return;
 	}
 
