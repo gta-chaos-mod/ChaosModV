@@ -17,7 +17,7 @@ static void OnTick()
 
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (!IS_PED_IN_ANY_HELI(playerPed))
+			if (!IS_PED_IN_ANY_HELI(playerPed) && !IS_PED_IN_ANY_PLANE(playerPed))
 			{
 				SET_VEHICLE_OUT_OF_CONTROL(veh, false, true);
 			}
