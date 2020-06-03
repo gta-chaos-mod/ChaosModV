@@ -104,6 +104,7 @@
     <ClCompile Include="Effects\db\Misc\MiscNoPhone.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNothing.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOneShot.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSnow.cpp" />
@@ -261,6 +262,9 @@
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

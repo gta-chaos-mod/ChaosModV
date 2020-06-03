@@ -210,6 +210,7 @@ enum EffectType
 	EFFECT_CLONE_PLAYER,
 	EFFECT_SLIDY_PEDS,
 	EFFECT_SPAWN_DANCING_APES,
+	EFFECT_ONE_BULLET_WEP,
 	_EFFECT_ENUM_MAX
 };
 
@@ -434,4 +435,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
 	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
 	{EFFECT_SPAWN_DANCING_APES, {"Spawn Dance Troop", "peds_spawndancingapes"}},
+	{EFFECT_ONE_BULLET_WEP, {"One Bullet Mags", "misc_onebullet", true}},
 };
