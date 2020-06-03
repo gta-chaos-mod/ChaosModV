@@ -246,6 +246,7 @@ namespace ConfigApp
             EFFECT_SPAWN_DANCING_APES,
             EFFECT_ONE_BULLET_WEP,
             EFFECT_PHONES,
+            EFFECT_MIDAS_TOUCH,
             _EFFECT_ENUM_MAX
         }
 
@@ -457,6 +458,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troop", EffectCategory.PEDS, "peds_spawndancingapes")},
             {EffectType.EFFECT_ONE_BULLET_WEP, new EffectInfo("One Bullet Mags", EffectCategory.MISC, "misc_onebullet", true, false)},
             {EffectType.EFFECT_PHONES, new EffectInfo("Who's Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true, false)},
+            {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.MISC, "misc_midas", true, false)}
         };
     }
 }

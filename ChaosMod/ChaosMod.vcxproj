@@ -98,6 +98,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMoneyRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNightVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoHUD.cpp" />
