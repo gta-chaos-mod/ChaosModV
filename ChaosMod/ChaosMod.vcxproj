@@ -98,12 +98,14 @@
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMoneyRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNightVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoHUD.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoPhone.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNothing.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOneShot.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSnow.cpp" />
@@ -137,6 +139,7 @@
     <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOnePunch.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsPhones.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
@@ -261,6 +264,9 @@
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

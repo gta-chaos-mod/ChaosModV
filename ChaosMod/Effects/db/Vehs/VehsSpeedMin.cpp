@@ -27,6 +27,7 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 	if (IS_PED_DEAD_OR_DYING(playerPed, 1))
 	{
+		m_lastVeh = 0;
 		return;
 	}
 
