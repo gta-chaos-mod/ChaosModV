@@ -7,13 +7,13 @@ namespace ConfigApp
 {
     public partial class EffectConfig : Window
     {
-        private bool _IsTimedEffect;
-        private bool _IsSaved = false;
+        private bool m_isTimedEffect;
+        private bool m_IsSaved = false;
         public bool IsSaved
         {
             get
             {
-                return _IsSaved;
+                return m_IsSaved;
             }
         }
 
@@ -21,9 +21,9 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            _IsTimedEffect = effectInfo.IsTimed;
+            m_isTimedEffect = effectInfo.IsTimed;
 
-            if (_IsTimedEffect)
+            if (m_isTimedEffect)
             {
                 effectconf_timer_type_enable.IsChecked = effectData.EffectTimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
                 effectconf_timer_type.ItemsSource = new string[]
@@ -55,7 +55,7 @@ namespace ConfigApp
 
         private void CheckEnableConfigurables()
         {
-            if (!_IsTimedEffect)
+            if (!m_isTimedEffect)
             {
                 effectconf_timer_type_enable.IsEnabled = false;
                 effectconf_timer_time_enable.IsEnabled = false;
@@ -107,7 +107,7 @@ namespace ConfigApp
 
         private void OnSave(object sender, RoutedEventArgs e)
         {
-            _IsSaved = true;
+            m_IsSaved = true;
 
             Close();
         }

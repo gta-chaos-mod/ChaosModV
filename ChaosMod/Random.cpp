@@ -2,7 +2,7 @@
 
 #include "Random.h"
 
-int m_seed = -1;
+int m_seed = 0;
 
 namespace Random
 {
@@ -23,7 +23,7 @@ namespace Random
 		{
 			firstTime = false;
 
-			if (m_seed >= 0)
+			if (m_seed > 0)
 			{
 				random1.seed(m_seed);
 			}

@@ -471,6 +471,9 @@
     <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OptionsFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
@@ -535,6 +538,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util\Vehicle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

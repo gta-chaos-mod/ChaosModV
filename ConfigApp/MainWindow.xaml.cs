@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,305 +7,118 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using static ConfigApp.Effects;
+using static ConfigApp.Options;
 
 namespace ConfigApp
 {
-    public class TreeMenuItem : INotifyPropertyChanged
-    {
-        public string Text { get; private set; }
-        public TreeMenuItem Parent;
-        public List<TreeMenuItem> Children { get; private set; }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private bool _IsChecked;
-        public bool IsChecked
-        {
-            get
-            {
-                return _IsChecked;
-            }
-            set
-            {
-                _IsChecked = value;
-
-                _NotifyFieldsUpdated();
-
-                foreach (TreeMenuItem menuItem in Children)
-                {
-                    menuItem.IsChecked = value;
-                }
-
-                Parent?.UpdateCheckedAccordingToChildrenStatus();
-            }
-        }
-        public string IsConfigVisible
-        {
-            get
-            {
-                return Children.Count == 0 ? "Visible" : "Hidden";
-            }
-        }
-        public bool IsConfigEnabled
-        {
-            get
-            {
-                return IsChecked;
-            }
-        }
-
-        public TreeMenuItem(string text, TreeMenuItem parent = null)
-        {
-            Text = text;
-            Parent = parent;
-            Children = new List<TreeMenuItem>();
-            _IsChecked = true;
-        }
-
-        public void AddChild(TreeMenuItem menuItem)
-        {
-            if (menuItem != null)
-            {
-                menuItem.Parent = this;
-                Children.Add(menuItem);
-            }
-        }
-
-        public void UpdateCheckedAccordingToChildrenStatus()
-        {
-            bool shouldBeChecked = false;
-            foreach (TreeMenuItem menuItem in Children)
-            {
-                if (menuItem.IsChecked)
-                {
-                    shouldBeChecked = true;
-                    break;
-                }
-            }
-
-            _IsChecked = shouldBeChecked;
-
-            _NotifyFieldsUpdated();
-        }
-
-        private void _NotifyFieldsUpdated()
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigVisible"));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigEnabled"));
-        }
-    }
-
-    public class EffectData
-    {
-        public EffectTimedType EffectTimedType;
-        public int EffectCustomTime;
-        public int EffectWeight;
-        public bool EffectPermanent;
-
-        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, int effectWeight, bool effectPermanent)
-        {
-            EffectTimedType = effectTimedType;
-            EffectCustomTime = effectCustomTime;
-            EffectWeight = effectWeight;
-            EffectPermanent = effectPermanent;
-        }
-    }
-
     public partial class MainWindow : Window
     {
-        private const string ConfigFile = "config.ini";
-        private const string EffectsFile = "effects.ini";
+        private OptionsFile m_configFile = RegisterFile("config.ini");
+        private OptionsFile m_twitchFile = RegisterFile("twitch.ini");
+        private OptionsFile m_effectsFile = RegisterFile("effects.ini");
 
-        private Dictionary<EffectType, TreeMenuItem> TreeMenuItemsMap;
-        private Dictionary<EffectType, EffectData> EffectDataMap;
+        private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
+        private Dictionary<EffectType, EffectData> m_effectDataMap;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            while (!ParseConfigFile())
-            {
-                WriteConfigFile();
-            }
+            ParseConfigFile();
+            ParseTwitchFile();
 
             InitEffectsTreeView();
 
-            while (!ParseEffectsFile())
-            {
-                WriteEffectsFile();
-            }
+            ParseEffectsFile();
 
             InitTwitchTab();
         }
 
-        private bool ParseConfigFile()
+        private void ParseConfigFile()
         {
-            if (!File.Exists(ConfigFile))
+            m_configFile.ReadFile();
+
+            misc_user_effects_spawn_dur.Text = m_configFile.ReadValue("NewEffectSpawnTime", "30");
+            misc_user_effects_timed_dur.Text = m_configFile.ReadValue("EffectTimedDur", "90");
+            misc_user_effects_random_seed.Text = m_configFile.ReadValue("Seed");
+            misc_user_effects_timed_short_dur.Text = m_configFile.ReadValue("EffectTimedShortDur", "30");
+            misc_user_effects_clear_enable.IsChecked = m_configFile.ReadValueBool("EnableClearEffectsShortcut", true);
+            misc_user_effects_twice_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTwiceInRow", false);
+            misc_user_effects_drawtimer_disable.IsChecked = m_configFile.ReadValueBool("DisableTimerBarDraw", false);
+            misc_user_effects_drawtext_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTextDraw", false);
+            misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
+            if (m_configFile.HasKey("EffectTimerColor"))
             {
-                return false;
+                misc_user_effects_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimerColor"));
             }
-
-            string data = File.ReadAllText(ConfigFile);
-            if (data.Length == 0)
+            if (m_configFile.HasKey("EffectTextColor"))
             {
-                return false;
+                misc_user_effects_text_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTextColor"));
             }
-
-            foreach (string line in data.Split('\n'))
+            if (m_configFile.HasKey("EffectTimedTimerColor"))
             {
-                string[] keyValue = line.Split('=');
-                if (keyValue.Length != 2)
-                {
-                    continue;
-                }
-
-                string key = keyValue[0];
-
-                if (int.TryParse(keyValue[1], out int value))
-                {
-                    switch (key)
-                    {
-                        case "NewEffectSpawnTime":
-                            misc_user_effects_spawn_dur.Text = $"{value}";
-                            break;
-                        case "EffectTimedDur":
-                            misc_user_effects_timed_dur.Text = $"{value}";
-                            break;
-                        case "Seed":
-                            if (value >= 0)
-                            {
-                                misc_user_effects_random_seed.Text = $"{value}";
-                            }
-                            break;
-                        case "EffectTimedShortDur":
-                            misc_user_effects_timed_short_dur.Text = $"{value}";
-                            break;
-                        case "EnableTwitchVoting":
-                            twitch_user_agreed.IsChecked = value != 0;
-                            break;
-                        case "TwitchVotingNoVoteChance":
-                            twitch_user_effects_chance_no_voting_round.Text = $"{(value >= 0 ? value <= 100 ? value : 100 : 0)}";
-                            break;
-                        case "TwitchVotingSecsBeforeVoting":
-                            twitch_user_effects_secs_before_chat_voting.Text = $"{(value >= 0 ? value == 1 ? 2 : value : 0)}";
-                            break;
-                        case "TwitchVotingVoterIndicator":
-                            twitch_user_voter_indicator_enabled.IsChecked = value != 0;
-                            break;
-                        case "TwitchVotingDisableNoVoteRoundMsg":
-                            twitch_user_chat_no_vote_msg_disable.IsChecked = value != 0;
-                            break;
-                        case "TwitchVotingShowVoteablesOnscreen":
-                            twitch_user_show_voteables_onscreen_enable.IsChecked = value != 0;
-                            break;
-                        case "EnableClearEffectsShortcut":
-                            misc_user_effects_clear_enable.IsChecked = value != 0;
-                            break;
-                        case "DisableEffectTwiceInRow":
-                            misc_user_effects_twice_disable.IsChecked = value != 0;
-                            break;
-                        case "DisableTimerBarDraw":
-                            misc_user_effects_drawtimer_disable.IsChecked = value != 0;
-                            break;
-                        case "DisableEffectTextDraw":
-                            misc_user_effects_drawtext_disable.IsChecked = value != 0;
-                            break;
-                        case "EnableToggleModShortcut":
-                            misc_user_toggle_mod_shortcut.IsChecked = value != 0;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (key)
-                    {
-                        case "EffectTimerColor":
-                            misc_user_effects_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
-                            break;
-                        case "EffectTextColor":
-                            misc_user_effects_text_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
-                            break;
-                        case "EffectTimedTimerColor":
-                            misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(keyValue[1]);
-                            break;
-                        case "TwitchChannelName":
-                            twitch_user_channel_name.Text = keyValue[1];
-                            break;
-                        case "TwitchUserName":
-                            twitch_user_user_name.Text = keyValue[1];
-                            break;
-                        case "TwitchChannelOAuth":
-                            twitch_user_channel_oauth.Text = keyValue[1];
-                            break;
-                        case "TwitchVotingPollPass":
-                            twitch_user_poll_passphrase.Text = keyValue[1];
-                            break;
-                    }
-                }
+                misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
-
-            return true;
         }
 
         private void WriteConfigFile()
         {
-            string data = "";
+            m_configFile.WriteValue("NewEffectSpawnTime", misc_user_effects_spawn_dur.Text);
+            m_configFile.WriteValue("EffectTimedDur", misc_user_effects_timed_dur.Text);
+            m_configFile.WriteValue("Seed", misc_user_effects_random_seed.Text);
+            m_configFile.WriteValue("EffectTimedShortDur", misc_user_effects_timed_short_dur.Text);
+            m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
+            m_configFile.WriteValue("DisableEffectTwiceInRow", misc_user_effects_twice_disable.IsChecked.Value);
+            m_configFile.WriteValue("DisableTimerBarDraw", misc_user_effects_drawtimer_disable.IsChecked.Value);
+            m_configFile.WriteValue("EnableToggleModShortcut", misc_user_toggle_mod_shortcut.IsChecked.Value);
+            m_configFile.WriteValue("EffectTimerColor", misc_user_effects_timer_color.SelectedColor.ToString());
+            m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
+            m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
 
-            data += $"NewEffectSpawnTime={(misc_user_effects_spawn_dur.Text.Length > 0 ? misc_user_effects_spawn_dur.Text : "30")}\n";
-            data += $"EffectTimedDur={(misc_user_effects_timed_dur.Text.Length > 0 ? misc_user_effects_timed_dur.Text : "90")}\n";
-            data += $"Seed={(misc_user_effects_random_seed.Text.Length > 0 ? misc_user_effects_random_seed.Text : "-1")}\n";
-            data += $"EffectTimedShortDur={(misc_user_effects_timed_short_dur.Text.Length > 0 ? misc_user_effects_timed_short_dur.Text : "30")}\n";
-            data += $"EnableTwitchVoting={(twitch_user_agreed.IsChecked.Value ? "1" : "0")}\n";
-            data += $"TwitchChannelName={(twitch_user_channel_name.Text)}\n";
-            data += $"TwitchUserName={(twitch_user_user_name.Text)}\n";
-            data += $"TwitchChannelOAuth={(twitch_user_channel_oauth.Text)}\n";
-            data += $"TwitchVotingNoVoteChance={(twitch_user_effects_chance_no_voting_round.Text != null ? twitch_user_effects_chance_no_voting_round.Text : "50")}\n";
-            data += $"TwitchVotingSecsBeforeVoting={(twitch_user_effects_secs_before_chat_voting.Text.Length > 0 ? twitch_user_effects_secs_before_chat_voting.Text : "0")}\n";
-            data += $"TwitchVotingPollPass={(twitch_user_poll_passphrase.Text)}\n";
-            data += $"TwitchVotingVoterIndicator={(twitch_user_voter_indicator_enabled.IsChecked.Value ? "1" : "0")}\n";
-            data += $"TwitchVotingDisableNoVoteRoundMsg={(twitch_user_chat_no_vote_msg_disable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"TwitchVotingShowVoteablesOnscreen={(twitch_user_show_voteables_onscreen_enable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"EnableClearEffectsShortcut={(misc_user_effects_clear_enable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"DisableEffectTwiceInRow={(misc_user_effects_twice_disable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"DisableTimerBarDraw={(misc_user_effects_drawtimer_disable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"DisableEffectTextDraw={(misc_user_effects_drawtext_disable.IsChecked.Value ? "1" : "0")}\n";
-            data += $"EnableToggleModShortcut={(misc_user_toggle_mod_shortcut.IsChecked.Value ? "1" : "0")}\n";
-            data += $"EffectTimerColor={(misc_user_effects_timer_color.SelectedColor)}\n";
-            data += $"EffectTextColor={(misc_user_effects_text_color.SelectedColor)}\n";
-            data += $"EffectTimedTimerColor={(misc_user_effects_effect_timer_color.SelectedColor)}\n";
-
-            File.WriteAllText(ConfigFile, data);
+            m_configFile.WriteFile();
         }
 
-        private bool ParseEffectsFile()
+        private void ParseTwitchFile()
         {
-            if (!File.Exists(EffectsFile))
-            {
-                return false;
-            }
+            m_twitchFile.ReadFile();
 
-            string data = File.ReadAllText(EffectsFile);
-            if (data.Length == 0)
-            {
-                return false;
-            }
+            twitch_user_agreed.IsChecked = m_twitchFile.ReadValueBool("EnableTwitchVoting", false);
+            twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
+            twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
+            twitch_user_channel_oauth.Text = m_twitchFile.ReadValue("TwitchChannelOAuth");
+            twitch_user_poll_passphrase.Text = m_twitchFile.ReadValue("TwitchVotingPollPass");
+            twitch_user_effects_chance_no_voting_round.Text = m_twitchFile.ReadValue("TwitchVotingNoVoteChance", "50");
+            twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
+            twitch_user_voter_indicator_enabled.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingVoterIndicator", false);
+            twitch_user_chat_no_vote_msg_disable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
+            twitch_user_show_voteables_onscreen_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingShowVoteablesOnscreen", false);
+        }
 
-            foreach (string line in data.Split('\n'))
-            {
-                string[] keyValue = line.Split('=');
-                if (keyValue.Length != 2)
-                {
-                    continue;
-                }
+        private void WriteTwitchFile()
+        {
+            m_twitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
+            m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
+            m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Text);
+            m_twitchFile.WriteValue("TwitchVotingPollPass", twitch_user_poll_passphrase.Text);
+            m_twitchFile.WriteValue("TwitchVotingNoVoteChance", twitch_user_effects_chance_no_voting_round.Text);
+            m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
+            m_twitchFile.WriteValue("TwitchVotingVoterIndicator", twitch_user_voter_indicator_enabled.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchVotingDisableNoVoteRoundMsg", twitch_user_chat_no_vote_msg_disable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchVotingShowVoteablesOnscreen", twitch_user_show_voteables_onscreen_enable.IsChecked.Value);
 
-                string key = keyValue[0];
-                string value = keyValue[1];
+            m_twitchFile.WriteFile();
+        }
+
+        private void ParseEffectsFile()
+        {
+            m_effectsFile.ReadFile();
+
+            foreach (string key in m_effectsFile.GetKeys())
+            {
+                string value = m_effectsFile.ReadValue(key);
 
                 string[] values = value.Split(',');
-
-                if (!int.TryParse(values[0], out int enabled))
-                {
-                    return false;
-                }
 
                 // Find EffectType from ID
                 EffectType effectType = EffectType._EFFECT_ENUM_MAX;
@@ -327,8 +139,10 @@ namespace ConfigApp
                 EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
                 int effectTimedTime = -1;
                 int effectWeight = 5;
-                int effectPermanent = 0;
+                bool effectPermanent = false;
+                bool effectExcludedFromVoting = false;
 
+                // Compatibility checks, previous versions had less options
                 if (values.Length >= 4)
                 {
                     Enum.TryParse(values[1], out effectTimedType);
@@ -337,46 +151,53 @@ namespace ConfigApp
 
                     if (values.Length >= 5)
                     {
-                        int.TryParse(values[4], out effectPermanent);
+                        int tmp;
+
+                        int.TryParse(values[4], out tmp);
+                        effectPermanent = tmp != 0;
+
+                        if (values.Length >= 6)
+                        {
+                            int.TryParse(values[5], out tmp);
+                            effectExcludedFromVoting = tmp != 0;
+                        }
                     }
                 }
 
                 if (effectType != EffectType._EFFECT_ENUM_MAX)
                 {
-                    TreeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
+                    int.TryParse(values[0], out int enabled);
+                    m_treeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    EffectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent != 0));
+                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting));
                 }
             }
-
-            return true;
         }
 
         private void WriteEffectsFile()
         {
-            string data = "";
-
             for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
             {
                 EffectInfo effectInfo = EffectsMap[effectType];
 
-                EffectDataMap.TryGetValue(effectType, out EffectData effectData);
+                // User might've not saved new effects included in update yet, create new EffectData entry if that's the case
+                m_effectDataMap.TryGetValue(effectType, out EffectData effectData);
                 if (effectData == null)
                 {
-                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false);
+                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false);
                 }
 
-                data += $"{EffectsMap[effectType].Id}={(TreeMenuItemsMap[effectType].IsChecked ? 1 : 0)}" +
-                    $",{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)},{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)}\n";
+                m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
+                    + $",{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)},{(effectData.EffectExcludedFromVoting ? 1 : 0)}");
             }
 
-            File.WriteAllText(EffectsFile, data);
+            m_effectsFile.WriteFile();
         }
 
         private void InitEffectsTreeView()
         {
-            TreeMenuItemsMap = new Dictionary<EffectType, TreeMenuItem>();
-            EffectDataMap = new Dictionary<EffectType, EffectData>();
+            m_treeMenuItemsMap = new Dictionary<EffectType, TreeMenuItem>();
+            m_effectDataMap = new Dictionary<EffectType, EffectData>();
 
             TreeMenuItem playerParentItem = new TreeMenuItem("Player");
             TreeMenuItem vehicleParentItem = new TreeMenuItem("Vehicle");
@@ -390,7 +211,7 @@ namespace ConfigApp
                 EffectInfo effectInfo = EffectsMap[effectType];
                 string effectName = effectInfo.Name;
                 TreeMenuItem menuItem = new TreeMenuItem(effectName);
-                TreeMenuItemsMap.Add(effectType, menuItem);
+                m_treeMenuItemsMap.Add(effectType, menuItem);
 
                 switch (effectInfo.EffectCategory)
                 {
@@ -463,9 +284,7 @@ namespace ConfigApp
             twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_voter_indicator_enabled.IsEnabled = agreed;
-            twitch_user_chat_no_vote_msg_disable_label.IsEnabled = agreed;
             twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
-            twitch_user_show_voteables_onscreen_enable_label.IsEnabled = agreed;
             twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
         }
 
@@ -487,6 +306,7 @@ namespace ConfigApp
         private void user_save_Click(object sender, RoutedEventArgs e)
         {
             WriteConfigFile();
+            WriteTwitchFile();
             WriteEffectsFile();
 
             MessageBox.Show("Saved Config!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -499,13 +319,25 @@ namespace ConfigApp
 
             if (result == MessageBoxResult.Yes)
             {
-                File.WriteAllText(ConfigFile, "");
-                File.WriteAllText(EffectsFile, "");
+                m_configFile.ResetFile();
+                ParseConfigFile();
 
-                MessageBox.Show("Resetted Config!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+                m_effectsFile.ResetFile();
+                ParseEffectsFile();
 
-                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-                Application.Current.Shutdown();
+                result = MessageBox.Show("Do you want to reset your Twitch settings too?", "ChaosModV",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    m_twitchFile.ResetFile();
+                    ParseTwitchFile();
+
+                    // Ensure all options are disabled in twitch tab again
+                    TwitchTabHandleAgreed();
+                }
+
+                MessageBox.Show("Config has been set back to default!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -519,7 +351,7 @@ namespace ConfigApp
             TreeMenuItem curTreeMenuItem = (TreeMenuItem)((TreeViewItem)((Grid)((Border)((ContentPresenter)((StackPanel)((Button)sender).Parent).TemplatedParent).Parent).Parent).TemplatedParent).DataContext;
 
             EffectType effectType = EffectType._EFFECT_ENUM_MAX;
-            foreach (var pair in TreeMenuItemsMap)
+            foreach (var pair in m_treeMenuItemsMap)
             {
                 if (pair.Value == curTreeMenuItem)
                 {
@@ -532,7 +364,7 @@ namespace ConfigApp
             if (effectType != EffectType._EFFECT_ENUM_MAX)
             {
                 EffectInfo effectInfo = EffectsMap[effectType];
-                EffectData effectData = EffectDataMap[effectType];
+                EffectData effectData = m_effectDataMap[effectType];
 
                 EffectConfig effectConfig = new EffectConfig(effectData, effectInfo);
                 effectConfig.Title = effectInfo.Name;
