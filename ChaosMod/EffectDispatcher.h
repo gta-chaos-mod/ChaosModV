@@ -72,7 +72,7 @@ private:
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
 	bool m_dispatchEffectsOnTimer = true;
-	bool m_enableTwitchVoteablesOnscreen = false;
+	bool m_enableTwitchVoteablesOnscreen;
 };
 
 inline std::unique_ptr<EffectDispatcher> g_effectDispatcher;

@@ -201,9 +201,18 @@ void TwitchVoting::Tick()
 			choosableEffects.erase(targetEffectType);
 		}
 
+		const char* name1 = g_effectsMap.at(m_effectChoices[0]).Name;
+		const char* name2 = g_effectsMap.at(m_effectChoices[1]).Name;
+		const char* name3 = g_effectsMap.at(m_effectChoices[2]).Name;
+
 		std::ostringstream oss;
-		oss << "vote:" << g_effectsMap.at(m_effectChoices[0]).Name << ":" << g_effectsMap.at(m_effectChoices[1]).Name << ":" << g_effectsMap.at(m_effectChoices[2]).Name << ":" << m_alternatedVotingRound;
+		oss << "vote:" << name1 << ":" << name2 << ":" << name3 << ":" << m_alternatedVotingRound;
 		SendToPipe(oss.str());
+
+		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents first
+		m_voteablesOutputFile << (!m_alternatedVotingRound ? 1 : 4) << ": " << name1 << std::endl << std::endl;
+		m_voteablesOutputFile << (!m_alternatedVotingRound ? 2 : 5) << ": " << name2 << std::endl << std::endl;
+		m_voteablesOutputFile << (!m_alternatedVotingRound ? 3 : 6) << ": " << name3 << std::endl;
 	}
 
 	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen)
@@ -259,6 +268,8 @@ bool TwitchVoting::HandleMsg(std::string msg)
 		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))];
 
 		m_alternatedVotingRound = !m_alternatedVotingRound;
+
+		m_voteablesOutputFile.clear();
 	}
 
 	return true;

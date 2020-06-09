@@ -5,6 +5,7 @@
 #include <map>
 #include <array>
 #include <memory>
+#include <fstream>
 
 class TwitchVoting
 {
@@ -33,6 +34,7 @@ private:
 	bool m_noVoteRound = false;
 	bool m_enableTwitchVoteablesOnscreen = false;
 	bool m_alternatedVotingRound = false;
+	std::ofstream m_voteablesOutputFile;
 
 	bool m_isVotingRunning = false;
 	std::array<EffectType, 3> m_effectChoices;

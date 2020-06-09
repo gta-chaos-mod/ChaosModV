@@ -29,7 +29,7 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 
 	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
 	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
-	seed = configFile.ReadValueInt("Seed", 1);
+	seed = configFile.ReadValueInt("Seed", 0);
 	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
 	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
 	disableEffectsTwiceInRow = configFile.ReadValueInt("DisableEffectTwiceInRow", false);
@@ -195,7 +195,7 @@ void Main::MainLoop()
 			m_clearEffectsTextTime -= curTick - lastTick;
 		}
 
-		if (m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
+		if (m_twitchVoting && m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
@@ -209,17 +209,20 @@ void Main::MainLoop()
 
 		lastTick = curTick;
 
-		if (!m_disableDrawTimerBar)
+		if (g_effectDispatcher)
 		{
-			g_effectDispatcher->DrawTimerBar();
-		}
-		if (!m_disableDrawEffectTexts)
-		{
-			g_effectDispatcher->DrawEffectTexts();
+			if (!m_disableDrawTimerBar)
+			{
+				g_effectDispatcher->DrawTimerBar();
+			}
+			if (!m_disableDrawEffectTexts)
+			{
+				g_effectDispatcher->DrawEffectTexts();
+			}
 		}
 
 #ifdef _DEBUG
-		if (m_debugMenu->IsVisible())
+		if (m_debugMenu && m_debugMenu->IsVisible())
 		{
 			// Arrow Up
 			DISABLE_CONTROL_ACTION(1, 27, true);
@@ -249,15 +252,13 @@ void Main::MainLoop()
 
 void Main::RunEffectLoop()
 {
-	g_effectDispatcher->Reset();
-
 	while (true)
 	{
 		WAIT(0);
 
 		if (IS_SCREEN_FADED_OUT())
 		{
-			SET_TIME_SCALE(1.f);
+			SET_TIME_SCALE(1.f); // Prevent potential softlock if Lag effect is running during screen fadeout
 
 			WAIT(100);
 
@@ -267,16 +268,24 @@ void Main::RunEffectLoop()
 		static bool justReenabled = false;
 		if (m_disableMod)
 		{
-			justReenabled = true;
+			if (!justReenabled)
+			{
+				justReenabled = true;
 
-			g_effectDispatcher->ClearEffects();
-			g_effectDispatcher->ResetTimer();
+				g_effectDispatcher.reset();
+#ifdef _DEBUG
+				m_debugMenu.reset();
+#endif
+				m_twitchVoting.reset();
+			}
+
+			continue;
 		}
 		else if (justReenabled)
 		{
 			justReenabled = false;
 
-			g_effectDispatcher->Reset();
+			Init(); // Restart the main part of the mod completely
 		}
 
 		if (m_clearAllEffects)
@@ -332,7 +341,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 	}
 
 #ifdef _DEBUG
-	if (m_debugMenu->IsVisible())
+	if (m_debugMenu && m_debugMenu->IsVisible())
 	{
 		m_debugMenu->HandleInput(key, wasDownBefore);
 	}

@@ -7,7 +7,7 @@ EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std:
 		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
 		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
 {
-	
+	Reset();
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -97,12 +97,12 @@ void EffectDispatcher::UpdateEffects()
 		return;
 	}
 
-	for (auto activeEffect : m_activeEffects)
+	for (const ActiveEffect& activeEffect : m_activeEffects)
 	{
 		activeEffect.RegisteredEffect->Tick();
 	}
 
-	auto currentUpdateTime = GetTickCount64();
+	DWORD64 currentUpdateTime = GetTickCount64();
 
 	if ((currentUpdateTime - m_effectsTimer) > 1000)
 	{
@@ -306,7 +306,7 @@ void EffectDispatcher::Reset()
 
 	m_enableNormalEffectDispatch = false;
 
-	for (auto pair : m_enabledEffects)
+	for (const auto& pair : m_enabledEffects)
 	{
 		if (pair.second.EffectPermanent)
 		{
