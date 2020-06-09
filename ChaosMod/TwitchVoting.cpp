@@ -50,6 +50,8 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance
 
 TwitchVoting::~TwitchVoting()
 {
+	m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
+
 	if (m_pipeHandle != INVALID_HANDLE_VALUE)
 	{
 		DisconnectNamedPipe(m_pipeHandle);
@@ -209,7 +211,6 @@ void TwitchVoting::Tick()
 		oss << "vote:" << name1 << ":" << name2 << ":" << name3 << ":" << m_alternatedVotingRound;
 		SendToPipe(oss.str());
 
-		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents first
 		m_voteablesOutputFile << (!m_alternatedVotingRound ? 1 : 4) << ": " << name1 << std::endl << std::endl;
 		m_voteablesOutputFile << (!m_alternatedVotingRound ? 2 : 5) << ": " << name2 << std::endl << std::endl;
 		m_voteablesOutputFile << (!m_alternatedVotingRound ? 3 : 6) << ": " << name3 << std::endl;
@@ -269,7 +270,7 @@ bool TwitchVoting::HandleMsg(std::string msg)
 
 		m_alternatedVotingRound = !m_alternatedVotingRound;
 
-		m_voteablesOutputFile.clear();
+		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
 	}
 
 	return true;
