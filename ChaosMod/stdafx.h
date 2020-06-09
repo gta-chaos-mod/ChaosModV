@@ -3,8 +3,11 @@
 #include "nativesNoNamespaces.h"
 #include "Random.h"
 #include "DebugMenu.h"
+#include "EffectDispatcher.h"
+#include "Main.h"
+#include "TwitchVoting.h"
 
-#include "Effects/Effects.h"
+#include "Effects/Effect.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle.h"
@@ -17,6 +20,7 @@
 #include "Util/Model.h"
 #include "Util/Player.h"
 #include "Util/Vehicle.h"
+#include "Util/TryParse.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

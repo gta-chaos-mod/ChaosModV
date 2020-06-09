@@ -5,7 +5,7 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	bool enableTwitchVoteablesOnscreen, std::map<EffectType, std::array<int, 4>> enabledEffects)
+	bool enableTwitchVoteablesOnscreen, std::map<EffectType, EffectData> enabledEffects)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
 	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
 	m_enabledEffects(enabledEffects)
@@ -157,21 +157,24 @@ void TwitchVoting::Tick()
 			return;
 		}
 
-		std::map<EffectType, std::array<int, 4>> choosableEffects;
-		for (auto pair : m_enabledEffects)
+		std::map<EffectType, EffectData> choosableEffects;
+		for (const auto& pair : m_enabledEffects)
 		{
-			choosableEffects.emplace(pair);
+			EffectType effectType = pair.first;
+			const EffectData& effectData = pair.second;
+
+			if (!effectData.EffectPermanent && !effectData.EffectExcludedFromVoting)
+			{
+				choosableEffects.emplace(effectType, effectData);
+			}
 		}
 
 		for (int i = 0; i < 3; i++)
 		{
 			int effectsTotalWeight = 0;
-			for (auto pair : choosableEffects)
+			for (const auto& pair : choosableEffects)
 			{
-				if (!pair.second[3])
-				{
-					effectsTotalWeight += pair.second[2] * 10;
-				}
+				effectsTotalWeight += pair.second.EffectWeight * 10;
 			}
 
 			int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -180,12 +183,12 @@ void TwitchVoting::Tick()
 			EffectType targetEffectType = _EFFECT_ENUM_MAX;
 			for (auto pair : choosableEffects)
 			{
-				if (pair.second[3])
+				if (pair.second.EffectPermanent)
 				{
 					continue;
 				}
 
-				addedUpWeight += pair.second[2] * 10;
+				addedUpWeight += pair.second.EffectWeight * 10;
 
 				if (index <= addedUpWeight)
 				{

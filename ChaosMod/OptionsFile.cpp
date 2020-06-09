@@ -7,60 +7,71 @@ OptionsFile::OptionsFile(const char* fileName) : m_fileName(fileName)
 	struct stat temp;
 	if (stat(m_fileName, &temp) == -1)
 	{
-		m_status = OptionsFileStatus::NOT_FOUND;
 		return;
 	}
 
-	std::ifstream config(m_fileName);
+	std::ifstream file(m_fileName);
 
-	if (config.fail())
+	if (file.fail())
 	{
-		m_status = OptionsFileStatus::FAILED_READING;
 		return;
 	}
 
-	char buffer[128];
-	while (config.getline(buffer, 128))
+	char buffer[64];
+	while (file.getline(buffer, 64))
 	{
 		std::string line(buffer);
 		std::string key = line.substr(0, line.find("="));
 
+		// Ignore line if there's no "="
 		if (line == key)
 		{
 			continue;
 		}
 
-		std::string value = line.substr(line.find("=") + 1);
+		std::string value = line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
 		
 		m_options.emplace(key, value);
 	}
 }
 
-OptionsFileStatus OptionsFile::GetStatus() const
+const std::vector<const char*> OptionsFile::GetAllKeys() const
 {
-	return m_status;
+	std::vector<const char*> keys;
+
+	for (const auto& pair : m_options)
+	{
+		keys.push_back(pair.first.c_str());
+	}
+
+	return keys;
 }
 
-const char* OptionsFile::ReadValue(const char* key, const char* defaultValue) const
+std::string OptionsFile::ReadValue(const char* key, const char* defaultValue) const
 {
-	try
+	const auto& result = m_options.find(key);
+	if (result != m_options.end())
 	{
-		return m_options.at(key);
+		return result->second;
 	}
-	catch (std::out_of_range)
+	else
 	{
-		return defaultValue;
+		return defaultValue ? defaultValue : "";
 	}
 }
 
 int OptionsFile::ReadValueInt(const char* key, int defaultValue) const
 {
-	try
+	const std::string& value = ReadValue(key);
+	
+	if (!value.empty())
 	{
-		return std::stoi(ReadValue(key));
+		int result;
+		if (TryParseInt(value, result))
+		{
+			return result;
+		}
 	}
-	catch (std::invalid_argument)
-	{
-		return defaultValue;
-	}
+
+	return defaultValue;
 }

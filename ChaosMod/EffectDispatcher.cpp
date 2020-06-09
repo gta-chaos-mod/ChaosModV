@@ -1,9 +1,6 @@
 #include "stdafx.h"
 
-#include "EffectDispatcher.h"
-#include "Effects/Effects.h"
-
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, std::array<int, 4>> enabledEffects,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, EffectData> enabledEffects,
 	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
 	bool enableTwitchVoteablesOnscreen)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
@@ -138,10 +135,16 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 	auto effectInfo = g_effectsMap.at(effectType);
 	auto effectData = m_enabledEffects.at(effectType);
 
-	int effectTime = effectInfo.IsTimed ? effectData[1] >= 0 ? effectData[1] : effectData[0] == 1 ? m_effectTimedShortDur : m_effectTimedDur : -1;
+	int effectTime = effectInfo.IsTimed
+		? effectData.EffectCustomTime >= 0
+			? effectData.EffectCustomTime
+			: effectData.EffectTimedType == EffectTimedType::TIMED_SHORT
+				? m_effectTimedShortDur
+				: m_effectTimedDur
+		: -1;
 
 	static std::ofstream log("chaosmod/effectslog.txt");
-	log << effectInfo.Name << " | " << effectTime << " | " << effectData[2] << std::endl;
+	log << effectInfo.Name << std::endl;
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -200,7 +203,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 	if (!alreadyExists)
 	{
-		auto registeredEffect = GetRegisteredEffect(effectType);
+		RegisteredEffect* registeredEffect = GetRegisteredEffect(effectType);
 
 		if (registeredEffect)
 		{
@@ -232,33 +235,36 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		return;
 	}
 
-	auto choosableEffects = m_enabledEffects;
-	if (m_disableTwiceInRow)
+	std::map<EffectType, EffectData> choosableEffects;
+	for (const auto& pair : m_enabledEffects)
 	{
-		choosableEffects.erase(m_lastEffect);
+		EffectType effectType = pair.first;
+		const EffectData& effectData = pair.second;
+
+		if (!effectData.EffectPermanent && (!m_disableTwiceInRow || effectType != m_lastEffect))
+		{
+			choosableEffects.emplace(effectType, effectData);
+		}
 	}
 
 	int effectsTotalWeight = 0;
-	for (auto pair : choosableEffects)
+	for (const auto& pair : choosableEffects)
 	{
-		if (!pair.second[3])
-		{
-			effectsTotalWeight += pair.second[2] * 10;
-		}
+		effectsTotalWeight += pair.second.EffectWeight * 10;
 	}
 
 	int index = Random::GetRandomInt(0, effectsTotalWeight);
 
 	int addedUpWeight = 0;
 	auto targetEffectType = _EFFECT_ENUM_MAX;
-	for (auto pair : choosableEffects)
+	for (const auto& pair : choosableEffects)
 	{
-		if (pair.second[3])
+		if (pair.second.EffectPermanent)
 		{
 			continue;
 		}
 
-		addedUpWeight += pair.second[2] * 10;
+		addedUpWeight += pair.second.EffectWeight * 10;
 
 		if (index <= addedUpWeight)
 		{
@@ -302,7 +308,7 @@ void EffectDispatcher::Reset()
 
 	for (auto pair : m_enabledEffects)
 	{
-		if (pair.second[3])
+		if (pair.second.EffectPermanent)
 		{
 			auto registeredEffect = GetRegisteredEffect(pair.first);
 

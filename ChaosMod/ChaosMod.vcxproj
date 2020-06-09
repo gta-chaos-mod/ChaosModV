@@ -248,7 +248,7 @@
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
-    <ClInclude Include="Effects\Effects.h" />
+    <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Gravity.h" />
@@ -264,6 +264,7 @@
     <ClInclude Include="TwitchVoting.h" />
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\Model.h" />
+    <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
   </ItemGroup>

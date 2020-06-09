@@ -1,5 +1,6 @@
 ﻿using Fleck;
 using Newtonsoft.Json;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,45 +85,27 @@ namespace TwitchChatVotingProxy
 
             m_twitchPollMode = File.Exists("chaosmod/.twitchpoll");
 
-            string data = File.ReadAllText("chaosmod/config.ini");
-            foreach (string line in data.Split('\n'))
+            OptionsFile twitchFile = new OptionsFile("chaosmod/twitch.ini");
+            twitchFile.ReadFile();
+
+            m_twitchChannelName = twitchFile.ReadValue("TwitchUserName");
+            twitchUsername = twitchFile.ReadValue("TwitchChannelName");
+            twitchOAuth = twitchFile.ReadValue("TwitchChannelOAuth");
+            twitchPollPass = twitchFile.ReadValue("TwitchVotingPollPass");
+            m_disableNoVoteMsg = twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
+
+            if (m_twitchPollMode)
             {
-                string[] text = line.Split('=');
-                if (text.Length < 2)
+                OptionsFile configFile = new OptionsFile("chaosmod/config.ini");
+                configFile.ReadFile();
+
+                m_twitchPollDur = twitchFile.ReadValueInt("NewEffectSpawnTime", 30);
+
+                if (m_twitchPollDur < 15 || m_twitchPollDur > 180)
                 {
-                    continue;
-                }
+                    m_streamWriter.Write("invalid_poll_dur\0");
 
-                switch (text[0])
-                {
-                    case "TwitchChannelName":
-                        m_twitchChannelName = text[1].Trim();
-                        break;
-                    case "TwitchUserName":
-                        twitchUsername = text[1].Trim();
-                        break;
-                    case "TwitchChannelOAuth":
-                        twitchOAuth = text[1].Trim();
-                        break;
-                    case "TwitchVotingPollPass":
-                        twitchPollPass = text[1].Trim();
-                        break;
-                    case "NewEffectSpawnTime":
-                        if (m_twitchPollMode)
-                        {
-                            m_twitchPollDur = int.Parse(text[1]) - 1;
-
-                            if (m_twitchPollDur < 15 || m_twitchPollDur > 180)
-                            {
-                                m_streamWriter.Write("invalid_poll_dur\0");
-
-                                return false;
-                            }
-                        }
-                        break;
-                    case "TwitchVotingDisableNoVoteRoundMsg":
-                        m_disableNoVoteMsg = int.Parse(text[1]) != 0;
-                        break;
+                    return false;
                 }
             }
 

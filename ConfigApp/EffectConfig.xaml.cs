@@ -21,6 +21,8 @@ namespace ConfigApp
         {
             InitializeComponent();
 
+            Title = effectInfo.Name;
+
             m_isTimedEffect = effectInfo.IsTimed;
 
             if (m_isTimedEffect)
@@ -49,6 +51,8 @@ namespace ConfigApp
             }
             effectconf_effect_weight.ItemsSource = weightItems;
             effectconf_effect_weight.SelectedIndex = effectData.EffectWeight - 1;
+
+            effectconf_exclude_voting_enable.IsChecked = effectData.EffectExcludedFromVoting;
 
             CheckEnableConfigurables();
         }

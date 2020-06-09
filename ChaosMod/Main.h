@@ -10,7 +10,7 @@
 class Main
 {
 public:
-	bool Init();
+	void Init();
 	void MainLoop();
 	void RunEffectLoop();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);

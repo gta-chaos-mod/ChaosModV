@@ -5,22 +5,27 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Shared; 
 
 using static ConfigApp.Effects;
-using static ConfigApp.Options;
 
 namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        private OptionsFile m_configFile = RegisterFile("config.ini");
-        private OptionsFile m_twitchFile = RegisterFile("twitch.ini");
-        private OptionsFile m_effectsFile = RegisterFile("effects.ini");
+        private OptionsFile m_configFile = new OptionsFile("config.ini");
+        private OptionsFile m_twitchFile = new OptionsFile("twitch.ini");
+        private OptionsFile m_effectsFile = new OptionsFile("effects.ini");
 
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
 
         public MainWindow()
+        {
+            Init();
+        }
+
+        private void Init()
         {
             InitializeComponent();
 
@@ -32,6 +37,17 @@ namespace ConfigApp
             ParseEffectsFile();
 
             InitTwitchTab();
+        }
+
+        private EffectData GetEffectData(EffectType effectType)
+        {
+            // Create EffectData in case effect wasn't saved yet
+            if (!m_effectDataMap.TryGetValue(effectType, out EffectData effectData))
+            {
+                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false);
+            }
+
+            return effectData;
         }
 
         private void ParseConfigFile()
@@ -70,6 +86,7 @@ namespace ConfigApp
             m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
             m_configFile.WriteValue("DisableEffectTwiceInRow", misc_user_effects_twice_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableTimerBarDraw", misc_user_effects_drawtimer_disable.IsChecked.Value);
+            m_configFile.WriteValue("DisableEffectTextDraw", misc_user_effects_drawtext_disable.IsChecked.Value);
             m_configFile.WriteValue("EnableToggleModShortcut", misc_user_toggle_mod_shortcut.IsChecked.Value);
             m_configFile.WriteValue("EffectTimerColor", misc_user_effects_timer_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
@@ -178,14 +195,7 @@ namespace ConfigApp
         {
             for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
             {
-                EffectInfo effectInfo = EffectsMap[effectType];
-
-                // User might've not saved new effects included in update yet, create new EffectData entry if that's the case
-                m_effectDataMap.TryGetValue(effectType, out EffectData effectData);
-                if (effectData == null)
-                {
-                    effectData = new EffectData(effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false);
-                }
+                EffectData effectData = GetEffectData(effectType);
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)},{(effectData.EffectExcludedFromVoting ? 1 : 0)}");
@@ -236,6 +246,7 @@ namespace ConfigApp
                 }
             }
 
+            effects_user_effects_tree_view.Items.Clear();
             effects_user_effects_tree_view.Items.Add(playerParentItem);
             effects_user_effects_tree_view.Items.Add(vehicleParentItem);
             effects_user_effects_tree_view.Items.Add(pedsParentItem);
@@ -320,10 +331,8 @@ namespace ConfigApp
             if (result == MessageBoxResult.Yes)
             {
                 m_configFile.ResetFile();
-                ParseConfigFile();
 
                 m_effectsFile.ResetFile();
-                ParseEffectsFile();
 
                 result = MessageBox.Show("Do you want to reset your Twitch settings too?", "ChaosModV",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -336,6 +345,8 @@ namespace ConfigApp
                     // Ensure all options are disabled in twitch tab again
                     TwitchTabHandleAgreed();
                 }
+
+                Init();
 
                 MessageBox.Show("Config has been set back to default!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -364,10 +375,9 @@ namespace ConfigApp
             if (effectType != EffectType._EFFECT_ENUM_MAX)
             {
                 EffectInfo effectInfo = EffectsMap[effectType];
-                EffectData effectData = m_effectDataMap[effectType];
+                EffectData effectData = GetEffectData(effectType);
 
                 EffectConfig effectConfig = new EffectConfig(effectData, effectInfo);
-                effectConfig.Title = effectInfo.Name;
                 effectConfig.ShowDialog();
 
                 if (effectConfig.IsSaved)
@@ -378,6 +388,7 @@ namespace ConfigApp
                         ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
                     effectData.EffectPermanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
                     effectData.EffectWeight = effectConfig.effectconf_effect_weight.SelectedIndex + 1;
+                    effectData.EffectExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
                 }
             }
         }
