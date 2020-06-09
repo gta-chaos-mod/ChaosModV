@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration (v1.5)" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="ChaosModV Configuration (v1.5.1)" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
