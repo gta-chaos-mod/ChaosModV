@@ -5,180 +5,83 @@
 #include "Memory.h"
 #include "TwitchVoting.h"
 #include "DebugMenu.h"
+#include "OptionsFile.h"
 
-int ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
-	bool& disableEffectsTwiceInRow, bool& disableTimerDrawing, bool& disableEffectTextDrawing, std::array<int, 3>& timerColor, std::array<int, 3>& textColor,
-	std::array<int, 3>& effectTimerColor, bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator,
-	bool& enableToggleModShortcut, bool& enableTwitchVoteablesOnscreen)
+std::array<int, 3> ParseColor(const std::string& colorText)
 {
-	static constexpr const char* FILE_PATH = "chaosmod/config.ini";
+	// # <A> <R> <G> <B>
 
-	struct stat temp;
-	if (stat(FILE_PATH, &temp) == -1)
+	std::array<int, 3> colors;
+
+	int j = 0;
+	for (int i = 3; i < 9; i += 2)
 	{
-		return -1;
+		 TryParseInt(colorText.substr(i, 2), colors[j++], 16);
 	}
 
-	std::ifstream config(FILE_PATH);
-
-	if (config.fail())
-	{
-		return -2;
-	}
-
-	char buffer[128];
-	while (config.getline(buffer, 128))
-	{
-		std::string line(buffer);
-		std::string key = line.substr(0, line.find("="));
-
-		if (line == key)
-		{
-			continue;
-		}
-
-		std::string value = line.substr(line.find("=") + 1);
-		try
-		{
-			int _value = std::stoi(value);
-
-			if (key == "NewEffectSpawnTime")
-			{
-				effectSpawnTime = _value > 0 ? _value : 1;
-			}
-			else if (key == "EffectTimedDur")
-			{
-				effectTimedDur = _value > 0 ? _value : 1;
-			}
-			else if (key == "Seed")
-			{
-				seed = _value;
-			}
-			else if (key == "EffectTimedShortDur")
-			{
-				effectTimedShortDur = _value > 0 ? _value : 1;
-			}
-			else if (key == "EnableTwitchVoting")
-			{
-				enableTwitchVoting = _value;
-			}
-			else if (key == "TwitchVotingNoVoteChance")
-			{
-				twitchVotingNoVoteChance = _value >= 0 ? _value <= 100 ? _value : 100 : 0;
-			}
-			else if (key == "TwitchVotingSecsBeforeVoting")
-			{
-				twitchSecsBeforeVoting = _value >= 0 ? _value == 1 ? 2 : _value : 0;
-			}
-			else if (key == "TwitchVotingVoterIndicator")
-			{
-				enableTwitchVoterIndicator = _value;
-			}
-			else if (key == "TwitchVotingShowVoteablesOnscreen")
-			{
-				enableTwitchVoteablesOnscreen = _value;
-			}
-			else if (key == "EnableClearEffectsShortcut")
-			{
-				enableClearEffectsShortcut = _value;
-			}
-			else if (key == "DisableEffectTwiceInRow")
-			{
-				disableEffectsTwiceInRow = _value;
-			}
-			else if (key == "DisableTimerBarDraw")
-			{
-				disableTimerDrawing = _value;
-			}
-			else if (key == "DisableEffectTextDraw")
-			{
-				disableEffectTextDrawing = _value;
-			}
-			else if (key == "EnableToggleModShortcut")
-			{
-				enableToggleModShortcut = _value;
-			}
-		}
-		catch (std::invalid_argument)
-		{
-			if (key == "EffectTimerColor" || key == "EffectTextColor" || key == "EffectTimedTimerColor")
-			{
-				// argb
-
-				std::array<int, 3> colors;
-
-				int j = 0;
-				for (int i = 3; i < 9; i += 2)
-				{
-					colors[j++] = std::strtol(value.substr(i, 2).c_str(), nullptr, 16);
-				}
-
-				if (key == "EffectTimerColor")
-				{
-					timerColor = colors;
-				}
-				else if (key == "EffectTextColor")
-				{
-					textColor = colors;
-				}
-				else if (key == "EffectTimedTimerColor")
-				{
-					effectTimerColor = colors;
-				}
-			}
-		}
-	}
-
-	return 0;
+	return colors;
 }
 
-int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
+void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut, bool& disableEffectsTwiceInRow,
+	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, std::array<int, 3>& timerColor, std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
-	static constexpr const char* FILE_PATH = "chaosmod/effects.ini";
+	OptionsFile configFile("chaosmod/config.ini");
 
-	struct stat temp;
-	if (stat(FILE_PATH, &temp) == -1)
-	{
-		return -1;
-	}
+	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
+	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
+	seed = configFile.ReadValueInt("Seed", 1);
+	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
+	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
+	disableEffectsTwiceInRow = configFile.ReadValueInt("DisableEffectTwiceInRow", false);
+	disableTimerDrawing = configFile.ReadValueInt("DisableTimerBarDraw", false);
+	disableEffectTextDrawing = configFile.ReadValueInt("DisableEffectTextDraw", false);
+	enableToggleModShortcut = configFile.ReadValueInt("EnableToggleModShortcut", true);
+	timerColor = ParseColor(configFile.ReadValue("EffectTimerColor", "#FF4040FF"));
+	textColor = ParseColor(configFile.ReadValue("EffectTextColor", "#FFFFFFFF"));
+	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
+}
 
-	std::ifstream config(FILE_PATH);
+void ParseTwitchFile(bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator, bool& enableTwitchVoteablesOnscreen)
+{
+	OptionsFile twitchFile("chaosmod/twitch.ini");
 
-	if (config.fail())
-	{
-		return -2;
-	}
+	enableTwitchVoting = twitchFile.ReadValueInt("EnableTwitchVoting", false);
+	twitchVotingNoVoteChance = twitchFile.ReadValueInt("TwitchVotingNoVoteChance", 50);
+	twitchSecsBeforeVoting = twitchFile.ReadValueInt("TwitchVotingSecsBeforeVoting", 0);
+	enableTwitchVoterIndicator = twitchFile.ReadValueInt("TwitchVotingVoterIndicator", false);
+	enableTwitchVoteablesOnscreen = twitchFile.ReadValueInt("TwitchVotingShowVoteablesOnscreen", false);
+}
+
+void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
+{
+	OptionsFile effectsFile("chaosmod/effects.ini");
 
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(std::make_pair<EffectType, std::array<int, 4>>(static_cast<EffectType>(i), { g_effectsMap.at(static_cast<EffectType>(i)).IsShortDuration, -1, 5, 0 }));
+		enabledEffects.emplace(static_cast<EffectType>(i), EffectData());
 	}
 
 	// Remove disabled effecttypes
-	char buffer[128];
-	while (config.getline(buffer, 128))
+	const std::vector<const char*>& effectKeys = effectsFile.GetAllKeys();
+	for (const char* key : effectKeys)
 	{
-		std::string line(buffer);
-		std::string key = line.substr(0, line.find("="));
-		if (line == key)
-		{
-			continue;
-		}
+		// Default EffectData values
+		// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
+		std::vector<int> values { true, static_cast<int>(EffectTimedType::TIMED_DEFAULT), -1, 5, false, false };
 
-		std::string value = line.substr(line.find("=") + 1);
-		std::array<int, 5> values { 1, -1, -1, 5, 0 };
+		std::string value = effectsFile.ReadValue(key);
 
 		int splitIndex = value.find(",");
 		if (splitIndex == value.npos)
 		{
-			values[0] = std::stoi(value);
+			TryParseInt(value, values[0]);
 		}
 		else
 		{
 			for (int i = 0; ; i++)
 			{
-				values[i] = std::stoi(value.substr(0, splitIndex));
+				TryParseInt(value.substr(0, splitIndex), values[i]);
 				value = value.substr(splitIndex + 1);
 
 				if (splitIndex == value.npos)
@@ -191,78 +94,51 @@ int ParseEffectsFile(std::map<EffectType, std::array<int, 4>>& enabledEffects)
 		}
 
 		// Map id to EffectType
-		for (const auto pair : g_effectsMap)
+		for (const auto& pair : g_effectsMap)
 		{
-			if (pair.second.Id == key)
+			if (!strcmp(pair.second.Id, key))
 			{
-				auto result = enabledEffects.find(pair.first);
+				const auto& result = enabledEffects.find(pair.first);
 				if (result != enabledEffects.end())
 				{
-					if (!values[0])
+					if (!values[0]) // 0: Enabled
 					{
 						enabledEffects.erase(result);
+
 						break;
 					}
 
-					EffectInfo effectInfo = g_effectsMap.at(result->first);
+					const EffectInfo& effectInfo = g_effectsMap.at(result->first);
+					EffectData& effectData = result->second;
 
-					result->second[0] = values[1] == -1 ? effectInfo.IsShortDuration : values[1];
-					result->second[1] = values[2];
-					result->second[2] = values[3];
-					result->second[3] = values[4];
+					effectData.EffectTimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]); // Dang
+					effectData.EffectCustomTime = values[2];
+					effectData.EffectWeight = values[3];
+					effectData.EffectPermanent = values[4];
+					effectData.EffectExcludedFromVoting = values[5];
 
 					static std::ofstream log("chaosmod/enabledeffectslog.txt");
-					log << effectInfo.Name << " " << result->second[0] << " " << result->second[1] << " " << result->second[2] << " " << result->second[3] << std::endl;
+					log << effectInfo.Name << std::endl;
 				}
 				break;
 			}
 		}
 	}
-
-	return 0;
 }
 
-bool Main::Init()
+void Main::Init()
 {
-	int effectSpawnTime = 30;
-	int effectTimedDur = 90;
-	int seed = -1;
-	int effectTimedShortDur = 30;
-	bool disableEffectsTwiceInRow = false;
-	std::array<int, 3> timerColor = { 40, 40, 255 };
-	std::array<int, 3> textColor = { 255, 255, 255 };
-	std::array<int, 3> effectTimerColor = { 180, 180, 180 };
-	std::map<EffectType, std::array<int, 4>> enabledEffects;
-	bool enableTwitchVoting = false;
-	int twitchVotingNoVoteChance = 50;
-	int twitchSecsBeforeChatVoting = 0;
-	bool enableTwitchVoterIndicator = false;
-	bool enableTwitchVoteablesOnscreen = false;
+	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting;
+	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen;
+	std::array<int, 3> timerColor, textColor, effectTimerColor;
+	std::map<EffectType, EffectData> enabledEffects;
+
+	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
+		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, timerColor, textColor, effectTimerColor);
+	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen);
+	ParseEffectsFile(enabledEffects);
 
 	struct stat temp;
-	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
-
-	int result;
-	if ((result = ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow,
-		m_disableDrawTimerBar, m_disableDrawEffectTexts, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting,
-		enableTwitchVoterIndicator, m_toggleModShortcutEnabled, enableTwitchVoteablesOnscreen)) || (result = ParseEffectsFile(enabledEffects)))
-	{
-		switch (result)
-		{
-		case -1:
-			MessageBox(NULL,
-				"Config File was either not found or is invalid. Please make sure you've run the config tool at least once, otherwise try regenerating it.",
-				"ChaosModV Error", MB_OK | MB_ICONERROR);
-			break;
-		case -2:
-			MessageBox(NULL,
-				"Config File couldn't be opened for reading. Make sure there's no process running with a handle on chaosmod/config.ini or chaosmod/effects.ini",
-				"ChaosModV Error", MB_OK | MB_ICONERROR);
-			break;
-		}
-		return false;
-	}
-
 	if (enableTwitchVoting && stat("chaosmod/.twitchmode", &temp) == -1)
 	{
 		enableTwitchVoting = false;
@@ -275,7 +151,7 @@ bool Main::Init()
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;
-	for (auto pair : enabledEffects)
+	for (const auto& pair : enabledEffects)
 	{
 		enabledEffectTypes.push_back(pair.first);
 	}
@@ -283,10 +159,9 @@ bool Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);
 #endif
 
+	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
 		enableTwitchVoteablesOnscreen, enabledEffects);
-
-	return true;
 }
 
 void Main::MainLoop()

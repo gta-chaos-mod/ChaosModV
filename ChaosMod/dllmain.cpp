@@ -3,7 +3,6 @@
 #include "Main.h"
 
 Main m_main;
-bool m_isInitialized = false;
 
 void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
@@ -16,29 +15,20 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		Memory::Init();
-
-		if (!m_main.Init())
-		{
-			return FALSE;
-		}
+		m_main.Init();
 
 		scriptRegister(hInstance, []() { m_main.MainLoop(); });
 		scriptRegisterAdditionalThread(hInstance, []() { m_main.RunEffectLoop(); });
 
 		keyboardHandlerRegister(OnKeyboardInput);
 
-		m_isInitialized = true;
-
 		break;
 	case DLL_PROCESS_DETACH:
 		Memory::Uninit();
 
-		if (m_isInitialized)
-		{
-			scriptUnregister(hInstance);
+		scriptUnregister(hInstance);
 
-			keyboardHandlerUnregister(OnKeyboardInput);
-		}
+		keyboardHandlerUnregister(OnKeyboardInput);
 
 		break;
 	}
