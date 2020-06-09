@@ -103,7 +103,7 @@
                         VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
                     <Label x:Name="twitch_user_channel_oauth_label" Content="OAuth Token" HorizontalAlignment="Left" Margin="559,84,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
-                    <TextBox x:Name="twitch_user_channel_oauth" HorizontalAlignment="Left" Height="23" Margin="666,87,0,0"
+                    <PasswordBox x:Name="twitch_user_channel_oauth" HorizontalAlignment="Left" Height="23" Margin="666,87,0,0"
                         VerticalAlignment="Top" Width="271" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
                     <Label x:Name="twitch_user_user_name_label" Content="Username" HorizontalAlignment="Left" Margin="278,84,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>

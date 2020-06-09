@@ -102,7 +102,7 @@ namespace ConfigApp
             twitch_user_agreed.IsChecked = m_twitchFile.ReadValueBool("EnableTwitchVoting", false);
             twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
             twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
-            twitch_user_channel_oauth.Text = m_twitchFile.ReadValue("TwitchChannelOAuth");
+            twitch_user_channel_oauth.Password = m_twitchFile.ReadValue("TwitchChannelOAuth");
             twitch_user_poll_passphrase.Text = m_twitchFile.ReadValue("TwitchVotingPollPass");
             twitch_user_effects_chance_no_voting_round.Text = m_twitchFile.ReadValue("TwitchVotingNoVoteChance", "50");
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
@@ -116,7 +116,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
             m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
-            m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Text);
+            m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
             m_twitchFile.WriteValue("TwitchVotingPollPass", twitch_user_poll_passphrase.Text);
             m_twitchFile.WriteValue("TwitchVotingNoVoteChance", twitch_user_effects_chance_no_voting_round.Text);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
