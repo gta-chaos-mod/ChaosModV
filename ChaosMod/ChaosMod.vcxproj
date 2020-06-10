@@ -153,6 +153,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionRandom.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnDancingApes.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnFanCats.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnHostileRandom.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnImpotentRage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpeechController.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStripWeapons.cpp" />

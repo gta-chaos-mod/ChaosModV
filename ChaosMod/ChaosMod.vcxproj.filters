@@ -474,6 +474,9 @@
     <ClCompile Include="OptionsFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\db\Peds\PedsSpawnHostileRandom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />

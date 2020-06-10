@@ -36,6 +36,9 @@ static void OnStart()
 		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 	}
 
+	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+
 	GIVE_WEAPON_TO_PED(ped, GET_SELECTED_PED_WEAPON(playerPed), 9999, true, true);
 
 	SET_PED_ACCURACY(ped, 100);

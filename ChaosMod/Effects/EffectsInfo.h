@@ -213,6 +213,7 @@ enum EffectType
 	EFFECT_ONE_BULLET_WEP,
 	EFFECT_PHONES,
 	EFFECT_MIDAS_TOUCH,
+	EFFECT_SPAWN_RANDOM_HOSTILE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -439,5 +440,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_DANCING_APES, {"Spawn Dance Troop", "peds_spawndancingapes"}},
 	{EFFECT_ONE_BULLET_WEP, {"One Bullet Mags", "misc_onebullet", true}},
 	{EFFECT_PHONES, {"Who's Phone Is Ringing?", "peds_phones", true}},
-	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}}
+	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}},
+	{EFFECT_SPAWN_RANDOM_HOSTILE, {"Spawn Random Enemy", "peds_spawnrandomhostile"}},
 };

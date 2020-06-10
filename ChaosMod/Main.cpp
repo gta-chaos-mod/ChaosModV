@@ -342,7 +342,7 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 		{
 			m_pauseTimer = !m_pauseTimer;
 		}
-		else if (key == VK_OEM_COMMA)
+		else if (key == VK_OEM_COMMA && m_debugMenu)
 		{
 			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
 		}
