@@ -82,6 +82,18 @@
                     <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="776,81,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="12*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0" Grid.RowSpan="2"/>
+                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="317,17,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.RowSpan="2"/>
+                    <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,24,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
+                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="317,27,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
+                </Grid>
+            </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -127,10 +139,6 @@
                     <Label x:Name="twitch_user_show_voteables_onscreen_enable_label" Content="Show voteables on-screen" HorizontalAlignment="Left" Margin="703,228,0,0"
                         VerticalAlignment="Top" Width="154" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_show_voteables_onscreen_enable" Margin="876,234,92,90" Grid.Row="1" />
-                    <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,270,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0"/>
-                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="317,273,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_github_click"/>
-                    <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,310,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
-                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="317,313,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
                 </Grid>
             </TabItem>
         </TabControl>
