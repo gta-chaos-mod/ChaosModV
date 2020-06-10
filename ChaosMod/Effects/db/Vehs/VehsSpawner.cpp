@@ -90,7 +90,20 @@ static void OnStartRandom()
 
 	if (!vehModels.empty())
 	{
-		CreateTempVehicleOnPlayerPos(vehModels[Random::GetRandomInt(0, vehModels.size() - 1)], GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		Vehicle veh = CreateTempVehicleOnPlayerPos(vehModels[Random::GetRandomInt(0, vehModels.size() - 1)], GET_ENTITY_HEADING(PLAYER_PED_ID()));
+
+		// Also apply random upgrades
+		SET_VEHICLE_MOD_KIT(veh, 0);
+		for (int i = 0; i < 50; i++)
+		{
+			int max = GET_NUM_VEHICLE_MODS(veh, i);
+			SET_VEHICLE_MOD(veh, i, max > 0 ? Random::GetRandomInt(0, max - 1) : 0, Random::GetRandomInt(0, 1));
+
+			TOGGLE_VEHICLE_MOD(veh, i, Random::GetRandomInt(0, 1));
+		}
+
+		SET_VEHICLE_TYRES_CAN_BURST(veh, Random::GetRandomInt(0, 1));
+		SET_VEHICLE_WINDOW_TINT(veh, Random::GetRandomInt(0, 6));
 	}
 }
 

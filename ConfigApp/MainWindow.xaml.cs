@@ -392,5 +392,15 @@ namespace ConfigApp
                 }
             }
         }
+
+        private void contribute_github_click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/gta-chaos-mod/ChaosModV");
+        }
+
+        private void contribute_donate_click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://paypal.me/EmrCue");
+        }
     }
 }

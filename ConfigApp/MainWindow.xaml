@@ -127,6 +127,10 @@
                     <Label x:Name="twitch_user_show_voteables_onscreen_enable_label" Content="Show voteables on-screen" HorizontalAlignment="Left" Margin="703,228,0,0"
                         VerticalAlignment="Top" Width="154" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_show_voteables_onscreen_enable" Margin="876,234,92,90" Grid.Row="1" />
+                    <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,270,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0"/>
+                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="317,273,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_github_click"/>
+                    <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,310,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
+                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="317,313,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
                 </Grid>
             </TabItem>
         </TabControl>
