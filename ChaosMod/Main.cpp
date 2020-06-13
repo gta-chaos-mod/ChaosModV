@@ -59,26 +59,17 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
-		enabledEffects.emplace(static_cast<EffectType>(i), EffectData());
-	}
+		EffectType effectType = static_cast<EffectType>(i);
+		const EffectInfo& effectInfo = g_effectsMap.at(effectType);
 
-	// Remove disabled effecttypes
-	const std::vector<const char*>& effectKeys = effectsFile.GetAllKeys();
-	for (const char* key : effectKeys)
-	{
 		// Default EffectData values
 		// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
 		std::vector<int> values { true, static_cast<int>(EffectTimedType::TIMED_DEFAULT), -1, 5, false, false };
+		std::string value = effectsFile.ReadValue(effectInfo.Id);
 
-		std::string value = effectsFile.ReadValue(key);
-
-		int splitIndex = value.find(",");
-		if (splitIndex == value.npos)
+		if (!value.empty())
 		{
-			TryParseInt(value, values[0]);
-		}
-		else
-		{
+			int splitIndex = value.find(",");
 			for (int i = 0; ; i++)
 			{
 				TryParseInt(value.substr(0, splitIndex), values[i]);
@@ -93,36 +84,22 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 			}
 		}
 
-		// Map id to EffectType
-		for (const auto& pair : g_effectsMap)
+		if (!values[0]) // enabled == false?
 		{
-			if (!strcmp(pair.second.Id, key))
-			{
-				const auto& result = enabledEffects.find(pair.first);
-				if (result != enabledEffects.end())
-				{
-					if (!values[0]) // 0: Enabled
-					{
-						enabledEffects.erase(result);
-
-						break;
-					}
-
-					const EffectInfo& effectInfo = g_effectsMap.at(result->first);
-					EffectData& effectData = result->second;
-
-					effectData.EffectTimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]); // Dang
-					effectData.EffectCustomTime = values[2];
-					effectData.EffectWeight = values[3];
-					effectData.EffectPermanent = values[4];
-					effectData.EffectExcludedFromVoting = values[5];
-
-					static std::ofstream log("chaosmod/enabledeffectslog.txt");
-					log << effectInfo.Name << std::endl;
-				}
-				break;
-			}
+			continue;
 		}
+
+		EffectData effectData;
+		effectData.EffectTimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]); // Dang
+		effectData.EffectCustomTime = values[2];
+		effectData.EffectWeight = values[3];
+		effectData.EffectPermanent = values[4];
+		effectData.EffectExcludedFromVoting = values[5];
+
+		enabledEffects.emplace(effectType, effectData);
+
+		static std::ofstream log("chaosmod/enabledeffectslog.txt");
+		log << effectInfo.Name << std::endl;
 	}
 }
 

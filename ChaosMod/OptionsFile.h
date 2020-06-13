@@ -7,7 +7,6 @@ class OptionsFile
 public:
 	OptionsFile(const char* fileName);
 
-	const std::vector<const char*> GetAllKeys() const;
 	std::string ReadValue(const char* key, const char* defaultValue = nullptr) const;
 	int ReadValueInt(const char* key, int defaultValue) const;
 

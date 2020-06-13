@@ -35,18 +35,6 @@ OptionsFile::OptionsFile(const char* fileName) : m_fileName(fileName)
 	}
 }
 
-const std::vector<const char*> OptionsFile::GetAllKeys() const
-{
-	std::vector<const char*> keys;
-
-	for (const auto& pair : m_options)
-	{
-		keys.push_back(pair.first.c_str());
-	}
-
-	return keys;
-}
-
 std::string OptionsFile::ReadValue(const char* key, const char* defaultValue) const
 {
 	const auto& result = m_options.find(key);
