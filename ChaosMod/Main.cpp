@@ -56,7 +56,6 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 {
 	OptionsFile effectsFile("chaosmod/effects.ini");
 
-	// Fill with all effecttypes first
 	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 	{
 		EffectType effectType = static_cast<EffectType>(i);
