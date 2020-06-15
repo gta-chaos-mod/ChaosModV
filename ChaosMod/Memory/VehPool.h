@@ -35,7 +35,7 @@ namespace Memory
 			handle = handle.At(3).Into();
 			WORD maxModels = handle.Value<WORD>();
 
-			for (WORD i = 0; i < maxModels + 1; i++)
+			for (WORD i = 0; i < maxModels; i++)
 			{
 				DWORD64 entry = *reinterpret_cast<DWORD64*>(modelList + 8 * i);
 				if (!entry)
