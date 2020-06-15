@@ -17,15 +17,14 @@ namespace Memory
 
 		if (vehModels.empty())
 		{
-			auto handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
+			Handle handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
 			if (!handle.IsValid())
 			{
 				return vehModels;
 			}
 
-			auto addr = handle.Addr();
-			addr += 7 + *reinterpret_cast<DWORD*>(addr + 3);
-			auto modelList = *reinterpret_cast<DWORD64*>(addr);
+			handle = handle.At(3).Into();
+			DWORD64 modelList = handle.Value<DWORD64>();
 
 			handle = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
 			if (!handle.IsValid())
@@ -33,19 +32,18 @@ namespace Memory
 				return vehModels;
 			}
 
-			addr = handle.Addr();
-			addr += 7 + *reinterpret_cast<DWORD*>(addr + 3);
-			auto maxModels = *reinterpret_cast<WORD*>(addr);
+			handle = handle.At(3).Into();
+			WORD maxModels = handle.Value<WORD>();
 
 			for (WORD i = 0; i < maxModels + 1; i++)
 			{
-				auto entry = *reinterpret_cast<DWORD64*>(modelList + 8 * i);
+				DWORD64 entry = *reinterpret_cast<DWORD64*>(modelList + 8 * i);
 				if (!entry)
 				{
 					continue;
 				}
 
-				auto model = *reinterpret_cast<Hash*>(entry);
+				Hash model = *reinterpret_cast<Hash*>(entry);
 
 				if (IS_MODEL_VALID(model) && IS_MODEL_A_VEHICLE(model))
 				{

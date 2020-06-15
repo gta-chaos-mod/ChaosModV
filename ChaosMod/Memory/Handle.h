@@ -22,7 +22,7 @@ public:
 	{
 		if (IsValid())
 		{
-			return Handle(m_addr + offset);
+			return m_addr + offset;
 		}
 	}
 
@@ -35,12 +35,17 @@ public:
 	template<typename T>
 	inline T Value() const
 	{
-		return IsValid() ? *Get<T>(m_addr) : 0;
+		return IsValid() ? *Get<T>() : 0;
 	}
 
 	inline DWORD64 Addr() const
 	{
 		return m_addr;
+	}
+
+	inline Handle Into() const
+	{
+		return m_addr + *reinterpret_cast<DWORD*>(m_addr) + 4;
 	}
 
 private:
