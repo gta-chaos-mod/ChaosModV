@@ -257,11 +257,6 @@ namespace ConfigApp
 
         void InitTwitchTab()
         {
-            if (!File.Exists(".twitchmode"))
-            {
-                twitch_tab.Visibility = Visibility.Hidden;
-            }
-
             if (File.Exists(".twitchpoll"))
             {
                 twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;

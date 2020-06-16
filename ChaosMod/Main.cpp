@@ -114,12 +114,6 @@ void Main::Init()
 	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen);
 	ParseEffectsFile(enabledEffects);
 
-	struct stat temp;
-	if (enableTwitchVoting && stat("chaosmod/.twitchmode", &temp) == -1)
-	{
-		enableTwitchVoting = false;
-	}
-
 	Random::SetSeed(seed);
 
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, enabledEffects, effectTimedShortDur, disableEffectsTwiceInRow,
@@ -135,6 +129,7 @@ void Main::Init()
 	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);
 #endif
 
+	struct stat temp;
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
 		enableTwitchVoteablesOnscreen, enabledEffects);
