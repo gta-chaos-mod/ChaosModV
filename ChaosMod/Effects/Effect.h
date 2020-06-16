@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "EffectsInfo.h"
 
 struct RegisteredEffect
@@ -126,4 +128,5 @@ struct EffectData
 	int EffectWeight;
 	bool EffectPermanent;
 	bool EffectExcludedFromVoting;
+	std::string EffectName;
 };

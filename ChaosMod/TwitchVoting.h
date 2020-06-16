@@ -37,10 +37,27 @@ private:
 	std::ofstream m_voteablesOutputFile { "chaosmod/currentvoteables.txt" };
 
 	bool m_isVotingRunning = false;
-	std::array<EffectType, 3> m_effectChoices;
+
+	struct ChoosableEffect
+	{
+		ChoosableEffect()
+		{
+
+		}
+
+		ChoosableEffect(EffectType effectType, std::string name) : EffectType(effectType), EffectName(name)
+		{
+
+		}
+
+		EffectType EffectType;
+		std::string EffectName;
+	};
+	std::array<ChoosableEffect, 3> m_effectChoices;
+
 	EffectType m_chosenEffectType;
 
-	bool HandleMsg(std::string msg);
+	bool HandleMsg(const std::string& msg);
 	void SendToPipe(std::string msg);
 	void ErrorOutWithMsg(const char* msg);
 };

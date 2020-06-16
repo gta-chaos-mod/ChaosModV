@@ -44,7 +44,7 @@ namespace ConfigApp
             // Create EffectData in case effect wasn't saved yet
             if (!m_effectDataMap.TryGetValue(effectType, out EffectData effectData))
             {
-                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false);
+                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null);
             }
 
             return effectData;
@@ -158,6 +158,7 @@ namespace ConfigApp
                 int effectWeight = 5;
                 bool effectPermanent = false;
                 bool effectExcludedFromVoting = false;
+                string effectCustomName = null;
 
                 // Compatibility checks, previous versions had less options
                 if (values.Length >= 4)
@@ -177,6 +178,11 @@ namespace ConfigApp
                         {
                             int.TryParse(values[5], out tmp);
                             effectExcludedFromVoting = tmp != 0;
+
+                            if (values.Length >= 7)
+                            {
+                                effectCustomName = values[6];
+                            }
                         }
                     }
                 }
@@ -186,7 +192,7 @@ namespace ConfigApp
                     int.TryParse(values[0], out int enabled);
                     m_treeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting));
+                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName));
                 }
             }
         }
@@ -198,7 +204,8 @@ namespace ConfigApp
                 EffectData effectData = GetEffectData(effectType);
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
-                    + $",{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)},{(effectData.EffectExcludedFromVoting ? 1 : 0)}");
+                    + $",{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)},{(effectData.EffectExcludedFromVoting ? 1 : 0)}"
+                    + $",{(string.IsNullOrEmpty(effectData.EffectCustomName) ? "0" : effectData.EffectCustomName)}");
             }
 
             m_effectsFile.WriteFile();
@@ -384,6 +391,7 @@ namespace ConfigApp
                     effectData.EffectPermanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
                     effectData.EffectWeight = effectConfig.effectconf_effect_weight.SelectedIndex + 1;
                     effectData.EffectExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
+                    effectData.EffectCustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
                 }
             }
         }

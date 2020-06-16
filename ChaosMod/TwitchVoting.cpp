@@ -182,8 +182,9 @@ void TwitchVoting::Tick()
 			int index = Random::GetRandomInt(0, effectsTotalWeight);
 
 			int addedUpWeight = 0;
-			EffectType targetEffectType = _EFFECT_ENUM_MAX;
-			for (auto pair : choosableEffects)
+			ChoosableEffect targetChoice;
+
+			for (const auto& pair : choosableEffects)
 			{
 				if (pair.second.EffectPermanent)
 				{
@@ -194,18 +195,18 @@ void TwitchVoting::Tick()
 
 				if (index <= addedUpWeight)
 				{
-					targetEffectType = pair.first;
+					targetChoice = ChoosableEffect(pair.first, pair.second.EffectName);
 					break;
 				}
 			}
 
-			m_effectChoices[i] = targetEffectType;
-			choosableEffects.erase(targetEffectType);
+			m_effectChoices[i] = targetChoice;
+			choosableEffects.erase(targetChoice.EffectType);
 		}
 
-		const char* name1 = g_effectsMap.at(m_effectChoices[0]).Name;
-		const char* name2 = g_effectsMap.at(m_effectChoices[1]).Name;
-		const char* name3 = g_effectsMap.at(m_effectChoices[2]).Name;
+		const std::string& name1 = m_effectChoices[0].EffectName;
+		const std::string& name2 = m_effectChoices[1].EffectName;
+		const std::string& name3 = m_effectChoices[2].EffectName;
 
 		std::ostringstream oss;
 		oss << "vote:" << name1 << ":" << name2 << ":" << name3 << ":" << m_alternatedVotingRound;
@@ -222,7 +223,7 @@ void TwitchVoting::Tick()
 		for (int i = 0; i < 3; i++)
 		{
 			std::ostringstream oss;
-			oss << (!m_alternatedVotingRound ? i + 1 : i + 4) << ": " << g_effectsMap.at(m_effectChoices[i]).Name << std::endl;
+			oss << (!m_alternatedVotingRound ? i + 1 : i + 4) << ": " << m_effectChoices[i].EffectName << std::endl;
 
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
@@ -238,7 +239,7 @@ void TwitchVoting::Tick()
 	}
 }
 
-bool TwitchVoting::HandleMsg(std::string msg)
+bool TwitchVoting::HandleMsg(const std::string& msg)
 {
 	if (msg == "ping")
 	{
@@ -266,7 +267,7 @@ bool TwitchVoting::HandleMsg(std::string msg)
 	}
 	else if (msg._Starts_with("voteresult"))
 	{
-		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))];
+		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))].EffectType;
 
 		m_alternatedVotingRound = !m_alternatedVotingRound;
 

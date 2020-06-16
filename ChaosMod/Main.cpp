@@ -64,6 +64,9 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 		// Default EffectData values
 		// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
 		std::vector<int> values { true, static_cast<int>(EffectTimedType::TIMED_DEFAULT), -1, 5, false, false };
+		// HACK: Store EffectCustomName seperately
+		std::string valueEffectName = effectInfo.Name;
+
 		std::string value = effectsFile.ReadValue(effectInfo.Id);
 
 		if (!value.empty())
@@ -71,7 +74,21 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 			int splitIndex = value.find(",");
 			for (int i = 0; ; i++)
 			{
-				TryParseInt(value.substr(0, splitIndex), values[i]);
+				const std::string& split = value.substr(0, splitIndex);
+
+				if (i == 6)
+				{
+					// EffectCustomName, parse as string, please kill me
+					if (split != "0")
+					{
+						valueEffectName = split;
+					}
+				}
+				else
+				{
+					TryParseInt(split, values[i]);
+				}
+
 				value = value.substr(splitIndex + 1);
 
 				if (splitIndex == value.npos)
@@ -94,6 +111,7 @@ void ParseEffectsFile(std::map<EffectType, EffectData>& enabledEffects)
 		effectData.EffectWeight = values[3];
 		effectData.EffectPermanent = values[4];
 		effectData.EffectExcludedFromVoting = values[5];
+		effectData.EffectName = valueEffectName;
 
 		enabledEffects.emplace(effectType, effectData);
 

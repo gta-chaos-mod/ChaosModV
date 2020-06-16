@@ -36,10 +36,10 @@ void EffectDispatcher::DrawEffectTexts()
 
 	// Effect Texts
 	float y = m_enableTwitchVoteablesOnscreen ? .3f : .2f;
-	for (ActiveEffect effect : m_activeEffects)
+	for (const ActiveEffect& effect : m_activeEffects)
 	{
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name);
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
 		SET_TEXT_SCALE(.5f, .5f);
 		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
 		SET_TEXT_OUTLINE();
@@ -132,8 +132,8 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 {
-	auto effectInfo = g_effectsMap.at(effectType);
-	auto effectData = m_enabledEffects.at(effectType);
+	const EffectInfo& effectInfo = g_effectsMap.at(effectType);
+	const EffectData& effectData = m_enabledEffects.at(effectType);
 
 	int effectTime = effectInfo.IsTimed
 		? effectData.EffectCustomTime >= 0
@@ -156,7 +156,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
-			auto& effect = *it;
+			ActiveEffect& effect = *it;
 
 			if (effect.EffectType == effectType)
 			{
@@ -178,7 +178,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			// Check if current effect is marked as incompatible in active effect
 			if (!found)
 			{
-				for (auto incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
+				for (EffectType incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
 				{
 					if (effect.EffectType == effectType)
 					{
@@ -210,7 +210,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			registeredEffect->Start();
 
 			std::ostringstream oss;
-			oss << effectInfo.Name;
+			oss << effectData.EffectName;
 
 			if (suffix && strlen(suffix) > 0)
 			{
@@ -219,7 +219,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 			oss << std::endl;
 
-			m_activeEffects.emplace_back(effectType, registeredEffect, oss.str().c_str(), effectTime);
+			m_activeEffects.emplace_back(effectType, registeredEffect, oss.str(), effectTime);
 		}
 	}
 

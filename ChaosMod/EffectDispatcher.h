@@ -51,16 +51,16 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const char* name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, std::string name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
 			Timer(timer), MaxTime(Timer)
 		{
-			strcpy_s(Name, name);
+			Name = name;
 		}
 
 	public:
 		EffectType EffectType;
 		RegisteredEffect* RegisteredEffect;
-		char Name[128] = {};
+		std::string Name;
 		int Timer;
 		int MaxTime;
 	};

@@ -54,6 +54,8 @@ namespace ConfigApp
 
             effectconf_exclude_voting_enable.IsChecked = effectData.EffectExcludedFromVoting;
 
+            effectconf_effect_custom_name.Text = effectData.EffectCustomName;
+
             CheckEnableConfigurables();
         }
 
