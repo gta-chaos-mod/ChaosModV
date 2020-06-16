@@ -13,6 +13,11 @@ static void OnTickMexico()
 
 static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico);
 
+static void OnStartBright()
+{
+	SET_CLOCK_TIME(12, 0, 0);
+}
+
 static void OnTickBright()
 {
 	SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
