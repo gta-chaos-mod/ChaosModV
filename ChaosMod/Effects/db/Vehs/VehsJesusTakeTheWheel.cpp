@@ -16,13 +16,14 @@ static void OnStart()
 		Hash relationshipGroup;
 		ADD_RELATIONSHIP_GROUP("_WHEEL_JESUS", &relationshipGroup);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
 
 		Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -2);
 
 		Ped jesus = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
 		SET_PED_RELATIONSHIP_GROUP_HASH(jesus, relationshipGroup);
+
+		SET_ENTITY_PROOFS(jesus, true, false, false, false, false, false, false, false);
 
 		// Try to fetch waypoint coords (if waypoint exists)
 		Vector3 coords;
