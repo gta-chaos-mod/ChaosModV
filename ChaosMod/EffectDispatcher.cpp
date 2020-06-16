@@ -165,7 +165,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			}
 
 			bool found = false;
-			for (auto incompatibleEffect : incompatibleEffects)
+			for (EffectType incompatibleEffect : incompatibleEffects)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
@@ -180,7 +180,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			{
 				for (EffectType incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
 				{
-					if (effect.EffectType == effectType)
+					if (effect.EffectType == incompatibleEffect)
 					{
 						found = true;
 
