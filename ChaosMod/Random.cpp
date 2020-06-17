@@ -2,10 +2,10 @@
 
 #include "Random.h"
 
-int m_seed = 0;
-
 namespace Random
 {
+	int m_seed = 0;
+
 	void SetSeed(int seed)
 	{
 		m_seed = seed;

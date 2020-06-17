@@ -56,6 +56,8 @@ namespace ConfigApp
 
             effectconf_effect_custom_name.Text = effectData.EffectCustomName;
 
+            effectconf_mp3_label.Text += $"{effectInfo.Id}.mp3";
+
             CheckEnableConfigurables();
         }
 

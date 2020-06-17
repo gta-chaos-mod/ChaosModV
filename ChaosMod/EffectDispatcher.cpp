@@ -209,17 +209,20 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 		{
 			registeredEffect->Start();
 
-			std::ostringstream oss;
-			oss << effectData.EffectName;
+			std::ostringstream ossEffectName;
+			ossEffectName << effectData.EffectName;
 
 			if (suffix && strlen(suffix) > 0)
 			{
-				oss << " " << suffix;
+				ossEffectName << " " << suffix;
 			}
 
-			oss << std::endl;
+			ossEffectName << std::endl;
 
-			m_activeEffects.emplace_back(effectType, registeredEffect, oss.str(), effectTime);
+			// Play a sound if corresponding .mp3 file exists
+			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
+
+			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
 		}
 	}
 

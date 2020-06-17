@@ -477,6 +477,9 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnHostileRandom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mp3Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
@@ -547,6 +550,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util\TryParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mp3Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

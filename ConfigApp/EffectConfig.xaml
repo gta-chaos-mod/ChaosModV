@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Effect Config" Height="319.342" Width="600.617" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="Effect Config" Height="400" Width="700" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <Label Content="Override Timed Effect Type" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
         <Label Content="Override Timed Effect Timer Length (Seconds)" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
@@ -15,12 +15,13 @@
         <CheckBox Name="effectconf_timer_time_enable" HorizontalAlignment="Left" Margin="385,97,0,0" VerticalAlignment="Top" Height="18" Click="OnClicked"/>
         <Label Content="Set Effect Weight&#xD;&#xA;(Affects chances of this effect occuring, lower weight: lower chances&#xD;&#xA; higher weight: higher chances, default is 5)" HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="effectconf_effect_weight" HorizontalAlignment="Left" Height="23" Margin="425,187,0,0" VerticalAlignment="Top" Width="45"/>
-        <Button Content="Save" Margin="481,224,13,13" Click="OnSave"/>
+        <Button Content="Save" Margin="560,310,13,13" Click="OnSave"/>
         <Label Content="Make Permanent (Might not work well with every effect)" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="effectconf_timer_permanent_enable" HorizontalAlignment="Left" Margin="385,137,0,0" VerticalAlignment="Top" Height="18" Click="OnClicked"/>
         <Label Content="Exclude Effect from Voting (Twitch)" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="effectconf_exclude_voting_enable" HorizontalAlignment="Left" Margin="385,237,0,0" VerticalAlignment="Top" Height="18" Click="OnClicked"/>
         <Label Content="Rename Effect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="effectconf_effect_custom_name" HorizontalAlignment="Left" Height="23" Margin="426,13,0,0" VerticalAlignment="Top" Width="134" />
+        <TextBlock x:Name="effectconf_mp3_label" Text="To play a sound when this effect triggers, drop a .mp3 file as chaosmod/sounds/" HorizontalAlignment="Left" Margin="10,280,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

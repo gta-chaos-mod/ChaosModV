@@ -6,6 +6,7 @@
 #include "EffectDispatcher.h"
 #include "Main.h"
 #include "TwitchVoting.h"
+#include "Mp3Manager.h"
 
 #include "Effects/Effect.h"
 
