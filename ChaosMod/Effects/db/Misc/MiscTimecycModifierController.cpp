@@ -24,7 +24,7 @@ static void OnTickBright()
 	PUSH_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStop, OnTickBright);
+static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, OnStartBright, OnStop, OnTickBright);
 
 static void OnTickFog()
 {
@@ -58,12 +58,15 @@ static void OnTickLSD()
 
 static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStop, OnTickLSD);
 
-static void OnTickFullbright()
+static void OnStartFullbright()
 {
 	SET_CLOCK_TIME(0, 0, 0);
+}
 
+static void OnTickFullbright()
+{
 	SET_TIMECYCLE_MODIFIER("int_lesters");
 	PUSH_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, nullptr, OnStop, OnTickFullbright);
+static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright);
