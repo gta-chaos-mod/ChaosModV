@@ -26,7 +26,6 @@
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
 #include "../vendor/minhook/include/MinHook.h"
-//#include "../vendor/libcurl/include/curl/curl.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

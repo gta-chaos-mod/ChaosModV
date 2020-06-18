@@ -6,15 +6,6 @@
 DWORD64 m_baseAddr;
 DWORD64 m_endAddr;
 
-struct PatchedFunc
-{
-	DWORD64 Addr;
-	std::vector<BYTE> PatchedBytes;
-	void* DetourBlock;
-};
-
-std::vector<PatchedFunc> m_patchedFuncs;
-
 namespace Memory
 {
 	void Init()
@@ -26,6 +17,8 @@ namespace Memory
 		m_endAddr = m_baseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
+	
+		MH_EnableHook(MH_ALL_HOOKS);
 	}
 
 	void Uninit()

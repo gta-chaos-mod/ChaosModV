@@ -5,13 +5,15 @@ static void OnStart()
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
 
-	auto playerPed = PLAYER_PED_ID();
-	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
 	LoadModel(oppressorHash);
 
-	auto veh = CREATE_VEHICLE(oppressorHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false, false);
+	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
+
+	auto veh = CREATE_VEHICLE(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	SET_VEHICLE_MOD_KIT(veh, 0);
 
