@@ -37,7 +37,7 @@ static void OnTick()
 	static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 	static Ped zombies[MAX_ZOMBIES] = {};
 	static int zombiesAmount = 0;
-	auto playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	if (zombiesAmount <= MAX_ZOMBIES)
 	{
 		Vector3 spawnPos;
@@ -46,10 +46,10 @@ static void OnTick()
 		{
 			LoadModel(MODEL_HASH);
 
-			auto zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+			Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 			zombiesAmount++;
 
-			for (auto& ped : zombies)
+			for (Ped& ped : zombies)
 			{
 				if (!ped)
 				{
@@ -71,7 +71,7 @@ static void OnTick()
 		}
 	}
 
-	for (auto& zombie : zombies)
+	for (Ped& zombie : zombies)
 	{
 		if (zombie)
 		{
@@ -80,6 +80,15 @@ static void OnTick()
 				Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
 				{
+					if (IS_PED_RAGDOLL(zombie))
+					{
+						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
+
+						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+
+						SET_ENTITY_HEALTH(zombie, 0, false);
+					}
+
 					continue;
 				}
 			}
