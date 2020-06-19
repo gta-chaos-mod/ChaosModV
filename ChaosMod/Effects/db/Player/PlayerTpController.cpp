@@ -98,3 +98,41 @@ static void OnStartFront()
 }
 
 static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront);
+
+static void OnStartRandom()
+{
+	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+	float x, y, z = playerPos.z, _;
+	do
+	{
+		x = Random::GetRandomInt(-3747.f, 4500.f);
+		y = Random::GetRandomInt(-4400.f, 8022.f);
+		
+	}
+	while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, z, 0, &_));
+
+	float groundZ;
+	bool useGroundZ;
+	for (int i = 0; i < 100; i++)
+	{
+		float testZ = (i * 10.f) - 100.f;
+
+		TeleportPlayer(x, y, testZ);
+		if (i % 5 == 0)
+		{
+			WAIT(0);
+		}
+
+		useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
+		if (useGroundZ)
+		{
+			break;
+		}
+	}
+
+	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
+}
+
+static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom);
