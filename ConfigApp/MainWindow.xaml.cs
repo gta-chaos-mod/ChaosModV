@@ -181,7 +181,7 @@ namespace ConfigApp
 
                             if (values.Length >= 7)
                             {
-                                effectCustomName = values[6];
+                                effectCustomName = values[6] == "0" ? null : values[6];
                             }
                         }
                     }
