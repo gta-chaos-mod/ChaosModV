@@ -277,7 +277,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_TP_FORTZANCUDO, {"Teleport To Fort Zancudo", "tp_fortzancudo"}},
 	{EFFECT_TP_MOUNTCHILLIAD, {"Teleport To Mount Chilliad", "tp_mountchilliad"}},
 	{EFFECT_TP_SKYFALL, {"Teleport To Heaven", "tp_skyfall"}},
-	{EFFECT_TP_RANDOM, {"Teleport To Random Place", "tp_random"}},
+	{EFFECT_TP_RANDOM, {"Teleport To Random Location", "tp_random"}},
 	{EFFECT_NO_PHONE, {"No Phone", "player_nophone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle", "player_tpclosestveh"}},
 	{EFFECT_EXIT_CURRENT_VEH, {"Exit Current Vehicle", "playerveh_exit"}},

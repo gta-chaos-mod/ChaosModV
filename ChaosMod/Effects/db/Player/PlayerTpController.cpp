@@ -52,11 +52,12 @@ static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall);
 static void OnStartWaypoint()
 {
 	Vector3 coords;
-	bool found = false;
+	bool found = false, playerBlip = false;
 	if (IS_WAYPOINT_ACTIVE())
 	{
 		coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
 		found = true;
+		playerBlip = true;
 	}
 	else
 	{
@@ -73,14 +74,46 @@ static void OnStartWaypoint()
 		}
 	}
 
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
 
 	if (found)
 	{
 		float z;
-		if (!GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, 1000.f, &z, false, false))
+		if (!playerBlip)
 		{
-			z = GET_ENTITY_COORDS(playerPed, false).z;
+			z = coords.z;
+		}
+		else
+		{
+			float groundZ;
+			bool useGroundZ;
+			for (int i = 0; i < 100; i++)
+			{
+				float testZ = (i * 10.f) - 100.f;
+
+				TeleportPlayer(coords.x, coords.y, testZ);
+				if (i % 5 == 0)
+				{
+					WAIT(0);
+				}
+
+				useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
+				if (useGroundZ)
+				{
+					break;
+				}
+			}
+
+			if (useGroundZ)
+			{
+				z = groundZ;
+			}
+			else
+			{
+				Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+				z = playerPos.z;
+			}
 		}
 
 		TeleportPlayer(coords.x, coords.y, z);
