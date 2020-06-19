@@ -396,6 +396,11 @@ namespace ConfigApp
             }
         }
 
+        private void contribute_modpage_click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+        }
+
         private void contribute_github_click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/gta-chaos-mod/ChaosModV");
