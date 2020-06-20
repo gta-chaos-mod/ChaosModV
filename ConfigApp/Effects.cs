@@ -249,6 +249,9 @@ namespace ConfigApp
             EFFECT_PHONES,
             EFFECT_MIDAS_TOUCH,
             EFFECT_SPAWN_RANDOM_HOSTILE,
+            EFFECT_VEH_NO_BRAKES,
+            EFFECT_PLAYER_WEAPON_LOCK,
+            EFFECT_MISC_FIREWORKS,
             _EFFECT_ENUM_MAX
         }
 
@@ -463,6 +466,9 @@ namespace ConfigApp
             {EffectType.EFFECT_PHONES, new EffectInfo("Who's Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true)},
             {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.MISC, "misc_midas", true)},
             {EffectType.EFFECT_SPAWN_RANDOM_HOSTILE, new EffectInfo("Spawn Random Enemy", EffectCategory.PEDS, "peds_spawnrandomhostile")},
+            {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo("No Time To Brake", EffectCategory.VEHICLE, "playerveh_nobrakes", true, true)},
+            {EffectType.EFFECT_PLAYER_WEAPON_LOCK, new EffectInfo("Weapon Lock", EffectCategory.PLAYER, "player_weaponlock", true, true)},
+            {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
         };
     }
 }

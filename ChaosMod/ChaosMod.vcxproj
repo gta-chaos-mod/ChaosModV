@@ -92,6 +92,7 @@
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Effects\db\Player\PlayerTpController.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWeaponLock.cpp" />
     <ClCompile Include="Effects\db\Time\TimeController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
     <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
@@ -211,6 +213,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRandomSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTire.cpp" />
