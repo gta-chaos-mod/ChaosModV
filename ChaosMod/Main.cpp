@@ -9,7 +9,7 @@
 
 std::array<int, 3> ParseColor(const std::string& colorText)
 {
-	// # <A> <R> <G> <B>
+	// Format: #ARGB
 
 	std::array<int, 3> colors;
 
@@ -41,7 +41,8 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
 }
 
-void ParseTwitchFile(bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator, bool& enableTwitchVoteablesOnscreen)
+void ParseTwitchFile(bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator, bool& enableTwitchVoteablesOnscreen,
+	bool& enableTwitchChanceSystem)
 {
 	OptionsFile twitchFile("chaosmod/twitch.ini");
 
@@ -50,6 +51,7 @@ void ParseTwitchFile(bool& enableTwitchVoting, int& twitchVotingNoVoteChance, in
 	twitchSecsBeforeVoting = twitchFile.ReadValueInt("TwitchVotingSecsBeforeVoting", 0);
 	enableTwitchVoterIndicator = twitchFile.ReadValueInt("TwitchVotingVoterIndicator", false);
 	enableTwitchVoteablesOnscreen = twitchFile.ReadValueInt("TwitchVotingShowVoteablesOnscreen", false);
+	enableTwitchChanceSystem = twitchFile.ReadValueInt("TwitchVotingChanceSystem", false);
 }
 
 void ParseEffectsFile()
@@ -128,13 +130,13 @@ void ParseEffectsFile()
 void Main::Init()
 {
 	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting;
-	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen;
+	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
 	std::map<EffectType, EffectData> enabledEffects;
 
 	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
 		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, timerColor, textColor, effectTimerColor);
-	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen);
+	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem);
 	ParseEffectsFile();
 
 	Random::SetSeed(seed);
@@ -155,7 +157,7 @@ void Main::Init()
 	struct stat temp;
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
-		enableTwitchVoteablesOnscreen);
+		enableTwitchVoteablesOnscreen, enableTwitchChanceSystem);
 }
 
 void Main::MainLoop()

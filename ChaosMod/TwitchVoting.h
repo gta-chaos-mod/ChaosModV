@@ -11,13 +11,14 @@ class TwitchVoting
 {
 public:
 	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-		bool enableTwitchVoteablesOnscreen);
+		bool enableTwitchVoteablesOnscreen, bool enableTwitchChanceSystem);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
 	{
 		return m_enableTwitchVoting;
 	}
+
 	void Tick();
 	
 private:
@@ -34,6 +35,7 @@ private:
 	bool m_enableTwitchVoteablesOnscreen = false;
 	bool m_alternatedVotingRound = false;
 	std::ofstream m_voteablesOutputFile { "chaosmod/currentvoteables.txt" };
+	bool m_enableTwitchChanceSystem;
 
 	bool m_isVotingRunning = false;
 
@@ -51,6 +53,7 @@ private:
 
 		EffectType EffectType;
 		std::string EffectName;
+		int ChanceVotes = 0;
 	};
 	std::array<ChoosableEffect, 3> m_effectChoices;
 

@@ -109,6 +109,7 @@ namespace ConfigApp
             twitch_user_voter_indicator_enabled.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingVoterIndicator", false);
             twitch_user_chat_no_vote_msg_disable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
             twitch_user_show_voteables_onscreen_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingShowVoteablesOnscreen", false);
+            twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
         }
 
         private void WriteTwitchFile()
@@ -123,6 +124,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchVotingVoterIndicator", twitch_user_voter_indicator_enabled.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingDisableNoVoteRoundMsg", twitch_user_chat_no_vote_msg_disable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingShowVoteablesOnscreen", twitch_user_show_voteables_onscreen_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
 
             m_twitchFile.WriteFile();
         }
@@ -264,6 +266,35 @@ namespace ConfigApp
 
         void InitTwitchTab()
         {
+            TwitchTabHandleAgreed();
+        }
+
+        void TwitchTabHandleAgreed()
+        {
+            bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault();
+
+            twitch_user_channel_name_label.IsEnabled = agreed;
+            twitch_user_channel_name.IsEnabled = agreed;
+            twitch_user_channel_oauth_label.IsEnabled = agreed;
+            twitch_user_channel_oauth.IsEnabled = agreed;
+            twitch_user_user_name_label.IsEnabled = agreed;
+            twitch_user_user_name.IsEnabled = agreed;
+            twitch_user_poll_passphrase_label.IsEnabled = agreed;
+            twitch_user_poll_passphrase.IsEnabled = agreed;
+            twitch_user_effects_chance_no_voting_round_label.IsEnabled = agreed;
+            twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
+            twitch_user_effects_secs_before_chat_voting_label.IsEnabled = agreed;
+            twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
+            twitch_user_voter_indicator_enabled_label.IsEnabled = agreed;
+            twitch_user_voter_indicator_enabled.IsEnabled = agreed;
+            twitch_user_chat_no_vote_msg_disable_label.IsEnabled = agreed;
+            twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
+            twitch_user_show_voteables_onscreen_enable_label.IsEnabled = agreed;
+            twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
+            twitch_user_chance_system_enable_label.IsEnabled = agreed;
+            twitch_user_chance_system_enable.IsEnabled = agreed;
+
+            // Ensure correct layout / widget properties if poll system is enabled
             if (File.Exists(".twitchpoll"))
             {
                 twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;
@@ -275,30 +306,16 @@ namespace ConfigApp
                 twitch_user_user_name.Visibility = Visibility.Hidden;
                 twitch_user_channel_oauth_label.Visibility = Visibility.Hidden;
                 twitch_user_channel_oauth.Visibility = Visibility.Hidden;
-                twitch_user_effects_chance_no_voting_round_label.Visibility = Visibility.Hidden;
-                twitch_user_effects_chance_no_voting_round.Visibility = Visibility.Hidden;
-                twitch_user_chat_no_vote_msg_disable_label.Visibility = Visibility.Hidden;
-                twitch_user_chat_no_vote_msg_disable.Visibility = Visibility.Hidden;
-                twitch_user_show_voteables_onscreen_enable_label.Visibility = Visibility.Hidden;
-                twitch_user_show_voteables_onscreen_enable.Visibility = Visibility.Hidden;
+
+                twitch_user_effects_chance_no_voting_round_label.IsEnabled = false;
+                twitch_user_effects_chance_no_voting_round.IsEnabled = false;
+                twitch_user_chat_no_vote_msg_disable_label.IsEnabled = false;
+                twitch_user_chat_no_vote_msg_disable.IsEnabled = false;
+                twitch_user_show_voteables_onscreen_enable_label.IsEnabled = false;
+                twitch_user_show_voteables_onscreen_enable.IsEnabled = false;
+                twitch_user_chance_system_enable_label.IsEnabled = false;
+                twitch_user_chance_system_enable.IsEnabled = false;
             }
-
-            TwitchTabHandleAgreed();
-        }
-
-        void TwitchTabHandleAgreed()
-        {
-            bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault();
-
-            twitch_user_channel_name.IsEnabled = agreed;
-            twitch_user_channel_oauth.IsEnabled = agreed;
-            twitch_user_user_name.IsEnabled = agreed;
-            twitch_user_poll_passphrase.IsEnabled = agreed;
-            twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
-            twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
-            twitch_user_voter_indicator_enabled.IsEnabled = agreed;
-            twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
-            twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

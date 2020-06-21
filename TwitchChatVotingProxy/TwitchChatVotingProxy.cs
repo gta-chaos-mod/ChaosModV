@@ -29,6 +29,8 @@ namespace TwitchChatVotingProxy
         private static List<string> m_alreadyVotedUsers = new List<string>();
         private static bool m_disableNoVoteMsg = false;
         private static bool m_alternatedVotingRound;
+        private static bool m_enableTwitchChanceSystem;
+        private static Random m_random = new Random();
 
         private static void Main(string[] args)
         {
@@ -93,6 +95,7 @@ namespace TwitchChatVotingProxy
             twitchOAuth = twitchFile.ReadValue("TwitchChannelOAuth");
             twitchPollPass = twitchFile.ReadValue("TwitchVotingPollPass");
             m_disableNoVoteMsg = twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
+            m_enableTwitchChanceSystem = twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
 
             if (m_twitchPollMode)
             {
@@ -103,7 +106,7 @@ namespace TwitchChatVotingProxy
 
                 if (m_twitchPollDur < 15 || m_twitchPollDur > 180)
                 {
-                    m_streamWriter.Write("invalid_poll_dur\0");
+                    SendToPipe("invalid_poll_dur");
 
                     return false;
                 }
@@ -167,7 +170,7 @@ namespace TwitchChatVotingProxy
 
             if (string.IsNullOrWhiteSpace(m_twitchChannelName) || string.IsNullOrWhiteSpace(twitchUsername) || string.IsNullOrWhiteSpace(twitchOAuth))
             {
-                m_streamWriter.Write("invalid_login\0");
+                SendToPipe("invalid_login");
 
                 return false;
             }
@@ -212,7 +215,7 @@ namespace TwitchChatVotingProxy
 
             if (failed)
             {
-                m_streamWriter.Write("invalid_login\0");
+                SendToPipe("invalid_login");
 
                 return false;
             }
@@ -243,7 +246,7 @@ namespace TwitchChatVotingProxy
 
             if (failed)
             {
-                m_streamWriter.Write("invalid_channel\0");
+                SendToPipe("invalid_channel");
 
                 return false;
             }
@@ -255,60 +258,62 @@ namespace TwitchChatVotingProxy
 
         private static void OnMessageRecieved(object sender, OnMessageReceivedArgs e)
         {
-            if (m_voteRunning)
+            if (!m_voteRunning)
             {
-                ChatMessage chatMessage = e.ChatMessage;
-                string userId = chatMessage.UserId;
+                return;
+            }
 
-                if (m_alreadyVotedUsers.Contains(userId))
-                {
-                    return;
-                }
+            ChatMessage chatMessage = e.ChatMessage;
+            string userId = chatMessage.UserId;
 
-                string msg = chatMessage.Message;
-                bool successfulVote = true;
+            if (m_alreadyVotedUsers.Contains(userId))
+            {
+                return;
+            }
 
-                if (!m_alternatedVotingRound)
-                {
-                    switch (msg.Trim())
-                    {
-                        case "1":
-                            m_votes[0]++;
-                            break;
-                        case "2":
-                            m_votes[1]++;
-                            break;
-                        case "3":
-                            m_votes[2]++;
-                            break;
-                        default:
-                            successfulVote = false;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (msg.Trim())
-                    {
-                        case "4":
-                            m_votes[0]++;
-                            break;
-                        case "5":
-                            m_votes[1]++;
-                            break;
-                        case "6":
-                            m_votes[2]++;
-                            break;
-                        default:
-                            successfulVote = false;
-                            break;
-                    }
-                }
+            string msg = chatMessage.Message;
+            bool successfulVote = true;
 
-                if (successfulVote)
+            if (!m_alternatedVotingRound)
+            {
+                switch (msg.Trim())
                 {
-                    m_alreadyVotedUsers.Add(userId);
+                    case "1":
+                        m_votes[0]++;
+                        break;
+                    case "2":
+                        m_votes[1]++;
+                        break;
+                    case "3":
+                        m_votes[2]++;
+                        break;
+                    default:
+                        successfulVote = false;
+                        break;
                 }
+            }
+            else
+            {
+                switch (msg.Trim())
+                {
+                    case "4":
+                        m_votes[0]++;
+                        break;
+                    case "5":
+                        m_votes[1]++;
+                        break;
+                    case "6":
+                        m_votes[2]++;
+                        break;
+                    default:
+                        successfulVote = false;
+                        break;
+                }
+            }
+
+            if (successfulVote)
+            {
+                m_alreadyVotedUsers.Add(userId);
             }
         }
 
@@ -363,6 +368,11 @@ namespace TwitchChatVotingProxy
                             m_twitchClient.SendMessage(m_twitchChannelName, $"5: {data[2]}");
                             m_twitchClient.SendMessage(m_twitchChannelName, $"6: {data[3]}");
                         }
+
+                        if (m_enableTwitchChanceSystem)
+                        {
+                            m_twitchClient.SendMessage(m_twitchChannelName, "Votes will affect the chance for one of the effects to occur.");
+                        }
                     }
                 }
                 else if (line == "getvoteresult")
@@ -377,9 +387,16 @@ namespace TwitchChatVotingProxy
                         SendPollJson($"{{\"type\":\"end\",\"id\":\"{m_twitchPollUUID}\"}}");
                     }
 
-                    m_streamWriter.Write($"voteresult:{GetHighestVoteItem()}\0");
+                    SendToPipe($"voteresult:{GetResultEffect()}");
 
                     m_voteRunning = false;
+                }
+                else if (line == "getcurrentvotes")
+                {
+                    if (m_voteRunning)
+                    {
+                        SendToPipe($"currentvotes:{m_votes[0]}:{m_votes[1]}:{m_votes[2]}");
+                    }
                 }
                 else if (line == "novoteround" && !m_twitchPollMode && !m_disableNoVoteMsg)
                 {
@@ -397,8 +414,13 @@ namespace TwitchChatVotingProxy
             {
                 _LastTick = curTick;
 
-                m_streamWriter.Write("ping\0");
+                SendToPipe("ping");
             }
+        }
+
+        private static void SendToPipe(string msg)
+        {
+            m_streamWriter.Write(msg + '\0');
         }
 
         private static dynamic DeserializeJson(string json)
@@ -414,35 +436,67 @@ namespace TwitchChatVotingProxy
             }
         }
 
-        private static int GetHighestVoteItem()
+        private static int GetResultEffect()
         {
-            List<int> chosenEffects = new List<int>();
-            int highestVotes = 0;
-            for (int i = 0; i < 3; i++)
+            if (!m_enableTwitchChanceSystem)
             {
-                int votes = m_votes[i];
-                if (votes > highestVotes)
+                List<int> chosenEffects = new List<int>();
+                int highestVotes = 0;
+                for (int i = 0; i < 3; i++)
                 {
+                    int votes = m_votes[i];
+                    if (votes > highestVotes)
+                    {
+                        chosenEffects.Clear();
+                        chosenEffects.Add(i);
+
+                        highestVotes = votes;
+                    }
+                    else if (votes == highestVotes)
+                    {
+                        chosenEffects.Add(i);
+                    }
+                }
+
+                int count = chosenEffects.Count;
+                if (count > 1)
+                {
+                    // Multiple effects with same amount of votes, choose random one
+                    int chosen = chosenEffects[m_random.Next(0, count)];
                     chosenEffects.Clear();
-                    chosenEffects.Add(i);
+                    chosenEffects.Add(chosen);
+                }
 
-                    highestVotes = votes;
-                }
-                else if (votes == highestVotes)
-                {
-                    chosenEffects.Add(i);
-                }
+                return chosenEffects[0];
             }
-
-            int count = chosenEffects.Count;
-            if (count > 1)
+            else
             {
-                int chosen = chosenEffects[new Random().Next(0, count)];
-                chosenEffects.Clear();
-                chosenEffects.Add(chosen);
-            }
+                int totalVotes = m_votes[0] + m_votes[1] + m_votes[2];
 
-            return chosenEffects[0];
+                if (totalVotes == 0)
+                {
+                    // No votes, just choose a random one
+                    return m_random.Next(0, 4);
+                }
+                else
+                {
+                    int index = m_random.Next(0, totalVotes + 1);
+
+                    int addedUpVotes = 0;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        addedUpVotes += m_votes[i];
+
+                        if (index <= addedUpVotes)
+                        {
+                            return i;
+                        }
+                    }
+                }
+
+                // This should literally never happen, but w/e just return the first voteable effect
+                return 0;
+            }
         }
     }
 }

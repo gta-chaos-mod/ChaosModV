@@ -5,9 +5,10 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	bool enableTwitchVoteablesOnscreen)
+	bool enableTwitchVoteablesOnscreen, bool enableTwitchChanceSystem)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
+	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
+	m_enableTwitchChanceSystem(enableTwitchChanceSystem)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -61,6 +62,7 @@ TwitchVoting::~TwitchVoting()
 void TwitchVoting::Tick()
 {
 	// Check if there's been no ping for too long and error out
+	// Also if the chance system is enabled, get current vote status every second (if shown on screen)
 	DWORD64 curTick = GetTickCount64();
 	if (m_lastPing < curTick - 1000)
 	{
@@ -73,6 +75,12 @@ void TwitchVoting::Tick()
 
 		m_noPingRuns++;
 		m_lastPing = curTick;
+
+		if (m_isVotingRunning && m_enableTwitchChanceSystem && m_enableTwitchVoteablesOnscreen)
+		{
+			// Get current vote status to display procentages on screen
+			SendToPipe("getcurrentvotes");
+		}
 	}
 
 	char buffer[BUFFER_SIZE];
@@ -229,11 +237,38 @@ void TwitchVoting::Tick()
 
 	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen)
 	{
+		// Count total votes if chance system is enabled
+		int totalVotes;
+		if (m_enableTwitchChanceSystem)
+		{
+			totalVotes = m_effectChoices[0].ChanceVotes + m_effectChoices[1].ChanceVotes + m_effectChoices[2].ChanceVotes;
+		}
+
 		float y = .1f;
 		for (int i = 0; i < 3; i++)
 		{
+			ChoosableEffect& choosableEffect = m_effectChoices[i];
+
 			std::ostringstream oss;
-			oss << (!m_alternatedVotingRound ? i + 1 : i + 4) << ": " << m_effectChoices[i].EffectName << std::endl;
+			oss << (!m_alternatedVotingRound ? i + 1 : i + 4) << ": " << choosableEffect.EffectName;
+
+			// Also show chance percentages if chance system is enabled
+			if (m_enableTwitchChanceSystem)
+			{
+				double percentage;
+				if (totalVotes == 0)
+				{
+					percentage = .33f;
+				}
+				else
+				{
+					percentage = choosableEffect.ChanceVotes == 0 ? 0.f : std::round(static_cast<float>(choosableEffect.ChanceVotes) / totalVotes * 100.f) / 100.f;
+				}
+
+				oss << " (" << percentage * 100.f << "%)";
+			}
+
+			oss << std::endl;
 
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
@@ -282,6 +317,27 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		m_alternatedVotingRound = !m_alternatedVotingRound;
 
 		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
+	}
+	else if (msg._Starts_with("currentvotes"))
+	{
+		std::string valuesStr = msg.substr(msg.find(":") + 1);
+
+		int splitIndex = valuesStr.find(":");
+		for (int i = 0; ; i++)
+		{
+			const std::string& split = valuesStr.substr(0, splitIndex);
+
+			TryParseInt(split, m_effectChoices[i].ChanceVotes);
+
+			valuesStr = valuesStr.substr(splitIndex + 1);
+
+			if (splitIndex == valuesStr.npos)
+			{
+				break;
+			}
+
+			splitIndex = valuesStr.find(":");
+		}
 	}
 
 	return true;

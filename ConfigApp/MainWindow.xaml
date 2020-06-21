@@ -27,59 +27,63 @@
             </TabItem>
             <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="107*"/>
+                        <ColumnDefinition Width="945*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="37*"/>
                         <RowDefinition Height="28*"/>
                     </Grid.RowDefinitions>
-                    <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="340,3,0,0" TextWrapping="Wrap"
+                    <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="233,3,0,0" TextWrapping="Wrap"
                          VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                          MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
                     <Label Content="How often should a new effect start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
-                        VerticalAlignment="Top" Width="325"/>
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
                     <Label Content="How long should timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,70,0,0"
-                        VerticalAlignment="Top" Width="325"/>
-                    <TextBox x:Name="misc_user_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="340,73,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="misc_user_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="233,73,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
                     <Label Content="How long should short timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,140,0,0"
-                        VerticalAlignment="Top" Width="325"/>
-                    <TextBox x:Name="misc_user_effects_timed_short_dur" HorizontalAlignment="Left" Height="23" Margin="340,143,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="misc_user_effects_timed_short_dur" HorizontalAlignment="Left" Height="23" Margin="233,143,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown"/>
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
                     <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2"/>
-                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="340,214,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="233,214,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         MaxLength="8" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.RowSpan="2"/>
-                    <xctk:ColorPicker Name="misc_user_effects_timer_color" HorizontalAlignment="Left" Height="23" Margin="125,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False"/>
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.RowSpan="2" Grid.Column="1"/>
+                    <xctk:ColorPicker Name="misc_user_effects_timer_color" HorizontalAlignment="Left" Height="23" Margin="18,135,0,0"
+                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
                     <Label Content="Timer Bar Color" HorizontalAlignment="Left" Margin="10,132,0,0"
-                        VerticalAlignment="Top" Width="110" Grid.Row="1"/>
-                    <Label Content="Effect Text Color" Margin="200,132,742,0"
-                        VerticalAlignment="Top" Grid.Row="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_text_color" HorizontalAlignment="Left" Height="23" Margin="315,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False"/>
-                    <Label Content="Effect Timer Bar Color" Margin="390,132,520,0"
-                        VerticalAlignment="Top" Grid.Row="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" HorizontalAlignment="Left" Height="23" Margin="537,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False"/>
-                    <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1"/>
-                    <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="340,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-                    <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="446,65,0,68" Width="325" Grid.Row="1"/>
-                    <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="776,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-                    <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="446,211,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2"/>
-                    <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="446,140,0,0"
-                        VerticalAlignment="Top" Width="325"/>
-                    <CheckBox x:Name="misc_user_effects_drawtext_disable" HorizontalAlignment="Left" Margin="776,218,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
-                    <CheckBox x:Name="misc_user_effects_drawtimer_disable" HorizontalAlignment="Left" Margin="776,147,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Enable toggle mod shortcut (CTRL + L)" HorizontalAlignment="Left" Margin="446,74,0,0"
-                        VerticalAlignment="Top" Width="325"/>
-                    <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="776,81,0,0" VerticalAlignment="Top"/>
+                        VerticalAlignment="Top" Width="110" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <Label Content="Effect Text Color" Margin="93,132,742,0"
+                        VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
+                    <xctk:ColorPicker x:Name="misc_user_effects_text_color" HorizontalAlignment="Left" Height="23" Margin="208,135,0,0"
+                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
+                    <Label Content="Effect Timer Bar Color" Margin="283,132,520,0"
+                        VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
+                    <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" HorizontalAlignment="Left" Height="23" Margin="430,135,0,0"
+                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
+                    <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="233,71,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
+                    <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="339,65,0,68" Width="325" Grid.Row="1" Grid.Column="1"/>
+                    <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="669,71,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
+                    <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="339,211,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2" Grid.Column="1"/>
+                    <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="339,140,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.Column="1"/>
+                    <CheckBox x:Name="misc_user_effects_drawtext_disable" HorizontalAlignment="Left" Margin="669,218,0,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1"/>
+                    <CheckBox x:Name="misc_user_effects_drawtimer_disable" HorizontalAlignment="Left" Margin="669,147,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <Label Content="Enable toggle mod shortcut (CTRL + L)" HorizontalAlignment="Left" Margin="339,74,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.Column="1"/>
+                    <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="669,81,0,0" VerticalAlignment="Top" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
@@ -109,16 +113,16 @@
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_user_name" HorizontalAlignment="Left" Height="23" Margin="378,87,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
-                    <Label Content="Only enable chat voting X seconds before new effect triggers (Keep at 0 to enable chat voting instantly, can't be 1)" HorizontalAlignment="Left" Margin="10,178,0,0"
+                    <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers (Keep at 0 to enable chat voting instantly, can't be 1)" HorizontalAlignment="Left" Margin="10,178,0,0"
                         VerticalAlignment="Top" Width="627" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" HorizontalAlignment="Left" Height="23" Margin="642,180,0,0"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
-                    <Label x:Name="twitch_user_poll_passphrase_label" Content="Passphrase" HorizontalAlignment="Left" Margin="11,149,0,0"
+                    <Label x:Name="twitch_user_poll_passphrase_label" Content="Passphrase" HorizontalAlignment="Left" Margin="11,85,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1" Visibility="Hidden" />
-                    <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="111,152,0,0"
+                    <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="111,88,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
-                    <Label Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,228,0,0"
+                    <Label x:Name="twitch_user_voter_indicator_enabled_label" Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,228,0,0"
                         VerticalAlignment="Top" Width="347" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,234,655,90" Grid.Row="1" />
                     <Label x:Name="twitch_user_chat_no_vote_msg_disable_label" Content="Disable no voting round chat message" HorizontalAlignment="Left" Margin="417,228,0,0"
@@ -127,6 +131,9 @@
                     <Label x:Name="twitch_user_show_voteables_onscreen_enable_label" Content="Show voteables on-screen" HorizontalAlignment="Left" Margin="703,228,0,0"
                         VerticalAlignment="Top" Width="154" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_show_voteables_onscreen_enable" Margin="876,234,92,90" Grid.Row="1" />
+                    <Label x:Name="twitch_user_chance_system_enable_label" Content="Votes affect chance for effect to occur instead (Experimental)" HorizontalAlignment="Left" Margin="10,268,0,0"
+                        VerticalAlignment="Top" Width="347" Grid.Row="1"/>
+                    <CheckBox x:Name="twitch_user_chance_system_enable" Margin="362,274,655,50" Grid.Row="1" />
                 </Grid>
             </TabItem>
             <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
