@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -26,7 +27,7 @@ namespace TwitchChatVotingProxy
         private static List<IWebSocketConnection> m_twitchPollClients;
         private static bool m_voteRunning = false;
         private static int[] m_votes = new int[3];
-        private static List<string> m_alreadyVotedUsers = new List<string>();
+        private static List<VoteUser> m_alreadyVotedUsers = new List<VoteUser>();
         private static bool m_disableNoVoteMsg = false;
         private static bool m_alternatedVotingRound;
         private static bool m_enableTwitchChanceSystem;
@@ -266,54 +267,44 @@ namespace TwitchChatVotingProxy
             ChatMessage chatMessage = e.ChatMessage;
             string userId = chatMessage.UserId;
 
-            if (m_alreadyVotedUsers.Contains(userId))
+            string msg = chatMessage.Message.Trim();
+            if (msg.Length > 1)
             {
                 return;
             }
 
-            string msg = chatMessage.Message;
-            bool successfulVote = true;
+            VoteUser voteUser = m_alreadyVotedUsers.Where(user => user.UserId == userId).FirstOrDefault();
+            if (voteUser == null)
+            {
+                voteUser = new VoteUser(userId);
 
-            if (!m_alternatedVotingRound)
-            {
-                switch (msg.Trim())
-                {
-                    case "1":
-                        m_votes[0]++;
-                        break;
-                    case "2":
-                        m_votes[1]++;
-                        break;
-                    case "3":
-                        m_votes[2]++;
-                        break;
-                    default:
-                        successfulVote = false;
-                        break;
-                }
-            }
-            else
-            {
-                switch (msg.Trim())
-                {
-                    case "4":
-                        m_votes[0]++;
-                        break;
-                    case "5":
-                        m_votes[1]++;
-                        break;
-                    case "6":
-                        m_votes[2]++;
-                        break;
-                    default:
-                        successfulVote = false;
-                        break;
-                }
+                m_alreadyVotedUsers.Add(voteUser);
             }
 
-            if (successfulVote)
+            int votedFor = -1;
+            if (msg == (!m_alternatedVotingRound ? "1" : "4"))
             {
-                m_alreadyVotedUsers.Add(userId);
+                votedFor = 0;
+            }
+            else if (msg == (!m_alternatedVotingRound ? "2" : "5"))
+            {
+                votedFor = 1;
+            }
+            else if (msg == (!m_alternatedVotingRound ? "3" : "6"))
+            {
+                votedFor = 2;
+            }
+
+            if (votedFor != -1)
+            {
+                if (voteUser.VotedForIndex != -1)
+                {
+                    // This user already voted before, remove their previous vote
+                    m_votes[voteUser.VotedForIndex]--;
+                }
+                voteUser.VotedForIndex = votedFor;
+
+                m_votes[votedFor]++;
             }
         }
 
