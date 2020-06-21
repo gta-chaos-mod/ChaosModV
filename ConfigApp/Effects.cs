@@ -255,6 +255,7 @@ namespace ConfigApp
             EFFECT_PLAYER_WEAPON_LOCK,
             EFFECT_MISC_FIREWORKS,
             EFFECT_VEH_DESPAWN,
+            EFFECT_PEDS_SCOOTERBROTHERS,
             _EFFECT_ENUM_MAX
         }
 
@@ -475,6 +476,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_WEAPON_LOCK, new EffectInfo("No Weapon Switching", EffectCategory.PLAYER, "player_weaponlock", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
+            {EffectType.EFFECT_PEDS_SCOOTERBROTHERS, new EffectInfo("Scooter Brothers", EffectCategory.PEDS, "peds_scooterbrothers")},
         };
     }
 }
