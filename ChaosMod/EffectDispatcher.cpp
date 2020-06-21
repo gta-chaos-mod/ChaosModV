@@ -1,11 +1,9 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, EffectData> enabledEffects,
-	int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
-	bool enableTwitchVoteablesOnscreen)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur),
-		m_enabledEffects(enabledEffects), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
-		m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
+	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoteablesOnscreen)
+	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
+	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
 {
 	Reset();
 }
@@ -92,7 +90,7 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
-	if (m_enabledEffects.empty())
+	if (g_enabledEffects.empty())
 	{
 		return;
 	}
@@ -132,13 +130,34 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 {
+	// Increase weight for all effects first
+	for (auto& pair : g_enabledEffects)
+	{
+		pair.second.Weight += pair.second.WeightMult;
+	}
+
 	const EffectInfo& effectInfo = g_effectsMap.at(effectType);
-	const EffectData& effectData = m_enabledEffects.at(effectType);
+	EffectData& effectData = g_enabledEffects.at(effectType);
+
+	// Reset weight of this effect to reduce / stop chance of same effect happening multiple times in a row
+	effectData.Weight = m_disableTwiceInRow ? 0 : effectData.WeightMult;
+
+#ifdef _DEBUG
+	// Write weight distribution to file
+	std::ofstream weightLog("chaosmod/effectweights.txt");
+
+	for (const auto& pair : g_enabledEffects)
+	{
+		const EffectData& effectData = pair.second;
+
+		weightLog << effectData.Name << " " << effectData.Weight << " (" << effectData.WeightMult << ")" << std::endl;
+	}
+#endif
 
 	int effectTime = effectInfo.IsTimed
-		? effectData.EffectCustomTime >= 0
-			? effectData.EffectCustomTime
-			: effectData.EffectTimedType == EffectTimedType::TIMED_SHORT
+		? effectData.CustomTime >= 0
+			? effectData.CustomTime
+			: effectData.TimedType == EffectTimedType::TIMED_SHORT
 				? m_effectTimedShortDur
 				: m_effectTimedDur
 		: -1;
@@ -210,7 +229,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			registeredEffect->Start();
 
 			std::ostringstream ossEffectName;
-			ossEffectName << effectData.EffectName;
+			ossEffectName << effectData.Name;
 
 			if (suffix && strlen(suffix) > 0)
 			{
@@ -231,20 +250,18 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 {
-	// Make sure we only dispatch enabled effects
-
 	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
 
 	std::map<EffectType, EffectData> choosableEffects;
-	for (const auto& pair : m_enabledEffects)
+	for (const auto& pair : g_enabledEffects)
 	{
 		EffectType effectType = pair.first;
 		const EffectData& effectData = pair.second;
 
-		if (!effectData.EffectPermanent && (!m_disableTwiceInRow || effectType != m_lastEffect))
+		if (!effectData.Permanent && (!m_disableTwiceInRow || effectType != m_lastEffect))
 		{
 			choosableEffects.emplace(effectType, effectData);
 		}
@@ -253,7 +270,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	int effectsTotalWeight = 0;
 	for (const auto& pair : choosableEffects)
 	{
-		effectsTotalWeight += pair.second.EffectWeight * 10;
+		effectsTotalWeight += pair.second.Weight;
 	}
 
 	int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -262,12 +279,12 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	auto targetEffectType = _EFFECT_ENUM_MAX;
 	for (const auto& pair : choosableEffects)
 	{
-		if (pair.second.EffectPermanent)
+		if (pair.second.Permanent)
 		{
 			continue;
 		}
 
-		addedUpWeight += pair.second.EffectWeight * 10;
+		addedUpWeight += pair.second.Weight;
 
 		if (index <= addedUpWeight)
 		{
@@ -309,11 +326,11 @@ void EffectDispatcher::Reset()
 
 	m_enableNormalEffectDispatch = false;
 
-	for (const auto& pair : m_enabledEffects)
+	for (const auto& pair : g_enabledEffects)
 	{
-		if (pair.second.EffectPermanent)
+		if (pair.second.Permanent)
 		{
-			auto registeredEffect = GetRegisteredEffect(pair.first);
+			RegisteredEffect* registeredEffect = GetRegisteredEffect(pair.first);
 
 			if (registeredEffect)
 			{
@@ -323,6 +340,7 @@ void EffectDispatcher::Reset()
 		}
 		else
 		{
+			// There's at least 1 enabled non-permanent effect, enable timer
 			m_enableNormalEffectDispatch = true;
 		}
 	}

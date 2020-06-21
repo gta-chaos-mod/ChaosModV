@@ -5,10 +5,9 @@
 #define BUFFER_SIZE 256
 
 TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	bool enableTwitchVoteablesOnscreen, std::map<EffectType, EffectData> enabledEffects)
+	bool enableTwitchVoteablesOnscreen)
 	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
-	m_enabledEffects(enabledEffects)
+	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -96,6 +95,8 @@ void TwitchVoting::Tick()
 
 	if (g_effectDispatcher->GetRemainingTimerTime() == 1)
 	{
+		// Get vote result 1 second before effect is supposed to dispatch
+
 		if (m_isVotingRunning)
 		{
 			m_isVotingRunning = false;
@@ -108,6 +109,8 @@ void TwitchVoting::Tick()
 	}
 	else if (g_effectDispatcher->ShouldDispatchEffectNow())
 	{
+		// End of voting round; dispatch resulted effect
+
 		if (m_noVoteRound)
 		{
 			g_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
@@ -130,6 +133,8 @@ void TwitchVoting::Tick()
 	}
 	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
 	{
+		// New voting round
+
 		m_isVotingRunning = true;
 		m_chosenEffectType = _EFFECT_ENUM_MAX;
 
@@ -159,15 +164,15 @@ void TwitchVoting::Tick()
 			return;
 		}
 
-		std::map<EffectType, EffectData> choosableEffects;
-		for (const auto& pair : m_enabledEffects)
+		std::map<EffectType, EffectData*> choosableEffects;
+		for (auto& pair : g_enabledEffects)
 		{
 			EffectType effectType = pair.first;
-			const EffectData& effectData = pair.second;
+			EffectData& effectData = pair.second;
 
-			if (!effectData.EffectPermanent && !effectData.EffectExcludedFromVoting)
+			if (!effectData.Permanent && !effectData.ExcludedFromVoting)
 			{
-				choosableEffects.emplace(effectType, effectData);
+				choosableEffects.emplace(effectType, &effectData);
 			}
 		}
 
@@ -176,7 +181,7 @@ void TwitchVoting::Tick()
 			int effectsTotalWeight = 0;
 			for (const auto& pair : choosableEffects)
 			{
-				effectsTotalWeight += pair.second.EffectWeight * 10;
+				effectsTotalWeight += pair.second->Weight;
 			}
 
 			int index = Random::GetRandomInt(0, effectsTotalWeight);
@@ -184,18 +189,23 @@ void TwitchVoting::Tick()
 			int addedUpWeight = 0;
 			ChoosableEffect targetChoice;
 
-			for (const auto& pair : choosableEffects)
+			for (auto& pair : choosableEffects)
 			{
-				if (pair.second.EffectPermanent)
+				EffectData* effectData = pair.second;
+
+				if (effectData->Permanent)
 				{
 					continue;
 				}
 
-				addedUpWeight += pair.second.EffectWeight * 10;
+				addedUpWeight += effectData->Weight;
 
 				if (index <= addedUpWeight)
 				{
-					targetChoice = ChoosableEffect(pair.first, pair.second.EffectName);
+					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
+					effectData->Weight = 0;
+
+					targetChoice = ChoosableEffect(pair.first, effectData->Name);
 					break;
 				}
 			}

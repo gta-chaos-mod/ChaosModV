@@ -6,6 +6,9 @@
 
 #include <Windows.h>
 #include <memory>
+#include <map>
+
+inline std::map<EffectType, EffectData> g_enabledEffects;
 
 class Main
 {

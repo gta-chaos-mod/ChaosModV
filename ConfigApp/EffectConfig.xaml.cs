@@ -27,34 +27,34 @@ namespace ConfigApp
 
             if (m_isTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = effectData.EffectTimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
+                effectconf_timer_type_enable.IsChecked = effectData.TimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short"
                 };
-                effectconf_timer_type.SelectedIndex = effectData.EffectTimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
+                effectconf_timer_type.SelectedIndex = effectData.TimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
 
-                if (effectData.EffectCustomTime >= 0)
+                if (effectData.CustomTime >= 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
-                    effectconf_timer_time.Text = $"{effectData.EffectCustomTime}";
+                    effectconf_timer_time.Text = $"{effectData.CustomTime}";
                 }
             }
 
-            effectconf_timer_permanent_enable.IsChecked = effectData.EffectPermanent;
+            effectconf_timer_permanent_enable.IsChecked = effectData.Permanent;
 
             int[] weightItems = new int[10];
             for (int i = 0; i < 10; i++)
             {
                 weightItems[i] = i + 1;
             }
-            effectconf_effect_weight.ItemsSource = weightItems;
-            effectconf_effect_weight.SelectedIndex = effectData.EffectWeight - 1;
+            effectconf_effect_weight_mult.ItemsSource = weightItems;
+            effectconf_effect_weight_mult.SelectedIndex = effectData.WeightMult - 1;
 
-            effectconf_exclude_voting_enable.IsChecked = effectData.EffectExcludedFromVoting;
+            effectconf_exclude_voting_enable.IsChecked = effectData.ExcludedFromVoting;
 
-            effectconf_effect_custom_name.Text = effectData.EffectCustomName;
+            effectconf_effect_custom_name.Text = effectData.CustomName;
 
             effectconf_mp3_label.Text += $"{effectInfo.Id}.mp3";
 

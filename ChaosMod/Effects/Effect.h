@@ -123,10 +123,11 @@ enum class EffectTimedType
 
 struct EffectData
 {
-	EffectTimedType EffectTimedType;
-	int EffectCustomTime;
-	int EffectWeight;
-	bool EffectPermanent;
-	bool EffectExcludedFromVoting;
-	std::string EffectName;
+	EffectTimedType TimedType;
+	int CustomTime;
+	int WeightMult;
+	int Weight;
+	bool Permanent;
+	bool ExcludedFromVoting;
+	std::string Name;
 };

@@ -4,21 +4,21 @@ namespace ConfigApp
 {
     public class EffectData
     {
-        public EffectTimedType EffectTimedType;
-        public int EffectCustomTime;
-        public int EffectWeight;
-        public bool EffectPermanent;
-        public bool EffectExcludedFromVoting;
-        public string EffectCustomName;
+        public EffectTimedType TimedType;
+        public int CustomTime;
+        public int WeightMult;
+        public bool Permanent;
+        public bool ExcludedFromVoting;
+        public string CustomName;
 
-        public EffectData(EffectTimedType effectTimedType, int effectCustomTime, int effectWeight, bool effectPermanent, bool effectExcludedFromVoting, string effectCustomName)
+        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName)
         {
-            EffectTimedType = effectTimedType;
-            EffectCustomTime = effectCustomTime;
-            EffectWeight = effectWeight;
-            EffectPermanent = effectPermanent;
-            EffectExcludedFromVoting = effectExcludedFromVoting;
-            EffectCustomName = effectCustomName;
+            TimedType = timedType;
+            CustomTime = customTime;
+            WeightMult = weightMult;
+            Permanent = permanent;
+            ExcludedFromVoting = excludedFromVoting;
+            CustomName = customName;
         }
     }
 }

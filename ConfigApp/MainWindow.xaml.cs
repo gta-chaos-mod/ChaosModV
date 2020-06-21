@@ -203,9 +203,9 @@ namespace ConfigApp
             {
                 EffectData effectData = GetEffectData(effectType);
 
-                m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.EffectTimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
-                    + $",{effectData.EffectCustomTime},{effectData.EffectWeight},{(effectData.EffectPermanent ? 1 : 0)},{(effectData.EffectExcludedFromVoting ? 1 : 0)}"
-                    + $",{(string.IsNullOrEmpty(effectData.EffectCustomName) ? "0" : effectData.EffectCustomName)}");
+                m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
+                    + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
+                    + $",{(string.IsNullOrEmpty(effectData.CustomName) ? "0" : effectData.CustomName)}");
             }
 
             m_effectsFile.WriteFile();
@@ -384,14 +384,14 @@ namespace ConfigApp
 
                 if (effectConfig.IsSaved)
                 {
-                    effectData.EffectTimedType = effectConfig.effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectConfig.effectconf_timer_type.SelectedIndex
+                    effectData.TimedType = effectConfig.effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectConfig.effectconf_timer_type.SelectedIndex
                         : effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
-                    effectData.EffectCustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
+                    effectData.CustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
                         ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
-                    effectData.EffectPermanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
-                    effectData.EffectWeight = effectConfig.effectconf_effect_weight.SelectedIndex + 1;
-                    effectData.EffectExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
-                    effectData.EffectCustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
+                    effectData.Permanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
+                    effectData.WeightMult = effectConfig.effectconf_effect_weight_mult.SelectedIndex + 1;
+                    effectData.ExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
+                    effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
                 }
             }
         }

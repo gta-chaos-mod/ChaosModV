@@ -10,9 +10,8 @@
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, std::map<EffectType, EffectData> enabledEffects,
-		int effectTimedShortDur, bool disableTwiceInRow, std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor,
-		bool enableTwitchVoteablesOnscreen);
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
+		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoteablesOnscreen);
 	~EffectDispatcher();
 
 public:
@@ -38,7 +37,6 @@ public:
 private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
-	const std::map<EffectType, EffectData> m_enabledEffects;
 	const int m_effectTimedShortDur;
 	const bool m_disableTwiceInRow;
 	EffectType m_lastEffect = _EFFECT_ENUM_MAX;
