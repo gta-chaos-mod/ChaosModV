@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,6 +32,10 @@ namespace ConfigApp
         {
             InitializeComponent();
 
+            Title += " (v" + Info.VERSION + ")";
+
+            CheckForUpdates();
+
             ParseConfigFile();
             ParseTwitchFile();
 
@@ -37,6 +44,28 @@ namespace ConfigApp
             ParseEffectsFile();
 
             InitTwitchTab();
+        }
+
+        void CheckForUpdates()
+        {
+            HttpClient httpClient = new HttpClient();
+
+            Task<string> task = httpClient.GetStringAsync("https://ducky.rivinshosting.com/chaos/version.txt");
+            while (!task.IsCompleted)
+            {
+
+            }
+
+            if (!task.IsFaulted)
+            {
+                string newVersion = task.Result;
+
+                if (Info.VERSION != newVersion)
+                {
+                    update_available_label.Visibility = Visibility.Visible;
+                    update_available_button.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private EffectData GetEffectData(EffectType effectType)

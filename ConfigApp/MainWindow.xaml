@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration (v1.6)" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
@@ -157,5 +157,7 @@
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
         <Button x:Name="user_reset" Content="Reset" Click="user_reset_Click" Margin="844,418,113,13"/>
+        <Label x:Name="update_available_label" Content="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." HorizontalAlignment="Left" Margin="22,420,0,0" VerticalAlignment="Top" Visibility="Hidden" />
+        <Button x:Name="update_available_button" Content="GTA5-Mods" HorizontalAlignment="Left" Margin="500,420,0,0" VerticalAlignment="Top" Width="93" Height="26" Click="contribute_modpage_click" Visibility="Hidden" />
     </Grid>
 </Window>
