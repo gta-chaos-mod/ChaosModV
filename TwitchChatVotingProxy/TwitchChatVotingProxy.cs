@@ -476,6 +476,11 @@ namespace TwitchChatVotingProxy
                     int addedUpVotes = 0;
                     for (int i = 0; i < 3; i++)
                     {
+                        if (m_votes[i] == 0)
+                        {
+                            continue;
+                        }
+
                         addedUpVotes += m_votes[i];
 
                         if (index <= addedUpVotes)
