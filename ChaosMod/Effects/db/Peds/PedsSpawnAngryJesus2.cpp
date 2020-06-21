@@ -31,6 +31,8 @@ static void OnStart()
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 
+	SET_ENTITY_PROOFS(ped, false, true, true, false, false, false, false, false);
+
 	SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(ped, 1);
 	SET_PED_CAN_RAGDOLL(ped, false);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);

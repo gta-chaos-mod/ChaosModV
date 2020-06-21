@@ -14,6 +14,8 @@ static void OnStart()
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
 
+	SET_ENTITY_PROOFS(ped, false, true, true, false, false, false, false, false);
+
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 
