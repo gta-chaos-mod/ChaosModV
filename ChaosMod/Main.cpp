@@ -132,7 +132,6 @@ void Main::Init()
 	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting;
 	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
-	std::map<EffectType, EffectData> enabledEffects;
 
 	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
 		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, timerColor, textColor, effectTimerColor);
@@ -146,7 +145,7 @@ void Main::Init()
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;
-	for (const auto& pair : enabledEffects)
+	for (const auto& pair : g_enabledEffects)
 	{
 		enabledEffectTypes.push_back(pair.first);
 	}
