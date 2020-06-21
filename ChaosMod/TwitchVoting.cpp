@@ -76,7 +76,7 @@ void TwitchVoting::Tick()
 		m_noPingRuns++;
 		m_lastPing = curTick;
 
-		if (m_isVotingRunning && m_enableTwitchChanceSystem && m_enableTwitchVoteablesOnscreen)
+		if (m_isVotingRunning && m_enableTwitchChanceSystem && !m_enableTwitchPollVoting)
 		{
 			// Get current vote status to display procentages on screen
 			SendToPipe("getcurrentvotes");
@@ -235,8 +235,10 @@ void TwitchVoting::Tick()
 		m_voteablesOutputFile << (!m_alternatedVotingRound ? 3 : 6) << ": " << name3 << std::endl;
 	}
 
-	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen)
+	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen && !m_enableTwitchPollVoting)
 	{
+		// Print voteables on screen
+
 		// Count total votes if chance system is enabled
 		int totalVotes;
 		if (m_enableTwitchChanceSystem)
@@ -337,6 +339,32 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 			}
 
 			splitIndex = valuesStr.find(":");
+		}
+
+		// Write to output file too
+
+		int totalVotes;
+		if (m_enableTwitchChanceSystem)
+		{
+			totalVotes = m_effectChoices[0].ChanceVotes + m_effectChoices[1].ChanceVotes + m_effectChoices[2].ChanceVotes;
+		}
+
+		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
+		for (int i = 0; i < 3; i++)
+		{
+			const ChoosableEffect& choosableEffect = m_effectChoices[i];
+
+			double percentage;
+			if (totalVotes == 0)
+			{
+				percentage = .33f;
+			}
+			else
+			{
+				percentage = choosableEffect.ChanceVotes == 0 ? 0.f : std::round(static_cast<float>(choosableEffect.ChanceVotes) / totalVotes * 100.f) / 100.f;
+			}
+
+			m_voteablesOutputFile << (!m_alternatedVotingRound ? 1 + i : 4 + i) << ": " << choosableEffect.EffectName << " (" << percentage * 100.f << "%)" << std::endl << std::endl;
 		}
 	}
 
