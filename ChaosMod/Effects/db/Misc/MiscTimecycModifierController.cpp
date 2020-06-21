@@ -70,3 +70,11 @@ static void OnTickFullbright()
 }
 
 static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright);
+
+static void OnTickBubbleVision()
+{
+	SET_TIMECYCLE_MODIFIER("ufo_deathray");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
