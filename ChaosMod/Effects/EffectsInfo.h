@@ -455,5 +455,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_NO_BRAKES, {"No Brakes", "playerveh_nobrakes", true}},
 	{EFFECT_PLAYER_WEAPON_LOCK, {"No Weapon Switching", "player_weaponlock", true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
-	{EFFECT_VEH_DESPAWN, {"Delete Current Vehicle", "playerveh_despawn"}},
+	{EFFECT_VEH_DESPAWN, {"Remove Current Vehicle", "playerveh_despawn"}},
 };

@@ -8,11 +8,13 @@ static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	int cE = playerPed; // COMPARE ENTITY
+
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		cE = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		SET_VEHICLE_COLOURS(cE, 158, 158); // 158 = Pure Gold
 	}
+
 	for (Vehicle veh : GetAllVehs())
 	{
 		if (IS_ENTITY_TOUCHING_ENTITY(cE, veh))
@@ -20,6 +22,7 @@ static void OnTick()
 			SET_VEHICLE_COLOURS(veh, 158, 158); // 158 = Pure Gold
 		}
 	}
+
 	static const auto model = GET_HASH_KEY("prop_money_bag_01");
 	REQUEST_MODEL(model);
 	for (Ped ped : GetAllPeds())
@@ -39,11 +42,12 @@ static void OnTick()
 			}
 		}
 	}
+
 	for (int prop : GetAllProps())
 	{
-		if (IS_ENTITY_TOUCHING_ENTITY(cE, prop))
+		if (IS_ENTITY_TOUCHING_ENTITY(cE, prop) && !IS_PED_CLIMBING(cE))
 		{
-			if(!IS_ENTITY_A_MISSION_ENTITY(prop) || IS_CUTSCENE_PLAYING())
+			if (!IS_ENTITY_A_MISSION_ENTITY(prop) || IS_CUTSCENE_PLAYING())
 			{
 				if (GET_ENTITY_ATTACHED_TO(prop) == false)
 				{
@@ -56,6 +60,7 @@ static void OnTick()
 			}
 		}
 	}
+
 	if (IS_PED_ARMED(playerPed, 7))
 	{
 		Hash weaponHash;

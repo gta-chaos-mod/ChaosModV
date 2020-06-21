@@ -469,12 +469,12 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troop", EffectCategory.PEDS, "peds_spawndancingapes")},
             {EffectType.EFFECT_ONE_BULLET_WEP, new EffectInfo("One Bullet Mags", EffectCategory.MISC, "misc_onebullet", true)},
             {EffectType.EFFECT_PHONES, new EffectInfo("Who's Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true)},
-            {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.MISC, "misc_midas", true)},
+            {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.PLAYER, "misc_midas", true)},
             {EffectType.EFFECT_SPAWN_RANDOM_HOSTILE, new EffectInfo("Spawn Random Enemy", EffectCategory.PEDS, "peds_spawnrandomhostile")},
             {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo("No Brakes", EffectCategory.VEHICLE, "playerveh_nobrakes", true)},
             {EffectType.EFFECT_PLAYER_WEAPON_LOCK, new EffectInfo("No Weapon Switching", EffectCategory.PLAYER, "player_weaponlock", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
-            {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Delete Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
+            {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
         };
     }
 }
