@@ -220,6 +220,7 @@ enum EffectType
 	EFFECT_VEH_NO_BRAKES,
 	EFFECT_PLAYER_WEAPON_LOCK,
 	EFFECT_MISC_FIREWORKS,
+	EFFECT_VEH_DESPAWN,
 	_EFFECT_ENUM_MAX
 };
 
@@ -454,4 +455,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_NO_BRAKES, {"No Brakes", "playerveh_nobrakes", true}},
 	{EFFECT_PLAYER_WEAPON_LOCK, {"No Weapon Switching", "player_weaponlock", true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
+	{EFFECT_VEH_DESPAWN, {"Delete Current Vehicle", "playerveh_despawn"}},
 };

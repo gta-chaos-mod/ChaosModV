@@ -254,6 +254,7 @@ namespace ConfigApp
             EFFECT_VEH_NO_BRAKES,
             EFFECT_PLAYER_WEAPON_LOCK,
             EFFECT_MISC_FIREWORKS,
+            EFFECT_VEH_DESPAWN,
             _EFFECT_ENUM_MAX
         }
 
@@ -473,6 +474,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo("No Brakes", EffectCategory.VEHICLE, "playerveh_nobrakes", true)},
             {EffectType.EFFECT_PLAYER_WEAPON_LOCK, new EffectInfo("No Weapon Switching", EffectCategory.PLAYER, "player_weaponlock", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
+            {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Delete Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
         };
     }
 }
