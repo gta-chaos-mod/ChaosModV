@@ -110,6 +110,7 @@ namespace ConfigApp
             twitch_user_chat_no_vote_msg_disable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
             twitch_user_show_voteables_onscreen_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingShowVoteablesOnscreen", false);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
+            twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
         }
 
         private void WriteTwitchFile()
@@ -125,6 +126,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchVotingDisableNoVoteRoundMsg", twitch_user_chat_no_vote_msg_disable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingShowVoteablesOnscreen", twitch_user_show_voteables_onscreen_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
 
             m_twitchFile.WriteFile();
         }
@@ -293,6 +295,8 @@ namespace ConfigApp
             twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
             twitch_user_chance_system_enable_label.IsEnabled = agreed;
             twitch_user_chance_system_enable.IsEnabled = agreed;
+            twitch_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
+            twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
 
             // Ensure correct layout / widget properties if poll system is enabled
             if (File.Exists(".twitchpoll"))
@@ -315,6 +319,8 @@ namespace ConfigApp
                 twitch_user_show_voteables_onscreen_enable.IsEnabled = false;
                 twitch_user_chance_system_enable_label.IsEnabled = false;
                 twitch_user_chance_system_enable.IsEnabled = false;
+                twitch_user_chance_system_retain_chance_enable_label.IsEnabled = false;
+                twitch_user_chance_system_retain_chance_enable.IsEnabled = false;
             }
         }
 

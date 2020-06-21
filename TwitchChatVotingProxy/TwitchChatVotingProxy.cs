@@ -31,6 +31,7 @@ namespace TwitchChatVotingProxy
         private static bool m_disableNoVoteMsg = false;
         private static bool m_alternatedVotingRound;
         private static bool m_enableTwitchChanceSystem;
+        private static bool m_enableTwitchChanceSystemRetainChance;
         private static Random m_random = new Random();
 
         private static void Main(string[] args)
@@ -97,6 +98,7 @@ namespace TwitchChatVotingProxy
             twitchPollPass = twitchFile.ReadValue("TwitchVotingPollPass");
             m_disableNoVoteMsg = twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
             m_enableTwitchChanceSystem = twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
+            m_enableTwitchChanceSystemRetainChance = twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
 
             if (m_twitchPollMode)
             {
@@ -331,9 +333,11 @@ namespace TwitchChatVotingProxy
 
                     string[] data = line.Split(':');
 
-                    m_votes[0] = 0;
-                    m_votes[1] = 0;
-                    m_votes[2] = 0;
+                    bool initialVotes = m_enableTwitchChanceSystem && m_enableTwitchChanceSystemRetainChance && !m_twitchPollMode;
+
+                    m_votes[0] = !initialVotes ? 0 : 1;
+                    m_votes[1] = !initialVotes ? 0 : 1;
+                    m_votes[2] = !initialVotes ? 0 : 1;
                     m_alreadyVotedUsers.Clear();
                     m_voteRunning = true;
 
@@ -429,7 +433,7 @@ namespace TwitchChatVotingProxy
 
         private static int GetResultEffect()
         {
-            if (!m_enableTwitchChanceSystem)
+            if (!m_enableTwitchChanceSystem || m_twitchPollMode)
             {
                 List<int> chosenEffects = new List<int>();
                 int highestVotes = 0;
