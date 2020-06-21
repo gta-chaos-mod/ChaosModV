@@ -381,9 +381,6 @@
     <ClCompile Include="Effects\db\Misc\MiscSnow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscSpawnUFO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -487,6 +484,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

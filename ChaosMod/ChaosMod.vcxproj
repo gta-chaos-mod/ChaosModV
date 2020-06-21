@@ -112,7 +112,7 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSnow.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscSpawnUFO.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWaves.cpp" />
