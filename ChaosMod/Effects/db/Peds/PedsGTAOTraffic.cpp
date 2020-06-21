@@ -4,14 +4,17 @@ static void OnTick()
 {
 	static std::vector<Ped> goneThrough;
 
-	auto playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped) && IS_PED_IN_ANY_VEHICLE(ped, false) && GET_PED_IN_VEHICLE_SEAT(GET_VEHICLE_PED_IS_IN(ped, false), -1, 0) == ped
 			&& std::find(goneThrough.begin(), goneThrough.end(), ped) == goneThrough.end())
 		{
-			TASK_VEHICLE_GOTO_NAVMESH(ped, GET_VEHICLE_PED_IS_IN(ped, false), playerPos.x, playerPos.y, playerPos.z, 9999.f, 156, 0.f);
+			Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
+
+			TASK_VEHICLE_MISSION_PED_TARGET(ped, veh, playerPed, 13, 9999.f, 4176732, .0f, .0f, false);
 
 			goneThrough.push_back(ped);
 		}

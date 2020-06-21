@@ -20,7 +20,7 @@ static void OnStart()
 			Vehicle veh = CreateTempVehicle(faggioHash, pedPos.x, pedPos.y, pedPos.z, pedHeading);
 			SET_PED_INTO_VEHICLE(ped, veh, -1);
 
-			TASK_VEHICLE_MISSION_PED_TARGET(ped, veh, playerPed, 7, 9999.f, 4176732, .0f, .0f, false);
+			TASK_VEHICLE_MISSION_PED_TARGET(ped, veh, playerPed, 13, 9999.f, 4176732, .0f, .0f, false);
 		}
 	}
 }
