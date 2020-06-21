@@ -448,6 +448,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}},
 	{EFFECT_SPAWN_RANDOM_HOSTILE, {"Spawn Random Enemy", "peds_spawnrandomhostile"}},
 	{EFFECT_VEH_NO_BRAKES, {"No Time To Brake", "playerveh_nobrakes", true, {}, true}},
-	{EFFECT_PLAYER_WEAPON_LOCK, {"Weapon Lock", "player_weaponlock", true, {}, true}},
+	{EFFECT_PLAYER_WEAPON_LOCK, {"No Weapon Switching", "player_weaponlock", true, {}, true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
 };
