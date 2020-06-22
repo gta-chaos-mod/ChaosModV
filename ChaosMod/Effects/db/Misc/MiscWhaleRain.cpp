@@ -57,6 +57,7 @@ static void OnTick()
 
 		DECOR_SET_BOOL(whale, "_WHALE", true);
 
+		SET_PED_TO_RAGDOLL(whale, 1000, 1000, 0, true, true, false);
 		SET_ENTITY_HEALTH(whale, 0, 0);
 
 		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(whale, 0, 35.f, 0, -5000.f, true, false, true, true);

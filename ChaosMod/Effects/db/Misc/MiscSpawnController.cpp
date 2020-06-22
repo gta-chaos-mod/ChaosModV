@@ -4,7 +4,7 @@ static void SpawnProp(const char* propName)
 {
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	static const Hash model = GET_HASH_KEY(propName);
+	Hash model = GET_HASH_KEY(propName);
 	LoadModel(model);
 
 	Object prop = CREATE_OBJECT(model, playerPos.x, playerPos.y, playerPos.z, true, false, true);
