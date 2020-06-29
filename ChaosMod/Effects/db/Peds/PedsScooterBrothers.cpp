@@ -16,6 +16,7 @@ static void OnStart()
 			SET_ENTITY_COORDS(ped, pedPos.x, pedPos.y, pedPos.z + 3.f, false, false, false, false);
 			SET_PED_COMBAT_ATTRIBUTES(ped, 3, false); // Don't allow them to leave vehicle by themselves
 			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+			SET_PED_KEEP_TASK(ped, true);
 
 			Vehicle veh = CreateTempVehicle(faggioHash, pedPos.x, pedPos.y, pedPos.z, pedHeading);
 			SET_PED_INTO_VEHICLE(ped, veh, -1);

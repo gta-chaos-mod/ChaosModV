@@ -11,7 +11,6 @@ OptionsFile::OptionsFile(const char* fileName) : m_fileName(fileName)
 	}
 
 	std::ifstream file(m_fileName);
-
 	if (file.fail())
 	{
 		return;

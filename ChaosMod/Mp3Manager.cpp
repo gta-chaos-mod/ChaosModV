@@ -10,14 +10,26 @@ namespace Mp3Manager
 	{
 		std::ostringstream ossTmp;
 
-		ossTmp << "open " << CHAOS_SOUNDFILES_DIR << soundFile << ".mp3 type mpegvideo alias " << soundFile;
+		// Check if file exists first
+		ossTmp << CHAOS_SOUNDFILES_DIR << soundFile << ".mp3";
+
+		struct stat temp;
+		if (stat(ossTmp.str().c_str(), &temp) == -1)
+		{
+			return;
+		}
+
+		ossTmp.str("");
+		ossTmp.clear();
+
+		ossTmp << "open " << CHAOS_SOUNDFILES_DIR << soundFile << ".mp3 type mpegvideo";
 		int error = mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);
 		ossTmp.str("");
 		ossTmp.clear();
 
 		if (!error || error == MCIERR_DEVICE_OPEN)
 		{
-			ossTmp << "play " << soundFile << " from 0";
+			ossTmp << "play " << CHAOS_SOUNDFILES_DIR << soundFile << ".mp3 from 0";
 			mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);
 		}
 	}
