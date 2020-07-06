@@ -300,16 +300,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehPopTires.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRepair.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehUpgradeController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp">
@@ -493,6 +487,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsScooterBrothers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

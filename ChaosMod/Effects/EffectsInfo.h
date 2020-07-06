@@ -342,7 +342,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_INSANE_GRAV, {"Insane Gravity", "insanegravity", true, { EFFECT_LOW_GRAV, EFFECT_VERY_LOW_GRAV, EFFECT_INVERT_GRAV }, true}},
 	{EFFECT_INVERT_GRAV, {"Invert Gravity", "invertgravity", true, { EFFECT_LOW_GRAV, EFFECT_VERY_LOW_GRAV, EFFECT_INSANE_GRAV }, true}},
 	{EFFECT_VEH_REPAIR, {"Repair Current Vehicle", "playerveh_repair"}},
-	{EFFECT_VEH_POP_TIRES, {"Pop Tires Of Current Vehicle", "playerveh_poptires"}},
+	{EFFECT_VEH_POP_TIRES, {"Pop Tires Of All Vehicles", "playerveh_poptires"}},
 	{EFFECT_ALL_VEH_POP_TIRES, {"Now This Is Some Tire Poppin'", "vehs_poptiresconstant", true}},
 	{EFFECT_NO_SPECIAL_ABILITY, {"No Special Ability", "player_nospecial", true}},
 	{EFFECT_IN_THE_HOOD, {"In The Hood", "peds_dance", true}},
