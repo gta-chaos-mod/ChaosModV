@@ -168,7 +168,7 @@
     <ClCompile Include="Effects\db\Player\PlayerBreak.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerExitCurVeh.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHealPlayer.cpp" />
@@ -221,13 +221,13 @@
     <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehBreakDoors.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsBreakDoors.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehExplode.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehKillEngine.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRepair.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehUpgradeController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />

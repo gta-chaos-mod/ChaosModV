@@ -147,9 +147,6 @@
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerExitCurVeh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -270,22 +267,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehBreakDoors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehExplode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehKillEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRepair.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehUpgradeController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp">
@@ -478,6 +463,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsBreakDoors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

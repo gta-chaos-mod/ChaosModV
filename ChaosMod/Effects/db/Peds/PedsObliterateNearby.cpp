@@ -5,6 +5,8 @@ static void OnStart()
 	REQUEST_NAMED_PTFX_ASSET("scr_xm_orbital");
 	REQUEST_NAMED_PTFX_ASSET("scr_xm_orbital_blast");
 
+	int count = 5;
+
 	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped))
@@ -22,9 +24,14 @@ static void OnStart()
 			// In case they're explosion proof
 			SET_ENTITY_HEALTH(ped, 0, false);
 
-			// Too many particles in 1 frame = won't show
-			// So we wait a bit
-			WAIT(0);
+			if (--count == 0)
+			{
+				count = 5;
+
+				// Too many particles in 1 frame = won't show
+				// So we wait a bit
+				WAIT(0);
+			}
 		}
 	}
 
