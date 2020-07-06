@@ -75,9 +75,9 @@ private:
 
 inline RegisteredEffect* g_registeredEffects = nullptr;
 
-static RegisteredEffect* GetRegisteredEffect(EffectType effectType)
+inline RegisteredEffect* GetRegisteredEffect(EffectType effectType)
 {
-	for (auto registeredEffect = g_registeredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
+	for (RegisteredEffect* registeredEffect = g_registeredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
 	{
 		if (registeredEffect == effectType)
 		{
@@ -86,13 +86,6 @@ static RegisteredEffect* GetRegisteredEffect(EffectType effectType)
 	}
 
 	return nullptr;
-}
-
-static bool IsEffectActive(EffectType effectType)
-{
-	auto registeredEffect = GetRegisteredEffect(effectType);
-
-	return registeredEffect ? registeredEffect->IsRunning() : false;
 }
 
 class RegisterEffect

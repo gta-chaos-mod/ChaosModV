@@ -232,14 +232,14 @@ public:
 
 const std::map<EffectType, EffectInfo> g_effectsMap =
 {
-	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide"}},
+	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
 	{EFFECT_5_STARS, {"5 Wanted Stars", "player_5stars", false, {EFFECT_NEVER_WANTED}}},
 	{EFFECT_NEVER_WANTED, {"Never Wanted", "player_neverwanted", true}},
 	{EFFECT_STRIP_WEAPONS, {"Remove Weapons From Everyone", "peds_remweps"}},
 	{EFFECT_HEAL, {"Heal Player", "player_heal"}},
 	{EFFECT_ARMOR, {"Give Armor", "player_armor"}},
-	{EFFECT_IGNITE, {"Ignite Player", "player_ignite"}},
+	{EFFECT_IGNITE, {"Ignite Player", "player_ignite", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_ANGRY_JESUS, {"Spawn Griefer Jesus", "spawn_grieferjesus"}},
 	{EFFECT_SPAWN_IMPOTENTRAGE, {"Spawn Impotent Rage", "peds_spawnimrage"}},
 	{EFFECT_ANGRY_JESUS2, {"Spawn Extreme Griefer Jesus", "spawn_grieferjesus2"}},
