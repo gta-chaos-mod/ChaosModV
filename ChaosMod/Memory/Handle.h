@@ -45,7 +45,7 @@ public:
 
 	inline Handle Into() const
 	{
-		return m_addr + *reinterpret_cast<DWORD*>(m_addr) + 4;
+		return m_addr + *reinterpret_cast<DWORD*>(m_addr + 1) + 5;
 	}
 
 private:
