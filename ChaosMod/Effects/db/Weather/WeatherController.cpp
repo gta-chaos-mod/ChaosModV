@@ -1,53 +1,39 @@
 #include <stdafx.h>
 
-static void OnStartSunny()
-{
-	SET_WEATHER_TYPE_NOW("CLEAR");
-}
-
-static RegisterEffect registerEffect1(EFFECT_WEATHER_SUNNY, OnStartSunny);
-
 static void OnStartExtraSunny()
 {
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
-static RegisterEffect registerEffect2(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny);
-
-static void OnStartRainy()
-{
-	SET_WEATHER_TYPE_NOW("RAIN");
-}
-
-static RegisterEffect registerEffect3(EFFECT_WEATHER_RAINY, OnStartRainy);
+static RegisterEffect registerEffect(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny);
 
 static void OnStartThunder()
 {
 	SET_WEATHER_TYPE_NOW("THUNDER");
 }
 
-static RegisterEffect registerEffect4(EFFECT_WEATHER_THUNDER, OnStartThunder);
+static RegisterEffect registerEffect2(EFFECT_WEATHER_THUNDER, OnStartThunder);
 
 static void OnStartFoggy()
 {
 	SET_WEATHER_TYPE_NOW("FOGGY");
 }
 
-static RegisterEffect registerEffect5(EFFECT_WEATHER_FOGGY, OnStartFoggy);
+static RegisterEffect registerEffect3(EFFECT_WEATHER_FOGGY, OnStartFoggy);
 
 static void OnStartNeutral()
 {
 	SET_WEATHER_TYPE_NOW("NEUTRAL");
 }
 
-static RegisterEffect registerEffect6(EFFECT_WEATHER_NEUTRAL, OnStartNeutral);
+static RegisterEffect registerEffect4(EFFECT_WEATHER_NEUTRAL, OnStartNeutral);
 
 static void OnStartXmas()
 {
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect7(EFFECT_WEATHER_XMAS, OnStartXmas);
+static RegisterEffect registerEffect5(EFFECT_WEATHER_XMAS, OnStartXmas);
 
 static void OnTickRandom()
 {
@@ -68,4 +54,4 @@ static void OnTickRandom()
 	}
 }
 
-static RegisterEffect registerEffect8(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nullptr, OnTickRandom);
+static RegisterEffect registerEffect6(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nullptr, OnTickRandom);
