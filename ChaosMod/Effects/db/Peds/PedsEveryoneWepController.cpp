@@ -54,14 +54,40 @@ static RegisterEffect registerEffect4(EFFECT_EVERYONE_UPNATOMIZER, OnStartUpNAto
 
 static void OnStartRandom()
 {
-	static const std::vector<Hash> weps = Memory::GetAllWeapons();
+	static const std::vector<Hash>& weps = Memory::GetAllWeapons();
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_PED_HUMAN(ped))
 		{
-			GIVE_WEAPON_TO_PED(ped, weps[Random::GetRandomInt(0, weps.size() - 1)], 9999, true, true);
+			GIVE_WEAPON_TO_PED(ped, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, true, true);
 		}
 	}
 }
 
 static RegisterEffect registerEffect5(EFFECT_EVERYONE_RANDOMWEP, OnStartRandom);
+
+static void OnStartRailgun()
+{
+	for (Ped ped : GetAllPeds())
+	{
+		if (IS_PED_HUMAN(ped))
+		{
+			GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
+		}
+	}
+}
+
+static RegisterEffect registerEffect6(EFFECT_EVERYONE_RAILGUN, OnStartRailgun);
+
+static void OnStartBattleAxe()
+{
+	for (Ped ped : GetAllPeds())
+	{
+		if (IS_PED_HUMAN(ped))
+		{
+			GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_BATTLEAXE"), 9999, true, true);
+		}
+	}
+}
+
+static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAxe);

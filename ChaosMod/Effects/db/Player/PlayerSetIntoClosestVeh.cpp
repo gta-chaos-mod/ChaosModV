@@ -27,13 +27,51 @@ static void OnStart()
 
 	if (closestVeh != -1)
 	{
-		if (!IS_VEHICLE_SEAT_FREE(closestVeh, -1, false))
+		Hash playerVehModel = GET_ENTITY_MODEL(playerVeh);
+		int playerVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(playerVehModel);
+
+		// Store all ped in current vehicle (if existant) to set them into chosen vehicle afterwards if possible
+
+		std::vector<Ped> teleportPeds;
+		teleportPeds.push_back(playerPed);
+
+		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 		{
-			CLEAR_PED_TASKS_IMMEDIATELY(GET_PED_IN_VEHICLE_SEAT(closestVeh, -1, false));
-			WAIT(0);
+			for (int i = -1; i < playerVehMaxSeats - 1; i++)
+			{
+				if (!IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
+				{
+					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
+
+					if (seatPed != playerPed)
+					{
+						teleportPeds.push_back(seatPed);
+					}
+				}
+			}
 		}
 
-		SET_PED_INTO_VEHICLE(playerPed, closestVeh, -1);
+		Hash closestVehModel = GET_ENTITY_MODEL(closestVeh);
+		int closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
+
+		for (int i = 0; i < teleportPeds.size(); i++)
+		{
+			Ped ped = teleportPeds[i];
+
+			if (i < closestVehMaxSeats)
+			{
+				if (!IS_VEHICLE_SEAT_FREE(closestVeh, i - 1, false))
+				{
+					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(closestVeh, i - 1, false);
+
+					CLEAR_PED_TASKS_IMMEDIATELY(seatPed);
+
+					WAIT(0);
+				}
+
+				SET_PED_INTO_VEHICLE(ped, closestVeh, i - 1);
+			}
+		}
 	}
 }
 

@@ -3,8 +3,26 @@
 #include <random>
 #include <time.h>
 
-namespace Random
+class Random
 {
-	void SetSeed(int seed);
-	int GetRandomInt(int lower, int upper);
+public:
+	inline void SetSeed(int seed)
+	{
+		if (seed > 0)
+		{
+			random.seed(seed);
+		}
+	}
+
+	inline int GetRandomInt(int lower, int upper)
+	{
+		std::uniform_int_distribution<> distr(lower, upper);
+		return distr(random);
+	}
+
+private:
+	std::random_device random_device;
+	std::mt19937 random = std::mt19937(random_device());
 };
+
+inline Random g_random;

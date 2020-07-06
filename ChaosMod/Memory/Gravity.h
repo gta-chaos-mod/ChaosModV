@@ -19,7 +19,7 @@ namespace Memory
 				return;
 			}
 
-			gravAddr = handle.At(4).Into().Get<float>();
+			gravAddr = handle.At(3).Into().Get<float>();
 
 			handle = FindPattern("0F 2E 05 ?? ?? ?? ?? 75 08 F3 0F 10 05 ?? ?? ?? ?? F3 0F 59 05");
 			if (!handle.IsValid())
@@ -35,8 +35,8 @@ namespace Memory
 				return;
 			}
 
-			handle = handle.At(1).Into().At(0x4A8);
-			someFunc2 = handle.At(1).Into().Get<void(__cdecl)()>();
+			handle = handle.Into().At(0x4A8);
+			someFunc2 = handle.Into().Get<void(__cdecl)()>();
 
 			handle = FindPattern("48 83 EC 48 66 0F 6E 05 ?? ?? ?? ?? 0F 29 74 24");
 			if (!handle.IsValid())

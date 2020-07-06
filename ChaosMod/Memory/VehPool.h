@@ -23,7 +23,7 @@ namespace Memory
 				return vehModels;
 			}
 
-			handle = handle.At(3).Into();
+			handle = handle.At(2).Into();
 			DWORD64 modelList = handle.Value<DWORD64>();
 
 			handle = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
@@ -32,7 +32,7 @@ namespace Memory
 				return vehModels;
 			}
 
-			handle = handle.At(3).Into();
+			handle = handle.At(2).Into();
 			WORD maxModels = handle.Value<WORD>();
 
 			for (WORD i = 0; i < maxModels; i++)

@@ -27,7 +27,7 @@ static void OnStart()
 			}
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
 			{
-				int randomIndex = Random::GetRandomInt(0, pedPool.size() - 1);
+				int randomIndex = g_random.GetRandomInt(0, pedPool.size() - 1);
 				SET_PED_INTO_VEHICLE(pedPool[randomIndex], playerVeh, i);
 
 				pedPool.erase(pedPool.begin() + randomIndex);

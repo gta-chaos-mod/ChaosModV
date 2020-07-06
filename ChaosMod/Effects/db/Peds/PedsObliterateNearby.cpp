@@ -5,11 +5,13 @@ static void OnStart()
 	REQUEST_NAMED_PTFX_ASSET("scr_xm_orbital");
 	REQUEST_NAMED_PTFX_ASSET("scr_xm_orbital_blast");
 
-	for (auto ped : GetAllPeds())
+	int count = 5;
+
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped))
 		{
-			auto pos = GET_ENTITY_COORDS(ped, false);
+			Vector3 pos = GET_ENTITY_COORDS(ped, false);
 
 			USE_PARTICLE_FX_ASSET("scr_xm_orbital");
 
@@ -19,7 +21,17 @@ static void OnStart()
 
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f, false);
 
-			WAIT(0);
+			// In case they're explosion proof
+			SET_ENTITY_HEALTH(ped, 0, false);
+
+			if (--count == 0)
+			{
+				count = 5;
+
+				// Too many particles in 1 frame = won't show
+				// So we wait a bit
+				WAIT(0);
+			}
 		}
 	}
 

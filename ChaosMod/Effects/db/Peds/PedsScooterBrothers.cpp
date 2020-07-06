@@ -8,7 +8,7 @@ static void OnStart()
 
 	for (Ped ped : GetAllPeds())
 	{
-		if (!IS_PED_A_PLAYER(ped))
+		if (!IS_PED_A_PLAYER(ped) && !IS_PED_DEAD_OR_DYING(ped, false))
 		{
 			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 			float pedHeading = GET_ENTITY_HEADING(ped);

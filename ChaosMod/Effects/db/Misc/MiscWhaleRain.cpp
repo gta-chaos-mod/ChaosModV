@@ -35,13 +35,13 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + Random::GetRandomInt(-150, 150);
-		spawnPos.y = playerPos.y + Random::GetRandomInt(-150, 150);
-		spawnPos.z = playerPos.z + Random::GetRandomInt(75, 200);
+		spawnPos.x = playerPos.x + g_random.GetRandomInt(-150, 150);
+		spawnPos.y = playerPos.y + g_random.GetRandomInt(-150, 150);
+		spawnPos.z = playerPos.z + g_random.GetRandomInt(75, 200);
 
 		LoadModel(WHALE_MODEL);
 
-		auto whale = CREATE_PED(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, Random::GetRandomInt(0, 359), true, false);
+		auto whale = CREATE_PED(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_random.GetRandomInt(0, 359), true, false);
 
 		whaleAmount++;
 		for (int i = 0; i < MAX_WHALES; i++)

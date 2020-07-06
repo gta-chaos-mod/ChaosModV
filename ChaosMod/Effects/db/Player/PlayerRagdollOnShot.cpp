@@ -2,11 +2,11 @@
 
 static void OnTick()
 {
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
 
 	int curTime = GET_GAME_TIMER();
 
-	for (auto weapon : Memory::GetAllWeapons())
+	for (Hash weapon : Memory::GetAllWeapons())
 	{
 		int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, weapon);
 		if (timeSinceDmg && curTime - timeSinceDmg < 200)

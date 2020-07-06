@@ -140,8 +140,8 @@ static void OnStartRandom()
 	float x, y, z = playerPos.z, _;
 	do
 	{
-		x = Random::GetRandomInt(-3747.f, 4500.f);
-		y = Random::GetRandomInt(-4400.f, 8022.f);
+		x = g_random.GetRandomInt(-3747.f, 4500.f);
+		y = g_random.GetRandomInt(-4400.f, 8022.f);
 		
 	}
 	while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, z, 0, &_));
