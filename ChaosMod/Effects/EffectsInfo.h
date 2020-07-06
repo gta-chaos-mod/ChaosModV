@@ -245,7 +245,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLODE_VEHS, {"Explode All Nearby Vehicles", "vehs_explode"}},
 	{EFFECT_PLAYER_LAUNCH, {"Launch Player Up", "player_upupaway"}},
 	{EFFECT_VEHS_LAUNCH, {"Launch All Vehicles Up", "vehs_upupaway"}},
-	{EFFECT_PLAYER_VEH_LOCK, {"Lock Vehicle Player Is In", "playerveh_lock"}},
+	{EFFECT_PLAYER_VEH_LOCK, {"Lock Player Inside Vehicle", "playerveh_lock", true}},
 	{EFFECT_NOTHING, {"Nothing", "nothing"}},
 	{EFFECT_KILL_ENGINE, {"Kill Engine Of Every Vehicle", "playerveh_killengine"}},
 	{EFFECT_TIME_MORNING, {"Set Time To Morning", "time_morning"}},

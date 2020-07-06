@@ -265,7 +265,7 @@ namespace ConfigApp
             {EffectType.EFFECT_EXPLODE_VEHS, new EffectInfo("Explode All Nearby Vehicles", EffectCategory.VEHICLE, "vehs_explode")},
             {EffectType.EFFECT_PLAYER_LAUNCH, new EffectInfo("Launch Player Up", EffectCategory.PLAYER, "player_upupaway")},
             {EffectType.EFFECT_VEHS_LAUNCH, new EffectInfo("Launch All Vehicles Up", EffectCategory.VEHICLE, "vehs_upupaway")},
-            {EffectType.EFFECT_PLAYER_VEH_LOCK, new EffectInfo("Lock Vehicle Player Is In", EffectCategory.VEHICLE, "playerveh_lock")},
+            {EffectType.EFFECT_PLAYER_VEH_LOCK, new EffectInfo("Lock Player Inside Vehicle", EffectCategory.VEHICLE, "playerveh_lock", true)},
             {EffectType.EFFECT_NOTHING, new EffectInfo("Nothing", EffectCategory.MISC, "nothing")},
             {EffectType.EFFECT_KILL_ENGINE, new EffectInfo("Kill Engine Of Every Vehicle", EffectCategory.VEHICLE, "playerveh_killengine")},
             {EffectType.EFFECT_TIME_MORNING, new EffectInfo("Set Time To Morning", EffectCategory.TIME, "time_morning")},

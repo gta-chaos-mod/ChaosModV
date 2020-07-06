@@ -27,7 +27,7 @@ static void OnStartMaxUpgrades()
 	}
 }
 
-static RegisterEffect registerEffect1(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades);
+static RegisterEffect registerEffect(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades);
 
 static void OnStartRandomUpgrades()
 {
