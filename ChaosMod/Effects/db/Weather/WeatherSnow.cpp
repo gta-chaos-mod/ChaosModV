@@ -1,10 +1,5 @@
 #include <stdafx.h>
 
-static void OnStart()
-{
-	SET_WEATHER_TYPE_NOW("XMAS");
-}
-
 static void OnStop()
 {
 	Memory::SetSnow(false);
@@ -15,6 +10,8 @@ static void OnStop()
 static void OnTick()
 {
 	Memory::SetSnow(true);
+
+	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect(EFFECT_SNOW, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_SNOW, nullptr, OnStop, OnTick);

@@ -1,24 +1,27 @@
 #include <stdafx.h>
 
+static DWORD64 m_anchorTick;
+
 static void OnStart()
 {
+	m_anchorTick = GetTickCount64();
+
 	SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
 }
 
 static void OnStop()
 {
 	CLEAR_WEATHER_TYPE_PERSIST();
+
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
 static void OnTick()
 {
-	static constexpr int EXPLOSIONS_PER_SEC = 5;
+	Ped playerPed = PLAYER_PED_ID();
+	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	auto playerPed = PLAYER_PED_ID();
-	auto playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		if (veh != playerVeh)
 		{
@@ -26,19 +29,25 @@ static void OnTick()
 		}
 	}
 
-	for (auto prop : GetAllProps())
+	for (Object prop : GetAllProps())
 	{
 		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(prop, 0, 50.f, .0f, .0f, true, true, true, true);
 	}
 
-	for (int i = 0; i < EXPLOSIONS_PER_SEC; i++)
-	{
-		float x = GET_RANDOM_INT_IN_RANGE(0, 1) ? GET_RANDOM_FLOAT_IN_RANGE(20.f, 50.f) : GET_RANDOM_FLOAT_IN_RANGE(-50.f, -20.f);
-		float y = GET_RANDOM_FLOAT_IN_RANGE(-50.f, 50.f);
-		float z = GET_RANDOM_FLOAT_IN_RANGE(.0f, 50.f);
-		auto pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, x, y, z);
+	DWORD64 curTick = GetTickCount64();
 
-		ADD_EXPLOSION(pos.x, pos.y, pos.z, 8, 1.f, false, true, .2f, false);
+	static DWORD64 lastTick = GetTickCount64();
+	if (lastTick < curTick - 100)
+	{
+		lastTick = curTick;
+
+		SHAKE_GAMEPLAY_CAM("SMALL_EXPLOSION_SHAKE", .1f);
+	}
+
+	// Make sure weather is always set to thunder after the transition
+	if (m_anchorTick < curTick - 2000)
+	{
+		SET_WEATHER_TYPE_NOW("THUNDER");
 	}
 }
 
