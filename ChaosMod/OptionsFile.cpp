@@ -16,7 +16,7 @@ OptionsFile::OptionsFile(const char* fileName) : m_fileName(fileName)
 		return;
 	}
 
-	char buffer[64];
+	char buffer[128];
 	while (file.getline(buffer, 64))
 	{
 		std::string line(buffer);
