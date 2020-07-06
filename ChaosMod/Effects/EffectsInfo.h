@@ -212,6 +212,7 @@ enum EffectType
 	EFFECT_MISC_FIREWORKS,
 	EFFECT_VEH_DESPAWN,
 	EFFECT_PEDS_SCOOTERBROTHERS,
+	EFFECT_PEDS_INTORANDOMVEHS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -438,4 +439,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
 	{EFFECT_VEH_DESPAWN, {"Remove Current Vehicle", "playerveh_despawn"}},
 	{EFFECT_PEDS_SCOOTERBROTHERS, {"Scooter Brothers", "peds_scooterbrothers"}},
+	{EFFECT_PEDS_INTORANDOMVEHS, {"Set All Peds Into Random Vehicles", "peds_intorandomvehs"}},
 };

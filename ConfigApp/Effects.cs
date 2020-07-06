@@ -246,6 +246,7 @@ namespace ConfigApp
             EFFECT_MISC_FIREWORKS,
             EFFECT_VEH_DESPAWN,
             EFFECT_PEDS_SCOOTERBROTHERS,
+            EFFECT_PEDS_INTORANDOMVEHS,
             _EFFECT_ENUM_MAX
         }
 
@@ -457,6 +458,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
             {EffectType.EFFECT_PEDS_SCOOTERBROTHERS, new EffectInfo("Scooter Brothers", EffectCategory.PEDS, "peds_scooterbrothers")},
+            {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set All Peds Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
         };
     }
 }

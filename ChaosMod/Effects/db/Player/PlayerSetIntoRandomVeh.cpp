@@ -48,21 +48,23 @@ static void OnStart()
 
 		for (int i = 0; i < teleportPeds.size(); i++)
 		{
+			if (i >= targetVehMaxSeats)
+			{
+				break;
+			}
+
 			Ped ped = teleportPeds[i];
 
-			if (i < targetVehMaxSeats)
+			if (!IS_VEHICLE_SEAT_FREE(targetVeh, i - 1, false))
 			{
-				if (!IS_VEHICLE_SEAT_FREE(targetVeh, i - 1, false))
-				{
-					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(targetVeh, i - 1, false);
+				Ped seatPed = GET_PED_IN_VEHICLE_SEAT(targetVeh, i - 1, false);
 
-					CLEAR_PED_TASKS_IMMEDIATELY(seatPed);
+				CLEAR_PED_TASKS_IMMEDIATELY(seatPed);
 
-					WAIT(0);
-				}
-
-				SET_PED_INTO_VEHICLE(ped, targetVeh, i - 1);
+				WAIT(0);
 			}
+
+			SET_PED_INTO_VEHICLE(ped, targetVeh, i - 1);
 		}
 	}
 }
