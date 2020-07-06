@@ -168,23 +168,35 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
 	bool alreadyExists = false;
-	if (effectInfo.IsTimed)
+
+	const std::vector<EffectType> incompatibleEffects = effectInfo.IncompatibleWith;
+
+	std::vector<ActiveEffect>::iterator it;
+	for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 	{
-		const std::vector<EffectType> incompatibleEffects = effectInfo.IncompatibleWith;
+		ActiveEffect& effect = *it;
 
-		std::vector<ActiveEffect>::iterator it;
-		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
+		if (effectInfo.IsTimed && effect.EffectType == effectType)
 		{
-			ActiveEffect& effect = *it;
+			alreadyExists = true;
+			effect.Timer = effect.MaxTime;
+		}
 
-			if (effect.EffectType == effectType)
+		bool found = false;
+		for (EffectType incompatibleEffect : incompatibleEffects)
+		{
+			if (effect.EffectType == incompatibleEffect)
 			{
-				alreadyExists = true;
-				effect.Timer = effect.MaxTime;
-			}
+				found = true;
 
-			bool found = false;
-			for (EffectType incompatibleEffect : incompatibleEffects)
+				break;
+			}
+		}
+
+		// Check if current effect is marked as incompatible in active effect
+		if (!found)
+		{
+			for (EffectType incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
 			{
 				if (effect.EffectType == incompatibleEffect)
 				{
@@ -193,30 +205,16 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 					break;
 				}
 			}
+		}
 
-			// Check if current effect is marked as incompatible in active effect
-			if (!found)
-			{
-				for (EffectType incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
-				{
-					if (effect.EffectType == incompatibleEffect)
-					{
-						found = true;
-
-						break;
-					}
-				}
-			}
-
-			if (found)
-			{
-				effect.RegisteredEffect->Stop();
-				it = m_activeEffects.erase(it);
-			}
-			else
-			{
-				it++;
-			}
+		if (found)
+		{
+			effect.RegisteredEffect->Stop();
+			it = m_activeEffects.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 

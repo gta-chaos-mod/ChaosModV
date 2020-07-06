@@ -8,7 +8,6 @@ enum EffectType
 	EFFECT_PLAYER_SUICIDE,
 	EFFECT_PLUS_2_STARS,
 	EFFECT_5_STARS,
-	EFFECT_CLEAR_STARS,
 	EFFECT_NEVER_WANTED,
 	EFFECT_STRIP_WEAPONS,
 	EFFECT_HEAL,
@@ -234,9 +233,8 @@ public:
 const std::map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide"}},
-	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars"}},
-	{EFFECT_5_STARS, {"5 Wanted Stars", "player_5stars"}},
-	{EFFECT_CLEAR_STARS, {"Clear Wanted Level", "player_clearwanted"}},
+	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
+	{EFFECT_5_STARS, {"5 Wanted Stars", "player_5stars", false, {EFFECT_NEVER_WANTED}}},
 	{EFFECT_NEVER_WANTED, {"Never Wanted", "player_neverwanted", true}},
 	{EFFECT_STRIP_WEAPONS, {"Remove Weapons From Everyone", "peds_remweps"}},
 	{EFFECT_HEAL, {"Heal Player", "player_heal"}},

@@ -144,9 +144,6 @@
     <ClCompile Include="Effects\db\Player\PlayerBreak.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerClearStars.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,9 +154,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerFiveStars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerGiveArmor.cpp">
@@ -180,9 +174,6 @@
     <ClCompile Include="Effects\db\Player\PlayerMinus100k.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNeverWanted.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -199,9 +190,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerPlus100k.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerPlusTwoStars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp">
@@ -490,6 +478,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
