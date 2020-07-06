@@ -1,19 +1,77 @@
 /*
-	Effect by Lucas7yoshi
+	Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
 
 static void OnStart()
 {
-	auto playerPed = PLAYER_PED_ID();
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	Ped playerPed = PLAYER_PED_ID();
+
+	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
-		auto veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-		auto seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
-		if (seats >= 2)
+		// Set into random vehicle & seat
+
+		std::vector<Vehicle> vehs;
+
+		for (Vehicle veh : GetAllVehs())
 		{
-			SET_PED_INTO_VEHICLE(playerPed, veh, g_random.GetRandomInt(0, seats - 2)); // 0 to seats -2 means passenger seat to any other passenger seat basically, does NOT go into drivers seat (used to be like that)
+			vehs.push_back(veh);
+		}
+
+		if (!vehs.empty())
+		{
+			Ped playerPed = PLAYER_PED_ID();
+
+			Vehicle veh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+			if (veh != GET_VEHICLE_PED_IS_IN(playerPed, false))
+			{
+				Hash vehModel = GET_ENTITY_MODEL(veh);
+				int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
+				int randomSeat = g_random.GetRandomInt(-1, maxSeats - 2);
+
+				if (!IS_VEHICLE_SEAT_FREE(veh, randomSeat, false))
+				{
+					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(veh, randomSeat, false);
+
+					CLEAR_PED_TASKS_IMMEDIATELY(seatPed);
+
+					WAIT(0);
+				}
+
+				SET_PED_INTO_VEHICLE(playerPed, veh, randomSeat);
+			}
+		}
+	}
+	else
+	{
+		// Set into random seat in current vehicle
+
+		Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+
+		if (maxSeats >= 2)
+		{
+			std::vector<int> choosableSeats;
+			for (int i = -1; i < maxSeats - 1; i++)
+			{
+				if (IS_VEHICLE_SEAT_FREE(veh, i, false) || GET_PED_IN_VEHICLE_SEAT(veh, i, false) != playerPed)
+				{
+					choosableSeats.push_back(i);
+				}
+			}
+
+			int seat = choosableSeats[g_random.GetRandomInt(0, choosableSeats.size() - 1)];
+			if (!IS_VEHICLE_SEAT_FREE(veh, seat, false))
+			{
+				Ped seatPed = GET_PED_IN_VEHICLE_SEAT(veh, seat, false);
+
+				CLEAR_PED_TASKS_IMMEDIATELY(seatPed);
+
+				WAIT(0);
+			}
+
+			SET_PED_INTO_VEHICLE(playerPed, veh, seat);
 		}
 	}
 }

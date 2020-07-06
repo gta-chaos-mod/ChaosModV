@@ -1,5 +1,5 @@
 /*
-	Effect by yzimroni
+	Effect by yzimroni, modified
 */
 
 #include <stdafx.h>

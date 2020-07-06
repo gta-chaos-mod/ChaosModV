@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi
+	Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -24,10 +24,12 @@ static void OnTick()
 			entities.push_back(veh);
 		}
 	}
+
 	for (Object prop : GetAllProps())
 	{
 		entities.push_back(prop);
 	}
+
 	for (Ped ped : GetAllPeds())
 	{
 		entities.push_back(ped);
