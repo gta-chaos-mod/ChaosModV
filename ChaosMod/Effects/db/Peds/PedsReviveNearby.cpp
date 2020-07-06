@@ -38,6 +38,8 @@ static void OnStart()
 				}
 			}
 
+			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
+
 			// Deleting the corpse requires the corpse to be a mission entity
 			SET_ENTITY_AS_MISSION_ENTITY(ped, false, false);
 			DELETE_PED(&ped);
@@ -48,8 +50,6 @@ static void OnStart()
 			}
 			else
 			{
-				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
-
 				SET_ENTITY_COORDS(clone, pedPos.x, pedPos.y, pedPos.z, false, false, false, false);
 			}
 
