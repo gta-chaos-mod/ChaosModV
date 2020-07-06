@@ -47,6 +47,9 @@ static void OnStartRandomUpgrades()
 		SET_VEHICLE_TYRES_CAN_BURST(veh, g_random.GetRandomInt(0, 1));
 		SET_VEHICLE_WINDOW_TINT(veh, g_random.GetRandomInt(0, 6));
 
+		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
+
 		if (--count == 0)
 		{
 			count = 5;
