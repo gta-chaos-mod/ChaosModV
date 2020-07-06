@@ -50,15 +50,41 @@ static void OnTickBloom()
 
 static RegisterEffect registerEffect5(EFFECT_SCREEN_BLOOM, nullptr, OnStop, OnTickBloom);
 
+static void OnStopLSD()
+{
+	OnStop();
+
+	ANIMPOSTFX_STOP("DrugsDrivingIn");
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	RESET_PED_MOVEMENT_CLIPSET(playerPed, .0f);
+	REMOVE_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+
+	SET_PED_IS_DRUNK(playerPed, false);
+}
+
 static void OnTickLSD()
 {
+	if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
+	{
+		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
+	}
+
 	SET_TIMECYCLE_MODIFIER("ArenaEMP");
 	PUSH_TIMECYCLE_MODIFIER();
 
 	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+	SET_PED_MOVEMENT_CLIPSET(playerPed, "MOVE_M@DRUNK@VERYDRUNK", 1.f);
+	
+	SET_PED_IS_DRUNK(playerPed, true);
 }
 
-static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStop, OnTickLSD);
+static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD);
 
 static void OnStartFullbright()
 {

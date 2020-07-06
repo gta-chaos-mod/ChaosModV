@@ -1,22 +1,5 @@
 #include <stdafx.h>
 
-static void OnStopRealLSD()
-{
-	ANIMPOSTFX_STOP("DrugsDrivingIn");
-}
-
-static void OnTickRealLSD()
-{
-	if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
-	{
-		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
-	}
-
-	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
-}
-
-static RegisterEffect registerEffect1(EFFECT_SCREEN_REALLSD, nullptr, OnStopRealLSD, OnTickRealLSD);
-
 static void OnStopChop()
 {
 	ANIMPOSTFX_STOP("ChopVision");
