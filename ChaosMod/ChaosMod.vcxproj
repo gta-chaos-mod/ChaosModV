@@ -143,7 +143,6 @@
     <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsOnePunch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsPhones.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />

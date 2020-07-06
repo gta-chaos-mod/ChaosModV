@@ -96,9 +96,6 @@
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsOnePunch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
