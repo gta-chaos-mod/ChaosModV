@@ -59,7 +59,7 @@ static void OnStartRandom()
 	{
 		if (IS_PED_HUMAN(ped))
 		{
-			GIVE_WEAPON_TO_PED(ped, weps[Random::GetRandomInt(0, weps.size() - 1)], 9999, true, true);
+			GIVE_WEAPON_TO_PED(ped, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, true, true);
 		}
 	}
 }

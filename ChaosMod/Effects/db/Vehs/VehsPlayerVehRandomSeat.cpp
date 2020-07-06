@@ -13,7 +13,7 @@ static void OnStart()
 		auto seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 		if (seats >= 2)
 		{
-			SET_PED_INTO_VEHICLE(playerPed, veh, Random::GetRandomInt(0, seats - 2)); // 0 to seats -2 means passenger seat to any other passenger seat basically, does NOT go into drivers seat (used to be like that)
+			SET_PED_INTO_VEHICLE(playerPed, veh, g_random.GetRandomInt(0, seats - 2)); // 0 to seats -2 means passenger seat to any other passenger seat basically, does NOT go into drivers seat (used to be like that)
 		}
 	}
 }

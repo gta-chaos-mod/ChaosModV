@@ -16,7 +16,7 @@ static void OnStart()
 
 	for (int i = 0; i < DANCING_APES_AMOUNT; i++)
 	{
-		Hash modelHash = GET_HASH_KEY(Random::GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
+		Hash modelHash = GET_HASH_KEY(g_random.GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
 		LoadModel(modelHash);
 
 		Ped ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);

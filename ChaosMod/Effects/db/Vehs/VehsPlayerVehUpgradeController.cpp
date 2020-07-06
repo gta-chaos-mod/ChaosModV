@@ -36,13 +36,13 @@ static void OnStartRandomUpgrades()
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(playerVeh, i);
-			SET_VEHICLE_MOD(playerVeh, i, max > 0 ? Random::GetRandomInt(0, max - 1) : 0, Random::GetRandomInt(0, 1));
+			SET_VEHICLE_MOD(playerVeh, i, max > 0 ? g_random.GetRandomInt(0, max - 1) : 0, g_random.GetRandomInt(0, 1));
 
-			TOGGLE_VEHICLE_MOD(playerVeh, i, Random::GetRandomInt(0, 1));
+			TOGGLE_VEHICLE_MOD(playerVeh, i, g_random.GetRandomInt(0, 1));
 		}
 
-		SET_VEHICLE_TYRES_CAN_BURST(playerVeh, Random::GetRandomInt(0, 1));
-		SET_VEHICLE_WINDOW_TINT(playerVeh, Random::GetRandomInt(0, 6));
+		SET_VEHICLE_TYRES_CAN_BURST(playerVeh, g_random.GetRandomInt(0, 1));
+		SET_VEHICLE_WINDOW_TINT(playerVeh, g_random.GetRandomInt(0, 6));
 	}
 }
 

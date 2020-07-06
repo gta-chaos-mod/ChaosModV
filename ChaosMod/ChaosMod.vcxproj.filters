@@ -33,9 +33,6 @@
     <ClCompile Include="TwitchVoting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Memory\Memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

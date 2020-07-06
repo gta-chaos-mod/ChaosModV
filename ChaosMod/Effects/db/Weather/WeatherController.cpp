@@ -64,7 +64,7 @@ static void OnTickRandom()
 	{
 		lastTick = curTick;
 
-		SET_WEATHER_TYPE_NOW(weathers[Random::GetRandomInt(0, weatherSize - 1)]);
+		SET_WEATHER_TYPE_NOW(weathers[g_random.GetRandomInt(0, weatherSize - 1)]);
 	}
 }
 

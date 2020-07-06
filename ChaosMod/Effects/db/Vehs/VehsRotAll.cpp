@@ -7,7 +7,7 @@ static void OnStart()
 		Vector3 vel = GET_ENTITY_VELOCITY(veh);
 		Vector3 rot = GET_ENTITY_ROTATION(veh, 2);
 
-		if (Random::GetRandomInt(0, 1))
+		if (g_random.GetRandomInt(0, 1))
 		{
 			// Horizontal flip
 

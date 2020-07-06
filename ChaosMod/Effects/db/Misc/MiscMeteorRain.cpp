@@ -36,11 +36,11 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + Random::GetRandomInt(-150, 150);
-		spawnPos.y = playerPos.y + Random::GetRandomInt(-150, 150);
-		spawnPos.z = playerPos.z + Random::GetRandomInt(75, 200);
+		spawnPos.x = playerPos.x + g_random.GetRandomInt(-150, 150);
+		spawnPos.y = playerPos.y + g_random.GetRandomInt(-150, 150);
+		spawnPos.z = playerPos.z + g_random.GetRandomInt(75, 200);
 
-		Hash choosenPropHash = GET_HASH_KEY(propNames[Random::GetRandomInt(0, 4)]);
+		Hash choosenPropHash = GET_HASH_KEY(propNames[g_random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
 
 		Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);

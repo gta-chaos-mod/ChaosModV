@@ -13,7 +13,7 @@ static void OnStart()
 	{
 		Ped playerPed = PLAYER_PED_ID();
 
-		Vehicle veh = vehs[Random::GetRandomInt(0, vehs.size() - 1)];
+		Vehicle veh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 		if (veh != GET_VEHICLE_PED_IS_IN(playerPed, false))
 		{
 			if (!IS_VEHICLE_SEAT_FREE(veh, -1, false))

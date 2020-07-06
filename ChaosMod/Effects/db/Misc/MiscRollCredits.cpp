@@ -19,7 +19,7 @@ static void OnStart()
 	SET_MOBILE_PHONE_RADIO_STATE(true);
 	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
 
-	auto song = Random::GetRandomInt(0, 2);
+	int song = g_random.GetRandomInt(0, 2);
 	if (song == 0)
 	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);

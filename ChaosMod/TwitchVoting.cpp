@@ -158,7 +158,7 @@ void TwitchVoting::Tick()
 			}
 			else
 			{
-				if (Random::GetRandomInt(0, 100) <= m_twitchVotingNoVoteChance)
+				if (g_random.GetRandomInt(0, 100) <= m_twitchVotingNoVoteChance)
 				{
 					m_noVoteRound = true;
 				}
@@ -192,7 +192,7 @@ void TwitchVoting::Tick()
 				effectsTotalWeight += pair.second->Weight;
 			}
 
-			int index = Random::GetRandomInt(0, effectsTotalWeight);
+			int index = g_random.GetRandomInt(0, effectsTotalWeight);
 
 			int addedUpWeight = 0;
 			ChoosableEffect targetChoice;

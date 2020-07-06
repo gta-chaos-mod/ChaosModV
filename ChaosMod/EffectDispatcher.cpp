@@ -273,7 +273,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		effectsTotalWeight += pair.second.Weight;
 	}
 
-	int index = Random::GetRandomInt(0, effectsTotalWeight);
+	int index = g_random.GetRandomInt(0, effectsTotalWeight);
 
 	int addedUpWeight = 0;
 	auto targetEffectType = _EFFECT_ENUM_MAX;

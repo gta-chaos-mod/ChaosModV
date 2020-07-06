@@ -138,7 +138,7 @@ void Main::Init()
 	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem);
 	ParseEffectsFile();
 
-	Random::SetSeed(seed);
+	g_random.SetSeed(seed);
 
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
 		enableTwitchVoteablesOnscreen);
