@@ -2,9 +2,11 @@
 
 static void OnStart()
 {
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
+	int maxHealth = GET_PED_MAX_HEALTH(playerPed);
 
-	SET_ENTITY_HEALTH(playerPed, GET_PED_MAX_HEALTH(playerPed), 0);
+	SET_ENTITY_HEALTH(playerPed, maxHealth, 0);
+	ADD_ARMOUR_TO_PED(playerPed, 200);
 }
 
 static RegisterEffect registerEffect(EFFECT_HEAL, OnStart);

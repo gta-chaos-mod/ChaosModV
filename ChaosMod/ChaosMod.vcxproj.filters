@@ -156,9 +156,6 @@
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerGiveArmor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerHealPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

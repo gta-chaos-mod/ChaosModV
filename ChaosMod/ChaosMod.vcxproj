@@ -171,7 +171,6 @@
     <ClCompile Include="Effects\db\Player\PlayerExitCurVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerGiveArmor.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHealPlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
