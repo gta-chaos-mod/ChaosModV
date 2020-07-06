@@ -4,8 +4,6 @@
 
 #include <stdafx.h>
 
-#define ApplyForce(entity, force) APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, 1, 0, 0, force, true, false, true, true)
-
 static void OnStop()
 {
 	CAM:STOP_GAMEPLAY_CAM_SHAKING(true);
@@ -14,18 +12,30 @@ static void OnStop()
 static void OnTick()
 {
 	CAM::SHAKE_GAMEPLAY_CAM("LARGE_EXPLOSION_SHAKE", 0.05);
-	auto shook = GET_RANDOM_FLOAT_IN_RANGE(-9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
-	for (auto veh : GetAllVehs())
+	float shook = GET_RANDOM_FLOAT_IN_RANGE(-9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
+
+	std::vector<Entity> entities;
+	for (Vehicle veh : GetAllVehs())
 	{
-		ApplyForce(veh, shook);
+		Hash model = GET_ENTITY_MODEL(veh);
+
+		if (!IS_THIS_MODEL_A_HELI(model) && !IS_THIS_MODEL_A_PLANE(model))
+		{
+			entities.push_back(veh);
+		}
 	}
-	for (auto prop : GetAllProps())
+	for (Object prop : GetAllProps())
 	{
-		ApplyForce(prop, shook);
+		entities.push_back(prop);
 	}
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
-		ApplyForce(ped, shook);
+		entities.push_back(ped);
+	}
+
+	for (Entity entity : entities)
+	{
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, 1, 0, 0, shook, true, false, true, true);
 	}
 }
 
