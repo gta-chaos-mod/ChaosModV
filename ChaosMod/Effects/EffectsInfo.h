@@ -435,7 +435,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PHONES, {"Whose Phone Is Ringing?", "peds_phones", true}},
 	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}},
 	{EFFECT_SPAWN_RANDOM_HOSTILE, {"Spawn Random Enemy", "peds_spawnrandomhostile"}},
-	{EFFECT_VEH_NO_BRAKES, {"No Brakes", "playerveh_nobrakes", true}},
+	{EFFECT_VEH_NO_BRAKES, {"No Braking Allowed", "playerveh_nobrakes", true}},
 	{EFFECT_PLAYER_WEAPON_LOCK, {"No Weapon Switching", "player_weaponlock", true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
 	{EFFECT_VEH_DESPAWN, {"Remove Current Vehicle", "playerveh_despawn"}},
