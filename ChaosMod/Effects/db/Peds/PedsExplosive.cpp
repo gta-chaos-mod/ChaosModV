@@ -10,6 +10,7 @@ static void OnTick()
 
 			ADD_EXPLOSION(pedPos.x, pedPos.y, pedPos.z, 4, 9999.f, true, false, 1.f, false);
 
+			// In case they're explosion proof
 			SET_ENTITY_HEALTH(ped, 0, false);
 		}
 	}
