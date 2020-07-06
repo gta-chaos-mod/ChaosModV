@@ -1,23 +1,25 @@
 /*
-	Effect by Lucas7yoshi
+	Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
 
 static void OnTick()
 {
-	auto playerPed = PLAYER_PED_ID();
-	if (IS_PED_ARMED(playerPed, 7)) // 7 = anything but fists
+	for (Ped ped : GetAllPeds())
 	{
-		Hash weaponHash;
-		GET_CURRENT_PED_WEAPON(playerPed, &weaponHash, 1);
-		int ammo;
-		GET_AMMO_IN_CLIP(playerPed, weaponHash, &ammo);
-		if (ammo > 1)
+		if (IS_PED_ARMED(ped, 7)) // 7 = anything but fists
 		{
-			int diff = ammo - 1;
-			ADD_AMMO_TO_PED(playerPed, weaponHash, diff);
-			SET_AMMO_IN_CLIP(playerPed, weaponHash, 1);
+			Hash weaponHash;
+			GET_CURRENT_PED_WEAPON(ped, &weaponHash, 1);
+			int ammo;
+			GET_AMMO_IN_CLIP(ped, weaponHash, &ammo);
+			if (ammo > 1)
+			{
+				int diff = ammo - 1;
+				ADD_AMMO_TO_PED(ped, weaponHash, diff);
+				SET_AMMO_IN_CLIP(ped, weaponHash, 1);
+			}
 		}
 	}
 }
