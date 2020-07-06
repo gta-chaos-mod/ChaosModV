@@ -393,9 +393,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPopTire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -490,6 +487,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

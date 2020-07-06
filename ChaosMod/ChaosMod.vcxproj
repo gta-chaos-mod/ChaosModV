@@ -218,7 +218,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRandomSeat.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsPopTire.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpeedMin.cpp" />
