@@ -11,6 +11,8 @@ static void OnTickRealLSD()
 	{
 		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
 	}
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
 }
 
 static RegisterEffect registerEffect1(EFFECT_SCREEN_REALLSD, nullptr, OnStopRealLSD, OnTickRealLSD);

@@ -22,6 +22,8 @@ static void OnTick()
 
 	REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
 	SET_PED_MOVEMENT_CLIPSET(PLAYER_PED_ID(), "MOVE_M@DRUNK@VERYDRUNK", 1.f);
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_DRUNK, nullptr, OnStop, OnTick);

@@ -54,6 +54,8 @@ static void OnTickLSD()
 {
 	SET_TIMECYCLE_MODIFIER("ArenaEMP");
 	PUSH_TIMECYCLE_MODIFIER();
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
 }
 
 static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStop, OnTickLSD);
@@ -75,6 +77,8 @@ static void OnTickBubbleVision()
 {
 	SET_TIMECYCLE_MODIFIER("ufo_deathray");
 	PUSH_TIMECYCLE_MODIFIER();
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
