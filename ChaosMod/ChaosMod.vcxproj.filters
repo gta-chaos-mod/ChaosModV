@@ -351,9 +351,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehRandomSeat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -478,6 +475,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
