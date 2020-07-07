@@ -284,7 +284,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_RANDOM, new EffectInfo("Teleport To Random Location", EffectCategory.PLAYER, "tp_random")},
             {EffectType.EFFECT_NO_PHONE, new EffectInfo("No Phone", EffectCategory.MISC, "player_nophone", true)},
             {EffectType.EFFECT_SET_INTO_CLOSEST_VEH, new EffectInfo("Set Player Into Closest Vehicle", EffectCategory.PLAYER, "player_tpclosestveh")},
-            {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("All Peds Exit Their Vehicle", EffectCategory.PEDS, "playerveh_exit")},
+            {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("All Peds Exit Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
             {EffectType.EFFECT_GAMESPEED_X02, new EffectInfo("x0.2 Gamespeed", EffectCategory.TIME, "time_x02", true, true)},
             {EffectType.EFFECT_GAMESPEED_X05, new EffectInfo("x0.5 Gamespeed", EffectCategory.TIME, "time_x05", true, true)},
             {EffectType.EFFECT_GAMESPEED_LAG, new EffectInfo("Lag", EffectCategory.TIME, "time_lag", true, true)},

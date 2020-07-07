@@ -264,7 +264,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_TP_RANDOM, {"Teleport To Random Location", "tp_random"}},
 	{EFFECT_NO_PHONE, {"No Phone", "player_nophone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle", "player_tpclosestveh"}},
-	{EFFECT_PEDS_EXIT_VEH, {"All Peds Exit Their Vehicle", "playerveh_exit"}},
+	{EFFECT_PEDS_EXIT_VEH, {"All Peds Exit Their Vehicles", "playerveh_exit"}},
 	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG }, true}},
 	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }, true}},
 	{EFFECT_GAMESPEED_LAG, {"Lag", "time_lag", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }, true}},
