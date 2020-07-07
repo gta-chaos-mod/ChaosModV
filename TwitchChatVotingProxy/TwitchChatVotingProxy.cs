@@ -81,41 +81,39 @@ namespace TwitchChatVotingProxy
 
             twitchVoting.CreateVote(voteOptions);
         }
-
         private static void onGetVoteResult(object sender, GetVoteResultEventArgs e)
         {
             var activeVoteOptions = twitchVoting.ActiveVoteOptions;
             // TODO make this dynamic
-            int selectedOption = getVoteResultPercentage(activeVoteOptions);
+            int selectedOption = getVoteResultByMajority(activeVoteOptions);
             Log.Logger.Information($"vote result requested, choosen option: {activeVoteOptions[selectedOption].Label}");
 
             e.SelectedOption = selectedOption;
         }
-
-        private static int getVoteResultMajority()
+        private static int getVoteResultByMajority(List<IVoteOption> voteOptions)
         {
-            var activeVoteOptions = twitchVoting.ActiveVoteOptions;
-            int selectedOption = 0;
-            for (var i = 0; i < activeVoteOptions.Count; i++)
-            {
-                if (activeVoteOptions[i].Votes > activeVoteOptions[selectedOption].Votes) selectedOption = i;
-            }
+            // Find the highest vote count
+            var highestVote = voteOptions[voteOptions.Max(_ => _.Votes)];
+            // Get all options that have the highest vote count
+            var choosenOptions = voteOptions.FindAll(_ => _.Votes == highestVote.Votes);
+            IVoteOption choosenOption;
+            // If we only have one choosen option, use that
+            if (choosenOptions.Count == 1) choosenOption = choosenOptions[1];
+            // Otherwise we have more that one option with the same vote count,
+            // and choose one at random
+            else choosenOption = choosenOptions[random.Next(0, choosenOptions.Count)];
 
-            return selectedOption;
+            return voteOptions.IndexOf(choosenOption);
         }
-
-        public static int getVoteResultPercentage(List<IVoteOption> voteOptions)
+        public static int getVoteResultByPercentage(List<IVoteOption> voteOptions)
         {
             // Get total votes
             var totalVotes = 0;
             voteOptions.ForEach(_ => totalVotes += _.Votes);
-
             // If we have no votes, choose one at random
             if (totalVotes == 0) return random.Next(0, voteOptions.Count);
-
             // Select a random vote from all votes
             var selectedVote = random.Next(0, totalVotes + 1);
-            
             // Now find out in what vote range/option that vote is
             var voteRange = 0;
             var selectedOption = 0;

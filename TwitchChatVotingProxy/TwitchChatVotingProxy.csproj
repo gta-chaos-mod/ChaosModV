@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChaosPipeClient.cs" />
-    <Compile Include="CodeFile1.cs" />
+    <Compile Include="VotingMode.cs" />
     <Compile Include="OverlayServer\OverlayVoteOption.cs" />
     <Compile Include="OverlayServer\OverlayMessage.cs" />
     <Compile Include="OverlayServer\OverlayServer.cs" />
