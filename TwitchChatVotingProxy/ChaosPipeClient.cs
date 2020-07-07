@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using TwitchChatVotingProxy.Properties;
@@ -17,6 +16,7 @@ namespace TwitchChatVotingProxy
     }
     class ChaosPipeClient
     {
+
         public static readonly int PIPE_RECONNECT_TIMEOUT = 1000;
         public static readonly int TICK_RATE = 500;
 
@@ -32,42 +32,33 @@ namespace TwitchChatVotingProxy
         private int voteCounter = 0;
 
         public ChaosPipeClient()
-        {      
+        {
             pipeTickInterval.Interval = TICK_RATE;
             pipeTickInterval.Elapsed += PipeTick;
+            pipeTickInterval.Enabled = true;
+            Connect();
+        }
 
-            connect();
-        } 
+        public bool Open {
+            get { return pipe.IsConnected; }
+        }
 
-        private void connect()
+        private void Connect()
         {
             try
             {
                 pipe.Connect(PIPE_RECONNECT_TIMEOUT);
-            } catch (Exception e)
-            {
-                Console.Error.WriteLine(e.Message);
-                Console.Error.WriteLine("failed to connect to chaos mod pipe");
-            }
-
-            if (!pipe.IsConnected)
-            {
-                Console.WriteLine($"reconnecting to chaos mod in {PIPE_RECONNECT_TIMEOUT}ms");
-                Task.Run(async () =>
-                {
-                    await Task.Delay(PIPE_RECONNECT_TIMEOUT);
-                    connect();
-                });
-            } else
-            {
-                Console.WriteLine("successfully connecte to chaos mod pipe");
                 pipeReader = new StreamReader(pipe);
                 pipeWriter = new StreamWriter(pipe);
                 pipeWriter.AutoFlush = true;
                 pipeTickInterval.Enabled = true;
+                Log.Logger.Information("connected to chaos mod pipe");
+            } catch (Exception e)
+            {
+                Log.Logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
+                return;
             }
         }
-
         private void GetVoteResult()
         {
             var e = new GetVoteResultEventArgs();
@@ -80,6 +71,7 @@ namespace TwitchChatVotingProxy
         }
         private void StartNewVote(string message)
         {
+
             var optionsNames = message.Split(':').ToList();
             // remove the first element (vote) and the last element (0/1)
             // which are not part of the option
@@ -93,13 +85,13 @@ namespace TwitchChatVotingProxy
                 // Alternate between index and index + options length.
                 // This has the effect that people don't need to type messages
                 // twice, which is prevented by some chat implementations (like twitch).
-                string MATCH = ((voteCounter % 2 == 0 
+                string MATCH = ((voteCounter % 2 == 0
                     // If the vote count is even, use the index (+1 because normal humans)
-                    ? i 
+                    ? i
                     // If the vote count is odd use the index (+1) plus the total option length.
                     : i + optionsNames.Count) + 1).ToString();
-                
-                var matches = new List<string>(){ MATCH };
+
+                var matches = new List<string>() { MATCH };
                 options.Add(new VoteOption(optionsNames[i], matches));
             }
             // Increase the vote counter
@@ -112,29 +104,23 @@ namespace TwitchChatVotingProxy
             // Exceptions are not thrown as this, as the code is called asynchronously
             try
             {
-                // If the pipe disconnected
-                if (!pipe.IsConnected)
-                {
-                    pipeTickInterval.Enabled = false;
-                    connect();
-                } else
-                {
-                    // Send heartbeat
-                    SendMessage("ping");
-                    if (readPipeTask == null) readPipeTask = pipeReader.ReadLineAsync();
-                    else if (readPipeTask.IsCompleted)
-                    {
-                        var message = readPipeTask.Result;
-                        if (message.StartsWith("vote:")) StartNewVote(message);
-                        else if (message == "getvoteresult") GetVoteResult();
-                        else Console.WriteLine($"unknown request: {message}");
+                // Send heartbeat
+                SendMessage("ping");
 
-                        readPipeTask = null;
-                    }
+                if (readPipeTask == null) readPipeTask = pipeReader.ReadLineAsync();
+                else if (readPipeTask.IsCompleted)
+                {
+                    var message = readPipeTask.Result;
+                    Log.Logger.Information("--" + message);
+                    if (message.StartsWith("vote:")) StartNewVote(message);
+                    else if (message == "getvoteresult") GetVoteResult();
+                    else Log.Logger.Warning($"unknown request: {message}");
+
+                    readPipeTask = null;
                 }
             } catch (Exception e)
             {
-                Console.Write(e);
+                Log.Logger.Fatal(e, "chaos mod pipe tick failed");
             }
         }
         private void SendMessage(string message)

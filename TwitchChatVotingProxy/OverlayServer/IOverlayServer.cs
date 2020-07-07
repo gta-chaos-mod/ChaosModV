@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwitchChatVotingProxy.Properties
 {
-    interface IDisplayWebsocket
+    interface IOverlayServer
     {
         void createVote(List<IVoteOption> votes);
         void updateVotes(List<IVoteOption> votes);

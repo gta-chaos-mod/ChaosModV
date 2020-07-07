@@ -29,7 +29,6 @@ function updateVote(message: IMessage): void {
 	const { voteOptions, totalVotes: newTotalVotes } = message;
 	// Check if the length of the vote options is the same as the bar amount.
 	// If not, an error ocurred and we just treat the update as create
-	console.log(message);
 	if (bars.length !== voteOptions.length) {
 		console.error(`bar amount is not equal to vote options length, treating as new vote`);
 		createVote(message);

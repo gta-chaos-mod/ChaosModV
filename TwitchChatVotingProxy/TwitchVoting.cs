@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,43 +22,46 @@ namespace TwitchChatVotingProxy.Properties
 
         private Timer displayUpdateInterval = new Timer();
         private List<string> usersThatVoted = new List<string>();
-        private IDisplayWebsocket displayWebsocket = new DisplayWebsocket("ws://127.0.0.1:9091");
+        private IOverlayServer displayWebsocket = new OverlayServer("ws://127.0.0.1:9091");
 
-        public TwitchVoting(string channnleName, string oAuth)
+        public TwitchVoting(string channelName, string oAuth)
         {
             // Initialize twitch client
             TwitchClient twitchClient = new TwitchClient(new WebSocketClient());
-            twitchClient.Initialize(new ConnectionCredentials(channnleName, oAuth), channnleName);
+            Log.Logger.Information($"trying to connect to channel \"{channelName}\"");
+            twitchClient.Initialize(new ConnectionCredentials(channelName, oAuth), channelName);
             // Set twitch connection error handler
             twitchClient.OnIncorrectLogin += (object sender, OnIncorrectLoginArgs e) =>
             {
-                Console.Error.WriteLine("Twitch client incorrect login");
+                Log.Logger.Error("twitch client incorrect login");
             };
             twitchClient.OnConnectionError += (object sender, OnConnectionErrorArgs e) =>
             {
-                Console.Error.WriteLine("Twitch connection failed");
-                Console.Error.WriteLine(e);
+                Log.Logger.Error(e.Error.Message, "twitch client connection error");
             };
             // Set twitch error handler
             twitchClient.OnError += (object sender, OnErrorEventArgs e) =>
             {
-                Console.Error.WriteLine("Twitch client error, disconnecting");
-                Console.Error.WriteLine(e);
+                Log.Logger.Error(e.Exception, "twitch client error, disconnecting");
                 twitchClient.Disconnect();
             };
             // Set twtich channle join handler
             twitchClient.OnJoinedChannel += (object sender, OnJoinedChannelArgs e) =>
             {
-                Console.WriteLine("Sucessfully joined the channel");
+                Log.Logger.Information("twitch client joined channel");
                 // Start the display update interval
                 Timer displayUpdateTimer = new Timer();
                 displayUpdateTimer.Interval = 250;
                 displayUpdateTimer.Elapsed += this.SendDisplayUpdate;
                 displayUpdateTimer.Start();
             };
+            twitchClient.OnFailureToReceiveJoinConfirmation += (object sender, OnFailureToReceiveJoinConfirmationArgs e) =>
+            {
+                Log.Logger.Error($"failed to join twitch channel \"{channelName}\"");
+            };
             twitchClient.OnDisconnected += (object sender, OnDisconnectedEventArgs e) =>
             {
-                Console.WriteLine("Twtich client disconnected, reconnecting");
+                Log.Logger.Error("twitch client disconnected, reconnecting");
                 Task.Run(async () =>
                 {
                     await Task.Delay(RECONNECT_INTERVAL);
@@ -73,21 +77,17 @@ namespace TwitchChatVotingProxy.Properties
             displayUpdateInterval.Elapsed += SendDisplayUpdate;
             displayUpdateInterval.Enabled = true;
         }
-
-        public void createVote(List<IVoteOption> voteOptions)
+        public void CreateVote(List<IVoteOption> voteOptions)
         {
             ActiveVoteOptions = voteOptions;
             displayWebsocket.createVote(voteOptions);
             // Clear the user that voted so they can vote again
             usersThatVoted.Clear();
         }
-
         private void OnTwichMessage(object sender, OnMessageReceivedArgs e)
         {
             string userId = e.ChatMessage.UserId;
             string message = e.ChatMessage.Message;
-
-            Console.WriteLine(message);
 
             // Loop through all possible vote options
             foreach (IVoteOption voteOption in ActiveVoteOptions)
@@ -98,10 +98,8 @@ namespace TwitchChatVotingProxy.Properties
                     usersThatVoted.Add(userId);
                     voteOption.Votes++;
                 }
-                Console.WriteLine($"Option: {voteOption.Label}, Votes: {voteOption.Votes}");
             }
         }
-
         private void SendDisplayUpdate(object source, ElapsedEventArgs e)
         {
             displayWebsocket.updateVotes(ActiveVoteOptions);
