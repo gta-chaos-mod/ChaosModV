@@ -82,6 +82,49 @@ static void OnTickLSD()
 	SET_PED_MOVEMENT_CLIPSET(playerPed, "MOVE_M@DRUNK@VERYDRUNK", 1.f);
 	
 	SET_PED_IS_DRUNK(playerPed, true);
+
+	// Random right / left steering
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
+		{
+			return;
+		}
+
+		static DWORD64 timeUntilSteer = GetTickCount64();
+		static bool enableDrunkSteering = false;
+		static float steering;
+
+		if (enableDrunkSteering)
+		{
+			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
+		}
+
+		DWORD64 curTick = GetTickCount64();
+
+		if (timeUntilSteer < curTick)
+		{
+			timeUntilSteer = GetTickCount64();
+
+			if (enableDrunkSteering)
+			{
+				// Give player back control
+
+				timeUntilSteer += g_random.GetRandomInt(500, 2000);
+			}
+			else
+			{
+				// Take control from player
+
+				steering = GET_RANDOM_FLOAT_IN_RANGE(-1.f, 1.f);
+
+				timeUntilSteer += g_random.GetRandomInt(50, 300);
+			}
+
+			enableDrunkSteering = !enableDrunkSteering;
+		}
+	}
 }
 
 static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD);
