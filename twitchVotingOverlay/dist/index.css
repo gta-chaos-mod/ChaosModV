@@ -6,6 +6,9 @@
 	font-family: 'Bebas Neue', cursive;
 	font-size: 15pt;
 	color: #ffffff;
+
+	-webkit-text-stroke-width: 0.25px;
+	-webkit-text-stroke-color: black;
 }
 
 .bar {
