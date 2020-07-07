@@ -171,7 +171,7 @@
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerHealPlayer.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
@@ -181,7 +181,6 @@
     <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprint.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerPlus100k.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRagdollOnShot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomClothes.cpp" />

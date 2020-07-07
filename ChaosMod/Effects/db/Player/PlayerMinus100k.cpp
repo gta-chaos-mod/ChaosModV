@@ -7,11 +7,9 @@ static void OnStart()
 		char statNameFull[32];
 		sprintf_s(statNameFull, "SP%d_TOTAL_CASH", i);
 
-		auto hash = GET_HASH_KEY(statNameFull);
+		Hash hash = GET_HASH_KEY(statNameFull);
 
-		int money;
-		STAT_GET_INT(hash, &money, -1);
-		STAT_SET_INT(hash, money - 100000, 1);
+		STAT_SET_INT(hash, 0, true);
 	}
 }
 
