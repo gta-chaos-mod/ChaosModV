@@ -10,16 +10,18 @@ using System.Timers;
 using TwitchChatVotingProxy.Properties;
 
 
-
+/**
+ * TODO: Choose random option when multiple options have the same votes
+ */
 
 namespace TwitchChatVotingProxy
 {
-
-
     class TwitchChatVotingProxy
     {
         private static ChaosPipeClient chaosPipe;
         private static TwitchVoting twitchVoting;
+        private static VotingMode VotingMode = VotingMode.PERCENTAGE;
+        private static Random random = new Random();
 
         private static void Main(string[] args)
         {
@@ -73,10 +75,24 @@ namespace TwitchChatVotingProxy
         {
             string options = String.Join(", ", voteOptions.ConvertAll(_ => _.Label).ToArray());
             Log.Logger.Information($"starting new vote, options: {options}");
+
+            Log.Logger.Warning("Remove this -- on new vote");
+            voteOptions.ForEach(_ => _.Votes = 1);
+
             twitchVoting.CreateVote(voteOptions);
         }
 
         private static void onGetVoteResult(object sender, GetVoteResultEventArgs e)
+        {
+            var activeVoteOptions = twitchVoting.ActiveVoteOptions;
+            // TODO make this dynamic
+            int selectedOption = getVoteResultPercentage(activeVoteOptions);
+            Log.Logger.Information($"vote result requested, choosen option: {activeVoteOptions[selectedOption].Label}");
+
+            e.SelectedOption = selectedOption;
+        }
+
+        private static int getVoteResultMajority()
         {
             var activeVoteOptions = twitchVoting.ActiveVoteOptions;
             int selectedOption = 0;
@@ -85,9 +101,36 @@ namespace TwitchChatVotingProxy
                 if (activeVoteOptions[i].Votes > activeVoteOptions[selectedOption].Votes) selectedOption = i;
             }
 
-            Log.Logger.Information($"vote result requested, choosen option: {activeVoteOptions[selectedOption].Label}");
+            return selectedOption;
+        }
 
-            e.SelectedOption = selectedOption;
+        public static int getVoteResultPercentage(List<IVoteOption> voteOptions)
+        {
+            // Get total votes
+            var totalVotes = 0;
+            voteOptions.ForEach(_ => totalVotes += _.Votes);
+
+            // If we have no votes, choose one at random
+            if (totalVotes == 0) return random.Next(0, voteOptions.Count);
+
+            // Select a random vote from all votes
+            var selectedVote = random.Next(0, totalVotes + 1);
+            
+            // Now find out in what vote range/option that vote is
+            var voteRange = 0;
+            var selectedOption = 0;
+            for (var i = 0; i < voteOptions.Count; i++)
+            {
+                voteRange += voteOptions[i].Votes;
+                if (selectedVote <= voteRange)
+                {
+                    selectedOption = i;
+                    break;
+                }
+            }
+
+            // Return the selected vote range/option
+            return selectedOption;
         }
     }
 }
