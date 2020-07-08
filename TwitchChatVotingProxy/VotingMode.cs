@@ -1,4 +1,6 @@
-﻿namespace TwitchChatVotingProxy
+﻿using System.Collections.Generic;
+
+namespace TwitchChatVotingProxy
 {
     enum VotingMode
     {

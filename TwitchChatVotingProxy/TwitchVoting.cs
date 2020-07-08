@@ -22,7 +22,7 @@ namespace TwitchChatVotingProxy.Properties
 
         private Timer displayUpdateInterval = new Timer();
         private List<string> usersThatVoted = new List<string>();
-        private IOverlayServer displayWebsocket = new OverlayServer("ws://127.0.0.1:9091");
+        private IOverlayServer displayWebsocket = new OverlayServer("ws://127.0.0.1:9091", VotingMode.MAJORITY);
 
         public TwitchVoting(string channelName, string oAuth)
         {

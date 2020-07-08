@@ -111,12 +111,13 @@ namespace TwitchChatVotingProxy
                 else if (readPipeTask.IsCompleted)
                 {
                     var message = readPipeTask.Result;
-                    Log.Logger.Information("--" + message);
+                    readPipeTask = null;
+
                     if (message.StartsWith("vote:")) StartNewVote(message);
                     else if (message == "getvoteresult") GetVoteResult();
                     else Log.Logger.Warning($"unknown request: {message}");
 
-                    readPipeTask = null;
+                    Log.Logger.Information("reached");
                 }
             } catch (Exception e)
             {

@@ -12,11 +12,11 @@ namespace TwitchChatVotingProxy.OverlayServer
         public OverlayVoteOption(IVoteOption voteOption)
         {
             label = voteOption.Label;
-            votes = voteOption.Votes;
+            value = voteOption.Votes;
             matches = voteOption.Matches.ToArray();
         }
         public string label { get; set; }
-        public int votes { get; set; }
         public string[] matches { get; set; }
+        public int value { get; set; }
     }
 }
