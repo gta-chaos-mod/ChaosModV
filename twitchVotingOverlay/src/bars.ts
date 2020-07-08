@@ -9,7 +9,7 @@ export class Bar {
 	private labelVotes: HTMLSpanElement;
 	private labelWrapper: HTMLDivElement;
 
-	public constructor(label: string, votes: number) {
+	public constructor(label: string, votes: string) {
 		// Create DOM elements
 		this.bar = document.createElement('div');
 		this.barWrapper = document.createElement('div');
@@ -45,7 +45,7 @@ export class Bar {
 		this.labelText.innerText = label;
 	}
 
-	public set votes(votes: number) {
+	public set votes(votes: string) {
 		this.labelVotes.innerText = votes.toString();
 	}
 

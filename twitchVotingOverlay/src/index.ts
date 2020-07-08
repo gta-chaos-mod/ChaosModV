@@ -18,7 +18,9 @@ function createVote(message: IMessage): void {
 	// Remove old bars from DOM
 	bars.forEach(bar => bar.getBarWrapper().remove());
 	// Update bars
-	bars = message.voteOptions.map(voteOption => new Bar(voteOption.label, voteOption.votes));
+	bars = message.voteOptions.map(
+		voteOption => new Bar(voteOption.label, voteOption.value.toString())
+	);
 	updateBarContainer();
 	// Update the total votes counter
 	totalVotes = message.totalVotes;
@@ -35,9 +37,16 @@ function updateVote(message: IMessage): void {
 	} else {
 		voteOptions.forEach((voteOption, index) => {
 			const bar = bars[index];
-			const BAR_WIDTH =
-				newTotalVotes > 0 ? (Bar.BAR_WIDTH / message.totalVotes) * voteOption.votes : 0;
-			bar.votes = voteOption.votes;
+			const BAR_WIDTH = newTotalVotes > 0 ? (Bar.BAR_WIDTH / newTotalVotes) * voteOption.value : 0;
+
+			if (message.votingMode === 'PERCENTAGE') {
+				let barValue: number;
+				// We can't divide by total votes if it is null
+				if (newTotalVotes === 0) barValue = 0;
+				else barValue = Math.floor((voteOption.value / newTotalVotes) * 100);
+				bar.votes = `${barValue}%`;
+			} else bar.votes = voteOption.value.toString();
+
 			bar.barWidth = `${BAR_WIDTH}px`;
 			bar.matches = voteOption.matches;
 		});

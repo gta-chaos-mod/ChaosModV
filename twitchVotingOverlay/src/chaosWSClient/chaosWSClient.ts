@@ -40,14 +40,18 @@ export class ChaosWSClient implements IChaosWSClient {
 	}
 
 	private connect(): void {
-		this.WS = new WebSocket(this.URL);
-
-		this.WS.addEventListener('close', this.onSocketClose);
-		// "as any" is required because typescript thinks that the websocket "onError"
-		// has an event, and not and error as callback data
-		this.WS.addEventListener('error', this.onSocketError as any);
-		this.WS.addEventListener('message', this.onSocketMessage);
-		this.WS.addEventListener('open', this.onSocketOpen);
+		try {
+			this.WS = new WebSocket(this.URL);
+			this.WS.addEventListener('close', this.onSocketClose);
+			// "as any" is required because typescript thinks that the websocket "onError"
+			// has an event, and not and error as callback data
+			this.WS.addEventListener('error', this.onSocketError as any);
+			this.WS.addEventListener('message', this.onSocketMessage);
+			this.WS.addEventListener('open', this.onSocketOpen);
+		} catch (e) {
+			// If the websocket connection fails we get an error,
+			// this is caught by the "onError" callback
+		}
 	}
 	private onSocketError(error: Error): void {
 		console.log(`error in socket occurred: ${error.message}. closing socket`);

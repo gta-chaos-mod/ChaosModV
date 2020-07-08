@@ -4,9 +4,11 @@ export interface IVoteOption {
 	 */
 	label: string;
 	/**
-	 * How meany votes the option has
+	 * Whats the value of this option. This could be
+	 * count, a percentage or something entirely different.
+	 * It depends on the "voting mode" of the message.
 	 */
-	votes: number;
+	value: number;
 	/**
 	 * What messages should result in voting
 	 * for this option.
