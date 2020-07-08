@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitchChatVotingProxy.Properties
+namespace TwitchChatVotingProxy
 {
     /// <summary>
     /// Default implementation for a vote option

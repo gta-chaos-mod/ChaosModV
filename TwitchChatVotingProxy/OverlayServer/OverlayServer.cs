@@ -9,19 +9,14 @@ using System.Threading.Tasks;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchLib.Api.Models.v5.Clips;
 
-namespace TwitchChatVotingProxy.Properties
+namespace TwitchChatVotingProxy.OverlayServer
 {
     class OverlayServer : IOverlayServer
     {
         private List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
-        private VotingMode votingMode;
-        private Dictionary<VotingMode, string> votingModeDic = new Dictionary<VotingMode, string>()
-        {
-            { VotingMode.MAJORITY, "MAJORITY" },
-            { VotingMode.PERCENTAGE, "PERCENTAGE" },
-        };
+        private EVotingMode votingMode;
      
-        public OverlayServer(string URL, VotingMode votingMode)
+        public OverlayServer(string URL, EVotingMode votingMode)
         {
             this.votingMode = votingMode;
 
@@ -72,7 +67,7 @@ namespace TwitchChatVotingProxy.Properties
             msg.request = request;
             msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
             var votingMode = "";
-            if (votingModeDic.TryGetValue(this.votingMode, out votingMode))
+            if (VotingModeDict.Dict.TryGetValue(this.votingMode, out votingMode))
             {
                 msg.votingMode = votingMode;
             } else
