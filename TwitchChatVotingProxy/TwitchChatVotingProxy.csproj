@@ -150,7 +150,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChaosModController.cs" />
     <Compile Include="ChaosPipeClient.cs" />
+    <Compile Include="ChaosPipe\ChaosPipeClient.cs" />
+    <Compile Include="ChaosPipe\IChaosPipeClient.cs" />
+    <Compile Include="ChaosPipe\OnGetResultArgs.cs" />
+    <Compile Include="ChaosPipe\OnNewVoteArgs.cs" />
     <Compile Include="TwitchConfig\twitchConfig.cs" />
     <Compile Include="TwitchConfig\ITwtichConfig.cs" />
     <Compile Include="EVotingMode.cs" />
@@ -160,7 +165,6 @@
     <Compile Include="OverlayServer\IOverlayServer.cs" />
     <Compile Include="VoteOption.cs" />
     <Compile Include="IVoteOption.cs" />
-    <Compile Include="TwitchVoting.cs" />
     <Compile Include="TwitchChatVotingProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VotingReceiver\IVotingReceiver.cs" />

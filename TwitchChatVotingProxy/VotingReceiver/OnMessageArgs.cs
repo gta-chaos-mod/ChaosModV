@@ -8,10 +8,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
 {
     class OnMessageArgs
     {
-        public OnMessageArgs(string message)
-        {
-            Message = message;
-        }
-        public string Message { get; }
+        public string ClientId { get; set; }
+        public string Message { get; set; }
     }
 }

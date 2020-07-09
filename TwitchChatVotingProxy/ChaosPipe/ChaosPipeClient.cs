@@ -17,7 +17,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
         public event EventHandler<OnNewVoteArgs> OnNewVote;
 
-        private ILogger logger = Log.Logger.ForContext("class:", typeof(ChaosPipeClient));
+        private ILogger logger = Log.Logger.ForContext<ChaosPipeClient>();
         private NamedPipeClientStream pipe = new NamedPipeClientStream(
             ".",
             "ChaosModVTwitchChatPipe",
@@ -50,6 +50,11 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
                 return;
             }
+        }
+
+        public bool IsConnected()
+        {
+            return pipe.IsConnected;
         }
 
         private void GetVoteResult()
@@ -86,7 +91,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 readPipeTask = null;
 
                 if (message.StartsWith("vote:")) StartNewVote(message);
-                else if (mesage == "getvoteresult") GetVoteResult();
+                else if (message == "getvoteresult") GetVoteResult();
                 else logger.Warning($"unknown request: {message}");
             }
         }

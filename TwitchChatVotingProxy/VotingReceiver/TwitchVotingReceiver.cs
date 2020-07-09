@@ -65,7 +65,12 @@ namespace TwitchChatVotingProxy.VotingReceiver
         }
         private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            OnMessage.Invoke(this, new OnMessageArgs(e.ChatMessage.Message.Trim()));
+            var ChatMessage = e.ChatMessage;
+
+            var evnt = new OnMessageArgs();
+            evnt.Message = ChatMessage.Message.Trim();
+            evnt.ClientId = ChatMessage.UserId;
+            OnMessage.Invoke(this, evnt);
         }
     }
 }

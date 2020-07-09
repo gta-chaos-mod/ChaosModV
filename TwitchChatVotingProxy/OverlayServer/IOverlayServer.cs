@@ -8,7 +8,7 @@ namespace TwitchChatVotingProxy.OverlayServer
 {
     interface IOverlayServer
     {
-        void createVote(List<IVoteOption> votes);
-        void updateVotes(List<IVoteOption> votes);
+        void CreateVote(List<IVoteOption> votes);
+        void UpdateVotes(List<IVoteOption> votes);
     }
 }
