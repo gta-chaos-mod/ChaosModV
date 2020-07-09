@@ -31,11 +31,15 @@ namespace TwitchChatVotingProxy.OverlayServer
             });
         }
 
+        public void EndVoting()
+        {
+            Request("END", new List<IVoteOption>());
+        }
         /// <summary>
         /// Notifies clients that a new vote started
         /// </summary>
         /// <param name="voteOptions">New vote options</param>
-        public void CreateVote(List<IVoteOption> voteOptions)
+        public void NewVoting(List<IVoteOption> voteOptions)
         {
             Request("CREATE", voteOptions);
         }
@@ -86,7 +90,7 @@ namespace TwitchChatVotingProxy.OverlayServer
         /// Notifies clients about vote updates
         /// </summary>
         /// <param name="voteOptions">Updated vote options</param>
-        public void UpdateVotes(List<IVoteOption> voteOptions)
+        public void UpdateVoting(List<IVoteOption> voteOptions)
         {
             Request("UPDATE", voteOptions);
         }

@@ -156,8 +156,8 @@
     <Compile Include="ChaosPipe\IChaosPipeClient.cs" />
     <Compile Include="ChaosPipe\OnGetResultArgs.cs" />
     <Compile Include="ChaosPipe\OnNewVoteArgs.cs" />
-    <Compile Include="TwitchConfig\twitchConfig.cs" />
-    <Compile Include="TwitchConfig\ITwtichConfig.cs" />
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\IConfig.cs" />
     <Compile Include="EVotingMode.cs" />
     <Compile Include="OverlayServer\OverlayVoteOption.cs" />
     <Compile Include="OverlayServer\OverlayMessage.cs" />

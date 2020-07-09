@@ -27,37 +27,23 @@ namespace TwitchChatVotingProxy
             logger.Information("Starting chaos mod twtich proxy");
             logger.Information("========================================");
                     
-            var twitchConfig = new TwitchConfig.TwitchConfig("./chaosmod/twitch.ini");
+            var config = new Config.Config("./chaosmod/twitch.ini");
             EVotingMode votingMode;
 
             // TODO: "twitch config" should become a global config, that also stores
             // username for potential youtube clients and other stuff.
             // this validation could then be moved to each individual voting receiver
             // Validate config
-            if (twitchConfig.ChannelName == null)
-            {
-                logger.Fatal("twitch channel name is null, aborting");
-                return;
-            }
-            if (twitchConfig.OAuth == null)
-            {
-                logger.Fatal("twitch oAuth is null, aborting");
-                return;
-            }
-            if (twitchConfig.UserName == null)
-            {
-                logger.Fatal("twitch user name is null, aborting");
-                return;
-            }
-            if (twitchConfig.VotingMode == null)
+
+            if (config.VotingMode == null)
             {
                 votingMode = EVotingMode.PERCENTAGE;
-                logger.Warning($"twitch voting mode is null, using default \"{VotingModeDict.Lookup(votingMode)}\"");
+                logger.Warning($"voting mode is null, using default \"{VotingModeDict.Lookup(votingMode)}\"");
             }
-            else votingMode = (EVotingMode)twitchConfig.VotingMode;
+            else votingMode = (EVotingMode)config.VotingMode;
 
             var overlayServer = new OverlayServer.OverlayServer("ws://127.0.0.1:9091", votingMode);
-            var votingReceiver = new TwitchVotingReceiver(twitchConfig);
+            var votingReceiver = new TwitchVotingReceiver(config);
             var chaosPipe = new ChaosPipeClient();
 
             var controller = new ChaosModController(chaosPipe, overlayServer, votingReceiver);

@@ -41,7 +41,7 @@ namespace TwitchChatVotingProxy
             this.chaosPipe.OnNewVote += OnNewVote;
 
             // Setup receiver listeners
-            votingReceiver.OnMessage += OnVoteReceiverMessage;
+            this.votingReceiver.OnMessage += OnVoteReceiverMessage;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -50,7 +50,7 @@ namespace TwitchChatVotingProxy
 
         private void DisplayUpdateTick(object sender, ElapsedEventArgs e)
         {
-            overlayServer.UpdateVotes(activeVoteOptions);
+            overlayServer.UpdateVoting(activeVoteOptions);
         }
         private int GetVoteResultByMajority()
         {
@@ -94,6 +94,10 @@ namespace TwitchChatVotingProxy
         }
         private void OnGetVoteResult(object sender, OnGetVoteResultArgs e)
         {
+            // Tell the overlay server that the vote has ended
+            overlayServer.EndVoting();
+
+            // Evaluate what result calculation to use
             switch (votingMode)
             {
                 case EVotingMode.MAJORITY:
@@ -120,7 +124,7 @@ namespace TwitchChatVotingProxy
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
             // Inform the overlay server about a new vote
-            overlayServer.CreateVote(activeVoteOptions);
+            overlayServer.NewVoting(activeVoteOptions);
             // Clear the old voted for information
             userVotedFor.Clear();
         }
