@@ -1,6 +1,6 @@
-import { ChaosWSClient } from './chaosWSClient/chaosWSClient';
+import { ChaosOverlayClient } from './chaosOverlayClient/client';
 import { Bar } from './bars';
-import { IMessage } from './chaosWSClient/iMessage';
+import { IChaosOverlayClientMessage } from './chaosOverlayClient/iMessage';
 
 let bars: Bar[] = [];
 let totalVotes = 0;
@@ -9,12 +9,13 @@ let totalVotes = 0;
 const BAR_CONTAINER = document.getElementById('barContainer');
 const TOTAL_VOTES = document.getElementById('totalVotes');
 
-const WS_CLIENT = new ChaosWSClient('ws://localhost:9091');
+const WS_CLIENT = new ChaosOverlayClient('ws://localhost:9091');
 
 WS_CLIENT.addCreateVoteListener(createVote);
 WS_CLIENT.addUpdateVoteListener(updateVote);
+WS_CLIENT.addEndVoteListener(() => console.log('vote should have ended'));
 
-function createVote(message: IMessage): void {
+function createVote(message: IChaosOverlayClientMessage): void {
 	// Remove old bars from DOM
 	bars.forEach(bar => bar.getBarWrapper().remove());
 	// Update bars
@@ -27,7 +28,7 @@ function createVote(message: IMessage): void {
 	updateTotalVotes();
 }
 
-function updateVote(message: IMessage): void {
+function updateVote(message: IChaosOverlayClientMessage): void {
 	const { voteOptions, totalVotes: newTotalVotes } = message;
 	// Check if the length of the vote options is the same as the bar amount.
 	// If not, an error ocurred and we just treat the update as create
