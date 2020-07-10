@@ -1,48 +1,105 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
 
-#totalVotes {
-	font-family: 'Bebas Neue', cursive;
-	font-size: 15pt;
-	color: #ffffff;
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
 
-	-webkit-text-stroke-width: 0.25px;
-	-webkit-text-stroke-color: black;
+body {
+	/* Global variables */
+	--global-font-family: 'Nunito';
+	--global-font-size: 12pt;
+	--global-font-weight: 600;
+	--global-outline-color: #000000;
+	--global-outline-thickness: 0.25px;
+	--global-text-color: #ffffff;
+
+	/* More specific variables (often use globals) */
+	--bar-background: #727272;
+	--bar-font-size: var(--global-font-size);
+	--bar-font-weight: var(--global-font-weight);
+	--bar-font: var(--global-font-family);
+	--bar-height: 30px;
+	--bar-progression: #238beb;
+	--bar-text-color: var(--global-text-color);
+	--bar-text-outline-color: var(--global-outline-color);
+	--bar-text-outline-thickness: var(--global-outline-thickness);
+}
+
+#barContainer {
+	width: 400px;
+	overflow: hidden;
+}
+#totalVotes {
+	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
+
+	color: var(--global-text-color);
+	font-family: var(--global-font-family);
+	font-size: var(--bar-font-size);
+	font-weight: var(--global-font-family);
 }
 
 .bar {
-	background-color: #238beb;
-	transition: ease-in-out 0.4s;
-}
-
-.barWrapper {
-	background-color: #727272;
-	margin: 5px;
+	background-color: var(--bar-background);
+	height: var(--bar-height);
+	margin: 10px 0;
 	position: relative;
 }
 
-.barWrapper span {
-	font-family: 'Bebas Neue', cursive;
-	font-family: 'Orbitron';
-	font-family: 'Nunito';
-	color: #ffffff;
-
-	-webkit-text-stroke-width: 0.25px;
-	-webkit-text-stroke-color: black;
-
-	font-weight: 600;
-	font-size: 10pt;
-}
-
-.labelWrapper {
+.bar > .labelContainer {
 	align-items: center;
 	bottom: 0;
 	display: flex;
 	justify-content: space-between;
 	left: 0;
-	padding: 0 10px;
+	padding: 0 1em;
 	position: absolute;
 	right: 0;
 	top: 0;
+}
+
+.bar > .labelContainer > span {
+	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
+
+	color: var(--bar-text-color);
+	font-family: var(--bar-font);
+	font-size: var(--bar-font-size);
+	font-weight: var(--bar-font-weight);
+}
+
+.bar > .progression {
+	background-color: var(--bar-progression);
+	height: 100%;
+	transition: width 0.3s ease-in-out;
+}
+
+.slideIn {
+	animation-fill-mode: both;
+	animation-timing-function: ease-in-out;
+	animation-name: slideIn;
+}
+
+.slideOut {
+	animation-fill-mode: both;
+	animation-timing-function: ease-in-out;
+	animation-name: slideOut;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(+100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideOut {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(+100%);
+	}
 }
