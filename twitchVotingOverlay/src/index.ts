@@ -1,6 +1,4 @@
-import { ChaosOverlayClient } from './chaosOverlayClient/client';
-import { Bar } from './bars';
-import { IChaosOverlayClientMessage } from './chaosOverlayClient/iMessage';
+import { ChaosOverlayClient } from './chaosOverlayClient';
 import { BarOverlay } from './barOverlay';
 
 // Get DOM elements
@@ -11,10 +9,6 @@ if (BAR_CONTAINER === null) throw new Error('could not find bar container in DOM
 if (TOTAL_VOTES === null) throw new Error('could not find total votes element in DOM');
 
 const OVERLAY_CLIENT = new ChaosOverlayClient('ws://localhost:9091');
-
-OVERLAY_CLIENT.addNoVotingRoundListener(() => {
-	console.log('no voting round');
-});
 
 OVERLAY_CLIENT.addUpdateVoteListener(message => {
 	TOTAL_VOTES.innerText = `Total Votes: ${message.totalVotes}`;
