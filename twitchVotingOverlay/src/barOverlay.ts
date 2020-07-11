@@ -114,7 +114,6 @@ export class BarOverlay {
 
 			BAR.label = VOTE_OPTION.label;
 			BAR.match = VOTE_OPTION.matches.join('/').concat('.');
-			console.log(VOTE_OPTION);
 
 			if (votingMode === 'MAJORITY') {
 				BAR.value = VOTE_OPTION.value.toString();

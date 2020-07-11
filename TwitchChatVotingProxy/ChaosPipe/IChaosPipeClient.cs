@@ -16,5 +16,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// Event that gets invoked when the chaos mod creates a new vote
         /// </summary>
         event EventHandler<OnNewVoteArgs> OnNewVote;
+        /// <summary>
+        /// Event that gets invoked when the chaos mod starts a no voting round
+        /// </summary>
+        event EventHandler OnNoVotingRound;
     }
 }

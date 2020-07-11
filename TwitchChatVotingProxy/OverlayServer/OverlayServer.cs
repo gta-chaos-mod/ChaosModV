@@ -22,6 +22,8 @@ namespace TwitchChatVotingProxy.OverlayServer
 
         public OverlayServer(OverlayServerConfig config)
         {
+            this.config = config;
+
             try
             {
                 var WSS = new Fleck.WebSocketServer($"ws://127.0.0.1:{config.Port}");
@@ -37,21 +39,23 @@ namespace TwitchChatVotingProxy.OverlayServer
             }
         }
 
-        /// <summary>
-        /// Notifies the overlay server that the vote ended
-        /// </summary>
         public void EndVoting()
         {
             Request("END", new List<IVoteOption>());
         }
-        /// <summary>
-        /// Notifies clients that a new vote started
-        /// </summary>
-        /// <param name="voteOptions">New vote options</param>
         public void NewVoting(List<IVoteOption> voteOptions)
         {
             Request("CREATE", voteOptions);
         }
+        public void NoVotingRound()
+        {
+            Request("NO_VOTING_ROUND", new List<IVoteOption>());
+        }
+        public void UpdateVoting(List<IVoteOption> voteOptions)
+        {
+            Request("UPDATE", voteOptions);
+        }
+
         /// <summary>
         /// Broadcasts a message to all socket clients
         /// </summary>
@@ -105,8 +109,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             var msg = new OverlayMessage();
             msg.request = request;
             msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
-            var strVotingMode = "";
-            if (VotingMode.Dict.TryGetValue(config.VotingMode, out strVotingMode))
+            var strVotingMode = VotingMode.Lookup(config.VotingMode);
+            if (strVotingMode != null)
             {
                 msg.votingMode = strVotingMode;
             } else
@@ -114,19 +118,11 @@ namespace TwitchChatVotingProxy.OverlayServer
                 logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
                 msg.votingMode = "UNKNOWN_VOTING_MODE";
             }
-            // Count total votes           
+            // Count total votes      
             msg.totalVotes = 0;
             voteOptions.ForEach(_ => msg.totalVotes += _.Votes);
             // Send the message to all clients
             Broadcast(JsonConvert.SerializeObject(msg));
-        }
-        /// <summary>
-        /// Notifies clients about vote updates
-        /// </summary>
-        /// <param name="voteOptions">Updated vote options</param>
-        public void UpdateVoting(List<IVoteOption> voteOptions)
-        {
-            Request("UPDATE", voteOptions);
         }
     }
 }

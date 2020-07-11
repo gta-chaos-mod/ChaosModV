@@ -19,6 +19,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
 
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
         public event EventHandler<OnNewVoteArgs> OnNewVote;
+        public event EventHandler OnNoVotingRound;
 
         private ILogger logger = Log.Logger.ForContext<ChaosPipeClient>();
         private NamedPipeClientStream pipe = new NamedPipeClientStream(
@@ -124,6 +125,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 // Evaluate message
                 if (message.StartsWith("vote:")) StartNewVote(message);
                 else if (message == "getvoteresult") GetVoteResult();
+                else if (message == "novoteround") StartNoVotingRound();
                 else logger.Warning($"unknown request: {message}");
             }
         }
@@ -158,6 +160,10 @@ namespace TwitchChatVotingProxy.ChaosPipe
             optionNames.RemoveAt(optionNames.Count - 1);
             // Dispatch information to listeners
             OnNewVote.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
+        }
+        private void StartNoVotingRound()
+        {
+            OnNoVotingRound.Invoke(this, null);
         }
         /// <summary>
         /// Sends a heartbeat to the chaos mod

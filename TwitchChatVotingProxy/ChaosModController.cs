@@ -40,6 +40,7 @@ namespace TwitchChatVotingProxy
             // Setup pipe listeners
             this.chaosPipe.OnGetVoteResult += OnGetVoteResult;
             this.chaosPipe.OnNewVote += OnNewVote;
+            this.chaosPipe.OnNoVotingRound += OnNoVotingRound;
 
             // Setup receiver listeners
             this.votingReceiver.OnMessage += OnVoteReceiverMessage;
@@ -49,10 +50,17 @@ namespace TwitchChatVotingProxy
             displayUpdateTick.Enabled = true;
         }
 
+        /// <summary>
+        /// Does the display update tick and is called by a timer
+        /// </summary>
         private void DisplayUpdateTick(object sender, ElapsedEventArgs e)
         {
             overlayServer.UpdateVoting(activeVoteOptions);
         }
+        /// <summary>
+        /// Calculate the voting result by counting them, and returning the one
+        /// with the most votes.
+        /// </summary>
         private int GetVoteResultByMajority()
         {
             // Find the highest vote count
@@ -68,6 +76,9 @@ namespace TwitchChatVotingProxy
 
             return activeVoteOptions.IndexOf(choosenOption);
         }
+        /// <summary>
+        /// Calculate the voting result by assigning them a percentage based on votes,
+        /// and choosing a random option based on that percentage.
         private int GetVoteResultByPercentage()
         {
             // Get total votes
@@ -93,6 +104,9 @@ namespace TwitchChatVotingProxy
             // Return the selected vote range/option
             return selectedOption;
         }
+        /// <summary>
+        /// Is called when the chaos mod wants to know the voting result (callback)
+        /// </summary>
         private void OnGetVoteResult(object sender, OnGetVoteResultArgs e)
         {
             // Tell the overlay server that the vote has ended
@@ -116,6 +130,9 @@ namespace TwitchChatVotingProxy
                     break;
             }
         }
+        /// <summary>
+        /// Is called when the chaos mod start a new vote (callback)
+        /// </summary>
         private void OnNewVote(object sender, OnNewVoteArgs e)
         {
             activeVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
@@ -139,6 +156,16 @@ namespace TwitchChatVotingProxy
             // Increase the vote counter
             voteCounter++;
         }
+        /// <summary>
+        /// Is called when the chaos mod stars a no voting round (callback)
+        /// </summary>
+        private void OnNoVotingRound(object sender, EventArgs e)
+        {
+            overlayServer.NoVotingRound();
+        }
+        /// <summary>
+        /// Is called when the voting receiver receives a message
+        /// </summary>
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
             for (int i = 0; i < activeVoteOptions.Count; i++)

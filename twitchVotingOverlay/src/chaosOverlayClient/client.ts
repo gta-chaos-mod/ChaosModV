@@ -15,6 +15,7 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	private WS: WebSocket | null = null;
 	private createEvent = new LiteEvent<IChaosOverlayClientMessage>();
 	private endEvent = new LiteEvent<IChaosOverlayClientMessage>();
+	private noVoteRoundEvent = new LiteEvent<IChaosOverlayClientMessage>();
 	private updateEvent = new LiteEvent<IChaosOverlayClientMessage>();
 
 	public constructor(URL: string) {
@@ -35,11 +36,17 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	public addEndVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.endEvent.addEventListener(listener);
 	}
+	public addNoVotingRoundListener(listener: TChaosOverlayClientEvent): void {
+		this.noVoteRoundEvent.addEventListener(listener);
+	}
 	public addUpdateVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.updateEvent.addEventListener(listener);
 	}
 	public removeCreateVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.createEvent.removeEventListener(listener);
+	}
+	public removeNoVotingRoundListener(listener: TChaosOverlayClientEvent): void {
+		this.noVoteRoundEvent.removeEventListener(listener);
 	}
 	public removeEndVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.endEvent.removeEventListener(listener);
@@ -89,10 +96,22 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 		try {
 			const MESSAGE: IChaosOverlayClientMessage = JSON.parse(message.data);
 
-			if (MESSAGE.request === 'CREATE') this.createEvent.dispatch(MESSAGE);
-			else if (MESSAGE.request === 'UPDATE') this.updateEvent.dispatch(MESSAGE);
-			else if (MESSAGE.request === 'END') this.endEvent.dispatch(MESSAGE);
-			else console.warn(`unknown request type: ${MESSAGE.request}`);
+			switch (MESSAGE.request) {
+				case 'CREATE':
+					this.createEvent.dispatch(MESSAGE);
+					break;
+				case 'END':
+					this.endEvent.dispatch(MESSAGE);
+					break;
+				case 'NO_VOTING_ROUND':
+					this.noVoteRoundEvent.dispatch(MESSAGE);
+					break;
+				case 'UPDATE':
+					this.updateEvent.dispatch(MESSAGE);
+					break;
+				default:
+					console.warn(`unknown request type: ${MESSAGE.request}`);
+			}
 		} catch (e) {
 			console.error(`failed to parse json data: ${e}`);
 		}
