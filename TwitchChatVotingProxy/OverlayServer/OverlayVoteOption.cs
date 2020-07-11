@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TwitchChatVotingProxy.OverlayServer
 {
+    /// <summary>
+    /// Represents how the vote options are being sent to the client after
+    /// JSON serializing them.
+    /// </summary>
     class OverlayVoteOption
     {
         public OverlayVoteOption(IVoteOption voteOption)

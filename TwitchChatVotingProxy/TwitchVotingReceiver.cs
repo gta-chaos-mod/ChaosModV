@@ -10,6 +10,9 @@ using TwitchLib.Communication.Events;
 
 namespace TwitchChatVotingProxy.VotingReceiver
 {
+    /// <summary>
+    /// Twitch voting receiver implementation
+    /// </summary>
     class TwitchVotingReceiver : IVotingReceiver
     {
         public static readonly int RECONNECT_INTERVAL = 1000;
@@ -17,39 +20,22 @@ namespace TwitchChatVotingProxy.VotingReceiver
         public event EventHandler<OnMessageArgs> OnMessage;
 
         private TwitchClient client;
-        private IConfig config;
+        private TwitchVotingReceiverConfig config;
         private ILogger logger = Log.Logger.ForContext<TwitchVotingReceiver>();
 
-        public TwitchVotingReceiver(IConfig config)
+        public TwitchVotingReceiver(TwitchVotingReceiverConfig config)
         {
-            // Validate Config
-            if (config.TwitchChannelName == null)
-            {
-                logger.Fatal("twitch channel name is null, aborting");
-                return;
-            }
-            if (config.TwitchOAuth == null)
-            {
-                logger.Fatal("twitch oAuth is null, aborting");
-                return;
-            }
-            if (config.TwitchUserName == null)
-            {
-                logger.Fatal("twitch user name is null, aborting");
-                return;
-            }
-
             this.config = config;
 
             // Connect to twitch
             logger.Information(
-                $"trying to connect to channel \"{config.TwitchChannelName}\" with user \"{config.TwitchUserName}\""
+                $"trying to connect to channel \"{config.ChannelName}\" with user \"{config.UserName}\""
             );
 
             client = new TwitchClient(new WebSocketClient());
             client.Initialize(
-                new ConnectionCredentials(config.TwitchUserName, config.TwitchOAuth),
-                config.TwitchChannelName
+                new ConnectionCredentials(config.UserName, config.OAuth),
+                config.ChannelName
             );
 
             client.OnConnected += OnConnected;
@@ -61,30 +47,58 @@ namespace TwitchChatVotingProxy.VotingReceiver
             client.Connect();
         }
 
+        public void SendMessage(string message)
+        {
+            try
+            {
+                client.SendMessage(config.ChannelName, message);
+            } catch (Exception e)
+            {
+                logger.Error(e, $"failed to send message to channel \"{config.ChannelName}\"");
+            }
+        }
+        /// <summary>
+        /// Called when the twitch client connects (callback)
+        /// </summary>
         private void OnConnected(object sender, OnConnectedArgs e)
         {
             logger.Information("successfully connected to twitch");
         }
+        /// <summary>
+        /// Called when the twitch client disconnects (callback)
+        /// </summary>
         private async void OnDisconnect(object sender, OnDisconnectedArgs e)
         {
             logger.Error("disconnected from the twitch channel, trying to reconnect");
             await Task.Delay(RECONNECT_INTERVAL);
             client.Connect();
         }
+        /// <summary>
+        /// Called when the twitch clients errors (callback)
+        /// </summary>
         private void OnError(object sender, OnErrorEventArgs e)
         {
             logger.Error(e.Exception, "client error, disconnecting");
             client.Disconnect();
         }
+        /// <summary>
+        /// Called when the twitch client has an failed login attempt (callback)
+        /// </summary>
         private void OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
         {
             logger.Error("incorrect twitch login, check user name and oauth");
             client.Disconnect();
         }
+        /// <summary>
+        /// Called when the twitch client joins a channel (callback)
+        /// </summary>
         private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
         {
-            logger.Information($"successfully joined twitch channel \"{config.TwitchChannelName}\"");
+            logger.Information($"successfully joined twitch channel \"{config.ChannelName}\"");
         }
+        /// <summary>
+        /// Called when the twitch client receives a message
+        /// </summary>
         private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
             var ChatMessage = e.ChatMessage;

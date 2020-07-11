@@ -13,10 +13,17 @@ namespace TwitchChatVotingProxy.Config
 {
     class Config : IConfig
     {
-        public static string KEY_CHANNEL = "TwitchChannelName"; 
-        public static string KEY_OAUTH = "TwitchChannelOAuth";
-        public static string KEY_USER_NAME = "TwitchUserName";
-        public static string KEY_VOTING_MODE = "TwitchVotingMode";
+        public static string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
+        public static string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName"; 
+        public static string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
+        public static string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
+        public static string KEY_VOTING_MODE = "VotingMode";
+
+        public int? OverlayServerPort { get; set; }
+        public string TwitchChannelName { get; set; }
+        public string TwitchOAuth { get; set; }
+        public string TwitchUserName { get; set; }
+        public EVotingMode? VotingMode { get; set; }
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
@@ -31,16 +38,14 @@ namespace TwitchChatVotingProxy.Config
                 // If the file does exist, read its content
                 optionsFile = new OptionsFile(file);
                 optionsFile.ReadFile();
-                TwitchChannelName = optionsFile.ReadValue(KEY_CHANNEL);
-                TwitchOAuth = optionsFile.ReadValue(KEY_OAUTH);
-                TwitchUserName = optionsFile.ReadValue(KEY_USER_NAME);
-                VotingMode = VotingModeDict.ReverseLookup(optionsFile.ReadValue(KEY_VOTING_MODE, null));
+
+                OverlayServerPort = optionsFile.ReadValueInt(KEY_OVERLAY_SERVER_PORT, -1);
+                if (OverlayServerPort == -1) OverlayServerPort = null; 
+                TwitchChannelName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_NAME);
+                TwitchOAuth = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_OAUTH);
+                TwitchUserName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_USER_NAME);
+                VotingMode = global::TwitchChatVotingProxy.VotingMode.ReverseLookup(optionsFile.ReadValue(KEY_VOTING_MODE));
             }
         }
-
-        public string TwitchChannelName { get; } = null;
-        public string TwitchOAuth { get; } = null;
-        public string TwitchUserName { get; } = null;
-        public EVotingMode? VotingMode { get; }
     }
 }

@@ -6,31 +6,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TwitchChatVotingProxy.Config;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchLib.Api.Models.v5.Clips;
 
+
+// TODO: fix voting mode
 namespace TwitchChatVotingProxy.OverlayServer
 {
     class OverlayServer : IOverlayServer
     {
+        private OverlayServerConfig config;
         private List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
         private ILogger logger = Log.Logger.ForContext<OverlayServer>();
-        private EVotingMode votingMode;
 
-        public OverlayServer(string URL, EVotingMode votingMode)
+        public OverlayServer(OverlayServerConfig config)
         {
-            this.votingMode = votingMode;
-
-            // Start the websocket
-            Fleck.WebSocketServer WSS = new Fleck.WebSocketServer(URL);
-            // Set the websocket listeners
-            WSS.Start(connection =>
+            try
             {
-                connection.OnOpen += () => OnWsConnectionOption(connection);
-                connection.OnClose += () => OnWSConnectionClose(connection);
-            });
+                var WSS = new Fleck.WebSocketServer($"ws://127.0.0.1:{config.Port}");
+                // Set the websocket listeners
+                WSS.Start(connection =>
+                {
+                    connection.OnOpen += () => OnWsConnectionOpen(connection);
+                    connection.OnClose += () => OnWSConnectionClose(connection);
+                });
+            } catch (Exception e)
+            {
+                logger.Fatal(e, "failed so start websocket server");
+            }
         }
 
+        /// <summary>
+        /// Notifies the overlay server that the vote ended
+        /// </summary>
         public void EndVoting()
         {
             Request("END", new List<IVoteOption>());
@@ -44,22 +53,47 @@ namespace TwitchChatVotingProxy.OverlayServer
             Request("CREATE", voteOptions);
         }
         /// <summary>
+        /// Broadcasts a message to all socket clients
+        /// </summary>
+        /// <param name="message">Message which should be broadcast</param>
+        private void Broadcast(string message)
+        {
+            connections.ForEach(connection =>
+            {
+                // If the connection is not available for some reason, we just close it
+                if (!connection.IsAvailable) connection.Close();
+                else connection.Send(message);
+            });
+        }
+        /// <summary>
         /// Is called when a client disconnects from the websocket
         /// </summary>
         /// <param name="connection">The client that disconnected</param>
         private void OnWSConnectionClose(IWebSocketConnection connection)
         {
-            logger.Information($"websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
-            connections.Remove(connection);
+            try
+            {
+                logger.Information($"websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
+                connections.Remove(connection);
+            } catch (Exception e)
+            {
+                logger.Error(e, "error occurred as client disconnected");
+            }
         }
         /// <summary>
         /// Is called when a new client connects to the websocket
         /// </summary>
         /// <param name="connection">The client that connected</param>
-        private void OnWsConnectionOption(IWebSocketConnection connection)
+        private void OnWsConnectionOpen(IWebSocketConnection connection)
         {
-            logger.Information($"new websocket client {connection.ConnectionInfo.ClientIpAddress}");
-            connections.Add(connection);
+            try
+            {
+                logger.Information($"new websocket client {connection.ConnectionInfo.ClientIpAddress}");
+                connections.Add(connection);
+            } catch (Exception e)
+            {
+                logger.Error(e, "error occurred as client connected");
+            }
         }
         /// <summary>
         /// Sends a request to the clients
@@ -72,19 +106,19 @@ namespace TwitchChatVotingProxy.OverlayServer
             msg.request = request;
             msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
             var strVotingMode = "";
-            if (VotingModeDict.Dict.TryGetValue(this.votingMode, out strVotingMode))
+            if (VotingMode.Dict.TryGetValue(config.VotingMode, out strVotingMode))
             {
                 msg.votingMode = strVotingMode;
             } else
             {
-                logger.Error($"could not find voting mode {this.votingMode} in dictonary");
+                logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
                 msg.votingMode = "UNKNOWN_VOTING_MODE";
             }
             // Count total votes           
             msg.totalVotes = 0;
             voteOptions.ForEach(_ => msg.totalVotes += _.Votes);
             // Send the message to all clients
-            connections.ForEach(connection => connection.Send(JsonConvert.SerializeObject(msg)));
+            Broadcast(JsonConvert.SerializeObject(msg));
         }
         /// <summary>
         /// Notifies clients about vote updates

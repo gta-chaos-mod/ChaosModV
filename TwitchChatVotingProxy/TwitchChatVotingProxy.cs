@@ -1,10 +1,8 @@
 ﻿using Serilog;
+using System;
 using TwitchChatVotingProxy.ChaosPipe;
+using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
-
-/**
- * TODO: Choose random option when multiple options have the same votes
- */
 
 namespace TwitchChatVotingProxy
 {
@@ -16,42 +14,52 @@ namespace TwitchChatVotingProxy
         {
 
             Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Information()
-               .Enrich.FromLogContext()
+               .MinimumLevel.Debug()
                .WriteTo.File("./chaosmod/chaosProxy.log", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}")
                .CreateLogger();
-
             logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
 
-            logger.Information("========================================");
+            logger.Information("===============================");
             logger.Information("Starting chaos mod twtich proxy");
-            logger.Information("========================================");
-                    
+            logger.Information("===============================");
+            
+            // Read big config file WIP
             var config = new Config.Config("./chaosmod/twitch.ini");
+
+            // Validate voting mode
             EVotingMode votingMode;
-
-            // TODO: "twitch config" should become a global config, that also stores
-            // username for potential youtube clients and other stuff.
-            // this validation could then be moved to each individual voting receiver
-            // Validate config
-
             if (config.VotingMode == null)
             {
-                votingMode = EVotingMode.PERCENTAGE;
-                logger.Warning($"voting mode is null, using default \"{VotingModeDict.Lookup(votingMode)}\"");
+                votingMode = EVotingMode.MAJORITY;
+                logger.Warning($"voting mode is null, using default \"{VotingMode.Lookup(votingMode)}\"");
             }
             else votingMode = (EVotingMode)config.VotingMode;
 
-            var overlayServer = new OverlayServer.OverlayServer("ws://127.0.0.1:9091", votingMode);
-            var votingReceiver = new TwitchVotingReceiver(config);
+            // Create twitch config
+            TwitchVotingReceiverConfig twitchVotingReceiverConfig;
+            try
+            {
+                 twitchVotingReceiverConfig = new TwitchVotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
+            } catch (Exception e)
+            {
+                logger.Fatal(e, "failed to create twitch voting receiver config");
+                return;
+            }
+
+            // Create overlay server config
+            OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.OverlayServerPort);
+
+            // Create components
+            var overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
+            var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
             var chaosPipe = new ChaosPipeClient();
 
-            var controller = new ChaosModController(chaosPipe, overlayServer, votingReceiver);
-
+            // Start the chaos mod controller
+            new ChaosModController(chaosPipe, overlayServer, votingReceiver);
 
             while (chaosPipe.IsConnected()) { }
 
-            logger.Information("Pipe disconnected, ending programm");
+            logger.Information("Pipe disconnected, ending program");
         }
     }
 }

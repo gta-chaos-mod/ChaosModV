@@ -7,20 +7,18 @@ using System.Threading.Tasks;
 namespace TwitchChatVotingProxy
 {
     /// <summary>
-    /// Default implementation for a vote option
+    /// Default implementation of the IVoteOption interface
     /// </summary>
     class VoteOption : IVoteOption
     {
         public VoteOption(string label, List<string> matches)
         {
-            this.Label = label;
-            this.Matches = matches;
+            Label = label;
+            Matches = matches;
         }
 
         public string Label { get; set; }
-
         public List<string> Matches { get; }
-
-        public int Votes { get; set; }
+        public int Votes { get; set; } = 0;
     }
 }

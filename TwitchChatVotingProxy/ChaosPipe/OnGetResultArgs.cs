@@ -8,6 +8,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
 {
     class OnGetVoteResultArgs
     {
-        public int? ChoosenOption { get; set; } = null;
+        /// <summary>
+        /// The chosen option that should be sent to the chaos mod pipe
+        /// </summary>
+        public int? ChosenOption { get; set; } = null;
     }
 }

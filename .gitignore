@@ -24,7 +24,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-dist/bundle.js
+bundle.js
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

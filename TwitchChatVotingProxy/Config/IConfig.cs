@@ -8,9 +8,10 @@ namespace TwitchChatVotingProxy.Config
 {
     interface IConfig
     {
-        string TwitchChannelName { get; }
-        string TwitchOAuth { get; }
-        string TwitchUserName { get; }
-        EVotingMode? VotingMode { get; }
+        int? OverlayServerPort { get; set; }
+        string TwitchChannelName { get; set; }
+        string TwitchOAuth { get; set; }
+        string TwitchUserName { get; set; }
+        EVotingMode? VotingMode { get; set; }
     }
 }

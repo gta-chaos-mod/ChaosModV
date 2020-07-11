@@ -20,6 +20,7 @@ namespace TwitchChatVotingProxy
         private List<IVoteOption> activeVoteOptions = new List<IVoteOption>();
         private IChaosPipeClient chaosPipe;
         private Timer displayUpdateTick = new Timer(DISPLAY_UPDATE_TICKRATE);
+        private ILogger logger = Log.Logger.ForContext<ChaosModController>();
         private IOverlayServer overlayServer;
         private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
         private Random random = new Random();
@@ -61,7 +62,7 @@ namespace TwitchChatVotingProxy
             IVoteOption choosenOption;
             // If we only have one choosen option, use that
             if (choosenOptions.Count == 1) choosenOption = choosenOptions[0];
-            // Otherwise we have more that one option with the same vote count,
+            // Otherwise we have more than one option with the same vote count
             // and choose one at random
             else choosenOption = choosenOptions[random.Next(0, choosenOptions.Count)];
 
@@ -95,16 +96,23 @@ namespace TwitchChatVotingProxy
         private void OnGetVoteResult(object sender, OnGetVoteResultArgs e)
         {
             // Tell the overlay server that the vote has ended
-            overlayServer.EndVoting();
+            try
+            {
+                overlayServer.EndVoting();
+
+            } catch (Exception err)
+            {
+                Log.Error(err, "error occured");
+            }
 
             // Evaluate what result calculation to use
             switch (votingMode)
             {
                 case EVotingMode.MAJORITY:
-                    e.ChoosenOption = GetVoteResultByMajority();
+                    e.ChosenOption = GetVoteResultByMajority();
                     break;
                 case EVotingMode.PERCENTAGE:
-                    e.ChoosenOption = GetVoteResultByPercentage();
+                    e.ChosenOption = GetVoteResultByPercentage();
                     break;
             }
         }
@@ -121,12 +129,15 @@ namespace TwitchChatVotingProxy
                 var match = voteCounter % 2 == 0
                     ? (index + 1).ToString()
                     : (index + 1 + activeVoteOptions.Count).ToString();
+
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
             // Inform the overlay server about a new vote
             overlayServer.NewVoting(activeVoteOptions);
             // Clear the old voted for information
             userVotedFor.Clear();
+            // Increase the vote counter
+            voteCounter++;
         }
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
