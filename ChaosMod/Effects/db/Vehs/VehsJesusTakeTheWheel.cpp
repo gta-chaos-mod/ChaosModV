@@ -59,6 +59,8 @@ static void OnStart()
 
 		SET_PED_KEEP_TASK(jesus, true);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true);
+
+		SET_VEHICLE_DOORS_LOCKED(veh, 2); // this is jesus's ride now, NO STEALING >:(
 	}
 }
 
