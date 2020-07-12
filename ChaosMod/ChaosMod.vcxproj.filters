@@ -96,9 +96,6 @@
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsOnePunch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -153,9 +150,6 @@
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerHealPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -181,9 +175,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerNoSprint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerPlus100k.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp">
@@ -478,6 +469,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

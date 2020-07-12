@@ -50,13 +50,84 @@ static void OnTickBloom()
 
 static RegisterEffect registerEffect5(EFFECT_SCREEN_BLOOM, nullptr, OnStop, OnTickBloom);
 
-static void OnTickLSD()
+static void OnStopLSD()
 {
-	SET_TIMECYCLE_MODIFIER("ArenaEMP");
-	PUSH_TIMECYCLE_MODIFIER();
+	OnStop();
+
+	ANIMPOSTFX_STOP("DrugsDrivingIn");
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	RESET_PED_MOVEMENT_CLIPSET(playerPed, .0f);
+	REMOVE_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+
+	SET_PED_IS_DRUNK(playerPed, false);
 }
 
-static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStop, OnTickLSD);
+static void OnTickLSD()
+{
+	if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
+	{
+		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
+	}
+
+	SET_TIMECYCLE_MODIFIER("ArenaEMP");
+	PUSH_TIMECYCLE_MODIFIER();
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
+	SET_PED_MOVEMENT_CLIPSET(playerPed, "MOVE_M@DRUNK@VERYDRUNK", 1.f);
+	
+	SET_PED_IS_DRUNK(playerPed, true);
+
+	// Random right / left steering
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
+		{
+			return;
+		}
+
+		static DWORD64 timeUntilSteer = GetTickCount64();
+		static bool enableDrunkSteering = false;
+		static float steering;
+
+		if (enableDrunkSteering)
+		{
+			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
+		}
+
+		DWORD64 curTick = GetTickCount64();
+
+		if (timeUntilSteer < curTick)
+		{
+			timeUntilSteer = GetTickCount64();
+
+			if (enableDrunkSteering)
+			{
+				// Give player back control
+
+				timeUntilSteer += g_random.GetRandomInt(500, 2000);
+			}
+			else
+			{
+				// Take control from player
+
+				steering = GET_RANDOM_FLOAT_IN_RANGE(-1.f, 1.f);
+
+				timeUntilSteer += g_random.GetRandomInt(50, 300);
+			}
+
+			enableDrunkSteering = !enableDrunkSteering;
+		}
+	}
+}
+
+static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD);
 
 static void OnStartFullbright()
 {
@@ -75,6 +146,8 @@ static void OnTickBubbleVision()
 {
 	SET_TIMECYCLE_MODIFIER("ufo_deathray");
 	PUSH_TIMECYCLE_MODIFIER();
+
+	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);

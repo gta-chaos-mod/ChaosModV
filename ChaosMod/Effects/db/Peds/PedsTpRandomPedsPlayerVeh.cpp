@@ -2,16 +2,16 @@
 
 static void OnStart()
 {
-	auto playerPed = PLAYER_PED_ID();
+	Ped playerPed = PLAYER_PED_ID();
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
-		auto playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 		int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(playerVeh));
 
 		std::vector<Ped> pedPool;
-		for (auto ped : GetAllPeds())
+		for (Ped ped : GetAllPeds())
 		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
 			{

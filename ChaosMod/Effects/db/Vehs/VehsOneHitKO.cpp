@@ -13,11 +13,11 @@ static void OnTick()
 	{
 		lastTick = curTick;
 
-		Ped playerPed = PLAYER_PED_ID();
-
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (!IS_PED_IN_ANY_HELI(playerPed))
+			Hash vehModel = GET_ENTITY_MODEL(veh);
+
+			if (!IS_THIS_MODEL_A_HELI(vehModel))
 			{
 				SET_VEHICLE_OUT_OF_CONTROL(veh, false, true);
 			}
