@@ -20,7 +20,7 @@ namespace TwitchChatVotingProxy
             logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
 
             logger.Information("===============================");
-            logger.Information("Starting chaos mod twtich proxy");
+            logger.Information("Starting chaos mod twitch proxy");
             logger.Information("===============================");
             
             // Read big config file WIP

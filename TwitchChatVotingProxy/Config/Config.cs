@@ -13,12 +13,12 @@ namespace TwitchChatVotingProxy.Config
 {
     class Config : IConfig
     {
-        public static string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
-        public static string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName"; 
-        public static string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
-        public static string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
-        public static string KEY_VOTING_MODE = "VotingMode";
-
+        public static readonly string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
+        public static readonly string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName"; 
+        public static readonly string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
+        public static readonly string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
+        public static readonly string KEY_TWITCH_VOTING_CHANCE_SYSTEM = "TwitchVotingChanceSystem";
+        
         public int? OverlayServerPort { get; set; }
         public string TwitchChannelName { get; set; }
         public string TwitchOAuth { get; set; }
@@ -44,7 +44,7 @@ namespace TwitchChatVotingProxy.Config
                 TwitchChannelName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_NAME);
                 TwitchOAuth = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_OAUTH);
                 TwitchUserName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_USER_NAME);
-                VotingMode = global::TwitchChatVotingProxy.VotingMode.ReverseLookup(optionsFile.ReadValue(KEY_VOTING_MODE));
+                VotingMode = optionsFile.ReadValueInt(KEY_TWITCH_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
             }
         }
     }
