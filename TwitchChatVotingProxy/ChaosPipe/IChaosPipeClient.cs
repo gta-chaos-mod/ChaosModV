@@ -8,6 +8,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
 {
     interface IChaosPipeClient
     {
+        event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         /// <summary>
         /// Event that gets invoked when the chaos mod requests voting results
         /// </summary>

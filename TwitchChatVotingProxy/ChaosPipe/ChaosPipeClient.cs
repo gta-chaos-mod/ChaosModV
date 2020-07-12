@@ -17,6 +17,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         public static readonly int PIPE_TICKRATE = 400;
 
+        public event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
         public event EventHandler<OnNewVoteArgs> OnNewVote;
         public event EventHandler OnNoVotingRound;
@@ -74,6 +75,20 @@ namespace TwitchChatVotingProxy.ChaosPipe
             pipeWriter.Close();
             pipe.Close();
         }
+        
+        private void GetCurrentVotes()
+        {
+            var args = new OnGetCurrentVotesArgs();
+            OnGetCurrentVotes.Invoke(this, args);
+            if (args.CurrentVotes == null)
+            {
+                logger.Error("listeners failed to supply on get current vote args");
+            } else
+            {
+                var currentVotes = string.Join(":", args.CurrentVotes.Select(_ => _.ToString()).ToArray());
+                SendMessageToPipe($"currentvotes:{currentVotes}");
+            }
+        }
         /// <summary>
         /// Gets called when the chaos mod requests vote results
         /// </summary>
@@ -126,6 +141,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 if (message.StartsWith("vote:")) StartNewVote(message);
                 else if (message == "getvoteresult") GetVoteResult();
                 else if (message == "novoteround") StartNoVotingRound();
+                else if (message == "getcurrentvotes") GetCurrentVotes();
                 else logger.Warning($"unknown request: {message}");
             }
         }
@@ -161,6 +177,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
             // Dispatch information to listeners
             OnNewVote.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
         }
+        /// <summary>
+        /// Start a no-voting round. The chaos mod will decide over the options
+        /// </summary>
         private void StartNoVotingRound()
         {
             OnNoVotingRound.Invoke(this, null);

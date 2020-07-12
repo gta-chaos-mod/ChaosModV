@@ -38,6 +38,7 @@ namespace TwitchChatVotingProxy
             this.votingReceiver = votingReceiver;
 
             // Setup pipe listeners
+            this.chaosPipe.OnGetCurrentVotes += OnGetCurrentVotes;
             this.chaosPipe.OnGetVoteResult += OnGetVoteResult;
             this.chaosPipe.OnNewVote += OnNewVote;
             this.chaosPipe.OnNoVotingRound += OnNoVotingRound;
@@ -103,6 +104,13 @@ namespace TwitchChatVotingProxy
 
             // Return the selected vote range/option
             return selectedOption;
+        }
+        /// <summary>
+        /// Is called when the chaos mod pipe requests the current votes (callback)
+        /// </summary>
+        private void OnGetCurrentVotes(object sender, OnGetCurrentVotesArgs args)
+        {
+            args.CurrentVotes = activeVoteOptions.Select(_ => _.Votes).ToList();
         }
         /// <summary>
         /// Is called when the chaos mod wants to know the voting result (callback)
