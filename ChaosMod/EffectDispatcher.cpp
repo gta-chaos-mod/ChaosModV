@@ -33,7 +33,7 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 
 	// Effect Texts
-	float y = m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME ? .3f : .2f;
+	float y = m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME ? .35f : .2f;
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");

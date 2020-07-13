@@ -144,6 +144,7 @@ namespace ConfigApp
             twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
+            twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
         }
 
         private void WriteTwitchFile()
@@ -157,6 +158,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
 
             m_twitchFile.WriteFile();
         }
@@ -321,6 +323,8 @@ namespace ConfigApp
             twitch_user_chance_system_enable.IsEnabled = agreed;
             twitch_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
+            twitch_user_random_voteable_enable.IsEnabled = agreed;
+            twitch_user_random_voteable_enable_label.IsEnabled = agreed;
 
             // Ensure correct layout / widget properties if poll system is enabled
             // disable for now
@@ -342,6 +346,8 @@ namespace ConfigApp
                 twitch_user_chance_system_enable.IsEnabled = false;
                 twitch_user_chance_system_retain_chance_enable_label.IsEnabled = false;
                 twitch_user_chance_system_retain_chance_enable.IsEnabled = false;
+                twitch_user_random_voteable_enable.IsEnabled = false;
+                twitch_user_random_voteable_enable_label.IsEnabled = false;
             }
         }
 

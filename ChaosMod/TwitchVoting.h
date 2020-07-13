@@ -2,10 +2,7 @@
 
 #include "EffectDispatcher.h"
 
-#include <map>
-#include <array>
-#include <memory>
-#include <fstream>
+#include <vector>
 
 enum class TwitchOverlayMode
 {
@@ -17,7 +14,8 @@ enum class TwitchOverlayMode
 class TwitchVoting
 {
 public:
-	TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem);
+	TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem,
+		bool enableVotingChanceSystemRetainChance, bool enableTwitchRandomEffectVoteable);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -33,12 +31,15 @@ private:
 	const bool m_enableTwitchPollVoting;
 	HANDLE m_pipeHandle = INVALID_HANDLE_VALUE;
 	DWORD64 m_lastPing = GetTickCount64();
+	DWORD64 m_lastVotesFetchTime = GetTickCount64();
 	int m_noPingRuns = 0;
 	bool m_noVoteRound = false;
 	bool m_receivedFirstPing = false;
 	bool m_alternatedVotingRound = false;
 	TwitchOverlayMode m_twitchOverlayMode;
 	bool m_enableTwitchChanceSystem;
+	bool m_enableVotingChanceSystemRetainChance;
+	bool m_enableTwitchRandomEffectVoteable;
 
 	bool m_isVotingRunning = false;
 
@@ -49,16 +50,17 @@ private:
 
 		}
 
-		ChoosableEffect(EffectType effectType, std::string name) : EffectType(effectType), EffectName(name)
+		ChoosableEffect(EffectType effectType, std::string name, int match) : EffectType(effectType), EffectName(name), Match(match)
 		{
 
 		}
 
 		EffectType EffectType;
 		std::string EffectName;
+		int Match;
 		int ChanceVotes = 0;
 	};
-	std::array<ChoosableEffect, 3> m_effectChoices;
+	std::vector<ChoosableEffect> m_effectChoices;
 
 	EffectType m_chosenEffectType;
 

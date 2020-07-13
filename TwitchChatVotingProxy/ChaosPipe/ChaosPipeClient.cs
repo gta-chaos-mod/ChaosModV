@@ -13,7 +13,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// <summary>
         /// Speed at which the chaos mod pipe gets processed
         /// </summary>
-        public static readonly int PIPE_TICKRATE = 400;
+        public static readonly int PIPE_TICKRATE = 100;
 
         public event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
@@ -169,9 +169,6 @@ namespace TwitchChatVotingProxy.ChaosPipe
             // Remove the first option (which is basically the indicator
             // that this is a new vote)
             optionNames.RemoveAt(0);
-            // Remove last option (which is not a vote option, but a parameter
-            // that we don't use)
-            optionNames.RemoveAt(optionNames.Count - 1);
             // Dispatch information to listeners
             OnNewVote.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
         }

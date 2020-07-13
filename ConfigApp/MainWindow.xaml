@@ -126,6 +126,9 @@
                     <CheckBox x:Name="twitch_user_chance_system_retain_chance_enable" Margin="722,324,295,0" Grid.Row="1" />
                     <Label Content="---------- Effect Chance Mode (EXPERIMENTAL!) ----------" HorizontalAlignment="Left" Margin="15,275,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                     <ComboBox x:Name="twitch_user_overlay_mode" HorizontalAlignment="Left" Margin="158,133,0,0" Grid.Row="1" VerticalAlignment="Top" Width="119"/>
+                    <Label x:Name="twitch_user_random_voteable_enable_label" Content="Enable &quot;Random Effect&quot; voteable option" HorizontalAlignment="Left" Margin="10,222,0,0"
+                        VerticalAlignment="Top" Width="237" Grid.Row="1"/>
+                    <CheckBox x:Name="twitch_user_random_voteable_enable" Margin="253,228,755,100" Grid.Row="1" />
                 </Grid>
             </TabItem>
             <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">

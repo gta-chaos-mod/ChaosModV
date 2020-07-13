@@ -1,7 +1,6 @@
 ﻿using Serilog;
 using System;
 using System.Threading.Tasks;
-using TwitchChatVotingProxy.Config;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -101,11 +100,11 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// </summary>
         private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            var ChatMessage = e.ChatMessage;
+            var chatMessage = e.ChatMessage;
 
             var evnt = new OnMessageArgs();
-            evnt.Message = ChatMessage.Message.Trim();
-            evnt.ClientId = ChatMessage.UserId;
+            evnt.Message = chatMessage.Message.Trim();
+            evnt.ClientId = chatMessage.UserId;
             OnMessage.Invoke(this, evnt);
         }
     }
