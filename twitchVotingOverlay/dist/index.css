@@ -66,12 +66,22 @@ body {
 	font-family: var(--bar-font);
 	font-size: var(--bar-font-size);
 	font-weight: var(--bar-font-weight);
+	transition: color 100ms ease-in-out;
+}
+
+.bar > .labelContainer.disabled > span {
+	color: #cfcfcf;
+	-webkit-text-stroke: none;
 }
 
 .bar > .progression {
 	background-color: var(--bar-progression);
 	height: 100%;
 	transition: width 0.3s ease-in-out;
+}
+
+.bar > .progression.disabled {
+	background-color: #afafaf;
 }
 
 .slideIn {
