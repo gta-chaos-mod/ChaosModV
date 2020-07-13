@@ -21,6 +21,7 @@ namespace TwitchChatVotingProxy
         private IOverlayServer? overlayServer;
         private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
         private Random random = new Random();
+        private Boolean retainInitialVotes;
         private int voteCounter = 0;
         private EVotingMode? votingMode;
         private EOverlayMode? overlayMode;
@@ -48,6 +49,7 @@ namespace TwitchChatVotingProxy
             // Setup config options
             votingMode = config.VotingMode;
             overlayMode = config.OverlayMode;
+            retainInitialVotes = config.RetainInitalVotes;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -86,18 +88,19 @@ namespace TwitchChatVotingProxy
         private int GetVoteResultByPercentage()
         {
             // Get total votes
+            var votes = activeVoteOptions.Select(_ => retainInitialVotes ? _.Votes + 1 : _.Votes).ToList();
             var totalVotes = 0;
-            activeVoteOptions.ForEach(_ => totalVotes += _.Votes);
+            votes.ForEach(_ => totalVotes += _);
             // If we have no votes, choose one at random
-            if (totalVotes == 0) return random.Next(0, activeVoteOptions.Count);
+            if (totalVotes == 0) return random.Next(0, votes.Count);
             // Select a random vote from all votes
             var selectedVote = random.Next(1, totalVotes + 1);
             // Now find out in what vote range/option that vote is
             var voteRange = 0;
             var selectedOption = 0;
-            for (var i = 0; i < activeVoteOptions.Count; i++)
+            for (var i = 0; i < votes.Count; i++)
             {
-                voteRange += activeVoteOptions[i].Votes;
+                voteRange += votes[i];
                 if (selectedVote <= voteRange)
                 {
                     selectedOption = i;
@@ -217,12 +220,13 @@ namespace TwitchChatVotingProxy
                 {
                     int previousVote;
 
+                    voteOption.Votes++;
+                    return;
                     // Check if the player has already voted
                     if (!userVotedFor.TryGetValue(e.ClientId, out previousVote))
                     {
                         // If they haven't voted, count his vote
                         userVotedFor.Add(e.ClientId, i);
-                        voteOption.Votes++;
        
                     } else if (previousVote != i)
                     {
