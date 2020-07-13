@@ -7,6 +7,16 @@ export interface IChaosOverlayClient {
 	 */
 	addCreateVoteListener(listener: TChaosOverlayClientEvent): void;
 	/**
+	 * Adds a listener that is triggered when the websocket connects
+	 * @param listener callback that should be called
+	 */
+	addConnectListener(listener: () => void): void;
+	/**
+	 * Adds a listener that is triggered when the websocket disconnects
+	 * @param listener callback that should be called
+	 */
+	addDisconnectListener(listener: () => void): void;
+	/**
 	 * Adds a listener that is triggered when a vote ended
 	 * @param listener callback that should be called
 	 */
@@ -26,6 +36,16 @@ export interface IChaosOverlayClient {
 	 * @param listener callback that should be removed
 	 */
 	removeCreateVoteListener(listener: TChaosOverlayClientEvent): void;
+	/**
+	 * Removes connect listener
+	 * @param listener callback that should be removed
+	 */
+	removeConnectListener(listener: () => void): void;
+	/**
+	 * Removes disconnect listener
+	 * @param listener callback that should be removed
+	 */
+	removeOnDisconnectListener(listener: () => void): void;
 	/**
 	 * Removes vote end listener
 	 * @param listener callback that should be removed

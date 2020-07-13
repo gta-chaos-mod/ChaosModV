@@ -1,6 +1,6 @@
 import { ILiteEvent } from './iLightEvent';
 
-export class LiteEvent<T> implements ILiteEvent<T> {
+export class LiteEvent<T = null> implements ILiteEvent<T> {
 	private handlers: ((data: T) => void)[] = [];
 
 	public addEventListener(handler: (data: T) => void): void {

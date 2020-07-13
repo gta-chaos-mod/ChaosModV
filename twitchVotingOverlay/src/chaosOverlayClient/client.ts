@@ -14,6 +14,8 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	private URL: string;
 	private WS: WebSocket | null = null;
 	private createEvent = new LiteEvent<IChaosOverlayClientMessage>();
+	private connectEvent = new LiteEvent();
+	private disconnectEvent = new LiteEvent();
 	private endEvent = new LiteEvent<IChaosOverlayClientMessage>();
 	private noVoteRoundEvent = new LiteEvent<IChaosOverlayClientMessage>();
 	private updateEvent = new LiteEvent<IChaosOverlayClientMessage>();
@@ -33,6 +35,12 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	public addCreateVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.createEvent.addEventListener(listener);
 	}
+	public addConnectListener(listener: () => void): void {
+		this.connectEvent.addEventListener(listener);
+	}
+	public addDisconnectListener(listener: () => void): void {
+		this.disconnectEvent.addEventListener(listener);
+	}
 	public addEndVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.endEvent.addEventListener(listener);
 	}
@@ -45,11 +53,17 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	public removeCreateVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.createEvent.removeEventListener(listener);
 	}
-	public removeNoVotingRoundListener(listener: TChaosOverlayClientEvent): void {
-		this.noVoteRoundEvent.removeEventListener(listener);
+	public removeConnectListener(listener: () => void): void {
+		this.connectEvent.removeEventListener(listener);
+	}
+	public removeOnDisconnectListener(listener: () => void): void {
+		this.disconnectEvent.removeEventListener(listener);
 	}
 	public removeEndVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.endEvent.removeEventListener(listener);
+	}
+	public removeNoVotingRoundListener(listener: TChaosOverlayClientEvent): void {
+		this.noVoteRoundEvent.removeEventListener(listener);
 	}
 	public removeUpdateVoteListener(listener: TChaosOverlayClientEvent): void {
 		this.updateEvent.removeEventListener(listener);
@@ -85,7 +99,7 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	 */
 	private onSocketClose(): void {
 		console.log(`socket closed, reconnecting in ${ChaosOverlayClient.RECONNECT_INTERVAL}ms`);
-
+		this.disconnectEvent.dispatch(null);
 		window.setTimeout(() => this.connect(), ChaosOverlayClient.RECONNECT_INTERVAL);
 	}
 	/**
@@ -121,5 +135,6 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	 */
 	private onSocketOpen(): void {
 		console.log('successfully connected to websocket');
+		this.connectEvent.dispatch(null);
 	}
 }
