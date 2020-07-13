@@ -1,11 +1,7 @@
 #pragma once
 
-#include "../../vendor/minhook/include/MinHook.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-#include <string>
+typedef unsigned long long DWORD64;
+typedef unsigned long DWORD;
 
 class Handle
 {
@@ -20,10 +16,7 @@ public:
 
 	inline Handle At(int offset) const
 	{
-		if (IsValid())
-		{
-			return m_addr + offset;
-		}
+		return IsValid() ? m_addr + offset : 0;
 	}
 
 	template<typename T>
@@ -45,7 +38,11 @@ public:
 
 	inline Handle Into() const
 	{
-		return m_addr + *reinterpret_cast<DWORD*>(m_addr + 1) + 5;
+		if (IsValid())
+		{
+			Handle handle = At(1);
+			return handle.At(handle.Value<DWORD>()).At(4);
+		}
 	}
 
 private:
