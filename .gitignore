@@ -24,7 +24,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-bundle.js
+dist/bundle.js
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -333,3 +333,4 @@ ASALocalRun/
 
 # Custom
 TwitchExtension/
+twitchVotingOverlay/dist/bundle.js
