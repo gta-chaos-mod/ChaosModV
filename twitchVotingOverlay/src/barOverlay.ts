@@ -5,7 +5,6 @@ const ANIMATION_DELAY_DELTA = 100;
 const ANIMATION_LENGTH = 600;
 
 class Bar {
-	private _isAnimating = false;
 	private bar: HTMLDivElement;
 	private barProgression: HTMLDivElement;
 	private container: HTMLDivElement;
@@ -36,6 +35,17 @@ class Bar {
 		this.container.append(this.bar);
 	}
 
+	public set isDisabled(value: boolean) {
+		const CLASS_NAME = 'disabled';
+		if (value) {
+			this.barProgression.classList.add(CLASS_NAME);
+			this.labelContainer.classList.add(CLASS_NAME);
+		} else {
+			this.labelContainer.classList.remove(CLASS_NAME);
+			this.barProgression.classList.remove(CLASS_NAME);
+		}
+	}
+
 	public set label(value: string) {
 		this.labelLabel.innerText = value;
 	}
@@ -47,10 +57,6 @@ class Bar {
 	}
 	public set width(value: string) {
 		this.barProgression.style.width = value;
-	}
-
-	public get isAnimating(): boolean {
-		return this._isAnimating;
 	}
 
 	public fadeIn(duration: number, delay: number = 0): void {
@@ -77,11 +83,13 @@ export class BarOverlay {
 
 		// Bind listener methods
 		this.onCreateVote = this.onCreateVote.bind(this);
+		this.onDisconnect = this.onDisconnect.bind(this);
 		this.onEndVote = this.onEndVote.bind(this);
 		this.onUpdateVote = this.onUpdateVote.bind(this);
 
 		// Add listener to the overlay client
 		overlayClient.addCreateVoteListener(this.onCreateVote);
+		overlayClient.addDisconnectListener(this.onDisconnect);
 		overlayClient.addEndVoteListener(this.onEndVote);
 		overlayClient.addUpdateVoteListener(this.onUpdateVote);
 	}
@@ -90,23 +98,36 @@ export class BarOverlay {
 		this.bars.forEach((bar, index) => {
 			const ANIMATION_DELAY = index * ANIMATION_DELAY_DELTA;
 			bar.fadeOut(ANIMATION_LENGTH, ANIMATION_DELAY);
-			setTimeout(() => bar.fadeIn(ANIMATION_LENGTH), ANIMATION_LENGTH + ANIMATION_DELAY);
+			setTimeout(() => {
+				bar.isDisabled = false;
+				bar.fadeIn(ANIMATION_LENGTH), ANIMATION_LENGTH + ANIMATION_DELAY;
+			}, ANIMATION_LENGTH + ANIMATION_DELAY);
 		});
 	}
-	private onEndVote(): void {}
+	private onDisconnect(): void {
+		this.bars.forEach((bar, index) => {
+			const ANIMATION_DELAY = index * ANIMATION_DELAY_DELTA;
+			bar.fadeOut(ANIMATION_LENGTH, ANIMATION_DELAY);
+		});
+	}
+	private onEndVote(): void {
+		this.bars.forEach(bar => (bar.isDisabled = true));
+	}
 	private onUpdateVote(message: IChaosOverlayClientMessage): void {
 		const { totalVotes, voteOptions, votingMode } = message;
 
 		if (voteOptions.length !== this.bars.length) {
 			while (this.container.firstChild) this.container.removeChild(this.container.firstChild);
-			this.bars = voteOptions.map((_, index) => new Bar(this.container));
+			this.bars = voteOptions.map(_ => new Bar(this.container));
 		}
 
 		for (let i = 0; i < voteOptions.length; i++) {
 			const BAR = this.bars[i];
 			const VOTE_OPTION = voteOptions[i];
 
-			if (BAR.isAnimating) continue;
+			// We only want to update the bar when it's not disabled. A bar is disabled
+			// after a vote ended, until it is out of view (fade out).
+			if (BAR.isDisabled) continue;
 
 			let percentage = 0;
 			if (VOTE_OPTION.value === 0) percentage = 0;
