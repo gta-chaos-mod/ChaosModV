@@ -38,9 +38,11 @@ class Bar {
 	public set isDisabled(value: boolean) {
 		const CLASS_NAME = 'disabled';
 		if (value) {
+			this.bar.classList.add(CLASS_NAME);
 			this.barProgression.classList.add(CLASS_NAME);
 			this.labelContainer.classList.add(CLASS_NAME);
 		} else {
+			this.bar.classList.remove(CLASS_NAME);
 			this.labelContainer.classList.remove(CLASS_NAME);
 			this.barProgression.classList.remove(CLASS_NAME);
 		}
