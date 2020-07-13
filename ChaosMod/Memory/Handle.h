@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../vendor/minhook/include/MinHook.h"
-
 typedef unsigned long long DWORD64;
 typedef unsigned long DWORD;
 

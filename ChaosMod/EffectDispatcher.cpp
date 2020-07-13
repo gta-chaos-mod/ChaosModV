@@ -90,6 +90,13 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
+	// Run permanent effects each tick
+	for (RegisteredEffect* permanentEffect : m_permanentEffects)
+	{
+		permanentEffect->Tick();
+	}
+
+	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
 	{
 		return;
@@ -304,13 +311,13 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
-	for (auto effect : m_permanentEffects)
+	for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();
 	}
 	m_permanentEffects.clear();
 
-	for (auto effect : m_activeEffects)
+	for (ActiveEffect& effect : m_activeEffects)
 	{
 		effect.RegisteredEffect->Stop();
 	}
@@ -328,6 +335,7 @@ void EffectDispatcher::Reset()
 	{
 		if (pair.second.Permanent)
 		{
+			// Always run permanent timed effects in background
 			RegisteredEffect* registeredEffect = GetRegisteredEffect(pair.first);
 
 			if (registeredEffect)

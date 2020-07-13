@@ -110,7 +110,7 @@ void ParseEffectsFile()
 		}
 
 		EffectData effectData;
-		effectData.TimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]); // Dang
+		effectData.TimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]);
 		effectData.CustomTime = values[2];
 		effectData.WeightMult = values[3];
 		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
