@@ -1,4 +1,4 @@
 export interface ILiteEvent<T> {
-	addEventListener(handler: { (data: T): void }): void;
-	removeEventListener(handler: { (data: T): void }): void;
+	addEventListener(listener: { (data: T): void }): void;
+	removeEventListener(listener: { (data: T): void }): void;
 }
