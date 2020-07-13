@@ -7,11 +7,17 @@
 #include <memory>
 #include <fstream>
 
+enum class TwitchOverlayMode
+{
+	CHAT_MESSAGES,
+	OVERLAY_INGAME,
+	OVERLAY_OBS
+};
+
 class TwitchVoting
 {
 public:
-	TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-		bool enableTwitchVoteablesOnscreen, bool enableTwitchChanceSystem);
+	TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -23,18 +29,15 @@ public:
 	
 private:
 	bool m_enableTwitchVoting;
-	const int m_twitchVotingNoVoteChance;
 	const int m_twitchSecsBeforeVoting;
 	const bool m_enableTwitchPollVoting;
-	const bool m_enableTwitchVoterIndicator;
 	HANDLE m_pipeHandle = INVALID_HANDLE_VALUE;
 	DWORD64 m_lastPing = GetTickCount64();
 	int m_noPingRuns = 0;
-	bool m_receivedFirstPing = false;
 	bool m_noVoteRound = false;
-	bool m_enableTwitchVoteablesOnscreen = false;
+	bool m_receivedFirstPing = false;
 	bool m_alternatedVotingRound = false;
-	std::ofstream m_voteablesOutputFile { "chaosmod/currentvoteables.txt" };
+	TwitchOverlayMode m_twitchOverlayMode;
 	bool m_enableTwitchChanceSystem;
 
 	bool m_isVotingRunning = false;

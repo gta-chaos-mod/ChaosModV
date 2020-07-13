@@ -32,6 +32,13 @@ namespace ConfigApp
         {
             InitializeComponent();
 
+            twitch_user_overlay_mode.ItemsSource = new string[]
+            {
+                "Chat Messages",
+                "In-Game Overlay",
+                "OBS Overlay"
+            };
+
             Title += " (v" + Info.VERSION + ")";
 
             CheckForUpdates();
@@ -133,11 +140,8 @@ namespace ConfigApp
             twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
             twitch_user_channel_oauth.Password = m_twitchFile.ReadValue("TwitchChannelOAuth");
             twitch_user_poll_passphrase.Text = m_twitchFile.ReadValue("TwitchVotingPollPass");
-            twitch_user_effects_chance_no_voting_round.Text = m_twitchFile.ReadValue("TwitchVotingNoVoteChance", "50");
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
-            twitch_user_voter_indicator_enabled.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingVoterIndicator", false);
-            twitch_user_chat_no_vote_msg_disable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingDisableNoVoteRoundMsg", false);
-            twitch_user_show_voteables_onscreen_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingShowVoteablesOnscreen", false);
+            twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
         }
@@ -149,11 +153,8 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
             m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
             m_twitchFile.WriteValue("TwitchVotingPollPass", twitch_user_poll_passphrase.Text);
-            m_twitchFile.WriteValue("TwitchVotingNoVoteChance", twitch_user_effects_chance_no_voting_round.Text);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
-            m_twitchFile.WriteValue("TwitchVotingVoterIndicator", twitch_user_voter_indicator_enabled.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchVotingDisableNoVoteRoundMsg", twitch_user_chat_no_vote_msg_disable.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchVotingShowVoteablesOnscreen", twitch_user_show_voteables_onscreen_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
 
@@ -312,23 +313,18 @@ namespace ConfigApp
             twitch_user_user_name.IsEnabled = agreed;
             twitch_user_poll_passphrase_label.IsEnabled = agreed;
             twitch_user_poll_passphrase.IsEnabled = agreed;
-            twitch_user_effects_chance_no_voting_round_label.IsEnabled = agreed;
-            twitch_user_effects_chance_no_voting_round.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting_label.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
-            twitch_user_voter_indicator_enabled_label.IsEnabled = agreed;
-            twitch_user_voter_indicator_enabled.IsEnabled = agreed;
-            twitch_user_chat_no_vote_msg_disable_label.IsEnabled = agreed;
-            twitch_user_chat_no_vote_msg_disable.IsEnabled = agreed;
-            twitch_user_show_voteables_onscreen_enable_label.IsEnabled = agreed;
-            twitch_user_show_voteables_onscreen_enable.IsEnabled = agreed;
+            twitch_user_overlay_mode_label.IsEnabled = agreed;
+            twitch_user_overlay_mode.IsEnabled = agreed;
             twitch_user_chance_system_enable_label.IsEnabled = agreed;
             twitch_user_chance_system_enable.IsEnabled = agreed;
             twitch_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
 
             // Ensure correct layout / widget properties if poll system is enabled
-            if (File.Exists(".twitchpoll"))
+            // disable for now
+            if (File.Exists(".twitchpoll") && false)
             {
                 twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;
                 twitch_user_poll_passphrase.Visibility = Visibility.Visible;
@@ -340,12 +336,8 @@ namespace ConfigApp
                 twitch_user_channel_oauth_label.Visibility = Visibility.Hidden;
                 twitch_user_channel_oauth.Visibility = Visibility.Hidden;
 
-                twitch_user_effects_chance_no_voting_round_label.IsEnabled = false;
-                twitch_user_effects_chance_no_voting_round.IsEnabled = false;
-                twitch_user_chat_no_vote_msg_disable_label.IsEnabled = false;
-                twitch_user_chat_no_vote_msg_disable.IsEnabled = false;
-                twitch_user_show_voteables_onscreen_enable_label.IsEnabled = false;
-                twitch_user_show_voteables_onscreen_enable.IsEnabled = false;
+                twitch_user_overlay_mode_label.IsEnabled = false;
+                twitch_user_overlay_mode.IsEnabled = false;
                 twitch_user_chance_system_enable_label.IsEnabled = false;
                 twitch_user_chance_system_enable.IsEnabled = false;
                 twitch_user_chance_system_retain_chance_enable_label.IsEnabled = false;

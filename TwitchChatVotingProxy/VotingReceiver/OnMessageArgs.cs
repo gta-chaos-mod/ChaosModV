@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TwitchChatVotingProxy.VotingReceiver
+﻿namespace TwitchChatVotingProxy.VotingReceiver
 {
     /// <summary>
     /// Event which should be dispatched when the voting receiver receives

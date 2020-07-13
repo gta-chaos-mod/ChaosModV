@@ -13,5 +13,6 @@ namespace TwitchChatVotingProxy.Config
         string TwitchOAuth { get; set; }
         string TwitchUserName { get; set; }
         EVotingMode? VotingMode { get; set; }
+        EOverlayMode? OverlayMode { get; set; }
     }
 }

@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-using Serilog;
-using Serilog.Core;
+﻿using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using TwitchChatVotingProxy.ChaosPipe;
+using TwitchChatVotingProxy.Config;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
 
@@ -21,17 +18,19 @@ namespace TwitchChatVotingProxy
         private IChaosPipeClient chaosPipe;
         private Timer displayUpdateTick = new Timer(DISPLAY_UPDATE_TICKRATE);
         private ILogger logger = Log.Logger.ForContext<ChaosModController>();
-        private IOverlayServer overlayServer;
+        private IOverlayServer? overlayServer;
         private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
         private Random random = new Random();
         private int voteCounter = 0;
-        private EVotingMode votingMode = EVotingMode.PERCENTAGE;
+        private EVotingMode? votingMode;
+        private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
 
         public ChaosModController(
             IChaosPipeClient chaosPipe,
             IOverlayServer overlayServer,
-            IVotingReceiver votingReceiver
+            IVotingReceiver votingReceiver,
+            IConfig config
         ) {
             this.chaosPipe = chaosPipe;
             this.overlayServer = overlayServer;
@@ -45,6 +44,10 @@ namespace TwitchChatVotingProxy
 
             // Setup receiver listeners
             this.votingReceiver.OnMessage += OnVoteReceiverMessage;
+
+            // Setup config options
+            votingMode = config.VotingMode;
+            overlayMode = config.OverlayMode;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -146,8 +149,8 @@ namespace TwitchChatVotingProxy
             activeVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
             {
                 // We want the options to alternate between matches.
-                // If we are on a event round we basically select the index (+1 for none programmers).
-                // If we are on a odd round, we add to the index the option count.
+                // If we are on an even round we basically select the index (+1 for non programmers).
+                // If we are on an odd round, we add to the index the option count.
                 // This gives us a pattern like following:
                 // Round 0: [O1, O2, O3, ...]
                 // Round 1: [O4, O5, O6, ...]
@@ -157,8 +160,38 @@ namespace TwitchChatVotingProxy
 
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
-            // Inform the overlay server about a new vote
-            overlayServer.NewVoting(activeVoteOptions);
+            // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message
+            switch (overlayMode)
+            {
+                case EOverlayMode.CHAT_MESSAGES:
+                    votingReceiver.SendMessage("Time for a new effect! Vote between:");
+                    foreach (IVoteOption voteOption in activeVoteOptions)
+                    {
+                        string msg = string.Empty;
+
+                        bool firstIndex = true;
+                        foreach (string match in voteOption.Matches)
+                        {
+                            msg += firstIndex ? $"{match} " : $" / {match}";
+
+                            firstIndex = true;
+                        }
+
+                        msg += $": {voteOption.Label}\n";
+
+                        votingReceiver.SendMessage(msg);
+                    }
+
+                    if (votingMode == EVotingMode.PERCENTAGE)
+                    {
+                        votingReceiver.SendMessage("Votes will affect the chance for one of the effects to occur.");
+                    }
+
+                    break;
+                case EOverlayMode.OVERLAY_OBS:
+                    overlayServer.NewVoting(activeVoteOptions);
+                    break;
+            }
             // Clear the old voted for information
             userVotedFor.Clear();
             // Increase the vote counter
@@ -187,7 +220,7 @@ namespace TwitchChatVotingProxy
                     // Check if the player has already voted
                     if (!userVotedFor.TryGetValue(e.ClientId, out previousVote))
                     {
-                        // If he hasn't voted, count his vote
+                        // If they haven't voted, count his vote
                         userVotedFor.Add(e.ClientId, i);
                         voteOption.Votes++;
        

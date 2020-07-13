@@ -41,17 +41,14 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
 }
 
-void ParseTwitchFile(bool& enableTwitchVoting, int& twitchVotingNoVoteChance, int& twitchSecsBeforeVoting, bool& enableTwitchVoterIndicator, bool& enableTwitchVoteablesOnscreen,
-	bool& enableTwitchChanceSystem)
+void ParseTwitchFile(bool& enableTwitchVoting, int& twitchSecsBeforeVoting, TwitchOverlayMode& twitchOverlayMode, bool& enableTwitchChanceSystem)
 {
 	OptionsFile twitchFile("chaosmod/twitch.ini");
 
 	enableTwitchVoting = twitchFile.ReadValueInt("EnableTwitchVoting", false);
-	twitchVotingNoVoteChance = twitchFile.ReadValueInt("TwitchVotingNoVoteChance", 50);
 	twitchSecsBeforeVoting = twitchFile.ReadValueInt("TwitchVotingSecsBeforeVoting", 0);
-	enableTwitchVoterIndicator = twitchFile.ReadValueInt("TwitchVotingVoterIndicator", false);
-	enableTwitchVoteablesOnscreen = twitchFile.ReadValueInt("TwitchVotingShowVoteablesOnscreen", false);
 	enableTwitchChanceSystem = twitchFile.ReadValueInt("TwitchVotingChanceSystem", false);
+	twitchOverlayMode = static_cast<TwitchOverlayMode>(twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0));
 }
 
 void ParseEffectsFile()
@@ -129,19 +126,20 @@ void ParseEffectsFile()
 
 void Main::Init()
 {
-	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting;
-	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem;
+	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting;
+	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchChanceSystem;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
+	TwitchOverlayMode twitchOverlayMode;
 
 	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
 		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, timerColor, textColor, effectTimerColor);
-	ParseTwitchFile(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchVoterIndicator, enableTwitchVoteablesOnscreen, enableTwitchChanceSystem);
+	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem);
 	ParseEffectsFile();
 
 	g_random.SetSeed(seed);
 
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
-		enableTwitchVoteablesOnscreen);
+		twitchOverlayMode);
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;
@@ -154,9 +152,8 @@ void Main::Init()
 #endif
 
 	struct stat temp;
-	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1;
-	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchVotingNoVoteChance, twitchSecsBeforeChatVoting, enableTwitchPollVoting, enableTwitchVoterIndicator,
-		enableTwitchVoteablesOnscreen, enableTwitchChanceSystem);
+	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
+	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchSecsBeforeChatVoting, enableTwitchPollVoting, twitchOverlayMode, enableTwitchChanceSystem);
 }
 
 void Main::MainLoop()

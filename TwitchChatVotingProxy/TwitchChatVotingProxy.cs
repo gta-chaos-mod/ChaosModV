@@ -46,16 +46,23 @@ namespace TwitchChatVotingProxy
                 return;
             }
 
-            // Create overlay server config
-            OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.OverlayServerPort);
+            // Check if OBS overlay should be shown
+            OverlayServer.OverlayServer overlayServer = null;
+            if (config.OverlayMode == EOverlayMode.OVERLAY_OBS)
+            {
+                // Create overlay server config
+                OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.OverlayServerPort);
+
+                // Create component
+                overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
+            }
 
             // Create components
-            var overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
             var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
             var chaosPipe = new ChaosPipeClient();
 
             // Start the chaos mod controller
-            new ChaosModController(chaosPipe, overlayServer, votingReceiver);
+            new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
 
             while (chaosPipe.IsConnected()) { }
 

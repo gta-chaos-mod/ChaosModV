@@ -3,13 +3,6 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TwitchChatVotingProxy.Config;
-using TwitchChatVotingProxy.OverlayServer;
-using TwitchLib.Api.Models.v5.Clips;
-
 
 // TODO: fix voting mode
 namespace TwitchChatVotingProxy.OverlayServer

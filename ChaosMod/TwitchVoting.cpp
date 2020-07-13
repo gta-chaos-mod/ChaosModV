@@ -4,11 +4,9 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, bool enableTwitchVoterIndicator,
-	bool enableTwitchVoteablesOnscreen, bool enableTwitchChanceSystem)
-	: m_enableTwitchVoting(enableTwitchVoting), m_twitchVotingNoVoteChance(twitchVotingNoVoteChance), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting),
-	m_enableTwitchPollVoting(enableTwitchPollVoting), m_enableTwitchVoterIndicator(enableTwitchVoterIndicator), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen),
-	m_enableTwitchChanceSystem(enableTwitchChanceSystem)
+TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem)
+	: m_enableTwitchVoting(enableTwitchVoting), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting), m_enableTwitchPollVoting(enableTwitchPollVoting),
+	m_twitchOverlayMode(twitchOverlayMode), m_enableTwitchChanceSystem(enableTwitchChanceSystem)
 {
 	if (!m_enableTwitchVoting)
 	{
@@ -50,8 +48,6 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchVotingNoVoteChance
 
 TwitchVoting::~TwitchVoting()
 {
-	m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
-
 	if (m_pipeHandle != INVALID_HANDLE_VALUE)
 	{
 		DisconnectNamedPipe(m_pipeHandle);
@@ -121,7 +117,7 @@ void TwitchVoting::Tick()
 
 		if (m_noVoteRound)
 		{
-			g_effectDispatcher->DispatchRandomEffect(m_enableTwitchVoterIndicator ? "(Mod)" : nullptr);
+			g_effectDispatcher->DispatchRandomEffect();
 			g_effectDispatcher->ResetTimer();
 
 			if (!m_enableTwitchPollVoting)
@@ -133,7 +129,7 @@ void TwitchVoting::Tick()
 		}
 		else if (m_chosenEffectType != _EFFECT_ENUM_MAX)
 		{
-			g_effectDispatcher->DispatchEffect(m_chosenEffectType, m_enableTwitchVoterIndicator ? "(Chat)" : nullptr);
+			g_effectDispatcher->DispatchEffect(m_chosenEffectType);
 			g_effectDispatcher->ResetTimer();
 
 			m_isVotingRunning = false;
@@ -149,20 +145,6 @@ void TwitchVoting::Tick()
 		if (m_enableTwitchPollVoting)
 		{
 			m_noVoteRound = !m_noVoteRound;
-		}
-		else if (m_twitchVotingNoVoteChance > 0)
-		{
-			if (m_twitchVotingNoVoteChance == 100)
-			{
-				m_noVoteRound = true;
-			}
-			else
-			{
-				if (g_random.GetRandomInt(0, 100) <= m_twitchVotingNoVoteChance)
-				{
-					m_noVoteRound = true;
-				}
-			}
 		}
 
 		if (m_noVoteRound)
@@ -229,13 +211,9 @@ void TwitchVoting::Tick()
 		std::ostringstream oss;
 		oss << "vote:" << name1 << ":" << name2 << ":" << name3 << ":" << m_alternatedVotingRound;
 		SendToPipe(oss.str());
-
-		m_voteablesOutputFile << (!m_alternatedVotingRound ? 1 : 4) << ": " << name1 << std::endl << std::endl;
-		m_voteablesOutputFile << (!m_alternatedVotingRound ? 2 : 5) << ": " << name2 << std::endl << std::endl;
-		m_voteablesOutputFile << (!m_alternatedVotingRound ? 3 : 6) << ": " << name3 << std::endl;
 	}
 
-	if (m_isVotingRunning && !m_noVoteRound && m_enableTwitchVoteablesOnscreen && !m_enableTwitchPollVoting)
+	if (m_isVotingRunning && !m_noVoteRound && m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME && !m_enableTwitchPollVoting)
 	{
 		// Print voteables on screen
 
@@ -317,8 +295,6 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		m_chosenEffectType = m_effectChoices[std::stoi(msg.substr(msg.find(":") + 1))].EffectType;
 
 		m_alternatedVotingRound = !m_alternatedVotingRound;
-
-		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
 	}
 	else if (msg._Starts_with("currentvotes"))
 	{
@@ -339,32 +315,6 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 			}
 
 			splitIndex = valuesStr.find(":");
-		}
-
-		// Write to output file too
-
-		int totalVotes;
-		if (m_enableTwitchChanceSystem)
-		{
-			totalVotes = m_effectChoices[0].ChanceVotes + m_effectChoices[1].ChanceVotes + m_effectChoices[2].ChanceVotes;
-		}
-
-		m_voteablesOutputFile = std::ofstream("chaosmod/currentvoteables.txt"); // Clear file contents
-		for (int i = 0; i < 3; i++)
-		{
-			const ChoosableEffect& choosableEffect = m_effectChoices[i];
-
-			double percentage;
-			if (totalVotes == 0)
-			{
-				percentage = .33f;
-			}
-			else
-			{
-				percentage = choosableEffect.ChanceVotes == 0 ? 0.f : std::round(static_cast<float>(choosableEffect.ChanceVotes) / totalVotes * 100.f) / 100.f;
-			}
-
-			m_voteablesOutputFile << (!m_alternatedVotingRound ? 1 + i : 4 + i) << ": " << choosableEffect.EffectName << " (" << percentage * 100.f << "%)" << std::endl << std::endl;
 		}
 	}
 

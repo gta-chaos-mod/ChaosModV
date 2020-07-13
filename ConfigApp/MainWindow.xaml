@@ -95,12 +95,6 @@
                     <Label Content="This feature allows Twitch chat to vote for an effect out of 3 random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Read the twitch__integration.txt text file included with the mod for more information." HorizontalAlignment="Left" Margin="10,0,0,0"
                     VerticalAlignment="Top" Width="1037" Height="60" Grid.RowSpan="2"/>
                     <CheckBox x:Name="twitch_user_agreed" Content="Enable the feature" Margin="15,45,695,280" Grid.Row="1" Click="twitch_user_agreed_Clicked" />
-                    <Label x:Name="twitch_user_effects_chance_no_voting_round_label" Content="Chance to get a random effect round (no voting enabled for that round, chance as %)" HorizontalAlignment="Left" Margin="10,130,0,0"
-                        VerticalAlignment="Top" Width="627" Grid.Row="1"/>
-                    <xctk:IntegerUpDown x:Name="twitch_user_effects_chance_no_voting_round" HorizontalAlignment="Left" Height="23" Margin="642,133,0,0"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Minimum="0" Maximum="100"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
                     <Label x:Name="twitch_user_channel_name_label" Content="Channel Name" HorizontalAlignment="Left" Margin="10,84,0,0"
                         VerticalAlignment="Top" Width="102" Grid.Row="1"/>
                     <TextBox x:Name="twitch_user_channel_name" HorizontalAlignment="Left" Height="23" Margin="117,87,0,0"
@@ -122,15 +116,8 @@
                         VerticalAlignment="Top" Width="102" Grid.Row="1" Visibility="Hidden" />
                     <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="111,88,0,0"
                         VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
-                    <Label x:Name="twitch_user_voter_indicator_enabled_label" Content="Enable triggered by mod / triggered by chat effect indicator" HorizontalAlignment="Left" Margin="10,228,0,0"
-                        VerticalAlignment="Top" Width="347" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_voter_indicator_enabled" Margin="362,234,655,90" Grid.Row="1" />
-                    <Label x:Name="twitch_user_chat_no_vote_msg_disable_label" Content="Disable no voting round chat message" HorizontalAlignment="Left" Margin="417,228,0,0"
-                        VerticalAlignment="Top" Width="235" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_chat_no_vote_msg_disable" Margin="655,234,365,90" Grid.Row="1" />
-                    <Label x:Name="twitch_user_show_voteables_onscreen_enable_label" Content="Show voteables on-screen" HorizontalAlignment="Left" Margin="703,228,0,0"
-                        VerticalAlignment="Top" Width="154" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_show_voteables_onscreen_enable" Margin="876,234,92,90" Grid.Row="1" />
+                    <Label x:Name="twitch_user_overlay_mode_label" Content="Voting Overlay Mode" HorizontalAlignment="Left" Margin="11,129,0,0"
+                        VerticalAlignment="Top" Width="142" Grid.Row="1"/>
                     <Label x:Name="twitch_user_chance_system_enable_label" Content="Votes affect chance for effect to occur instead" HorizontalAlignment="Left" Margin="10,317,0,0"
                         VerticalAlignment="Top" Width="287" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_chance_system_enable" Margin="302,324,715,0" Grid.Row="1" />
@@ -138,6 +125,7 @@
                         VerticalAlignment="Top" Width="355" Grid.Row="1"/>
                     <CheckBox x:Name="twitch_user_chance_system_retain_chance_enable" Margin="722,324,295,0" Grid.Row="1" />
                     <Label Content="---------- Effect Chance Mode (EXPERIMENTAL!) ----------" HorizontalAlignment="Left" Margin="15,275,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="twitch_user_overlay_mode" HorizontalAlignment="Left" Margin="158,133,0,0" Grid.Row="1" VerticalAlignment="Top" Width="119"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">

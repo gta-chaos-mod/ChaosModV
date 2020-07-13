@@ -1,13 +1,6 @@
 ﻿using Serilog;
-using Serilog.Core;
 using Shared;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TwitchChatVotingProxy.Config
 {
@@ -18,12 +11,14 @@ namespace TwitchChatVotingProxy.Config
         public static readonly string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
         public static readonly string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
         public static readonly string KEY_TWITCH_VOTING_CHANCE_SYSTEM = "TwitchVotingChanceSystem";
-        
+        public static readonly string KEY_TWITCH_OVERLAY_MODE = "TwitchVotingOverlayMode";
+
         public int? OverlayServerPort { get; set; }
         public string TwitchChannelName { get; set; }
         public string TwitchOAuth { get; set; }
         public string TwitchUserName { get; set; }
         public EVotingMode? VotingMode { get; set; }
+        public EOverlayMode? OverlayMode { get; set; }
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
@@ -45,6 +40,7 @@ namespace TwitchChatVotingProxy.Config
                 TwitchOAuth = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_OAUTH);
                 TwitchUserName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_USER_NAME);
                 VotingMode = optionsFile.ReadValueInt(KEY_TWITCH_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
+                OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_TWITCH_OVERLAY_MODE, 0);
             }
         }
     }

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoteablesOnscreen)
+	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, TwitchOverlayMode twitchOverlayMode)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
-	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
+	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
 }
@@ -33,7 +33,7 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 
 	// Effect Texts
-	float y = m_enableTwitchVoteablesOnscreen ? .3f : .2f;
+	float y = m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME ? .3f : .2f;
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
