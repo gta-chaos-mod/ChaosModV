@@ -222,6 +222,7 @@ namespace TwitchChatVotingProxy
 
                     voteOption.Votes++;
                     return;
+
                     // Check if the player has already voted
                     if (!userVotedFor.TryGetValue(e.ClientId, out previousVote))
                     {
