@@ -23,6 +23,7 @@ namespace TwitchChatVotingProxy
         private Random random = new Random();
         private Boolean retainInitialVotes;
         private int voteCounter = 0;
+        private bool voteRunning = false;
         private EVotingMode? votingMode;
         private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
@@ -143,6 +144,9 @@ namespace TwitchChatVotingProxy
                     e.ChosenOption = GetVoteResultByPercentage();
                     break;
             }
+
+            // Vote round ended
+            voteRunning = false;
         }
         /// <summary>
         /// Is called when the chaos mod start a new vote (callback)
@@ -199,6 +203,9 @@ namespace TwitchChatVotingProxy
             userVotedFor.Clear();
             // Increase the vote counter
             voteCounter++;
+
+            // Vote round started now
+            voteRunning = true;
         }
         /// <summary>
         /// Is called when the chaos mod stars a no voting round (callback)
@@ -212,6 +219,8 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
+            if (!voteRunning) return;
+
             for (int i = 0; i < activeVoteOptions.Count; i++)
             {
                 var voteOption = activeVoteOptions[i];
