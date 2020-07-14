@@ -2,7 +2,7 @@
 
 static void OnStart()
 {
-	auto playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
+	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 
 	for (Vehicle veh : GetAllVehs())
 	{

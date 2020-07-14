@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Memory.h"
-#include "../nativesNoNamespaces.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "Handle.h"
+#include "nativesNoNamespaces.h"
 
 #include <vector>
-#include <fstream>
+
+typedef unsigned short WORD;
+typedef unsigned long long DWORD64;
+typedef unsigned long Hash;
+typedef int Vehicle;
 
 namespace Memory
 {
@@ -17,7 +19,9 @@ namespace Memory
 
 		if (vehModels.empty())
 		{
-			Handle handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
+			Handle handle;
+
+			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
 			if (!handle.IsValid())
 			{
 				return vehModels;
@@ -53,5 +57,35 @@ namespace Memory
 		}
 
 		return vehModels;
+	}
+
+	inline void SetVehicleOutOfControl(Vehicle vehicle, bool state)
+	{
+		static __int64(*sub_7FF69C749B98)(int a1);
+
+		static bool isSetup = false;
+		if (!isSetup)
+		{
+			Handle handle;
+
+			handle = FindPattern("E8 ? ? ? ? 8D 53 01 33 DB");
+			if (!handle.IsValid())
+			{
+				return;
+			}
+
+			sub_7FF69C749B98 = handle.Into().Get<__int64(int)>();
+
+			isSetup = true;
+		}
+
+		__int64 v6 = sub_7FF69C749B98(vehicle);
+		if (v6)
+		{
+			v6 = (*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
+
+			*reinterpret_cast<BYTE*>(v6 + 2341) &= 0xFEu;
+			*reinterpret_cast<BYTE*>(v6 + 2341) |= state;
+		}
 	}
 }

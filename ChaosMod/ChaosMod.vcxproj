@@ -258,7 +258,7 @@
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\Snow.h" />
-    <ClInclude Include="Memory\VehPool.h" />
+    <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="nativesNoNamespaces.h" />
     <ClInclude Include="OptionsFile.h" />
