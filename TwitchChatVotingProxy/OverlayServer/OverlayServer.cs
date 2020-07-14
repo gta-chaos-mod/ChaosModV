@@ -102,6 +102,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             var msg = new OverlayMessage();
             msg.request = request;
             msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
+            msg.retainInitialVotes = config.RetainInitialVotes;
             var strVotingMode = VotingMode.Lookup(config.VotingMode);
             if (strVotingMode != null)
             {
