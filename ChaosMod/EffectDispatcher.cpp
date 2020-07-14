@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoteablesOnscreen)
+	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, TwitchOverlayMode twitchOverlayMode)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
-	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoteablesOnscreen(enableTwitchVoteablesOnscreen)
+	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
 }
@@ -33,7 +33,12 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 
 	// Effect Texts
-	float y = m_enableTwitchVoteablesOnscreen ? .3f : .2f;
+	float y = .2f;
+	if (m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME || m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_OBS)
+	{
+		y = .35f;
+	}
+
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -90,6 +95,13 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
+	// Run permanent effects each tick
+	for (RegisteredEffect* permanentEffect : m_permanentEffects)
+	{
+		permanentEffect->Tick();
+	}
+
+	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
 	{
 		return;
@@ -304,13 +316,13 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
-	for (auto effect : m_permanentEffects)
+	for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();
 	}
 	m_permanentEffects.clear();
 
-	for (auto effect : m_activeEffects)
+	for (ActiveEffect& effect : m_activeEffects)
 	{
 		effect.RegisteredEffect->Stop();
 	}
@@ -328,6 +340,7 @@ void EffectDispatcher::Reset()
 	{
 		if (pair.second.Permanent)
 		{
+			// Always run permanent timed effects in background
 			RegisteredEffect* registeredEffect = GetRegisteredEffect(pair.first);
 
 			if (registeredEffect)

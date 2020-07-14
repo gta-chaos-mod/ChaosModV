@@ -14,7 +14,7 @@
 #include "Memory/Handle.h"
 #include "Memory/Gravity.h"
 #include "Memory/Snow.h"
-#include "Memory/VehPool.h"
+#include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 
 #include "Util/EntityIterator.h"

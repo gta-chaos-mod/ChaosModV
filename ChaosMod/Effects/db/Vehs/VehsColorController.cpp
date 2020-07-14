@@ -33,17 +33,6 @@ static void OnTickGreen()
 
 static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTickGreen);
 
-static void OnTickBlack()
-{
-	for (Vehicle veh : GetAllVehs())
-	{
-		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 0);
-		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 0);
-	}
-}
-
-static RegisterEffect registerEffect4(EFFECT_BLACK_VEHS, nullptr, nullptr, OnTickBlack);
-
 static void OnTickChrome()
 {
 	for (auto veh : GetAllVehs())
@@ -52,7 +41,7 @@ static void OnTickChrome()
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTickChrome);
+static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTickChrome);
 
 static void OnTickPink()
 {
@@ -63,7 +52,7 @@ static void OnTickPink()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_PINK_VEHS, nullptr, nullptr, OnTickPink);
+static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, nullptr, OnTickPink);
 
 static void OnTickRainbow()
 {
@@ -86,4 +75,4 @@ static void OnTickRainbow()
 	}
 }
 
-static RegisterEffect registerEffect7(EFFECT_RAINBOW_VEHS, nullptr, nullptr, OnTickRainbow);
+static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, nullptr, OnTickRainbow);
