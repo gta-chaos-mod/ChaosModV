@@ -228,7 +228,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />

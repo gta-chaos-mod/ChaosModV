@@ -2,7 +2,7 @@
 
 static void OnTickRed()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
@@ -13,7 +13,7 @@ static RegisterEffect registerEffect1(EFFECT_RED_VEHS, nullptr, nullptr, OnTickR
 
 static void OnTickBlue()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
@@ -24,7 +24,7 @@ static RegisterEffect registerEffect2(EFFECT_BLUE_VEHS, nullptr, nullptr, OnTick
 
 static void OnTickGreen()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
@@ -35,7 +35,7 @@ static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTic
 
 static void OnTickChrome()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_COLOURS(veh, 120, 120);
 	}
@@ -45,7 +45,7 @@ static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTi
 
 static void OnTickPink()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
@@ -56,7 +56,9 @@ static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, nullptr, OnTick
 
 static void OnTickRainbow()
 {
-	for (auto veh : GetAllVehs())
+	static int headlightColor = 0;
+
+	for (Vehicle veh : GetAllVehs())
 	{
 		static ULONG cnt = 0;
 		static constexpr float freq = .001f;
@@ -72,6 +74,25 @@ static void OnTickRainbow()
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+
+		// Headlights too
+
+		TOGGLE_VEHICLE_MOD(veh, 22, true);
+		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, headlightColor);
+	}
+
+	// Headlight color switcher
+
+	static DWORD64 lastTick = GetTickCount64();
+	DWORD64 curTick = GetTickCount64();
+
+	if (lastTick < curTick - 50)
+	{
+		lastTick = curTick;
+		if (++headlightColor >= 13)
+		{
+			headlightColor = 0;
+		}
 	}
 }
 

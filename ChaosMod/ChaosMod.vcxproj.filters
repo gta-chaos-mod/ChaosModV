@@ -258,9 +258,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
