@@ -22,7 +22,7 @@ body {
 	--bar-font: var(--global-font-family);
 	--bar-height: 30px;
 	--bar-progression: #238beb;
-	--bar-progression-disabled: #9e9e9e;
+	--bar-progression-disabled: #8d8d8d;
 	--bar-text-color: var(--global-text-color);
 	--bar-text-color-disabled: #f3f3f3;
 	--bar-text-outline-color: var(--global-outline-color);
