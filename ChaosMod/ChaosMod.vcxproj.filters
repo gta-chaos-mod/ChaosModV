@@ -522,9 +522,6 @@
     <ClInclude Include="Memory\Snow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Memory\VehPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Effects\EffectsInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -550,6 +547,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mp3Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Vehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
