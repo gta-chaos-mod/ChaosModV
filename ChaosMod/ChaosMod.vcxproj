@@ -165,7 +165,7 @@
     <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsZombies.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBreak.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
@@ -175,7 +175,7 @@
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerMinus100k.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />

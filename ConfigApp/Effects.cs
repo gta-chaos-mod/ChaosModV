@@ -365,7 +365,7 @@ namespace ConfigApp
             {EffectType.EFFECT_QUICK_TIME, new EffectInfo("Timelapse", EffectCategory.TIME, "time_quickday", true)},
             {EffectType.EFFECT_MOV_NO_UD, new EffectInfo("Disable Forwards / Backwards Movement", EffectCategory.PLAYER, "player_noforwardbackward", true, true)},
             {EffectType.EFFECT_MOV_NO_LR, new EffectInfo("Disable Left / Right Movement", EffectCategory.PLAYER, "player_noleftright", true, true)},
-            {EffectType.EFFECT_BREAK, new EffectInfo("It's Time For A Break", EffectCategory.PLAYER, "player_break", true, true)},
+            {EffectType.EFFECT_BREAK, new EffectInfo("Autopilot", EffectCategory.PLAYER, "player_break", true, true)},
             {EffectType.EFFECT_EVERYONE_RPG, new EffectInfo("Give Everyone A RPG", EffectCategory.PEDS, "peds_giverpg")},
             {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stun Gun", EffectCategory.PEDS, "peds_stungun")},
             {EffectType.EFFECT_EVERYONE_MINIGUN, new EffectInfo("Give Everyone A Minigun", EffectCategory.PEDS, "peds_minigun")},
