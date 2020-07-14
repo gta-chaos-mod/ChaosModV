@@ -116,10 +116,10 @@ export class BarOverlay {
 		this.bars.forEach(bar => (bar.isDisabled = true));
 	}
 	private onUpdateVote(message: IChaosOverlayClientMessage): void {
-		const { voteOptions, votingMode } = message;
+		const { retainInitialVotes, voteOptions, votingMode } = message;
 		let { totalVotes } = message;
 
-		if (votingMode === 'PERCENTAGE') {
+		if (votingMode === 'PERCENTAGE' && (totalVotes === 0 || retainInitialVotes)) {
 			totalVotes += voteOptions.length;
 			voteOptions.forEach(_ => _.value++);
 		}
