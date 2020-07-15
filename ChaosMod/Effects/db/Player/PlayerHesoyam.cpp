@@ -19,6 +19,14 @@ static void OnStart()
 		STAT_GET_INT(hash, &money, -1);
 		STAT_SET_INT(hash, money + 250000, 1);
 	}
+
+	// Also repair vehicle
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+
+		SET_VEHICLE_FIXED(playerVeh);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_HEAL, OnStart);
