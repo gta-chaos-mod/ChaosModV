@@ -19,6 +19,7 @@ static void OnTick()
 			{
 				if (g_random.GetRandomInt(0, 1)) // random true / false to get ideally 50% of tires popped.
 				{
+					SET_VEHICLE_TYRES_CAN_BURST(veh, true);
 					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
 				}
 				else
