@@ -1,26 +1,10 @@
 #include <stdafx.h>
 
-static void OnStart()
-{
-	DECOR_REGISTER("_METEOR", 2);
-}
-
-static void OnStop()
-{
-	for (auto prop : GetAllProps())
-	{
-		if (DECOR_EXIST_ON(prop, "_METEOR"))
-		{
-			SET_OBJECT_AS_NO_LONGER_NEEDED(&prop);
-		}
-	}
-}
-
 static void OnTick()
 {
 	// Thanks to menyoo for the prop names
 	static const char* propNames[] = { "prop_asteroid_01", "prop_test_boulder_01", "prop_test_boulder_02", "prop_test_boulder_03", "prop_test_boulder_04" };
-	static constexpr int MAX_METEORS = 20;
+	static constexpr int MAX_METEORS = 25;
 
 	static Object meteors[MAX_METEORS] = {};
 	static int meteorDespawnTime[MAX_METEORS];
@@ -31,14 +15,14 @@ static void OnTick()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GetTickCount64();
 
-	if (meteorsAmount <= MAX_METEORS && curTick > lastTick + 500)
+	if (meteorsAmount <= MAX_METEORS && curTick > lastTick + 200)
 	{
 		lastTick = curTick;
 
 		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + g_random.GetRandomInt(-150, 150);
-		spawnPos.y = playerPos.y + g_random.GetRandomInt(-150, 150);
-		spawnPos.z = playerPos.z + g_random.GetRandomInt(75, 200);
+		spawnPos.x = playerPos.x + g_random.GetRandomInt(-100, 100);
+		spawnPos.y = playerPos.y + g_random.GetRandomInt(-100, 100);
+		spawnPos.z = playerPos.z + g_random.GetRandomInt(25, 50);
 
 		Hash choosenPropHash = GET_HASH_KEY(propNames[g_random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
@@ -48,7 +32,7 @@ static void OnTick()
 
 		for (int i = 0; i < MAX_METEORS; i++)
 		{
-			auto& prop = meteors[i];
+			Object& prop = meteors[i];
 			if (!prop)
 			{
 				prop = meteor;
@@ -57,10 +41,8 @@ static void OnTick()
 			}
 		}
 
-		DECOR_SET_BOOL(meteor, "_METEOR", true);
-
-		SET_OBJECT_PHYSICS_PARAMS(meteor, 50000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 50.f, 0, -1000.f, true, false, true, true);
+		SET_OBJECT_PHYSICS_PARAMS(meteor, 100000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 50.f, 0, -10000.f, true, false, true, true);
 
 		SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 	}
@@ -68,7 +50,7 @@ static void OnTick()
 	static DWORD64 lastTick2 = 0;
 	for (int i = 0; i < MAX_METEORS; i++)
 	{
-		auto& prop = meteors[i];
+		Object& prop = meteors[i];
 		if (prop)
 		{
 			if (DOES_ENTITY_EXIST(prop) && meteorDespawnTime[i] > 0)
@@ -101,4 +83,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_METEOR_RAIN, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_METEOR_RAIN, nullptr, nullptr, OnTick);
