@@ -75,21 +75,27 @@ static void OnTick()
 	{
 		if (zombie)
 		{
-			if (DOES_ENTITY_EXIST(zombie) && !IS_PED_DEAD_OR_DYING(zombie, true))
+			if (DOES_ENTITY_EXIST(zombie))
 			{
 				Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
 				{
-					if (IS_PED_RAGDOLL(zombie))
+					int maxHealth = GET_ENTITY_MAX_HEALTH(zombie);
+
+					if (maxHealth > 0 && IS_PED_INJURED(zombie))
 					{
 						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
 						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
 
 						SET_ENTITY_HEALTH(zombie, 0, false);
+						SET_ENTITY_MAX_HEALTH(zombie, 0);
 					}
 
-					continue;
+					if (!IS_PED_DEAD_OR_DYING(zombie, true))
+					{
+						continue;
+					}
 				}
 			}
 

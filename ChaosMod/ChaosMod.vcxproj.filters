@@ -14,7 +14,6 @@
     <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerTPGun.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
@@ -151,6 +150,7 @@
     <ClCompile Include="TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />

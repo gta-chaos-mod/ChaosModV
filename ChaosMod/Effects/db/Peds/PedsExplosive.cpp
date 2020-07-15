@@ -4,14 +4,19 @@ static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
 	{
-		if (!IS_PED_A_PLAYER(ped) && IS_PED_RAGDOLL(ped) && !IS_PED_DEAD_OR_DYING(ped, false))
+		if (!IS_PED_A_PLAYER(ped))
 		{
-			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
+			int maxHealth = GET_ENTITY_MAX_HEALTH(ped);
 
-			ADD_EXPLOSION(pedPos.x, pedPos.y, pedPos.z, 4, 9999.f, true, false, 1.f, false);
+			if (maxHealth > 0 && IS_PED_INJURED(ped))
+			{
+				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
-			// In case they're explosion proof
-			SET_ENTITY_HEALTH(ped, 0, false);
+				ADD_EXPLOSION(pedPos.x, pedPos.y, pedPos.z, 4, 9999.f, true, false, 1.f, false);
+
+				SET_ENTITY_HEALTH(ped, 0, false);
+				SET_ENTITY_MAX_HEALTH(ped, 0);
+			}
 		}
 	}
 }
