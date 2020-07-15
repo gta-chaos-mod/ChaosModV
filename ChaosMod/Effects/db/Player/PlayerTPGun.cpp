@@ -1,29 +1,33 @@
 #include <stdafx.h>
 
 /**
- * Effect by: https://github.com/Elias-Graf
+ * Effect by: https://github.com/Elias-Graf, modified
  **/
 
 static void OnTick()
 {
-	static auto player = PLAYER_PED_ID();
-	static auto playerShoot = false;
-
-	if (IS_PED_SHOOTING(player))
+	for (Ped ped : GetAllPeds())
 	{
-		playerShoot = true;
-	}
+		if (IS_PED_SHOOTING(ped))
+		{
+			Vector3 impactCoords;
+			if (GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
+			{
+				Entity toTeleport = ped;
 
-	// Bullet Impact Coords
-	auto BIC = Vector3();
-	// If the player shot, and the bullet impacted (takes some time), teleport the
-	// player
-	if (playerShoot && GET_PED_LAST_WEAPON_IMPACT_COORD(player, &BIC))
-	{
-		playerShoot = false;
+				if (IS_PED_IN_ANY_VEHICLE(ped, false))
+				{
+					toTeleport = GET_VEHICLE_PED_IS_IN(ped, false);
+				}
 
-		SET_ENTITY_COORDS(player, BIC.x, BIC.y, BIC.z, 1, 0, 0, true);
+				float heading = GET_ENTITY_HEADING(toTeleport);
+				Vector3 vel = GET_ENTITY_VELOCITY(toTeleport);
+				SET_ENTITY_COORDS(toTeleport, impactCoords.x, impactCoords.y, impactCoords.z, false, false, false, false);
+
+				SET_ENTITY_VELOCITY(toTeleport, vel.x, vel.y, vel.z);
+			}
+		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_PORTAL_GUN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick);
