@@ -88,6 +88,8 @@ namespace ConfigApp
             if (!m_effectDataMap.TryGetValue(effectType, out EffectData effectData))
             {
                 effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null);
+
+                m_effectDataMap.Add(effectType, effectData);
             }
 
             return effectData;
