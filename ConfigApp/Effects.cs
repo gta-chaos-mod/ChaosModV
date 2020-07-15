@@ -238,6 +238,7 @@ namespace ConfigApp
             EFFECT_VEH_DESPAWN,
             EFFECT_PEDS_SCOOTERBROTHERS,
             EFFECT_PEDS_INTORANDOMVEHS,
+            EFFECT_PEDS_CAT_GUNS,
             _EFFECT_ENUM_MAX
         }
 
@@ -441,6 +442,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
             {EffectType.EFFECT_PEDS_SCOOTERBROTHERS, new EffectInfo("Scooter Brothers", EffectCategory.PEDS, "peds_scooterbrothers")},
             {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set Everyone Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
+            {EffectType.EFFECT_PEDS_CAT_GUNS, new EffectInfo("Cat Guns", EffectCategory.PEDS, "peds_catguns", true)},
         };
     }
 }

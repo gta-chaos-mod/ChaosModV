@@ -1,12 +1,12 @@
 /*
-	Effect by Lucas7yoshi
+	Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
 
 static void OnStart()
 {
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		SET_PED_TO_RAGDOLL(ped, 10000, 10000, 0, true, true, false);
 	}

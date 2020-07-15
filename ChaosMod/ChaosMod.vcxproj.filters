@@ -80,7 +80,6 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
@@ -150,6 +149,8 @@
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
