@@ -137,7 +137,6 @@
     <ClCompile Include="Effects\db\Peds\PedsLaunchNearbyPeds.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNearbyFlee.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
