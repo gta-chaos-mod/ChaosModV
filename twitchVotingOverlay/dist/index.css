@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
 
-html,
-body {
+* {
 	margin: 0;
 	padding: 0;
 }
@@ -13,16 +12,19 @@ body {
 	--global-font-weight: 600;
 	--global-outline-color: #000000;
 	--global-outline-thickness: 0.25px;
-	--global-text-color: #ffffff;
+	--global-text-color: #f1f1f1;
 
 	/* More specific variables (often use globals) */
 	--bar-background: #727272;
+	--bar-background-disabled: #afafaf;
 	--bar-font-size: var(--global-font-size);
 	--bar-font-weight: var(--global-font-weight);
 	--bar-font: var(--global-font-family);
 	--bar-height: 30px;
 	--bar-progression: #238beb;
+	--bar-progression-disabled: #8d8d8d;
 	--bar-text-color: var(--global-text-color);
+	--bar-text-color-disabled: #f3f3f3;
 	--bar-text-outline-color: var(--global-outline-color);
 	--bar-text-outline-thickness: var(--global-outline-thickness);
 }
@@ -34,17 +36,24 @@ body {
 #totalVotes {
 	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
 
+	opacity: 0;
+	transition: opacity 200ms ease-in-out;
 	color: var(--global-text-color);
 	font-family: var(--global-font-family);
-	font-size: var(--bar-font-size);
+	font-size: 15pt;
 	font-weight: var(--global-font-family);
 }
 
 .bar {
+	transition: background-color 100ms ease-in-out;
 	background-color: var(--bar-background);
 	height: var(--bar-height);
 	margin: 10px 0;
 	position: relative;
+}
+
+.bar.disabled {
+	background-color: var(--bar-background-disabled);
 }
 
 .bar > .labelContainer {
@@ -66,12 +75,22 @@ body {
 	font-family: var(--bar-font);
 	font-size: var(--bar-font-size);
 	font-weight: var(--bar-font-weight);
+	transition: color 100ms ease-in-out;
+}
+
+.bar > .labelContainer.disabled > span {
+	-webkit-text-stroke: unset;
+	color: var(--bar-text-color-disabled);
 }
 
 .bar > .progression {
 	background-color: var(--bar-progression);
 	height: 100%;
 	transition: width 0.3s ease-in-out;
+}
+
+.bar > .progression.disabled {
+	background-color: var(--bar-progression-disabled);
 }
 
 .slideIn {

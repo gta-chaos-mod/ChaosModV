@@ -2,6 +2,16 @@
 
 static void OnStart()
 {
+	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
+	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+
+	Hash relationshipGroup;
+	ADD_RELATIONSHIP_GROUP("_HOSTILE_REVIVED", &relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
+
 	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped) && IS_PED_DEAD_OR_DYING(ped, false))
@@ -40,6 +50,8 @@ static void OnStart()
 
 			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
+			bool isMissionEntityCorpse = IS_ENTITY_A_MISSION_ENTITY(ped);
+
 			// Deleting the corpse requires the corpse to be a mission entity
 			SET_ENTITY_AS_MISSION_ENTITY(ped, false, false);
 			DELETE_PED(&ped);
@@ -53,7 +65,22 @@ static void OnStart()
 				SET_ENTITY_COORDS(clone, pedPos.x, pedPos.y, pedPos.z, false, false, false, false);
 			}
 
-			SET_PED_AS_NO_LONGER_NEEDED(&clone);
+			SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
+			SET_PED_HEARING_RANGE(clone, 9999.f);
+			SET_PED_CONFIG_FLAG(clone, 281, true);
+			SET_PED_COMBAT_ATTRIBUTES(clone, 5, true);
+			SET_PED_COMBAT_ATTRIBUTES(clone, 46, true);
+			SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(clone, false);
+			SET_RAGDOLL_BLOCKING_FLAGS(clone, 5);
+			SET_PED_SUFFERS_CRITICAL_HITS(clone, false);
+
+			SET_PED_ACCURACY(clone, 100);
+			SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
+
+			if (!isMissionEntityCorpse)
+			{
+				SET_PED_AS_NO_LONGER_NEEDED(&clone);
+			}
 		}
 	}
 }

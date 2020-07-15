@@ -10,6 +10,12 @@ if (TOTAL_VOTES === null) throw new Error('could not find total votes element in
 
 const OVERLAY_CLIENT = new ChaosOverlayClient('ws://localhost:9091');
 
+OVERLAY_CLIENT.addConnectListener(() => {
+	TOTAL_VOTES.style.opacity = '1';
+});
+OVERLAY_CLIENT.addDisconnectListener(() => {
+	TOTAL_VOTES.style.opacity = '0';
+});
 OVERLAY_CLIENT.addUpdateVoteListener(message => {
 	TOTAL_VOTES.innerText = `Total Votes: ${message.totalVotes}`;
 });

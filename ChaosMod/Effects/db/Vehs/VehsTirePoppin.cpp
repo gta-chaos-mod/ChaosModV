@@ -2,7 +2,7 @@
 
 static void OnStop()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		for (int i = 0; i < 47; i++)
 		{
@@ -13,10 +13,11 @@ static void OnStop()
 
 static void OnTick()
 {
-	for (auto veh : GetAllVehs())
+	for (Vehicle veh : GetAllVehs())
 	{
 		for (int i = 0; i < 48; i++)
 		{
+			SET_VEHICLE_TYRES_CAN_BURST(veh, true);
 			SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
 		}
 	}

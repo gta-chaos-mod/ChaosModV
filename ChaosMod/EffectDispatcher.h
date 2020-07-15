@@ -13,7 +13,8 @@ class EffectDispatcher
 {
 public:
 	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
-		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, TwitchOverlayMode twitchOverlayMode);
+		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
+		TwitchOverlayMode twitchOverlayMode);
 	~EffectDispatcher();
 
 public:
@@ -72,7 +73,8 @@ private:
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
 	bool m_dispatchEffectsOnTimer = true;
-	TwitchOverlayMode m_twitchOverlayMode;
+	const bool m_enableTwitchVoting;
+	const TwitchOverlayMode m_twitchOverlayMode;
 };
 
 inline std::unique_ptr<EffectDispatcher> g_effectDispatcher;

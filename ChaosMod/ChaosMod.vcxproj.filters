@@ -84,9 +84,6 @@
     <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsNoHeadshots.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
     <ClCompile Include="Effects\db\Player\PlayerBlind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerBreak.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,9 +151,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerMinus100k.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp">
@@ -262,9 +253,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp">
@@ -478,6 +466,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Effects\db\Player\PlayerTPGun.cpp">
+    <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\db\Player\PlayerPoor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -525,9 +517,6 @@
     <ClInclude Include="Memory\Snow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Memory\VehPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Effects\EffectsInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -553,6 +542,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mp3Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Vehicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

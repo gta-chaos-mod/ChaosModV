@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Handle.h"
+class Handle;
+enum MH_STATUS;
+
+#include <string>
 
 namespace Memory
 {

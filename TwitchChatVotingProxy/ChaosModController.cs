@@ -21,7 +21,9 @@ namespace TwitchChatVotingProxy
         private IOverlayServer? overlayServer;
         private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
         private Random random = new Random();
+        private Boolean retainInitialVotes;
         private int voteCounter = 0;
+        private bool voteRunning = false;
         private EVotingMode? votingMode;
         private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
@@ -48,6 +50,7 @@ namespace TwitchChatVotingProxy
             // Setup config options
             votingMode = config.VotingMode;
             overlayMode = config.OverlayMode;
+            retainInitialVotes = config.RetainInitalVotes;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -86,18 +89,19 @@ namespace TwitchChatVotingProxy
         private int GetVoteResultByPercentage()
         {
             // Get total votes
+            var votes = activeVoteOptions.Select(_ => retainInitialVotes ? _.Votes + 1 : _.Votes).ToList();
             var totalVotes = 0;
-            activeVoteOptions.ForEach(_ => totalVotes += _.Votes);
+            votes.ForEach(_ => totalVotes += _);
             // If we have no votes, choose one at random
-            if (totalVotes == 0) return random.Next(0, activeVoteOptions.Count);
+            if (totalVotes == 0) return random.Next(0, votes.Count);
             // Select a random vote from all votes
             var selectedVote = random.Next(1, totalVotes + 1);
             // Now find out in what vote range/option that vote is
             var voteRange = 0;
             var selectedOption = 0;
-            for (var i = 0; i < activeVoteOptions.Count; i++)
+            for (var i = 0; i < votes.Count; i++)
             {
-                voteRange += activeVoteOptions[i].Votes;
+                voteRange += votes[i];
                 if (selectedVote <= voteRange)
                 {
                     selectedOption = i;
@@ -140,6 +144,9 @@ namespace TwitchChatVotingProxy
                     e.ChosenOption = GetVoteResultByPercentage();
                     break;
             }
+
+            // Vote round ended
+            voteRunning = false;
         }
         /// <summary>
         /// Is called when the chaos mod start a new vote (callback)
@@ -196,6 +203,9 @@ namespace TwitchChatVotingProxy
             userVotedFor.Clear();
             // Increase the vote counter
             voteCounter++;
+
+            // Vote round started now
+            voteRunning = true;
         }
         /// <summary>
         /// Is called when the chaos mod stars a no voting round (callback)
@@ -209,6 +219,8 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
+            if (!voteRunning) return;
+
             for (int i = 0; i < activeVoteOptions.Count; i++)
             {
                 var voteOption = activeVoteOptions[i];

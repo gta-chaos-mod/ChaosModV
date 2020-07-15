@@ -110,7 +110,7 @@ void ParseEffectsFile()
 		}
 
 		EffectData effectData;
-		effectData.TimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]); // Dang
+		effectData.TimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_DEFAULT ? effectInfo.IsShortDuration : values[1]);
 		effectData.CustomTime = values[2];
 		effectData.WeightMult = values[3];
 		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
@@ -143,7 +143,7 @@ void Main::Init()
 	g_random.SetSeed(seed);
 
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
-		twitchOverlayMode);
+		enableTwitchVoting, twitchOverlayMode);
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;
@@ -196,7 +196,7 @@ void Main::MainLoop()
 		if (splashTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mod by pongo1231\n\nContributors:\nLucas7yoshi\nyzimroni");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mod by pongo1231\n\nContributors:\nLucas7yoshi\nyzimroni\nAduentix");
 			SET_TEXT_SCALE(.65f, .65f);
 			SET_TEXT_COLOUR(0, 255, 255, 255);
 			SET_TEXT_CENTRE(true);

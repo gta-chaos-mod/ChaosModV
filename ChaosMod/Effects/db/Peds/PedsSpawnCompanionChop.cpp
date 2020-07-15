@@ -10,11 +10,12 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
 
-	auto playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	auto ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+	Ped ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 0, false);
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+	SET_PED_HEARING_RANGE(ped, 9999.f);
 
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 

@@ -4,17 +4,6 @@
 
 #include <stdafx.h>
 
-static void OnStop()
-{
-	for (Vehicle veh : GetAllVehs())
-	{
-		for (int i = 0; i < 48; i++)
-		{
-			SET_VEHICLE_TYRE_FIXED(veh, i);
-		}
-	}
-}
-
 static void OnTick()
 {
 	static DWORD64 lastTick = GetTickCount64();
@@ -30,6 +19,7 @@ static void OnTick()
 			{
 				if (g_random.GetRandomInt(0, 1)) // random true / false to get ideally 50% of tires popped.
 				{
+					SET_VEHICLE_TYRES_CAN_BURST(veh, true);
 					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
 				}
 				else
@@ -41,4 +31,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick);

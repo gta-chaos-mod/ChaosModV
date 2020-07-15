@@ -11,13 +11,15 @@ namespace TwitchChatVotingProxy.OverlayServer
     /// </summary>
     class OverlayServerConfig
     {
-        public OverlayServerConfig(EVotingMode votingMode, int? port)
+        public bool RetainInitialVotes { get; set; }
+        public EVotingMode VotingMode { get; set; }
+        public int Port { get; set; }
+
+        public OverlayServerConfig(EVotingMode votingMode, bool retainInitialVotes, int? port)
         {
+            RetainInitialVotes = retainInitialVotes;
             VotingMode = votingMode;
             Port = port == null ? 9091 : (int)port;
         }
-
-        public EVotingMode VotingMode { get; set; }
-        public int Port { get; set; }
     }
 }

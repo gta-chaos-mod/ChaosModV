@@ -140,7 +140,6 @@
     <ClCompile Include="Effects\db\Peds\PedsMinDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNearbyFlee.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsNoHeadshots.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
@@ -166,7 +165,7 @@
     <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsZombies.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBreak.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
@@ -176,7 +175,7 @@
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerMinus100k.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
@@ -229,7 +228,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsRainbowHeadlights.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
@@ -259,7 +257,7 @@
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\Snow.h" />
-    <ClInclude Include="Memory\VehPool.h" />
+    <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="nativesNoNamespaces.h" />
     <ClInclude Include="OptionsFile.h" />

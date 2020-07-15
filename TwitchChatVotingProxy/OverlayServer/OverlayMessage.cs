@@ -5,6 +5,7 @@
     /// </summary>
     class OverlayMessage
     {
+        public bool retainInitialVotes { get; set; }
         /// <summary>
         /// request type
         /// </summary>

@@ -20,6 +20,7 @@ static void OnStart()
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+	SET_PED_HEARING_RANGE(ped, 9999.f);
 
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 

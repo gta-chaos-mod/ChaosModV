@@ -13,4 +13,4 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MINUS_100K, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_POOR, OnStart);

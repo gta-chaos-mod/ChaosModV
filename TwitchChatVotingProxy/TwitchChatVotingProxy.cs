@@ -51,7 +51,7 @@ namespace TwitchChatVotingProxy
             if (config.OverlayMode == EOverlayMode.OVERLAY_OBS)
             {
                 // Create overlay server config
-                OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.OverlayServerPort);
+                OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.RetainInitalVotes, config.OverlayServerPort);
 
                 // Create component
                 overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
