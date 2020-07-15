@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
 EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, TwitchOverlayMode twitchOverlayMode)
+	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
+	TwitchOverlayMode twitchOverlayMode)
 	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
-	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_twitchOverlayMode(twitchOverlayMode)
+	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
 }
@@ -34,7 +35,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 	// Effect Texts
 	float y = .2f;
-	if (m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME || m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_OBS)
+	if (m_enableTwitchVoting && (m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_INGAME || m_twitchOverlayMode == TwitchOverlayMode::OVERLAY_OBS))
 	{
 		y = .35f;
 	}

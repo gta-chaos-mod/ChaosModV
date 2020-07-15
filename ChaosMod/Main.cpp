@@ -143,7 +143,7 @@ void Main::Init()
 	g_random.SetSeed(seed);
 
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
-		twitchOverlayMode);
+		enableTwitchVoting, twitchOverlayMode);
 
 #ifdef _DEBUG
 	std::vector<EffectType> enabledEffectTypes;

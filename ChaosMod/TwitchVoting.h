@@ -36,10 +36,10 @@ private:
 	bool m_noVoteRound = false;
 	bool m_receivedFirstPing = false;
 	bool m_alternatedVotingRound = false;
-	TwitchOverlayMode m_twitchOverlayMode;
-	bool m_enableTwitchChanceSystem;
-	bool m_enableVotingChanceSystemRetainChance;
-	bool m_enableTwitchRandomEffectVoteable;
+	const TwitchOverlayMode m_twitchOverlayMode;
+	const bool m_enableTwitchChanceSystem;
+	const bool m_enableVotingChanceSystemRetainChance;
+	const bool m_enableTwitchRandomEffectVoteable;
 
 	bool m_isVotingRunning = false;
 
