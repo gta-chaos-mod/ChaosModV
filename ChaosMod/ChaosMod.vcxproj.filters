@@ -465,6 +465,7 @@
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Effects\db\Player\PlayerTPGun.cpp">
     <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
