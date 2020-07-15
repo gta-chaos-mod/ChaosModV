@@ -37,7 +37,10 @@ static void OnTick()
 	static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
 	static Ped zombies[MAX_ZOMBIES] = {};
 	static int zombiesAmount = 0;
-	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+
+	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
 	if (zombiesAmount <= MAX_ZOMBIES)
 	{
 		Vector3 spawnPos;
@@ -62,10 +65,10 @@ static void OnTick()
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
 
-			SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
+			//SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
 			DISABLE_PED_PAIN_AUDIO(zombie, true);
 
-			TASK_COMBAT_PED(zombie, PLAYER_PED_ID(), 0, 16);
+			TASK_COMBAT_PED(zombie, playerPed, 0, 16);
 
 			SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 		}
@@ -82,18 +85,18 @@ static void OnTick()
 				{
 					int maxHealth = GET_ENTITY_MAX_HEALTH(zombie);
 
-					if (maxHealth > 0 && IS_PED_INJURED(zombie))
+					if (maxHealth > 0)
 					{
-						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
+						if (IS_PED_INJURED(zombie))
+						{
+							Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
-						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+							ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
 
-						SET_ENTITY_HEALTH(zombie, 0, false);
-						SET_ENTITY_MAX_HEALTH(zombie, 0);
-					}
+							SET_ENTITY_HEALTH(zombie, 0, false);
+							SET_ENTITY_MAX_HEALTH(zombie, 0);
+						}
 
-					if (!IS_PED_DEAD_OR_DYING(zombie, true))
-					{
 						continue;
 					}
 				}
