@@ -49,6 +49,49 @@ static void OnTick()
 	{
 		SET_WEATHER_TYPE_NOW("THUNDER");
 	}
+
+	// Random right / left steering
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
+		{
+			return;
+		}
+
+		static DWORD64 timeUntilSteer = GetTickCount64();
+		static bool enableDrunkSteering = false;
+		static float steering;
+
+		if (enableDrunkSteering)
+		{
+			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
+		}
+
+		DWORD64 curTick = GetTickCount64();
+
+		if (timeUntilSteer < curTick)
+		{
+			timeUntilSteer = GetTickCount64();
+
+			if (enableDrunkSteering)
+			{
+				// Give player back control
+
+				timeUntilSteer += g_random.GetRandomInt(50, 250);
+			}
+			else
+			{
+				// Take control from player
+
+				steering = GET_RANDOM_FLOAT_IN_RANGE(-.7f, .7f);
+
+				timeUntilSteer += g_random.GetRandomInt(50, 300);
+			}
+
+			enableDrunkSteering = !enableDrunkSteering;
+		}
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_TOTAL_CHAOS, OnStart, OnStop, OnTick);
