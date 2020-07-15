@@ -16,6 +16,8 @@ namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
+        private bool m_initializedTitle = false;
+
         private OptionsFile m_configFile = new OptionsFile("config.ini");
         private OptionsFile m_twitchFile = new OptionsFile("twitch.ini");
         private OptionsFile m_effectsFile = new OptionsFile("effects.ini");
@@ -39,7 +41,12 @@ namespace ConfigApp
                 "OBS Overlay"
             };
 
-            Title += " (v" + Info.VERSION + ")";
+            if (!m_initializedTitle)
+            {
+                m_initializedTitle = true;
+
+                Title += " (v" + Info.VERSION + ")";
+            }
 
             CheckForUpdates();
 
