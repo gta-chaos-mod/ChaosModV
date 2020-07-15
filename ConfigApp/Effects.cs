@@ -278,7 +278,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_RANDOM, new EffectInfo("Teleport To Random Location", EffectCategory.PLAYER, "tp_random")},
             {EffectType.EFFECT_NO_PHONE, new EffectInfo("No Phone", EffectCategory.MISC, "player_nophone", true)},
             {EffectType.EFFECT_SET_INTO_CLOSEST_VEH, new EffectInfo("Set Player Into Closest Vehicle", EffectCategory.PLAYER, "player_tpclosestveh")},
-            {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("All Peds Exit Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
+            {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("Everyone Exits Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
             {EffectType.EFFECT_GAMESPEED_X02, new EffectInfo("x0.2 Gamespeed", EffectCategory.TIME, "time_x02", true, true)},
             {EffectType.EFFECT_GAMESPEED_X05, new EffectInfo("x0.5 Gamespeed", EffectCategory.TIME, "time_x05", true, true)},
             {EffectType.EFFECT_GAMESPEED_LAG, new EffectInfo("Lag", EffectCategory.TIME, "time_lag", true, true)},
@@ -319,7 +319,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SUPER_RUN, new EffectInfo("Super Run", EffectCategory.PLAYER, "player_superrun", true)},
             {EffectType.EFFECT_SUPER_JUMP, new EffectInfo("Super Jump", EffectCategory.PLAYER, "player_superjump", true)},
             {EffectType.EFFECT_PLAYER_RAGDOLL, new EffectInfo("Ragdoll", EffectCategory.PLAYER, "player_ragdoll")},
-            {EffectType.EFFECT_PEDS_RAGDOLL, new EffectInfo("All Peds Ragdoll", EffectCategory.PEDS, "peds_ragdoll")},
+            {EffectType.EFFECT_PEDS_RAGDOLL, new EffectInfo("Everyone Ragdolls", EffectCategory.PEDS, "peds_ragdoll")},
             {EffectType.EFFECT_PEDS_RAGDOLL_ON_TOUCH, new EffectInfo("Sensitive Touch", EffectCategory.PEDS, "peds_sensitivetouch", true)},
             {EffectType.EFFECT_MINUS_100K, new EffectInfo("Poor Boy", EffectCategory.PLAYER, "poorboi")},
             {EffectType.EFFECT_PEDS_FOLLOW_PLAYER, new EffectInfo("You Are Famous", EffectCategory.PEDS, "player_famous", true)},
@@ -442,7 +442,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
             {EffectType.EFFECT_PEDS_SCOOTERBROTHERS, new EffectInfo("Scooter Brothers", EffectCategory.PEDS, "peds_scooterbrothers")},
-            {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set All Peds Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
+            {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set Everyone Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
         };
     }
 }
