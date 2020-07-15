@@ -84,9 +84,6 @@
     <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsNoHeadshots.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

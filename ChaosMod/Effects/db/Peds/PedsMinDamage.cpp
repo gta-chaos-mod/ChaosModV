@@ -8,7 +8,7 @@ static void OnStop()
 	SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f, true);
 	SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), 1.f);
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped))
 		{
@@ -26,7 +26,7 @@ static void OnTick()
 	SET_PLAYER_MELEE_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), .1f, true);
 	SET_PLAYER_WEAPON_DAMAGE_MODIFIER(PLAYER_ID(), .1f);
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped))
 		{
