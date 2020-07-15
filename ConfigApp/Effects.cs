@@ -319,7 +319,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SUPER_RUN, new EffectInfo("Super Run", EffectCategory.PLAYER, "player_superrun", true)},
             {EffectType.EFFECT_SUPER_JUMP, new EffectInfo("Super Jump", EffectCategory.PLAYER, "player_superjump", true)},
             {EffectType.EFFECT_PLAYER_RAGDOLL, new EffectInfo("Ragdoll", EffectCategory.PLAYER, "player_ragdoll")},
-            {EffectType.EFFECT_PEDS_RAGDOLL, new EffectInfo("Everyone Ragdolls", EffectCategory.PEDS, "peds_ragdoll")},
+            {EffectType.EFFECT_PEDS_RAGDOLL, new EffectInfo("Ragdoll Everyone", EffectCategory.PEDS, "peds_ragdoll")},
             {EffectType.EFFECT_PEDS_RAGDOLL_ON_TOUCH, new EffectInfo("Sensitive Touch", EffectCategory.PEDS, "peds_sensitivetouch", true)},
             {EffectType.EFFECT_MINUS_100K, new EffectInfo("Poor Boy", EffectCategory.PLAYER, "poorboi")},
             {EffectType.EFFECT_PEDS_FOLLOW_PLAYER, new EffectInfo("You Are Famous", EffectCategory.PEDS, "player_famous", true)},

@@ -8,6 +8,8 @@ static void OnStart()
 {
 	for (Ped ped : GetAllPeds())
 	{
+		CLEAR_PED_TASKS_IMMEDIATELY(ped);
+
 		SET_PED_TO_RAGDOLL(ped, 10000, 10000, 0, true, true, false);
 	}
 }
