@@ -87,7 +87,6 @@
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
