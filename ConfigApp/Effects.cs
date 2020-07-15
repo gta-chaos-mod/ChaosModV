@@ -358,7 +358,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MOV_NO_UD, new EffectInfo("Disable Forwards / Backwards Movement", EffectCategory.PLAYER, "player_noforwardbackward", true, true)},
             {EffectType.EFFECT_MOV_NO_LR, new EffectInfo("Disable Left / Right Movement", EffectCategory.PLAYER, "player_noleftright", true, true)},
             {EffectType.EFFECT_BREAK, new EffectInfo("Autopilot", EffectCategory.PLAYER, "player_break", true, true)},
-            {EffectType.EFFECT_EVERYONE_RPG, new EffectInfo("Give Everyone A RPG", EffectCategory.PEDS, "peds_giverpg")},
+            {EffectType.EFFECT_EVERYONE_RPG, new EffectInfo("Give Everyone An RPG", EffectCategory.PEDS, "peds_giverpg")},
             {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stun Gun", EffectCategory.PEDS, "peds_stungun")},
             {EffectType.EFFECT_EVERYONE_MINIGUN, new EffectInfo("Give Everyone A Minigun", EffectCategory.PEDS, "peds_minigun")},
             {EffectType.EFFECT_EVERYONE_UPNATOMIZER, new EffectInfo("Give Everyone An Up-N-Atomizer", EffectCategory.PEDS, "peds_upnatomizer")},
