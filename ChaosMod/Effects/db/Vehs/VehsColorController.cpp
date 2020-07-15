@@ -54,26 +54,42 @@ static void OnTickPink()
 
 static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, nullptr, OnTickPink);
 
+static void OnStopRainbow()
+{
+	for (int i = 0; i < 13; i++)
+	{
+		Memory::OverrideVehicleHeadlightColor(i, false, 0, 0, 0);
+	}
+}
+
 static void OnTickRainbow()
 {
 	static int headlightColor = 0;
 
+	static ULONG cnt = 0;
+	static const float freq = .1f;
+
+	if (++cnt >= (ULONG)-1)
+	{
+		cnt = 0;
+	}
+
 	for (Vehicle veh : GetAllVehs())
 	{
-		static ULONG cnt = 0;
-		static constexpr float freq = .001f;
-
-		int r = std::sin(freq * cnt) * 127 + 128;
-		int g = std::sin(freq * cnt + 2) * 127 + 128;
-		int b = std::sin(freq * cnt + 4) * 127 + 128;
-
-		if (++cnt >= (ULONG)-1)
-		{
-			cnt = 0;
-		}
+		int r = std::sin(veh + freq * cnt) * 127 + 128;
+		int g = std::sin(veh + freq * cnt + 2) * 127 + 128;
+		int b = std::sin(veh + freq * cnt + 4) * 127 + 128;
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+
+		// Neon lights
+
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, r, g, b);
+		for (int i = 0; i < 4; i++)
+		{
+			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
+		}
 
 		// Headlights too
 
@@ -83,17 +99,14 @@ static void OnTickRainbow()
 
 	// Headlight color switcher
 
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	int r = std::sin(freq * cnt) * 127 + 128;
+	int g = std::sin(freq * cnt + 2) * 127 + 128;
+	int b = std::sin(freq * cnt + 4) * 127 + 128;
 
-	if (lastTick < curTick - 50)
+	for (int i = 0; i < 13; i++)
 	{
-		lastTick = curTick;
-		if (++headlightColor >= 13)
-		{
-			headlightColor = 0;
-		}
+		Memory::OverrideVehicleHeadlightColor(i, true, r, g, b);
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, nullptr, OnTickRainbow);
+static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, OnStopRainbow, OnTickRainbow);

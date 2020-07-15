@@ -88,4 +88,47 @@ namespace Memory
 			*reinterpret_cast<BYTE*>(v6 + 2341) |= state;
 		}
 	}
+
+	inline void OverrideVehicleHeadlightColor(int index, bool overrideColor, int r, int g, int b)
+	{
+		static DWORD64* qword_7FF69E1E8E88 = nullptr;
+
+		static const int maxColors = 13;
+		static DWORD origColors[maxColors] = { };
+
+		if (index >= maxColors)
+		{
+			return;
+		}
+
+		if (!qword_7FF69E1E8E88)
+		{
+			Handle handle;
+
+			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 33 C0 E8 ? ? ? ? 4C 8D 0D");
+			if (!handle.IsValid())
+			{
+				return;
+			}
+
+			qword_7FF69E1E8E88 = handle.At(2).Into().Get<DWORD64>();
+		}
+
+		DWORD* colors = *reinterpret_cast<DWORD**>(*qword_7FF69E1E8E88 + 328);
+
+		if (!origColors[0])
+		{
+			// Orig colors not backed up yet, do it now
+
+			for (int i = 0; i < maxColors; i++)
+			{
+				origColors[i] = colors[i * 4];
+			}
+		}
+
+		DWORD newColor = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
+
+		colors[index * 4] = overrideColor ? newColor : origColors[index];
+		colors[index * 4 + 1] = overrideColor ? newColor : origColors[index];
+	}
 }
