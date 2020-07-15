@@ -118,11 +118,9 @@
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCops.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDrivebyPlayer.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEveryoneWepController.cpp" />
@@ -131,7 +129,7 @@
     <ClCompile Include="Effects\db\Peds\PedsFrozen.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGTAOTraffic.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIgniteNearby.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsIgnorePlayer.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInvinciblePeds.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInvisiblePeds.cpp" />

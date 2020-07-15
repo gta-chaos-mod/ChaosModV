@@ -1,552 +1,186 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="DebugMenu.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="EffectDispatcher.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTPGun.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMoneyRain.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNightVision.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoHUD.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoPhone.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNothing.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOneShot.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
+    <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsCops.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsDrivebyPlayer.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsEveryoneWepController.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExplosive.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFollowPlayer.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFrozen.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGTAOTraffic.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsIgniteNearby.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsInvinciblePeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsInvisiblePeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsJumpy.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsLaunchNearbyPeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsMinDamage.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNearbyFlee.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsPhones.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsRiot.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsScooterBrothers.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryAlien.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus2.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionBrad.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionChimp.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionChop.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionRandom.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnDancingApes.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnFanCats.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnHostileRandom.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnImpotentRage.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpeechController.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsStripWeapons.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsZombies.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoSprint.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRagdollOnShot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRandomClothes.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSetIntoClosestVeh.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSetIntoRandomVeh.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSuicide.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSuperJump.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSuperRun.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpController.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWeaponLock.cpp" />
+    <ClCompile Include="Effects\db\Time\TimeController.cpp" />
+    <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsAllHorn.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsAllVehsLaunchUp.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsCinematicCam.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsColorController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsEngineMultiplierController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsExplodeNearby.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsFullAccel.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsHonkBoosting.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsInvincible.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsInvisible.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsSpeedMin.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsBreakDoors.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehExplode.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
+    <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Memory.cpp" />
+    <ClCompile Include="OptionsFile.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TwitchVoting.cpp" />
+    <ClCompile Include="Mp3Manager.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectDispatcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugMenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TwitchVoting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Memory\Memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsBlind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsDrivebyPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsEveryoneWepController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsExplosive.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsFollowPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsFrozen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsGTAOTraffic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsIgniteNearby.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsIgnorePlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsInvinciblePeds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsInvisiblePeds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsMinDamage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsNearbyFlee.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsNoFear.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsNoRagdoll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsObliterateNearby.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsOHKO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsRiot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionBrad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionChimp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionChop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnImpotentRage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpeechController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsStripWeapons.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsZombies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerBlind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerExplosiveBullets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNoJump.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerNoSprint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerRagdollOnShot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerRandomClothes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerSetIntoClosestVeh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerSetIntoRandomVeh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerSuicide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerSuperJump.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerSuperRun.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerTpController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Time\TimeController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsAllHorn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsAllVehsLaunchUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsCinematicCam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsColorController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsEngineMultiplierController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsExplodeNearby.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsFullAccel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsHonkBoosting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsInvincible.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsInvisible.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsNoGrav.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsNoTraffic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehExplode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Weather\WeatherController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscMoneyRain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscNightVision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscNoHUD.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscNoPhone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscNothing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsTriggerAlarm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscWaves.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsSpeedMin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnFanCats.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsCops.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsLaunchNearbyPeds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryAlien.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerClone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsJumpy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnCompanionRandom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnDancingApes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscOneShot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsPhones.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionsFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsSpawnHostileRandom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mp3Manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerWeaponLock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsScooterBrothers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsBreakDoors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerTPGun.cpp">
-    <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Effects\db\Player\PlayerPoor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="DebugMenu.h" />
+    <ClInclude Include="EffectDispatcher.h" />
+    <ClInclude Include="Effects\EffectHandler.h" />
+    <ClInclude Include="Effects\Effect.h" />
+    <ClInclude Include="Effects\EffectsInfo.h" />
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Handle.h" />
+    <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="Memory\Snow.h" />
+    <ClInclude Include="Memory\Vehicle.h" />
+    <ClInclude Include="Memory\WeaponPool.h" />
+    <ClInclude Include="nativesNoNamespaces.h" />
+    <ClInclude Include="OptionsFile.h" />
+    <ClInclude Include="Random.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TwitchVoting.h" />
+    <ClInclude Include="Util\EntityIterator.h" />
+    <ClInclude Include="Util\Model.h" />
+    <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Util\TryParse.h" />
+    <ClInclude Include="Util\Player.h" />
+    <ClInclude Include="Util\Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectDispatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nativesNoNamespaces.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\EffectHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TwitchVoting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\Memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\Handle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\WeaponPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\Gravity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\Snow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\EffectsInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\EntityIterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\Vehicle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionsFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Effects\Effect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\TryParse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mp3Manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\Vehicle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
