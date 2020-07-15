@@ -2,7 +2,7 @@
 
 static void OnStartMaxUpgrades()
 {
-	int count = 5;
+	int count = 3;
 
 	for (Vehicle veh : GetAllVehs())
 	{
@@ -20,7 +20,7 @@ static void OnStartMaxUpgrades()
 
 		if (--count == 0)
 		{
-			count = 5;
+			count = 3;
 
 			WAIT(0);
 		}
@@ -31,7 +31,7 @@ static RegisterEffect registerEffect(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades
 
 static void OnStartRandomUpgrades()
 {
-	int count = 5;
+	int count = 3;
 
 	for (Vehicle veh : GetAllVehs())
 	{
@@ -52,7 +52,7 @@ static void OnStartRandomUpgrades()
 
 		if (--count == 0)
 		{
-			count = 5;
+			count = 3;
 
 			WAIT(0);
 		}
