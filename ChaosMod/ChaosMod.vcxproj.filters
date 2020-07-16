@@ -150,6 +150,7 @@
     <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSuperRunJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />

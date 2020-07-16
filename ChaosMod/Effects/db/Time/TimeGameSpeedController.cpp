@@ -22,29 +22,3 @@ static void OnTickX05()
 }
 
 static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnTickX05);
-
-static void OnTickLag()
-{
-	static int state = 0;
-
-	static DWORD64 lastTick = 0;
-	auto curTick = GetTickCount64();
-
-	if (curTick > lastTick + 250)
-	{
-		lastTick = curTick;
-		if (++state == 6)
-		{
-			state = 0;
-		}
-	}
-
-	SET_TIME_SCALE(state < 5 ? 1.f : 0.f);
-
-	if (state == 5)
-	{
-		DISABLE_ALL_CONTROL_ACTIONS(1);
-	}
-}
-
-static RegisterEffect registerEffect3(EFFECT_GAMESPEED_LAG, nullptr, OnStop, OnTickLag);

@@ -280,7 +280,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("Everyone Exits Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
             {EffectType.EFFECT_GAMESPEED_X02, new EffectInfo("x0.2 Gamespeed", EffectCategory.TIME, "time_x02", true, true)},
             {EffectType.EFFECT_GAMESPEED_X05, new EffectInfo("x0.5 Gamespeed", EffectCategory.TIME, "time_x05", true, true)},
-            {EffectType.EFFECT_GAMESPEED_LAG, new EffectInfo("Lag", EffectCategory.TIME, "time_lag", true, true)},
+            {EffectType.EFFECT_GAMESPEED_LAG, new EffectInfo("Lag", EffectCategory.MISC, "time_lag", true, true)},
             {EffectType.EFFECT_PEDS_RIOT, new EffectInfo("Peds Riot", EffectCategory.PEDS, "peds_riot", true)},
             {EffectType.EFFECT_RED_VEHS, new EffectInfo("Red Traffic", EffectCategory.VEHICLE, "vehs_red", true)},
             {EffectType.EFFECT_BLUE_VEHS, new EffectInfo("Blue Traffic", EffectCategory.VEHICLE, "vehs_blue", true)},

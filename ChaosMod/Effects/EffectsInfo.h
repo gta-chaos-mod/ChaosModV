@@ -260,7 +260,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_EXIT_VEH, {"Everyone Exits Their Vehicles", "playerveh_exit"}},
 	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG }, true}},
 	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }, true}},
-	{EFFECT_GAMESPEED_LAG, {"Lag", "time_lag", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }, true}},
+	{EFFECT_GAMESPEED_LAG, {"Lag", "time_lag", true, {}, true}},
 	{EFFECT_PEDS_RIOT, {"Peds Riot", "peds_riot", true}},
 	{EFFECT_RED_VEHS, {"Red Traffic", "vehs_red", true, { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS }}},
 	{EFFECT_BLUE_VEHS, {"Blue Traffic", "vehs_blue", true, { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS }}},
