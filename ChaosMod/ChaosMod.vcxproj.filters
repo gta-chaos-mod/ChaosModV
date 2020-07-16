@@ -89,15 +89,12 @@
     <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoSprint.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRagdollOnShot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomClothes.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSetIntoClosestVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSetIntoRandomVeh.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSuicide.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerSuperJump.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerSuperRun.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpController.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
@@ -151,6 +148,8 @@
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSuperRunJump.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
