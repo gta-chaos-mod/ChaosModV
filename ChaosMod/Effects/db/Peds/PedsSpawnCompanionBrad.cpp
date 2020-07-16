@@ -19,7 +19,6 @@ static void OnStart()
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
 
-	SET_PED_CAN_RAGDOLL(ped, false);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);

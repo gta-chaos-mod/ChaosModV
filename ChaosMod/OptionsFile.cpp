@@ -16,8 +16,8 @@ OptionsFile::OptionsFile(const char* fileName) : m_fileName(fileName)
 		return;
 	}
 
-	char buffer[128];
-	while (file.getline(buffer, 64))
+	char buffer[256];
+	while (file.getline(buffer, 256))
 	{
 		std::string line(buffer);
 		std::string key = line.substr(0, line.find("="));

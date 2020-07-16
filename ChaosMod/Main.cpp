@@ -76,29 +76,31 @@ void ParseEffectsFile()
 		if (!value.empty())
 		{
 			int splitIndex = value.find(",");
-			for (int i = 0; ; i++)
+			for (int j = 0; ; j++)
 			{
-				const std::string& split = value.substr(0, splitIndex);
-
-				if (i == 6)
+				if (j == 6)
 				{
-					// EffectCustomName, parse as string, please kill me
-					if (split != "0")
+					// HACK for EffectCustomName :(
+					if (value != "0")
 					{
-						valueEffectName = split;
+						valueEffectName = value;
 					}
+
+					break;
 				}
 				else
 				{
-					TryParseInt(split, values[i]);
-				}
+					const std::string& split = value.substr(0, splitIndex);
 
-				value = value.substr(splitIndex + 1);
+					TryParseInt(split, values[j]);
+				}
 
 				if (splitIndex == value.npos)
 				{
 					break;
 				}
+
+				value = value.substr(splitIndex + 1);
 
 				splitIndex = value.find(",");
 			}

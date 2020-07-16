@@ -16,15 +16,11 @@ DebugMenu::DebugMenu(std::vector<EffectType> effects)
 
 	m_effects.reserve(effects.size());
 
-	for (EffectType effectType : effects)
+	for (const auto& pair : g_effectsMap)
 	{
-		for (const auto pair : g_effectsMap)
+		if (std::find(effects.begin(), effects.end(), pair.first) != effects.end())
 		{
-			if (pair.first == effectType)
-			{
-				m_effects.emplace_back(effectType, pair.second.Name);
-				break;
-			}
+			m_effects.emplace_back(pair.first, pair.second.Name);
 		}
 	}
 
