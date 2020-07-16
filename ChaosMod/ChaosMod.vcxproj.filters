@@ -131,7 +131,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
@@ -151,6 +150,7 @@
     <ClCompile Include="Effects\db\Player\PlayerSuperRunJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />

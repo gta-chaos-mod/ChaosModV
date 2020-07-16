@@ -222,7 +222,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsKillEngine.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehLock.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTires.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsRepair.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsUpgradeController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
