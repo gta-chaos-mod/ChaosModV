@@ -21,6 +21,14 @@ static void OnStartMaxUpgrades()
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
 
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
+		for (int i = 0; i < 4; i++)
+		{
+			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
+		}
+
+		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_random.GetRandomInt(0, 12));
+
 		if (--count == 0)
 		{
 			count = 3;
@@ -52,6 +60,14 @@ static void OnStartRandomUpgrades()
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
+
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255), g_random.GetRandomInt(0, 255));
+		for (int i = 0; i < 4; i++)
+		{
+			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
+		}
+
+		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_random.GetRandomInt(0, 12));
 
 		if (--count == 0)
 		{
