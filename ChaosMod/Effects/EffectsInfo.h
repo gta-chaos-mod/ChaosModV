@@ -421,5 +421,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_DESPAWN, {"Remove Current Vehicle", "playerveh_despawn"}},
 	{EFFECT_PEDS_SCOOTERBROTHERS, {"Scooter Brothers", "peds_scooterbrothers"}},
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
-	{EFFECT_PEDS_CAT_GUNS, {"Cat Guns", "peds_catguns", true}},
+	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
 };
