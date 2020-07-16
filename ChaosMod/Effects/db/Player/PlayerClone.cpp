@@ -26,8 +26,11 @@ static void OnStart()
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
 
-	SET_PED_CAN_RAGDOLL(ped, false);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+	SET_PED_HEARING_RANGE(ped, 9999.f);
+	SET_PED_CONFIG_FLAG(ped, 281, true);
+	SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
+	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 
