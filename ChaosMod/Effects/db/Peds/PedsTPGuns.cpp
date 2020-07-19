@@ -1,7 +1,8 @@
-#include <stdafx.h>
 /**
- * Effect by: https://github.com/Elias-Graf, modified by pongo1231
+ * Effect by: https://github.com/Elias-Graf, modified
  **/
+
+#include <stdafx.h>
 
 static std::map<Ped, bool> hasShoot;
 
@@ -47,7 +48,7 @@ static void OnTick()
 		Ped ped = it->first;
 		bool& hasShoot = it->second;
 		
-		// If this ped has shoot and the bulled impacted
+		// If this ped has shoot and the bullet impacted
 		Vector3 impactCoords;
 		if (hasShoot && GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
 		{
