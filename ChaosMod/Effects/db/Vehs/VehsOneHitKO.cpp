@@ -23,12 +23,7 @@ static void OnTick()
 
 		for (Vehicle veh : GetAllVehs())
 		{
-			Hash vehModel = GET_ENTITY_MODEL(veh);
-
-			if (!IS_THIS_MODEL_A_HELI(vehModel) && !IS_THIS_MODEL_A_PLANE(vehModel))
-			{
-				Memory::SetVehicleOutOfControl(veh, true);
-			}
+			Memory::SetVehicleOutOfControl(veh, true);
 		}
 	}
 }

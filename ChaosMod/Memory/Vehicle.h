@@ -79,6 +79,12 @@ namespace Memory
 			isSetup = true;
 		}
 
+		int vehClass = GET_VEHICLE_CLASS(vehicle);
+		if (vehClass == 15 || vehClass == 16) // No helis nor planes
+		{
+			return;
+		}
+
 		__int64 v6 = sub_7FF69C749B98(vehicle);
 		if (v6)
 		{
