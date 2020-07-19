@@ -1,61 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
-
 * {
 	margin: 0;
 	padding: 0;
 }
 
 body {
-	/* Global variables */
-	--global-font-family: 'Nunito';
-	--global-font-size: 12pt;
-	--global-font-weight: 600;
-	--global-outline-color: #000000;
-	--global-outline-thickness: 0.25px;
-	--global-text-color: #f1f1f1;
+	/* Text */
+	--text-color: #ffffff;
+	--text-font-family: 'Arial';
+	--text-font-weight: 600;
+	--text-outline-color: #000000;
+	--text-outline-thickness: 0.6pt;
+	--text-size: 16pt;
 
-	/* More specific variables (often use globals) */
-	--bar-background: #727272;
+	/* Bar related things */
 	--bar-background-disabled: #afafaf;
-	--bar-font-size: var(--global-font-size);
-	--bar-font-weight: var(--global-font-weight);
-	--bar-font: var(--global-font-family);
+	--bar-background: #727272;
+	--bar-font-size: 12pt;
+	--bar-font-weight: 600;
+	--bar-font: var(--text-font-family);
 	--bar-height: 30px;
-	--bar-progression: #238beb;
 	--bar-progression-disabled: #8d8d8d;
-	--bar-text-color: var(--global-text-color);
+	--bar-progression: #238beb;
 	--bar-text-color-disabled: #f3f3f3;
-	--bar-text-outline-color: var(--global-outline-color);
-	--bar-text-outline-thickness: var(--global-outline-thickness);
+	--bar-text-color: #f1f1f1;
+	--bar-text-outline-color: #000000;
+	--bar-text-outline-thickness: 0.25px;
 }
 
 #barContainer {
-	width: 400px;
 	overflow: hidden;
+	width: 400px;
 }
 #totalVotes {
-	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
-
+	-webkit-text-stroke: var(--text-outline-thickness) var(--text-outline-color);
+	color: var(--text-color);
+	font-family: var(--text-font-family);
+	font-size: var(--text-size);
+	font-weight: var(--text-font-weight);
 	opacity: 0;
 	transition: opacity 200ms ease-in-out;
-	color: var(--global-text-color);
-	font-family: var(--global-font-family);
-	font-size: 15pt;
-	font-weight: var(--global-font-family);
 }
 
 .bar {
-	transition: background-color 100ms ease-in-out;
 	background-color: var(--bar-background);
 	height: var(--bar-height);
 	margin: 10px 0;
 	position: relative;
+	transition: background-color 100ms ease-in-out;
 }
-
 .bar.disabled {
 	background-color: var(--bar-background-disabled);
 }
-
 .bar > .labelContainer {
 	align-items: center;
 	bottom: 0;
@@ -67,42 +62,36 @@ body {
 	right: 0;
 	top: 0;
 }
-
 .bar > .labelContainer > span {
 	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
-
 	color: var(--bar-text-color);
 	font-family: var(--bar-font);
 	font-size: var(--bar-font-size);
 	font-weight: var(--bar-font-weight);
 	transition: color 100ms ease-in-out;
 }
-
 .bar > .labelContainer.disabled > span {
 	-webkit-text-stroke: unset;
 	color: var(--bar-text-color-disabled);
 }
-
 .bar > .progression {
 	background-color: var(--bar-progression);
 	height: 100%;
 	transition: width 0.3s ease-in-out;
 }
-
 .bar > .progression.disabled {
 	background-color: var(--bar-progression-disabled);
 }
 
 .slideIn {
 	animation-fill-mode: both;
-	animation-timing-function: ease-in-out;
 	animation-name: slideIn;
+	animation-timing-function: ease-in-out;
 }
-
 .slideOut {
 	animation-fill-mode: both;
-	animation-timing-function: ease-in-out;
 	animation-name: slideOut;
+	animation-timing-function: ease-in-out;
 }
 
 @keyframes slideIn {
@@ -113,7 +102,6 @@ body {
 		transform: translateX(0);
 	}
 }
-
 @keyframes slideOut {
 	from {
 		transform: translateX(0);
