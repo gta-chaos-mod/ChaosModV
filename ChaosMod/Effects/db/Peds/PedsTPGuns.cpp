@@ -13,6 +13,16 @@ static void OnStart()
 
 static void OnTick()
 {
+	static int lastClearTick = GetTickCount64();
+	int tick = GetTickCount64();
+
+	if (lastClearTick < tick - 10000)
+	{		
+		lastClearTick = tick;
+		hasShoot.clear();
+	}
+
+
 	for (Ped ped : GetAllPeds())
 	{
 		// Only add ped to map if it doesn't already contain them
