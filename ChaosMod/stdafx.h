@@ -7,6 +7,7 @@
 #include "Main.h"
 #include "TwitchVoting.h"
 #include "Mp3Manager.h"
+#include "OptionsFile.h"
 
 #include "Effects/Effect.h"
 
@@ -37,6 +38,6 @@
 #include <array>
 #include <string>
 #include <sstream>
-#include <stdexcept>
+//#include <stdexcept>
 #include <memory>
 #include <numeric>

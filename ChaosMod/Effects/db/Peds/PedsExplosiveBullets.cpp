@@ -2,15 +2,13 @@
 
 static void OnTick()
 {
+	Vector3 impactCoords;
+
 	for (Ped ped : GetAllPeds())
 	{
-		if (IS_PED_SHOOTING(ped))
+		if (GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
 		{
-			Vector3 impactCoords;
-			if (GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
-			{
-				ADD_EXPLOSION(impactCoords.x, impactCoords.y, impactCoords.z, 4, 9999.f, true, false, 1.f, false);
-			}
+			ADD_EXPLOSION(impactCoords.x, impactCoords.y, impactCoords.z, 4, 9999.f, true, false, 1.f, false);
 		}
 	}
 }

@@ -4,56 +4,14 @@
 
 #include <stdafx.h>
 
-static std::map<Ped, bool> hasShoot;
-
-static void OnStart()
-{
-	// We want to remove potential old peds
-	hasShoot.clear();
-}
-
 static void OnTick()
 {
-	static int lastClearTick = GetTickCount64();
-	int tick = GetTickCount64();
-
-	if (lastClearTick < tick - 10000)
-	{		
-		lastClearTick = tick;
-		hasShoot.clear();
-	}
-
+	Vector3 impactCoords;
 
 	for (Ped ped : GetAllPeds())
 	{
-		// Only add ped to map if it doesn't already contain them
-		if (!hasShoot.count(ped))
+		if (GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
 		{
-			hasShoot.insert(std::pair<Ped, bool>(ped, false));
-		}
-
-		if (IS_PED_SHOOTING(ped))
-		{
-			std::map<Ped, bool>::iterator it = hasShoot.find(ped);
-			if (it != hasShoot.end())
-			{
-				it->second = true;
-			}
-		}
-	}
-
-	std::map<Ped, bool>::iterator it;
-	for (it = hasShoot.begin(); it != hasShoot.end(); it++)
-	{
-		Ped ped = it->first;
-		bool& hasShoot = it->second;
-		
-		// If this ped has shoot and the bullet impacted
-		Vector3 impactCoords;
-		if (hasShoot && GET_PED_LAST_WEAPON_IMPACT_COORD(ped, &impactCoords))
-		{
-			hasShoot = false;
-
 			Entity toTeleport = ped;
 
 			if (IS_PED_IN_ANY_VEHICLE(ped, false))
@@ -69,4 +27,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick);

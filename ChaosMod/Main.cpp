@@ -1,11 +1,6 @@
 #include "stdafx.h"
 
 #include "Main.h"
-#include "EffectDispatcher.h"
-#include "Memory.h"
-#include "TwitchVoting.h"
-#include "DebugMenu.h"
-#include "OptionsFile.h"
 
 std::array<int, 3> ParseColor(const std::string& colorText)
 {
