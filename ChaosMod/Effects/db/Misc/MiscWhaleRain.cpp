@@ -34,7 +34,7 @@ static void OnTick()
 			if (!ped)
 			{
 				ped = whale;
-				whaleDespawnTime[i] = 10;
+				whaleDespawnTime[i] = 5;
 				break;
 			}
 		}

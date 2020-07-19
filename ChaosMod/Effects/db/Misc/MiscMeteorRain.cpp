@@ -36,7 +36,7 @@ static void OnTick()
 			if (!prop)
 			{
 				prop = meteor;
-				meteorDespawnTime[i] = 10;
+				meteorDespawnTime[i] = 5;
 				break;
 			}
 		}
@@ -55,7 +55,7 @@ static void OnTick()
 		{
 			if (DOES_ENTITY_EXIST(prop) && meteorDespawnTime[i] > 0)
 			{
-				auto propPos = GET_ENTITY_COORDS(prop, false);
+				Vector3 propPos = GET_ENTITY_COORDS(prop, false);
 				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, propPos.x, propPos.y, propPos.z, true) < 400.f)
 				{
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(prop))
