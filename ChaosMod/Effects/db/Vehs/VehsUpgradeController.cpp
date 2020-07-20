@@ -10,7 +10,10 @@ static void OnStartMaxUpgrades()
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
-			SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, true);
+			if (max > 0)
+			{
+				SET_VEHICLE_MOD(veh, i, max - 1, true);
+			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, true);
 		}
@@ -50,7 +53,10 @@ static void OnStartRandomUpgrades()
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
-			SET_VEHICLE_MOD(veh, i, max > 0 ? g_random.GetRandomInt(0, max - 1) : 0, g_random.GetRandomInt(0, 1));
+			if (max > 0)
+			{
+				SET_VEHICLE_MOD(veh, i, g_random.GetRandomInt(0, max - 1), g_random.GetRandomInt(0, 1));
+			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_random.GetRandomInt(0, 1));
 		}
