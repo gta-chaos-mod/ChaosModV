@@ -54,6 +54,8 @@ static void OnTick()
 	{
 		m_state = STATE_NONE;
 
+		SET_PLAYER_CONTROL(player, false, 7001);
+
 		if (playerDead)
 		{
 			return;
@@ -67,8 +69,6 @@ static void OnTick()
 		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, playerPos.z, 0, 255, 0, 255);
 	}
 #endif
-
-	SET_PLAYER_CONTROL(player, false, 7001);
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
 
