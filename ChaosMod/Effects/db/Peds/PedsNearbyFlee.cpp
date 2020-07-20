@@ -9,7 +9,8 @@ static void OnStart()
 		if (!IS_PED_A_PLAYER(ped))
 		{
 			TASK_REACT_AND_FLEE_PED(ped, playerPed);
-			SET_PED_KEEP_TASK(ped, true);
+
+			SET_PED_FLEE_ATTRIBUTES(ped, 2, true);
 		}
 	}
 }

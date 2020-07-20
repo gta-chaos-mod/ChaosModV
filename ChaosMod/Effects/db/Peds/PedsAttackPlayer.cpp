@@ -26,10 +26,13 @@ static void OnTick()
 			{
 				REMOVE_PED_FROM_GROUP(ped);
 			}
+
 			SET_PED_RELATIONSHIP_GROUP_HASH(ped, enemyGroupHash);
 
 			SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 			SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+
+			SET_PED_FLEE_ATTRIBUTES(ped, 2, true);
 
 			TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		}
