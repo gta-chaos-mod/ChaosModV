@@ -50,7 +50,7 @@ static void OnStart()
 
 		if (found)
 		{
-			TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(jesus, veh, coords.x, coords.y, coords.z, 9999.f, 4176732, 0.f);
+			TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(jesus, veh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);
 		}
 		else
 		{

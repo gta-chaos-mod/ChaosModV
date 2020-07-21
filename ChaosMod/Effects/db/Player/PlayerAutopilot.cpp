@@ -13,9 +13,9 @@ static Vector3 m_waypointCoords;
 static bool m_foundWaypoint;
 static bool m_customWaypoint;
 
-static bool VectorEqual(Vector3 vec1, Vector3 vec2)
+static bool VectorEqualRoughZ(Vector3 vec1, Vector3 vec2)
 {
-	return vec1.x == vec2.x && vec1.y == vec2.y && vec1.z == vec2.z;
+	return vec1.x == vec2.x && vec1.y == vec2.y && std::abs(vec1.z - vec2.z) < 1.f;
 }
 
 static void OnStart()
@@ -114,7 +114,7 @@ static void OnTick()
 		m_foundWaypoint = true;
 		m_customWaypoint = true;
 
-		if (m_state != STATE_ROAMING && !VectorEqual(m_waypointCoords, lastWaypointCoords))
+		if (m_state != STATE_ROAMING && !VectorEqualRoughZ(m_waypointCoords, lastWaypointCoords))
 		{
 			m_state = STATE_NONE;
 		}
@@ -146,7 +146,7 @@ static void OnTick()
 		{
 			m_customWaypoint = true;
 
-			if (m_state != STATE_ROAMING && !VectorEqual(m_waypointCoords, lastWaypointCoords))
+			if (m_state != STATE_ROAMING && !VectorEqualRoughZ(m_waypointCoords, lastWaypointCoords))
 			{
 				m_state = STATE_NONE;
 			}
