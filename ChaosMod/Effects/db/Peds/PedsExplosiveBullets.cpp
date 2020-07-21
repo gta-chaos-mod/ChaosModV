@@ -2,6 +2,8 @@
 
 static void OnTick()
 {
+	SET_EXPLOSIVE_AMMO_THIS_FRAME(PLAYER_ID());
+
 	Vector3 impactCoords;
 
 	for (Ped ped : GetAllPeds())

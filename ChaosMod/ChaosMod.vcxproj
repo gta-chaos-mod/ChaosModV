@@ -231,7 +231,6 @@
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
-    <ClCompile Include="Memory\Hooks\Controls.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
