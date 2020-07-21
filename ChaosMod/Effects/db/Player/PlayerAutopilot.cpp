@@ -13,6 +13,11 @@ static Vector3 m_waypointCoords;
 static bool m_foundWaypoint;
 static bool m_customWaypoint;
 
+static bool VectorEqual(Vector3 vec1, Vector3 vec2)
+{
+	return vec1.x == vec2.x && vec1.y == vec2.y && vec1.z == vec2.z;
+}
+
 static void OnStart()
 {
 	m_state = STATE_NONE;
@@ -66,7 +71,7 @@ static void OnTick()
 	// Draw debug go to line
 	if (m_state == STATE_TO_COORDS)
 	{
-		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, playerPos.z, 0, 255, 0, 255);
+		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 0, 255, 0, 255);
 	}
 #endif
 
@@ -93,59 +98,69 @@ static void OnTick()
 	}
 	lastTick = curTick;
 
-	bool isAtDest = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, false) <= 10.f;
-
 	// Try to fetch waypoint coords (if waypoint exists)
-	if (!isAtDest)
+	m_foundWaypoint = false;
+	Blip targetBlip = 0;
+
+	Vector3 lastWaypointCoords = m_waypointCoords;
+
+	if (IS_WAYPOINT_ACTIVE())
 	{
-		m_foundWaypoint = false;
+		m_waypointCoords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
 
-		if (IS_WAYPOINT_ACTIVE())
+		// Player waypoint doesn't have proper z coord, use player z coord instead
+		m_waypointCoords.z = playerPos.z;
+
+		m_foundWaypoint = true;
+		m_customWaypoint = true;
+
+		if (m_state != STATE_ROAMING && !VectorEqual(m_waypointCoords, lastWaypointCoords))
 		{
-			m_waypointCoords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
-
-			m_foundWaypoint = true;
-			m_customWaypoint = true;
-
-			if (m_state != STATE_ROAMING)
-			{
-				m_state = STATE_NONE;
-			}
+			m_state = STATE_NONE;
 		}
-		else
+	}
+	else
+	{
+		float closestBlipDist = 9999.f;
+
+		for (int i = 0; i < 3; i++)
 		{
-			for (int i = 0; i < 3; i++)
+			Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+			if (DOES_BLIP_EXIST(blip) && IS_BLIP_ON_MINIMAP(blip) && GET_BLIP_ALPHA(blip) > 0)
 			{
-				Blip blip = GET_FIRST_BLIP_INFO_ID(i);
-				if (DOES_BLIP_EXIST(blip) && IS_BLIP_ON_MINIMAP(blip) && GET_BLIP_ALPHA(blip) > 0)
+				m_foundWaypoint = true;
+
+				Vector3 blipPos = GET_BLIP_COORDS(blip);
+				float blipDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, blipPos.x, blipPos.y, blipPos.z, true);
+
+				if (blipDist < closestBlipDist)
 				{
-					m_waypointCoords = GET_BLIP_COORDS(blip);
-
-					m_foundWaypoint = true;
-					m_customWaypoint = true;
-					
-					if (m_state != STATE_ROAMING)
-					{
-						m_state = STATE_NONE;
-					}
-
-					break;
+					m_waypointCoords = blipPos;
+					closestBlipDist = blipDist;
+					targetBlip = blip;
 				}
 			}
 		}
 
-		// Player waypoint doesn't have proper z coord, use player z coord instead
-		if (m_foundWaypoint && m_customWaypoint)
+		if (m_foundWaypoint)
 		{
-			m_waypointCoords.z = playerPos.z;
+			m_customWaypoint = true;
+
+			if (m_state != STATE_ROAMING && !VectorEqual(m_waypointCoords, lastWaypointCoords))
+			{
+				m_state = STATE_NONE;
+			}
 		}
 	}
+
+	bool isAtDest = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, false) <= 10.f;
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		bool vehDrivable = IS_VEHICLE_DRIVEABLE(playerVeh, true);
+		bool vehStuck = IS_VEHICLE_STUCK_TIMER_UP(playerVeh, 0, 5000);
 
-		if (vehDrivable && !isAtDest)
+		if (vehDrivable && !vehStuck && !isAtDest)
 		{
 			if (m_state != STATE_TO_COORDS)
 			{
@@ -160,7 +175,7 @@ static void OnTick()
 					}
 					else
 					{
-						TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, playerVeh, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 9999.f, 4176732, 5.f);
+						TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, playerVeh, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 9999.f, 262668, .0f);
 					}
 
 					m_state = STATE_TO_COORDS;
@@ -173,9 +188,22 @@ static void OnTick()
 				}
 			}
 		}
-		else if (!vehDrivable || (isAtDest && IS_VEHICLE_STOPPED(playerVeh)))
+		else if (!vehDrivable || vehStuck || (isAtDest && IS_VEHICLE_STOPPED(playerVeh)))
 		{
-			TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
+			bool isTargetThisVehicle = false;
+
+			if (targetBlip)
+			{
+				if (GET_BLIP_INFO_ID_ENTITY_INDEX(targetBlip) == playerVeh)
+				{
+					isTargetThisVehicle = true;
+				}
+			}
+
+			if (!vehDrivable || (!isTargetThisVehicle && GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)))
+			{
+				TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
+			}
 
 			m_state = STATE_NONE;
 		}
@@ -253,22 +281,63 @@ static void OnTick()
 
 			m_state = STATE_COMBAT;
 		}
-		else
+		else if (m_state != STATE_TO_COORDS)
 		{
-			if (m_state != STATE_TO_COORDS)
+			if (m_foundWaypoint)
 			{
-				if (m_foundWaypoint && !isAtDest)
-				{
-					TASK_GO_TO_COORD_ANY_MEANS(playerPed, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 2.f, 0, false, 786603, 5.f);
+				bool isEnteringVehicle = false;
 
-					m_state = STATE_TO_COORDS;
-				}
-				else if (m_state != STATE_ROAMING)
+				if (targetBlip)
 				{
-					TASK_SMART_FLEE_COORD(playerPed, playerPos.x, playerPos.y, playerPos.z, 9999.f, -1, false, false);
+					Entity blipEntity = GET_BLIP_INFO_ID_ENTITY_INDEX(targetBlip);
+					if (blipEntity && DOES_ENTITY_EXIST(blipEntity) && GET_ENTITY_TYPE(blipEntity) == 2 /* Vehicle */
+						&& !IS_PED_IN_VEHICLE(playerPed, blipEntity, true) && GET_VEHICLE_PED_IS_ENTERING(playerPed) != blipEntity)
+					{
+						isEnteringVehicle = true;
 
-					m_state = STATE_ROAMING;
+						TASK_ENTER_VEHICLE(playerPed, blipEntity, -1, -1, 2.f, 1, 0);
+					}
 				}
+				
+				if (!isEnteringVehicle)
+				{
+					bool isCarNearby = false;
+
+					for (Vehicle veh : GetAllVehs())
+					{
+						int doorLock = GET_VEHICLE_DOOR_LOCK_STATUS(veh);
+
+						if (IS_VEHICLE_DRIVEABLE(veh, true) && doorLock != 2 && doorLock != 3 && doorLock != 10)
+						{
+							Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
+							float vehDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, vehPos.x, vehPos.y, vehPos.z, true);
+
+							if (vehDist < 20.f)
+							{
+								isCarNearby = true;
+
+								break;
+							}
+						}
+					}
+
+					if (isCarNearby)
+					{
+						TASK_GO_TO_COORD_ANY_MEANS(playerPed, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 2.f, 0, false, 262668, .0f);
+					}
+					else
+					{
+						TASK_FOLLOW_NAV_MESH_TO_COORD(playerPed, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 2.f, -1, .0f, true, .0f);
+					}
+				}
+
+				m_state = STATE_TO_COORDS;
+			}
+			else if (m_state != STATE_ROAMING)
+			{
+				TASK_SMART_FLEE_COORD(playerPed, playerPos.x, playerPos.y, playerPos.z, 9999.f, -1, false, false);
+
+				m_state = STATE_ROAMING;
 			}
 		}
 	}
