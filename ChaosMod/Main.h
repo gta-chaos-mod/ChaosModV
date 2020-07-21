@@ -30,4 +30,6 @@ private:
 	bool m_disableDrawEffectTexts = false;
 	bool m_toggleModShortcutEnabled = false;
 	bool m_disableMod = false;
+	bool m_enableDebugMenu = false;
+	bool m_enablePauseTimerShortcut = false;
 };

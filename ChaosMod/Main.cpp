@@ -18,7 +18,8 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 }
 
 void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut, bool& disableEffectsTwiceInRow,
-	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, std::array<int, 3>& timerColor, std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
+	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, bool& enableDebugMenu, bool& enablePauseTimerShortcut, std::array<int, 3>& timerColor,
+	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
 	OptionsFile configFile("chaosmod/config.ini");
 
@@ -31,6 +32,8 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 	disableTimerDrawing = configFile.ReadValueInt("DisableTimerBarDraw", false);
 	disableEffectTextDrawing = configFile.ReadValueInt("DisableEffectTextDraw", false);
 	enableToggleModShortcut = configFile.ReadValueInt("EnableToggleModShortcut", true);
+	enableDebugMenu = configFile.ReadValueInt("EnableDebugMenu", false);
+	enablePauseTimerShortcut = configFile.ReadValueInt("EnablePauseTimerShortcut", false);
 	timerColor = ParseColor(configFile.ReadValue("EffectTimerColor", "#FF4040FF"));
 	textColor = ParseColor(configFile.ReadValue("EffectTextColor", "#FFFFFFFF"));
 	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
@@ -132,7 +135,7 @@ void Main::Init()
 	TwitchOverlayMode twitchOverlayMode;
 
 	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
-		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, timerColor, textColor, effectTimerColor);
+		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor);
 	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance,
 		enableTwitchRandomEffectVoteable);
 	ParseEffectsFile();
@@ -142,15 +145,16 @@ void Main::Init()
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
 		enableTwitchVoting, twitchOverlayMode);
 
-#ifdef _DEBUG
-	std::vector<EffectType> enabledEffectTypes;
-	for (const auto& pair : g_enabledEffects)
+	if (m_enableDebugMenu)
 	{
-		enabledEffectTypes.push_back(pair.first);
-	}
+		std::vector<EffectType> enabledEffectTypes;
+		for (const auto& pair : g_enabledEffects)
+		{
+			enabledEffectTypes.push_back(pair.first);
+		}
 
-	m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);
-#endif
+		m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);
+	}
 
 	struct stat temp;
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
@@ -228,32 +232,33 @@ void Main::MainLoop()
 			}
 		}
 
-#ifdef _DEBUG
-		if (m_debugMenu && m_debugMenu->IsVisible())
+		if (m_enableDebugMenu)
 		{
-			// Arrow Up
-			DISABLE_CONTROL_ACTION(1, 27, true);
-			DISABLE_CONTROL_ACTION(1, 127, true);
-			DISABLE_CONTROL_ACTION(1, 188, true);
-			DISABLE_CONTROL_ACTION(1, 300, true);
-			// Arrow Down
-			DISABLE_CONTROL_ACTION(1, 173, true);
-			DISABLE_CONTROL_ACTION(1, 187, true);
-			DISABLE_CONTROL_ACTION(1, 299, true);
-			// Enter
-			DISABLE_CONTROL_ACTION(1, 18, true);
-			DISABLE_CONTROL_ACTION(1, 176, true);
-			DISABLE_CONTROL_ACTION(1, 191, true);
-			DISABLE_CONTROL_ACTION(1, 201, true);
-			DISABLE_CONTROL_ACTION(1, 215, true);
-			// Backspace
-			DISABLE_CONTROL_ACTION(1, 177, true);
-			DISABLE_CONTROL_ACTION(1, 194, true);
-			DISABLE_CONTROL_ACTION(1, 202, true);
+			if (m_debugMenu && m_debugMenu->IsVisible())
+			{
+				// Arrow Up
+				DISABLE_CONTROL_ACTION(1, 27, true);
+				DISABLE_CONTROL_ACTION(1, 127, true);
+				DISABLE_CONTROL_ACTION(1, 188, true);
+				DISABLE_CONTROL_ACTION(1, 300, true);
+				// Arrow Down
+				DISABLE_CONTROL_ACTION(1, 173, true);
+				DISABLE_CONTROL_ACTION(1, 187, true);
+				DISABLE_CONTROL_ACTION(1, 299, true);
+				// Enter
+				DISABLE_CONTROL_ACTION(1, 18, true);
+				DISABLE_CONTROL_ACTION(1, 176, true);
+				DISABLE_CONTROL_ACTION(1, 191, true);
+				DISABLE_CONTROL_ACTION(1, 201, true);
+				DISABLE_CONTROL_ACTION(1, 215, true);
+				// Backspace
+				DISABLE_CONTROL_ACTION(1, 177, true);
+				DISABLE_CONTROL_ACTION(1, 194, true);
+				DISABLE_CONTROL_ACTION(1, 202, true);
 
-			m_debugMenu->Tick();
+				m_debugMenu->Tick();
+			}
 		}
-#endif
 	}
 }
 
@@ -280,9 +285,12 @@ void Main::RunEffectLoop()
 				justReenabled = true;
 
 				g_effectDispatcher.reset();
-#ifdef _DEBUG
-				m_debugMenu.reset();
-#endif
+
+				if (m_enableDebugMenu)
+				{
+					m_debugMenu.reset();
+				}
+
 				m_twitchVoting.reset();
 			}
 
@@ -331,26 +339,22 @@ void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtend
 			m_clearAllEffects = true;
 			m_clearEffectsTextTime = 5000;
 		}
-#ifdef _DEBUG
-		else if (key == VK_OEM_PERIOD)
+		else if (key == VK_OEM_PERIOD && m_enablePauseTimerShortcut)
 		{
 			m_pauseTimer = !m_pauseTimer;
 		}
-		else if (key == VK_OEM_COMMA && m_debugMenu)
+		else if (key == VK_OEM_COMMA && m_enableDebugMenu && m_debugMenu)
 		{
 			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
 		}
-#endif
 		else if (key == 0x4C && m_toggleModShortcutEnabled) // L
 		{
 			m_disableMod = !m_disableMod;
 		}
 	}
 
-#ifdef _DEBUG
-	if (m_debugMenu && m_debugMenu->IsVisible())
+	if (m_enableDebugMenu && m_debugMenu && m_debugMenu->IsVisible())
 	{
 		m_debugMenu->HandleInput(key, wasDownBefore);
 	}
-#endif
 }
