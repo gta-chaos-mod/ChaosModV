@@ -24,6 +24,8 @@ static void OnStart()
 		{
 			Vector3 vel = GET_ENTITY_VELOCITY(ped);
 
+			CLEAR_PED_TASKS_IMMEDIATELY(ped);
+
 			SET_PED_TO_RAGDOLL(ped, 10000, 10000, 0, true, true, false);
 
 			spacePeds.emplace_back(ped, vel);
