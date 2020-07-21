@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Memory.h"
+#include "Handle.h"
 
 namespace Memory
 {

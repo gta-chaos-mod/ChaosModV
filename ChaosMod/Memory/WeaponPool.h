@@ -3,8 +3,9 @@
 #include "Memory.h"
 #include "../nativesNoNamespaces.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+typedef unsigned long long DWORD64;
+typedef unsigned long DWORD;
+typedef unsigned short WORD;
 
 #include <vector>
 

@@ -1,7 +1,7 @@
 #pragma once
 
 class Handle;
-enum MH_STATUS;
+enum MH_STATUS : int;
 
 #include <string>
 

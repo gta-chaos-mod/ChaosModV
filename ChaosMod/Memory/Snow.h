@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Memory.h"
+#include "Handle.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+typedef unsigned long long DWORD64;
+typedef unsigned long DWORD;
+typedef unsigned char BYTE;
 
 namespace Memory
 {
@@ -13,7 +15,7 @@ namespace Memory
 
 		static bool init = false;
 
-		static auto handle = FindPattern("80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00");
+		static Handle handle = FindPattern("80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00");
 		if (!handle.IsValid())
 		{
 			return;
@@ -27,7 +29,7 @@ namespace Memory
 			memcpy(orig1, reinterpret_cast<void*>(addr1), 13);
 		}
 
-		static auto handle2 = FindPattern("44 38 3D ?? ?? ?? ?? 74 1D B9 40 00 00 00");
+		static Handle handle2 = FindPattern("44 38 3D ?? ?? ?? ?? 74 1D B9 40 00 00 00");
 		if (!handle2.IsValid())
 		{
 			return;

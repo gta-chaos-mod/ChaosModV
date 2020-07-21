@@ -151,6 +151,8 @@
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
+    <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Memory\Hooks\Controls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+    <ClInclude Include="Memory\Hooks\Hook.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />

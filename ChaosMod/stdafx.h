@@ -18,6 +18,8 @@
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 
+#include "Memory/Hooks/Hook.h"
+
 #include "Util/EntityIterator.h"
 #include "Util/Model.h"
 #include "Util/Player.h"

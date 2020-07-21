@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Memory.h"
+
 #include <vector>
 
 DWORD64 m_baseAddr;
@@ -17,6 +18,15 @@ namespace Memory
 		m_endAddr = m_baseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
+
+		std::ofstream log("chaosmod/hooklog.txt");
+		for (RegisteredHook* registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
+		{
+			if (!registeredHook->RunHook())
+			{
+				log << "Error while executing " << registeredHook->GetName() << " hook" << std::endl;
+			}
+		}
 	
 		MH_EnableHook(MH_ALL_HOOKS);
 	}

@@ -73,11 +73,11 @@ private:
 	bool m_isRunning = false;
 };
 
-inline RegisteredEffect* g_registeredEffects = nullptr;
+inline RegisteredEffect* g_pRegisteredEffects = nullptr;
 
 inline RegisteredEffect* GetRegisteredEffect(EffectType effectType)
 {
-	for (RegisteredEffect* registeredEffect = g_registeredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
+	for (RegisteredEffect* registeredEffect = g_pRegisteredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
 	{
 		if (registeredEffect == effectType)
 		{
@@ -95,12 +95,12 @@ public:
 	{
 		m_registeredEffect = RegisteredEffect(effectType, onStart, onStop, onTick);
 
-		if (g_registeredEffects)
+		if (g_pRegisteredEffects)
 		{
-			m_registeredEffect.m_nextEffect = g_registeredEffects;
+			m_registeredEffect.m_nextEffect = g_pRegisteredEffects;
 		}
 
-		g_registeredEffects = &m_registeredEffect;
+		g_pRegisteredEffects = &m_registeredEffect;
 	}
 
 private:
