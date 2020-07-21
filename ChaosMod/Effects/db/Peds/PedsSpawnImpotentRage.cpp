@@ -42,10 +42,20 @@ static void OnStart()
 
 	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 
+	DWORD64 lastTick = GetTickCount64();
+
 	while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
 	{
+		DWORD64 curTick = GetTickCount64();
+
+		if (lastTick < curTick - 500)
+		{
+			break;
+		}
+
 		WAIT(0);
 	}
+
 	for (int i = 0; i < 3; i++)
 	{
 		PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
