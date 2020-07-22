@@ -423,7 +423,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_SCOOTERBROTHERS, {"Scooter Brothers", "peds_scooterbrothers"}},
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_PEDS_FOG_OF_WAR, {"Fog of War", "peds_fogofwar", true}},
+	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}},
 		
 >>>>>>> 827d44f... Added "Fog of War" Effect
 };
