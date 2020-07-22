@@ -80,7 +80,10 @@ namespace Memory
 		}
 
 		int vehClass = GET_VEHICLE_CLASS(vehicle);
-		if (vehClass == 15 || vehClass == 16) // No helis nor planes
+		
+		static const Hash blimpHash = GET_HASH_KEY("BLIMP");
+		Hash vehModel = GET_ENTITY_MODEL(vehicle);
+		if (vehClass == 15 || vehClass == 16 || vehModel == blimpHash) // No helis nor planes, also make sure to explicitely exclude blimps at all costs as they cause a crash
 		{
 			return;
 		}
@@ -90,8 +93,11 @@ namespace Memory
 		{
 			v6 = (*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
 
-			*reinterpret_cast<BYTE*>(v6 + 2341) &= 0xFEu;
-			*reinterpret_cast<BYTE*>(v6 + 2341) |= state;
+			if (v6)
+			{
+				*reinterpret_cast<BYTE*>(v6 + 2341) &= 0xFEu;
+				*reinterpret_cast<BYTE*>(v6 + 2341) |= state;
+			}
 		}
 	}
 
