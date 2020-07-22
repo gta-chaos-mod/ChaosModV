@@ -238,6 +238,7 @@ namespace ConfigApp
             EFFECT_PEDS_SCOOTERBROTHERS,
             EFFECT_PEDS_INTORANDOMVEHS,
             EFFECT_PEDS_CAT_GUNS,
+            EFFECT_PEDS_OIL_LEAK,
             _EFFECT_ENUM_MAX
         }
 
@@ -441,6 +442,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_SCOOTERBROTHERS, new EffectInfo("Scooter Brothers", EffectCategory.PEDS, "peds_scooterbrothers")},
             {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set Everyone Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
             {EffectType.EFFECT_PEDS_CAT_GUNS, new EffectInfo("Catto Guns", EffectCategory.PEDS, "peds_catguns", true)},
+            {EffectType.EFFECT_PEDS_OIL_LEAK, new EffectInfo("Oil Leak", EffectCategory.PEDS, "peds_oilleak", true)},
         };
     }
 }

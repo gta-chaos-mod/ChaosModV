@@ -152,6 +152,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsOilLeak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
