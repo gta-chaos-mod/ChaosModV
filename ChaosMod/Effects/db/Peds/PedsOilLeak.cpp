@@ -8,7 +8,7 @@ static void OnTick()
 {
 	for (Ped ped : GetAllPeds()) 
 	{
-		if (IS_PED_IN_ANY_VEHICLE(ped, false) || IS_PED_DEAD_OR_DYING(ped, true)) 
+		if (!IS_PED_HUMAN(ped) || IS_PED_IN_FLYING_VEHICLE(ped) || IS_PED_IN_ANY_SUB(ped) || IS_PED_IN_ANY_BOAT(ped) || IS_PED_IN_ANY_TRAIN(ped) || IS_PED_SWIMMING(ped) || IS_PED_SWIMMING_UNDER_WATER(ped) || IS_PED_DEAD_OR_DYING(ped, true))
 		{
 			continue;
 		}
