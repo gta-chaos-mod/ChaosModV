@@ -8,7 +8,8 @@ static void OnTick()
 {
 	for (Ped ped : GetAllPeds()) 
 	{
-		if (IS_PED_IN_ANY_VEHICLE(ped, false) || IS_PED_DEAD_OR_DYING(ped, true)) {
+		if (IS_PED_IN_ANY_VEHICLE(ped, false) || IS_PED_DEAD_OR_DYING(ped, true)) 
+		{
 			continue;
 		}
 		Vector3 playerPos = GET_ENTITY_COORDS(ped, false);
