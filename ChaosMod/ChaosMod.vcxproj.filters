@@ -42,7 +42,6 @@
     <ClCompile Include="Effects\db\Peds\PedsExplosive.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFollowPlayer.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFrozen.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsGTAOTraffic.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIgniteNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInvinciblePeds.cpp" />
@@ -154,6 +153,7 @@
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
