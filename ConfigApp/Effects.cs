@@ -371,7 +371,7 @@ namespace ConfigApp
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, "vehs_jumpy", true, true)},
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, "vehs_lockdoors")},
             {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, "chaosmode", true)},
-            {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PLAYER, "player_noragdoll", true)},
+            {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PEDS, "player_noragdoll", true)},
             {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, "vehs_honkconstant", true)},
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, "player_tptowaypoint")},
             {EffectType.EFFECT_PEDS_SAY_HI, new EffectInfo("Friendly Neighborhood", EffectCategory.PEDS, "peds_sayhi", true)},
