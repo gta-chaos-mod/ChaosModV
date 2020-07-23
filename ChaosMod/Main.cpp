@@ -292,6 +292,8 @@ void Main::RunEffectLoop()
 				}
 
 				m_twitchVoting.reset();
+
+				ClearEntityPool();
 			}
 
 			continue;
@@ -308,6 +310,8 @@ void Main::RunEffectLoop()
 			m_clearAllEffects = false;
 
 			g_effectDispatcher->Reset();
+
+			ClearEntityPool();
 		}
 
 		if (m_twitchVoting->IsEnabled())

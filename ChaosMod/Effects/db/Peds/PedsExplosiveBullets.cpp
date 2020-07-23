@@ -2,7 +2,9 @@
 
 static void OnTick()
 {
-	SET_EXPLOSIVE_AMMO_THIS_FRAME(PLAYER_ID());
+	Player player = PLAYER_ID();
+
+	SET_EXPLOSIVE_AMMO_THIS_FRAME(player);
 
 	Vector3 impactCoords;
 

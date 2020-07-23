@@ -12,11 +12,28 @@ static void HandleEntity(Entity entity)
 
 	if (m_entities.size() > ENTITY_POOL_MAX)
 	{
-		Ped frontPed = m_entities.front();
+		Entity frontEntity = m_entities.front();
 
-		if (DOES_ENTITY_EXIST(frontPed))
+		if (DOES_ENTITY_EXIST(frontEntity))
 		{
-			SET_PED_AS_NO_LONGER_NEEDED(&frontPed);
+			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
+		}
+
+		m_entities.pop();
+	}
+}
+
+void ClearEntityPool()
+{
+	while (!m_entities.empty())
+	{
+		Entity frontEntity = m_entities.front();
+
+		if (DOES_ENTITY_EXIST(frontEntity))
+		{
+			SET_ENTITY_AS_MISSION_ENTITY(frontEntity, true, true);
+
+			DELETE_ENTITY(&frontEntity);
 		}
 
 		m_entities.pop();
