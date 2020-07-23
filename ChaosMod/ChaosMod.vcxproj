@@ -131,7 +131,7 @@
     <ClCompile Include="Effects\db\Peds\PedsExplosive.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFollowPlayer.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFrozen.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsGTAOTraffic.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIgniteNearby.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsInTheHood.cpp" />

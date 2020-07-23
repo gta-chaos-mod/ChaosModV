@@ -7,7 +7,7 @@ static void SpawnProp(const char* propName)
 	Hash model = GET_HASH_KEY(propName);
 	LoadModel(model);
 
-	Object prop = CREATE_OBJECT(model, playerPos.x, playerPos.y, playerPos.z, true, false, true);
+	Object prop = CreatePoolProp(model, playerPos.x, playerPos.y, playerPos.z, true);
 	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 }
 

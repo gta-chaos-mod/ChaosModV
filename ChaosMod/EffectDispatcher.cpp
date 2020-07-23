@@ -71,17 +71,17 @@ void EffectDispatcher::UpdateTimer()
 
 	DWORD64 currentUpdateTime = GetTickCount64();
 
-	float thing = currentUpdateTime - m_timerTimer;
+	float delta = currentUpdateTime - m_timerTimer;
 
-	if (thing > 1000.f)
+	if (delta > 1000.f)
 	{
 		m_timerTimerRuns++;
 
 		m_timerTimer = currentUpdateTime;
-		thing = 0;
+		delta = 0;
 	}
 
-	if ((m_percentage = (thing + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f && m_dispatchEffectsOnTimer)
+	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f && m_dispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
@@ -123,7 +123,7 @@ void EffectDispatcher::UpdateEffects()
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
-			auto& effect = *it;
+			ActiveEffect& effect = *it;
 
 			effect.Timer--;
 

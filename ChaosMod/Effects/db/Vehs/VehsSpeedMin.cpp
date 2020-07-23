@@ -5,7 +5,7 @@
 #include <stdafx.h>
 #include <cmath>
 
-#define WAIT_TIME 6000 // ms
+#define WAIT_TIME 10000 // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
 
 #define MPH_TO_MS(mph) mph / 2.236936

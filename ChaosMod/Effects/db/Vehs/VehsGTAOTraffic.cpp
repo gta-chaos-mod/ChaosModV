@@ -14,6 +14,8 @@ static void OnTick()
 		{
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
 
+			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+
 			TASK_VEHICLE_MISSION_PED_TARGET(ped, veh, playerPed, 13, 9999.f, 4176732, .0f, .0f, false);
 
 			goneThrough.push_back(ped);
