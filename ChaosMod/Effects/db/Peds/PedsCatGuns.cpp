@@ -3,9 +3,9 @@
 static Vector3 DegToRadian(const Vector3& angles)
 {
 	Vector3 vec3;
-	vec3.x = angles.x * 0.0174532925199433F;
-	vec3.y = angles.y * 0.0174532925199433F;
-	vec3.z = angles.z * 0.0174532925199433F;
+	vec3.x = angles.x * .0174532925199433F;
+	vec3.y = angles.y * .0174532925199433F;
+	vec3.z = angles.z * .0174532925199433F;
 
 	return vec3;
 }
@@ -16,11 +16,29 @@ static Vector3 GetCoordsFromGameplayCam(float distance)
 	Vector3 coords = GET_GAMEPLAY_CAM_COORD();
 
 	rot.y = distance * cos(rot.x);
-	coords.x = coords.x + rot.y * std::sin(rot.z * -1.0f);
-	coords.y = coords.y + rot.y * std::cos(rot.z * -1.0f);
+	coords.x = coords.x + rot.y * std::sin(rot.z * -1.f);
+	coords.y = coords.y + rot.y * std::cos(rot.z * -1.f);
 	coords.z = coords.z + distance * sin(rot.x);
 
 	return coords;
+}
+
+static bool IsWeaponShotgun(Hash wepHash)
+{
+	switch (wepHash)
+	{
+	case 487013001:
+	case 2017895192:
+	case -1654528753:
+	case -494615257:
+	case -1466123874:
+	case 984333226:
+	case -275439685:
+	case 317205821:
+		return true;
+	}
+
+	return false;
 }
 
 static void OnTick()
@@ -51,14 +69,18 @@ static void OnTick()
 				spawnRot = GET_ENTITY_ROTATION(ped, 2);
 			}
 
-			Ped cat = CREATE_PED(28, catHash, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
-			SET_ENTITY_ROTATION(cat, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
+			int catCount = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped)) ? 5 : 1;
+			for (int i = 0; i < catCount; i++)
+			{
+				Ped cat = CREATE_PED(28, catHash, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+				SET_ENTITY_ROTATION(cat, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
 
-			SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
+				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
 
-			SET_PED_AS_NO_LONGER_NEEDED(&cat);
+				SET_PED_AS_NO_LONGER_NEEDED(&cat);
+			}
 		}
 	}
 
