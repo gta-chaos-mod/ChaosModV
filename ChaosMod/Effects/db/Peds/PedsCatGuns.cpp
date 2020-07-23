@@ -50,7 +50,7 @@ static void OnTick()
 	{
 		if (IS_PED_SHOOTING(ped))
 		{
-			Vector3 spawnPos;
+			Vector3 spawnBasePos;
 			Vector3 spawnRot;
 
 			if (IS_PED_A_PLAYER(ped))
@@ -60,18 +60,30 @@ static void OnTick()
 
 				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y, camCoords.z, true);
 
-				spawnPos = GetCoordsFromGameplayCam(distCamToPed + .5f);
+				spawnBasePos = GetCoordsFromGameplayCam(distCamToPed + .5f);
 				spawnRot = GET_GAMEPLAY_CAM_ROT(2);
 			}
 			else
 			{
-				spawnPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, .0f, 1.f, .0f);
+				spawnBasePos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, .0f, 1.f, .0f);
 				spawnRot = GET_ENTITY_ROTATION(ped, 2);
 			}
 
-			int catCount = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped)) ? 5 : 1;
+			bool isShotgun = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
+			int catCount = isShotgun ? 3 : 1;
 			for (int i = 0; i < catCount; i++)
 			{
+				if (i > 0)
+				{
+					WAIT(0);
+				}
+
+				Vector3 spawnPos = spawnBasePos;
+				if (isShotgun)
+				{
+					spawnPos.z = spawnBasePos.z - .25f + i * .25f;
+				}
+
 				Ped cat = CREATE_PED(28, catHash, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 				SET_ENTITY_ROTATION(cat, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
 
