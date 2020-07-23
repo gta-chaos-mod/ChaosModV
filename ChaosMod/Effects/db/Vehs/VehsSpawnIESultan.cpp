@@ -12,7 +12,7 @@ static void OnStart()
 
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Vehicle veh = CREATE_VEHICLE(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
+	Vehicle veh = CreatePoolVehicle(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_COLOURS(veh, 64, 64);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
@@ -28,7 +28,7 @@ static void OnStart()
 
 	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
 
-	Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, model, -1, true, false);
+	Ped ped = CreatePoolPedInsideVehicle(veh, 4, model, -1);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
@@ -42,7 +42,7 @@ static void OnStart()
 
 	WAIT(0);
 
-	ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, model, 0, true, false);
+	ped = CreatePoolPedInsideVehicle(veh, 4, model, 0);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 

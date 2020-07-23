@@ -205,6 +205,7 @@ enum EffectType
 	EFFECT_PEDS_INTORANDOMVEHS,
 	EFFECT_PEDS_CAT_GUNS,
 	EFFECT_MISC_OIL_LEAKS,
+	EFFECT_PEDS_FOG_OF_WAR,
 	_EFFECT_ENUM_MAX
 };
 
@@ -297,8 +298,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NO_RADAR, {"No Radar", "no_radar", true, { EFFECT_NO_HUD }}},
 	{EFFECT_NO_HUD, {"No HUD", "no_hud", true, { EFFECT_NO_RADAR } }},
 	{EFFECT_SUPER_RUN, {"Super Run & Super Jump", "player_superrun", true }},
-	{EFFECT_PLAYER_RAGDOLL, {"Ragdoll", "player_ragdoll"}},
-	{EFFECT_PEDS_RAGDOLL_ON_TOUCH, {"Sensitive Touch", "peds_sensitivetouch", true}},
+	{EFFECT_PLAYER_RAGDOLL, {"Ragdoll", "player_ragdoll", false, { EFFECT_NO_RAGDOLL }}},
+	{EFFECT_PEDS_RAGDOLL_ON_TOUCH, {"Sensitive Touch", "peds_sensitivetouch", true, { EFFECT_NO_RAGDOLL }}},
 	{EFFECT_PLAYER_POOR, {"Poor Boy", "poorboi"}},
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous", "player_famous", true}},
 	{EFFECT_PLAYER_DRUNK, {"Drunk", "player_drunk", true}},
@@ -350,7 +351,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_JUMPY_VEHS, {"Jumpy Vehicles", "vehs_jumpy", true, {}, true}},
 	{EFFECT_LOCK_VEHS, {"Lock All Vehicles", "vehs_lockdoors"}},
 	{EFFECT_TOTAL_CHAOS, {"Doomsday", "chaosmode", true}},
-	{EFFECT_NO_RAGDOLL, {"No Ragdoll", "player_noragdoll", true, { EFFECT_PLAYER_SHOT_RAGDOLL }}},
+	{EFFECT_NO_RAGDOLL, {"No Ragdoll", "player_noragdoll", true}},
 	{EFFECT_VEHS_HORN, {"All Vehicles Honk", "vehs_honkconstant", true}},
 	{EFFECT_TP_WAYPOINT, {"Teleport To Waypoint", "player_tptowaypoint"}},
 	{EFFECT_PEDS_SAY_HI, {"Friendly Neighborhood", "peds_sayhi", true, { EFFECT_PEDS_INSULT }}},
@@ -400,7 +401,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SLIDY_PEDS, {"Slidy Peds", "peds_slidy", true}},
 	{EFFECT_VEH_SET_RANDOM_SEAT, {"Set Player Into Random Vehicle Seat", "veh_randomseat"}},
 	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},
-	{EFFECT_PEDS_RAGDOLL, {"Ragdoll Everyone", "peds_ragdoll"}},
+	{EFFECT_PEDS_RAGDOLL, {"Ragdoll Everyone", "peds_ragdoll", false, { EFFECT_NO_RAGDOLL }}},
 	{EFFECT_JESUS_TAKE_THE_WHEEL, {"Jesus Take The Wheel", "veh_jesustakethewheel"}},
 	{EFFECT_VEH_POP_TIRE_LOOP, {"Random Tire Popping", "veh_poptire", true, {}, true}},
 	{EFFECT_ANGRY_ALIEN, {"Spawn Angry Alien", "peds_angryalien"}},
@@ -424,4 +425,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Leaks", "misc_oilleaks", true}},
+	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}}
 };

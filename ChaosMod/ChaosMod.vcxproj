@@ -100,6 +100,7 @@
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
@@ -240,6 +241,7 @@
     </ClCompile>
     <ClCompile Include="TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
+    <ClCompile Include="Util\PoolSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
@@ -267,6 +269,7 @@
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Util\PoolSpawner.h" />
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />

@@ -182,7 +182,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 	// Also check for incompatible effects
 	bool alreadyExists = false;
 
-	const std::vector<EffectType> incompatibleEffects = effectInfo.IncompatibleWith;
+	const std::vector<EffectType>& incompatibleEffects = effectInfo.IncompatibleWith;
 
 	std::vector<ActiveEffect>::iterator it;
 	for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
@@ -196,27 +196,19 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 		}
 
 		bool found = false;
-		for (EffectType incompatibleEffect : incompatibleEffects)
+		if (std::find(incompatibleEffects.begin(), incompatibleEffects.end(), effect.EffectType) != incompatibleEffects.end())
 		{
-			if (effect.EffectType == incompatibleEffect)
-			{
-				found = true;
-
-				break;
-			}
+			found = true;
 		}
 
 		// Check if current effect is marked as incompatible in active effect
 		if (!found)
 		{
-			for (EffectType incompatibleEffect : g_effectsMap.at(effect.EffectType).IncompatibleWith)
-			{
-				if (effect.EffectType == incompatibleEffect)
-				{
-					found = true;
+			const std::vector<EffectType>& activeIncompatibleEffects = g_effectsMap.at(effect.EffectType).IncompatibleWith;
 
-					break;
-				}
+			if (std::find(activeIncompatibleEffects.begin(), activeIncompatibleEffects.end(), effectType) != activeIncompatibleEffects.end())
+			{
+				found = true;
 			}
 		}
 

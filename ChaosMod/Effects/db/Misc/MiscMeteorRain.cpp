@@ -4,7 +4,7 @@ static void OnTick()
 {
 	// Thanks to menyoo for the prop names
 	static const char* propNames[] = { "prop_asteroid_01", "prop_test_boulder_01", "prop_test_boulder_02", "prop_test_boulder_03", "prop_test_boulder_04" };
-	static constexpr int MAX_METEORS = 25;
+	static constexpr int MAX_METEORS = 20;
 
 	static Object meteors[MAX_METEORS] = {};
 	static int meteorDespawnTime[MAX_METEORS];

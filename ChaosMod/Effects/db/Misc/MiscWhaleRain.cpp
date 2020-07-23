@@ -2,7 +2,7 @@
 
 static void OnTick()
 {
-	static constexpr int MAX_WHALES = 25;
+	static constexpr int MAX_WHALES = 20;
 	static const Hash WHALE_MODEL = 1193010354;
 
 	static Ped whales[MAX_WHALES] = {};

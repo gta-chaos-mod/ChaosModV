@@ -12,7 +12,7 @@ static void OnStart()
 
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	Ped ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 0, false);
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 	SET_PED_HEARING_RANGE(ped, 9999.f);

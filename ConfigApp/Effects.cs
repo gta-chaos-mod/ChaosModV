@@ -239,6 +239,7 @@ namespace ConfigApp
             EFFECT_PEDS_INTORANDOMVEHS,
             EFFECT_PEDS_CAT_GUNS,
             EFFECT_MISC_OIL_LEAKS,
+            EFFECT_PEDS_FOG_OF_WAR,
             _EFFECT_ENUM_MAX
         }
 
@@ -371,7 +372,7 @@ namespace ConfigApp
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, "vehs_jumpy", true, true)},
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, "vehs_lockdoors")},
             {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, "chaosmode", true)},
-            {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PLAYER, "player_noragdoll", true)},
+            {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PEDS, "player_noragdoll", true)},
             {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, "vehs_honkconstant", true)},
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, "player_tptowaypoint")},
             {EffectType.EFFECT_PEDS_SAY_HI, new EffectInfo("Friendly Neighborhood", EffectCategory.PEDS, "peds_sayhi", true)},
@@ -443,6 +444,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_INTORANDOMVEHS, new EffectInfo("Set Everyone Into Random Vehicles", EffectCategory.PEDS, "peds_intorandomvehs")},
             {EffectType.EFFECT_PEDS_CAT_GUNS, new EffectInfo("Catto Guns", EffectCategory.PEDS, "peds_catguns", true)},
             {EffectType.EFFECT_MISC_OIL_LEAKS, new EffectInfo("Oil Leaks", EffectCategory.MISC, "misc_oilleaks", true)},
+            {EffectType.EFFECT_PEDS_FOG_OF_WAR, new EffectInfo("Fog Of War", EffectCategory.PEDS, "peds_fogofwar", true)},
         };
     }
 }

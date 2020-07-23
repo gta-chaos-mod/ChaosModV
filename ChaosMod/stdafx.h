@@ -25,6 +25,7 @@
 #include "Util/Player.h"
 #include "Util/Vehicle.h"
 #include "Util/TryParse.h"
+#include "Util/PoolSpawner.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
@@ -40,6 +41,6 @@
 #include <array>
 #include <string>
 #include <sstream>
-//#include <stdexcept>
 #include <memory>
 #include <numeric>
+#include <queue>

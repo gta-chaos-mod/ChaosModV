@@ -17,7 +17,7 @@ static void OnStart()
 
 	for (int i = 0; i < FAN_CATS_AMOUNT; i++)
 	{
-		Ped ped = CREATE_PED(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+		Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 	}
