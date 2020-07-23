@@ -11,6 +11,11 @@ static void OnTick()
 		int timeSinceDmg = _GET_TIME_OF_LAST_PED_WEAPON_DAMAGE(playerPed, weapon);
 		if (timeSinceDmg && curTime - timeSinceDmg < 200)
 		{
+			if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+			{
+				CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
+			}
+
 			SET_PED_TO_RAGDOLL(playerPed, 500, 1000, 0, true, true, false);
 
 			CREATE_NM_MESSAGE(true, 0);
