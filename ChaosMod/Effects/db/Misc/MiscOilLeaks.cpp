@@ -25,6 +25,7 @@ static void OnTick()
 		}
 	}
 
+	int count = 25;
 	for (Entity entity : entities)
 	{
 		if (!DOES_ENTITY_EXIST(entity)) 
@@ -36,6 +37,13 @@ static void OnTick()
 		if (GET_GROUND_Z_FOR_3D_COORD(entityPos.x, entityPos.y, entityPos.z, &groundZ, false, false))
 		{
 			ADD_PETROL_DECAL(entityPos.x, entityPos.y, groundZ, 2, 2, 1);
+		}
+
+		if (--count == 0)
+		{
+			count = 25;
+
+			WAIT(0);
 		}
 	}
 }
