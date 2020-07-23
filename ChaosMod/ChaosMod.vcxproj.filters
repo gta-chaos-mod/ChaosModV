@@ -151,6 +151,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
