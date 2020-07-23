@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+static std::vector<Ped> m_peds;
+
 //based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {
@@ -23,7 +25,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
-	Ped ped = CREATE_PED(4, alienHash, playerPos.x, playerPos.y, playerPos.z, 0.f, true, false);
+	Ped ped = CreatePoolPed(4, alienHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 	SET_PED_CONFIG_FLAG(ped, 281, true);

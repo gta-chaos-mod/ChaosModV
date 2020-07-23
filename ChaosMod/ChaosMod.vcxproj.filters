@@ -153,6 +153,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
+    <ClCompile Include="Util\PoolSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
+    <ClInclude Include="Util\PoolSpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />

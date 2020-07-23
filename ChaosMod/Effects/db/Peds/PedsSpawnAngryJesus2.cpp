@@ -13,7 +13,7 @@ static void OnStart()
 
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
 
-	Vehicle veh = CREATE_VEHICLE(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
+	Vehicle veh = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -36,7 +36,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
-	Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
+	Ped ped = CreatePoolPedInsideVehicle(veh, 4, modelHash, -1);
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 	SET_PED_CONFIG_FLAG(ped, 281, true);
