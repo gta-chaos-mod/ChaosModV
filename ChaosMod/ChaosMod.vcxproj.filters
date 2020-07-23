@@ -155,6 +155,7 @@
     <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
