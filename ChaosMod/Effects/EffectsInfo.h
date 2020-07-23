@@ -204,7 +204,7 @@ enum EffectType
 	EFFECT_PEDS_SCOOTERBROTHERS,
 	EFFECT_PEDS_INTORANDOMVEHS,
 	EFFECT_PEDS_CAT_GUNS,
-	EFFECT_PEDS_OIL_LEAK,
+	EFFECT_MISC_OIL_LEAKS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -423,5 +423,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_SCOOTERBROTHERS, {"Scooter Brothers", "peds_scooterbrothers"}},
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_PEDS_OIL_LEAK, {"Oil Leak", "peds_oilleak", true}},
+	{EFFECT_MISC_OIL_LEAKS, {"Oil Leaks", "misc_oilleaks", true}},
 };

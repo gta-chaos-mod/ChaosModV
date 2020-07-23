@@ -99,8 +99,8 @@
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsOilLeak.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
