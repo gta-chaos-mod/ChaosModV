@@ -3,9 +3,13 @@
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false)) 
+	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false) && !IS_PED_FALLING(playerPed) && !IS_PED_SWIMMING(playerPed) && !IS_PED_SWIMMING_UNDER_WATER(playerPed)) 
 	{
 		REQUEST_ANIM_DICT("mp_suicide");
+		while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
+		{
+			WAIT(0);
+		}
 		Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
 		GIVE_WEAPON_TO_PED(playerPed, pistolHash, 9999, true, true);
 		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, -1.f, 1, 0.f, false, false, false);
