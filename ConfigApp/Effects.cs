@@ -448,7 +448,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_CAT_GUNS, new EffectInfo("Catto Guns", EffectCategory.PEDS, "peds_catguns", true)},
             {EffectType.EFFECT_MISC_OIL_LEAKS, new EffectInfo("Oil Leaks", EffectCategory.MISC, "misc_oilleaks", true)},
             {EffectType.EFFECT_PEDS_FOG_OF_WAR, new EffectInfo("Fog Of War", EffectCategory.PEDS, "peds_fogofwar", true)},
-            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("These Boots Are Made For Running", EffectCategory.PLAYER, "player_keeprunning", true)},
+            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
         };
     }
 }
