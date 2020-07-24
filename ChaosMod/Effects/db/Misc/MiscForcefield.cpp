@@ -44,4 +44,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FORCEFIELD, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FORCEFIELD, nullptr, nullptr, OnTick);

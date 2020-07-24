@@ -205,7 +205,7 @@ enum EffectType
 	EFFECT_PEDS_INTORANDOMVEHS,
 	EFFECT_PLAYER_HEAVY_RECOIL,
 	EFFECT_PEDS_CAT_GUNS,
-	EFFECT_MISC_FORCEFIELD,
+	EFFECT_PLAYER_FORCEFIELD,
 	EFFECT_MISC_OIL_LEAKS,
 	EFFECT_PEDS_FOG_OF_WAR,
 	_EFFECT_ENUM_MAX
@@ -427,7 +427,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PLAYER_HEAVY_RECOIL, { "Heavy Recoil", "player_heavyrecoil", true}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_MISC_FORCEFIELD, {"Forcefield", "misc_forcefield", true}},
+	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Leaks", "misc_oilleaks", true}},
 	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}}
 };
