@@ -119,6 +119,7 @@
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDrivingPhobia.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
