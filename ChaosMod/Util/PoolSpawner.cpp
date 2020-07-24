@@ -42,45 +42,63 @@ void ClearEntityPool()
 
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading)
 {
+	LoadModel(modelHash);
+
 	Ped ped = CREATE_PED(pedType, modelHash, x, y, z, heading, true, false);
 
 	HandleEntity(ped);
 
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+
 	return ped;
 }
 
-Ped CreateRandomPoolPed(float posX, float posY, float posZ)
+Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading)
 {
-	Ped ped = CREATE_RANDOM_PED(posX, posY, posZ);
+	static const std::vector<Hash>& pedModels = Memory::GetAllPedModels();
+	
+	Hash model = pedModels[g_random.GetRandomInt(0, pedModels.size() - 1)];
 
-	HandleEntity(ped);
+	Ped ped = CreatePoolPed(4, model, posX, posY, posZ, heading);
 
 	return ped;
 }
 
 Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seat)
 {
+	LoadModel(modelHash);
+
 	Ped ped = CREATE_PED_INSIDE_VEHICLE(vehicle, pedType, modelHash, seat, true, false);
 
 	HandleEntity(ped);
+
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 
 	return ped;
 }
 
 Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading)
 {
+	LoadModel(modelHash);
+
 	Vehicle veh = CREATE_VEHICLE(modelHash, x, y, z, heading, true, false, false);
 
 	HandleEntity(veh);
+
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 
 	return veh;
 }
 
 Object CreatePoolProp(Object modelHash, float x, float y, float z, bool dynamic)
 {
+	LoadModel(modelHash);
+
 	Object prop = CREATE_OBJECT(modelHash, x, y, z, true, false, dynamic);
 
 	HandleEntity(prop);
+
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 
 	return prop;
 }

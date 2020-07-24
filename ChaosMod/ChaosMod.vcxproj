@@ -259,6 +259,7 @@
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
     <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="Memory\PedModels.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
