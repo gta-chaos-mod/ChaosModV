@@ -17,6 +17,7 @@
 #include "Memory/Snow.h"
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
+#include "Memory/PedModels.h"
 
 #include "Memory/Hooks/Hook.h"
 

@@ -13,7 +13,6 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, femCivGroup);
 
 	Hash model = GET_HASH_KEY("u_m_y_imporage");
-	LoadModel(model);
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -39,8 +38,6 @@ static void OnStart()
 	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 
 	DWORD64 lastTick = GetTickCount64();
 

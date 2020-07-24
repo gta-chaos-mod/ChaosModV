@@ -17,7 +17,6 @@ static void OnStart()
 	for (int i = 0; i < DANCING_APES_AMOUNT; i++)
 	{
 		Hash modelHash = GET_HASH_KEY(g_random.GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
-		LoadModel(modelHash);
 
 		Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
@@ -34,8 +33,6 @@ static void OnStart()
 		WAIT(0);
 
 		SET_PED_CONFIG_FLAG(ped, 292, true);
-
-		SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	}
 
 	REMOVE_ANIM_DICT("missfbi3_sniping");

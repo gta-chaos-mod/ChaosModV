@@ -6,7 +6,6 @@ static void OnStart()
 	float playerHeading = GET_ENTITY_HEADING(playerPed);
 
 	static const Hash sultanModel = GET_HASH_KEY("SULTANRS");
-	LoadModel(sultanModel);
 
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
 
@@ -24,7 +23,6 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);
 
 	static const Hash model = GET_HASH_KEY("g_m_m_armboss_01");
-	LoadModel(model);
 
 	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
 
@@ -55,9 +53,6 @@ static void OnStart()
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	WAIT(0);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(sultanModel);
-	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart);

@@ -5,7 +5,6 @@
 static void OnStart()
 {
 	static const Hash modelHash = GET_HASH_KEY("a_c_cat_01");
-	LoadModel(modelHash);
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_FAN_CATS", &relationshipGroup);
@@ -21,8 +20,6 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 	}
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_FAN_CATS, OnStart);
