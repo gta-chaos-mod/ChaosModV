@@ -184,6 +184,7 @@
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
+    <ClInclude Include="Memory\PedModels.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />

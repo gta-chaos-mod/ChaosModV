@@ -3,7 +3,6 @@
 static void OnStart()
 {
 	static const Hash modelHash = GET_HASH_KEY("a_c_chimp");
-	LoadModel(modelHash);
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_COMPANION_CHIMP", &relationshipGroup);
@@ -13,7 +12,7 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
+	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
@@ -34,8 +33,6 @@ static void OnStart()
 
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_PISTOL"), 9999, false, true);
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_CARBINERIFLE"), 9999, false, true);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHIMP, OnStart);

@@ -3,7 +3,6 @@
 static void OnStart()
 {
 	static const Hash model = GET_HASH_KEY("ig_brad");
-	LoadModel(model);
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_COMPANION_BRAD", &relationshipGroup);

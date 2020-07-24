@@ -3,7 +3,6 @@
 static void OnStart()
 {
 	static constexpr Hash modelHash = -835930287;
-	LoadModel(modelHash);
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -41,8 +40,6 @@ static void OnStart()
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 }
 
 static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS, OnStart);

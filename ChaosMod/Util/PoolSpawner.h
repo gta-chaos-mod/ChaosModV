@@ -7,7 +7,7 @@ typedef unsigned long Hash;
 void ClearEntityPool();
 
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading);
-Ped CreateRandomPoolPed(float posX, float posY, float posZ);
+Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading);
 Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seat);
 
 Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading);
