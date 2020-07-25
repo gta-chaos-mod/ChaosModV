@@ -208,6 +208,7 @@ enum EffectType
 	EFFECT_PLAYER_FORCEFIELD,
 	EFFECT_MISC_OIL_LEAKS,
 	EFFECT_PEDS_FOG_OF_WAR,
+	EFFECT_PLAYER_KEEP_RUNNING,
 	_EFFECT_ENUM_MAX
 };
 
@@ -429,5 +430,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
 	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Leaks", "misc_oilleaks", true}},
-	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}}
+	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}},
+	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}}
 };
