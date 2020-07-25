@@ -21,6 +21,7 @@ static void OnStart()
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_IESULTAN", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, relationshipGroup);
 
 	static const Hash model = GET_HASH_KEY("g_m_m_armboss_01");
 
