@@ -5,10 +5,11 @@
 #include <stdafx.h>
 
 static int lastAirStrike = 0;
-static Hash airstrikeHash = GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET");
+static Hash airstrikeHash;
 
 static void OnStart()
 {
+	airstrikeHash = GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET");
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
 	SET_MAX_WANTED_LEVEL(0);
 }
@@ -36,7 +37,7 @@ static void OnTick()
 		WAIT(0);
 	}
 	int current_time = GET_GAME_TIMER();
-	if (current_time - lastAirStrike > 500)
+	if (current_time - lastAirStrike > 1000)
 	{
 		lastAirStrike = current_time;
 		Ped player = PLAYER_PED_ID();
