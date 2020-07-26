@@ -7,7 +7,6 @@
 static int lastAirStrike = 0;
 static Hash airstrikeHash = GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET");
 
-
 static void OnStart()
 {
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
@@ -41,12 +40,12 @@ static void OnTick()
 	{
 		lastAirStrike = current_time;
 		Ped player = PLAYER_PED_ID();
-		Vector3 pos = GET_ENTITY_COORDS(player, false);
-		float range = 300;
-		Vector3 startPosition = getRandomOffsetCoord(pos, 10);
-		Vector3 targetPosition = getRandomOffsetCoord(pos, 50);
+		Vector3 playerPos = GET_ENTITY_COORDS(player, false);
+		Vector3 startPosition = getRandomOffsetCoord(playerPos, 10);
+		Vector3 targetPosition = getRandomOffsetCoord(playerPos, 50);
 		float groundZ = 0;
-		if (GET_GROUND_Z_FOR_3D_COORD(targetPosition.x, targetPosition.y, targetPosition.z, &groundZ, false, false)) {
+		if (GET_GROUND_Z_FOR_3D_COORD(targetPosition.x, targetPosition.y, targetPosition.z, &groundZ, false, false)) 
+		{
 			SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startPosition.x, startPosition.y, startPosition.z + 200, targetPosition.x, targetPosition.y, groundZ, 200, true, airstrikeHash, player, true, false, 5000);
 		}
 	}
