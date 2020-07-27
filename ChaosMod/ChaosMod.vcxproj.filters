@@ -157,6 +157,8 @@
     <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscForcefield.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMerryweatherHere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
