@@ -37,7 +37,8 @@ static void OnStart()
 	static const Hash model = GET_HASH_KEY("csb_mweather");
 	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
 
-	for (int seatPos = -1; seatPos < 3; seatPos++) {
+	for (int seatPos = -1; seatPos < 3; seatPos++) 
+	{
 		Ped ped = CreatePoolPedInsideVehicle(veh, -1, model, seatPos);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
