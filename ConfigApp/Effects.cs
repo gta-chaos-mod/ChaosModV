@@ -245,6 +245,7 @@ namespace ConfigApp
             EFFECT_PLAYER_KEEP_RUNNING,
             EFFECT_VEH_WEAPONS,
             EFFECT_MISC_AIRSTRIKE,
+            EFFECT_MISC_FAKEDEATH,
             _EFFECT_ENUM_MAX
         }
 
@@ -455,6 +456,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Incoming", EffectCategory.MISC, "misc_airstrike", true)},
+            {EffectType.EFFECT_MISC_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.MISC, "misc_fakedeath", true, true)},
         };
     }
 }
