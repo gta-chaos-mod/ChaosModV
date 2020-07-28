@@ -87,7 +87,7 @@ static void OnTick()
 
 					if (maxHealth > 0)
 					{
-						if (IS_PED_INJURED(zombie))
+						if (IS_PED_INJURED(zombie) || IS_PED_RAGDOLL(zombie))
 						{
 							Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
