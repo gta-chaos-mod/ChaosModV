@@ -211,7 +211,7 @@ enum EffectType
 	EFFECT_PLAYER_KEEP_RUNNING,
 	EFFECT_VEH_WEAPONS,
 	EFFECT_MISC_AIRSTRIKE,
-	EFFECT_MISC_MERRYWEATHER_HERE,
+	EFFECT_MISC_MERCENARIES,
 	_EFFECT_ENUM_MAX
 };
 
@@ -437,5 +437,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Incoming", "misc_airstrike", true}},
-	{EFFECT_MISC_MERRYWEATHER_HERE, {"Merryweather Fleets Here, Bro", "misc_merryweatherhere", true}},
+	{EFFECT_MISC_MERCENARIES, {"Mercenaries", "misc_mercenaries", true}},
 };
