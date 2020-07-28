@@ -56,4 +56,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick);
