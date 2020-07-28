@@ -51,7 +51,7 @@
                         VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="misc_user_effects_timed_short_dur" HorizontalAlignment="Left" Height="23" Margin="233,143,0,0" TextWrapping="Wrap"
                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="6" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
                     <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
                         VerticalAlignment="Top" Width="325" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
