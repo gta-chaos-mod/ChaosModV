@@ -13,7 +13,6 @@ static void OnStop()
 
 static void OnTick()
 {
-
 	int current_time = GET_GAME_TIMER();
 	if (current_time - lastCheck > 100)
 	{
@@ -22,7 +21,6 @@ static void OnTick()
 		float fixedGameSpeed = max(min(speed, 4.f), 0.4) / 4;
 		SET_TIME_SCALE(fixedGameSpeed);
 	}
-
 }
 
 static RegisterEffect registerEffect(EFFECT_GAMESPEED_SUPERHOT, nullptr, OnStop, OnTick);
