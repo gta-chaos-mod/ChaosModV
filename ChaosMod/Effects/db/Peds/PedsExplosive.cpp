@@ -8,7 +8,7 @@ static void OnTick()
 		{
 			int maxHealth = GET_ENTITY_MAX_HEALTH(ped);
 
-			if (maxHealth > 0 && IS_PED_INJURED(ped))
+			if (maxHealth > 0 && (IS_PED_INJURED(ped) || IS_PED_RAGDOLL(ped)))
 			{
 				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
