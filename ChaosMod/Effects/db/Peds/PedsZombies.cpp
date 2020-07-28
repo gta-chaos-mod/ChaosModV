@@ -2,8 +2,6 @@
 
 static void OnStart()
 {
-	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
-	SET_MAX_WANTED_LEVEL(0);
 	static const auto playerGroupHash = GET_HASH_KEY("PLAYER");
 	static const auto civMaleGroupHash = GET_HASH_KEY("CIVMALE");
 	static const auto civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
@@ -40,6 +38,9 @@ static void OnTick()
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
+	SET_MAX_WANTED_LEVEL(0);
 
 	if (zombiesAmount <= MAX_ZOMBIES)
 	{
