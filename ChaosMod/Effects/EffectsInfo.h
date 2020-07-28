@@ -433,5 +433,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Leaks", "misc_oilleaks", true}},
 	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
-	{EFFECT_VEH_WEAPONS, {"Vehicle Rockets", "veh_weapons", true}},
+	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
 };

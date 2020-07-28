@@ -452,7 +452,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_OIL_LEAKS, new EffectInfo("Oil Leaks", EffectCategory.MISC, "misc_oilleaks", true)},
             {EffectType.EFFECT_PEDS_FOG_OF_WAR, new EffectInfo("Fog Of War", EffectCategory.PEDS, "peds_fogofwar", true)},
             {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
-            {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicle Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
+            {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
         };
     }
 }
