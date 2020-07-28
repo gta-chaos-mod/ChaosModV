@@ -23,27 +23,30 @@ static void OnTick()
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	static std::vector<Ped> goneThroughPeds;
+	static std::list<Ped> goneThroughPeds;
 
 	for (Ped ped : GetAllPeds())
 	{
-		if (!IS_PED_A_PLAYER(ped) && std::find(goneThroughPeds.begin(), goneThroughPeds.end(), ped) == goneThroughPeds.end())
+		if (!IS_PED_A_PLAYER(ped))
 		{
 			SET_PED_RELATIONSHIP_GROUP_HASH(ped, riotGroupHash);
 
 			SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 			SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 
-			static const std::vector<Hash>& weps = Memory::GetAllWeapons();
-			GIVE_WEAPON_TO_PED(ped, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
-
 			SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 
-			goneThroughPeds.push_back(ped);
+			if (std::find(goneThroughPeds.begin(), goneThroughPeds.end(), ped) == goneThroughPeds.end())
+			{
+				static const std::vector<Hash>& weps = Memory::GetAllWeapons();
+				GIVE_WEAPON_TO_PED(ped, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+
+				goneThroughPeds.push_back(ped);
+			}
 		}
 	}
 
-	for (std::vector<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end(); )
+	for (std::list<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end(); )
 	{
 		if (!DOES_ENTITY_EXIST(*it))
 		{

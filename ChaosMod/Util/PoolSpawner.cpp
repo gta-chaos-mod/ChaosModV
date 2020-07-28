@@ -2,14 +2,28 @@
 
 #include "PoolSpawner.h"
 
-#define ENTITY_POOL_MAX 20
+#define ENTITY_POOL_MAX 30
 
-static std::queue<Entity> m_entities;
+static std::list<Entity> m_entities;
 
 static void HandleEntity(Entity entity)
 {
-	m_entities.push(entity);
+	m_entities.push_back(entity);
 
+	// Clean up entities which don't exist anymore first
+	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
+	{
+		if (!DOES_ENTITY_EXIST(*it))
+		{
+			it = m_entities.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	// Delete front entity if size above limit
 	if (m_entities.size() > ENTITY_POOL_MAX)
 	{
 		Entity frontEntity = m_entities.front();
@@ -19,15 +33,15 @@ static void HandleEntity(Entity entity)
 			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
 		}
 
-		m_entities.pop();
+		m_entities.pop_front();
 	}
 }
 
 void ClearEntityPool()
 {
-	while (!m_entities.empty())
+	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
 	{
-		Entity frontEntity = m_entities.front();
+		Entity frontEntity = *it;
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
@@ -35,9 +49,9 @@ void ClearEntityPool()
 
 			DELETE_ENTITY(&frontEntity);
 		}
-
-		m_entities.pop();
 	}
+
+	m_entities.clear();
 }
 
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading)
