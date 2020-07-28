@@ -10,8 +10,6 @@ static Hash airstrikeHash;
 static void OnStart()
 {
 	airstrikeHash = GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET");
-	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
-	SET_MAX_WANTED_LEVEL(0);
 }
 
 static void OnStop()
@@ -31,6 +29,9 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 
 static void OnTick()
 {
+	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
+	SET_MAX_WANTED_LEVEL(0);
+
 	REQUEST_WEAPON_ASSET(airstrikeHash, 31, 0);
 	while (!HAS_WEAPON_ASSET_LOADED(airstrikeHash))
 	{
