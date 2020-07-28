@@ -39,7 +39,7 @@ static void HandleEntity(Entity entity)
 
 void ClearEntityPool()
 {
-	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
+	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); it++)
 	{
 		Entity frontEntity = *it;
 
