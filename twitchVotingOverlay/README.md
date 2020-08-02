@@ -18,7 +18,7 @@ After that it's just a matter of opening the `dist/index.html` file.
 
 ## Developing
 
-There is a package called webpack dev server which is currently **NOT** installed (if someone wants to do that, feel free). That's why I recommend using `npx webpack --watch --mode=development`. This will compile the code, and re-compile on changes. If you now open the `index.html`, with a tool that refreshes the webpage on changes, I use [this](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) with VS Code, the webpage will automatically refresh and show the changes.
+This project uses [webpack](https://webpack.js.org/). To automatically set up a server which will recompile and reload the page, run `npm run develop` in a terminal. Note that these compiled files will only be served from `webpack-dev-server`, and you'll need to go through the normal compile steps for production use.
 
 # Basic usage
 

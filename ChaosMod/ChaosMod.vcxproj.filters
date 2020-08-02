@@ -79,7 +79,6 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
@@ -145,7 +144,6 @@
     <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSuperRunJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
@@ -161,6 +159,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
