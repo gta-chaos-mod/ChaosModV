@@ -4,6 +4,7 @@ static void OnTick()
 {
 	Player player = PLAYER_ID();
 
+	SET_EXPLOSIVE_MELEE_THIS_FRAME(player);
 	SET_EXPLOSIVE_AMMO_THIS_FRAME(player);
 
 	Vector3 impactCoords;
@@ -17,4 +18,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_BULLETS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_COMBAT, nullptr, nullptr, OnTick);
