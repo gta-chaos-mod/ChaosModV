@@ -6,7 +6,7 @@
 
 static void OnTick()
 {
-	_HUD_WEAPON_WHEEL_IGNORE_SELECTION();
+	DISABLE_CONTROL_ACTION(0, 37, true); // INPUT_SELECT_WEAPON - TAB or LB
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_WEAPON_LOCK, nullptr, nullptr, OnTick);
