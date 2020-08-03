@@ -211,6 +211,7 @@ enum EffectType
 	EFFECT_GAMESPEED_SUPERHOT,
 	EFFECT_VEH_WEAPONS,
 	EFFECT_MISC_AIRSTRIKE,
+	EFFECT_MISC_FAKEDEATH,
 	_EFFECT_ENUM_MAX
 };
 
@@ -435,5 +436,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Incoming", "misc_airstrike", true}},
+	{EFFECT_MISC_FAKEDEATH, {"Fake Death", "misc_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
 };
