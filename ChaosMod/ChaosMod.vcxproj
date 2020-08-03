@@ -95,8 +95,8 @@
     <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscForcefield.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
@@ -121,6 +121,7 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
