@@ -358,7 +358,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_SHOT_RAGDOLL, {"Player Ragdolls When Shot", "player_ragdollondmg", true, { EFFECT_NO_RAGDOLL }}},
 	{EFFECT_JUMPY_VEHS, {"Jumpy Vehicles", "vehs_jumpy", true, {}, true}},
 	{EFFECT_LOCK_VEHS, {"Lock All Vehicles", "vehs_lockdoors"}},
-	{EFFECT_TOTAL_CHAOS, {"Doomsday", "chaosmode", true}},
+	{EFFECT_TOTAL_CHAOS, {"Doomsday", "chaosmode", true, {}, true}},
 	{EFFECT_NO_RAGDOLL, {"No Ragdoll", "player_noragdoll", true}},
 	{EFFECT_VEHS_HORN, {"All Vehicles Honk", "vehs_honkconstant", true}},
 	{EFFECT_TP_WAYPOINT, {"Teleport To Waypoint", "player_tptowaypoint"}},
