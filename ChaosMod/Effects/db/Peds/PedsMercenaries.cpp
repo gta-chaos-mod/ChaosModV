@@ -168,4 +168,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_MERCENARIES, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_MERCENARIES, OnStart, OnStop, OnTick);
