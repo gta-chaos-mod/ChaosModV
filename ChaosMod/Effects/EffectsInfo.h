@@ -436,7 +436,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_FOG_OF_WAR, {"Fog Of War", "peds_fogofwar", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
-	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Incoming", "misc_airstrike", true}},
+	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Inbound", "misc_airstrike", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "player_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
