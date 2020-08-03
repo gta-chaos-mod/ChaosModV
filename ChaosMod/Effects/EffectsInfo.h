@@ -212,6 +212,7 @@ enum EffectType
 	EFFECT_VEH_WEAPONS,
 	EFFECT_MISC_AIRSTRIKE,
 	EFFECT_LOOSE_TRIGGER,
+	EFFECT_MISC_FLAMETHROWER,
 	EFFECT_MISC_FAKEDEATH,
 	_EFFECT_ENUM_MAX
 };
@@ -438,6 +439,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Incoming", "misc_airstrike", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "player_loosetrigger", true}},
+	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_MISC_FAKEDEATH, {"Fake Death", "misc_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
 };
