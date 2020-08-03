@@ -158,6 +158,8 @@
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
+    <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
   </ItemGroup>
   <ItemGroup>
