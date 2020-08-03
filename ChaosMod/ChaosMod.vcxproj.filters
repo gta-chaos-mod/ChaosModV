@@ -96,7 +96,6 @@
     <ClCompile Include="Effects\db\Player\PlayerTpController.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerWeaponLock.cpp" />
     <ClCompile Include="Effects\db\Time\TimeController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
     <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
@@ -157,6 +156,7 @@
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
