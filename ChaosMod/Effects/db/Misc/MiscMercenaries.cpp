@@ -44,7 +44,8 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 {
 	for (int seatPos = -1; seatPos < 3; seatPos++)
 	{
-		Ped ped = CreatePoolPedInsideVehicle(veh, -1, modelHash, seatPos);
+		LoadModel(modelHash);
+		Ped ped = CREATE_PED_INSIDE_VEHICLE(veh, -1, modelHash, seatPos, true, false);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
@@ -67,7 +68,8 @@ static void spawnBuzzard()
 	Hash buzzardHash = GET_HASH_KEY("BUZZARD");
 	Vector3 spawnPoint = getRandomOffsetCoord(playerPos, 200, 250);
 	helicopterGroup = EnemyGroup();
-	helicopterGroup.vehicle = CreatePoolVehicle(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, 0);
+	LoadModel(buzzardHash);
+	helicopterGroup.vehicle = CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, 0, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(helicopterGroup.vehicle, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0); // Needed, so the heli doesn't fall down instantly
@@ -83,7 +85,8 @@ static void spawnMesa()
 	{
 		Hash mesaHash = GET_HASH_KEY("Mesa3");
 		mesaGroup = EnemyGroup();
-		mesaGroup.vehicle = CreatePoolVehicle(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, 0);
+		LoadModel(mesaHash);
+		mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, 0, true, false, false);
 		SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
 		SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
 		SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
