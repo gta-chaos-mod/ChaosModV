@@ -454,7 +454,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Incoming", EffectCategory.MISC, "misc_airstrike", true)},
-            {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrower", EffectCategory.MISC, "misc_flamethrower", true)},
+            {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
         };
     }
 }
