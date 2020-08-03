@@ -95,6 +95,7 @@
     <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
