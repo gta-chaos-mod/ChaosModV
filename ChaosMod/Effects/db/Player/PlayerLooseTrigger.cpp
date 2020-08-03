@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+	Effect by Last0xygen
 */
 
 #include <stdafx.h>
