@@ -91,8 +91,6 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
@@ -161,6 +159,26 @@
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMercenaries.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsBlind.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSuperRunJump.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
+    <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
+    <ClCompile Include="Util\PoolSpawner.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscForcefield.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
+    <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />

@@ -171,8 +171,7 @@ namespace ConfigApp
             EFFECT_TP_WAYPOINT,
             EFFECT_PEDS_SAY_HI,
             EFFECT_PEDS_INSULT,
-            EFFECT_EXPLOSIVE_BULLETS,
-            EFFECT_EXPLOSIVE_PUNCH,
+            EFFECT_EXPLOSIVE_COMBAT,
             EFFECT_GIVE_ALL_WEPS,
             EFFECT_PEDS_AIMBOT,
             EFFECT_SPAWN_COMPANION_CHOP,
@@ -246,6 +245,8 @@ namespace ConfigApp
             EFFECT_VEH_WEAPONS,
             EFFECT_MISC_AIRSTRIKE,
             EFFECT_MISC_MERCENARIES,
+            EFFECT_MISC_FAKEDEATH,
+            EFFECT_GAMESPEED_SUPERHOT,
             _EFFECT_ENUM_MAX
         }
 
@@ -383,8 +384,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, "player_tptowaypoint")},
             {EffectType.EFFECT_PEDS_SAY_HI, new EffectInfo("Friendly Neighborhood", EffectCategory.PEDS, "peds_sayhi", true)},
             {EffectType.EFFECT_PEDS_INSULT, new EffectInfo("Unfriendly Neighborhood", EffectCategory.PEDS, "peds_insult", true)},
-            {EffectType.EFFECT_EXPLOSIVE_BULLETS, new EffectInfo("Explosive Bullets", EffectCategory.PEDS, "player_explosivebullets", true)},
-            {EffectType.EFFECT_EXPLOSIVE_PUNCH, new EffectInfo("Explosive Punch", EffectCategory.PLAYER, "player_explosivepunch", true)},
+            {EffectType.EFFECT_EXPLOSIVE_COMBAT, new EffectInfo("Explosive Combat", EffectCategory.PEDS, "player_explosivecombat", true)},
             {EffectType.EFFECT_GIVE_ALL_WEPS, new EffectInfo("Give All Weapons", EffectCategory.PLAYER, "player_allweps")},
             {EffectType.EFFECT_PEDS_AIMBOT, new EffectInfo("Aimbot Peds", EffectCategory.PEDS, "peds_aimbot", true)},
             {EffectType.EFFECT_SPAWN_COMPANION_CHOP, new EffectInfo("Spawn Companion Doggo", EffectCategory.PEDS, "spawn_chop")},
@@ -457,6 +457,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Incoming", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_MISC_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.MISC, "misc_mercenaries", true)},
+            {EffectType.EFFECT_MISC_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "misc_fakedeath")},
+            {EffectType.EFFECT_GAMESPEED_SUPERHOT, new EffectInfo("Superhot", EffectCategory.TIME, "time_superhot", true)},
         };
     }
 }
