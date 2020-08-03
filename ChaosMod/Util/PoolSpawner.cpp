@@ -71,9 +71,19 @@ Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading)
 {
 	static const std::vector<Hash>& pedModels = Memory::GetAllPedModels();
 	
-	Hash model = pedModels[g_random.GetRandomInt(0, pedModels.size() - 1)];
+	Ped ped;
+	if (!pedModels.empty())
+	{
+		Hash model = pedModels[g_random.GetRandomInt(0, pedModels.size() - 1)];
 
-	Ped ped = CreatePoolPed(4, model, posX, posY, posZ, heading);
+		ped = CreatePoolPed(4, model, posX, posY, posZ, heading);
+	}
+	else
+	{
+		ped = CREATE_RANDOM_PED(posX, posY, posZ);
+
+		SET_ENTITY_HEADING(ped, heading);
+	}
 
 	return ped;
 }
