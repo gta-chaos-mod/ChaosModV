@@ -246,7 +246,7 @@ namespace ConfigApp
             EFFECT_PEDS_MERCENARIES,
             EFFECT_LOOSE_TRIGGER,
             EFFECT_MISC_FLAMETHROWER,
-            EFFECT_MISC_FAKEDEATH,
+            EFFECT_PLAYER_FAKEDEATH,
             EFFECT_GAMESPEED_SUPERHOT,
             _EFFECT_ENUM_MAX
         }
@@ -459,7 +459,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
             {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PLAYER, "player_loosetrigger", true)},
             {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
-            {EffectType.EFFECT_MISC_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "misc_fakedeath")},
+            {EffectType.EFFECT_PLAYER_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "player_fakedeath")},
             {EffectType.EFFECT_GAMESPEED_SUPERHOT, new EffectInfo("Superhot", EffectCategory.TIME, "time_superhot", true)},
         };
     }

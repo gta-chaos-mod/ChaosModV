@@ -76,4 +76,4 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FAKEDEATH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart);
