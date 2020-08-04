@@ -133,6 +133,7 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 	{
 		if (!DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, false))
 		{
+			SET_ENTITY_HEALTH(ped, 0, false);
 			SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		}
 		else
@@ -142,6 +143,7 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 			Vector3 enemyPos = GET_ENTITY_COORDS(ped, false);
 			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, enemyPos.x, enemyPos.y, enemyPos.z, false) > 300.f)
 			{
+				SET_ENTITY_HEALTH(ped, 0, false);
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);
 			}
 		}
