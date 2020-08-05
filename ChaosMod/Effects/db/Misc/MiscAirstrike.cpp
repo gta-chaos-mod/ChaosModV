@@ -48,7 +48,7 @@ static void OnTick()
 		float groundZ = 0;
 		if (GET_GROUND_Z_FOR_3D_COORD(targetPosition.x, targetPosition.y, targetPosition.z, &groundZ, false, false)) 
 		{
-			SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startPosition.x, startPosition.y, startPosition.z + 200, targetPosition.x, targetPosition.y, groundZ, 200, true, airstrikeHash, player, true, false, 5000);
+			SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startPosition.x, startPosition.y, startPosition.z + 200, targetPosition.x, targetPosition.y, groundZ, 200, true, airstrikeHash, 0, true, false, 5000);
 		}
 	}
 }
