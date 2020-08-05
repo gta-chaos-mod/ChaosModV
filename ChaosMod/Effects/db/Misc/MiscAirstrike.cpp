@@ -15,7 +15,6 @@ static void OnStart()
 static void OnStop()
 {
 	REMOVE_WEAPON_ASSET(airstrikeHash);
-	SET_MAX_WANTED_LEVEL(5);
 }
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
@@ -29,8 +28,6 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 
 static void OnTick()
 {
-	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
-	SET_MAX_WANTED_LEVEL(0);
 
 	REQUEST_WEAPON_ASSET(airstrikeHash, 31, 0);
 	while (!HAS_WEAPON_ASSET_LOADED(airstrikeHash))
