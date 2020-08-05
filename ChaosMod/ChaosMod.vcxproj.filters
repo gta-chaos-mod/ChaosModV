@@ -172,13 +172,13 @@
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
