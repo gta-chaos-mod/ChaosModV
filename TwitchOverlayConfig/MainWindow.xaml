@@ -1,0 +1,85 @@
+﻿<Window x:Class="TwitchOverlayConfig.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:TwitchOverlayConfig"
+        mc:Ignorable="d"
+        Title="Twitch Overlay Configuration" Height="513" Width="1064">
+    <Grid>
+        <TabControl Background="{x:Null}" BorderBrush="LightGray">
+            <TabItem Header="Global Settings" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="113*"/>
+                        <RowDefinition Height="81*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Global Text Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="16" Height="31" Width="149"/>
+                    <Label Content="Text color" HorizontalAlignment="Left" Margin="20,35,0,0" VerticalAlignment="Top" Width="104" Height="25" FontSize="14"/>
+                    <xctk:ColorPicker Name="overlay_global_text_color" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="124,38,0,203" Width="90" SelectedColor="#ffffff"/>
+                    <Label Content="Bold text" HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" Width="104" Height="26"/>
+                    <CheckBox x:Name="overlay_global_bold_text" HorizontalAlignment="Left" Margin="172,67,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.188,2.133" Height="15" Width="16"/>
+                    <Label Content="Text outline color" HorizontalAlignment="Left" Margin="20,85,0,0" VerticalAlignment="Top" Height="25" Width="101"/>
+                    <xctk:ColorPicker Name="overlay_global_outline_color" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="207,85,0,154" Width="90" RenderTransformOrigin="0.889,0.65" SelectedColor="#000000"/>
+                    <Label Content="Text outline thickness (in points)" HorizontalAlignment="Left" Margin="20,110,0,0" VerticalAlignment="Top" Width="183" Height="26" Grid.ColumnSpan="2"/>
+                    <TextBox  x:Name="overlay_global_outline_thickness" HorizontalAlignment="Left" Height="23" Margin="207,117,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput"/>
+                    <Label Content="Text size (in points)" HorizontalAlignment="Left" Margin="20,136,0,0" VerticalAlignment="Top" Width="118" Height="26"/>
+                    <TextBox x:Name="overlay_global_text_size"  HorizontalAlignment="Left" Height="23" Margin="207,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput"/>
+                    <Label Content="Bar Settings" HorizontalAlignment="Left" Margin="365,10,0,0" VerticalAlignment="Top" FontSize="16" Height="31" Width="144"/>
+                    <Label x:Name="overlay_bar_font_size_label" Content="Bar text font size (in points)" HorizontalAlignment="Left" Margin="763,85,0,0" VerticalAlignment="Top" Height="26" Width="155" IsEnabled="False"/>
+                    <TextBox x:Name="overlay_bar_font_size"  HorizontalAlignment="Left" Height="23" Margin="937,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput" IsEnabled="False"/>
+                    <Label x:Name="overlay_bar_bold_text_label" Content="Bold bar Text" HorizontalAlignment="Left" Margin="838,114,0,0" VerticalAlignment="Top" Height="26" Width="79" IsEnabled="False"/>
+                    <CheckBox x:Name="overlay_bar_bold_text" HorizontalAlignment="Left" Margin="937,123,0,0" VerticalAlignment="Top" RenderTransformOrigin="17,-9.133" Height="15" Width="16" IsEnabled="False"/>
+                    <Label Content="Bar height (in pixels)" HorizontalAlignment="Left" Margin="372,35,0,0" VerticalAlignment="Top" Height="26" Width="118"/>
+                    <TextBox x:Name="overlay_bar_height"  HorizontalAlignment="Left" Height="23" Margin="534,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput"/>
+                    <Label Content="Bar progression color" HorizontalAlignment="Left" Margin="372,60,0,0" VerticalAlignment="Top" Height="26" Width="123"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_progression_color" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="534,67,0,178" Width="90" RenderTransformOrigin="0.889,0.65" SelectedColor="#238beb"/>
+                    <Label Content="Bar background color" HorizontalAlignment="Left" Margin="372,88,0,0" VerticalAlignment="Top" Height="26" Width="124"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_background_color" HorizontalAlignment="Left" Margin="534,91,0,151" Width="90" RenderTransformOrigin="0.889,0.65" ShowStandardColors="False" UsingAlphaChannel="False"  SelectedColor="#727272"/>
+                    <Label Content="Disabled background color" HorizontalAlignment="Left" Margin="356,149,0,0" VerticalAlignment="Top" Height="26" Width="153" RenderTransformOrigin="1.261,2.077"/>
+                    <Label Content="Disabled progression color" HorizontalAlignment="Left" Margin="356,123,0,0" VerticalAlignment="Top" Height="26" Width="152"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_progression_color_disabled"  ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="534,123,0,124" Width="90" RenderTransformOrigin="0.889,0.65" SelectedColor="#8d8d8d"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_background_color_disabled" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="534,148,0,89" Width="90" RenderTransformOrigin="0.889,0.65" SelectedColor="#afafaf"/>
+                    <Label x:Name="overlay_bar_text_color_label" Content="Bar text color" HorizontalAlignment="Left" Margin="838,60,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_text_color" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="937,60,0,182" Width="90" RenderTransformOrigin="0.889,0.65" IsEnabled="False" SelectedColor="#f1f1f1"/>
+                    <Label Content="Bar text color disabled" HorizontalAlignment="Left" Margin="381,180,0,0" VerticalAlignment="Top"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_text_color_disabled" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="534,180,0,59" Width="90" RenderTransformOrigin="0.889,0.65" SelectedColor="#f3f3f3"/>
+                    <Label x:Name="overlay_bar_outline_color_label" Content="Bar text outline color" HorizontalAlignment="Left" Margin="797,143,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <xctk:ColorPicker x:Name="overlay_bar_outline_color" ShowStandardColors="False" UsingAlphaChannel="False" HorizontalAlignment="Left" Margin="922,146,0,95" Width="90" RenderTransformOrigin="0.889,0.65" IsEnabled="False" SelectedColor="#000000"/>
+                    <Label x:Name="overlay_bar_outline_thickness_label" Content="Bar outline thickness (in pixels)" HorizontalAlignment="Left" Margin="745,174,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <TextBox  x:Name="overlay_bar_outline_thickness" HorizontalAlignment="Left" Height="23" Margin="922,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput" IsEnabled="False"/>
+                    <Label Content="Use custom Settings for the Bars (recommended)" HorizontalAlignment="Left" Margin="662,32,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="custom_bar_settings" HorizontalAlignment="Left" Margin="937,35,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.812,-1.467" Click="bar_custom_settings_Clicked"/>
+                    <Button x:Name="user_save" Content="Save" HorizontalAlignment="Left" Margin="937,127,0,0" Grid.Row="1" VerticalAlignment="Top" Width="101" Click="user_save_Click" Height="53" />
+                    <Button x:Name="user_reset" Content="Reset" HorizontalAlignment="Left" Margin="836,127,0,0" Grid.Row="1" VerticalAlignment="Top" Width="101" Height="53" Click="user_reset_Click"/>
+                    <Label Content="Bar width (in pixels)" HorizontalAlignment="Left" Margin="356,211,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="overlay_bar_width"  HorizontalAlignment="Left" Height="23" Margin="534,214,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90"
+                        PreviewTextInput="OnlyNumbersAndPeriodPreviewTextInput"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Help/Explenation of the Settings" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <Grid>
+                    <!-- These descriptions need reworking -->
+                    <Label Content="&quot;Global Text Settings&quot;: These settings are used in a lot of different places unless you&#xD;&#xA;choose to use custom settings." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="450" Height="42"/>
+                    <Label Content="Text color: Defines the color of most of the text that you can see on the overlay" HorizontalAlignment="Left" Margin="10,57,0,0" VerticalAlignment="Top" Height="24" Width="450"/>
+                    <Label Content="Bold text: Choose whether or not you want to use bold text" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Height="26" Width="450"/>
+                    <Label Content="Text outline color: Pick the color which the outline of your text should have" HorizontalAlignment="Left" Margin="10,107,0,0" VerticalAlignment="Top" Height="23" Width="450"/>
+                    <Label Content="Text outline thickness: Describes thick the outline of your text should be.&#xD;&#xA;&#x9;e.g. 0.5 or 2. It doesn't matter what you type as long as you seperate your&#xD;&#xA;&#x9;decimals with a '.'." HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" Width="450" Height="61"/>
+                    <Label Content="Text size: How big should your text be" HorizontalAlignment="Left" Margin="10,191,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Font family: Choose the font you want text to be in (from a few options)" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Bar related Settings explained" HorizontalAlignment="Left" Margin="586,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="Bar height: How high do you want the bars to be" HorizontalAlignment="Left" Margin="586,46,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Bar text color disabled: Color of the Text once the bar is &quot;disabled&quot; (as described &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;before)" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="586,264,0,0" RenderTransformOrigin="0.526,-0.154" Height="39"/>
+                    <Label Content="Bar progression color: When you look at the Bar you can see that there are 2 &quot;parts&quot;&#xD;&#xA;to it. There is the background and there is the part of the bar that moves around &#xD;&#xA;according to the percentage that each option has (Blue is standard). This is the &#xD;&#xA;that controls the blue part. " HorizontalAlignment="Left" Margin="586,72,0,0" VerticalAlignment="Top" Width="454" Height="82"/>
+                    <Label Content="Bar background color: The part of the bar that isn't taken up by the progression bar." HorizontalAlignment="Left" Margin="586,154,0,0" VerticalAlignment="Top" Height="27" Width="454"/>
+                    <Label Content="Disabled progression bar and background color: &#xD;&#xA;Once the current voting round is coming to an end you can see that for the last &#xD;&#xA;2 seconds or so the bar turns into another color and no more votes by the viewers &#xD;&#xA;are accepted. These settings set those colors. " HorizontalAlignment="Left" Margin="586,186,0,0" VerticalAlignment="Top" Width="454" Height="78"/>
+                    <Label Content="Custom bar settings: They are basically the exact same the global settings but they&#xD;&#xA; only apply to the bar" HorizontalAlignment="Left" Margin="586,303,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

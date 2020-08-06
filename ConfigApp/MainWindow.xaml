@@ -12,7 +12,11 @@
         <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
-                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="246*"/>
+                    </Grid.ColumnDefinitions>
+                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}" Grid.ColumnSpan="2">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal" Height="21">
@@ -25,7 +29,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" Margin="-2,-2,0,0" VerticalAlignment="Top">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="107*"/>

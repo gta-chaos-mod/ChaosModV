@@ -1,112 +1,113 @@
-* {
-	margin: 0;
-	padding: 0;
+*{
+margin: 0;
+padding: 0;
 }
 
-body {
-	/* Text */
-	--text-color: #ffffff;
+body{
+/* Text */
+	--text-color: #FF0000;
 	--text-font-family: 'Arial';
-	--text-font-weight: 600;
-	--text-outline-color: #000000;
+	--text-font-weight: normal;
+	--text-outline-color: #8A2BE2;
 	--text-outline-thickness: 0.6pt;
-	--text-size: 16pt;
+   --text-size: 16pt;
 
 	/* Bar related things */
-	--bar-background-disabled: #afafaf;
-	--bar-background: #727272;
-	--bar-font-size: 12pt;
-	--bar-font-weight: 600;
+	--bar-background-disabled: #AFAFAF;
+	--bar-background: #00FFFF;
+	--bar-font-size: 16;
+	--bar-font-weight: normal;
 	--bar-font: var(--text-font-family);
 	--bar-height: 30px;
 	--bar-progression-disabled: #8d8d8d;
-	--bar-progression: #238beb;
-	--bar-text-color-disabled: #f3f3f3;
-	--bar-text-color: #f1f1f1;
-	--bar-text-outline-color: #000000;
-	--bar-text-outline-thickness: 0.25px;
+	--bar-progression: #FFA500;
+	--bar-text-color-disabled: #FFFFFF;
+	--bar-text-color: #FF69B4;
+	--bar-text-outline-color: #7FFF00;
+	--bar-text-outline-thickness: 0.1px;
 }
 
 #barContainer {
-	overflow: hidden;
-	width: 400px;
+   overflow: hidden;
+   width: 400px;
 }
 #totalVotes {
-	-webkit-text-stroke: var(--text-outline-thickness) var(--text-outline-color);
-	color: var(--text-color);
-	font-family: var(--text-font-family);
-	font-size: var(--text-size);
-	font-weight: var(--text-font-weight);
-	opacity: 0;
-	transition: opacity 200ms ease-in-out;
+   -webkit-text-stroke: var(--text-outline-thickness) var(--text-outline-color);
+   color: var(--text-color);
+   font-family: var(--text-font-family);
+   font-size: var(--text-size);
+   font-weight: var(--text-font-weight);
+   opacity: 0;
+   transition: opacity 200ms ease-in-out;
 }
 
 .bar {
-	background-color: var(--bar-background);
-	height: var(--bar-height);
-	margin: 10px 0;
-	position: relative;
-	transition: background-color 100ms ease-in-out;
+   background-color: var(--bar-background);
+   height: var(--bar-height);
+   margin: 10px 0;
+   position: relative;
+   transition: background-color 100ms ease-in-out;
 }
 .bar.disabled {
-	background-color: var(--bar-background-disabled);
+   background-color: var(--bar-background);
 }
 .bar > .labelContainer {
-	align-items: center;
-	bottom: 0;
-	display: flex;
-	justify-content: space-between;
-	left: 0;
-	padding: 0 1em;
-	position: absolute;
-	right: 0;
-	top: 0;
+   align-items: center;
+   bottom: 0;
+   display: flex;
+   justify-content: space-between;
+   left: 0;
+   padding: 0 1em;
+   position: absolute;
+   right: 0;
+   top: 0;
 }
 .bar > .labelContainer > span {
-	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
-	color: var(--bar-text-color);
-	font-family: var(--bar-font);
-	font-size: var(--bar-font-size);
-	font-weight: var(--bar-font-weight);
-	transition: color 100ms ease-in-out;
+   -webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
+   color: var(--bar-text-color);
+   font - family: var(--bar-font);
+    font - size: var(--bar-font-size);
+    font - weight: var(--bar-font-weight);
+transition: color 100ms ease-in-out;
 }
+
 .bar > .labelContainer.disabled > span {
-	-webkit-text-stroke: unset;
-	color: var(--bar-text-color-disabled);
+   -webkit-text-stroke: unset;
+   color: var(--bar-text-color-disabled);
 }
 .bar > .progression {
-	background-color: var(--bar-progression);
-	height: 100%;
-	transition: width 0.3s ease-in-out;
+   background-color: var(--bar-progression);
+   height: 100%;
+   transition: width 0.3s ease-in-out;
 }
 .bar > .progression.disabled {
-	background-color: var(--bar-progression-disabled);
+   background-color: var(--bar-progression-disabled);
 }
 
 .slideIn {
-	animation-fill-mode: both;
-	animation-name: slideIn;
-	animation-timing-function: ease-in-out;
+animation-fill-mode: both;
+animation-name: slideIn;
+animation-timing-function: ease-in-out;
 }
 .slideOut {
-	animation-fill-mode: both;
-	animation-name: slideOut;
-	animation-timing-function: ease-in-out;
+animation-fill-mode: both;
+animation-name: slideOut;
+animation-timing-function: ease-in-out;
 }
 
 @keyframes slideIn {
-	from {
-		transform: translateX(+100%);
-	}
-	to {
-		transform: translateX(0);
-	}
+   from {
+        transform: translateX(-100%);
+     }
+        to {
+        transform: translateX(0);
+    }
 }
 @keyframes slideOut {
-	from {
-		transform: translateX(0);
-	}
-	to {
-		transform: translateX(+100%);
-	}
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
 }
