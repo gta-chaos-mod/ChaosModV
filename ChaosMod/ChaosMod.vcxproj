@@ -127,6 +127,7 @@
     <ClCompile Include="Effects\db\Player\PlayerLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsHighBeamsEverywhere.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />

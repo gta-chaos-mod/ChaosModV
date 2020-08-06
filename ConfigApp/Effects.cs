@@ -248,6 +248,7 @@ namespace ConfigApp
             EFFECT_MISC_FLAMETHROWER,
             EFFECT_PLAYER_FAKEDEATH,
             EFFECT_GAMESPEED_SUPERHOT,
+            EFFECT_VEH_HIGH_BEAMS_EVERYWHERE,
             _EFFECT_ENUM_MAX
         }
 
@@ -461,6 +462,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
             {EffectType.EFFECT_PLAYER_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "player_fakedeath")},
             {EffectType.EFFECT_GAMESPEED_SUPERHOT, new EffectInfo("Superhot", EffectCategory.TIME, "time_superhot", true)},
+            {EffectType.EFFECT_VEH_HIGH_BEAMS_EVERYWHERE, new EffectInfo("High Beams Everywhere", EffectCategory.VEHICLE, "veh_highbeamseverywhere", true)},
         };
     }
 }
