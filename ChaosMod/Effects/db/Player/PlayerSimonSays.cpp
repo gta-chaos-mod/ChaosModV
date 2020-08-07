@@ -25,7 +25,7 @@ static std::map<std::string, std::vector<int>> actionKeys = {
 		35, 64, 90, 134, 148, 235,
 		44, 23, 102, 55,
 	}},
-	{"look behind(c)", {26, 79}}
+	{"look behind (c)", {26, 79}}
 };
 
 static int scaleForm = 0;
