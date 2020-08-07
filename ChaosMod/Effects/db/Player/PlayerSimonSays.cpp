@@ -42,7 +42,7 @@ static void OnStart()
 	
 	int rand_int = g_random.GetRandomInt(0, 1);
 
-	std::string message = "Simon Says: ";
+	std::string message = "Simeon Says: ";
 	
 	if (rand_int == 0)
 	{
@@ -119,4 +119,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SIMONSAYS, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick);
