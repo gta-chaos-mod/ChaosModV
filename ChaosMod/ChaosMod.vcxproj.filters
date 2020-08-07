@@ -179,7 +179,7 @@
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerSimonSays.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
