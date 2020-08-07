@@ -214,7 +214,7 @@ enum EffectType
 	EFFECT_LOOSE_TRIGGER,
 	EFFECT_MISC_FLAMETHROWER,
 	EFFECT_PLAYER_FAKEDEATH,
-	EFFECT_PLAYER_SIMONSAYS,
+	EFFECT_PLAYER_SIMEONSAYS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -443,5 +443,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
-	{EFFECT_PLAYER_SIMONSAYS, {"Simon Says", "player_simonsays", true, {}, true}},
+	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 };
