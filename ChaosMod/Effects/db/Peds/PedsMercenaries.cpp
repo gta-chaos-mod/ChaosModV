@@ -54,6 +54,12 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
 		SET_PED_ACCURACY(ped, 50);
 
+		SET_PED_COMBAT_ATTRIBUTES(ped, 0, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 1, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 2, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		listToAddPedTo.push_back(ped);
 		WAIT(0);
@@ -76,22 +82,35 @@ static void spawnBuzzard()
 	fillVehicleWithPeds(helicopterGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, helicopterGroup.peds);
 }
 
-static void spawnMesa() 
+static void spawnMesa()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Vector3 spawnPoint;
-	if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 150, &spawnPoint, 0, 0, 0))
-	{
-		Hash mesaHash = GET_HASH_KEY("Mesa3");
-		mesaGroup = EnemyGroup();
-		LoadModel(mesaHash);
-		mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, 0, true, false, false);
-		SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
-		SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
-		SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
-		fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds);
-	}
+	// Try spawning on a vehicle node, fall back to random coord
+	int nodeDistance = 150;
+	do {
+		if (!GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, nodeDistance, &spawnPoint, 0, 0, 0) || nodeDistance <= 10)
+		{
+			spawnPoint = getRandomOffsetCoord(playerPos, 50, 50);
+			float groundZ;
+			if (GET_GROUND_Z_FOR_3D_COORD(spawnPoint.x, spawnPoint.y, spawnPoint.z, &groundZ, false, false))
+			{
+				spawnPoint.z = groundZ;
+			}
+			break;
+		}
+		nodeDistance -= 10;
+	} while (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPoint.x, spawnPoint.y, spawnPoint.z, false) > 200);
+
+	Hash mesaHash = GET_HASH_KEY("Mesa3");
+	mesaGroup = EnemyGroup();
+	LoadModel(mesaHash);
+	mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, 0, true, false, false);
+	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
+	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
+	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
+	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds);
 }
 
 static void OnStart()
@@ -141,7 +160,7 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 			allDead = false;
 			Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 			Vector3 enemyPos = GET_ENTITY_COORDS(ped, false);
-			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, enemyPos.x, enemyPos.y, enemyPos.z, false) > 300.f)
+			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, enemyPos.x, enemyPos.y, enemyPos.z, false) > 350)
 			{
 				SET_ENTITY_HEALTH(ped, 0, false);
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);
