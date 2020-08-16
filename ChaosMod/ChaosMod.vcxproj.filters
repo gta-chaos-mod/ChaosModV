@@ -179,6 +179,7 @@
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
