@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ConfigApp
 {
@@ -249,6 +249,11 @@ namespace ConfigApp
             EFFECT_PLAYER_FAKEDEATH,
             EFFECT_GAMESPEED_SUPERHOT,
             EFFECT_VEH_BEYBLADE,
+            EFFECT_KILLER_CLOWNS,
+            EFFECT_JAMES_BOND,
+            EFFECT_PLAYER_POOF,
+            EFFECT_PLAYER_SIMEONSAYS,
+            EFFECT_VEH_LOCKCAMERA,
             _EFFECT_ENUM_MAX
         }
 
@@ -458,11 +463,16 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
-            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PLAYER, "player_loosetrigger", true)},
+            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PEDS, "peds_loosetrigger", true)},
             {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
             {EffectType.EFFECT_PLAYER_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "player_fakedeath")},
             {EffectType.EFFECT_GAMESPEED_SUPERHOT, new EffectInfo("Superhot", EffectCategory.TIME, "time_superhot", true)},
             {EffectType.EFFECT_VEH_BEYBLADE, new EffectInfo("Beyblades", EffectCategory.VEHICLE, "vehs_beyblade", true)},
+            {EffectType.EFFECT_KILLER_CLOWNS, new EffectInfo("Killer Clowns", EffectCategory.PEDS, "peds_killerclowns", true)},
+            {EffectType.EFFECT_JAMES_BOND, new EffectInfo("Spawn Deadly Agent", EffectCategory.PEDS, "peds_jamesbond")},
+            {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
+            {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
+            {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
         };
     }
 }

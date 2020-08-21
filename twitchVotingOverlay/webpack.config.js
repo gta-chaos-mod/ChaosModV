@@ -6,6 +6,7 @@ module.exports = {
 	devServer: {
 		port: 9090,
 		contentBase: path.join(__dirname, 'dist'),
+		watchContentBase: true,
 		publicPath: '/',
 	},
 

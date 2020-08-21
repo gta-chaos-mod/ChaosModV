@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="DebugMenu.cpp" />
@@ -172,7 +172,6 @@
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
@@ -180,6 +179,12 @@
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBeyblade.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />

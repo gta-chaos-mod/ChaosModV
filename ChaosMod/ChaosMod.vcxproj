@@ -93,6 +93,9 @@
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
@@ -125,9 +128,12 @@
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLooseTrigger.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBeyblade.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
