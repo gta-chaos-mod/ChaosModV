@@ -197,11 +197,11 @@ void Main::MainLoop()
 		if (splashTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mod by pongo1231\n\nContributors:\nLucas7yoshi\nyzimroni\nAduentix\nLast0xygen");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Mod by pongo1231\n\nContributors:\nLucas7yoshi\nyzimroni\nAduentix\nLast0xygen\ndzwdz\nSlothersbee");
 			SET_TEXT_SCALE(.65f, .65f);
 			SET_TEXT_COLOUR(0, 255, 255, 255);
 			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.2f, .5f, 0);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.2f, .4f, 0);
 
 			splashTextTime -= curTick - lastTick;
 		}
