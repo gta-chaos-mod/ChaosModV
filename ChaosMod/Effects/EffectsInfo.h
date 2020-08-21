@@ -443,5 +443,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
-	{EFFECT_VEH_BEYBLADE, {"Beyblade", "vehs_beyblade", true}},
+	{EFFECT_VEH_BEYBLADE, {"Beyblades", "vehs_beyblade", true}},
 };
