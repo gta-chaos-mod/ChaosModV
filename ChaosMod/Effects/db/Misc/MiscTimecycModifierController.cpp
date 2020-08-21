@@ -174,4 +174,4 @@ static void OnNearSightedTick()
 	PUSH_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect(EFFECT_SCREEN_NEAR_SIGHTED, nullptr, OnStop, OnNearSightedTick);
+static RegisterEffect registerEffectNearSighted(EFFECT_SCREEN_NEAR_SIGHTED, nullptr, OnStop, OnNearSightedTick);
