@@ -151,3 +151,12 @@ static void OnTickBubbleVision()
 }
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
+
+
+static void OnNearSightedTick()
+{
+	SET_TIMECYCLE_MODIFIER("HicksBar");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffect(EFFECT_SCREEN_NEAR_SIGHTED, nullptr, OnStop, OnNearSightedTick);
