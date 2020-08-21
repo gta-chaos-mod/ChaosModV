@@ -20,6 +20,7 @@ static void OnStartBright()
 
 static void OnStopBright()
 {
+	OnStop();
 	for (auto car : GetAllVehs())
 	{
 		SET_VEHICLE_LIGHTS(car, 0);
