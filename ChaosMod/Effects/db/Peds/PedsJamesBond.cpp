@@ -14,14 +14,10 @@ static void OnStart()
 	static const Hash model = GET_HASH_KEY("cs_milton");
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_BOND", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
