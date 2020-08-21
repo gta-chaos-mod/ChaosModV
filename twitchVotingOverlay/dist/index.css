@@ -4,32 +4,37 @@
 }
 
 body {
-	/* Text */
+	/*
+	 Text (none specific, specific text has specific properties, like 
+	 --bar-text-color).
+	*/
 	--text-color: #ffffff;
 	--text-font-family: 'Arial';
 	--text-font-weight: 600;
 	--text-outline-color: #000000;
-	--text-outline-thickness: 0.6pt;
-	--text-size: 16pt;
+	--text-outline-thickness: 1.3px;
+	--text-size: 22pt;
 
 	/* Bar related things */
 	--bar-background-disabled: #afafaf;
 	--bar-background: #727272;
-	--bar-font-size: 12pt;
+	--bar-font-size: 14pt;
 	--bar-font-weight: 600;
 	--bar-font: var(--text-font-family);
-	--bar-height: 30px;
+	--bar-height: 35px;
+	--bar-width: 450px;
 	--bar-progression-disabled: #8d8d8d;
 	--bar-progression: #238beb;
 	--bar-text-color-disabled: #f3f3f3;
 	--bar-text-color: #f1f1f1;
 	--bar-text-outline-color: #000000;
-	--bar-text-outline-thickness: 0.25px;
+	--bar-text-outline-thickness: 0px;
+	--bar-border-radius: 0px;
 }
 
 #barContainer {
 	overflow: hidden;
-	width: 400px;
+	width: var(--bar-width);
 }
 #totalVotes {
 	-webkit-text-stroke: var(--text-outline-thickness) var(--text-outline-color);
@@ -47,6 +52,7 @@ body {
 	margin: 10px 0;
 	position: relative;
 	transition: background-color 100ms ease-in-out;
+	border-radius: var(--bar-border-radius);
 }
 .bar.disabled {
 	background-color: var(--bar-background-disabled);
