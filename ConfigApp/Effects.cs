@@ -248,7 +248,6 @@ namespace ConfigApp
             EFFECT_MISC_FLAMETHROWER,
             EFFECT_PLAYER_FAKEDEATH,
             EFFECT_GAMESPEED_SUPERHOT,
-            EFFECT_VEH_HIGH_BEAMS_EVERYWHERE,
             _EFFECT_ENUM_MAX
         }
 
