@@ -15,7 +15,7 @@ static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnT
 
 static void OnStartBright()
 {
-	SET_CLOCK_TIME(0, 0, 0);
+	SET_CLOCK_TIME(12, 0, 0);
 }
 
 static void OnStopBright()
