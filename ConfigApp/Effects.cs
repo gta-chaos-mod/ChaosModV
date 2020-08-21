@@ -358,7 +358,7 @@ namespace ConfigApp
             {EffectType.EFFECT_INVERT_GRAV, new EffectInfo("Invert Gravity", EffectCategory.MISC, "invertgravity", true, true)},
             {EffectType.EFFECT_VEH_REPAIR, new EffectInfo("Repair All Vehicles", EffectCategory.VEHICLE, "playerveh_repair")},
             {EffectType.EFFECT_VEH_POP_TIRES, new EffectInfo("Pop Tires Of Every Vehicle", EffectCategory.VEHICLE, "playerveh_poptires")},
-            {EffectType.EFFECT_ALL_VEH_POP_TIRES, new EffectInfo("Now This Is Some Tire Poppin'", EffectCategory.VEHICLE, "vehs_poptiresconstant", true)},
+            {EffectType.EFFECT_ALL_VEH_POP_TIRES, new EffectInfo("Now This Is Some Tire Poppin'", EffectCategory.VEHICLE, "vehs_poptiresconstant", true, true)},
             {EffectType.EFFECT_NO_SPECIAL_ABILITY, new EffectInfo("No Special Ability", EffectCategory.PLAYER, "player_nospecial", true)},
             {EffectType.EFFECT_IN_THE_HOOD, new EffectInfo("In The Hood", EffectCategory.PEDS, "peds_dance", true)},
             {EffectType.EFFECT_FORCED_CINEMATIC, new EffectInfo("Cinematic Vehicle Cam", EffectCategory.VEHICLE, "player_forcedcinematiccam", true)},
