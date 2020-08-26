@@ -2,19 +2,12 @@
 
 static void OnStart()
 {
-	int count = 2;
-
 	for (Ped ped : GetAllPeds())
 	{
 		Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 		SET_ENTITY_COORDS(ped, pedPos.x, pedPos.y, pedPos.z + 5.f, false, false, false, false);
 
-		if (--count == 0)
-		{
-			count = 2;
-
-			WAIT(0);
-		}
+		WAIT(0);
 	}
 
 	WAIT(0);
@@ -44,13 +37,8 @@ static void OnStart()
 				break;
 			}
 		}
-
-		if (--count == 0)
-		{
-			count = 2;
-
-			WAIT(1);
-		}
+		
+		WAIT(0);
 	}
 }
 
