@@ -115,6 +115,7 @@ static void OnTick()
 	if (kill && !IS_PED_DEAD_OR_DYING(playerPed, false))
 	{
 		Vector3 pos = GET_ENTITY_COORDS(playerPed, false);
+		SET_ENTITY_HEALTH(playerPed, 0, 0);
 		ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f, false);
 	}
 }
