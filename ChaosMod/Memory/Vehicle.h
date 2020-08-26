@@ -95,8 +95,8 @@ namespace Memory
 
 			if (v6)
 			{
-				*reinterpret_cast<BYTE*>(v6 + 2341) &= 0xFEu;
-				*reinterpret_cast<BYTE*>(v6 + 2341) |= state;
+				*reinterpret_cast<BYTE*>(v6 + 2373) &= 0xFEu;
+				*reinterpret_cast<BYTE*>(v6 + 2373) |= state;
 			}
 		}
 	}
