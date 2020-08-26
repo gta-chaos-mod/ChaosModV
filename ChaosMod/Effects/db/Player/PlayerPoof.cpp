@@ -17,6 +17,8 @@ static void OnTick()
 		if ((IS_ENTITY_A_PED(target) || IS_ENTITY_A_VEHICLE(target)) && !IS_ENTITY_DEAD(target, false))
 		{
 			Vector3 pos = GET_ENTITY_COORDS(target, false);
+			SET_ENTITY_HEALTH(target, 0, 0);
+			SET_ENTITY_INVINCIBLE(target, false);
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f, false);
 		}
 	}
