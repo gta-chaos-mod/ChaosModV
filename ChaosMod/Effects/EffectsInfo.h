@@ -220,6 +220,8 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
+	EFFECT_VEH_BUSRAIN,
+	EFFECT_VEH_BUSJESUS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -454,4 +456,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_POOF, {"Deadly Aim", "player_poof", true}},
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
+	{EFFECT_VEH_BUSRAIN, {"Bus Rain", "veh_busrain", true, {}, true}},
+	{ EFFECT_VEH_BUSJESUS, {"Spawn Personal Bus Jesus", "veh_busjesus", false, {}, false}},
 };
