@@ -256,6 +256,7 @@ namespace ConfigApp
             EFFECT_VEH_LOCKCAMERA,
             EFFECT_VEH_BUSRAIN,
             EFFECT_VEH_BUSJESUS,
+            EFFECT_PEDS_INVISIJESUS,
             _EFFECT_ENUM_MAX
         }
 
@@ -477,6 +478,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
             {EffectType.EFFECT_VEH_BUSRAIN,  new EffectInfo("Bus Rain", EffectCategory.VEHICLE, "veh_busrain", true, true)},
             {EffectType.EFFECT_VEH_BUSJESUS,  new EffectInfo("Spawn Personal Bus Jesus", EffectCategory.VEHICLE, "veh_busjesus")},
+            {EffectType.EFFECT_PEDS_INVISIJESUS,  new EffectInfo("Spawn Semi-Invisible Battleaxe Griefer Jesus", EffectCategory.PEDS, "peds_invisijesus")},
         };
     }
 }
