@@ -49,3 +49,9 @@ static void OnStart()
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_INVISIJESUS, OnStart);
+
+
+
+
+
+
