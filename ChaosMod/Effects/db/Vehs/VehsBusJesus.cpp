@@ -8,7 +8,6 @@ static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-
 	//delete current vehicle
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
@@ -19,7 +18,6 @@ static void OnStart()
 
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
-
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_WHEEL_JESUS", &relationshipGroup);
