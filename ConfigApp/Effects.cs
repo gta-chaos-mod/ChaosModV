@@ -254,6 +254,8 @@ namespace ConfigApp
             EFFECT_PLAYER_POOF,
             EFFECT_PLAYER_SIMEONSAYS,
             EFFECT_VEH_LOCKCAMERA,
+            EFFECT_VEH_BUSRAIN,
+            EFFECT_VEH_BUSJESUS,
             _EFFECT_ENUM_MAX
         }
 
@@ -473,6 +475,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_VEH_BUSRAIN,  new EffectInfo("Bus Rain", EffectCategory.VEHICLE, "veh_busrain", true, true)},
+            {EffectType.EFFECT_VEH_BUSJESUS,  new EffectInfo("Spawn Personal Bus Jesus", EffectCategory.VEHICLE, "veh_busjesus")},
         };
     }
 }
