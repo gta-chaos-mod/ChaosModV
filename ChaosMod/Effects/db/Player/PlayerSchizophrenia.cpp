@@ -11,7 +11,6 @@ static void OnStop()
 		RESET_ENTITY_ALPHA(veh);
 	}
 }
-
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -33,11 +32,5 @@ static void OnTick()
 			}
 		}
 	}
-	
-	
-
-	
 }
-
-
 static RegisterEffect registerEffect(EFFECT_PLAYER_SCHIZOPHRENIA, nullptr, OnStop, OnTick);
