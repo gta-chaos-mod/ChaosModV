@@ -1,5 +1,5 @@
 #include <stdafx.h>
-
+//effect by ProfessorBiddle
 static void OnStart()
 {
 	static constexpr Hash modelHash = -835930287;
