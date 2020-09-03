@@ -17,7 +17,6 @@
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
@@ -165,7 +164,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsRepairAll.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsGTAOTraffic.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
@@ -185,6 +184,7 @@
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
