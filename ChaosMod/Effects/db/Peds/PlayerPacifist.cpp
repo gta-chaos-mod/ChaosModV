@@ -1,4 +1,5 @@
 #include <stdafx.h>
+//Effect by ProfessorBiddle, requested thousands of times on discord
 static void OnStart()
 {
 	for (auto ped : GetAllPeds())
