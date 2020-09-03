@@ -95,20 +95,16 @@ static void spawnMesa()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Vector3 spawnPoint;
 	// Try spawning on a vehicle node, fall back to random coord
-	int nodeDistance = 150;
-	do {
-		if (!GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, nodeDistance, &spawnPoint, 0, 0, 0) || nodeDistance <= 10)
+	int nodeId;
+	if (!GET_RANDOM_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 150, false, false, false, &spawnPoint, &nodeId))
+	{
+		spawnPoint = getRandomOffsetCoord(playerPos, 50, 50);
+		float groundZ;
+		if (GET_GROUND_Z_FOR_3D_COORD(spawnPoint.x, spawnPoint.y, spawnPoint.z, &groundZ, false, false))
 		{
-			spawnPoint = getRandomOffsetCoord(playerPos, 50, 50);
-			float groundZ;
-			if (GET_GROUND_Z_FOR_3D_COORD(spawnPoint.x, spawnPoint.y, spawnPoint.z, &groundZ, false, false))
-			{
-				spawnPoint.z = groundZ;
-			}
-			break;
+			spawnPoint.z = groundZ;
 		}
-		nodeDistance -= 10;
-	} while (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPoint.x, spawnPoint.y, spawnPoint.z, false) > 200);
+	}
 	float xDiff = playerPos.x - spawnPoint.x;
 	float yDiff = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
