@@ -11,7 +11,7 @@ static void OnTick()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GetTickCount64();
 
-	if (curTick > lastTick + 400)
+	if (curTick > lastTick + 500)
 	{
 		lastTick = curTick;
 
