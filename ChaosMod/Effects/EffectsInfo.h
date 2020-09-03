@@ -225,6 +225,7 @@ enum EffectType
 	EFFECT_PEDS_INVISIJESUS,
 	EFFECT_PEDS_JESUSARMY,
 	EFFECT_PLAYER_SCHIZOPHRENIA,
+	EFFECT_PEDS_BUSBOIS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -461,7 +462,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
 	{EFFECT_VEH_BUSRAIN, {"Bus Rain", "veh_busrain", true, {}, true}},
 	{EFFECT_VEH_BUSJESUS, {"Spawn Personal Bus Jesus", "veh_busjesus", false, {}, false}},
-	{EFFECT_PEDS_INVISIJESUS, {"Spawn Semi-Invisible Battleaxe Griefer Jesus", "veh_invisijesus", false, {}, false}},
-	{EFFECT_PEDS_JESUSARMY, {"Spawn Jesus Army", "veh_invisijesus", false, {}, false}},
+	{EFFECT_PEDS_INVISIJESUS, {"Spawn Semi-Invisible Battleaxe Griefer Jesus", "peds_invisijesus", false, {}, false}},
+	{EFFECT_PEDS_JESUSARMY, {"Spawn Jesus Army", "peds_jesusarmy", false, {}, false}},
 	{EFFECT_PLAYER_SCHIZOPHRENIA, {"Schizophrenia", "player_schizophrenia", true, {}, false}},
+	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois", false, {}, false}},
 };
