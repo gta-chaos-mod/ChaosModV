@@ -119,6 +119,7 @@ static void spawnMesa()
 	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
 	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
+	SET_VEHICLE_CHEAT_POWER_INCREASE(mesaGroup.vehicle, 2); // Make it easier to catch up
 	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds, true);
 }
 
