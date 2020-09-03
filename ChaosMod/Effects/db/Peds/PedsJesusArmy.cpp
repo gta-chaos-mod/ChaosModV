@@ -16,7 +16,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, femCivGroup);
 
-	for(int i = 0; i < 50; i++)
+	for(int i = 0; i < 20; i++)
 	{		
 		Ped ped = CreatePoolPed(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
