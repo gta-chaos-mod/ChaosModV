@@ -40,7 +40,7 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float m
 	return randomCoord;
 }
 
-static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGroup, Hash modelHash, Hash weaponHash, std::vector<Ped> &listToAddPedTo)
+static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGroup, Hash modelHash, Hash weaponHash, std::vector<Ped> &listToAddPedTo, bool canExitVehicle)
 {
 	for (int seatPos = -1; seatPos < 3; seatPos++)
 	{
@@ -57,9 +57,11 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 		SET_PED_COMBAT_ATTRIBUTES(ped, 0, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 1, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 2, true);
-		SET_PED_COMBAT_ATTRIBUTES(ped, 3, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, canExitVehicle);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
-		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true); 
+		
+		REGISTER_TARGET(ped, playerPed);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		listToAddPedTo.push_back(ped);
 		WAIT(0);
@@ -73,14 +75,19 @@ static void spawnBuzzard()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Hash buzzardHash = GET_HASH_KEY("BUZZARD");
 	Vector3 spawnPoint = getRandomOffsetCoord(playerPos, 200, 250);
+	float xDiff = playerPos.x - spawnPoint.x;
+	float yDiff = playerPos.y - spawnPoint.y;
+	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
 	helicopterGroup = EnemyGroup();
 	LoadModel(buzzardHash);
-	helicopterGroup.vehicle = CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, 0, true, false, false);
+	helicopterGroup.vehicle = CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(helicopterGroup.vehicle, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0); // Needed, so the heli doesn't fall down instantly
-	fillVehicleWithPeds(helicopterGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, helicopterGroup.peds);
+	SET_VEHICLE_CHEAT_POWER_INCREASE(helicopterGroup.vehicle, 2); // Make it easier to catch up
+	fillVehicleWithPeds(helicopterGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, helicopterGroup.peds, false);
 }
+
 
 static void spawnMesa()
 {
@@ -102,15 +109,17 @@ static void spawnMesa()
 		}
 		nodeDistance -= 10;
 	} while (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPoint.x, spawnPoint.y, spawnPoint.z, false) > 200);
-
+	float xDiff = playerPos.x - spawnPoint.x;
+	float yDiff = playerPos.y - spawnPoint.y;
+	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
 	Hash mesaHash = GET_HASH_KEY("Mesa3");
 	mesaGroup = EnemyGroup();
 	LoadModel(mesaHash);
-	mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, 0, true, false, false);
+	mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
 	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
 	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
-	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds);
+	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds, true);
 }
 
 static void OnStart()
