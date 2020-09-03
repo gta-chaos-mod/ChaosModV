@@ -260,6 +260,7 @@ namespace ConfigApp
             EFFECT_PEDS_JESUSARMY,
             EFFECT_PLAYER_SCHIZOPHRENIA,
             EFFECT_PEDS_BUSBOIS,
+            EFFECT_PLAYER_PACIFIST,
             _EFFECT_ENUM_MAX
         }
 
@@ -485,6 +486,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_JESUSARMY,  new EffectInfo("Spawn Jesus Army", EffectCategory.PEDS, "peds_jesusarmy")},
             {EffectType.EFFECT_PLAYER_SCHIZOPHRENIA,  new EffectInfo("Schizophrenia", EffectCategory.PLAYER, "player_schizophrenia", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
+            {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
         };
     }
 }
