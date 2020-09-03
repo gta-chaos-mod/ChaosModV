@@ -12,8 +12,10 @@ static void OnStart()
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-		SET_ENTITY_AS_MISSION_ENTITY(playerVeh, true, true);
-		DELETE_VEHICLE(&playerVeh);
+		Vector3 vel = GET_ENTITY_VELOCITY(playerVeh);
+		Vector3 oldPos = GET_ENTITY_COORDS(playerVeh, false);
+		SET_ENTITY_COORDS_NO_OFFSET(playerVeh, oldPos.x, oldPos.y, oldPos.z + 5, 0, 0, 0);
+		SET_ENTITY_VELOCITY(playerVeh, vel.x, vel.y, 40.f);
 	}
 
 	static constexpr Hash modelHash = -835930287;
