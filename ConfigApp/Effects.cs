@@ -259,6 +259,7 @@ namespace ConfigApp
             EFFECT_PEDS_INVISIJESUS,
             EFFECT_PEDS_JESUSARMY,
             EFFECT_PLAYER_SCHIZOPHRENIA,
+            EFFECT_PEDS_BUSBOIS,
             _EFFECT_ENUM_MAX
         }
 
@@ -483,6 +484,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_INVISIJESUS,  new EffectInfo("Spawn Semi-Invisible Battleaxe Griefer Jesus", EffectCategory.PEDS, "peds_invisijesus")},
             {EffectType.EFFECT_PEDS_JESUSARMY,  new EffectInfo("Spawn Jesus Army", EffectCategory.PEDS, "peds_jesusarmy")},
             {EffectType.EFFECT_PLAYER_SCHIZOPHRENIA,  new EffectInfo("Schizophrenia", EffectCategory.PLAYER, "player_schizophrenia", true, true)},
+            {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
         };
     }
 }
