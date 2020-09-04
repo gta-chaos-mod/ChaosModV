@@ -261,6 +261,7 @@ namespace ConfigApp
             EFFECT_PLAYER_SCHIZOPHRENIA,
             EFFECT_PEDS_BUSBOIS,
             EFFECT_PLAYER_PACIFIST,
+            EFFECT_VEHS_BOUNCY,
             _EFFECT_ENUM_MAX
         }
 
@@ -487,6 +488,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_SCHIZOPHRENIA,  new EffectInfo("Schizophrenia", EffectCategory.PLAYER, "player_schizophrenia", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
             {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
+            {EffectType.EFFECT_VEHS_BOUNCY,  new EffectInfo("Bouncy Vehicles", EffectCategory.VEHICLE, "veh_bouncy", true, false)},
         };
     }
 }

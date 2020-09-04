@@ -2,17 +2,19 @@
 //Effect by ProfessorBiddle, requested thousands of times on discord
 static void OnStart()
 {
-	for (auto ped : GetAllPeds())
-	{
-		CLEAR_ENTITY_LAST_DAMAGE_ENTITY(ped);
-	}
+
 }
 static void OnTick()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	for (auto ped : GetAllPeds())
+	Player player = PLAYER_ID();
+
+	Entity target;
+
+	STOP_GAMEPLAY_CAM_SHAKING(true);
+
+	if (GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(player, &target))
 	{
-		if(HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(ped, playerPed, 1))
+		if ((IS_ENTITY_A_PED(target) || IS_ENTITY_A_VEHICLE(target)) && !IS_ENTITY_DEAD(target, false))
 		{
 			Ped playerPed = PLAYER_PED_ID();
 			if (!IS_PED_IN_ANY_VEHICLE(playerPed, false) && !IS_PED_FALLING(playerPed) && !IS_PED_SWIMMING(playerPed) && !IS_PED_SWIMMING_UNDER_WATER(playerPed))
@@ -31,6 +33,6 @@ static void OnTick()
 			}
 			SET_ENTITY_HEALTH(playerPed, 0, 0);
 		}
-	}	
+	}
 }
 static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, nullptr, nullptr, OnTick);
