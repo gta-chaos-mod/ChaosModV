@@ -5,6 +5,9 @@ static void OnTick()
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 	for (auto veh : GetAllVehs())
 	{
+		//softlock prevention, hopefully
+		if (IS_ENTITY_A_MISSION_ENTITY(veh)) { continue; }
+
 		//detect if vehicle already randomized
 		auto carModified = GET_VEHICLE_WINDOW_TINT(veh);
 
