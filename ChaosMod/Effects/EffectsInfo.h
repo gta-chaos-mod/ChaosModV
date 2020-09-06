@@ -229,6 +229,7 @@ enum EffectType
 	EFFECT_PLAYER_PACIFIST,
 	EFFECT_VEH_BOUNCY,
 	EFFECT_PLAYER_GRAVITY,
+	EFFECT_VEH_RANDTRAFFIC,
 	_EFFECT_ENUM_MAX
 };
 
@@ -472,4 +473,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_BOUNCY, {"Bouncy Vehicles", "veh_bouncy", true, {}, false}},
 	{EFFECT_PLAYER_GRAVITY, {"Player has Gravity", "player_gravity", true, {}, true}},
+	{EFFECT_VEH_RANDTRAFFIC, {"Random Traffic", "veh_randtraffic", true, {}, false}},
 };
