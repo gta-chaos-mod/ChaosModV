@@ -2,12 +2,13 @@
 //effect by ProfessorBiddle, this is a bit clunky but it works well.
 static void OnTick()
 {
+	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 	for (auto veh : GetAllVehs())
 	{
 		//detect if vehicle already randomized
 		auto carModified = GET_VEHICLE_WINDOW_TINT(veh);
 
-		if(veh != GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false) && (carModified != 3))
+		if(veh != playerVeh && (carModified != 3))
 		{
 			//remove ped from vehicle and place them out of the way for now
 			Ped pedInCar = GET_PED_IN_VEHICLE_SEAT(veh, -1, 0);
