@@ -1,3 +1,7 @@
+/*
+	Effect by Last0xygen
+*/
+
 #include <stdafx.h>
 
 enum TiredMode {
