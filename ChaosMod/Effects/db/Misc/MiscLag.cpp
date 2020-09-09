@@ -1,16 +1,18 @@
 #include <stdafx.h>
 
 static int m_state;
+static std::map<Ped, Vector3> toTpPeds;
+static std::map<Vehicle, Vector3> toTpVehs;
 
 static void OnStart()
 {
 	m_state = 0;
+	toTpPeds.clear();
+	toTpVehs.clear();
 }
 
 static void OnTickLag()
 {
-	static std::map<Ped, Vector3> toTpPeds;
-	static std::map<Vehicle, Vector3> toTpVehs;
 
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GetTickCount64();
