@@ -3,6 +3,12 @@ const path = require('path');
 module.exports = {
 	entry: './src/index.ts',
 	devtool: 'inline-source-map',
+	devServer: {
+		port: 9090,
+		contentBase: path.join(__dirname, 'dist'),
+		publicPath: '/',
+	},
+
 	module: {
 		rules: [
 			{
@@ -13,7 +19,7 @@ module.exports = {
 		],
 	},
 	resolve: {
-		extensions: ['.ts'],
+		extensions: ['.ts', '.js'],
 	},
 	output: {
 		filename: 'bundle.js',

@@ -93,9 +93,9 @@
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscForcefield.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
@@ -120,9 +120,11 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
+    <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
@@ -176,8 +178,7 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsExplosiveBullets.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerExplosivePunch.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
