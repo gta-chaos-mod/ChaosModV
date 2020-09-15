@@ -18,13 +18,28 @@ static void OnStartBright()
 	SET_CLOCK_TIME(12, 0, 0);
 }
 
+static void OnStopBright()
+{
+	OnStop();
+	for (auto car : GetAllVehs())
+	{
+		SET_VEHICLE_LIGHTS(car, 0);
+		SET_VEHICLE_LIGHT_MULTIPLIER(car, 1);
+	}
+}
+
 static void OnTickBright()
 {
 	SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
 	PUSH_TIMECYCLE_MODIFIER();
+	for (auto car : GetAllVehs())
+	{
+		SET_VEHICLE_LIGHTS(car, 2); // Vehicles lights always on even if no peds inside
+		SET_VEHICLE_LIGHT_MULTIPLIER(car, 10000); // Make lights eye hurting
+	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, OnStartBright, OnStop, OnTickBright);
+static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, OnStartBright, OnStopBright, OnTickBright);
 
 static void OnTickFog()
 {

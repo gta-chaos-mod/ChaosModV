@@ -1,10 +1,14 @@
 #include <stdafx.h>
 
+static std::list<Ped> m_zombies;
+
 static void OnStart()
 {
-	static const auto playerGroupHash = GET_HASH_KEY("PLAYER");
-	static const auto civMaleGroupHash = GET_HASH_KEY("CIVMALE");
-	static const auto civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
+	m_zombies.clear();
+
+	static const Hash playerGroupHash = GET_HASH_KEY("PLAYER");
+	static const Hash civMaleGroupHash = GET_HASH_KEY("CIVMALE");
+	static const Hash civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
 
 	Hash groupHash;
 	ADD_RELATIONSHIP_GROUP("_ZOMBIES", &groupHash);
@@ -16,11 +20,10 @@ static void OnStart()
 static void OnStop()
 {
 	SET_MAX_WANTED_LEVEL(5);
-	static const auto zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
-
-	for (Ped ped : GetAllPeds())
+	
+	for (Ped ped : m_zombies)
 	{
-		if (GET_PED_RELATIONSHIP_GROUP_HASH(ped) == zombieGroupHash)
+		if (DOES_ENTITY_EXIST(ped))
 		{
 			SET_PED_AS_NO_LONGER_NEEDED(&ped);
 		}
@@ -33,8 +36,6 @@ static void OnTick()
 	static constexpr Hash MODEL_HASH = -1404353274;
 
 	static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
-	static Ped zombies[MAX_ZOMBIES] = {};
-	static int zombiesAmount = 0;
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -42,25 +43,17 @@ static void OnTick()
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	if (zombiesAmount <= MAX_ZOMBIES)
+	if (m_zombies.size() <= MAX_ZOMBIES)
 	{
 		Vector3 spawnPos;
-		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + zombiesAmount, &spawnPos, 0, 0, 0)
+		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + m_zombies.size(), &spawnPos, 0, 0, 0)
 			&& GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z, false) < 300.f)
 		{
 			LoadModel(MODEL_HASH);
 
 			Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
-			zombiesAmount++;
 
-			for (Ped& ped : zombies)
-			{
-				if (!ped)
-				{
-					ped = zombie;
-					break;
-				}
-			}
+			m_zombies.push_back(zombie);
 
 			SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
@@ -75,40 +68,39 @@ static void OnTick()
 		}
 	}
 
-	for (Ped& zombie : zombies)
+	for (std::list<Ped>::iterator it = m_zombies.begin(); it != m_zombies.end(); )
 	{
-		if (zombie)
+		Ped zombie = *it;
+
+		if (DOES_ENTITY_EXIST(zombie))
 		{
-			if (DOES_ENTITY_EXIST(zombie))
+			Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
+			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
 			{
-				Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
-				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
+				int maxHealth = GET_ENTITY_MAX_HEALTH(zombie);
+
+				if (maxHealth > 0)
 				{
-					int maxHealth = GET_ENTITY_MAX_HEALTH(zombie);
-
-					if (maxHealth > 0)
+					if (IS_PED_INJURED(zombie) || IS_PED_RAGDOLL(zombie))
 					{
-						if (IS_PED_INJURED(zombie) || IS_PED_RAGDOLL(zombie))
-						{
-							Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
+						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
-							ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
 
-							SET_ENTITY_HEALTH(zombie, 0, false);
-							SET_ENTITY_MAX_HEALTH(zombie, 0);
-						}
-
-						continue;
+						SET_ENTITY_HEALTH(zombie, 0, false);
+						SET_ENTITY_MAX_HEALTH(zombie, 0);
 					}
+
+					it++;
+
+					continue;
 				}
 			}
 
-			zombiesAmount--;
-
 			SET_PED_AS_NO_LONGER_NEEDED(&zombie);
-
-			zombie = 0;
 		}
+
+		it = m_zombies.erase(it);
 	}
 }
 

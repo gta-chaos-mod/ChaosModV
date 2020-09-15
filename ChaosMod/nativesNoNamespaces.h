@@ -39,3 +39,24 @@ using namespace DLC;
 using namespace SYSTEM;
 using namespace DECORATOR;
 using namespace SOCIALCLUB;
+
+inline void SET_ENTITY_AS_NO_LONGER_NEEDED(Entity* entity)
+{
+	SET_ENTITY_AS_MISSION_ENTITY(*entity, true, true);
+	invoke<Void>(0xB736A491E64A32CF, entity); // orig native
+}
+
+inline void SET_OBJECT_AS_NO_LONGER_NEEDED(Object* prop)
+{
+	SET_ENTITY_AS_NO_LONGER_NEEDED(prop);
+}
+
+inline void SET_PED_AS_NO_LONGER_NEEDED(Ped* ped)
+{
+	SET_ENTITY_AS_NO_LONGER_NEEDED(ped);
+}
+
+inline void SET_VEHICLE_AS_NO_LONGER_NEEDED(Vehicle* veh)
+{
+	SET_ENTITY_AS_NO_LONGER_NEEDED(veh);
+}

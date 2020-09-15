@@ -74,6 +74,9 @@ static void OnStart()
 			SET_RAGDOLL_BLOCKING_FLAGS(clone, 5);
 			SET_PED_SUFFERS_CRITICAL_HITS(clone, false);
 
+			static const std::vector<Hash>& weps = Memory::GetAllWeapons();
+			GIVE_WEAPON_TO_PED(clone, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+
 			SET_PED_ACCURACY(clone, 100);
 			SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
 

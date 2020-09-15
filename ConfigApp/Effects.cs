@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace ConfigApp
 {
@@ -230,7 +230,6 @@ namespace ConfigApp
             EFFECT_MIDAS_TOUCH,
             EFFECT_SPAWN_RANDOM_HOSTILE,
             EFFECT_VEH_NO_BRAKES,
-            EFFECT_PLAYER_WEAPON_LOCK,
             EFFECT_PLAYER_PORTAL_GUN,
             EFFECT_MISC_FIREWORKS,
             EFFECT_VEH_DESPAWN,
@@ -244,9 +243,18 @@ namespace ConfigApp
             EFFECT_PLAYER_KEEP_RUNNING,
             EFFECT_VEH_WEAPONS,
             EFFECT_MISC_AIRSTRIKE,
+            EFFECT_PEDS_MERCENARIES,
+            EFFECT_LOOSE_TRIGGER,
+            EFFECT_MISC_FLAMETHROWER,
+            EFFECT_PLAYER_FAKEDEATH,
             EFFECT_MISC_REPLACEVEHICLE,
-            EFFECT_MISC_FAKEDEATH,
             EFFECT_GAMESPEED_SUPERHOT,
+            EFFECT_VEH_BEYBLADE,
+            EFFECT_KILLER_CLOWNS,
+            EFFECT_JAMES_BOND,
+            EFFECT_PLAYER_POOF,
+            EFFECT_PLAYER_SIMEONSAYS,
+            EFFECT_VEH_LOCKCAMERA,
             _EFFECT_ENUM_MAX
         }
 
@@ -351,7 +359,7 @@ namespace ConfigApp
             {EffectType.EFFECT_INVERT_GRAV, new EffectInfo("Invert Gravity", EffectCategory.MISC, "invertgravity", true, true)},
             {EffectType.EFFECT_VEH_REPAIR, new EffectInfo("Repair All Vehicles", EffectCategory.VEHICLE, "playerveh_repair")},
             {EffectType.EFFECT_VEH_POP_TIRES, new EffectInfo("Pop Tires Of Every Vehicle", EffectCategory.VEHICLE, "playerveh_poptires")},
-            {EffectType.EFFECT_ALL_VEH_POP_TIRES, new EffectInfo("Now This Is Some Tire Poppin'", EffectCategory.VEHICLE, "vehs_poptiresconstant", true)},
+            {EffectType.EFFECT_ALL_VEH_POP_TIRES, new EffectInfo("Now This Is Some Tire Poppin'", EffectCategory.VEHICLE, "vehs_poptiresconstant", true, true)},
             {EffectType.EFFECT_NO_SPECIAL_ABILITY, new EffectInfo("No Special Ability", EffectCategory.PLAYER, "player_nospecial", true)},
             {EffectType.EFFECT_IN_THE_HOOD, new EffectInfo("In The Hood", EffectCategory.PEDS, "peds_dance", true)},
             {EffectType.EFFECT_FORCED_CINEMATIC, new EffectInfo("Cinematic Vehicle Cam", EffectCategory.VEHICLE, "player_forcedcinematiccam", true)},
@@ -378,7 +386,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_SHOT_RAGDOLL, new EffectInfo("Player Ragdolls When Shot", EffectCategory.PLAYER, "player_ragdollondmg", true)},
             {EffectType.EFFECT_JUMPY_VEHS, new EffectInfo("Jumpy Vehicles", EffectCategory.VEHICLE, "vehs_jumpy", true, true)},
             {EffectType.EFFECT_LOCK_VEHS, new EffectInfo("Lock All Vehicles", EffectCategory.VEHICLE, "vehs_lockdoors")},
-            {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, "chaosmode", true)},
+            {EffectType.EFFECT_TOTAL_CHAOS, new EffectInfo("Doomsday", EffectCategory.MISC, "chaosmode", true, true)},
             {EffectType.EFFECT_NO_RAGDOLL, new EffectInfo("No Ragdoll", EffectCategory.PEDS, "player_noragdoll", true)},
             {EffectType.EFFECT_VEHS_HORN, new EffectInfo("All Vehicles Honk", EffectCategory.VEHICLE, "vehs_honkconstant", true)},
             {EffectType.EFFECT_TP_WAYPOINT, new EffectInfo("Teleport To Waypoint", EffectCategory.PLAYER, "player_tptowaypoint")},
@@ -442,7 +450,6 @@ namespace ConfigApp
             {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.PLAYER, "misc_midas", true)},
             {EffectType.EFFECT_SPAWN_RANDOM_HOSTILE, new EffectInfo("Spawn Random Enemy", EffectCategory.PEDS, "peds_spawnrandomhostile")},
             {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo("No Braking Allowed", EffectCategory.VEHICLE, "playerveh_nobrakes", true)},
-            {EffectType.EFFECT_PLAYER_WEAPON_LOCK, new EffectInfo("No Weapon Switching", EffectCategory.PLAYER, "player_weaponlock", true)},
             {EffectType.EFFECT_PLAYER_PORTAL_GUN, new EffectInfo("Portal Guns", EffectCategory.PEDS, "peds_portal_gun", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_VEH_DESPAWN, new EffectInfo("Remove Current Vehicle", EffectCategory.VEHICLE, "playerveh_despawn")},
@@ -455,10 +462,19 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_FOG_OF_WAR, new EffectInfo("Fog Of War", EffectCategory.PEDS, "peds_fogofwar", true)},
             {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
-            {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Incoming", EffectCategory.MISC, "misc_airstrike", true)},
-            {EffectType.EFFECT_MISC_REPLACEVEHICLE, new EffectInfo("Replace Current Vehicle", EffectCategory.MISC, "misc_replacevehicle")},
-            {EffectType.EFFECT_MISC_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "misc_fakedeath")},
+            {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
+            {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
+            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PEDS, "peds_loosetrigger", true)},
+            {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
+            {EffectType.EFFECT_PLAYER_FAKEDEATH, new EffectInfo("Fake Death", EffectCategory.PLAYER, "player_fakedeath")},
             {EffectType.EFFECT_GAMESPEED_SUPERHOT, new EffectInfo("Superhot", EffectCategory.TIME, "time_superhot", true)},
+            {EffectType.EFFECT_VEH_BEYBLADE, new EffectInfo("Beyblades", EffectCategory.VEHICLE, "vehs_beyblade", true)},
+            {EffectType.EFFECT_KILLER_CLOWNS, new EffectInfo("Killer Clowns", EffectCategory.PEDS, "peds_killerclowns", true)},
+            {EffectType.EFFECT_JAMES_BOND, new EffectInfo("Spawn Deadly Agent", EffectCategory.PEDS, "peds_jamesbond")},
+            {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
+            {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
+            {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_MISC_REPLACEVEHICLE, new EffectInfo("Replace Current Vehicle", EffectCategory.MISC, "misc_replacevehicle")},
         };
     }
 }
