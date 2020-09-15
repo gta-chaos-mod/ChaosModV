@@ -39,11 +39,18 @@ static void OnStart()
 			{
 				randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
 			}
+			float spawnZ = vehCoords.z;
+			if (!IS_ENTITY_A_MISSION_ENTITY(currentVehicle))
+			{
+				SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
+				DELETE_VEHICLE(&currentVehicle);
+			}
+			else
+			{
+				spawnZ += 5;
+			}
 
-			SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
-			DELETE_VEHICLE(&currentVehicle);
-
-			Vehicle newVehicle = CreatePoolVehicle(randomVeh, vehCoords.x, vehCoords.y, vehCoords.z, heading);
+			Vehicle newVehicle = CreatePoolVehicle(randomVeh, vehCoords.x, vehCoords.y, spawnZ, heading);
 
 			for (int index = 0; index < vehPeds.size(); index++) 
 			{
