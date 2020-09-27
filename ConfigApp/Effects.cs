@@ -247,6 +247,7 @@ namespace ConfigApp
             EFFECT_LOOSE_TRIGGER,
             EFFECT_MISC_FLAMETHROWER,
             EFFECT_PLAYER_FAKEDEATH,
+            EFFECT_VEH_KICKFLIP,
             EFFECT_GAMESPEED_SUPERHOT,
             EFFECT_VEH_BEYBLADE,
             EFFECT_KILLER_CLOWNS,
@@ -473,6 +474,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_VEH_KICKFLIP,  new EffectInfo("Kickflip", EffectCategory.VEHICLE, "vehs_kickflip")},
         };
     }
 }
