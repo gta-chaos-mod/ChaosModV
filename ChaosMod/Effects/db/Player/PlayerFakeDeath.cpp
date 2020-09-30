@@ -75,6 +75,10 @@ static void OnStart()
 			else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 			{
 				Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+				for (int i = 0; i < 6; i++)
+				{
+					SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+				}
 				Vector3 coords = GET_ENTITY_COORDS(veh, false);
 				ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 			}
@@ -124,6 +128,8 @@ static void OnStart()
 			PLAY_SOUND_FRONTEND(-1, "TextHit", "WastedSounds", true);
 			break;
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
+			Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+			SET_VEHICLE_FIXED(veh);
 			STOP_ANIM_TASK(playerPed, "mp_suicide", "pistol", 3);
 			ANIMPOSTFX_STOP("DeathFailOut");
 			STOP_AUDIO_SCENE("DEATH_SCENE");
