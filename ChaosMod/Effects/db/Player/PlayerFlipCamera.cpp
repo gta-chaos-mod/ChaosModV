@@ -1,5 +1,5 @@
 /*
-	Effect by DrUnderscore (James)
+	Effect by DrUnderscore (James), modified by Last0xygen
 */
 
 #include <stdafx.h>
@@ -19,23 +19,21 @@ static void UpdateCamera()
 static void OnStart()
 {
     flippedCamera = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
-    CAM::SET_CAM_ACTIVE(flippedCamera, true);
-    UpdateCamera();
-    CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0, 0);
+    CAM::RENDER_SCRIPT_CAMS(true, true, 700, 1, 1, 1);
 }
 
 static void OnTick()
 {
+    CAM::SET_CAM_ACTIVE(flippedCamera, true);
     UpdateCamera();
 }
 
-static void OnEnd()
+static void OnStop()
 {
     CAM::SET_CAM_ACTIVE(flippedCamera, false);
-    CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0, 0);
-    CAM::DESTROY_CAM(flippedCamera, false);
-
+    CAM::RENDER_SCRIPT_CAMS(false, true, 700, 1, 1, 1);
+    CAM::DESTROY_CAM(flippedCamera, true);
     flippedCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnEnd, OnTick);
+static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnStop, OnTick);
