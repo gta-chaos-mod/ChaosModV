@@ -254,6 +254,7 @@ namespace ConfigApp
             EFFECT_PLAYER_POOF,
             EFFECT_PLAYER_SIMEONSAYS,
             EFFECT_VEH_LOCKCAMERA,
+            EFFECT_FLIP_CAMERA,
             _EFFECT_ENUM_MAX
         }
 
@@ -473,6 +474,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
         };
     }
 }
