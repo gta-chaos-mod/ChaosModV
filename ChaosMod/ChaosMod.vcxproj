@@ -92,7 +92,7 @@
     <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />

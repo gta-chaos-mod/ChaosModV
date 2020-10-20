@@ -140,7 +140,6 @@ enum EffectType
 	EFFECT_EXPLOSIVE_COMBAT,
 	EFFECT_GIVE_ALL_WEPS,
 	EFFECT_PEDS_AIMBOT,
-	//EFFECT_EVERYTHING_FACE_PLAYER,
 	EFFECT_SPAWN_COMPANION_CHOP,
 	EFFECT_SPAWN_COMPANION_CHIMP,
 	EFFECT_SPAWN_COMPANION_BRAD,
@@ -221,6 +220,7 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
+	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
 	_EFFECT_ENUM_MAX
 };
@@ -376,7 +376,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_EXPLOSIVE_COMBAT, {"Explosive Combat", "player_explosivecombat", true}},
 	{EFFECT_GIVE_ALL_WEPS, {"Give All Weapons", "player_allweps"}},
 	{EFFECT_PEDS_AIMBOT, {"Aimbot Peds", "peds_aimbot", true}},
-	//{EFFECT_EVERYTHING_FACE_PLAYER, {"Everything Faces Player", "everythingfacesplayer", true}},
 	{EFFECT_SPAWN_COMPANION_CHOP, {"Spawn Companion Doggo", "spawn_chop"}},
 	{EFFECT_SPAWN_COMPANION_CHIMP, {"Spawn Companion Chimp", "spawn_chimp"}},
 	{EFFECT_SPAWN_COMPANION_BRAD, {"Spawn Companion Brad", "spawn_compbrad"}},
@@ -458,4 +457,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_POOF, {"Deadly Aim", "player_poof", true}},
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
-};
+	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
+}; 

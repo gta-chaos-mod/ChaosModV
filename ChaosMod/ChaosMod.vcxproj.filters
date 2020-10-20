@@ -8,7 +8,6 @@
     <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
@@ -185,6 +184,7 @@
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
   </ItemGroup>
   <ItemGroup>
