@@ -185,6 +185,7 @@
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
