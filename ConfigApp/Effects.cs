@@ -210,6 +210,7 @@ namespace ConfigApp
             EFFECT_JESUS_TAKE_THE_WHEEL,
             EFFECT_VEH_POP_TIRE_LOOP,
             EFFECT_ANGRY_ALIEN,
+            EFFECT_ANGRY_JIMMY,
             EFFECT_OHKO_VEHICLES,
             EFFECT_VEH_SPAM_DOORS,
             EFFECT_VEH_SPEED_MINIMUM,
@@ -254,6 +255,8 @@ namespace ConfigApp
             EFFECT_PLAYER_POOF,
             EFFECT_PLAYER_SIMEONSAYS,
             EFFECT_VEH_LOCKCAMERA,
+            EFFECT_MISC_SUPER_STUNT,
+            EFFECT_SCREEN_NEED_GLASSES,
             _EFFECT_ENUM_MAX
         }
 
@@ -429,6 +432,7 @@ namespace ConfigApp
             {EffectType.EFFECT_JESUS_TAKE_THE_WHEEL, new EffectInfo("Jesus Take The Wheel", EffectCategory.VEHICLE, "veh_jesustakethewheel")},
             {EffectType.EFFECT_VEH_POP_TIRE_LOOP, new EffectInfo("Random Tire Popping", EffectCategory.VEHICLE, "veh_poptire", true, true)},
             {EffectType.EFFECT_ANGRY_ALIEN, new EffectInfo("Spawn Angry Alien", EffectCategory.PEDS, "peds_angryalien")},
+            {EffectType.EFFECT_ANGRY_JIMMY, new EffectInfo("Spawn Jealous Jimmy", EffectCategory.PEDS, "peds_angryjimmy")},
             {EffectType.EFFECT_OHKO_VEHICLES, new EffectInfo("Vehicles Explode On Impact", EffectCategory.VEHICLE, "vehs_ohko", true)},
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spammy Vehicle Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true)},
@@ -473,6 +477,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_MISC_SUPER_STUNT,  new EffectInfo("Super Stunt", EffectCategory.MISC, "misc_superstunt")},
+            {EffectType.EFFECT_SCREEN_NEED_GLASSES,  new EffectInfo("I Need Glasses", EffectCategory.MISC, "screen_needglasses", true)},
         };
     }
 }
