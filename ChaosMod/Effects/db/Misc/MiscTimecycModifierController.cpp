@@ -166,3 +166,11 @@ static void OnTickBubbleVision()
 }
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
+
+static void OnTickNeedGlasses()
+{
+	SET_TIMECYCLE_MODIFIER("hud_def_blur");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
