@@ -193,7 +193,6 @@ enum EffectType
 	EFFECT_SPAWN_DANCING_APES,
 	EFFECT_ONE_BULLET_WEP,
 	EFFECT_PHONES,
-	EFFECT_FAKE_PLAYER_SWAP,
 	EFFECT_MIDAS_TOUCH,
 	EFFECT_SPAWN_RANDOM_HOSTILE,
 	EFFECT_VEH_NO_BRAKES,
@@ -221,9 +220,12 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
+<<<<<<< HEAD
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
+=======
 	EFFECT_FLIP_CAMERA,
+>>>>>>> 3932d129895590be53ae2a184d11f80bbbe93f3a
 	_EFFECT_ENUM_MAX
 };
 
@@ -448,7 +450,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Inbound", "misc_airstrike", true}},
-	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
