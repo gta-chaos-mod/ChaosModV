@@ -144,7 +144,6 @@ enum EffectType
 	EFFECT_SPAWN_COMPANION_CHIMP,
 	EFFECT_SPAWN_COMPANION_BRAD,
 	EFFECT_SPAWN_COMPANION_RANDOM,
-	EFFECT_SPAWN_BALLA_SQUAD,
 	EFFECT_PLAYER_NIGHTVISION,
 	EFFECT_PLAYER_HEATVISION,
 	EFFECT_PLAYER_MONEYDROPS,
@@ -223,7 +222,6 @@ enum EffectType
 	EFFECT_VEH_LOCKCAMERA,
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
-	EFFECT_FLIP_CAMERA,
 	_EFFECT_ENUM_MAX
 };
 
@@ -434,7 +432,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PHONES, {"Whose Phone Is Ringing?", "peds_phones", true}},
 	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}},
 	{EFFECT_SPAWN_RANDOM_HOSTILE, {"Spawn Random Enemy", "peds_spawnrandomhostile"}},
-	{EFFECT_SPAWN_BALLA_SQUAD, {"Spawn Balla Squad", "peds_spawnballasquad"}},
 	{EFFECT_VEH_NO_BRAKES, {"No Braking Allowed", "playerveh_nobrakes", true}},
 	{EFFECT_PEDS_PORTAL_GUN, {"Portal Guns", "peds_portal_gun", true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
@@ -461,5 +458,4 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}}
-};
+}; 
