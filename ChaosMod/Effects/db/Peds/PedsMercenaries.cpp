@@ -20,7 +20,7 @@ static EnemyGroup mesaGroup;
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float maxOffset)
 {
 	Vector3 randomCoord;
-	if (g_random.GetRandomInt(0, 2) % 2 == 0)
+	if (g_random.GetRandomInt(0, 1) % 2 == 0)
 	{
 		randomCoord.x = startCoord.x + g_random.GetRandomInt(minOffset, maxOffset);
 	}
@@ -28,7 +28,7 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float m
 	{
 		randomCoord.x = startCoord.x - g_random.GetRandomInt(minOffset, maxOffset);
 	}
-	if (g_random.GetRandomInt(0, 2) % 2 == 0)
+	if (g_random.GetRandomInt(0, 1) % 2 == 0)
 	{
 		randomCoord.y = startCoord.y + g_random.GetRandomInt(minOffset, maxOffset);
 	}

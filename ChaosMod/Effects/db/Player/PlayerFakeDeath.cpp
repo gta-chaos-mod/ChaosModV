@@ -56,31 +56,34 @@ static void OnStart()
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
-			if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
+			if (g_random.GetRandomInt(0, 1) % 2 == 0)
 			{
-				if (!IS_PED_FALLING(playerPed) && !IS_PED_SWIMMING(playerPed) && !IS_PED_SWIMMING_UNDER_WATER(playerPed))
+				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					REQUEST_ANIM_DICT("mp_suicide");
-					while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
+					if (!IS_PED_FALLING(playerPed) && !IS_PED_SWIMMING(playerPed) && !IS_PED_SWIMMING_UNDER_WATER(playerPed))
 					{
-						WAIT(0);
+						REQUEST_ANIM_DICT("mp_suicide");
+						while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
+						{
+							WAIT(0);
+						}
+						Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
+						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
+						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, -1.f, 1, 0.f, false, false, false);
+						nextModeTime = 750;
+						break;
 					}
-					Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
-					GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
-					TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, -1.f, 1, 0.f, false, false, false);
-					nextModeTime = 750;
-					break;
 				}
-			} 
-			else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-			{
-				Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-				for (int i = 0; i < 6; i++)
+				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+					for (int i = 0; i < 6; i++)
+					{
+						SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+					}
+					Vector3 coords = GET_ENTITY_COORDS(veh, false);
+					ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 				}
-				Vector3 coords = GET_ENTITY_COORDS(veh, false);
-				ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 			}
 			nextModeTime = 0;
 			break;
