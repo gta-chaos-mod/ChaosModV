@@ -213,7 +213,6 @@ enum EffectType
 	EFFECT_PEDS_MERCENARIES,
 	EFFECT_LOOSE_TRIGGER,
 	EFFECT_MISC_FLAMETHROWER,
-	EFFECT_MISC_DVDSCREENSAVER,
 	EFFECT_PLAYER_FAKEDEATH,
 	EFFECT_VEH_BEYBLADE,
 	EFFECT_KILLER_CLOWNS,
@@ -221,9 +220,12 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
+<<<<<<< HEAD
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
+=======
 	EFFECT_FLIP_CAMERA,
+>>>>>>> 3932d129895590be53ae2a184d11f80bbbe93f3a
 	_EFFECT_ENUM_MAX
 };
 
@@ -451,7 +453,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
-	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
 	{EFFECT_VEH_BEYBLADE, {"Beyblades", "vehs_beyblade", true}},

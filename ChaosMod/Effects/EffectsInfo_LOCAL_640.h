@@ -213,7 +213,6 @@ enum EffectType
 	EFFECT_PEDS_MERCENARIES,
 	EFFECT_LOOSE_TRIGGER,
 	EFFECT_MISC_FLAMETHROWER,
-	EFFECT_MISC_DVDSCREENSAVER,
 	EFFECT_PLAYER_FAKEDEATH,
 	EFFECT_VEH_BEYBLADE,
 	EFFECT_KILLER_CLOWNS,
@@ -223,7 +222,6 @@ enum EffectType
 	EFFECT_VEH_LOCKCAMERA,
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
-	EFFECT_FLIP_CAMERA,
 	_EFFECT_ENUM_MAX
 };
 
@@ -451,7 +449,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
-	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
 	{EFFECT_VEH_BEYBLADE, {"Beyblades", "vehs_beyblade", true}},
@@ -461,5 +458,4 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}}
-};
+}; 
