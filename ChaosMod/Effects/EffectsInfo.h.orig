@@ -212,7 +212,6 @@ enum EffectType
 	EFFECT_MISC_AIRSTRIKE,
 	EFFECT_PEDS_MERCENARIES,
 	EFFECT_LOOSE_TRIGGER,
-	EFFECT_VEH_KICKFLIP,
 	EFFECT_MISC_FLAMETHROWER,
 	EFFECT_PLAYER_FAKEDEATH,
 	EFFECT_VEH_BEYBLADE,
@@ -221,9 +220,12 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
+<<<<<<< HEAD
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
+=======
 	EFFECT_FLIP_CAMERA,
+>>>>>>> 3932d129895590be53ae2a184d11f80bbbe93f3a
 	_EFFECT_ENUM_MAX
 };
 
@@ -453,7 +455,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
-	{EFFECT_VEH_KICKFLIP, {"Kickflip", "vehs_kickflip"}},
 	{EFFECT_VEH_BEYBLADE, {"Beyblades", "vehs_beyblade", true}},
 	{EFFECT_KILLER_CLOWNS, {"Killer Clowns", "peds_killerclowns", true}},
 	{EFFECT_JAMES_BOND, {"Spawn Deadly Agent", "peds_jamesbond"}},
