@@ -255,20 +255,12 @@ namespace ConfigApp
             EFFECT_PLAYER_POOF,
             EFFECT_PLAYER_SIMEONSAYS,
             EFFECT_VEH_LOCKCAMERA,
-            EFFECT_VEH_BUSRAIN,
-            EFFECT_VEH_BUSJESUS,
-            EFFECT_PEDS_INVISIJESUS,
-            EFFECT_PEDS_JESUSARMY,
-            EFFECT_PLAYER_SCHIZOPHRENIA,
-            EFFECT_PEDS_BUSBOIS,
-            EFFECT_PLAYER_PACIFIST,
-            EFFECT_VEHS_BOUNCY,
-            EFFECT_PLAYER_GRAVITY,
-            EFFECT_VEH_RANDTRAFFIC,
-            EFFECT_PEDS_FLIP,
+<<<<<<< HEAD
             EFFECT_MISC_SUPER_STUNT,
             EFFECT_SCREEN_NEED_GLASSES,
+=======
             EFFECT_FLIP_CAMERA,
+>>>>>>> 3932d129895590be53ae2a184d11f80bbbe93f3a
             _EFFECT_ENUM_MAX
         }
 
@@ -489,21 +481,9 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
-            {EffectType.EFFECT_VEH_BUSRAIN,  new EffectInfo("Bus Rain", EffectCategory.VEHICLE, "veh_busrain", true, true)},
-            {EffectType.EFFECT_VEH_BUSJESUS,  new EffectInfo("Spawn Personal Bus Jesus", EffectCategory.VEHICLE, "veh_busjesus")},
-            {EffectType.EFFECT_PEDS_INVISIJESUS,  new EffectInfo("Spawn Semi-Invisible Battleaxe Griefer Jesus", EffectCategory.PEDS, "peds_invisijesus")},
-            {EffectType.EFFECT_PEDS_JESUSARMY,  new EffectInfo("Spawn Jesus Army", EffectCategory.PEDS, "peds_jesusarmy")},
-            {EffectType.EFFECT_PLAYER_SCHIZOPHRENIA,  new EffectInfo("Schizophrenia", EffectCategory.PLAYER, "player_schizophrenia", true, true)},
-            {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
-            {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
-            {EffectType.EFFECT_VEHS_BOUNCY,  new EffectInfo("Bouncy Vehicles", EffectCategory.VEHICLE, "veh_bouncy", true, false)},
-            {EffectType.EFFECT_PLAYER_GRAVITY,  new EffectInfo("Player has Gravity field", EffectCategory.PLAYER, "player_gravity", true, true)},
-            {EffectType.EFFECT_VEH_RANDTRAFFIC,  new EffectInfo("Random Traffic", EffectCategory.VEHICLE, "veh_randtraffic", true, false)},
-            {EffectType.EFFECT_PEDS_FLIP,  new EffectInfo("Spinning Peds", EffectCategory.PEDS, "peds_flip", true, true)},
             {EffectType.EFFECT_MISC_SUPER_STUNT,  new EffectInfo("Super Stunt", EffectCategory.MISC, "misc_superstunt")},
             {EffectType.EFFECT_SCREEN_NEED_GLASSES,  new EffectInfo("I Need Glasses", EffectCategory.MISC, "screen_needglasses", true)},
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
-
         };
     }
 }

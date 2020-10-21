@@ -92,10 +92,11 @@
     <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscEverythingFacePlayer.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
@@ -107,7 +108,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsFogOfWar.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
@@ -124,6 +125,7 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
