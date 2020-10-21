@@ -16,6 +16,11 @@ static void OnStart()
 
 	for (Ped ped : GetAllPeds())
 	{
+		// May crash, if you try to put a whale into the driver seat + ped may not be valid anymore after several "WAIT"s
+		if (!DOES_ENTITY_EXIST(ped) || !IS_PED_HUMAN(ped))
+		{
+			continue;
+		}
 		std::vector<Vehicle> vehs;
 		for (Vehicle veh : GetAllVehs())
 		{
