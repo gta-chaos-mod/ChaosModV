@@ -169,8 +169,7 @@ static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnSto
 
 static void OnTickNeedGlasses()
 {
-	SET_TIMECYCLE_MODIFIER("hud_def_blur");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("hud_def_blur");
 }
 
 static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
