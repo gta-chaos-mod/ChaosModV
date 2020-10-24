@@ -229,6 +229,7 @@ enum EffectType
 	EFFECT_MISC_SUPER_STUNT,
 	EFFECT_SCREEN_NEED_GLASSES,
 	EFFECT_FLIP_CAMERA,
+	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
 	EFFECT_PEDS_DRIVE_BACKWARDS,
@@ -484,4 +485,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 };
