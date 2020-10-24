@@ -187,6 +187,7 @@
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
