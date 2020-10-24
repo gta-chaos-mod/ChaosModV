@@ -28,35 +28,28 @@ static void OnTick()
 
 		if (vehClass == 14 || !IS_VEHICLE_ON_ALL_WHEELS(veh)) // Allow Steering if not "on ground" or boat in water
 		{
+			Vector3 rot = GET_ENTITY_ROTATION(veh, 2);
 			if (IS_CONTROL_PRESSED(0, 63)) //Turn Left
 			{
-				Vector3 Rot = GET_ENTITY_ROTATION(veh, 2);
-				Rot.z += 1.0;
-				SET_ENTITY_ROTATION(veh, Rot.x, Rot.y, Rot.z, 2, 1);
+				rot.z += 1.0;
 			}
-
 			if (IS_CONTROL_PRESSED(0, 64)) //Turn Right
 			{
-				Vector3 Rot = GET_ENTITY_ROTATION(veh, 2);
-				Rot.z -= 1.0;
-				SET_ENTITY_ROTATION(veh, Rot.x, Rot.y, Rot.z, 2, 1);
+				rot.z -= 1.0;
 			}
 
 			if (IS_CONTROL_PRESSED(0, 108)) //Roll Left
 			{
-				Vector3 Rot = GET_ENTITY_ROTATION(veh, 2);
-				Rot.y -= 1.0;
-				SET_ENTITY_ROTATION(veh, Rot.x, Rot.y, Rot.z, 2, 1);
+				rot.y -= 1.0;
 			}
 
 			if (IS_CONTROL_PRESSED(0, 109)) //Roll Right
 			{
-				Vector3 Rot = GET_ENTITY_ROTATION(veh, 2);
-				Rot.y += 1.0;
-				SET_ENTITY_ROTATION(veh, Rot.x, Rot.y, Rot.z, 2, 1);
+				rot.y += 1.0;
 			}
+			SET_ENTITY_ROTATION(veh, rot.x, rot.y, rot.z, 2, 1);
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_FLYING_CAR, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_FLYING_CAR, nullptr, nullptr, OnTick);
