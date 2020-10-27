@@ -484,7 +484,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_SUPER_STUNT,  new EffectInfo("Super Stunt", EffectCategory.MISC, "misc_superstunt")},
             {EffectType.EFFECT_SCREEN_NEED_GLASSES,  new EffectInfo("I Need Glasses", EffectCategory.MISC, "screen_needglasses", true)},
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
-            {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand Cartoon", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
+            {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
         };
     }
 }
