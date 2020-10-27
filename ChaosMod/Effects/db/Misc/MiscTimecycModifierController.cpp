@@ -221,8 +221,7 @@ static void OnStartLSNoire()
 
 static void OnTickLSNoire()
 {
-	SET_TIMECYCLE_MODIFIER("NG_filmnoir_BW01");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("NG_filmnoir_BW01");
 }
 
 static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire);
