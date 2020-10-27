@@ -127,12 +127,12 @@
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBeyblade.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsKickflip.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />

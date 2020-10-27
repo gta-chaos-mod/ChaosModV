@@ -1,3 +1,7 @@
+/*
+	Effect by Last0xygen
+*/
+
 #include <stdafx.h>
 
 static void OnStart()
@@ -16,4 +20,4 @@ static void OnStart()
 	APPLY_FORCE_TO_ENTITY(entityToFlip, 1, 0, 0, 10, 2, 0, 0, 0, true, true, true, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_KICKFLIP, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_KICKFLIP, OnStart);
