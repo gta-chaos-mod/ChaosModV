@@ -167,7 +167,6 @@ static void OnTickBubbleVision()
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
 
-
 static void OnStartLSNoire()
 {
 	Ped player = PLAYER_PED_ID();
@@ -227,3 +226,11 @@ static void OnTickLSNoire()
 }
 
 static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire);
+
+static void OnTickNeedGlasses()
+{
+	SET_TIMECYCLE_MODIFIER("hud_def_blur");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
