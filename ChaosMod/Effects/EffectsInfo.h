@@ -225,6 +225,7 @@ enum EffectType
 	EFFECT_SCREEN_NEED_GLASSES,
 	EFFECT_FLIP_CAMERA,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
+	EFFECT_PEDS_DRIVE_BACKWARDS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -464,4 +465,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
 	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
+	{EFFECT_PEDS_DRIVE_BACKWARDS, {"Peds Drive Backwards", "peds_drive_backwards", true}},
 };
