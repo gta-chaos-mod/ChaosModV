@@ -15,6 +15,8 @@ static int m_overlay = 0;
 static Vehicle m_lastVeh;
 
 static DWORD64 m_timeReserve;
+static DWORD64 lastTick = GetTickCount64();
+static bool enteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -23,8 +25,6 @@ static inline bool Beepable(DWORD64 reserveValue)
 
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	static bool enteredVehicle = false;
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -119,7 +119,8 @@ static void OnStart()
 	{
 		WAIT(0);
 	}
-
+	enteredVehicle = false;
+	lastTick = GetTickCount64();
 	m_lastVeh = 0;
 	m_timeReserve = WAIT_TIME;
 }
