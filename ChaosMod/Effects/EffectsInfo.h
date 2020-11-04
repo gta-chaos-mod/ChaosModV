@@ -447,7 +447,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Trails", "misc_oilleaks", true}},
 	{EFFECT_PEDS_GUNSMOKE, {"Gunsmoke", "peds_gunsmoke", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
-	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click)", "veh_weapons", true}},
+	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click/RB)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Inbound", "misc_airstrike", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
