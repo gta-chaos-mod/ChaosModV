@@ -89,10 +89,10 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
@@ -129,6 +129,8 @@
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
