@@ -131,6 +131,7 @@
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TwitchVoting.h" />
+    <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />

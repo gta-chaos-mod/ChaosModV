@@ -188,6 +188,7 @@
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+    <ClInclude Include="Util\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
