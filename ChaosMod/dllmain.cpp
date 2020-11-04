@@ -20,7 +20,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		scriptRegister(hInstance, []() { m_main.MainLoop(); });
 		scriptRegisterAdditionalThread(hInstance, []() { m_main.RunEffectLoop(); });
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			scriptRegisterAdditionalThread(hInstance, []() { m_main.StartEffectThread(); });
 		}
