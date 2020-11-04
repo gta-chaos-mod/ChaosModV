@@ -23,4 +23,4 @@ static void OnTick()
 	REMOVE_NAMED_PTFX_ASSET("scr_sr_tr");
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FOG_OF_WAR, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_GUNSMOKE, nullptr, nullptr, OnTick);

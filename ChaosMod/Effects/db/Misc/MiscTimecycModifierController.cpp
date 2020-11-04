@@ -166,3 +166,71 @@ static void OnTickBubbleVision()
 }
 
 static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
+
+static void OnStartLSNoire()
+{
+	Ped player = PLAYER_PED_ID();
+	switch (GET_ENTITY_MODEL(player)) // Change outfits for every player to a suit to fit the noire setting
+	{
+	case 225514697: // Michael 
+		SET_PED_COMPONENT_VARIATION(player, 0, 0, 2, 0);
+		SET_PED_COMPONENT_VARIATION(player, 1, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 2, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 3, 0, 12, 0);
+		SET_PED_COMPONENT_VARIATION(player, 4, 0, 12, 0);
+		SET_PED_COMPONENT_VARIATION(player, 5, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 6, 21, 4, 0);
+		SET_PED_COMPONENT_VARIATION(player, 7, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 8, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 9, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 10, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 11, 0, 0, 0);
+		break;
+	case 2602752943: // Franklin
+		SET_PED_COMPONENT_VARIATION(player, 0, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 1, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 2, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 3, 23, 4, 0);
+		SET_PED_COMPONENT_VARIATION(player, 4, 15, 4, 0);
+		SET_PED_COMPONENT_VARIATION(player, 5, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 6, 8, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 7, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 8, 15, 4, 0);
+		SET_PED_COMPONENT_VARIATION(player, 9, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 10, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 11, 4, 4, 0);
+		break;
+	case 2608926626: // Trevor
+		SET_PED_COMPONENT_VARIATION(player, 0, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 1, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 2, 7, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 3, 27, 6, 0);
+		SET_PED_COMPONENT_VARIATION(player, 4, 20, 6, 0);
+		SET_PED_COMPONENT_VARIATION(player, 5, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 6, 8, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 7, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 8, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 9, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 10, 0, 0, 0);
+		SET_PED_COMPONENT_VARIATION(player, 11, 0, 0, 0);
+		break;
+	default: // default
+		break;
+	}
+}
+
+static void OnTickLSNoire()
+{
+	SET_TIMECYCLE_MODIFIER("NG_filmnoir_BW01");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire);
+
+static void OnTickNeedGlasses()
+{
+	SET_TIMECYCLE_MODIFIER("hud_def_blur");
+	PUSH_TIMECYCLE_MODIFIER();
+}
+
+static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
