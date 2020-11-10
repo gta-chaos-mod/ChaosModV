@@ -16,12 +16,8 @@ static void OnStart()
 	static const Hash caddyModel = GET_HASH_KEY("CADDY");
 
 	Vehicle veh = CREATE_VEHICLE(caddyModel, playerPos.x, playerPos.y, playerPos.z, heading, true, true, true);
-
-	//removing Vehicle
-	Vehicle toRemove = GET_VEHICLE_PED_IS_IN(playerPed, false);
-	SET_ENTITY_AS_MISSION_ENTITY(toRemove, true, true);
-	DELETE_VEHICLE(&toRemove);
-
+	sleep(0);
+	
 	//setting player into new vehicle
 	SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 
@@ -80,19 +76,9 @@ static void OnStart()
 	}
 
 	//weapon
-	REMOVE_ALL_PED_WEAPONS(playerPed, false);
+	//REMOVE_ALL_PED_WEAPONS(playerPed, false);
 	Hash weaponHash = GET_HASH_KEY("WEAPON_GOLFCLUB");
 	GIVE_WEAPON_TO_PED(playerPed, weaponHash, 1, false, true);
 }
 
-static void OnStop()
-{
-
-}
-
-static void OnTick()
-{
-
-}
-
-static RegisterEffect registerEffect(EFFECT_GOLF_PERCENT, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_GOLF_PERCENT, OnStart, nullptr, nullptr);
