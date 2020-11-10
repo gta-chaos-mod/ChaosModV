@@ -261,6 +261,8 @@ namespace ConfigApp
             EFFECT_FLIP_CAMERA,
             EFFECT_PLAYER_ON_DEMAND_CARTOON,
             EFFECT_PEDS_DRIVE_BACKWARDS,
+            EFFECT_GOOD_RNG_DIE,
+            EFFECT_BAD_RNG_DIE,
             _EFFECT_ENUM_MAX
         }
 
@@ -487,6 +489,8 @@ namespace ConfigApp
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
             {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
+            {EffectType.EFFECT_GOOD_RNG_DIE, new EffectInfo("Good RNG Die", EffectCategory.PLAYER, "player_good_rng_die")},
+            {EffectType.EFFECT_BAD_RNG_DIE, new EffectInfo("Bad RNG Die", EffectCategory.PLAYER, "player_bad_rng_die")},
         };
     }
 }
