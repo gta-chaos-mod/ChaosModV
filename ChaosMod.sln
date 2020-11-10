@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchChatVotingProxy", "Tw
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{E8C71724-789E-46CF-82B9-8A9C0D964E91}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C109DDED-6739-4901-8CF1-92E4057B2ADF}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Shared.projitems*{4765f6e3-b78c-4b76-ba30-aa5362862818}*SharedItemsImports = 4
@@ -26,10 +34,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Debug|x64.ActiveCfg = Debug|x64
-		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Debug|x64.Build.0 = Debug|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|Any CPU.ActiveCfg = Release|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.ActiveCfg = Release|x64
-		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.Build.0 = Release|x64
 		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Debug|x64.ActiveCfg = Debug|Any CPU
