@@ -261,6 +261,7 @@ namespace ConfigApp
             EFFECT_FLIP_CAMERA,
             EFFECT_PLAYER_ON_DEMAND_CARTOON,
             EFFECT_PEDS_DRIVE_BACKWARDS,
+            EFFECT_VEH_RANDTRAFFIC,
             _EFFECT_ENUM_MAX
         }
 
@@ -487,6 +488,8 @@ namespace ConfigApp
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
             {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
+            {EffectType.EFFECT_VEH_RANDTRAFFIC,  new EffectInfo("Random Traffic", EffectCategory.VEHICLE, "veh_randtraffic", true, true)},
+
         };
     }
 }
