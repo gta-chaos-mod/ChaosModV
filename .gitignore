@@ -334,3 +334,7 @@ ASALocalRun/
 # Custom
 TwitchExtension/
 twitchVotingOverlay/dist/bundle.js
+
+# Ignore build folders
+build
+build_release
