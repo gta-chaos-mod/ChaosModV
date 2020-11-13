@@ -189,6 +189,7 @@
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
