@@ -91,6 +91,7 @@
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
