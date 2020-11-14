@@ -21,7 +21,7 @@ static void OnStart()
 		{
 			DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, 255, false);
 			//Error, composed of meme and random garbage. Button says no, but doesn't do anything.
-			SET_WARNING_MESSAGE("LIBCMT LNK", 32, "Error code 420", 0, -1, 0, 0, 0, 0);
+			SET_WARNING_MESSAGE("PM_WAIT", 32, "HUD_QUITTING", 0, -1, 0, 0, 0, 0);
 		}
 
 		int current_time = GetTickCount64();
