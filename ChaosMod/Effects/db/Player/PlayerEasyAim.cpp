@@ -4,7 +4,6 @@
 
 static void OnTick()
 {
-	static float verticalRecoil = 4;
 	Ped player = PLAYER_PED_ID();
 	//detect player aiming
 	if (GET_PED_CONFIG_FLAG(player, 78, 1))
