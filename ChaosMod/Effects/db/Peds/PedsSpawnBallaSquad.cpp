@@ -6,7 +6,7 @@
 
 static void OnStart()
 {
-	std::vector<int> ballaNames = { -198252413, 588969535, 361513884, -1492432238, -1410400252, 599294057 };
+	static const std::vector<int> ballaNames = { -198252413, 588969535, 361513884, -1492432238, -1410400252, 599294057 };
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_ENEMY_BALLAS", &relationshipGroup);
