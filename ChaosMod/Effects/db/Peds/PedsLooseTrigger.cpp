@@ -41,4 +41,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOOSE_TRIGGER, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_LOOSE_TRIGGER, nullptr, OnStop, OnTick);

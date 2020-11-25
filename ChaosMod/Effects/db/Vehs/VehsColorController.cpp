@@ -43,16 +43,57 @@ static void OnTickChrome()
 
 static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTickChrome);
 
+static std::map<Vehicle, int> flameByCar;
+
+static void OnStopPink()
+{
+	for (auto it = flameByCar.cbegin(); it != flameByCar.cend();)
+	{
+		int animHandle = it->second;
+		STOP_PARTICLE_FX_LOOPED(animHandle, false);
+		it++;
+	}
+	flameByCar.clear();
+	REMOVE_NAMED_PTFX_ASSET("des_trailerpark");
+}
+
 static void OnTickPink()
 {
+	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
+	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
+	{
+		WAIT(0);
+	}
+	for (auto it = flameByCar.cbegin(); it != flameByCar.cend();)
+	{
+		Vehicle veh = it->first;
+		if (!DOES_ENTITY_EXIST(veh))
+		{
+			STOP_PARTICLE_FX_LOOPED(it->second, false);
+			flameByCar.erase(it++);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	for (Vehicle veh : GetAllVehs())
 	{
+		if (flameByCar.find(veh) == flameByCar.end())
+		{
+			USE_PARTICLE_FX_ASSET("des_trailerpark");
+			int boneId = GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis");
+			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0, boneId, 1, false, false, false);
+			flameByCar[veh] = handle;
+		}
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, nullptr, OnTickPink);
+static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, OnStopPink, OnTickPink);
 
 static void OnStopRainbow()
 {
