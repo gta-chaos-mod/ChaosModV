@@ -15,23 +15,19 @@ static void OnStart()
 static void OnStop()
 {
 	REMOVE_WEAPON_ASSET(airstrikeHash);
-	SET_MAX_WANTED_LEVEL(5);
 }
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 {
-	Vector3 randomCoord;
-	randomCoord.x = startCoord.x + g_random.GetRandomInt(-maxOffset, maxOffset);
-	randomCoord.y = startCoord.y + g_random.GetRandomInt(-maxOffset, maxOffset);
-	randomCoord.z = startCoord.z + g_random.GetRandomInt(-maxOffset, maxOffset);
-	return randomCoord;
+	return Vector3::Init(
+		startCoord.x + g_random.GetRandomInt(-maxOffset, maxOffset),
+		startCoord.y + g_random.GetRandomInt(-maxOffset, maxOffset),
+		startCoord.z + g_random.GetRandomInt(-maxOffset, maxOffset)
+	);
 }
 
 static void OnTick()
 {
-	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
-	SET_MAX_WANTED_LEVEL(0);
-
 	REQUEST_WEAPON_ASSET(airstrikeHash, 31, 0);
 	while (!HAS_WEAPON_ASSET_LOADED(airstrikeHash))
 	{
@@ -48,7 +44,7 @@ static void OnTick()
 		float groundZ = 0;
 		if (GET_GROUND_Z_FOR_3D_COORD(targetPosition.x, targetPosition.y, targetPosition.z, &groundZ, false, false)) 
 		{
-			SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startPosition.x, startPosition.y, startPosition.z + 200, targetPosition.x, targetPosition.y, groundZ, 200, true, airstrikeHash, player, true, false, 5000);
+			SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startPosition.x, startPosition.y, startPosition.z + 200, targetPosition.x, targetPosition.y, groundZ, 200, true, airstrikeHash, 0, true, false, 5000);
 		}
 	}
 }

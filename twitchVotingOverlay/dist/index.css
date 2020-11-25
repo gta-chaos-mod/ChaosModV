@@ -14,6 +14,7 @@ body {
 	--text-outline-color: #000000;
 	--text-outline-thickness: 1.3px;
 	--text-size: 22pt;
+
 	/* Bar related things */
 	--bar-background-disabled: #afafaf;
 	--bar-background: #727272;
