@@ -82,7 +82,6 @@
     <ClCompile Include="Effects\db\Peds\PedsStripWeapons.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsZombies.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
