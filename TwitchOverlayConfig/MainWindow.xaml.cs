@@ -7,9 +7,6 @@ using System;
 
 namespace TwitchOverlayConfig
 {
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public static OptionsFile m_overlayConfig = new OptionsFile("overlay.ini");
@@ -21,7 +18,11 @@ namespace TwitchOverlayConfig
 
         public void Init()
         {
-            InitializeComponent();         
+            InitializeComponent();
+
+            // Warning popup
+            MessageBox.Show("This is an experimental third-party config utility for editing the look of the OBS overlay. Please report any issues you encounter on the GitHub page!", "Notice", MessageBoxButton.OK, MessageBoxImage.Warning);
+
             ParseOverlayConfig();
         }
 
@@ -315,7 +316,7 @@ namespace TwitchOverlayConfig
         {
             WriteOverlayConfig();
             writeToCss();
-            MessageBox.Show("To see the changes refresh the index.html file in the browser and re-add it to OBS");
+            MessageBox.Show("To see the changes refresh the index.html file in the browser and re-add it to OBS.");
         }
     }
 }

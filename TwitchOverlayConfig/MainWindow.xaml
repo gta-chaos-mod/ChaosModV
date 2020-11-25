@@ -6,7 +6,7 @@
 		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:TwitchOverlayConfig"
         mc:Ignorable="d"
-        Title="Twitch Overlay Configuration" Height="513" Width="1064">
+        Title="Twitch Overlay Configuration (by LennartOschika)" Height="513" Width="1064">
     <Grid>
         <TabControl Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Global Settings" Background="#FFF0F0F0" BorderBrush="LightGray">
@@ -69,9 +69,9 @@
                         <ColumnDefinition Width="13*"/>
                         <ColumnDefinition Width="512*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="There are two 'states' the bar can." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <Label Content="There are two 'states' the bar can be in." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <Label Content="1. The 'active' state. Here the viewers can still vote on which effect should be picked." HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <Label Content="2. The 'disabled' state. This state occurs a second or so before the final effect is &#xD;&#xA;    picked. The bar turns grey (standard) and no further votes are accepted" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <Label Content="2. The 'disabled' state. This state occurs a second or so before the final effect is &#xD;&#xA;    picked. The bar turns grey (standard) and no further votes are accepted." HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <Label Content="Settings that effect the latter have 'disabled' in their name." HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <Label Content="Text color: The color of all the text that you can see." HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <Label Content="Bar progression color: The &quot;progression bar&quot; is the part of the bar that &#xD;&#xA;moves around according to the amount of votes each effect has" HorizontalAlignment="Left" Margin="10,181,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
