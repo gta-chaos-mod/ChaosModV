@@ -1,16 +1,18 @@
 #include <stdafx.h>
 
 static int m_state;
+static std::map<Ped, Vector3> m_toTpPeds;
+static std::map<Vehicle, Vector3> m_toTpVehs;
 
 static void OnStart()
 {
 	m_state = 0;
+	m_toTpPeds.clear();
+	m_toTpVehs.clear();
 }
 
 static void OnTickLag()
 {
-	static std::map<Ped, Vector3> toTpPeds;
-	static std::map<Vehicle, Vector3> toTpVehs;
 
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GetTickCount64();
@@ -32,7 +34,7 @@ static void OnTickLag()
 				{
 					Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
-					toTpPeds.emplace(ped, pedPos);
+					m_toTpPeds.emplace(ped, pedPos);
 				}
 			}
 
@@ -40,12 +42,12 @@ static void OnTickLag()
 			{
 				Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
 
-				toTpVehs.emplace(veh, vehPos);
+				m_toTpVehs.emplace(veh, vehPos);
 			}
 		}
 		else if (m_state == 2)
 		{
-			for (const auto& pair : toTpPeds)
+			for (const auto& pair : m_toTpPeds)
 			{
 				const Ped& ped = pair.first;
 
@@ -60,9 +62,9 @@ static void OnTickLag()
 				SET_ENTITY_VELOCITY(ped, vel.x, vel.y, vel.z);
 			}
 
-			toTpPeds.clear();
+			m_toTpPeds.clear();
 
-			for (const auto& pair : toTpVehs)
+			for (const auto& pair : m_toTpVehs)
 			{
 				const Vehicle& veh = pair.first;
 
@@ -80,7 +82,7 @@ static void OnTickLag()
 				SET_VEHICLE_FORWARD_SPEED(veh, forwardSpeed);
 			}
 
-			toTpVehs.clear();
+			m_toTpVehs.clear();
 		}
 	}
 }

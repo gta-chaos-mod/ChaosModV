@@ -121,7 +121,6 @@ namespace ConfigApp
             EFFECT_PEDS_OHKO,
             EFFECT_SCREEN_BLOOM,
             EFFECT_SCREEN_LSD,
-            EFFECT_SCREEN_CHOPVISION,
             EFFECT_SCREEN_RENDERDIST,
             EFFECT_SCREEN_FOG,
             EFFECT_SCREEN_BRIGHT,
@@ -249,6 +248,7 @@ namespace ConfigApp
             EFFECT_PEDS_MINIONS,
             EFFECT_MISC_FLAMETHROWER,
             EFFECT_PLAYER_FAKEDEATH,
+            EFFECT_PLAYER_KICKFLIP,
             EFFECT_GAMESPEED_SUPERHOT,
             EFFECT_VEH_BEYBLADE,
             EFFECT_KILLER_CLOWNS,
@@ -256,9 +256,13 @@ namespace ConfigApp
             EFFECT_PLAYER_POOF,
             EFFECT_PLAYER_SIMEONSAYS,
             EFFECT_VEH_LOCKCAMERA,
+            EFFECT_PLAYER_TIRED,
+            EFFECT_SCREEN_LS_NOIRE,
             EFFECT_MISC_SUPER_STUNT,
             EFFECT_SCREEN_NEED_GLASSES,
             EFFECT_FLIP_CAMERA,
+            EFFECT_PLAYER_ON_DEMAND_CARTOON,
+            EFFECT_PEDS_DRIVE_BACKWARDS,
             _EFFECT_ENUM_MAX
         }
 
@@ -346,9 +350,9 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_OHKO, new EffectInfo("One Hit KO", EffectCategory.PEDS, "player_ohko", true)},
             {EffectType.EFFECT_SCREEN_BLOOM, new EffectInfo("Bloom", EffectCategory.MISC, "screen_bloom", true)},
             {EffectType.EFFECT_SCREEN_LSD, new EffectInfo("LSD", EffectCategory.PLAYER, "screen_lsd", true)},
-            {EffectType.EFFECT_SCREEN_CHOPVISION, new EffectInfo("Chop Vision", EffectCategory.PLAYER, "screen_chop", true)},
             {EffectType.EFFECT_SCREEN_RENDERDIST, new EffectInfo("Where Did Everything Go?", EffectCategory.MISC, "screen_lowrenderdist", true, true)},
             {EffectType.EFFECT_SCREEN_FOG, new EffectInfo("Extreme Fog", EffectCategory.MISC, "screen_fog", true, true)},
+            {EffectType.EFFECT_SCREEN_LS_NOIRE, new EffectInfo("LS Noire", EffectCategory.MISC, "screen_lsnoire", true)},
             {EffectType.EFFECT_SCREEN_BRIGHT, new EffectInfo("Deep Fried", EffectCategory.MISC, "screen_bright", true)},
             {EffectType.EFFECT_SCREEN_MEXICO, new EffectInfo("Is This What Mexico Looks Like?", EffectCategory.MISC, "screen_mexico", true)},
             {EffectType.EFFECT_SCREEN_FULLBRIGHT, new EffectInfo("mat_fullbright 1", EffectCategory.MISC, "screen_fullbright", true)},
@@ -480,9 +484,13 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_POOF, new EffectInfo("Deadly Aim", EffectCategory.PLAYER, "player_poof", true)},
             {EffectType.EFFECT_PLAYER_SIMEONSAYS, new EffectInfo("Simeon Says", EffectCategory.PLAYER, "player_simeonsays", true, true)},
             {EffectType.EFFECT_VEH_LOCKCAMERA,  new EffectInfo("Lock Vehicle Camera", EffectCategory.VEHICLE, "veh_lockcamera", true)},
+            {EffectType.EFFECT_PLAYER_TIRED,  new EffectInfo("I'm So Tired", EffectCategory.PLAYER, "player_tired", true)},
+            {EffectType.EFFECT_PLAYER_KICKFLIP,  new EffectInfo("Kickflip", EffectCategory.PLAYER, "player_kickflip")},
             {EffectType.EFFECT_MISC_SUPER_STUNT,  new EffectInfo("Super Stunt", EffectCategory.MISC, "misc_superstunt")},
             {EffectType.EFFECT_SCREEN_NEED_GLASSES,  new EffectInfo("I Need Glasses", EffectCategory.MISC, "screen_needglasses", true)},
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
+            {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
+            {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
         };
     }
 }
