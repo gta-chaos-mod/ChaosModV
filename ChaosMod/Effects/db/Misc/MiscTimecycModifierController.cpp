@@ -13,11 +13,6 @@ static void OnTickMexico()
 
 static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico);
 
-static void OnStartBright()
-{
-	SET_CLOCK_TIME(12, 0, 0);
-}
-
 static void OnStopBright()
 {
 	OnStop();
@@ -30,6 +25,10 @@ static void OnStopBright()
 
 static void OnTickBright()
 {
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 1, 255, 255, 255, 5000, 5, 0);
+	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 100, 255, 255, 255, 5000, 10, 0);
+	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 	SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
 	PUSH_TIMECYCLE_MODIFIER();
 	for (auto car : GetAllVehs())
@@ -39,7 +38,7 @@ static void OnTickBright()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, OnStartBright, OnStopBright, OnTickBright);
+static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright);
 
 static void OnTickFog()
 {
