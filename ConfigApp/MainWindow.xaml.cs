@@ -76,8 +76,11 @@ namespace ConfigApp
 
                 if (Info.VERSION != newVersion)
                 {
-                    update_available_label.Visibility = Visibility.Visible;
                     update_available_button.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    update_available_label.Content = "You are on the newest version of the mod!";
                 }
             }
         }
