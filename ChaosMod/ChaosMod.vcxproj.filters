@@ -5,7 +5,6 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscAnimPostFXController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
@@ -184,10 +183,16 @@
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerFakePlayerSwap.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerImTired.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
