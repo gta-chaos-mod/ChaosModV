@@ -329,7 +329,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NO_HUD, {"No HUD", "no_hud", true, { EFFECT_NO_RADAR } }},
 	{EFFECT_SUPER_RUN, {"Super Run & Super Jump", "player_superrun", true }},
 	{EFFECT_PLAYER_RAGDOLL, {"Ragdoll", "player_ragdoll", false, { EFFECT_NO_RAGDOLL }}},
-	{EFFECT_PEDS_RAGDOLL_ON_TOUCH, {"Sensitive Touch", "peds_sensitivetouch", true, { EFFECT_NO_RAGDOLL }}},
+	{EFFECT_PEDS_RAGDOLL_ON_TOUCH, {"Sensitive Touch", "peds_sensitivetouch", true, { EFFECT_NO_RAGDOLL }, true}},
 	{EFFECT_PLAYER_POOR, {"Poor Boy", "poorboi"}},
 	{EFFECT_PEDS_FOLLOW_PLAYER, {"You Are Famous", "player_famous", true}},
 	{EFFECT_PLAYER_DRUNK, {"Drunk", "player_drunk", true}},
