@@ -16,6 +16,7 @@ static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
 	Vector3 PlayerCoord = GET_ENTITY_COORDS(player, 1);
+	LoadModel(displayHash);
 	waterObj = GET_CLOSEST_OBJECT_OF_TYPE(PlayerCoord.x, PlayerCoord.y, PlayerCoord.z, 300, displayHash, 1, 0, 1);
 	float waterZ;
 	GET_WATER_HEIGHT(PlayerCoord.x, PlayerCoord.y, PlayerCoord.z, &waterZ);
@@ -26,7 +27,7 @@ static void OnTick()
 			waterObj = CREATE_OBJECT(displayHash, PlayerCoord.x, PlayerCoord.y, PlayerCoord.z, true, true, true);
 			SET_ENTITY_ROTATION(waterObj, 90, 0, 0, 2, true);
 			FREEZE_ENTITY_POSITION(waterObj, 1);
-			ENTITY::SET_ENTITY_VISIBLE(waterObj, false, false);
+			SET_ENTITY_VISIBLE(waterObj, false, false);
 		}
 		else
 		{
