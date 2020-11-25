@@ -361,7 +361,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SCREEN_RENDERDIST, new EffectInfo("Where Did Everything Go?", EffectCategory.MISC, "screen_lowrenderdist", true, true)},
             {EffectType.EFFECT_SCREEN_FOG, new EffectInfo("Extreme Fog", EffectCategory.MISC, "screen_fog", true, true)},
             {EffectType.EFFECT_SCREEN_LS_NOIRE, new EffectInfo("LS Noire", EffectCategory.MISC, "screen_lsnoire", true)},
-            {EffectType.EFFECT_SCREEN_BRIGHT, new EffectInfo("Deep Fried", EffectCategory.MISC, "screen_bright", true)},
+            {EffectType.EFFECT_SCREEN_BRIGHT, new EffectInfo("Deep Fried", EffectCategory.MISC, "screen_bright", true, true)},
             {EffectType.EFFECT_SCREEN_MEXICO, new EffectInfo("Is This What Mexico Looks Like?", EffectCategory.MISC, "screen_mexico", true)},
             {EffectType.EFFECT_SCREEN_FULLBRIGHT, new EffectInfo("Fullbright", EffectCategory.MISC, "screen_fullbright", true)},
             {EffectType.EFFECT_SCREEN_BUBBLE_VISION, new EffectInfo("Bubble Vision", EffectCategory.MISC, "screen_bubblevision", true, true)},
