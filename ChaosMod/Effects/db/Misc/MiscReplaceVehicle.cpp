@@ -50,7 +50,7 @@ static void OnStart()
 				spawnZ += 5;
 			}
 
-			Vehicle newVehicle = CreatePoolVehicle(randomVeh, vehCoords.x, vehCoords.y, spawnZ, heading);
+			Vehicle newVehicle = CreateTempVehicle(randomVeh, vehCoords.x, vehCoords.y, spawnZ, heading);
 
 			for (int index = 0; index < vehPeds.size(); index++) 
 			{
