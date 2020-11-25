@@ -231,6 +231,7 @@ enum EffectType
 	EFFECT_RAPID_FIRE,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
 	EFFECT_PEDS_DRIVE_BACKWARDS,
+	EFFECT_PEDS_BUSBOIS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -470,10 +471,11 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_POOF, {"Deadly Aim", "player_poof", true}},
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
-	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true} },
+	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
 	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
 	{EFFECT_PEDS_DRIVE_BACKWARDS, {"Peds Drive Backwards", "peds_drive_backwards", true}},
+	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
 };
