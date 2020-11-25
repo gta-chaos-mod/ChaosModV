@@ -266,6 +266,7 @@ namespace ConfigApp
             EFFECT_RAPID_FIRE,
             EFFECT_PLAYER_ON_DEMAND_CARTOON,
             EFFECT_PEDS_DRIVE_BACKWARDS,
+            EFFECT_VEH_TURN_RIGHT,
             EFFECT_PEDS_BUSBOIS,
             _EFFECT_ENUM_MAX
         }
@@ -498,6 +499,7 @@ namespace ConfigApp
             {EffectType.EFFECT_RAPID_FIRE, new EffectInfo("Rapid Fire", EffectCategory.PLAYER, "player_rapid_fire", true)},
             {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
+            {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
         };
     }
