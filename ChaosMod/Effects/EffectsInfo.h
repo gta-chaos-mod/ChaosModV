@@ -438,7 +438,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_PORTAL_GUN, {"Portal Guns", "peds_portal_gun", true}},
 	{EFFECT_MISC_FIREWORKS, {"Fireworks!", "misc_fireworks", true}},
 	{EFFECT_VEH_DESPAWN, {"Remove Current Vehicle", "playerveh_despawn"}},
-	{EFFECT_VEH_FLYING_CAR, {"Flying Car", "vehs_flyingcar", true}},
+	{EFFECT_VEH_FLYING_CAR, {"Flying Cars", "vehs_flyingcars", true}},
 	{EFFECT_PEDS_SCOOTERBROTHERS, {"Scooter Brothers", "peds_scooterbrothers"}},
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PLAYER_HEAVY_RECOIL, { "Heavy Recoil", "player_heavyrecoil", true}},

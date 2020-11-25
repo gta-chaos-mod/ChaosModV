@@ -438,7 +438,7 @@ namespace ConfigApp
             {EffectType.EFFECT_OHKO_VEHICLES, new EffectInfo("Vehicles Explode On Impact", EffectCategory.VEHICLE, "vehs_ohko", true)},
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spammy Vehicle Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true)},
-            {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo("Flying Car", EffectCategory.VEHICLE, "vehs_flyingcar", true)},
+            {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo("Flying Cars", EffectCategory.VEHICLE, "vehs_flyingcars", true)},
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, true)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
             {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, true)},
