@@ -6,7 +6,7 @@
 		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:TwitchOverlayConfig"
         mc:Ignorable="d"
-        Title="Twitch Overlay Configuration (by LennartOschika)" Height="513" Width="1064">
+        Title="Twitch Overlay Configuration (by Lennart Oschika/Couch941)" Height="513" Width="1064">
     <Grid>
         <TabControl Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Global Settings" Background="#FFF0F0F0" BorderBrush="LightGray">
