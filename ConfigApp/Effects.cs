@@ -362,7 +362,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SCREEN_LS_NOIRE, new EffectInfo("LS Noire", EffectCategory.MISC, "screen_lsnoire", true)},
             {EffectType.EFFECT_SCREEN_BRIGHT, new EffectInfo("Deep Fried", EffectCategory.MISC, "screen_bright", true)},
             {EffectType.EFFECT_SCREEN_MEXICO, new EffectInfo("Is This What Mexico Looks Like?", EffectCategory.MISC, "screen_mexico", true)},
-            {EffectType.EFFECT_SCREEN_FULLBRIGHT, new EffectInfo("mat_fullbright 1", EffectCategory.MISC, "screen_fullbright", true)},
+            {EffectType.EFFECT_SCREEN_FULLBRIGHT, new EffectInfo("Fullbright", EffectCategory.MISC, "screen_fullbright", true)},
             {EffectType.EFFECT_SCREEN_BUBBLE_VISION, new EffectInfo("Bubble Vision", EffectCategory.MISC, "screen_bubblevision", true, true)},
             {EffectType.EFFECT_PEDS_BLIND, new EffectInfo("Blind Peds", EffectCategory.PEDS, "peds_blind", true)},
             {EffectType.EFFECT_HONK_BOOSTING, new EffectInfo("Honk Boosting", EffectCategory.VEHICLE, "vehs_honkboost", true)},
