@@ -199,7 +199,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
