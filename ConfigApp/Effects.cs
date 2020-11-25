@@ -488,7 +488,7 @@ namespace ConfigApp
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
             {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
-            {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true)},
+            {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true, true)},
         };
     }
 }
