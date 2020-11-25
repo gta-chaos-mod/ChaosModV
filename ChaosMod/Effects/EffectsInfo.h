@@ -426,7 +426,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_LAUNCH_ALL_PEDS, {"Launch All Nearby Peds Up", "peds_launchnearby"}},
 	{EFFECT_PEDS_ATTACK_PLAYER, {"All Peds Attack Player", "peds_attackplayer", true}},
 	{EFFECT_CLONE_PLAYER, {"Clone Player", "player_clone"}},
-	{EFFECT_SLIDY_PEDS, {"Slidy Peds", "peds_slidy", true}},
+	{EFFECT_SLIDY_PEDS, {"Slidy Peds", "peds_slidy", true, {}, true}},
 	{EFFECT_VEH_SET_RANDOM_SEAT, {"Set Player Into Random Vehicle Seat", "veh_randomseat"}},
 	{EFFECT_VEH_SET_TOPSPEED_30MPH, {"30MPH Speed Limit", "veh_30mphlimit", true, {}, true}},
 	{EFFECT_PEDS_RAGDOLL, {"Ragdoll Everyone", "peds_ragdoll", false, { EFFECT_NO_RAGDOLL }}},
