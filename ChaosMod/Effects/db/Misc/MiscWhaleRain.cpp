@@ -18,10 +18,11 @@ static void OnTick()
 	{
 		lastTick = curTick;
 
-		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + g_random.GetRandomInt(-100, 100);
-		spawnPos.y = playerPos.y + g_random.GetRandomInt(-100, 100);
-		spawnPos.z = playerPos.z + g_random.GetRandomInt(25, 50);
+		Vector3 spawnPos = Vector3::Init(
+			playerPos.x + g_random.GetRandomInt(-100, 100),
+			playerPos.y + g_random.GetRandomInt(-100, 100),
+			playerPos.z + g_random.GetRandomInt(25, 50)
+		);
 
 		LoadModel(WHALE_MODEL);
 

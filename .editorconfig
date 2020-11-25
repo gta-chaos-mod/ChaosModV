@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0005: Using-Direktive ist unnötig.
+dotnet_diagnostic.IDE0005.severity = none
