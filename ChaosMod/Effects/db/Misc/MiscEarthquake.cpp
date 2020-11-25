@@ -6,7 +6,7 @@
 
 static void OnStop()
 {
-	CAM:STOP_GAMEPLAY_CAM_SHAKING(true);
+	CAM::STOP_GAMEPLAY_CAM_SHAKING(true);
 }
 
 static void OnTick()

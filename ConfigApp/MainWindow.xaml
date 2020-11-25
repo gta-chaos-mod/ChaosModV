@@ -12,7 +12,11 @@
         <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
             <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
-                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="17*"/>
+                        <ColumnDefinition Width="246*"/>
+                    </Grid.ColumnDefinitions>
+                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}" Grid.ColumnSpan="2">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal" Height="21">
@@ -25,7 +29,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" Margin="-2,-2,0,0" VerticalAlignment="Top">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="107*"/>
@@ -152,7 +156,7 @@
         </TabControl>
         <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
         <Button x:Name="user_reset" Content="Reset" Click="user_reset_Click" Margin="844,418,113,13"/>
-        <Label x:Name="update_available_label" Content="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." HorizontalAlignment="Left" Margin="22,420,0,0" VerticalAlignment="Top" Visibility="Hidden" />
+        <Label x:Name="update_available_label" Content="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." HorizontalAlignment="Left" Margin="22,420,0,0" VerticalAlignment="Top" />
         <Button x:Name="update_available_button" Content="GTA5-Mods" HorizontalAlignment="Left" Margin="500,420,0,0" VerticalAlignment="Top" Width="93" Height="26" Click="contribute_modpage_click" Visibility="Hidden" />
     </Grid>
 </Window>
