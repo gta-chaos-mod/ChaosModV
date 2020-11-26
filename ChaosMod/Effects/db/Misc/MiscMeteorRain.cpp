@@ -19,11 +19,11 @@ static void OnTick()
 	{
 		lastTick = curTick;
 
-		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + g_random.GetRandomInt(-100, 100);
-		spawnPos.y = playerPos.y + g_random.GetRandomInt(-100, 100);
-		spawnPos.z = playerPos.z + g_random.GetRandomInt(25, 50);
-
+		Vector3 spawnPos = Vector3::Init(
+			playerPos.x + g_random.GetRandomInt(-100, 100),
+			playerPos.y + g_random.GetRandomInt(-100, 100),
+			playerPos.z + g_random.GetRandomInt(25, 50)
+		);
 		Hash choosenPropHash = GET_HASH_KEY(propNames[g_random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
 
