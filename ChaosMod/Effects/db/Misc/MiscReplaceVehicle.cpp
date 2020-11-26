@@ -8,6 +8,7 @@ static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
+	static Vehicle lastVeh = 0;
 
 	static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 	if (!vehModels.empty())
@@ -65,7 +66,8 @@ static void OnStart()
 			randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
 		}
 
-		Vehicle newVehicle = CreateTempVehicle(randomVeh, newVehCoords.x, newVehCoords.y, newVehCoords.z, heading);
+		LoadModel(randomVeh);
+		Vehicle newVehicle = CREATE_VEHICLE(randomVeh, newVehCoords.x, newVehCoords.y, newVehCoords.z, heading, true, true, true);
 
 		for (int index = 0; index < vehPeds.size(); index++)
 		{
@@ -79,6 +81,16 @@ static void OnStart()
 		}
 		SET_ENTITY_VELOCITY(newVehicle, vehVelocity.x, vehVelocity.y, vehVelocity.z);
 		SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
+
+		if (lastVeh)
+		{
+			DELETE_VEHICLE(&lastVeh);
+		}
+
+		lastVeh = newVehicle;
+
+		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
+		SET_MODEL_AS_NO_LONGER_NEEDED(randomVeh);
 	}
 }
 
