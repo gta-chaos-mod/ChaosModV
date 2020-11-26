@@ -135,6 +135,7 @@
     <ClCompile Include="Effects\db\Player\PlayerFakePlayerSwap.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerImTired.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
