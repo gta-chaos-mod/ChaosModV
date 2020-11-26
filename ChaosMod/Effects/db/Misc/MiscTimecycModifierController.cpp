@@ -1,5 +1,13 @@
 #include <stdafx.h>
 
+static void StartTransitionTimecycle(std::string modifier)
+{
+	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
+	{
+		SET_TRANSITION_TIMECYCLE_MODIFIER(modifier.c_str(), 5.f);
+	}
+}
+
 static void OnStop()
 {
 	CLEAR_TIMECYCLE_MODIFIER();
@@ -7,16 +15,10 @@ static void OnStop()
 
 static void OnTickMexico()
 {
-	SET_TIMECYCLE_MODIFIER("trevorspliff");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("trevorspliff");
 }
 
 static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico);
-
-static void OnStartBright()
-{
-	SET_CLOCK_TIME(12, 0, 0);
-}
 
 static void OnStopBright()
 {
@@ -30,8 +32,15 @@ static void OnStopBright()
 
 static void OnTickBright()
 {
+	StartTransitionTimecycle("mp_x17dlc_int_02");
+  
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 1, 255, 255, 255, 5000, 5, 0);
+	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 100, 255, 255, 255, 5000, 10, 0);
+	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 	SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
 	PUSH_TIMECYCLE_MODIFIER();
+
 	for (auto car : GetAllVehs())
 	{
 		SET_VEHICLE_LIGHTS(car, 2); // Vehicles lights always on even if no peds inside
@@ -39,28 +48,25 @@ static void OnTickBright()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, OnStartBright, OnStopBright, OnTickBright);
+static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright);
 
 static void OnTickFog()
 {
-	SET_TIMECYCLE_MODIFIER("prologue_ending_fog");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("prologue_ending_fog");
 }
 
 static RegisterEffect registerEffect3(EFFECT_SCREEN_FOG, nullptr, OnStop, OnTickFog);
 
 static void OnTickRenderdist()
 {
-	SET_TIMECYCLE_MODIFIER("Mp_apart_mid");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("Mp_apart_mid");
 }
 
 static RegisterEffect registerEffect4(EFFECT_SCREEN_RENDERDIST, nullptr, OnStop, OnTickRenderdist);
 
 static void OnTickBloom()
 {
-	SET_TIMECYCLE_MODIFIER("Bloom");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("Bloom");
 }
 
 static RegisterEffect registerEffect5(EFFECT_SCREEN_BLOOM, nullptr, OnStop, OnTickBloom);
@@ -86,8 +92,7 @@ static void OnTickLSD()
 		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
 	}
 
-	SET_TIMECYCLE_MODIFIER("ArenaEMP");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("ArenaEMP");
 
 	SET_AUDIO_SPECIAL_EFFECT_MODE(2);
 
@@ -151,16 +156,14 @@ static void OnStartFullbright()
 
 static void OnTickFullbright()
 {
-	SET_TIMECYCLE_MODIFIER("int_lesters");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("int_lesters");
 }
 
 static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright);
 
 static void OnTickBubbleVision()
 {
-	SET_TIMECYCLE_MODIFIER("ufo_deathray");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("ufo_deathray");
 
 	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
@@ -221,16 +224,14 @@ static void OnStartLSNoire()
 
 static void OnTickLSNoire()
 {
-	SET_TIMECYCLE_MODIFIER("NG_filmnoir_BW01");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("NG_filmnoir_BW01");
 }
 
 static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire);
 
 static void OnTickNeedGlasses()
 {
-	SET_TIMECYCLE_MODIFIER("hud_def_blur");
-	PUSH_TIMECYCLE_MODIFIER();
+	StartTransitionTimecycle("hud_def_blur");
 }
 
 static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
