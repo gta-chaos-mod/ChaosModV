@@ -29,7 +29,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" Margin="-2,-2,0,0" VerticalAlignment="Top">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" VerticalAlignment="Top">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="107*"/>
