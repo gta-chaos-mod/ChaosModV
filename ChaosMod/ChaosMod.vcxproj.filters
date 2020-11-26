@@ -196,6 +196,7 @@
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPacifist.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
