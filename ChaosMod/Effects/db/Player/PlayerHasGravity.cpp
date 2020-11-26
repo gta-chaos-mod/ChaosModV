@@ -1,15 +1,15 @@
 /*
-	Effect by Last0xygen
+	Effect by ProfessorBiddle
 */
 
 #include <stdafx.h>
 
 static void OnTick()
 {
-	Ped playerPed = PLAYER_PED_ID();
+	Ped player = PLAYER_ID();
 	std::vector<Entity> entities;
 	//make player not die instantly
-	SET_PLAYER_INVINCIBLE(playerPed, true);
+	SET_PLAYER_INVINCIBLE(player, true);
 
 	//get all moveable entities
 	for (Ped ped : GetAllPeds())
@@ -54,7 +54,7 @@ static void OnTick()
 }
 static void OnStop()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	SET_PLAYER_INVINCIBLE(playerPed, false);
+	Ped player = PLAYER_ID();
+	SET_PLAYER_INVINCIBLE(player, false);
 }
 static RegisterEffect registerEffect(EFFECT_PLAYER_GRAVITY, nullptr, OnStop, OnTick);
