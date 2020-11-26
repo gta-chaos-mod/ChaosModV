@@ -1,5 +1,9 @@
 #include <stdafx.h>
 
+/*
+	Effect by ProfessorBiddle
+*/
+
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())
