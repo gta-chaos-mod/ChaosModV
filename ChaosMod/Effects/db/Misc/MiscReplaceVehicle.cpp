@@ -8,21 +8,28 @@ static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	static Vehicle lastVeh = 0;
+
+	static std::vector<Hash> vehModels = Memory::GetAllVehModels();
+	if (!vehModels.empty())
 	{
-		static std::vector<Hash> vehModels = Memory::GetAllVehModels();
-		if (!vehModels.empty())
+		float heading;
+		std::vector<Ped> vehPeds;
+		Vector3 newVehCoords;
+		bool isEngineRunning = false;
+		Vector3 vehVelocity;
+		float forwardSpeed = 0;
+		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 		{
 			Vehicle currentVehicle = GET_VEHICLE_PED_IS_IN(playerPed, false);
 			int numberOfSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(currentVehicle));
 
-			bool isEngineRunning = GET_IS_VEHICLE_ENGINE_RUNNING(currentVehicle);
-			Vector3 vehCoords = GET_ENTITY_COORDS(currentVehicle, false);
-			float heading = GET_ENTITY_HEADING(currentVehicle);
-			Vector3 vehVelocity = GET_ENTITY_VELOCITY(currentVehicle);
-			float forwardSpeed = GET_ENTITY_SPEED(currentVehicle);
+			isEngineRunning = GET_IS_VEHICLE_ENGINE_RUNNING(currentVehicle);
+			newVehCoords = GET_ENTITY_COORDS(currentVehicle, false);
+			heading = GET_ENTITY_HEADING(currentVehicle);
+			vehVelocity = GET_ENTITY_VELOCITY(currentVehicle);
+			forwardSpeed = GET_ENTITY_SPEED(currentVehicle);
 
-			std::vector<Ped> vehPeds;
 
 			for (int i = -1; i < numberOfSeats - 1; i++)
 			{
@@ -34,12 +41,6 @@ static void OnStart()
 				vehPeds.push_back(ped);
 			}
 
-			Hash randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
-			while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(randomVeh) < vehPeds.size())
-			{
-				randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
-			}
-			float spawnZ = vehCoords.z;
 			if (!IS_ENTITY_A_MISSION_ENTITY(currentVehicle))
 			{
 				SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
@@ -47,24 +48,49 @@ static void OnStart()
 			}
 			else
 			{
-				spawnZ += 5;
+				newVehCoords.z += 5;
 			}
-
-			Vehicle newVehicle = CreateTempVehicle(randomVeh, vehCoords.x, vehCoords.y, spawnZ, heading);
-
-			for (int index = 0; index < vehPeds.size(); index++) 
-			{
-				int seatIdx = index == 0 ? -1 : -2;
-				int ped = vehPeds[index];
-				SET_PED_INTO_VEHICLE(ped, newVehicle, seatIdx);
-			}
-			if (isEngineRunning)
-			{
-				SET_VEHICLE_ENGINE_ON(newVehicle, true, true, false);
-			}
-			SET_ENTITY_VELOCITY(newVehicle, vehVelocity.x, vehVelocity.y, vehVelocity.z);
-			SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
 		}
+		else
+		{
+			heading = GET_ENTITY_HEADING(playerPed);
+			vehPeds.push_back(playerPed);
+			newVehCoords = GET_ENTITY_COORDS(playerPed, false);
+			vehVelocity = GET_ENTITY_VELOCITY(playerPed);
+			forwardSpeed = GET_ENTITY_SPEED(playerPed);
+		}
+
+		Hash randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
+		while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(randomVeh) < vehPeds.size())
+		{
+			randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
+		}
+
+		LoadModel(randomVeh);
+		Vehicle newVehicle = CREATE_VEHICLE(randomVeh, newVehCoords.x, newVehCoords.y, newVehCoords.z, heading, true, true, true);
+
+		for (int index = 0; index < vehPeds.size(); index++)
+		{
+			int seatIdx = index == 0 ? -1 : -2;
+			int ped = vehPeds[index];
+			SET_PED_INTO_VEHICLE(ped, newVehicle, seatIdx);
+		}
+		if (isEngineRunning)
+		{
+			SET_VEHICLE_ENGINE_ON(newVehicle, true, true, false);
+		}
+		SET_ENTITY_VELOCITY(newVehicle, vehVelocity.x, vehVelocity.y, vehVelocity.z);
+		SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
+
+		if (lastVeh)
+		{
+			DELETE_VEHICLE(&lastVeh);
+		}
+
+		lastVeh = newVehicle;
+
+		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
+		SET_MODEL_AS_NO_LONGER_NEEDED(randomVeh);
 	}
 }
 
