@@ -196,6 +196,7 @@
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerEasyAim.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
