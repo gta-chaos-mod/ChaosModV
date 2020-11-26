@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-// Effect by ProfessorBiddle
+// Effect by ProfessorBiddle, modified
 
 static void OnTick()
 {
@@ -9,7 +9,7 @@ static void OnTick()
 	if (GET_PED_CONFIG_FLAG(player, 78, 1))
 	{
 		//slow time
-		SET_TIME_SCALE(.1);
+		SET_TIME_SCALE(.3);
 	}
 	else
 	{
@@ -17,4 +17,9 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_EASY_AIM, nullptr, nullptr, OnTick);
+static void OnStop()
+{
+	SET_TIME_SCALE(1);
+}
+
+static RegisterEffect registerEffect(EFFECT_PLAYER_EASY_AIM, nullptr, OnStop, OnTick);
