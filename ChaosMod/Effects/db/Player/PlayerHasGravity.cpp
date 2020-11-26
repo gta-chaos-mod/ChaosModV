@@ -11,6 +11,8 @@ static void OnTick()
 	//make player not die instantly
 	SET_PLAYER_INVINCIBLE(player, true);
 
+	Ped playerPed = PLAYER_PED_ID();
+
 	//get all moveable entities
 	for (Ped ped : GetAllPeds())
 	{
