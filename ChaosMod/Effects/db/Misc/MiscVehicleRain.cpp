@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-	//Effect by ProfessorBiddle
+//Effect by ProfessorBiddle
 
 static void OnTick()
 {
@@ -23,7 +23,7 @@ static void OnTick()
 
 		if (!vehModels.empty())
 		{
-			Vehicle veh = CreatePoolVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], spawnPos.x, spawnPos.y, spawnPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+			Vehicle veh = CreateTempVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], spawnPos.x, spawnPos.y, spawnPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 
 			// Also apply random upgrades
 			SET_VEHICLE_MOD_KIT(veh, 0);

@@ -467,5 +467,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
 	{EFFECT_PEDS_DRIVE_BACKWARDS, {"Peds Drive Backwards", "peds_drive_backwards", true}},
-	{EFFECT_MISC_VEHICLE_RAIN, {"Vehicle Rain", "misc_vehicle_rain", true}},
+	{EFFECT_MISC_VEHICLE_RAIN, {"Vehicle Rain", "misc_vehicle_rain", true, {}, true}},
 };
