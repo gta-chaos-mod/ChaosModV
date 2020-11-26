@@ -1,4 +1,9 @@
 #include <stdafx.h>
+
+/*
+	Effect by ProfessorBiddle
+*/
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
