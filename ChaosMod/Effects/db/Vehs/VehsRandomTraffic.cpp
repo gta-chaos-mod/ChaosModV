@@ -26,7 +26,7 @@ static void OnTick()
 			static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 			if (!vehModels.empty())
 			{
-				Vehicle veh = CreatePoolVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], prevPos.x, prevPos.y, prevPos.z, prevRot);
+				Vehicle veh = CreateTempVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], prevPos.x, prevPos.y, prevPos.z, prevRot);
 
 				// Also apply random upgrades
 				SET_VEHICLE_MOD_KIT(veh, 0);
