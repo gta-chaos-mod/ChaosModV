@@ -1,5 +1,9 @@
 #include <stdafx.h>
 
+/*
+	Effect by ProfessorBiddle
+*/
+
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
