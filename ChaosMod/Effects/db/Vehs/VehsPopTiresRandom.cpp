@@ -9,7 +9,7 @@ static void OnTick()
 	static DWORD64 lastTick = GetTickCount64();
 	DWORD64 currentTick = GetTickCount64();
 
-	if (lastTick < currentTick - 1250) // 1250MS = every 1.25 seconds.
+	if (lastTick < currentTick - 1750) // 1750MS = every 1.75 seconds.
 	{
 		lastTick = currentTick;
 
