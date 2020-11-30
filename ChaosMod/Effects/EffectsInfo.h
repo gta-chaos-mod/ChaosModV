@@ -234,7 +234,7 @@ enum EffectType
 	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
-	EFFECT_PEDS_DRIVE_BACKWARDS,
+    EFFECT_PEDS_DRIVE_BACKWARDS,
 	EFFECT_VEH_RANDTRAFFIC,
 	EFFECT_MISC_RAMPJAM,
 	EFFECT_MISC_VEHICLE_RAIN,
@@ -246,7 +246,8 @@ enum EffectType
 	EFFECT_PEDS_FLIP,
 	EFFECT_PLAYER_PACIFIST,
 	EFFECT_VEH_TURN_RIGHT,
-	EFFECT_PEDS_BUSBOIS,
+    EFFECT_PEDS_BUSBOIS,
+    EFFECT_PLAYER_HACKING,
 	_EFFECT_ENUM_MAX
 };
 
@@ -494,7 +495,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
-	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
+    {EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
 	{EFFECT_PEDS_DRIVE_BACKWARDS, {"Peds Drive Backwards", "peds_drive_backwards", true}},
 	{EFFECT_VEH_RANDTRAFFIC, {"Random Traffic", "veh_randtraffic", true, {}, true}},
 	{EFFECT_MISC_RAMPJAM, {"Ramp Jam (Press Jump In Vehicle)", "misc_rampjam", true}},
@@ -507,5 +508,6 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true, {}, true}},
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
-	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+    {EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+    {EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
 };

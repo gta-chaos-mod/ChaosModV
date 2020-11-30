@@ -106,6 +106,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerEasyAim.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
