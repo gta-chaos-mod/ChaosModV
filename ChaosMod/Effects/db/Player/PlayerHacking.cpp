@@ -49,7 +49,6 @@ static int lives = 0;
 static int scaleform = 0;
 static int timer = 0;
 static TimerAction act = TimerAction::NONE;
-static bool initialized = false;
 static int selectInputReturn = 0;
 static bool finished = false;
 
@@ -103,54 +102,41 @@ static void OnStart()
     act = TimerAction::NONE;
     timer = 0;
     lives = 2;
-    initialized = false;
     selectInputReturn = 0;
-    scaleform = 0;
     finished = false;
     PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), false, 0);
+
+    scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
+    while(!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleform))
+        WAIT(0);
+
+    GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_BACKGROUND");
+    GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
+    GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+
+    ScaleformRunProgram(4);
+    ScaleformRunProgram(83);
+
+    ScaleformUpdateLives();
+
+    auto word = g_random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
+    GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_WORD");
+    ScaleformPushString(ROULETTE_WORDS[word]);
+    GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+
+    for(int i = 0; i < 8; i++)
+    {
+        GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
+        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
+        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
+        GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+    }
 }
 
 static void OnTick()
 {
-    // We have to stagger the initialization like this, otherwise
-    // the game doesn't like to cooperate with what we want.
-
-    // This forces the scaleform to be created, and then initialized
-    // on different ticks.
-    if(scaleform == 0)
+    if(!finished)
     {
-        if(!finished)
-            scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
-    }
-    else
-    {
-        if(!initialized)
-        {
-            initialized = true;
-
-            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_BACKGROUND");
-            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
-            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-
-            ScaleformRunProgram(4);
-            ScaleformRunProgram(83);
-
-            ScaleformUpdateLives();
-
-            auto word = g_random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
-            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_WORD");
-            ScaleformPushString(ROULETTE_WORDS[word]);
-            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-
-            for(int i = 0; i < 8; i++)
-            {
-                GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
-                GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-                GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
-                GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-            }
-        }
-
         GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleform, 255, 255, 255, 255, 0);
 
         if(act == TimerAction::NONE)
