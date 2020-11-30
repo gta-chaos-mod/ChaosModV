@@ -187,6 +187,7 @@ static void OnTick()
                             GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleform, "STOP_ROULETTE");
                             ScaleformUpdateLives();
                         }
+                        break;
                     case 92: // Properly hit character
                         AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_CLICK", 0, 1);
                         break;
