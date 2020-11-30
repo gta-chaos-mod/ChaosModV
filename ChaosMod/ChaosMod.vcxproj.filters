@@ -82,7 +82,6 @@
     <ClCompile Include="Effects\db\Peds\PedsStripWeapons.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTpRandomPedsPlayerVeh.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsZombies.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBlind.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAutopilot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
@@ -170,6 +169,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
@@ -182,14 +182,34 @@
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerFakePlayerSwap.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerImTired.cpp" />
     <ClCompile Include="EffectThread.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerEasyAim.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerPacifist.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -218,6 +238,7 @@
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+    <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="EffectThread.h" />
   </ItemGroup>
   <ItemGroup>
