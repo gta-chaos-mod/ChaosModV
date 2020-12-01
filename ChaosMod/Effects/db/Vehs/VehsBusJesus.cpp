@@ -1,5 +1,5 @@
 /*
-	Effect by ProfessorBiddle, a very shite programmer
+	Effect by ProfessorBiddle
 */
 
 #include <stdafx.h>
@@ -31,7 +31,11 @@ static void OnStart()
 	SET_PED_INTO_VEHICLE(playerPed, veh, -2);
 
 	//put jesus behind wheel
-	Ped jesus = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
+	//Ped jesus = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);
+	Ped jesus = CreatePoolPed(4, modelHash, spawnPos.x, spawnPos.y + 50.f, spawnPos.z, -1);
+	SET_PED_INTO_VEHICLE(jesus, veh, -1);
+
+
 	SET_PED_RELATIONSHIP_GROUP_HASH(jesus, relationshipGroup);
 
 	SET_ENTITY_PROOFS(jesus, true, false, false, false, false, false, false, false);
