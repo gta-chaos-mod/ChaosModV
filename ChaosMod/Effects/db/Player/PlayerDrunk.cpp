@@ -45,7 +45,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GetTickCount64();
+		static DWORD64 timeUntilSteer = MISC::GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -54,11 +54,11 @@ static void OnTick()
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
 		}
 
-		DWORD64 curTick = GetTickCount64();
+		DWORD64 curTick = MISC::GET_GAME_TIMER();
 
 		if (timeUntilSteer < curTick)
 		{
-			timeUntilSteer = GetTickCount64();
+			timeUntilSteer = MISC::GET_GAME_TIMER();
 
 			if (enableDrunkSteering)
 			{

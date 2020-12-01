@@ -5,8 +5,8 @@
 Vehicle veh;
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 currentTick = GetTickCount64();
+	static DWORD64 lastTick = MISC::GET_GAME_TIMER();
+	DWORD64 currentTick = MISC::GET_GAME_TIMER();
 
 	//Player vehicle steering locked to the right
 	Ped playerPed = PLAYER_PED_ID();

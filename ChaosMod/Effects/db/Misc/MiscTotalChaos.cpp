@@ -4,7 +4,7 @@ static DWORD64 m_anchorTick;
 
 static void OnStart()
 {
-	m_anchorTick = GetTickCount64();
+	m_anchorTick = MISC::GET_GAME_TIMER();
 
 	SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
 }
@@ -34,9 +34,9 @@ static void OnTick()
 		APPLY_FORCE_TO_ENTITY(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = MISC::GET_GAME_TIMER();
 
-	static DWORD64 lastTick = GetTickCount64();
+	static DWORD64 lastTick = MISC::GET_GAME_TIMER();
 	if (lastTick < curTick - 100)
 	{
 		lastTick = curTick;
