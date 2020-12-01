@@ -18,6 +18,7 @@ static void OnTick()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GetTickCount64();
+	static const int spawnTime = 1000;
 
 	if (jesusAmount <= maxJesus && curTick > lastTick + 800)
 	{
@@ -39,13 +40,12 @@ static void OnTick()
 				break;
 			}
 		}	
-		SET_MODEL_AS_NO_LONGER_NEEDED(maxJesus);
 		//Give em' a shove
 		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(jesus, 0, 35.f, 0, -2500.f, true, false, true, true);
 		//give parachute, for some reason only works with both
 		SET_PED_GADGET(jesus, parachute, true);
 		GIVE_WEAPON_TO_PED(jesus, parachute, 9999, true, true);
-		//Jesus hates criminals
+		//Jesus hates everyone
 		Hash relationshipGroup;
 		ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
 		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
@@ -57,7 +57,7 @@ static void OnTick()
 		GIVE_WEAPON_TO_PED(jesus, wep, 9999, true, false);
 		SET_CURRENT_PED_WEAPON(jesus, wep, true);
 		//Make jesus badass, but not as badass as Griefer Jesus		
-		SET_ENTITY_PROOFS(jesus, false, true, true, true, false, false, false, false);		
+		SET_ENTITY_PROOFS(jesus, false, true, false, true, false, false, false, false);		
 		SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(jesus, true);
 		SET_RAGDOLL_BLOCKING_FLAGS(jesus, 5);
 		SET_PED_SUFFERS_CRITICAL_HITS(jesus, true);
@@ -79,7 +79,7 @@ static void OnTick()
 				{
 					if (!IS_ENTITY_IN_AIR(jesus) && !GET_IS_TASK_ACTIVE(jesus, 282))
 					{
-						if (lastTick2 < curTick - 1000)
+						if (lastTick2 < curTick - spawnTime)
 						{
 							jesusDespawnTime[i]--;
 							//Attack time
@@ -101,7 +101,7 @@ static void OnTick()
 			jesus = 0;
 		}
 	}
-	if (lastTick2 < curTick - 1000)
+	if (lastTick2 < curTick - spawnTime)
 	{
 		lastTick2 = curTick;
 	}
