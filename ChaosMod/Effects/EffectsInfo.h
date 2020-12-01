@@ -509,5 +509,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
-	{EFFECT_DARKVIPERAU, {"Cola Rain", "meteorrain", true}},
+	{EFFECT_DARKVIPERAU, {"Cola Rain", "player_coladrops", true}},
 };
