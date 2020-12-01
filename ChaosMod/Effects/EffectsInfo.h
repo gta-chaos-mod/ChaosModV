@@ -504,7 +504,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_GRAVITY, {"Gravity Field", "player_gravity", true, {}, true}},
 	{EFFECT_VEH_BOUNCY, {"Bouncy Vehicles", "veh_bouncy", true, {}, false}},
 	{EFFECT_PEDS_STOP_AND_STARE, {"Stop and Stare", "peds_stop_stare"}},
-	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true, {}, true}},
+	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true}},
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
