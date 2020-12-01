@@ -15,7 +15,7 @@ static void OnTickLag()
 {
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = MISC::GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
