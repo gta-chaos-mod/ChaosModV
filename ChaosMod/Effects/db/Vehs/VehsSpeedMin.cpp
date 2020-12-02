@@ -42,7 +42,7 @@ static void OnTick()
 
 			m_lastVeh = 0;
 			m_timeReserve = WAIT_TIME;
-			m_lastTick = MISC::GET_GAME_TIMER();
+			m_lastTick = GET_GAME_TIMER();
 
 			return;
 		}
@@ -51,7 +51,7 @@ static void OnTick()
 
 		float minSpeed = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
 		float speedms = GET_ENTITY_SPEED(veh);
-		DWORD64 currentTick = MISC::GET_GAME_TIMER();
+		DWORD64 currentTick = GET_GAME_TIMER();
 		DWORD64 tickDelta = currentTick - m_lastTick;
 		int overlaycolor = 0;
 		if (speedms < minSpeed)
@@ -120,7 +120,7 @@ static void OnStart()
 		WAIT(0);
 	}
 	m_enteredVehicle = false;
-	m_lastTick = MISC::GET_GAME_TIMER();
+	m_lastTick = GET_GAME_TIMER();
 	m_lastVeh = 0;
 	m_timeReserve = WAIT_TIME;
 }

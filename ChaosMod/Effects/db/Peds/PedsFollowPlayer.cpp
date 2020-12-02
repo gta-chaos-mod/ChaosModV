@@ -29,8 +29,8 @@ static void OnTick()
 		m_savedPlayerVeh = playerVeh;
 	}
 
-	static DWORD64 lastTick = MISC::GET_GAME_TIMER();
-	DWORD64 curTick = MISC::GET_GAME_TIMER();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 2000)
 	{

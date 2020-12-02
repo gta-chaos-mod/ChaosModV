@@ -2,8 +2,8 @@
 
 static void OnTick()
 {
-	static auto lastTick = MISC::GET_GAME_TIMER();
-	auto curTick = MISC::GET_GAME_TIMER();
+	static auto lastTick = GET_GAME_TIMER();
+	auto curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 100)
 	{

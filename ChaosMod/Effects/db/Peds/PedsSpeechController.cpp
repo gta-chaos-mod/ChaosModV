@@ -3,7 +3,7 @@
 static void OnTickFriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = MISC::GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -27,7 +27,7 @@ static RegisterEffect registerEffect1(EFFECT_PEDS_SAY_HI, nullptr, nullptr, OnTi
 static void OnTickUnfriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = MISC::GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{

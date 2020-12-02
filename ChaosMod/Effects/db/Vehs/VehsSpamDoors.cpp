@@ -6,8 +6,8 @@
 
 static void OnTick()
 {
-	static DWORD64 lastTick = MISC::GET_GAME_TIMER();
-	DWORD64 currentTick = MISC::GET_GAME_TIMER();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 currentTick = GET_GAME_TIMER();
 
 	if (lastTick < currentTick - 500) //every second, half of second
 	{
