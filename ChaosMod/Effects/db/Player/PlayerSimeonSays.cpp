@@ -28,6 +28,15 @@ static std::map<std::string, std::vector<int>> actionKeys = {
 	{"look behind (c)", {26, 79}}
 };
 
+static std::map<std::string, std::vector<int>> blacklistedKeys = {
+	{"move forwards", {33, 72, 78, 88, 130, 139, 151, 233}},
+	{"move backwards", {32, 71, 77, 87, 129, 136, 150, 232}},
+	{"move left", {35, 64, 90, 134, 148, 235}},
+	{"move right", {34, 63, 89, 133, 147, 234}},
+	{"move", {}},
+	{"look behind (c)", {}}
+};
+
 static int scaleForm = 0;
 static int lastTime = 0;
 static int waitTime = 2000;
@@ -98,6 +107,13 @@ static void OnTick()
 			if (IS_CONTROL_PRESSED(0, key) || IS_CONTROL_JUST_PRESSED(0, key))
 			{
 				kill = false;
+			}
+		}
+		for (int key : blacklistedKeys[action])
+		{
+			if (IS_CONTROL_PRESSED(0, key) || IS_CONTROL_JUST_PRESSED(0, key))
+			{
+				kill = true;
 			}
 		}
 	}
