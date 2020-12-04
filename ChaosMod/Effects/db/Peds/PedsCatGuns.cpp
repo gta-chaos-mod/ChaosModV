@@ -44,6 +44,7 @@ static void OnTick()
 {
 	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
 	LoadModel(catHash);
+	int numCats = 0;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -70,6 +71,7 @@ static void OnTick()
 
 			bool isShotgun = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
 			int catCount = isShotgun ? 3 : 1;
+			numCats += catCount;
 			for (int i = 0; i < catCount; i++)
 			{
 				if (i > 0)
@@ -94,7 +96,19 @@ static void OnTick()
 			}
 		}
 	}
-
+	//limit object numbers by deleting non mission objects
+	if (numCats >= 10)
+	{
+		for (Ped delPed : GetAllPeds())
+		{
+			if (!IS_ENTITY_A_MISSION_ENTITY(delPed))
+			{
+				DELETE_PED(&delPed);
+				numCats--;
+				break;
+			}
+		}
+	}
 	SET_MODEL_AS_NO_LONGER_NEEDED(catHash);
 }
 
