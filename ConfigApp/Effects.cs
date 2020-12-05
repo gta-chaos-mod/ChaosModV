@@ -282,6 +282,7 @@ namespace ConfigApp
             EFFECT_PLAYER_PACIFIST,
             EFFECT_VEH_TURN_RIGHT,
             EFFECT_PEDS_BUSBOIS,
+            EFFECT_VEH_WINGS,
             _EFFECT_ENUM_MAX
         }
 
@@ -529,6 +530,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
             {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
+            {EffectType.EFFECT_VEH_WINGS,  new EffectInfo("Vehicles have Wings", EffectCategory.VEHICLE, "veh_wings")},
         };
     }
 }
