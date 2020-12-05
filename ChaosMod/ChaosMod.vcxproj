@@ -155,6 +155,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsBeyblade.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsGtaRacing.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
