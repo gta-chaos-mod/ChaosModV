@@ -2,11 +2,12 @@
 
 static Vector3 DegToRadian(const Vector3& angles)
 {
-	return Vector3::Init(
-		angles.x * .0174532925199433F,
-		angles.y * .0174532925199433F,
-		angles.z * .0174532925199433F
-	);
+	Vector3 vec3;
+	vec3.x = angles.x * .0174532925199433F;
+	vec3.y = angles.y * .0174532925199433F;
+	vec3.z = angles.z * .0174532925199433F;
+
+	return vec3;
 }
 
 static Vector3 GetCoordsFromGameplayCam(float distance)

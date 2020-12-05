@@ -21,7 +21,6 @@
 
 #include "Memory/Hooks/Hook.h"
 
-#include "Util/Camera.h"
 #include "Util/EntityIterator.h"
 #include "Util/Model.h"
 #include "Util/Player.h"

@@ -7,7 +7,6 @@
 #pragma once
 
 #include <windows.h>
-#include <cmath>
 
 typedef DWORD Void;
 typedef DWORD Any;
@@ -37,7 +36,7 @@ typedef int Sphere;
 typedef int ScrHandle;
 
 #pragma pack(push, 1)
-struct Vector3
+typedef struct
 {
 	float x;
 	DWORD _paddingx;
@@ -45,83 +44,5 @@ struct Vector3
 	DWORD _paddingy;
 	float z;
 	DWORD _paddingz;
-
-	static Vector3 Init(float x, float y, float z)
-	{
-		Vector3 result;
-		result.x = x;
-		result.y = y;
-		result.z = z;
-		return result;
-	}
-
-	Vector3 operator +(Vector3 val)
-	{
-		return Vector3::Init(
-			this->x + val.x,
-			this->y + val.y,
-			this->z + val.z
-		);
-	}
-
-	Vector3 operator -(Vector3 val)
-	{
-		return Vector3::Init(
-			this->x - val.x,
-			this->y - val.y,
-			this->z - val.z);
-	}
-
-	Vector3 operator *(float val)
-	{
-		return Vector3::Init(
-			this->x * val,
-			this->y * val,
-			this->z * val
-		);
-	}
-
-	Vector3 operator /(float val)
-	{
-		return Vector3::Init(
-			this->x / val,
-			this->y / val,
-			this->z / val
-		);
-	}
-
-	static Vector3 Cross(Vector3 left, Vector3 right)
-	{
-		return Vector3::Init(
-			left.y * right.z - left.z * right.y,
-			left.z * right.x - left.x * right.z,
-			left.x * right.y - left.y * right.x
-		);
-	}
-
-	float Length()
-	{
-		return std::sqrt((this->x * this->x) + (this->y * this->y) + (this->z * this->z));
-	}
-
-	float distanceTo(Vector3 otherVector)
-	{
-		return (otherVector - *this).Length();
-	}
-
-	Vector3 GetDirectionForRotation()
-	{
-		double rotX = this->x / 57.295779513082320876798154814105;
-		double rotZ = this->z / 57.295779513082320876798154814105;
-		double multXY = abs(cos(rotX));
-		return Vector3::Init(
-			-sin(rotZ) * multXY,
-			cos(rotZ) * multXY,
-			sin(rotX)
-		);
-	}
-
-};
-
-
+} Vector3;
 #pragma pack(pop)

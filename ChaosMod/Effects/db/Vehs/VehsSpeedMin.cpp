@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+	Effect by Lucas7yoshi
 */
 
 #include <stdafx.h>
@@ -15,8 +15,6 @@ static int m_overlay = 0;
 static Vehicle m_lastVeh;
 
 static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick = GetTickCount64();
-static bool m_enteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -25,6 +23,8 @@ static inline bool Beepable(DWORD64 reserveValue)
 
 static void OnTick()
 {
+	static DWORD64 lastTick = GetTickCount64();
+	static bool enteredVehicle = false;
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -36,13 +36,13 @@ static void OnTick()
 
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false) && IS_PED_IN_ANY_VEHICLE(playerPed, false) && GET_IS_VEHICLE_ENGINE_RUNNING(veh))
 	{
-		if (!m_enteredVehicle)
+		if (!enteredVehicle)
 		{
-			m_enteredVehicle = true;
+			enteredVehicle = true;
 
 			m_lastVeh = 0;
 			m_timeReserve = WAIT_TIME;
-			m_lastTick = GetTickCount64();
+			lastTick = GetTickCount64();
 
 			return;
 		}
@@ -52,7 +52,7 @@ static void OnTick()
 		float minSpeed = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
 		float speedms = GET_ENTITY_SPEED(veh);
 		DWORD64 currentTick = GetTickCount64();
-		DWORD64 tickDelta = currentTick - m_lastTick;
+		DWORD64 tickDelta = currentTick - lastTick;
 		int overlaycolor = 0;
 		if (speedms < minSpeed)
 		{
@@ -81,7 +81,7 @@ static void OnTick()
 			}
 		}
 
-		m_lastTick = currentTick;
+		lastTick = currentTick;
 
 		BEGIN_SCALEFORM_MOVIE_METHOD(m_overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 
@@ -108,7 +108,7 @@ static void OnTick()
 	}
 	else
 	{
-		m_enteredVehicle = false;
+		enteredVehicle = false;
 	}
 }
 
@@ -119,8 +119,7 @@ static void OnStart()
 	{
 		WAIT(0);
 	}
-	m_enteredVehicle = false;
-	m_lastTick = GetTickCount64();
+
 	m_lastVeh = 0;
 	m_timeReserve = WAIT_TIME;
 }

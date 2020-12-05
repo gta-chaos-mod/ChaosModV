@@ -36,7 +36,6 @@ body {
 	overflow: hidden;
 	width: var(--bar-width);
 }
-
 #totalVotes {
 	-webkit-text-stroke: var(--text-outline-thickness) var(--text-outline-color);
 	color: var(--text-color);
@@ -55,53 +54,46 @@ body {
 	transition: background-color 100ms ease-in-out;
 	border-radius: var(--bar-border-radius);
 }
-
-	.bar.disabled {
-		background-color: var(--bar-background-disabled);
-	}
-
-	.bar > .labelContainer {
-		align-items: center;
-		bottom: 0;
-		display: flex;
-		justify-content: space-between;
-		left: 0;
-		padding: 0 1em;
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
-
-		.bar > .labelContainer > span {
-			-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
-			color: var(--bar-text-color);
-			font-family: var(--bar-font);
-			font-size: var(--bar-font-size);
-			font-weight: var(--bar-font-weight);
-			transition: color 100ms ease-in-out;
-		}
-
-		.bar > .labelContainer.disabled > span {
-			-webkit-text-stroke: unset;
-			color: var(--bar-text-color-disabled);
-		}
-
-	.bar > .progression {
-		background-color: var(--bar-progression);
-		height: 100%;
-		transition: width 0.3s ease-in-out;
-	}
-
-		.bar > .progression.disabled {
-			background-color: var(--bar-progression-disabled);
-		}
+.bar.disabled {
+	background-color: var(--bar-background-disabled);
+}
+.bar > .labelContainer {
+	align-items: center;
+	bottom: 0;
+	display: flex;
+	justify-content: space-between;
+	left: 0;
+	padding: 0 1em;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.bar > .labelContainer > span {
+	-webkit-text-stroke: var(--bar-text-outline-thickness) var(--bar-text-outline-color);
+	color: var(--bar-text-color);
+	font-family: var(--bar-font);
+	font-size: var(--bar-font-size);
+	font-weight: var(--bar-font-weight);
+	transition: color 100ms ease-in-out;
+}
+.bar > .labelContainer.disabled > span {
+	-webkit-text-stroke: unset;
+	color: var(--bar-text-color-disabled);
+}
+.bar > .progression {
+	background-color: var(--bar-progression);
+	height: 100%;
+	transition: width 0.3s ease-in-out;
+}
+.bar > .progression.disabled {
+	background-color: var(--bar-progression-disabled);
+}
 
 .slideIn {
 	animation-fill-mode: both;
 	animation-name: slideIn;
 	animation-timing-function: ease-in-out;
 }
-
 .slideOut {
 	animation-fill-mode: both;
 	animation-name: slideOut;
@@ -112,17 +104,14 @@ body {
 	from {
 		transform: translateX(+100%);
 	}
-
 	to {
 		transform: translateX(0);
 	}
 }
-
 @keyframes slideOut {
 	from {
 		transform: translateX(0);
 	}
-
 	to {
 		transform: translateX(+100%);
 	}

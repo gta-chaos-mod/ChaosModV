@@ -19,11 +19,11 @@ static void OnStop()
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 {
-	return Vector3::Init(
-		startCoord.x + g_random.GetRandomInt(-maxOffset, maxOffset),
-		startCoord.y + g_random.GetRandomInt(-maxOffset, maxOffset),
-		startCoord.z + g_random.GetRandomInt(-maxOffset, maxOffset)
-	);
+	Vector3 randomCoord;
+	randomCoord.x = startCoord.x + g_random.GetRandomInt(-maxOffset, maxOffset);
+	randomCoord.y = startCoord.y + g_random.GetRandomInt(-maxOffset, maxOffset);
+	randomCoord.z = startCoord.z + g_random.GetRandomInt(-maxOffset, maxOffset);
+	return randomCoord;
 }
 
 static void OnTick()
