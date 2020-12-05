@@ -21,12 +21,12 @@ static void OnTickLag()
 	{
 		lastTick = curTick;
 
-		if (++m_state == 3)
+		if (++m_state == 4)
 		{
 			m_state = 0;
 		}
 
-		if (m_state == 1)
+		if (m_state == 2)
 		{
 			for (Ped ped : GetAllPeds())
 			{
@@ -45,7 +45,7 @@ static void OnTickLag()
 				m_toTpVehs.emplace(veh, vehPos);
 			}
 		}
-		else if (m_state == 2)
+		else if (m_state == 3)
 		{
 			for (const auto& pair : m_toTpPeds)
 			{
