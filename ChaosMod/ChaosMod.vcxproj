@@ -147,6 +147,7 @@
     <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPacifist.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
