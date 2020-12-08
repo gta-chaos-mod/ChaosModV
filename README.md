@@ -4,6 +4,8 @@ A replica of the chaos mods found on previous GTA games for GTA V.
 
 See the [GTA5-Mods mod page](https://www.gta5-mods.com/scripts/chaos-mod-v-beta) for more information and instructions on how to install it.
 
+Feel free to join the [Discord Server](https://discord.gg/w2tDeKVaF9) for support or just to stay up to date on this (and other) mods.
+
 ## Building
 
 1. Clone the repo `git clone https://github.com/gta-chaos-mod/ChaosModV.git`
