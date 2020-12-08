@@ -54,6 +54,10 @@ static void OnStart()
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+	
+	Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+	SET_BLIP_COLOUR(blip, 1);
+	SET_BLIP_AS_FRIENDLY(blip, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_ANGRY_ALIEN, OnStart);
