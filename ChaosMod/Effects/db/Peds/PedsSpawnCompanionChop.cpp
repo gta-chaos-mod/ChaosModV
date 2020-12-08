@@ -18,6 +18,10 @@ static void OnStart()
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+	
+	Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+	SET_BLIP_COLOUR(blip, 2);
+	SET_BLIP_AS_FRIENDLY(blip, true);
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart);
