@@ -40,7 +40,7 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped1, relationshipGroup);
 		SET_PED_HEARING_RANGE(ped1, 9999.f);
 		SET_PED_AS_GROUP_MEMBER(ped1, playerGroup);
-		SET_ENTITY_PROOFS(ped0, true, true, true, true, true, true, 1, true);
+		SET_ENTITY_PROOFS(ped1, true, true, true, true, true, true, 1, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped1, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped1, 46, true);
 		SET_PED_ACCURACY(ped1, 100);
@@ -50,7 +50,7 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped2, relationshipGroup);
 		SET_PED_HEARING_RANGE(ped2, 9999.f);
 		SET_PED_AS_GROUP_MEMBER(ped2, playerGroup);
-		SET_ENTITY_PROOFS(ped0, true, true, true, true, true, true, 1, true);
+		SET_ENTITY_PROOFS(ped2, true, true, true, true, true, true, 1, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped2, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped2, 46, true);
 		SET_PED_ACCURACY(ped2, 100);
@@ -60,7 +60,7 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped3, relationshipGroup);
 		SET_PED_HEARING_RANGE(ped3, 9999.f);
 		SET_PED_AS_GROUP_MEMBER(ped3, playerGroup);
-		SET_ENTITY_PROOFS(ped0, true, true, true, true, true, true, 1, true);
+		SET_ENTITY_PROOFS(ped3, true, true, true, true, true, true, 1, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped3, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped3, 46, true);
 		SET_PED_ACCURACY(ped3, 100);
@@ -70,7 +70,7 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped4, relationshipGroup);
 		SET_PED_HEARING_RANGE(ped4, 9999.f);
 		SET_PED_AS_GROUP_MEMBER(ped4, playerGroup);
-		SET_ENTITY_PROOFS(ped0, true, true, true, true, true, true, 1, true);
+		SET_ENTITY_PROOFS(ped4, true, true, true, true, true, true, 1, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped4, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped4, 46, true);
 		SET_PED_ACCURACY(ped4, 100);
