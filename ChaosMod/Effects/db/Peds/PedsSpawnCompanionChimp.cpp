@@ -33,6 +33,10 @@ static void OnStart()
 
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_PISTOL"), 9999, false, true);
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_CARBINERIFLE"), 9999, false, true);
+	
+	Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+	SET_BLIP_COLOUR(blip, 2);
+	SET_BLIP_AS_FRIENDLY(blip, true);
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHIMP, OnStart);
