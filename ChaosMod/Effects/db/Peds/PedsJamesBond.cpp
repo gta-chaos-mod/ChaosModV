@@ -51,6 +51,10 @@ static void OnStart()
 	GIVE_WEAPON_COMPONENT_TO_PED(bond, GET_HASH_KEY("WEAPON_VINTAGEPISTOL"), GET_HASH_KEY("COMPONENT_AT_PI_SUPP"));
 	SET_PED_ACCURACY(bond, 100);
 	TASK_COMBAT_PED(bond, playerPed, 0, 16);
+	
+	Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+	SET_BLIP_COLOUR(blip, 1);
+	SET_BLIP_AS_FRIENDLY(blip, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_JAMES_BOND, OnStart);
