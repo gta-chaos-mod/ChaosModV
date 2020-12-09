@@ -66,7 +66,6 @@ static void RandomStore(int random)
         TeleportPlayer(1697.1395263672f, 4923.4130859375f, 42.063632965088f);   // LTD Grapeseed
         break;
     default:
-        TeleportPlayer(0.0f, 0.0f, 0.0f); // Something broke :(
         break;
     }
 }
