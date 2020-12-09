@@ -33,7 +33,7 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 	}
 }
 
-inline void TeleportPlayer(Vector3 coords, bool noOffset = false)
+inline void TeleportPlayer(const Vector3& coords, bool noOffset = false)
 {
 	TeleportPlayer(coords.x, coords.y, coords.z, noOffset);
 }
