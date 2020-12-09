@@ -32,3 +32,8 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 		SET_VEHICLE_FORWARD_SPEED(playerVeh, forwardSpeed);
 	}
 }
+
+inline void TeleportPlayer(Vector3 coords, bool noOffset = false)
+{
+	TeleportPlayer(coords.x, coords.y, coords.z, noOffset);
+}
