@@ -149,6 +149,7 @@
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
