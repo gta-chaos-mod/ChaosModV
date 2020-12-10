@@ -247,6 +247,7 @@ enum EffectType
 	EFFECT_PLAYER_PACIFIST,
 	EFFECT_VEH_TURN_RIGHT,
 	EFFECT_PEDS_BUSBOIS,
+	EFFECT_PLAYER_BEES,
 	_EFFECT_ENUM_MAX
 };
 
@@ -508,4 +509,5 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true}},
 };
