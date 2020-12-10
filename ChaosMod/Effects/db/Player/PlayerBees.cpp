@@ -2,9 +2,19 @@
 
 // Effect by kolyaventuri
 
+struct Velocity {
+  float x;
+  float y;
+  float z;
+};
+
+// Struct values are _offsets_ from Player postion. NOT world coords
 struct Bee {
-  int x{ 0 };
-  int y{ 0 };
+  float x{ 0.0 };
+  float y{ 0.0 };
+  float z{ 0.0 };
+  int tick{0};
+  Velocity vel{ {0, 1, 2 } }
 };
 
 static const int NUM_BEES = 20;
@@ -14,21 +24,27 @@ static Bee BEES [NUM_BEES] = {};
 static void OnStart() {
   // Create the bees
   for (int i = 0; i < NUM_BEES; i++) {
-    BEES[i] = Bee; 
+    Bee bee;
+    bee.x = g_random.GetRandomFloat(0.1, 1.0);
+    bee.y = g_random.GetRandomFloat(0.1, 1.0);
+    bee.z = g_random.GetRandomFloat(0.1, 1.0);
+
+    BEES[i] = bee;
   }
 }
 
-static void OnTick() {
-  float screenX, screenY;
+static void DrawBee(const Bee& bee) {
+  _DRAW_SPHERE(bee.x, bee.y, bee.z, 0.25, 0, 0, 0, 255);
+}
 
-  // Get player screen coords
+static void OnTick() {
+  // Get player coords
   Ped player = PLAYER_PED_ID();
   Vector3 playerWorldPos = GET_ENTITY_COORDS(player, false);
-  bool didGetScreenCoords = GET_SCREEN_COORD_FROM_WORLD_COORDS(playerWorldPos.x, playerWorldPos.y, playerWorldPos.z, &screenX, &screenY);
 
-  if (!didGetScreenCoords) {
-    // Something is wrong, can't get screen coords
-    return;
+  for (const Bee& bee : BEES) {
+
+    DrawBee(bee);
   }
 }
 
