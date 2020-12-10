@@ -5,6 +5,8 @@
 #include <stdafx.h>
 
 Vector3 Stores[] = {
+
+    // Convenience Stores
     { 372.29217529297f, 326.39370727539f, 103.56636047363f },   // 247 Clinton
     { 24.215274810791f, -1347.2624511719f, 29.497016906738f },  // 247 Strawberry
     { 2557.1748046875f, 380.64489746094f, 108.62294006348f },   // 247 Palomino
@@ -23,16 +25,41 @@ Vector3 Stores[] = {
     { -46.958980560303f, -1758.9643554688f, 29.420999526978f }, // LTD Davis
     { 1165.1630859375f, -323.87414550781f, 69.205047607422f },  // LTD Mirror Park
     { -1819.5125732422f, 793.64141845703f, 138.08486938477f },  // LTD Banham Canyon
-    { 1697.1395263672f, 4923.4130859375f, 42.063632965088f }    // LTD Grapeseed
-};
+    { 1697.1395263672f, 4923.4130859375f, 42.063632965088f },   // LTD Grapeseed
 
-static void TPVector(Vector3 coords) {
-    TeleportPlayer(coords.x, coords.y, coords.z);
-}
+    // Ammunitions
+    { 807.94f, -2159.67f, 29.63f },     // Ammunition (Cypress Flats)
+    { 24.97f, -1105.96f, 29.8f },       // Ammunition (PillBox Hill)
+    { 839.86f, -1035.8f, 28.19f },      // Ammunition (La Mesa)
+    { -659.7f, -933.34f, 21.83f },      // Ammunition (Cypress Flats)
+    { -1304.25f, -397.22f, 36.70f },    // Ammunition (MorningWood)
+    { 253.42f, -53.13f, 69.94f },       // Ammunition (Hawick)
+    { 2565.4f, 292.08f, 108.63f },      // Ammunition (Montañas Tataviam)
+    { 1693.57f, 3763.2f, 34.71f },      // Ammunition (Sandy Shores)
+    { -330.04f, 6087.03f, 31.45f },     // Ammunition (Sandy Shores)
+    { -1117.48f, 2701.36f, 18.55f },    // Ammunition (Sandy Shores)
+
+    // Clothing Stores
+    { 72.3f, -1399.1f, 28.4f },
+    { -703.8f, -152.3f, 36.4f },
+    { -167.9f, -299.0f, 38.7f },
+    { 428.7f, -800.1f, 28.5f },
+    { -829.4f, -1073.7f, 10.3f },
+    { -1447.8f, -242.5f, 48.8f },
+    { 11.6f, 6514.2f, 30.9f },
+    { 123.6f, -219.4f, 53.6f },
+    { 1696.3f, 4829.3f, 41.1f },
+    { 618.1f, 2759.6f, 41.1f },
+    { 1190.6f, 2713.4f, 37.2f },
+    { -1193.4f, -772.3f, 16.3f },
+    { -3172.5f, 1048.1f, 19.9f },
+    { -1108.4f, 2708.9f, 18.1f }
+
+};
 
 static void OnStart()
 {
-    TPVector(Stores[g_random.GetRandomInt(0, 19)]);
+    TeleportPlayer(Stores[g_random.GetRandomInt(0, 42)]);
 }
 
 static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, nullptr, nullptr);
