@@ -314,9 +314,6 @@
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
