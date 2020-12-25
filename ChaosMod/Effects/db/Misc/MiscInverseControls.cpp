@@ -38,4 +38,4 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_INVERT_CONTROLS, OnStart, OnStop);
+//static RegisterEffect registerEffect(EFFECT_INVERT_CONTROLS, OnStart, OnStop);
