@@ -46,13 +46,22 @@ struct Vector3
 	float z;
 	DWORD _paddingz;
 
+	Vector3() = default;
+
+	Vector3(float x, float y, float z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+
+		_paddingx = 0;
+		_paddingy = 0;
+		_paddingz = 0;
+	}
+
 	static Vector3 Init(float x, float y, float z)
 	{
-		Vector3 result;
-		result.x = x;
-		result.y = y;
-		result.z = z;
-		return result;
+		return Vector3(x, y, z);
 	}
 
 	Vector3 operator +(Vector3 val)

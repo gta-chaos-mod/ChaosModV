@@ -244,7 +244,4 @@
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
-  </ItemGroup>
 </Project>
