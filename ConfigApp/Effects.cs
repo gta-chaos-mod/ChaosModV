@@ -534,7 +534,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
             {EffectType.EFFECT_PLAYER_DEAD_EYE,  new EffectInfo("Dead Eye", EffectCategory.PLAYER, "player_dead_eye", true)},
-            {EffectType.EFFECT_PLAYER_HACKING, new EffectInfo("Realistic Hacking", EffectCategory.PLAYER, "player_hacking")},
+            {EffectType.EFFECT_PLAYER_HACKING, new EffectInfo("Realistic Hacking", EffectCategory.PLAYER, "player_hacking", true)},
         };
     }
 }
