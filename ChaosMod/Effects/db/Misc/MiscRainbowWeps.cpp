@@ -2,8 +2,8 @@
 
 static void OnTick()
 {
-	static auto lastTick = GetTickCount64();
-	auto curTick = GetTickCount64();
+	static auto lastTick = GET_GAME_TIMER();
+	auto curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 100)
 	{

@@ -39,11 +39,11 @@ static void OnStart()
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
 
-	DWORD64 lastTick = GetTickCount64();
+	DWORD64 lastTick = GET_GAME_TIMER();
 
 	while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
 	{
-		DWORD64 curTick = GetTickCount64();
+		DWORD64 curTick = GET_GAME_TIMER();
 
 		if (lastTick < curTick - 500)
 		{
