@@ -1,5 +1,5 @@
 /*
-        Effect by DrUnderscore (James)
+        Effect by DrUnderscore (James), modified
 */
 
 #include <stdafx.h>
@@ -131,66 +131,66 @@ static void OnStart()
         GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
         GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
     }
-}
 
-static void OnTick()
-{
-    if(!finished)
+    bool breakOut = false;
+    while (!breakOut)
     {
+        WAIT(0);
+
         GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleform, 255, 255, 255, 255, 0);
 
-        if(act == TimerAction::NONE)
+        if (act == TimerAction::NONE)
         {
             ScaleformCheckInput(32, 172, 8);
             ScaleformCheckInput(33, 173, 9);
             ScaleformCheckInput(34, 174, 10);
             ScaleformCheckInput(35, 175, 11);
 
-            if(PAD::IS_CONTROL_JUST_PRESSED(2, 201))
+            if (PAD::IS_CONTROL_JUST_PRESSED(2, 201))
             {
                 GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_INPUT_EVENT_SELECT");
                 selectInputReturn = GRAPHICS::END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE();
             }
         }
 
-        if(selectInputReturn != 0)
+        if (selectInputReturn != 0)
         {
-            if(GRAPHICS::IS_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_READY(selectInputReturn))
+            if (GRAPHICS::IS_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_READY(selectInputReturn))
             {
-                switch(GRAPHICS::GET_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_INT(selectInputReturn))
+                switch (GRAPHICS::GET_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_INT(selectInputReturn))
                 {
-                    case 86: // Player succeeded in hack
+                case 86: // Player succeeded in hack
+                {
+                    timer = MISC::GET_GAME_TIMER() + 2000;
+                    act = TimerAction::REMOVE;
+                    auto phrase = g_random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
+                    AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
+                    GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
+                    GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(true);
+                    ScaleformPushString(WIN_PHRASES[phrase]);
+                    GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+                    break;
+                }
+                case 87: // Player failed one of the columns (our job to find if they completely failed)
+                    AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_CLICK_BAD", 0, 1);
+                    if (lives-- == 0) // Out of lives
                     {
                         timer = MISC::GET_GAME_TIMER() + 2000;
-                        act = TimerAction::REMOVE;
-                        auto phrase = g_random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
-                        AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
-                        GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
-                        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(true);
-                        ScaleformPushString(WIN_PHRASES[phrase]);
-                        GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-                        break;
+                        act = TimerAction::KILL;
+                        ScaleformRemove();
+                        AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
                     }
-                    case 87: // Player failed one of the columns (our job to find if they completely failed)
-                        AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_CLICK_BAD", 0, 1);
-                        if(lives-- == 0) // Out of lives
-                        {
-                            timer = MISC::GET_GAME_TIMER() + 2000;
-                            act = TimerAction::KILL;
-                            ScaleformRemove();
-                            AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
-                        }
-                        else
-                        {
-                            timer = MISC::GET_GAME_TIMER() + 500;
-                            act = TimerAction::RESET;
-                            GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleform, "STOP_ROULETTE");
-                            ScaleformUpdateLives();
-                        }
-                        break;
-                    case 92: // Properly hit character
-                        AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_CLICK", 0, 1);
-                        break;
+                    else
+                    {
+                        timer = MISC::GET_GAME_TIMER() + 500;
+                        act = TimerAction::RESET;
+                        GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleform, "STOP_ROULETTE");
+                        ScaleformUpdateLives();
+                    }
+                    break;
+                case 92: // Properly hit character
+                    AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_CLICK", 0, 1);
+                    break;
                 default:
                     break;
                 }
@@ -198,54 +198,46 @@ static void OnTick()
                 selectInputReturn = 0;
             }
         }
-    }
 
-    if(act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
-    {
-        switch(act)
+        if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
         {
+            switch (act)
+            {
             case TimerAction::REMOVE:
                 ScaleformRemove();
                 PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
+                breakOut = true;
                 break;
             case TimerAction::RESET:
                 ScaleformReset();
                 break;
             case TimerAction::KILL:
+            {
+                breakOut = true;
+                auto ped = PLAYER::PLAYER_PED_ID();
+                if (PED::IS_PED_IN_ANY_VEHICLE(ped, false))
                 {
-                    auto ped = PLAYER::PLAYER_PED_ID();
-                    if(PED::IS_PED_IN_ANY_VEHICLE(ped, false))
-                    {
-                        auto veh = PED::GET_VEHICLE_PED_IS_IN(ped, false);
-                        VEHICLE::EXPLODE_VEHICLE(veh, true, false);
-                    }
-                    else
-                    {
-                        auto coords = ENTITY::GET_ENTITY_COORDS(ped, true);
-                        FIRE::ADD_EXPLOSION(coords.x, coords.y, coords.z, ExplosionTypeStickyBomb, 500.0f, true, false, 3.0f, false);
-                    }
-                    ENTITY::SET_ENTITY_HEALTH(ped, 0, 0);
-                    PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
+                    auto veh = PED::GET_VEHICLE_PED_IS_IN(ped, false);
+                    VEHICLE::EXPLODE_VEHICLE(veh, true, false);
                 }
-                break;
+                else
+                {
+                    auto coords = ENTITY::GET_ENTITY_COORDS(ped, true);
+                    FIRE::ADD_EXPLOSION(coords.x, coords.y, coords.z, ExplosionTypeStickyBomb, 500.0f, true, false, 3.0f, false);
+                }
+                ENTITY::SET_ENTITY_HEALTH(ped, 0, 0);
+                PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
+            }
+            break;
             case TimerAction::NONE:
             default:
                 break;
+            }
+
+            timer = 0;
+            act = TimerAction::NONE;
         }
-
-        timer = 0;
-        act = TimerAction::NONE;
     }
 }
 
-static void OnStop()
-{
-    // No one should be waiting this effect out, but we have to be sure that we return control to the player.
-    if(!finished)
-    {
-        ScaleformRemove();
-        PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
-    }
-}
-
-static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart);
