@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Effects/Effect.h"
+#include "EffectThread.h"
 
 #include <vector>
 #include <array>
@@ -36,6 +37,8 @@ public:
 	void ClearEffects();
 	void Reset();
 	void ResetTimer();
+	EffectThread* GetNextFreeThread();
+	void StopEffectThread(RegisteredEffect* effect);
 
 private:
 	const int m_effectSpawnTime;
