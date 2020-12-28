@@ -209,6 +209,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
   </ItemGroup>
   <ItemGroup>
