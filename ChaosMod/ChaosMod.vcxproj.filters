@@ -200,7 +200,6 @@
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerEasyAim.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
@@ -211,6 +210,8 @@
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscInverseControls.cpp" />
+    <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Camera.h" />
+    <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
