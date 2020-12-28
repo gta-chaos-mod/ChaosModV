@@ -471,7 +471,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PLAYER_HEAVY_RECOIL, { "Heavy Recoil", "player_heavyrecoil", true}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true}},
+	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true, {}, true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Trails", "misc_oilleaks", true}},
 	{EFFECT_PEDS_GUNSMOKE, {"Gunsmoke", "peds_gunsmoke", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
