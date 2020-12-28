@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 enum EffectType
@@ -266,7 +266,7 @@ public:
 	const std::vector<EffectType> IncompatibleWith;
 };
 
-const std::map<EffectType, EffectInfo> g_effectsMap =
+const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
