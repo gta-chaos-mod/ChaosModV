@@ -65,6 +65,6 @@ private:
 	EffectType m_chosenEffectType;
 
 	bool HandleMsg(const std::string& msg);
-	void SendToPipe(std::string msg);
-	void ErrorOutWithMsg(const char* msg);
+	void SendToPipe(std::string&& msg);
+	void ErrorOutWithMsg(const std::string&& msg);
 };

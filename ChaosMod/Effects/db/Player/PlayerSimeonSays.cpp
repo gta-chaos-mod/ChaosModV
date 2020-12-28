@@ -64,14 +64,14 @@ static void OnStart()
 	{
 		WAIT(0);
 	}
-	lastTime = GetTickCount64();
+    lastTime = GetTickCount64();
 	waitTime = 2000;
 	SET_TIME_SCALE(0.1f);
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(message.c_str());
 	END_SCALEFORM_MOVIE_METHOD();
 
-	while (GetTickCount64() - lastTime < waitTime)
+    while (GetTickCount64() - lastTime < waitTime)
 	{
 		WAIT(0);
 		DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);

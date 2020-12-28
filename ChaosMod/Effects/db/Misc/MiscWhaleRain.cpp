@@ -12,7 +12,7 @@ static void OnTick()
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (whaleAmount <= MAX_WHALES && curTick > lastTick + 200)
 	{

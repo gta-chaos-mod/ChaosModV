@@ -20,7 +20,7 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
 
-	char buffer[64];
+	char buffer[128];
 	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe");
 #ifdef _DEBUG
 	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, 0, NULL, NULL, &startupInfo, &procInfo);
@@ -30,7 +30,7 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 
 	if (!result)
 	{
-		ErrorOutWithMsg("Error while starting chaosmod/TwitchChatVotingProxy.exe. Please verify the file exists. Switching to normal mode.");
+		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Switching to normal mode.").str());
 
 		return;
 	}
@@ -363,15 +363,15 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 	return true;
 }
 
-void TwitchVoting::SendToPipe(std::string msg)
+void TwitchVoting::SendToPipe(std::string&& msg)
 {
 	msg += "\n";
 	WriteFile(m_pipeHandle, msg.c_str(), msg.length(), NULL, NULL);
 }
 
-void TwitchVoting::ErrorOutWithMsg(const char* msg)
+void TwitchVoting::ErrorOutWithMsg(const std::string&& msg)
 {
-	MessageBox(NULL, msg, "ChaosModV Error", MB_OK | MB_ICONERROR);
+	MessageBox(NULL, msg.c_str(), "ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_pipeHandle);
 	CloseHandle(m_pipeHandle);

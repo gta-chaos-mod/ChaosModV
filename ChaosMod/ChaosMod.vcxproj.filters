@@ -210,6 +210,7 @@
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -243,8 +244,5 @@
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ConfigApp\bin\Debug\ChaosModVConfig.exe" />
   </ItemGroup>
 </Project>

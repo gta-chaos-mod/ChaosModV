@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 enum EffectType
@@ -38,6 +38,7 @@ enum EffectType
 	EFFECT_TP_SKYFALL,
 	EFFECT_TP_RANDOM,
 	EFFECT_TP_MISSION,
+	EFFECT_TP_FAKE,
 	EFFECT_NO_PHONE,
 	EFFECT_SET_INTO_CLOSEST_VEH,
 	EFFECT_PEDS_EXIT_VEH,
@@ -248,6 +249,7 @@ enum EffectType
 	EFFECT_VEH_TURN_RIGHT,
 	EFFECT_PEDS_BUSBOIS,
 	EFFECT_PLAYER_DEAD_EYE,
+	EFFECT_PLAYER_QUAKE_FOV,
 	_EFFECT_ENUM_MAX
 };
 
@@ -265,7 +267,7 @@ public:
 	const std::vector<EffectType> IncompatibleWith;
 };
 
-const std::map<EffectType, EffectInfo> g_effectsMap =
+const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
@@ -300,6 +302,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_TP_SKYFALL, {"Teleport To Heaven", "tp_skyfall"}},
 	{EFFECT_TP_RANDOM, {"Teleport To Random Location", "tp_random"}},
 	{EFFECT_TP_MISSION,  {"Teleport To Random Mission", "tp_mission"}},
+	{EFFECT_TP_FAKE,  {"Fake Teleport", "tp_fake"}},
 	{EFFECT_NO_PHONE, {"No Phone", "player_nophone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle", "player_tpclosestveh"}},
 	{EFFECT_PEDS_EXIT_VEH, {"Everyone Exits Their Vehicles", "playerveh_exit"}},
@@ -493,7 +496,8 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
 	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
+	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV }}},
+	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA }}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},

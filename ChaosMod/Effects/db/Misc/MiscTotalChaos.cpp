@@ -4,7 +4,7 @@ static DWORD64 m_anchorTick;
 
 static void OnStart()
 {
-	m_anchorTick = GetTickCount64();
+	m_anchorTick = GET_GAME_TIMER();
 
 	SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
 }
@@ -34,9 +34,9 @@ static void OnTick()
 		APPLY_FORCE_TO_ENTITY(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = GET_GAME_TIMER();
 
-	static DWORD64 lastTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
 	if (lastTick < curTick - 100)
 	{
 		lastTick = curTick;
@@ -59,7 +59,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GetTickCount64();
+		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -68,11 +68,11 @@ static void OnTick()
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
 		}
 
-		DWORD64 curTick = GetTickCount64();
+		DWORD64 curTick = GET_GAME_TIMER();
 
 		if (timeUntilSteer < curTick)
 		{
-			timeUntilSteer = GetTickCount64();
+			timeUntilSteer = GET_GAME_TIMER();
 
 			if (enableDrunkSteering)
 			{

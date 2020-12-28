@@ -73,6 +73,7 @@ namespace ConfigApp
             EFFECT_TP_SKYFALL,
             EFFECT_TP_RANDOM,
             EFFECT_TP_MISSION,
+            EFFECT_TP_FAKE,
             EFFECT_NO_PHONE,
             EFFECT_SET_INTO_CLOSEST_VEH,
             EFFECT_PEDS_EXIT_VEH,
@@ -283,6 +284,7 @@ namespace ConfigApp
             EFFECT_VEH_TURN_RIGHT,
             EFFECT_PEDS_BUSBOIS,
             EFFECT_PLAYER_DEAD_EYE,
+            EFFECT_PLAYER_QUAKE_FOV,
             _EFFECT_ENUM_MAX
         }
 
@@ -321,6 +323,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_MOUNTCHILLIAD, new EffectInfo("Teleport To Mount Chiliad", EffectCategory.PLAYER, "tp_mountchilliad")},
             {EffectType.EFFECT_TP_RANDOM, new EffectInfo("Teleport To Random Location", EffectCategory.PLAYER, "tp_random")},
             {EffectType.EFFECT_TP_MISSION, new EffectInfo("Teleport To Random Mission", EffectCategory.PLAYER, "tp_mission")},
+            {EffectType.EFFECT_TP_FAKE, new EffectInfo("Fake Teleport", EffectCategory.PLAYER, "tp_fake")},
             {EffectType.EFFECT_NO_PHONE, new EffectInfo("No Phone", EffectCategory.MISC, "player_nophone", true)},
             {EffectType.EFFECT_SET_INTO_CLOSEST_VEH, new EffectInfo("Set Player Into Closest Vehicle", EffectCategory.PLAYER, "player_tpclosestveh")},
             {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("Everyone Exits Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
@@ -515,6 +518,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_WALK_ON_WATER,  new EffectInfo("Walk On Water", EffectCategory.PLAYER, "player_walkonwater", true)},
             {EffectType.EFFECT_SCREEN_NEED_GLASSES,  new EffectInfo("I Need Glasses", EffectCategory.MISC, "screen_needglasses", true, true)},
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true)},
+            {EffectType.EFFECT_PLAYER_QUAKE_FOV,  new EffectInfo("Quake FOV", EffectCategory.PLAYER, "player_quake_fov", true)},
             {EffectType.EFFECT_RAPID_FIRE, new EffectInfo("Rapid Fire", EffectCategory.PLAYER, "player_rapid_fire", true)},
             {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},

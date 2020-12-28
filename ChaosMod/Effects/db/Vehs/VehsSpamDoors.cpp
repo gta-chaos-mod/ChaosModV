@@ -6,8 +6,8 @@
 
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 currentTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 currentTick = GET_GAME_TIMER();
 
 	if (lastTick < currentTick - 500) //every second, half of second
 	{
@@ -16,6 +16,7 @@ static void OnTick()
 			for (int i = 0; i < 7; i++)
 			{
 				SET_VEHICLE_DOOR_OPEN(veh, i, false, false);
+				_SET_VEHICLE_DOOR_CAN_BREAK(veh, i, false);
 			}
 		}
 	}
@@ -30,4 +31,15 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_SPAM_DOORS, nullptr, nullptr, OnTick);
+static void OnStop()
+{
+	for (auto veh : GetAllVehs())
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			_SET_VEHICLE_DOOR_CAN_BREAK(veh, i, true);
+		}
+	}
+}
+
+static RegisterEffect registerEffect(EFFECT_VEH_SPAM_DOORS, nullptr, OnStop, OnTick);

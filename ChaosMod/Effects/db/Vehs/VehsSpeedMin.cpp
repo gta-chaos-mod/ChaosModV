@@ -15,7 +15,7 @@ static int m_overlay = 0;
 static Vehicle m_lastVeh;
 
 static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick = GetTickCount64();
+static DWORD64 m_lastTick = 0;
 static bool m_enteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
@@ -42,7 +42,7 @@ static void OnTick()
 
 			m_lastVeh = 0;
 			m_timeReserve = WAIT_TIME;
-			m_lastTick = GetTickCount64();
+			m_lastTick = GET_GAME_TIMER();
 
 			return;
 		}
@@ -51,7 +51,7 @@ static void OnTick()
 
 		float minSpeed = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
 		float speedms = GET_ENTITY_SPEED(veh);
-		DWORD64 currentTick = GetTickCount64();
+		DWORD64 currentTick = GET_GAME_TIMER();
 		DWORD64 tickDelta = currentTick - m_lastTick;
 		int overlaycolor = 0;
 		if (speedms < minSpeed)
@@ -120,7 +120,7 @@ static void OnStart()
 		WAIT(0);
 	}
 	m_enteredVehicle = false;
-	m_lastTick = GetTickCount64();
+	m_lastTick = GET_GAME_TIMER();
 	m_lastVeh = 0;
 	m_timeReserve = WAIT_TIME;
 }
