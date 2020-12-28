@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -97,4 +97,4 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_REPLACEVEHICLE, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_REPLACEVEHICLE, OnStart);
