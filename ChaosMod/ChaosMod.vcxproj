@@ -273,6 +273,7 @@
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
+    <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OptionsFile.cpp" />
@@ -295,9 +296,11 @@
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
+    <ClInclude Include="Memory\Hooks\HandleToEntityStructHook.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\PedModels.h" />

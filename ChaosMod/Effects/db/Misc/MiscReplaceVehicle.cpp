@@ -4,13 +4,15 @@
 
 #include <stdafx.h>
 
+#include "Memory/Hooks/HandleToEntityStructHook.h"
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
 	static Vehicle lastVeh = 0;
 
-	static std::vector<Hash> vehModels = Memory::GetAllVehModels();
+	static const std::vector<Hash> vehModels = Memory::GetAllVehModels();
 	if (!vehModels.empty())
 	{
 		float heading;
@@ -19,6 +21,7 @@ static void OnStart()
 		bool isEngineRunning = false;
 		Vector3 vehVelocity;
 		float forwardSpeed = 0;
+		Entity oldVehHandle = 0;
 		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 		{
 			Vehicle currentVehicle = GET_VEHICLE_PED_IS_IN(playerPed, false);
@@ -41,15 +44,10 @@ static void OnStart()
 				vehPeds.push_back(ped);
 			}
 
-			if (!IS_ENTITY_A_MISSION_ENTITY(currentVehicle))
-			{
-				SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
-				DELETE_VEHICLE(&currentVehicle);
-			}
-			else
-			{
-				newVehCoords.z += 5;
-			}
+			oldVehHandle = currentVehicle;
+
+			SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
+			DELETE_VEHICLE(&currentVehicle);
 		}
 		else
 		{
@@ -91,6 +89,11 @@ static void OnStart()
 
 		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
 		SET_MODEL_AS_NO_LONGER_NEEDED(randomVeh);
+
+		if (oldVehHandle)
+		{
+			Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+		}
 	}
 }
 

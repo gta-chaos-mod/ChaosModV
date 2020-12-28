@@ -83,7 +83,7 @@ namespace Memory
 		
 		static const Hash blimpHash = GET_HASH_KEY("BLIMP");
 		Hash vehModel = GET_ENTITY_MODEL(vehicle);
-		if (vehClass == 15 || vehClass == 16 || vehModel == blimpHash) // No helis nor planes, also make sure to explicitely exclude blimps at all costs as they cause a crash
+		if (vehClass == 15 || vehClass == 16 || vehModel == blimpHash) // No helis or planes, also make sure to explicitely exclude blimps at all costs as they cause a crash
 		{
 			return;
 		}

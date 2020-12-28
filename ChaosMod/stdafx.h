@@ -18,6 +18,7 @@
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
+#include "Memory/Entity.h"
 
 #include "Memory/Hooks/Hook.h"
 

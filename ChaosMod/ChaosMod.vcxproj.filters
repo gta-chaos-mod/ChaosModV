@@ -212,6 +212,7 @@
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInverseControls.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
+    <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -242,6 +243,8 @@
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
+    <ClInclude Include="Memory\Entity.h" />
+    <ClInclude Include="Memory\Hooks\HandleToEntityStructHook.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
