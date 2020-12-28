@@ -529,7 +529,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_GRAVITY,  new EffectInfo("Gravity Field", EffectCategory.PLAYER, "player_gravity", true, true)},
             {EffectType.EFFECT_VEHS_BOUNCY,  new EffectInfo("Bouncy Vehicles", EffectCategory.VEHICLE, "veh_bouncy", true, false)},
             {EffectType.EFFECT_PEDS_STOP_AND_STARE, new EffectInfo("Stop And Stare", EffectCategory.PEDS, "peds_stop_stare")},
-            {EffectType.EFFECT_PEDS_FLIP,  new EffectInfo("Spinning Peds", EffectCategory.PEDS, "peds_flip", true, true)},
+            {EffectType.EFFECT_PEDS_FLIP,  new EffectInfo("Spinning Peds", EffectCategory.PEDS, "peds_flip", true)},
             {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
             {EffectType.EFFECT_VEH_TURN_RIGHT,  new EffectInfo("Everyone Turn Right", EffectCategory.VEHICLE, "veh_turnright", true, true)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
