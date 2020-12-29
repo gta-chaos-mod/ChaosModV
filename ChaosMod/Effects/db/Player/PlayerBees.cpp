@@ -13,9 +13,8 @@ static void OnStart() {
         WAIT(0);
     }
 
-    Ped player = PLAYER_PED_ID();
     USE_PARTICLE_FX_ASSET("core");
-    
+
     particleId = START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_amb_fly_swarm", player, 0, 0, 0, 0, 0, 0, 1.1, false, false, false);
 }
 
@@ -23,10 +22,11 @@ static void OnStart() {
 static void OnTick() {
     Ped player = PLAYER_PED_ID();
     int rand_int = g_random.GetRandomInt(0, CHANCE);
-
+    
+    PLAY_STREAM_FROM_PED(player);
     if (rand_int == match) {
         APPLY_DAMAGE_TO_PED(player, 1, false, false);
-        // TOOD: Add a damage sound here
+        PLAY_PAIN(player, 6, 0, 0);
     }
 }
 
