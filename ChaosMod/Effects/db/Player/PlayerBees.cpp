@@ -13,6 +13,7 @@ static void OnStart() {
         WAIT(0);
     }
 
+    Ped player = PLAYER_PED_ID();
     USE_PARTICLE_FX_ASSET("core");
 
     particleId = START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_amb_fly_swarm", player, 0, 0, 0, 0, 0, 0, 1.1, false, false, false);
