@@ -1,31 +1,41 @@
 #include <stdafx.h>
 
 static std::vector<Ped> frozenPeds;
-Entity nailgun;
+static std::map<Ped, Entity> pedGuns;
 
-static bool isFrozen(Ped ped) {
+static bool isFrozen(const Ped ped) {
 	return std::find(frozenPeds.begin(), frozenPeds.end(), ped) != frozenPeds.end();
 }
 
-static void OnStart() {
-	Ped player = PLAYER_PED_ID();
-	int bone = GET_PED_BONE_INDEX(player, 0xDEAD); // (kolyaventuri): Right Hand
+static bool hasNailgun(const Ped ped) {
+	return pedGuns.count(ped) > 0;
+}
 
-	nailgun = CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
-	ATTACH_ENTITY_TO_ENTITY(nailgun, player, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2, true); 
+static void giveNailgun(const Ped ped) {
+	int bone = GET_PED_BONE_INDEX(ped, 0xDEAD); // (kolyaventuri): Right Hand
+
+	Entity nailgun = CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
+	ATTACH_ENTITY_TO_ENTITY(nailgun, ped, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2, true);
+	pedGuns[ped] = nailgun;
 }
 
 static void OnTick() {
 	const std::vector<Ped> peds = GetAllPeds();
-	Ped player = PLAYER_PED_ID();
 
-	Weapon weapon = GET_SELECTED_PED_WEAPON(player);
-	int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
+	for (const Ped ped : GetAllPeds()) {
+		if (!hasNailgun(ped)) {
+			giveNailgun(ped);
+		} else {
+			Entity nailgun = pedGuns[ped];
 
-	int isHoldingGun = weaponType == 3;
-	SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+			// (kolyaventuri): Check for weapon visiblity
+			Weapon weapon = GET_SELECTED_PED_WEAPON(ped);
+			int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
 
-	for (Ped ped : GetAllPeds()) {
+			int isHoldingGun = weaponType == 3;
+			SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+		}
+
 		if (HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped) && !isFrozen(ped)) {
 			frozenPeds.push_back(ped);
 		}
@@ -37,13 +47,17 @@ static void OnTick() {
 }
 
 static void OnStop() {
-	for (Ped ped : frozenPeds) {
+	for (const Ped ped : frozenPeds) {
 		FREEZE_ENTITY_POSITION(ped, false);
 	}
 
-	SET_OBJECT_AS_NO_LONGER_NEEDED(&nailgun);
-	DELETE_OBJECT(&nailgun);
+	for (std::map<Ped, Entity>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it) {
+		Entity nailgun = it->second;
+
+		SET_OBJECT_AS_NO_LONGER_NEEDED(&nailgun);
+		DELETE_OBJECT(&nailgun);
+	}
 	std::vector<Ped>().swap(frozenPeds); // Clear frozenPeds and reallocate
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_NAILGUNS, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_NAILGUNS, nullptr, OnStop, OnTick);
