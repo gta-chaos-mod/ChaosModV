@@ -262,13 +262,6 @@ void Main::MainLoop()
 	}
 }
 
-void Main::StartEffectThread()
-{
-	EffectThread newThread;
-	g_effectThreads.push_back(&newThread);
-	newThread.Loop();
-}
-
 void Main::RunEffectLoop()
 {
 	while (true)

@@ -3,14 +3,12 @@
 #include "DebugMenu.h"
 #include "EffectDispatcher.h"
 #include "TwitchVoting.h"
-#include "EffectThread.h"
 
 #include <Windows.h>
 #include <memory>
 #include <map>
 
 inline std::map<EffectType, EffectData> g_enabledEffects;
-inline std::vector<EffectThread*> g_effectThreads;
 
 class Main
 {
@@ -19,7 +17,6 @@ public:
 	void MainLoop();
 	void RunEffectLoop();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
-	void StartEffectThread();
 
 private:
 	std::unique_ptr<DebugMenu> m_debugMenu;
