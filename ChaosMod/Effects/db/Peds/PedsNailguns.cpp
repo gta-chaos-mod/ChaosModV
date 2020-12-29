@@ -12,11 +12,19 @@ static void OnStart() {
 	int bone = GET_PED_BONE_INDEX(player, 0xDEAD); // (kolyaventuri): Right Hand
 
 	nailgun = CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
-	ATTACH_ENTITY_TO_ENTITY(nailgun, player, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2, true);
+	ATTACH_ENTITY_TO_ENTITY(nailgun, player, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2, true); 
 }
 
 static void OnTick() {
 	const std::vector<Ped> peds = GetAllPeds();
+	Ped player = PLAYER_PED_ID();
+
+	Weapon weapon = GET_SELECTED_PED_WEAPON(player);
+	int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
+
+	int isHoldingGun = weaponType == 3;
+	SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+
 	for (Ped ped : GetAllPeds()) {
 		if (HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped) && !isFrozen(ped)) {
 			frozenPeds.push_back(ped);
@@ -33,6 +41,7 @@ static void OnStop() {
 		FREEZE_ENTITY_POSITION(ped, false);
 	}
 
+	SET_OBJECT_AS_NO_LONGER_NEEDED(&nailgun);
 	DELETE_OBJECT(&nailgun);
 	std::vector<Ped>().swap(frozenPeds); // Clear frozenPeds and reallocate
 }
