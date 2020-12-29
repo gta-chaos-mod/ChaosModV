@@ -2,12 +2,9 @@
 
 // Effect by kolyaventuri
 
-static int CHANCE = 500; // Higher is less chance
+static int CHANCE = 100; // Higher is less chance
+int match = g_random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
 int particleId;
-
-static float getVal() {
-    return g_random.GetRandomFloat(-1, 1);
-}
 
 static void OnStart() {
     REQUEST_NAMED_PTFX_ASSET("core");
@@ -18,24 +15,24 @@ static void OnStart() {
 
     Ped player = PLAYER_PED_ID();
     USE_PARTICLE_FX_ASSET("core");
-    particleId = START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_amb_fly_swarm", player, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+    
+    particleId = START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_amb_fly_swarm", player, 0, 0, 0, 0, 0, 0, 1.1, false, false, false);
 }
 
 // (kolyaventuri) There's gotta be a better way of doing this...
-static void attemptDamage(const Ped& player) {
+static void OnTick() {
+    Ped player = PLAYER_PED_ID();
     int rand_int = g_random.GetRandomInt(0, CHANCE);
-    int match = g_random.GetRandomInt(0, CHANCE);
+
     if (rand_int == match) {
-        /* TODO: ADD DAMAGE */
+        APPLY_DAMAGE_TO_PED(player, 1, false, false);
+        // TOOD: Add a damage sound here
     }
 }
 
-static void OnTick() {
-    // attemptDamage(player);
-}
-
 static void OnStop() {
-    STOP_PARTICLE_FX_LOOPED(particleId, false);
+    // Cleanup
+    STOP_PARTICLE_FX_LOOPED(particleId, 0);
     REMOVE_NAMED_PTFX_ASSET("core");
 }
 
