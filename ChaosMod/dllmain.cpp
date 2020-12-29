@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "EffectThread.h"
 
 Main m_main;
 
@@ -19,7 +20,10 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		scriptRegister(hInstance, []() { m_main.MainLoop(); });
 		scriptRegisterAdditionalThread(hInstance, []() { m_main.RunEffectLoop(); });
-
+		for (int i = 0; i < 20; i++)
+		{
+			scriptRegisterAdditionalThread(hInstance, []() { m_main.StartEffectThread(); });
+		}
 		keyboardHandlerRegister(OnKeyboardInput);
 
 		break;

@@ -486,5 +486,10 @@ namespace ConfigApp
         {
             System.Diagnostics.Process.Start("https://paypal.me/EmrCue");
         }
+
+        private void contribute_discord_click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+        }
     }
 }

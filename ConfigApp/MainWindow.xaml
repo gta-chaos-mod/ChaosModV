@@ -29,7 +29,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" VerticalAlignment="Top">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="107*"/>
@@ -146,11 +146,13 @@
                         <RowDefinition Height="12*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Visit the mod page for more information" HorizontalAlignment="Left" Margin="15,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0" Grid.RowSpan="2"/>
-                    <Button Content="GTA5-Mods" HorizontalAlignment="Left" Margin="317,20,0,0" VerticalAlignment="Top" Width="75" Click="contribute_modpage_click" Grid.RowSpan="2"/>
-                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="317,29,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.Row="1"/>
+                    <Button Content="GTA5-Mods" HorizontalAlignment="Left" Margin="342,20,0,0" VerticalAlignment="Top" Width="75" Click="contribute_modpage_click" Grid.RowSpan="2"/>
+                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="342,29,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.Row="1"/>
                     <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,64,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
-                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="317,69,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
+                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="342,69,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
                     <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,25,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="282"/>
+                    <Label Content="Join our Discord for announcements, support and more!" HorizontalAlignment="Left" Margin="15,105,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="312"/>
+                    <Button Content="Discord" HorizontalAlignment="Left" Margin="342,110,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_discord_click"/>
                 </Grid>
             </TabItem>
         </TabControl>

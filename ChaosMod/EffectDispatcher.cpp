@@ -108,11 +108,6 @@ void EffectDispatcher::UpdateEffects()
 		return;
 	}
 
-	for (const ActiveEffect& activeEffect : m_activeEffects)
-	{
-		activeEffect.RegisteredEffect->Tick();
-	}
-
 	DWORD64 currentUpdateTime = GetTickCount64();
 
 	if ((currentUpdateTime - m_effectsTimer) > 1000)
@@ -130,7 +125,7 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				effect.RegisteredEffect->Stop();
+				StopEffectThread(effect.RegisteredEffect);
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -214,7 +209,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
-			effect.RegisteredEffect->Stop();
+			StopEffectThread(effect.RegisteredEffect);
 			it = m_activeEffects.erase(it);
 		}
 		else
@@ -229,22 +224,26 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (registeredEffect)
 		{
-			registeredEffect->Start();
-
-			std::ostringstream ossEffectName;
-			ossEffectName << effectData.Name;
-
-			if (suffix && strlen(suffix) > 0)
+			EffectThread* nextThread = GetNextFreeThread();
+			if (nextThread)
 			{
-				ossEffectName << " " << suffix;
+				nextThread->Start(registeredEffect, effectInfo.IsTimed);
+
+				std::ostringstream ossEffectName;
+				ossEffectName << effectData.Name;
+
+				if (suffix && strlen(suffix) > 0)
+				{
+					ossEffectName << " " << suffix;
+				}
+
+				ossEffectName << std::endl;
+
+				// Play a sound if corresponding .mp3 file exists
+				Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
+
+				m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
 			}
-
-			ossEffectName << std::endl;
-
-			// Play a sound if corresponding .mp3 file exists
-			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
-
-			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
 		}
 	}
 
@@ -317,7 +316,7 @@ void EffectDispatcher::ClearEffects()
 
 	for (ActiveEffect& effect : m_activeEffects)
 	{
-		effect.RegisteredEffect->Stop();
+		StopEffectThread(effect.RegisteredEffect);
 	}
 	m_activeEffects.clear();
 }
@@ -355,4 +354,34 @@ void EffectDispatcher::ResetTimer()
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();
+}
+
+EffectThread* EffectDispatcher::GetNextFreeThread()
+{
+	std::vector<EffectThread*>::iterator it;
+	for (it = g_effectThreads.begin(); it != g_effectThreads.end(); )
+	{
+		EffectThread* thread = *it;
+		if (thread->isStopped)
+		{
+			return thread;
+		}
+		it++;
+	}
+	return nullptr;
+}
+
+void EffectDispatcher::StopEffectThread(RegisteredEffect* effect)
+{
+	std::vector<EffectThread*>::iterator it;
+	for (it = g_effectThreads.begin(); it != g_effectThreads.end(); )
+	{
+		EffectThread* thread = *it;
+		if (thread->currentEffect == effect)
+		{
+			thread->Stop();
+			return;
+		}
+		it++;
+	}
 }

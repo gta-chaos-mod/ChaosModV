@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Hooks/EntityCoordsHook.h"
+
 static void OnStartLSIA()
 {
 	TeleportPlayer(-1388.6f, -3111.61f, 13.94f);
@@ -214,3 +216,53 @@ static void OnStartMission()
 }
 
 static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission);
+
+static void OnStartFakeTp()
+{
+	static const Vector3 tpLocations[] =
+	{
+		{ -1388.6f, -3111.61f, 13.94f }, // LSIA
+		{ -75.7f, -818.62f, 326.16f }, // Maze Tower
+		{ -2267.89f, 3121.04f, 32.5f }, // Fort Zancudo
+		{ 503.33f, 5531.91f, 777.45f }, // Mount Chilliad
+		{ 935.f, 3800.f, 2300.f } // Heaven
+	};
+
+	Player player = PLAYER_ID();
+	Ped playerPed = PLAYER_PED_ID();
+	Vehicle playerVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : 0;
+	
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+	Hooks::EnableFakeTpHook(playerPos);
+
+	SET_ENTITY_INVINCIBLE(playerPed, true);
+	if (playerVeh)
+	{
+		SET_ENTITY_INVINCIBLE(playerVeh, true);
+	}
+
+	SET_PLAYER_WANTED_LEVEL(player, 0, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+	SET_MAX_WANTED_LEVEL(0);
+
+	TeleportPlayer(tpLocations[g_random.GetRandomInt(0, 4)]);
+
+	WAIT(g_random.GetRandomInt(2000, 4000));
+
+	TeleportPlayer(playerPos);
+
+	WAIT(0);
+
+	SET_ENTITY_INVINCIBLE(playerPed, false);
+	if (playerVeh)
+	{
+		SET_ENTITY_INVINCIBLE(playerVeh, false);
+	}
+
+	SET_MAX_WANTED_LEVEL(5);
+
+	Hooks::DisableFakeTpHook();
+}
+
+static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp);

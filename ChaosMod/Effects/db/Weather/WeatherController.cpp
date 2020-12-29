@@ -40,8 +40,8 @@ static void OnTickRandom()
 	static constexpr const char* weathers[] = { "CLEAR", "EXTRASUNNY" , "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "XMAS", "SNOWLIGHT", "BLIZZARD" };
 	static constexpr int weatherSize = 12;
 
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	// Note: setting the compare to a low number (e.g. < 1000, or faster than once per sec) could cause the
 	// effect to flicker the screen, which is a known trigger for some types of motion sickness and epilepsy

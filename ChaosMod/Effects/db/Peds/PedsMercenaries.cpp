@@ -154,6 +154,7 @@ static void OnStop()
 static bool checkPedsAlive(std::vector<Ped> pedList)
 {
 	bool allDead = true;
+	Ped player = PLAYER_PED_ID();
 	for (Ped ped : pedList) 
 	{
 		if (!DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, false))
@@ -170,6 +171,10 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 			{
 				SET_ENTITY_HEALTH(ped, 0, false);
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);
+			}
+			else
+			{
+				TASK_COMBAT_PED(ped, player, 0, 16);
 			}
 		}
 	}

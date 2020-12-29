@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 enum EffectType
@@ -38,6 +38,7 @@ enum EffectType
 	EFFECT_TP_SKYFALL,
 	EFFECT_TP_RANDOM,
 	EFFECT_TP_MISSION,
+	EFFECT_TP_FAKE,
 	EFFECT_NO_PHONE,
 	EFFECT_SET_INTO_CLOSEST_VEH,
 	EFFECT_PEDS_EXIT_VEH,
@@ -225,7 +226,7 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
-	EFFECT_MISC_REPLACEVEHICLE,
+	EFFECT_VEH_REPLACEVEHICLE,
 	EFFECT_PLAYER_TIRED,
 	EFFECT_SCREEN_LS_NOIRE,
 	EFFECT_MISC_SUPER_STUNT,
@@ -234,12 +235,11 @@ enum EffectType
 	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
-	EFFECT_PEDS_DRIVE_BACKWARDS,
+    EFFECT_PEDS_DRIVE_BACKWARDS,
 	EFFECT_VEH_RANDTRAFFIC,
 	EFFECT_MISC_RAMPJAM,
 	EFFECT_MISC_VEHICLE_RAIN,
 	EFFECT_MISC_CRASH,
-	EFFECT_PLAYER_EASY_AIM,
 	EFFECT_PLAYER_GRAVITY,
 	EFFECT_VEH_BOUNCY,
 	EFFECT_PEDS_STOP_AND_STARE,
@@ -247,6 +247,9 @@ enum EffectType
 	EFFECT_PLAYER_PACIFIST,
 	EFFECT_VEH_TURN_RIGHT,
 	EFFECT_PEDS_BUSBOIS,
+	EFFECT_PLAYER_DEAD_EYE,
+	EFFECT_PLAYER_QUAKE_FOV,
+    EFFECT_PLAYER_HACKING,
 	EFFECT_PLAYER_BEES,
 	_EFFECT_ENUM_MAX
 };
@@ -265,7 +268,7 @@ public:
 	const std::vector<EffectType> IncompatibleWith;
 };
 
-const std::map<EffectType, EffectInfo> g_effectsMap =
+const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
@@ -300,11 +303,13 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_TP_SKYFALL, {"Teleport To Heaven", "tp_skyfall"}},
 	{EFFECT_TP_RANDOM, {"Teleport To Random Location", "tp_random"}},
 	{EFFECT_TP_MISSION,  {"Teleport To Random Mission", "tp_mission"}},
+	{EFFECT_TP_FAKE,  {"Fake Teleport", "tp_fake"}},
 	{EFFECT_NO_PHONE, {"No Phone", "player_nophone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle", "player_tpclosestveh"}},
 	{EFFECT_PEDS_EXIT_VEH, {"Everyone Exits Their Vehicles", "playerveh_exit"}},
-	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG }, true}},
-	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }, true}},
+	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }, true}},
+	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }, true}},
+	{EFFECT_PLAYER_DEAD_EYE, {"Dead Eye", "player_dead_eye", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }}},
 	{EFFECT_GAMESPEED_LAG, {"Lag", "time_lag", true, {}, true}},
 	{EFFECT_PEDS_RIOT, {"Peds Riot", "peds_riot", true, { EFFECT_PEDS_COPS }}},
 	{EFFECT_RED_VEHS, {"Red Traffic", "vehs_red", true, { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS }}},
@@ -468,7 +473,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PLAYER_HEAVY_RECOIL, { "Heavy Recoil", "player_heavyrecoil", true}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true}},
+	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true, {}, true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Trails", "misc_oilleaks", true}},
 	{EFFECT_PEDS_GUNSMOKE, {"Gunsmoke", "peds_gunsmoke", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
@@ -489,25 +494,27 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_POOF, {"Deadly Aim", "player_poof", true}},
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
-	{EFFECT_MISC_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
+	{EFFECT_VEH_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
 	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
+	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV }, true}},
+	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA }}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
-	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
+    {EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
 	{EFFECT_PEDS_DRIVE_BACKWARDS, {"Peds Drive Backwards", "peds_drive_backwards", true}},
 	{EFFECT_VEH_RANDTRAFFIC, {"Random Traffic", "veh_randtraffic", true, {}, true}},
 	{EFFECT_MISC_RAMPJAM, {"Ramp Jam (Press Jump In Vehicle)", "misc_rampjam", true}},
 	{EFFECT_MISC_VEHICLE_RAIN, {"Vehicle Rain", "misc_vehicle_rain", true, {}, true}},
 	{EFFECT_MISC_CRASH, {"Fake Crash", "misc_fakecrash"}},
-	{EFFECT_PLAYER_EASY_AIM, {"Bullet Time", "player_easy_aim", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_SUPERHOT}}},
 	{EFFECT_PLAYER_GRAVITY, {"Gravity Field", "player_gravity", true, {}, true}},
 	{EFFECT_VEH_BOUNCY, {"Bouncy Vehicles", "veh_bouncy", true, {}, false}},
 	{EFFECT_PEDS_STOP_AND_STARE, {"Stop and Stare", "peds_stop_stare"}},
-	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true, {}, true}},
+	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true}},
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
-	{ EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true} },
+    {EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+    {EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
+	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
 };
