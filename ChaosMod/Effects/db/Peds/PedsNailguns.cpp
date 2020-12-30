@@ -2,6 +2,7 @@
 
 static std::vector<Ped> frozenPeds;
 static std::map<Ped, Entity> pedGuns;
+static std::map<Ped, Entity*> heldWeapons;
 
 static bool isFrozen(const Ped ped) {
 	return std::find(frozenPeds.begin(), frozenPeds.end(), ped) != frozenPeds.end();
@@ -35,6 +36,14 @@ static void OnTick() {
 
 				int isHoldingGun = weaponType == 3;
 				SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+
+
+				if (isHoldingGun) {
+					Entity currWeapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+					heldWeapons[ped] = &currWeapon;
+
+					SET_ENTITY_VISIBLE(currWeapon, false, 0);
+				}
 			}
 		}
 
@@ -51,6 +60,11 @@ static void OnTick() {
 static void OnStop() {
 	for (const Ped ped : frozenPeds) {
 		FREEZE_ENTITY_POSITION(ped, false);
+	}
+
+	// (kolyaventuri): Reshow weapons
+	for (std::map<Ped, Entity*>::iterator it = heldWeapons.begin(); it != heldWeapons.end(); ++it) {
+		SET_ENTITY_VISIBLE(*it->second, true, 0);
 	}
 
 	// (kolyaventuri): Remove weapons
