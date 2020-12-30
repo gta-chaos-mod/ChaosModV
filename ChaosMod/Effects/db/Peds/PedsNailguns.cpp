@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
 static std::vector<Ped> frozenPeds;
-static std::map<Ped, Entity> pedGuns;
+static std::map<Ped, Entity*> pedGuns;
 static std::map<Ped, Entity*> heldWeapons;
 
 static bool isFrozen(const Ped ped) {
@@ -17,7 +17,7 @@ static void giveNailgun(const Ped ped) {
 
 	Entity nailgun = CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
 	ATTACH_ENTITY_TO_ENTITY(nailgun, ped, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2, true);
-	pedGuns[ped] = nailgun;
+	pedGuns[ped] = &nailgun;
 }
 
 static void OnTick() {
@@ -25,17 +25,17 @@ static void OnTick() {
 		if (!hasNailgun(ped)) {
 			giveNailgun(ped);
 		} else {
-			Entity nailgun = pedGuns[ped];
+			Entity* nailgun = pedGuns[ped];
 
 			if (IS_PED_DEAD_OR_DYING(ped, 1)) {
-				DETACH_ENTITY(nailgun, 0, 0);
+				DETACH_ENTITY(*nailgun, 0, 0);
 			} else {
 				// (kolyaventuri): Check for weapon visiblity
 				Weapon weapon = GET_SELECTED_PED_WEAPON(ped);
 				int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
 
 				int isHoldingGun = weaponType == 3;
-				SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+				SET_ENTITY_VISIBLE(*nailgun, isHoldingGun, 0);
 
 
 				if (isHoldingGun) {
@@ -68,8 +68,8 @@ static void OnStop() {
 	}
 
 	// (kolyaventuri): Remove weapons
-	for (std::map<Ped, Entity>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it) {
-		Entity nailgun = it->second;
+	for (std::map<Ped, Entity*>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it) {
+		Entity nailgun = *it->second;
 
 		SET_ENTITY_VISIBLE(nailgun, false, 0);
 		SET_ENTITY_AS_NO_LONGER_NEEDED(&nailgun);
