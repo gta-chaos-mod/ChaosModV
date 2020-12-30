@@ -20,20 +20,22 @@ static void giveNailgun(const Ped ped) {
 }
 
 static void OnTick() {
-	const std::vector<Ped> peds = GetAllPeds();
-
 	for (const Ped ped : GetAllPeds()) {
 		if (!hasNailgun(ped)) {
 			giveNailgun(ped);
 		} else {
 			Entity nailgun = pedGuns[ped];
 
-			// (kolyaventuri): Check for weapon visiblity
-			Weapon weapon = GET_SELECTED_PED_WEAPON(ped);
-			int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
+			if (IS_PED_DEAD_OR_DYING(ped, 1)) {
+				DETACH_ENTITY(nailgun, 0, 0);
+			} else {
+				// (kolyaventuri): Check for weapon visiblity
+				Weapon weapon = GET_SELECTED_PED_WEAPON(ped);
+				int weaponType = GET_WEAPON_DAMAGE_TYPE(weapon);
 
-			int isHoldingGun = weaponType == 3;
-			SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+				int isHoldingGun = weaponType == 3;
+				SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
+			}
 		}
 
 		if (HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped) && !isFrozen(ped)) {
