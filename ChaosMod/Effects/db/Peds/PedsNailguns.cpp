@@ -51,13 +51,18 @@ static void OnStop() {
 		FREEZE_ENTITY_POSITION(ped, false);
 	}
 
+	// (kolyaventuri): Remove weapons
 	for (std::map<Ped, Entity>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it) {
 		Entity nailgun = it->second;
 
-		SET_OBJECT_AS_NO_LONGER_NEEDED(&nailgun);
-		DELETE_OBJECT(&nailgun);
+		SET_ENTITY_VISIBLE(nailgun, false, 0);
+		SET_ENTITY_AS_NO_LONGER_NEEDED(&nailgun);
+		DELETE_ENTITY(&nailgun);
 	}
-	std::vector<Ped>().swap(frozenPeds); // Clear frozenPeds and reallocate
+
+	// (kolyaventuri): Clean up and deallocate memory
+	std::vector<Ped>().swap(frozenPeds);
+	pedGuns.clear();
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_NAILGUNS, nullptr, OnStop, OnTick);
