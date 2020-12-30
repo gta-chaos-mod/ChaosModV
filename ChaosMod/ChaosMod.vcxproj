@@ -282,6 +282,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
@@ -312,12 +313,14 @@
     <ClInclude Include="OptionsFile.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ThreadManager.h" />
     <ClInclude Include="TwitchVoting.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
+    <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
