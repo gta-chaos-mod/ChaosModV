@@ -45,7 +45,7 @@ static void OnStart() {
 		Vector3 loc = GET_ENTITY_COORDS(veh, true);
 		int colors = GET_VEHICLE_COLOUR_COMBINATION(veh);
 
-		cloneVeh = CREATE_VEHICLE(model, loc.x, loc.y, loc.z, GET_ENTITY_HEADING(veh), false, false, 0);
+		cloneVeh = CreatePoolVehicle(model, loc.x, loc.y, loc.z, GET_ENTITY_HEADING(veh));
 		SET_VEHICLE_COLOUR_COMBINATION(cloneVeh, colors);
 		SET_ENTITY_INVINCIBLE(cloneVeh, true);
 		SET_ENTITY_NO_COLLISION_ENTITY(cloneVeh, veh, false);
