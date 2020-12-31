@@ -33,6 +33,7 @@ namespace ThreadManager
 	void RunThreads();
 	void SwitchToMainThread();
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
+	bool IsAnyThreadRunningOnStart();
 };
 
 static void EffectThreadFunc(void* data)

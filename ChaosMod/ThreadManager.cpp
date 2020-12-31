@@ -101,4 +101,17 @@ namespace ThreadManager
 
 		return thread ? thread->HasOnStartExecuted() : false;
 	}
+
+	bool IsAnyThreadRunningOnStart()
+	{
+		for (std::unique_ptr<EffectThread>& thread : m_threads)
+		{
+			if (!thread->HasOnStartExecuted())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

@@ -235,7 +235,7 @@ void Main::MainLoop()
 			}
 		}
 
-		if (m_enableDebugMenu)
+		if (m_enableDebugMenu && !ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			if (m_debugMenu && m_debugMenu->IsVisible())
 			{
@@ -282,41 +282,44 @@ void Main::RunEffectLoop()
 			continue;
 		}
 
-		static bool justReenabled = false;
-		if (m_disableMod)
+		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
-			if (!justReenabled)
+			static bool justReenabled = false;
+			if (m_disableMod)
 			{
-				justReenabled = true;
-
-				g_effectDispatcher.reset();
-
-				if (m_enableDebugMenu)
+				if (!justReenabled)
 				{
-					m_debugMenu.reset();
+					justReenabled = true;
+
+					g_effectDispatcher.reset();
+
+					if (m_enableDebugMenu)
+					{
+						m_debugMenu.reset();
+					}
+
+					m_twitchVoting.reset();
+
+					ClearEntityPool();
 				}
 
-				m_twitchVoting.reset();
+				continue;
+			}
+			else if (justReenabled)
+			{
+				justReenabled = false;
+
+				Init(); // Restart the main part of the mod completely
+			}
+
+			if (m_clearAllEffects)
+			{
+				m_clearAllEffects = false;
+
+				g_effectDispatcher->Reset();
 
 				ClearEntityPool();
 			}
-
-			continue;
-		}
-		else if (justReenabled)
-		{
-			justReenabled = false;
-
-			Init(); // Restart the main part of the mod completely
-		}
-
-		if (m_clearAllEffects)
-		{
-			m_clearAllEffects = false;
-
-			g_effectDispatcher->Reset();
-
-			ClearEntityPool();
 		}
 
 		if (m_twitchVoting->IsEnabled())
