@@ -234,34 +234,6 @@ void Main::MainLoop()
 				g_effectDispatcher->DrawEffectTexts();
 			}
 		}
-
-		if (m_enableDebugMenu)
-		{
-			if (m_debugMenu && m_debugMenu->IsVisible())
-			{
-				// Arrow Up
-				DISABLE_CONTROL_ACTION(1, 27, true);
-				DISABLE_CONTROL_ACTION(1, 127, true);
-				DISABLE_CONTROL_ACTION(1, 188, true);
-				DISABLE_CONTROL_ACTION(1, 300, true);
-				// Arrow Down
-				DISABLE_CONTROL_ACTION(1, 173, true);
-				DISABLE_CONTROL_ACTION(1, 187, true);
-				DISABLE_CONTROL_ACTION(1, 299, true);
-				// Enter
-				DISABLE_CONTROL_ACTION(1, 18, true);
-				DISABLE_CONTROL_ACTION(1, 176, true);
-				DISABLE_CONTROL_ACTION(1, 191, true);
-				DISABLE_CONTROL_ACTION(1, 201, true);
-				DISABLE_CONTROL_ACTION(1, 215, true);
-				// Backspace
-				DISABLE_CONTROL_ACTION(1, 177, true);
-				DISABLE_CONTROL_ACTION(1, 194, true);
-				DISABLE_CONTROL_ACTION(1, 202, true);
-
-				m_debugMenu->Tick();
-			}
-		}
 	}
 }
 
@@ -330,6 +302,34 @@ void Main::RunEffectLoop()
 		}
 
 		g_effectDispatcher->UpdateEffects();
+
+		if (m_enableDebugMenu)
+		{
+			if (m_debugMenu && m_debugMenu->IsVisible())
+			{
+				// Arrow Up
+				DISABLE_CONTROL_ACTION(1, 27, true);
+				DISABLE_CONTROL_ACTION(1, 127, true);
+				DISABLE_CONTROL_ACTION(1, 188, true);
+				DISABLE_CONTROL_ACTION(1, 300, true);
+				// Arrow Down
+				DISABLE_CONTROL_ACTION(1, 173, true);
+				DISABLE_CONTROL_ACTION(1, 187, true);
+				DISABLE_CONTROL_ACTION(1, 299, true);
+				// Enter
+				DISABLE_CONTROL_ACTION(1, 18, true);
+				DISABLE_CONTROL_ACTION(1, 176, true);
+				DISABLE_CONTROL_ACTION(1, 191, true);
+				DISABLE_CONTROL_ACTION(1, 201, true);
+				DISABLE_CONTROL_ACTION(1, 215, true);
+				// Backspace
+				DISABLE_CONTROL_ACTION(1, 177, true);
+				DISABLE_CONTROL_ACTION(1, 194, true);
+				DISABLE_CONTROL_ACTION(1, 202, true);
+
+				m_debugMenu->Tick();
+			}
+		}
 	}
 }
 
