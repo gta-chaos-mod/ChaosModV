@@ -11,26 +11,28 @@ typedef unsigned long long DWORD64;
 struct EffectThreadData
 {
 public:
-	EffectThreadData(RegisteredEffect* effect, std::string* name, bool& isRunning, bool& hasStopped) : Effect(effect), Name(name), IsRunning(isRunning), HasStopped(hasStopped)
+	EffectThreadData(RegisteredEffect* effect, bool& hasOnStartExecuted, bool& isRunning, bool& hasStopped) : Effect(effect), HasOnStartExecuted(hasOnStartExecuted),
+		IsRunning(isRunning), HasStopped(hasStopped)
 	{
 
 	}
 	
 public:
 	RegisteredEffect* Effect;
-	std::string* Name;
 	bool& IsRunning;
+	bool& HasOnStartExecuted;
 	bool& HasStopped;
 };
 
 namespace ThreadManager
 {
-	DWORD64 CreateThread(RegisteredEffect* effect, bool isTimed, std::string* = nullptr);
+	DWORD64 CreateThread(RegisteredEffect* effect, bool isTimed);
 	void StopThread(DWORD64 threadId);
 	void StopThreads();
 	void PutThreadOnPause(DWORD ms);
 	void RunThreads();
 	void SwitchToMainThread();
+	bool HasThreadOnStartExecuted(DWORD64 threadId);
 };
 
 static void EffectThreadFunc(void* data)
@@ -39,19 +41,9 @@ static void EffectThreadFunc(void* data)
 
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData*>(data);
 
-	std::string origName = threadData.Name ? *threadData.Name : "";
-
-	if (!origName.empty())
-	{
-		*threadData.Name = "";
-	}
-
 	threadData.Effect->Start();
 
-	if (threadData.Name && !origName.empty())
-	{
-		*threadData.Name = origName;
-	}
+	threadData.HasOnStartExecuted = true;
 
 	while (threadData.IsRunning)
 	{
@@ -70,7 +62,7 @@ static void EffectThreadFunc(void* data)
 struct EffectThread
 {
 public:
-	EffectThread(RegisteredEffect* effect, bool isTimed, std::string* name = nullptr) : m_effect(effect), m_isRunning(isTimed), m_threadData(effect, name, m_isRunning, m_hasStopped),
+	EffectThread(RegisteredEffect* effect, bool isTimed) : m_effect(effect), m_isRunning(isTimed), m_threadData(effect, m_hasOnStartExecuted, m_isRunning, m_hasStopped),
 		Thread(CreateFiber(0, EffectThreadFunc, &m_threadData)), Id(m_lastId++)
 	{
 		
@@ -116,10 +108,16 @@ public:
 		return m_hasStopped;
 	}
 
+	bool HasOnStartExecuted() const
+	{
+		return m_hasOnStartExecuted;
+	}
+
 private:
 	static inline DWORD64 m_lastId = 0;
 
 	RegisteredEffect* m_effect;
+	bool m_hasOnStartExecuted = false;
 	bool m_isRunning;
 	bool m_hasStopped = false;
 	EffectThreadData m_threadData;

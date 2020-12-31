@@ -42,6 +42,11 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
+		if (effect.HideText)
+		{
+			continue;
+		}
+
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
 		SET_TEXT_SCALE(.5f, .5f);
@@ -102,6 +107,14 @@ void EffectDispatcher::UpdateEffects()
 	if (g_enabledEffects.empty())
 	{
 		return;
+	}
+
+	for (ActiveEffect& effect : m_activeEffects)
+	{
+		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId))
+		{
+			effect.HideText = false;
+		}
 	}
 
 	DWORD64 currentUpdateTime = GetTickCount64();
