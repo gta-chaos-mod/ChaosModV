@@ -9,6 +9,7 @@ static Vector3 coords;
 static float heading;
 static Vector3 rot;
 static Vehicle cloneVeh;
+static int camModes[3] = {0,0,0};
 
 static void OnStart() {
 	Ped player = PLAYER_PED_ID();
@@ -17,6 +18,9 @@ static void OnStart() {
 	heading = GET_ENTITY_HEADING(player);
 	coords = GET_ENTITY_COORDS(player, true);
 	rot = GET_ENTITY_ROTATION(player, 0);
+	camModes[0] = GET_FOLLOW_PED_CAM_VIEW_MODE();
+	camModes[1] = GET_FOLLOW_VEHICLE_CAM_VIEW_MODE();
+	camModes[2] = GET_FOLLOW_VEHICLE_CAM_ZOOM_LEVEL();
 
 	// (kolyaventuri): Create clone. CLONE_PED wasn't playing nice with entity deletion
 	int type = GET_PED_TYPE(player);
@@ -102,8 +106,9 @@ static void OnStop() {
 	DELETE_VEHICLE(&cloneVeh);
 
 	// (kolyaventuri): Clean up FP
-	SET_FOLLOW_PED_CAM_VIEW_MODE(1);
-	SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(1);
+	SET_FOLLOW_PED_CAM_VIEW_MODE(camModes[0]);
+	SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(camModes[1]);
+	SET_FOLLOW_VEHICLE_CAM_ZOOM_LEVEL(camModes[2]);
 
 	// (kolyaventuri): Clear camera effects
 	CLEAR_TIMECYCLE_MODIFIER();
