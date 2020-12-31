@@ -171,11 +171,11 @@ void Main::MainLoop()
 
 	while (true)
 	{
-		scriptWait(0);
+		WAIT(0);
 
 		if (IS_SCREEN_FADED_OUT() || m_disableMod)
 		{
-			scriptWait(100);
+			WAIT(100);
 
 			continue;
 		}
@@ -264,20 +264,17 @@ void Main::MainLoop()
 
 void Main::RunEffectLoop()
 {
-	if (!g_threadManager)
-	{
-		g_threadManager = std::make_unique<ThreadManager>();
-	}
+	g_mainThread = GetCurrentFiber();
 
 	while (true)
 	{
-		scriptWait(0);
+		WAIT(0);
 
 		if (IS_SCREEN_FADED_OUT())
 		{
 			SET_TIME_SCALE(1.f); // Prevent potential softlock if Lag effect is running during screen fadeout
 
-			scriptWait(100);
+			WAIT(100);
 
 			continue;
 		}

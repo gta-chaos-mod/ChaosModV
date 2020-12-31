@@ -23,58 +23,48 @@ static void EffectThreadFunc(void* effect)
 struct EffectThread
 {
 public:
-	EffectThread(RegisteredEffect* effect) : m_effect(effect), m_thread(CreateFiber(0, EffectThreadFunc, effect)), m_id(m_lastId++)
+	EffectThread(RegisteredEffect* effect) : m_effect(effect), Thread(CreateFiber(0, EffectThreadFunc, effect)), Id(m_lastId++)
 	{
 		
 	}
 
-	bool operator==(DWORD64 threadId) const
+	~EffectThread()
 	{
-		return m_id == threadId;
+		DeleteFiber(Thread);
 	}
 
-	bool operator==(void* thread) const
+	friend bool operator==(const std::unique_ptr<EffectThread>& thisThread, DWORD64 threadId)
 	{
-		return m_thread == thread;
+		return thisThread->Id == threadId;
+	}
+
+	friend bool operator==(const std::unique_ptr<EffectThread>& thisThread, void* thread)
+	{
+		return thisThread->Thread == thread;
 	}
 
 public:
-	DWORD PauseTime = 0;
+	int PauseTime = 0;
+	void* const Thread;
+	const DWORD64 Id = 0;
 
 	void Run() const
 	{
-		SwitchToFiber(m_thread);
-	}
-
-	DWORD64 GetId() const
-	{
-		return m_id;
+		SwitchToFiber(Thread);
 	}
 
 private:
 	static inline DWORD64 m_lastId = 0;
-	DWORD64 m_id = 0;
 
-	void* m_thread;
 	RegisteredEffect* m_effect;
 };
 
-class ThreadManager
+namespace ThreadManager
 {
-public:
-	ThreadManager();
-
-public:
 	DWORD64 CreateThread(RegisteredEffect* effect);
 	void UnregisterThread(DWORD64 threadId);
+	void ClearThreads();
 	void PutThreadOnPause(DWORD ms);
 	void RunThreads();
 	void SwitchToMainThread();
-
-private:
-	std::list<EffectThread> m_threads;
-	void* m_mainThread;
-	DWORD64 m_lastTimestamp;
 };
-
-inline std::unique_ptr<ThreadManager> g_threadManager;

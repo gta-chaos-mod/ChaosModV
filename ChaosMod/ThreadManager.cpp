@@ -1,63 +1,71 @@
 #include "stdafx.h"
 #include "ThreadManager.h"
 
-ThreadManager::ThreadManager() : m_mainThread(GetCurrentFiber())
+static std::list<std::unique_ptr<EffectThread>> m_threads;
+static DWORD64 m_lastTimestamp;
+
+namespace ThreadManager
 {
-
-}
-
-DWORD64 ThreadManager::CreateThread(RegisteredEffect* effect)
-{
-	EffectThread thread(effect);
-
-	m_threads.push_back(thread);
-
-	return thread.GetId();
-}
-
-void ThreadManager::UnregisterThread(DWORD64 threadId)
-{
-	std::list<EffectThread>::iterator result = std::find(m_threads.begin(), m_threads.end(), threadId);
-
-	if (result != m_threads.end())
+	DWORD64 CreateThread(RegisteredEffect* effect)
 	{
-		m_threads.erase(result);
+		std::unique_ptr<EffectThread> thread = std::make_unique<EffectThread>(effect);
+
+		DWORD64 threadId = thread->Id;
+
+		m_threads.push_back(std::move(thread));
+
+		return threadId;
 	}
-}
 
-void ThreadManager::PutThreadOnPause(DWORD time)
-{
-	void* fiber = GetCurrentFiber();
-
-	std::list<EffectThread>::iterator result = std::find(m_threads.begin(), m_threads.end(), fiber);
-
-	if (result != m_threads.end())
+	void UnregisterThread(DWORD64 threadId)
 	{
-		result->PauseTime = time;
-	}
-}
+		const std::list<std::unique_ptr<EffectThread>>::iterator& result = std::find(m_threads.begin(), m_threads.end(), threadId);
 
-void ThreadManager::RunThreads()
-{
-	DWORD64 curTimestamp = GetTickCount64();
-
-	for (EffectThread& thread : m_threads)
-	{
-		if (thread.PauseTime > 0)
+		if (result != m_threads.end())
 		{
-			thread.PauseTime -= curTimestamp - m_lastTimestamp;
-		}
-
-		if (thread.PauseTime == 0)
-		{
-			thread.Run();
+			m_threads.erase(result);
 		}
 	}
 
-	m_lastTimestamp = curTimestamp;
-}
+	void ClearThreads()
+	{
+		m_threads.empty();
+	}
 
-void ThreadManager::SwitchToMainThread()
-{
-	SwitchToFiber(m_mainThread);
+	void PutThreadOnPause(DWORD ms)
+	{
+		void* fiber = GetCurrentFiber();
+
+		const std::list<std::unique_ptr<EffectThread>>::iterator& result = std::find(m_threads.begin(), m_threads.end(), fiber);
+
+		if (result != m_threads.end())
+		{
+			result->get()->PauseTime = ms;
+		}
+	}
+
+	void RunThreads()
+	{
+		DWORD64 curTimestamp = GetTickCount64();
+
+		for (std::unique_ptr<EffectThread>& thread : m_threads)
+		{
+			if (thread->PauseTime > 0 && m_lastTimestamp)
+			{
+				thread->PauseTime -= curTimestamp - m_lastTimestamp;
+			}
+
+			if (thread->PauseTime <= 0)
+			{
+				thread->Run();
+			}
+		}
+
+		m_lastTimestamp = curTimestamp;
+	}
+
+	void SwitchToMainThread()
+	{
+		SwitchToFiber(g_mainThread);
+	}
 }

@@ -2,11 +2,22 @@
 
 #include "ThreadManager.h"
 
+#include "../vendor/scripthookv/inc/main.h"
+
 typedef unsigned long DWORD;
+
+inline void* g_mainThread = nullptr;
 
 inline void WAIT(DWORD ms)
 {
-	g_threadManager->PutThreadOnPause(ms);
+	if (!g_mainThread || GetCurrentFiber() == g_mainThread)
+	{
+		scriptWait(ms);
+	}
+	else
+	{
+		ThreadManager::PutThreadOnPause(ms);
 
-	g_threadManager->SwitchToMainThread();
+		ThreadManager::SwitchToMainThread();
+	}
 }

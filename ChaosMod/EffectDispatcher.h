@@ -55,7 +55,7 @@ private:
 	{
 	public:
 		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Name(name), ThreadId(g_threadManager->CreateThread(registeredEffect)), Timer(timer), MaxTime(Timer)
+			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect)), Timer(timer), MaxTime(Timer)
 		{
 			
 		}

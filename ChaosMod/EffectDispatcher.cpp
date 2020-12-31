@@ -96,7 +96,7 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
-	g_threadManager->RunThreads();
+	ThreadManager::RunThreads();
 
 	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
@@ -121,7 +121,7 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				g_threadManager->UnregisterThread(effect.ThreadId);
+				ThreadManager::UnregisterThread(effect.ThreadId);
 
 				effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
@@ -207,6 +207,8 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
+			ThreadManager::UnregisterThread(effect.ThreadId);
+
 			effect.RegisteredEffect->Stop();
 			it = m_activeEffects.erase(it);
 		}
@@ -302,6 +304,8 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
+	ThreadManager::ClearThreads();
+
 	for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();
