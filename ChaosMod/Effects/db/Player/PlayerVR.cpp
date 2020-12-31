@@ -39,10 +39,27 @@ static void OnStart() {
 		Vehicle veh = GET_VEHICLE_PED_IS_IN(player, false);
 		Hash model = GET_ENTITY_MODEL(veh);
 		Vector3 loc = GET_ENTITY_COORDS(veh, true);
+		int colors = GET_VEHICLE_COLOUR_COMBINATION(veh);
+
 		cloneVeh = CREATE_VEHICLE(model, loc.x, loc.y, loc.z, GET_ENTITY_HEADING(veh), false, false, 0);
+		SET_VEHICLE_COLOUR_COMBINATION(cloneVeh, colors);
+		SET_ENTITY_INVINCIBLE(cloneVeh, true);
+		SET_ENTITY_NO_COLLISION_ENTITY(cloneVeh, veh, false);
+		
+		// Find seat player is in
+		int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(model);
+		int vehicleSeat = 0;
+		for (int i = 0; i < maxSeats; i++) {
+			if (GET_PED_IN_VEHICLE_SEAT(veh, i, false) == player) {
+				vehicleSeat = i;
+				break;
+			}
+		}
+
+		SET_PED_INTO_VEHICLE(clone, cloneVeh, vehicleSeat);
 	}
 
-	// (kolyaventuri): Apply camera effects
+	// (kolyaventuri): Apply camera effectsf
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
@@ -79,11 +96,10 @@ static void OnStop() {
 
 	// (kolyaventuri): Clean up clone
 	SET_ENTITY_AS_MISSION_ENTITY(clone, 0, 0);
-	SET_PED_AS_NO_LONGER_NEEDED(&clone);
 	DELETE_PED(&clone);
 
-	SET_ENTITY_AS_NO_LONGER_NEEDED(&cloneVeh);
-	DELETE_ENTITY(&cloneVeh);
+	SET_ENTITY_AS_MISSION_ENTITY(cloneVeh, true, true);
+	DELETE_VEHICLE(&cloneVeh);
 
 	// (kolyaventuri): Clean up FP
 	SET_FOLLOW_PED_CAM_VIEW_MODE(1);
