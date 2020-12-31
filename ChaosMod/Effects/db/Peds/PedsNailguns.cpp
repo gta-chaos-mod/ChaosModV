@@ -72,7 +72,8 @@ static void OnStop() {
 		Entity nailgun = it->second;
 
 		SET_ENTITY_VISIBLE(nailgun, false, 0);
-		SET_ENTITY_AS_NO_LONGER_NEEDED(&nailgun);
+		SET_ENTITY_AS_MISSION_ENTITY(nailgun, true, true);
+
 		DELETE_ENTITY(&nailgun);
 	}
 
