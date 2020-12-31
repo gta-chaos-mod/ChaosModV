@@ -7,6 +7,7 @@
 static Ped clone;
 static Vector3 coords;
 static float heading;
+static Vector3 rot;
 
 static void OnStart() {
 	Ped player = PLAYER_PED_ID();
@@ -23,6 +24,7 @@ static void OnStart() {
 
 	clone = CLONE_PED(player, heading, false , true);
 	SET_ENTITY_INVINCIBLE(clone, true);
+	rot = GET_ENTITY_ROTATION(clone, 0);
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
 	FREEZE_ENTITY_POSITION(clone, true);
@@ -59,6 +61,7 @@ static void OnStop() {
 	// (kolyaventuri): Snap player back to their original position
 	TeleportPlayer(coords);
 	SET_ENTITY_HEADING(player, heading);
+	SET_ENTITY_ROTATION(player, rot.x, rot.y, rot.z, 0, 1);
 	AUDIO::PLAY_SOUND_FRONTEND(-1, "1st_Person_Transition", "PLAYER_SWITCH_CUSTOM_SOUNDSET", 1);
 
 	// (kolyaventuri): Clean up clone
