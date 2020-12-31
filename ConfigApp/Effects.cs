@@ -285,6 +285,7 @@ namespace ConfigApp
             EFFECT_PLAYER_DEAD_EYE,
             EFFECT_PLAYER_QUAKE_FOV,
             EFFECT_PLAYER_HACKING,
+            EFFECT_PEDS_NAILGUNS,
             EFFECT_VEH_BRAKEBOOST,
             EFFECT_PLAYER_BEES,
             _EFFECT_ENUM_MAX
@@ -537,6 +538,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
             {EffectType.EFFECT_PLAYER_DEAD_EYE,  new EffectInfo("Dead Eye", EffectCategory.PLAYER, "player_dead_eye", true)},
             {EffectType.EFFECT_PLAYER_HACKING, new EffectInfo("Realistic Hacking", EffectCategory.PLAYER, "player_hacking")},
+            {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true)}
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)}
         };
