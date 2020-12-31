@@ -150,7 +150,10 @@ void Main::Init()
 		std::vector<EffectType> enabledEffectTypes;
 		for (const auto& pair : g_enabledEffects)
 		{
-			enabledEffectTypes.push_back(pair.first);
+			if (!pair.second.Permanent)
+			{
+				enabledEffectTypes.push_back(pair.first);
+			}
 		}
 
 		m_debugMenu = std::make_unique<DebugMenu>(enabledEffectTypes);

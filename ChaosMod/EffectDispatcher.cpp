@@ -337,6 +337,8 @@ void EffectDispatcher::Reset()
 			{
 				registeredEffect->Start();
 				m_permanentEffects.push_back(registeredEffect);
+
+				ThreadManager::CreateThread(registeredEffect);
 			}
 		}
 		else
