@@ -42,6 +42,11 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
+		if (effect.HideText)
+		{
+			continue;
+		}
+
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
 		SET_TEXT_SCALE(.5f, .5f);
@@ -96,11 +101,7 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
-	// Run permanent effects each tick
-	for (RegisteredEffect* permanentEffect : m_permanentEffects)
-	{
-		permanentEffect->Tick();
-	}
+	ThreadManager::RunThreads();
 
 	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
@@ -108,9 +109,12 @@ void EffectDispatcher::UpdateEffects()
 		return;
 	}
 
-	for (const ActiveEffect& activeEffect : m_activeEffects)
+	for (ActiveEffect& effect : m_activeEffects)
 	{
-		activeEffect.RegisteredEffect->Tick();
+		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId))
+		{
+			effect.HideText = false;
+		}
 	}
 
 	DWORD64 currentUpdateTime = GetTickCount64();
@@ -130,7 +134,9 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				effect.RegisteredEffect->Stop();
+				ThreadManager::StopThread(effect.ThreadId);
+
+				//effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -214,7 +220,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
-			effect.RegisteredEffect->Stop();
+			ThreadManager::StopThread(effect.ThreadId);
+
+			//effect.RegisteredEffect->Stop();
 			it = m_activeEffects.erase(it);
 		}
 		else
@@ -229,7 +237,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (registeredEffect)
 		{
-			registeredEffect->Start();
+			//registeredEffect->Start();
 
 			std::ostringstream ossEffectName;
 			ossEffectName << effectData.Name;
@@ -309,16 +317,18 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
-	for (RegisteredEffect* effect : m_permanentEffects)
+	ThreadManager::StopThreads();
+
+	/*for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();
-	}
+	}*/
 	m_permanentEffects.clear();
 
-	for (ActiveEffect& effect : m_activeEffects)
+	/*for (ActiveEffect& effect : m_activeEffects)
 	{
 		effect.RegisteredEffect->Stop();
-	}
+	}*/
 	m_activeEffects.clear();
 }
 
@@ -338,8 +348,10 @@ void EffectDispatcher::Reset()
 
 			if (registeredEffect)
 			{
-				registeredEffect->Start();
+				//registeredEffect->Start();
 				m_permanentEffects.push_back(registeredEffect);
+
+				ThreadManager::CreateThread(registeredEffect, true);
 			}
 		}
 		else

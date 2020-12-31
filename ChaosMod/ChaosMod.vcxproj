@@ -103,6 +103,7 @@
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBeyblade.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsBrakeBoosting.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
@@ -234,6 +236,7 @@
     <ClCompile Include="Effects\db\Player\PlayerTpController.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBees.cpp" />
     <ClCompile Include="Effects\db\Time\TimeController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
     <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
@@ -283,6 +286,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
@@ -313,12 +317,14 @@
     <ClInclude Include="OptionsFile.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ThreadManager.h" />
     <ClInclude Include="TwitchVoting.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
+    <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />

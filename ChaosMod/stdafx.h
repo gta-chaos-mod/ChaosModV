@@ -8,6 +8,7 @@
 #include "TwitchVoting.h"
 #include "Mp3Manager.h"
 #include "OptionsFile.h"
+#include "ThreadManager.h"
 
 #include "Effects/Effect.h"
 
@@ -29,6 +30,7 @@
 #include "Util/Vehicle.h"
 #include "Util/TryParse.h"
 #include "Util/PoolSpawner.h"
+#include "Util/Script.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

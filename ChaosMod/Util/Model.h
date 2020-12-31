@@ -2,6 +2,8 @@
 
 #include "nativesNoNamespaces.h"
 
+#include "Util/Script.h"
+
 inline void LoadModel(Hash model)
 {
 	if (IS_MODEL_VALID(model))
