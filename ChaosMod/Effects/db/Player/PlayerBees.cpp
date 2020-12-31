@@ -35,7 +35,7 @@ static void OnTick() {
     PLAY_STREAM_FROM_PED(player);
     if (rand_int == match) {
         APPLY_DAMAGE_TO_PED(player, 1, false, false);
-        PLAY_PAIN(player, 6, 0, 0);
+        PLAY_PAIN(player, 22, 0, 0);
 
         ApplyVig();
         timeUntilClear += 250;
