@@ -1,7 +1,8 @@
 #pragma once
 
+#include "ThreadManager.h"
+
 #include "Effects/Effect.h"
-#include "EffectThread.h"
 
 #include <vector>
 #include <array>
@@ -37,8 +38,6 @@ public:
 	void ClearEffects();
 	void Reset();
 	void ResetTimer();
-	EffectThread* GetNextFreeThread();
-	void StopEffectThread(RegisteredEffect* effect);
 
 private:
 	const int m_effectSpawnTime;
@@ -55,18 +54,20 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, std::string name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Timer(timer), MaxTime(Timer)
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
 		{
-			Name = name;
+			
 		}
 
 	public:
 		EffectType EffectType;
 		RegisteredEffect* RegisteredEffect;
+		DWORD64 ThreadId;
 		std::string Name;
 		int Timer;
 		int MaxTime;
+		bool HideText = true;
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;

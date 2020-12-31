@@ -42,6 +42,11 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
+		if (effect.HideText)
+		{
+			continue;
+		}
+
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
 		SET_TEXT_SCALE(.5f, .5f);
@@ -96,16 +101,20 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
-	// Run permanent effects each tick
-	for (RegisteredEffect* permanentEffect : m_permanentEffects)
-	{
-		permanentEffect->Tick();
-	}
+	ThreadManager::RunThreads();
 
 	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
 	{
 		return;
+	}
+
+	for (ActiveEffect& effect : m_activeEffects)
+	{
+		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId))
+		{
+			effect.HideText = false;
+		}
 	}
 
 	DWORD64 currentUpdateTime = GetTickCount64();
@@ -125,7 +134,9 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
-				StopEffectThread(effect.RegisteredEffect);
+				ThreadManager::StopThread(effect.ThreadId);
+
+				//effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -209,7 +220,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
-			StopEffectThread(effect.RegisteredEffect);
+			ThreadManager::StopThread(effect.ThreadId);
+
+			//effect.RegisteredEffect->Stop();
 			it = m_activeEffects.erase(it);
 		}
 		else
@@ -224,26 +237,22 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (registeredEffect)
 		{
-			EffectThread* nextThread = GetNextFreeThread();
-			if (nextThread)
+			//registeredEffect->Start();
+
+			std::ostringstream ossEffectName;
+			ossEffectName << effectData.Name;
+
+			if (suffix && strlen(suffix) > 0)
 			{
-				nextThread->Start(registeredEffect, effectInfo.IsTimed);
-
-				std::ostringstream ossEffectName;
-				ossEffectName << effectData.Name;
-
-				if (suffix && strlen(suffix) > 0)
-				{
-					ossEffectName << " " << suffix;
-				}
-
-				ossEffectName << std::endl;
-
-				// Play a sound if corresponding .mp3 file exists
-				Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
-
-				m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
+				ossEffectName << " " << suffix;
 			}
+
+			ossEffectName << std::endl;
+
+			// Play a sound if corresponding .mp3 file exists
+			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
+
+			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
 		}
 	}
 
@@ -308,16 +317,18 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
-	for (RegisteredEffect* effect : m_permanentEffects)
+	ThreadManager::StopThreads();
+
+	/*for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();
-	}
+	}*/
 	m_permanentEffects.clear();
 
-	for (ActiveEffect& effect : m_activeEffects)
+	/*for (ActiveEffect& effect : m_activeEffects)
 	{
-		StopEffectThread(effect.RegisteredEffect);
-	}
+		effect.RegisteredEffect->Stop();
+	}*/
 	m_activeEffects.clear();
 }
 
@@ -337,8 +348,10 @@ void EffectDispatcher::Reset()
 
 			if (registeredEffect)
 			{
-				registeredEffect->Start();
+				//registeredEffect->Start();
 				m_permanentEffects.push_back(registeredEffect);
+
+				ThreadManager::CreateThread(registeredEffect, true);
 			}
 		}
 		else
@@ -354,34 +367,4 @@ void EffectDispatcher::ResetTimer()
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();
-}
-
-EffectThread* EffectDispatcher::GetNextFreeThread()
-{
-	std::vector<EffectThread*>::iterator it;
-	for (it = g_effectThreads.begin(); it != g_effectThreads.end(); )
-	{
-		EffectThread* thread = *it;
-		if (thread->isStopped)
-		{
-			return thread;
-		}
-		it++;
-	}
-	return nullptr;
-}
-
-void EffectDispatcher::StopEffectThread(RegisteredEffect* effect)
-{
-	std::vector<EffectThread*>::iterator it;
-	for (it = g_effectThreads.begin(); it != g_effectThreads.end(); )
-	{
-		EffectThread* thread = *it;
-		if (thread->currentEffect == effect)
-		{
-			thread->Stop();
-			return;
-		}
-		it++;
-	}
 }

@@ -235,7 +235,7 @@ enum EffectType
 	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
 	EFFECT_PLAYER_ON_DEMAND_CARTOON,
-    EFFECT_PEDS_DRIVE_BACKWARDS,
+	EFFECT_PEDS_DRIVE_BACKWARDS,
 	EFFECT_VEH_RANDTRAFFIC,
 	EFFECT_MISC_RAMPJAM,
 	EFFECT_MISC_VEHICLE_RAIN,
@@ -249,8 +249,10 @@ enum EffectType
 	EFFECT_PEDS_BUSBOIS,
 	EFFECT_PLAYER_DEAD_EYE,
 	EFFECT_PLAYER_QUAKE_FOV,
-    EFFECT_PLAYER_HACKING,
+  EFFECT_PLAYER_HACKING,
 	EFFECT_PEDS_NAILGUNS,
+	EFFECT_VEH_BRAKEBOOST,
+	EFFECT_PLAYER_BEES,
 	_EFFECT_ENUM_MAX
 };
 
@@ -516,4 +518,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
 	{EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true}}
+	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
+	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
 };

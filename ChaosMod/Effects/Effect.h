@@ -29,25 +29,28 @@ struct RegisteredEffect
 
 	void Start()
 	{
-		if (m_onStart && !m_isRunning)
-		{
-			m_onStart();
-		}
-
-		if (m_onTick)
+		if (!m_isRunning)
 		{
 			m_isRunning = true;
+
+			if (m_onStart)
+			{
+				m_onStart();
+			}
 		}
 	}
 
 	void Stop()
 	{
-		if (m_onStop && (!m_onTick || m_isRunning))
+		if (m_isRunning)
 		{
-			m_onStop();
-		}
+			m_isRunning = false;
 
-		m_isRunning = false;
+			if (m_onStop)
+			{
+				m_onStop();
+			}
+		}
 	}
 
 	void Tick()

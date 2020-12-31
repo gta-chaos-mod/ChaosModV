@@ -103,7 +103,7 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 	{
 		DWORD curTime = GetTickCount64();
 
-		if (m_repeatTime > curTime - 250)
+		if (key == VK_RETURN || m_repeatTime > curTime - 250)
 		{
 			return;
 		}
