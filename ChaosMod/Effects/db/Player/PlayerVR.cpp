@@ -32,6 +32,8 @@ static void OnStart() {
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
 	}
+
+	AUDIO::PLAY_SOUND_FRONTEND(-1, "1st_Person_Transition", "PLAYER_SWITCH_CUSTOM_SOUNDSET", 0);
 }
 
 static void OnTick() {
@@ -57,6 +59,7 @@ static void OnStop() {
 	// (kolyaventuri): Snap player back to their original position
 	TeleportPlayer(coords);
 	SET_ENTITY_HEADING(player, heading);
+	AUDIO::PLAY_SOUND_FRONTEND(-1, "1st_Person_Transition", "PLAYER_SWITCH_CUSTOM_SOUNDSET", 1);
 
 	// (kolyaventuri): Clean up clone
 	SET_ENTITY_INVINCIBLE(clone, false);
