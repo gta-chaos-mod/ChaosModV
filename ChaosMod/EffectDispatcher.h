@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ThreadManager.h"
+
 #include "Effects/Effect.h"
 
 #include <vector>
@@ -52,15 +54,16 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, std::string name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Timer(timer), MaxTime(Timer)
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect)), Timer(timer), MaxTime(Timer)
 		{
-			Name = name;
+			
 		}
 
 	public:
 		EffectType EffectType;
 		RegisteredEffect* RegisteredEffect;
+		DWORD64 ThreadId;
 		std::string Name;
 		int Timer;
 		int MaxTime;

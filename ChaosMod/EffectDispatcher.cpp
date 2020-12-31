@@ -96,21 +96,12 @@ void EffectDispatcher::OverrideTimerDontDispatch(bool state)
 
 void EffectDispatcher::UpdateEffects()
 {
-	// Run permanent effects each tick
-	for (RegisteredEffect* permanentEffect : m_permanentEffects)
-	{
-		permanentEffect->Tick();
-	}
+	ThreadManager::RunThreads();
 
 	// Don't continue if there are no enabled effects
 	if (g_enabledEffects.empty())
 	{
 		return;
-	}
-
-	for (const ActiveEffect& activeEffect : m_activeEffects)
-	{
-		activeEffect.RegisteredEffect->Tick();
 	}
 
 	DWORD64 currentUpdateTime = GetTickCount64();
@@ -130,6 +121,8 @@ void EffectDispatcher::UpdateEffects()
 			if (effect.Timer == 0
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
+				ThreadManager::UnregisterThread(effect.ThreadId);
+
 				effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
@@ -214,6 +207,8 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
+			ThreadManager::UnregisterThread(effect.ThreadId);
+
 			effect.RegisteredEffect->Stop();
 			it = m_activeEffects.erase(it);
 		}
@@ -309,6 +304,8 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 void EffectDispatcher::ClearEffects()
 {
+	ThreadManager::ClearThreads();
+
 	for (RegisteredEffect* effect : m_permanentEffects)
 	{
 		effect->Stop();

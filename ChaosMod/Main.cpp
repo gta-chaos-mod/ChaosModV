@@ -264,6 +264,8 @@ void Main::MainLoop()
 
 void Main::RunEffectLoop()
 {
+	g_mainThread = GetCurrentFiber();
+
 	while (true)
 	{
 		WAIT(0);
