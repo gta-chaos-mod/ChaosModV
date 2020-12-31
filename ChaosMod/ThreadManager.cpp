@@ -6,9 +6,9 @@ static DWORD64 m_lastTimestamp;
 
 namespace ThreadManager
 {
-	DWORD64 CreateThread(RegisteredEffect* effect, bool isTimed, std::string* name)
+	DWORD64 CreateThread(RegisteredEffect* effect)
 	{
-		std::unique_ptr<EffectThread> thread = std::make_unique<EffectThread>(effect, isTimed, name);
+		std::unique_ptr<EffectThread> thread = std::make_unique<EffectThread>(effect);
 
 		DWORD64 threadId = thread->Id;
 
@@ -17,26 +17,19 @@ namespace ThreadManager
 		return threadId;
 	}
 
-	void StopThread(DWORD64 threadId)
+	void UnregisterThread(DWORD64 threadId)
 	{
 		const std::list<std::unique_ptr<EffectThread>>::iterator& result = std::find(m_threads.begin(), m_threads.end(), threadId);
 
 		if (result != m_threads.end())
 		{
-			result->get()->Stop();
-
 			m_threads.erase(result);
 		}
 	}
 
-	void StopThreads()
+	void ClearThreads()
 	{
-		for (std::unique_ptr<EffectThread>& thread : m_threads)
-		{
-			thread->Stop();
-		}
-
-		m_threads.clear();
+		m_threads.empty();
 	}
 
 	void PutThreadOnPause(DWORD ms)
@@ -55,17 +48,8 @@ namespace ThreadManager
 	{
 		DWORD64 curTimestamp = GetTickCount64();
 
-		for (std::list<std::unique_ptr<EffectThread>>::iterator it = m_threads.begin(); it != m_threads.end(); )
+		for (std::unique_ptr<EffectThread>& thread : m_threads)
 		{
-			std::unique_ptr<EffectThread>& thread = *it;
-
-			if (thread->HasStopped())
-			{
-				it = m_threads.erase(it);
-
-				continue;
-			}
-
 			if (thread->PauseTime > 0 && m_lastTimestamp)
 			{
 				thread->PauseTime -= curTimestamp - m_lastTimestamp;
@@ -75,8 +59,6 @@ namespace ThreadManager
 			{
 				thread->Run();
 			}
-
-			it++;
 		}
 
 		m_lastTimestamp = curTimestamp;
