@@ -63,6 +63,10 @@ static void OnTick()
 			DISABLE_PED_PAIN_AUDIO(zombie, true);
 
 			TASK_COMBAT_PED(zombie, playerPed, 0, 16);
+			
+			Blip blip = ADD_BLIP_FOR_ENTITY(zombie);
+ 	                SET_BLIP_COLOUR(blip, 1);
+ 	                SET_BLIP_AS_FRIENDLY(blip, false);
 
 			SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 		}
