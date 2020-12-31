@@ -26,6 +26,12 @@ static void OnStart() {
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
 	FREEZE_ENTITY_POSITION(clone, true);
+
+	// (kolyaventuri): Apply camera effects
+	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
+	{
+		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
+	}
 }
 
 static void OnTick() {
@@ -62,6 +68,9 @@ static void OnStop() {
 	// (kolyaventuri): Clean up FP
 	SET_FOLLOW_PED_CAM_VIEW_MODE(1);
 	SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(1);
+
+	// (kolyaventuri): Clear camera effects
+	CLEAR_TIMECYCLE_MODIFIER();
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_VR, OnStart, OnStop, OnTick);
