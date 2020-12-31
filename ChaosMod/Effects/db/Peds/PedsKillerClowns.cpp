@@ -111,6 +111,9 @@ static void OnTick()
 		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
 		SET_PED_ACCURACY(ped, 50);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+ 	        SET_BLIP_COLOUR(blip, 1);
+ 	        SET_BLIP_AS_FRIENDLY(blip, false);
 		clownEnemies.push_back(ped);
 	}
 }
