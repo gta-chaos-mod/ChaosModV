@@ -61,6 +61,10 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true); 
 		
+		Blip blip = ADD_BLIP_FOR_ENTITY(ped);
+ 	        SET_BLIP_COLOUR(blip, 1);
+ 	        SET_BLIP_AS_FRIENDLY(blip, false);
+		
 		REGISTER_TARGET(ped, playerPed);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		listToAddPedTo.push_back(ped);
