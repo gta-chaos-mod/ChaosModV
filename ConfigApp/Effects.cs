@@ -289,6 +289,7 @@ namespace ConfigApp
             EFFECT_VEH_BRAKEBOOST,
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
+            EFFECT_MISC_PORTRAIT_MODE,
             _EFFECT_ENUM_MAX
         }
 
@@ -542,7 +543,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true)},
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
-            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true)}
+            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true)},
+            {EffectType.EFFECT_MISC_PORTRAIT_MODE, new EffectInfo("Portrait Mode", EffectCategory.MISC, "misc_portrait", true)},
         };
     }
 }
