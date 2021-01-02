@@ -75,6 +75,12 @@ static void OnStart() {
 static void OnTick() {
 	Ped player = PLAYER_PED_ID();
 
+	// (kolyaventuri): Face the same direction as the player
+	if (!IS_PED_IN_ANY_VEHICLE(player, false)) {
+		float heading = GET_ENTITY_HEADING(player);
+		SET_ENTITY_HEADING(clone, heading);
+	}
+
 	// (kolyaventuri): Replicate weapon
 	GIVE_WEAPON_TO_PED(clone, GET_SELECTED_PED_WEAPON(player), 0, true, true);
 
