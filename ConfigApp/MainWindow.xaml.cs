@@ -398,6 +398,10 @@ namespace ConfigApp
             WriteTwitchFile();
             WriteEffectsFile();
 
+            // Reload saved config to show the "new" (saved) settings
+            ParseConfigFile();
+            ParseTwitchFile();
+
             MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

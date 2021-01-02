@@ -1,17 +1,17 @@
 #include <stdafx.h>
 
-static Entity m_origHandle = 0;
-static Entity m_proxyHandle = 0;
+static std::map<Entity, Entity> vehicleMap;
 
 __int64(*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
 {
-	if (entity == m_origHandle)
-	{
-		return _OG_HandleToEntityStruct(m_proxyHandle);
-	}
+	Entity vehToContinue = entity;
 
-	return _OG_HandleToEntityStruct(entity);
+	while (vehicleMap.count(vehToContinue) > 0)
+	{
+		vehToContinue = vehicleMap[vehToContinue];
+	}
+	return _OG_HandleToEntityStruct(vehToContinue);
 }
 
 static bool OnHook()
@@ -33,7 +33,6 @@ namespace Hooks
 {
 	void ProxyEntityHandle(Entity origHandle, Entity newHandle)
 	{
-		m_origHandle = origHandle;
-		m_proxyHandle = newHandle;
+		vehicleMap.emplace(origHandle, newHandle);
 	}
 }

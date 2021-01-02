@@ -25,7 +25,7 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 
 	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
 	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
-	seed = configFile.ReadValueInt("Seed", 0);
+	seed = configFile.ReadValueInt("Seed", g_random.GetRandomInt(0, MAXINT));
 	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
 	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
 	disableEffectsTwiceInRow = configFile.ReadValueInt("DisableEffectTwiceInRow", false);

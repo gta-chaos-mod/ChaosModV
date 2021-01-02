@@ -136,7 +136,6 @@ void EffectDispatcher::UpdateEffects()
 			{
 				ThreadManager::StopThread(effect.ThreadId);
 
-				//effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
 			else
