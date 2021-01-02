@@ -149,6 +149,14 @@ void TwitchVoting::Tick()
 
 			m_isVotingRunning = false;
 		}
+
+		if (g_metaInfo.additionalEffectsToDispatch > 0) 
+		{
+			for (int i = 0; i < g_metaInfo.additionalEffectsToDispatch; i++)
+			{
+				g_effectDispatcher->DispatchRandomEffect();
+			}
+		}
 	}
 	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
 	{

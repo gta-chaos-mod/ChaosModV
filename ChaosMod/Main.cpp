@@ -165,6 +165,7 @@ void Main::Init()
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchSecsBeforeChatVoting, enableTwitchPollVoting, twitchOverlayMode, enableTwitchChanceSystem,
 		enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable);
+	g_metaInfo = MetaEffectInfo();
 }
 
 void Main::MainLoop()

@@ -259,6 +259,8 @@ enum EffectType
 	EFFECT_META_TIMER_SPEED_X5,
 	EFFECT_META_EFFECT_DURATION_X2,
 	EFFECT_META_EFFECT_DURATION_X0_5,
+	EFFECT_META_HIDE_CHAOS_UI,
+	EFFECT_META_ADDITIONAL_EFFECTS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -539,4 +541,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_EFFECT_DURATION_X2, {"2x Effect Duration", "meta_effect_duration_2x", true, { EFFECT_META_EFFECT_DURATION_X0_5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_EFFECT_DURATION_X0_5, {"0.5x Effect Duration", "meta_effect_duration_0_5x", true, { EFFECT_META_EFFECT_DURATION_X2 }, false, EffectExecutionType::META}},
+	{EFFECT_META_HIDE_CHAOS_UI, {"What's Happening??", "meta_hide_chaos_ui", true, {}, false, EffectExecutionType::META}},
+	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
 };

@@ -16,7 +16,7 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_enableNormalEffectDispatch)
+	if (!m_enableNormalEffectDispatch || g_metaInfo.shouldHideChaosUI)
 	{
 		return;
 	}
@@ -42,7 +42,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText)
+		if (effect.HideText || (g_metaInfo.shouldHideChaosUI && effect.EffectType != EFFECT_META_HIDE_CHAOS_UI))
 		{
 			continue;
 		}
@@ -89,6 +89,14 @@ void EffectDispatcher::UpdateTimer()
 	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.timerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
+
+		if (g_metaInfo.additionalEffectsToDispatch > 0)
+		{
+			for (int i = 0; i < g_metaInfo.additionalEffectsToDispatch; i++)
+			{
+				g_effectDispatcher->DispatchRandomEffect();
+			}
+		}
 
 		m_timerTimerRuns = 0;
 	}
@@ -140,7 +148,7 @@ void EffectDispatcher::UpdateEffects()
 				effect.Timer -= 1 / g_metaInfo.effectDurationModifier;
 			}
 
-			if (effect.Timer <= 0
+			if ((effect.MaxTime > 0 && effect.Timer <= 0)
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
 				ThreadManager::StopThread(effect.ThreadId);
