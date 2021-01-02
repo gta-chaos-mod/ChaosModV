@@ -518,8 +518,8 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
 	{EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
-	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true}},
+	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true, {}, true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
-	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}}
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}}
 };
