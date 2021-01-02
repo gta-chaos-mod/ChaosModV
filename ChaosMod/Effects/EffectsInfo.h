@@ -249,11 +249,12 @@ enum EffectType
 	EFFECT_PEDS_BUSBOIS,
 	EFFECT_PLAYER_DEAD_EYE,
 	EFFECT_PLAYER_QUAKE_FOV,
-  EFFECT_PLAYER_HACKING,
+	EFFECT_PLAYER_HACKING,
 	EFFECT_PEDS_NAILGUNS,
 	EFFECT_VEH_BRAKEBOOST,
 	EFFECT_PLAYER_BEES,
-  EFFECT_PLAYER_VR,
+	EFFECT_PLAYER_VR,
+	EFFECT_PLAYER_BUSTED,
 	_EFFECT_ENUM_MAX
 };
 
@@ -521,5 +522,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
-  {EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}}
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}},
+	{EFFECT_PLAYER_BUSTED, {"Busted", "player_busted"}}
 };
