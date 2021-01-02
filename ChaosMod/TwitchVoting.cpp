@@ -177,7 +177,7 @@ void TwitchVoting::Tick()
 			EffectType effectType = pair.first;
 			EffectData& effectData = pair.second;
 
-			if (!effectData.Permanent && !effectData.ExcludedFromVoting)
+			if (!effectData.Permanent && !effectData.isMeta && !effectData.ExcludedFromVoting)
 			{
 				choosableEffects.emplace(effectType, &effectData);
 			}

@@ -111,6 +111,7 @@ namespace ConfigApp
             misc_user_effects_drawtimer_disable.IsChecked = m_configFile.ReadValueBool("DisableTimerBarDraw", false);
             misc_user_effects_drawtext_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTextDraw", false);
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
+            misc_meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "120");
             misc_user_effects_menu_enable.IsChecked = m_configFile.ReadValueBool("EnableDebugMenu", false);
             misc_user_effects_timer_pause_shortcut_enable.IsChecked = m_configFile.ReadValueBool("EnablePauseTimerShortcut", false);
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
@@ -132,6 +133,7 @@ namespace ConfigApp
         {
             m_configFile.WriteValue("NewEffectSpawnTime", misc_user_effects_spawn_dur.Text);
             m_configFile.WriteValue("EffectTimedDur", misc_user_effects_timed_dur.Text);
+            m_configFile.WriteValue("NewMetaEffectSpawnTime", misc_meta_effects_spawn_dur.Text);
             m_configFile.WriteValue("Seed", misc_user_effects_random_seed.Text);
             m_configFile.WriteValue("EffectTimedShortDur", misc_user_effects_timed_short_dur.Text);
             m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
@@ -275,6 +277,7 @@ namespace ConfigApp
             TreeMenuItem timeParentItem = new TreeMenuItem("Time");
             TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
             TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
+            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
 
             SortedDictionary<string, Tuple<EffectType, EffectCategory>> sortedEffects = new SortedDictionary<string, Tuple<EffectType, EffectCategory>>();
 
@@ -312,6 +315,9 @@ namespace ConfigApp
                     case EffectCategory.MISC:
                         miscParentItem.AddChild(menuItem);
                         break;
+                    case EffectCategory.META:
+                        metaParentItem.AddChild(menuItem);
+                        break;
                 }
             }
 
@@ -322,6 +328,7 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(timeParentItem);
             effects_user_effects_tree_view.Items.Add(weatherParentItem);
             effects_user_effects_tree_view.Items.Add(miscParentItem);
+            effects_user_effects_tree_view.Items.Add(metaParentItem);
         }
 
         void InitTwitchTab()

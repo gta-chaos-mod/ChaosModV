@@ -3,12 +3,14 @@
 #include "DebugMenu.h"
 #include "EffectDispatcher.h"
 #include "TwitchVoting.h"
+#include "Effects/MetaEffectInfo.h"
 
 #include <Windows.h>
 #include <memory>
 #include <map>
 
 inline std::map<EffectType, EffectData> g_enabledEffects;
+inline MetaEffectInfo g_metaInfo = MetaEffectInfo();
 
 class Main
 {

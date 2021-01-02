@@ -17,7 +17,7 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 	return colors;
 }
 
-void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut, bool& disableEffectsTwiceInRow,
+void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, int& metaEffectSpawnTime, bool& enableClearEffectsShortcut, bool& disableEffectsTwiceInRow,
 	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, bool& enableDebugMenu, bool& enablePauseTimerShortcut, std::array<int, 3>& timerColor,
 	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
@@ -25,6 +25,7 @@ void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& 
 
 	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
 	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
+	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 120);
 	seed = configFile.ReadValueInt("Seed", 0);
 	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
 	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
@@ -117,6 +118,7 @@ void ParseEffectsFile()
 		effectData.Permanent = values[4];
 		effectData.ExcludedFromVoting = values[5];
 		effectData.Name = valueEffectName;
+		effectData.isMeta = effectInfo.executionType == EffectExecutionType::META;
 
 		enabledEffects.emplace(effectType, effectData);
 
@@ -129,12 +131,12 @@ void ParseEffectsFile()
 
 void Main::Init()
 {
-	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting;
+	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime;
 	bool disableEffectsTwiceInRow, enableTwitchVoting, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
 	TwitchOverlayMode twitchOverlayMode;
 
-	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
+	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, metaEffectSpawnTime, m_clearEffectsShortcutEnabled, disableEffectsTwiceInRow, m_disableDrawTimerBar,
 		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor);
 	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance,
 		enableTwitchRandomEffectVoteable);
@@ -142,7 +144,7 @@ void Main::Init()
 
 	g_random.SetSeed(seed);
 
-	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, timerColor, textColor, effectTimerColor,
+	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, disableEffectsTwiceInRow, metaEffectSpawnTime, timerColor, textColor, effectTimerColor,
 		enableTwitchVoting, twitchOverlayMode);
 
 	if (m_enableDebugMenu)

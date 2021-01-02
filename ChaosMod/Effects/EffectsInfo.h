@@ -249,19 +249,30 @@ enum EffectType
 	EFFECT_PEDS_BUSBOIS,
 	EFFECT_PLAYER_DEAD_EYE,
 	EFFECT_PLAYER_QUAKE_FOV,
-  EFFECT_PLAYER_HACKING,
+	EFFECT_PLAYER_HACKING,
 	EFFECT_PEDS_NAILGUNS,
 	EFFECT_VEH_BRAKEBOOST,
 	EFFECT_PLAYER_BEES,
-  EFFECT_PLAYER_VR,
+	EFFECT_PLAYER_VR,
+	EFFECT_META_TIMER_SPEED_X0_5,
+	EFFECT_META_TIMER_SPEED_X2,
+	EFFECT_META_TIMER_SPEED_X5,
+	EFFECT_META_EFFECT_DURATION_X2,
+	EFFECT_META_EFFECT_DURATION_X0_5,
 	_EFFECT_ENUM_MAX
+};
+
+enum EffectExecutionType
+{
+	DEFAULT,
+	META
 };
 
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList) {}
+	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, EffectExecutionType type = EffectExecutionType::DEFAULT)
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), executionType(type) {}
 
 public:
 	const char* Name;
@@ -269,6 +280,7 @@ public:
 	const bool IsTimed;
 	const bool IsShortDuration;
 	const std::vector<EffectType> IncompatibleWith;
+	const EffectExecutionType executionType;
 };
 
 const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
@@ -521,5 +533,10 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
-  {EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}}
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}},
+	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_EFFECT_DURATION_X2, {"2x Effect Duration", "meta_effect_duration_2x", true, { EFFECT_META_EFFECT_DURATION_X0_5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_EFFECT_DURATION_X0_5, {"0.5x Effect Duration", "meta_effect_duration_0_5x", true, { EFFECT_META_EFFECT_DURATION_X2 }, false, EffectExecutionType::META}},
 };

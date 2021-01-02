@@ -29,7 +29,8 @@ namespace ConfigApp
             PEDS,
             TIME,
             WEATHER,
-            MISC
+            MISC,
+            META
         }
 
         public enum EffectTimedType
@@ -289,6 +290,11 @@ namespace ConfigApp
             EFFECT_VEH_BRAKEBOOST,
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
+            EFFECT_META_TIMER_SPEED_X2,
+            EFFECT_META_TIMER_SPEED_X5,
+            EFFECT_META_TIMER_SPEED_X0_5,
+            EFFECT_META_EFFECT_DURATION_X2,
+            EFFECT_META_EFFECT_DURATION_X0_5,
             _EFFECT_ENUM_MAX
         }
 
@@ -542,7 +548,12 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true)},
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
-            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true)}
+            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X0_5, new EffectInfo("0.5x Timer Speed", EffectCategory.META, "meta_timerspeed_0_5x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X2, new EffectInfo("2x Timer Speed", EffectCategory.META, "meta_timerspeed_2x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X2, new EffectInfo("2x Effect Duration", EffectCategory.META, "meta_effect_duration_2x", true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
         };
     }
 }

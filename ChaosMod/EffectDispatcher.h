@@ -14,7 +14,7 @@ enum class TwitchOverlayMode;
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow, int metaEffectSpawnTime,
 		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 		TwitchOverlayMode twitchOverlayMode);
 	~EffectDispatcher();
@@ -33,6 +33,7 @@ public:
 		return m_effectSpawnTime - m_timerTimerRuns;
 	}
 	void UpdateEffects();
+	void UpdateMetaEffects();
 	void DispatchEffect(EffectType effectType, const char* suffix = nullptr);
 	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
@@ -44,6 +45,7 @@ private:
 	const int m_effectTimedDur;
 	const int m_effectTimedShortDur;
 	const bool m_disableTwiceInRow;
+	const int m_metaEffectSpawnTime;
 	EffectType m_lastEffect = _EFFECT_ENUM_MAX;
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;
@@ -54,7 +56,7 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, float timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
 			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
 		{
 			
@@ -65,8 +67,8 @@ private:
 		RegisteredEffect* RegisteredEffect;
 		DWORD64 ThreadId;
 		std::string Name;
-		int Timer;
-		int MaxTime;
+		float Timer;
+		float MaxTime;
 		bool HideText = true;
 	};
 
@@ -77,6 +79,7 @@ private:
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
 	bool m_dispatchEffectsOnTimer = true;
+	int m_metaEffectTimer = m_metaEffectSpawnTime;
 	const bool m_enableTwitchVoting;
 	const TwitchOverlayMode m_twitchOverlayMode;
 };
