@@ -76,7 +76,7 @@ static void OnTick() {
 	Ped player = PLAYER_PED_ID();
 
 	// (kolyaventuri): Replicate weapon
-	GIVE_WEAPON_TO_PED(clone, GET_SELECTED_PED_WEAPON(player), 9999, true, true);
+	GIVE_WEAPON_TO_PED(clone, GET_SELECTED_PED_WEAPON(player), 0, true, true);
 
 	// (kolyaventuri): Force first person
 
