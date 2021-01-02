@@ -10,8 +10,6 @@ static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	static Vehicle lastVeh = 0;
-
 	static const std::vector<Hash> vehModels = Memory::GetAllVehModels();
 	if (!vehModels.empty())
 	{
