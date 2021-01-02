@@ -165,19 +165,96 @@ void Main::Init()
 		enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable);
 }
 
-void Main::MainLoop()
+void Main::Reset()
+{
+	g_effectDispatcher.reset();
+
+	if (m_enableDebugMenu)
+	{
+		m_debugMenu.reset();
+	}
+
+	m_twitchVoting.reset();
+
+	ClearEntityPool();
+
+	Init(); // Restart the main part of the mod completely
+}
+
+void Main::Loop()
 {
 	int splashTextTime = 15000;
 	int twitchVotingWarningTextTime = 15000;
 
 	DWORD64 lastTick = GetTickCount64();
 
+	g_mainThread = GetCurrentFiber();
+
+	ThreadManager::ClearThreads();
+
+	Reset();
+
 	while (true)
 	{
 		WAIT(0);
 
-		if (IS_SCREEN_FADED_OUT() || m_disableMod)
+		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
+			static bool justReenabled = false;
+			if (m_disableMod)
+			{
+				if (!justReenabled)
+				{
+					justReenabled = true;
+
+					Reset();
+				}
+
+				continue;
+			}
+			else if (justReenabled)
+			{
+				justReenabled = false;
+			}
+
+			if (m_clearAllEffects)
+			{
+				m_clearAllEffects = false;
+
+				g_effectDispatcher->Reset();
+
+				ClearEntityPool();
+			}
+
+			if (m_debugMenu && m_debugMenu->IsVisible())
+			{
+				// Arrow Up
+				DISABLE_CONTROL_ACTION(1, 27, true);
+				DISABLE_CONTROL_ACTION(1, 127, true);
+				DISABLE_CONTROL_ACTION(1, 188, true);
+				DISABLE_CONTROL_ACTION(1, 300, true);
+				// Arrow Down
+				DISABLE_CONTROL_ACTION(1, 173, true);
+				DISABLE_CONTROL_ACTION(1, 187, true);
+				DISABLE_CONTROL_ACTION(1, 299, true);
+				// Enter
+				DISABLE_CONTROL_ACTION(1, 18, true);
+				DISABLE_CONTROL_ACTION(1, 176, true);
+				DISABLE_CONTROL_ACTION(1, 191, true);
+				DISABLE_CONTROL_ACTION(1, 201, true);
+				DISABLE_CONTROL_ACTION(1, 215, true);
+				// Backspace
+				DISABLE_CONTROL_ACTION(1, 177, true);
+				DISABLE_CONTROL_ACTION(1, 194, true);
+				DISABLE_CONTROL_ACTION(1, 202, true);
+
+				m_debugMenu->Tick();
+			}
+		}
+		else if (IS_SCREEN_FADED_OUT())
+		{
+			SET_TIME_SCALE(1.f); // Prevent potential softlock for certain effects
+
 			WAIT(100);
 
 			continue;
@@ -209,7 +286,7 @@ void Main::MainLoop()
 			splashTextTime -= curTick - lastTick;
 		}
 
-		if (m_twitchVoting && m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
+		if (m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
@@ -221,106 +298,7 @@ void Main::MainLoop()
 			twitchVotingWarningTextTime -= curTick - lastTick;
 		}
 
-		lastTick = curTick;
-
-		if (g_effectDispatcher)
-		{
-			if (!m_disableDrawTimerBar)
-			{
-				g_effectDispatcher->DrawTimerBar();
-			}
-			if (!m_disableDrawEffectTexts)
-			{
-				g_effectDispatcher->DrawEffectTexts();
-			}
-		}
-
-		if (m_enableDebugMenu && !ThreadManager::IsAnyThreadRunningOnStart())
-		{
-			if (m_debugMenu && m_debugMenu->IsVisible())
-			{
-				// Arrow Up
-				DISABLE_CONTROL_ACTION(1, 27, true);
-				DISABLE_CONTROL_ACTION(1, 127, true);
-				DISABLE_CONTROL_ACTION(1, 188, true);
-				DISABLE_CONTROL_ACTION(1, 300, true);
-				// Arrow Down
-				DISABLE_CONTROL_ACTION(1, 173, true);
-				DISABLE_CONTROL_ACTION(1, 187, true);
-				DISABLE_CONTROL_ACTION(1, 299, true);
-				// Enter
-				DISABLE_CONTROL_ACTION(1, 18, true);
-				DISABLE_CONTROL_ACTION(1, 176, true);
-				DISABLE_CONTROL_ACTION(1, 191, true);
-				DISABLE_CONTROL_ACTION(1, 201, true);
-				DISABLE_CONTROL_ACTION(1, 215, true);
-				// Backspace
-				DISABLE_CONTROL_ACTION(1, 177, true);
-				DISABLE_CONTROL_ACTION(1, 194, true);
-				DISABLE_CONTROL_ACTION(1, 202, true);
-
-				m_debugMenu->Tick();
-			}
-		}
-	}
-}
-
-void Main::RunEffectLoop()
-{
-	g_mainThread = GetCurrentFiber();
-
-	while (true)
-	{
-		WAIT(0);
-
-		if (IS_SCREEN_FADED_OUT())
-		{
-			SET_TIME_SCALE(1.f); // Prevent potential softlock if Lag effect is running during screen fadeout
-
-			WAIT(100);
-
-			continue;
-		}
-
-		if (!ThreadManager::IsAnyThreadRunningOnStart())
-		{
-			static bool justReenabled = false;
-			if (m_disableMod)
-			{
-				if (!justReenabled)
-				{
-					justReenabled = true;
-
-					g_effectDispatcher.reset();
-
-					if (m_enableDebugMenu)
-					{
-						m_debugMenu.reset();
-					}
-
-					m_twitchVoting.reset();
-
-					ClearEntityPool();
-				}
-
-				continue;
-			}
-			else if (justReenabled)
-			{
-				justReenabled = false;
-
-				Init(); // Restart the main part of the mod completely
-			}
-
-			if (m_clearAllEffects)
-			{
-				m_clearAllEffects = false;
-
-				g_effectDispatcher->Reset();
-
-				ClearEntityPool();
-			}
-		}
+		g_effectDispatcher->UpdateEffects();
 
 		if (m_twitchVoting->IsEnabled())
 		{
@@ -332,7 +310,16 @@ void Main::RunEffectLoop()
 			g_effectDispatcher->UpdateTimer();
 		}
 
-		g_effectDispatcher->UpdateEffects();
+		if (!m_disableDrawTimerBar)
+		{
+			g_effectDispatcher->DrawTimerBar();
+		}
+		if (!m_disableDrawEffectTexts)
+		{
+			g_effectDispatcher->DrawEffectTexts();
+		}
+
+		lastTick = curTick;
 	}
 }
 

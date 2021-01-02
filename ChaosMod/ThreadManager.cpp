@@ -124,4 +124,9 @@ namespace ThreadManager
 
 		return false;
 	}
+
+	void ClearThreads()
+	{
+		m_threads.clear();
+	}
 }
