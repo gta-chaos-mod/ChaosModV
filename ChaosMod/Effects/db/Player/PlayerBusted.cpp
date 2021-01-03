@@ -85,7 +85,7 @@ static void OnStart() {
 		DISABLE_ALL_CONTROL_ACTIONS(0);
 		WAIT(0);
 
-		int currentTime = GetTickCount64();
+		int currentTime = GET_GAME_TIMER();
 		if (currentTime - lastModeTime > nextModeTime)
 		{
 			nextModeTime = 2000;
@@ -105,7 +105,7 @@ static void OnStart() {
 		switch (currentMode) {
 			case ArrestState::startBust:
 				TASK_ARREST_PED(cop, player);
-				lastModeTime = GetTickCount64();
+				lastModeTime = GET_GAME_TIMER();
 				nextModeTime = 15000;
 				currentMode++;
 				break;
