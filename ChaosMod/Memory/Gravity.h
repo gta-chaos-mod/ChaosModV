@@ -3,6 +3,8 @@
 #include "Memory.h"
 #include "Handle.h"
 
+#include <fstream>
+
 namespace Memory
 {
 	inline void SetGravityLevel(float gravity)
@@ -14,13 +16,13 @@ namespace Memory
 
 		if (!gravAddr)
 		{
-			Handle handle = FindPattern("48 83 EC 28 83 F9 03 77 26 48 63 C1 48 8D 0D ? ? ? ? F3 0F 10 04 81 F3 0F 11 05 ? ? ? ? E8 ? ? ? ? E8 ? ? ? ? E8");
+			Handle handle = FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
 			if (!handle.IsValid())
 			{
 				return;
 			}
 
-			handle = handle.At(24);
+			handle = handle.Into().At(24);
 
 			gravAddr = handle.At(3).Into().Get<float>();
 
