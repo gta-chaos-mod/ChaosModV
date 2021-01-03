@@ -135,14 +135,7 @@ static void OnStart()
     bool breakOut = false;
     while (!breakOut)
     {
-        static int lastFrameCount = GET_FRAME_COUNT();
-
-        while (lastFrameCount == GET_FRAME_COUNT())
-        {
-            WAIT(0);
-        }
-        
-        lastFrameCount = GET_FRAME_COUNT();
+        WAIT(0);
 
         GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleform, 255, 255, 255, 255, 0);
 
