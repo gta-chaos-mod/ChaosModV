@@ -15,7 +15,7 @@ static void OnStart()
 
 	static const Hash caddyModel = GET_HASH_KEY("CADDY");
 
-	Vehicle veh = CREATE_VEHICLE(caddyModel, playerPos.x, playerPos.y, playerPos.z, heading, true, true, true);
+	Vehicle veh = CreatePoolVehicle(caddyModel, playerPos.x, playerPos.y, playerPos.z, heading);
 	WAIT(0);
 	
 	//setting player into new vehicle
