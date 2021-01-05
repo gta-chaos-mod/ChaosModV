@@ -535,7 +535,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true, {}, true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
-	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true}},
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
 	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
