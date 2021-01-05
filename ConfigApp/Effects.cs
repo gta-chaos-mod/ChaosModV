@@ -503,7 +503,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
-            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PEDS, "peds_loosetrigger", true)},
+            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Triggers", EffectCategory.PEDS, "peds_loosetrigger", true)},
             {EffectType.EFFECT_PEDS_MINIONS, new EffectInfo("Minions", EffectCategory.PEDS, "peds_minions", true)},
             {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
             {EffectType.EFFECT_MISC_DVDSCREENSAVER, new EffectInfo("DVD Screensaver", EffectCategory.MISC, "misc_dvdscreensaver", true, true)},

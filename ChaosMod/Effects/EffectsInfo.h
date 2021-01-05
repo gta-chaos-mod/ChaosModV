@@ -485,7 +485,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true}},
 	{EFFECT_PEDS_MINIONS, {"Minions", "peds_minions", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
-	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
+	{EFFECT_LOOSE_TRIGGER, {"Loose Triggers", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
