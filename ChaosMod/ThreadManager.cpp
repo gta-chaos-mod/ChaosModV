@@ -61,6 +61,16 @@ namespace ThreadManager
 
 	void RunThreads()
 	{
+		static int lastFrame = GET_FRAME_COUNT();
+		int curFrame = GET_FRAME_COUNT();
+
+		if (lastFrame == curFrame)
+		{
+			return;
+		}
+
+		lastFrame = curFrame;
+
 		DWORD64 curTimestamp = GetTickCount64();
 
 		for (std::list<std::unique_ptr<EffectThread>>::iterator it = m_threads.begin(); it != m_threads.end(); )
@@ -113,5 +123,10 @@ namespace ThreadManager
 		}
 
 		return false;
+	}
+
+	void ClearThreads()
+	{
+		m_threads.clear();
 	}
 }

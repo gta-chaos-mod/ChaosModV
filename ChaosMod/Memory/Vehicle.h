@@ -143,4 +143,24 @@ namespace Memory
 		colors[index * 4] = overrideColor ? newColor : origColors[index];
 		colors[index * 4 + 1] = overrideColor ? newColor : origColors[index];
 	}
+
+	inline bool IsVehicleBraking(Vehicle vehicle)
+	{
+		static __int64(*sub_7FF788D32A60)(Vehicle vehicle) = nullptr;
+
+		if (!sub_7FF788D32A60)
+		{
+			Handle handle = FindPattern("E8 ? ? ? ? 48 85 FF 74 47");
+			if (!handle.IsValid())
+			{
+				return false;
+			}
+
+			sub_7FF788D32A60 = handle.Into().Get<__int64(Vehicle)>();
+		}
+
+		__int64 result = sub_7FF788D32A60(vehicle);
+
+		return result ? *reinterpret_cast<float*>(result + 2496) : false;
+	}
 }

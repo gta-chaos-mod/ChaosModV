@@ -33,7 +33,6 @@ static void OnStart()
 			vehVelocity = GET_ENTITY_VELOCITY(currentVehicle);
 			forwardSpeed = GET_ENTITY_SPEED(currentVehicle);
 
-
 			for (int i = -1; i < numberOfSeats - 1; i++)
 			{
 				if (IS_VEHICLE_SEAT_FREE(currentVehicle, i, false))
@@ -44,7 +43,10 @@ static void OnStart()
 				vehPeds.push_back(ped);
 			}
 
-			oldVehHandle = currentVehicle;
+			if (IS_ENTITY_A_MISSION_ENTITY(currentVehicle))
+			{
+				oldVehHandle = currentVehicle;
+			}
 
 			SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
 			DELETE_VEHICLE(&currentVehicle);

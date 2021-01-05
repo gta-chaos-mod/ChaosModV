@@ -20,7 +20,7 @@ static bool OnHook()
 	if (!handle.IsValid())
 	{
 		return false;
-	}
+	}	
 
 	Memory::AddHook(handle.Get<void>(), _HK_HandleToEntityStruct, &_OG_HandleToEntityStruct);
 
