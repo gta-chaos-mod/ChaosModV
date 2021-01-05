@@ -4,14 +4,17 @@ static void OnStart()
 {
 	for (Ped ped : GetAllPeds())
 	{
+		WAIT(0);
+
 		if (!IS_PED_IN_ANY_VEHICLE(ped, true))
 		{
 			continue;
 		}
+
 		Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 		SET_ENTITY_COORDS(ped, pedPos.x, pedPos.y, pedPos.z + 5.f, false, false, false, false);
-		WAIT(0);
 	}
+
 	WAIT(0);
 
 	for (Ped ped : GetAllPeds())
@@ -41,6 +44,7 @@ static void OnStart()
 				break;
 			}
 		}
+
 		WAIT(0);
 	}
 }
