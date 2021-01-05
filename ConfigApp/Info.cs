@@ -2,6 +2,6 @@
 {
     public static class Info
     {
-        public static string VERSION = "1.8.2.1";
+        public static string VERSION = "1.8.2.2";
     }
 }
