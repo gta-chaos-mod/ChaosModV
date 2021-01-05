@@ -31,7 +31,6 @@ static void OnStart()
 			vehVelocity = GET_ENTITY_VELOCITY(oldVehHandle);
 			forwardSpeed = GET_ENTITY_SPEED(oldVehHandle);
 
-
 			for (int i = -1; i < numberOfSeats - 1; i++)
 			{
 				if (IS_VEHICLE_SEAT_FREE(oldVehHandle, i, false))
@@ -41,7 +40,6 @@ static void OnStart()
 				Ped ped = GET_PED_IN_VEHICLE_SEAT(oldVehHandle, i, false);
 				vehPeds.push_back(ped);
 			}
-
 		}
 		else
 		{
@@ -79,10 +77,13 @@ static void OnStart()
 
 		if (oldVehHandle)
 		{
+			if (IS_ENTITY_A_MISSION_ENTITY(oldVehHandle))
+			{
+			  Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+			}
 			Entity copy = oldVehHandle;
 			SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
 			DELETE_VEHICLE(&copy);
-			Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
 		}
 	}
 }

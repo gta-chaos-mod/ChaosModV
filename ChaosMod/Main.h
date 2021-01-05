@@ -14,8 +14,7 @@ class Main
 {
 public:
 	void Init();
-	void MainLoop();
-	void RunEffectLoop();
+	void Loop();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
 
 private:
@@ -32,4 +31,6 @@ private:
 	bool m_disableMod = false;
 	bool m_enableDebugMenu = false;
 	bool m_enablePauseTimerShortcut = false;
+
+	void Reset();
 };
