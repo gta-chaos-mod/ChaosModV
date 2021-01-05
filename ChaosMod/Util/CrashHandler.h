@@ -34,7 +34,13 @@ static LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
 			| MiniDumpWithFullMemoryInfo | MiniDumpWithThreadInfo;
 	}
 
-	MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, static_cast<MINIDUMP_TYPE>(flags), &exInfo, NULL, NULL);
+	typedef BOOL(WINAPI* _MiniDumpWriteDump)(HANDLE hProcess, DWORD ProcessId, HANDLE hFile, MINIDUMP_TYPE DumpType, PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+		PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
+
+	HMODULE lib = LoadLibrary("dbghelp.dll");
+	_MiniDumpWriteDump dumpFunc = reinterpret_cast<_MiniDumpWriteDump>(GetProcAddress(lib, "MiniDumpWriteDump"));
+
+	dumpFunc(GetCurrentProcess(), GetCurrentProcessId(), file, static_cast<MINIDUMP_TYPE>(flags), &exInfo, NULL, NULL);
 
 	CloseHandle(file);
 
