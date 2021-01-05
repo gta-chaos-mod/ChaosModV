@@ -31,6 +31,7 @@
 #include "Util/TryParse.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
+#include "Util/CrashHandler.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
@@ -41,6 +42,7 @@
 
 #include <WinUser.h>
 #include <Psapi.h>
+#include <minidumpapiset.h>
 
 #include <fstream>
 #include <array>

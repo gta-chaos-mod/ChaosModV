@@ -188,6 +188,8 @@ void Main::Loop()
 
 	DWORD64 lastTick = GetTickCount64();
 
+	SetUnhandledExceptionFilter(CrashHandler);
+
 	g_mainThread = GetCurrentFiber();
 
 	ThreadManager::ClearThreads();
