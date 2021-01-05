@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -7,7 +7,7 @@
 static std::list<Ped> clownEnemies;
 static int spawnTimer = -1;
 static Hash relationshipGroup;
-static int maxClownsToSpawn = 5;
+static int maxClownsToSpawn = 3;
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOffset)
 {
@@ -43,8 +43,14 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOf
 
 static void OnStop()
 {
-	ANIMPOSTFX_STOP("DrugsTrevorClownsFightOut");
 	REMOVE_NAMED_PTFX_ASSET("scr_rcbarry2");
+
+	for (Ped ped : clownEnemies)
+	{
+		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+	}
+
+	clownEnemies.clear();
 }
 
 static void OnStart()
@@ -62,10 +68,6 @@ static void OnTick()
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("scr_rcbarry2"))
 	{
 		WAIT(0);
-	}
-	if (!ANIMPOSTFX_IS_RUNNING("DrugsTrevorClownsFightOut"))
-	{
-		ANIMPOSTFX_PLAY("DrugsTrevorClownsFightOut", -1, true);
 	}
 
 	Ped playerPed = PLAYER_PED_ID();
@@ -109,7 +111,7 @@ static void OnTick()
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 		SET_PED_HEARING_RANGE(ped, 9999.f);
 		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
-		SET_PED_ACCURACY(ped, 50);
+		SET_PED_ACCURACY(ped, 20);
 		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 		clownEnemies.push_back(ped);
 	}
