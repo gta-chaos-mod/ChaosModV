@@ -202,6 +202,16 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
+		int fpsLimit = g_metaInfo.fpsLimit;
+		if (fpsLimit > 0)
+		{
+			int time = 1000 / fpsLimit;
+			int lastUpdateTick = GetTickCount64();
+			while (lastUpdateTick > GetTickCount64() - time)
+			{
+				// Create Lag for Meta
+			}
+		}
 
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{

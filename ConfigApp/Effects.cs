@@ -297,6 +297,8 @@ namespace ConfigApp
             EFFECT_META_EFFECT_DURATION_X0_5,
             EFFECT_META_HIDE_CHAOS_UI,
             EFFECT_META_ADDITIONAL_EFFECTS,
+            EFFECT_META_FPS_LIMIT_15,
+            EFFECT_META_FPS_LIMIT_30,
             _EFFECT_ENUM_MAX
         }
 
@@ -558,6 +560,8 @@ namespace ConfigApp
             {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
             {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
+            {EffectType.EFFECT_META_FPS_LIMIT_15, new EffectInfo("15 FPS Limit", EffectCategory.META, "meta_fps_limit_15", true)},
+            {EffectType.EFFECT_META_FPS_LIMIT_30, new EffectInfo("30 FPS Limit", EffectCategory.META, "meta_fps_limit_30", true)},
         };
     }
 }
