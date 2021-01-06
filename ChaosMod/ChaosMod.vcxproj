@@ -280,6 +280,7 @@
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -308,6 +309,7 @@
     <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
     <ClInclude Include="Memory\Hooks\HandleToEntityStructHook.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
+    <ClInclude Include="Memory\Hooks\AudioPitchHook.h" />
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\PedModels.h" />
     <ClInclude Include="Memory\Snow.h" />
