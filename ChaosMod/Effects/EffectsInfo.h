@@ -260,12 +260,13 @@ enum EffectType
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList) {}
+	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, const char* fakeName = nullptr)
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), FakeName(fakeName) {}
 
 public:
 	const char* Name;
 	const char* Id;
+	const char* FakeName;
 	const bool IsTimed;
 	const bool IsShortDuration;
 	const std::vector<EffectType> IncompatibleWith;
@@ -488,7 +489,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_LOOSE_TRIGGER, {"Loose Triggers", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
-	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
+	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath", false, {}, false, "Suicide"}},
 	{EFFECT_GAMESPEED_SUPERHOT, {"Superhot", "time_superhot", true}},
 	{EFFECT_PLAYER_KICKFLIP, {"Kickflip", "player_kickflip"}},
 	{EFFECT_VEH_BEYBLADE, {"Beyblades", "vehs_beyblade", true, {}, true}},

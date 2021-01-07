@@ -54,17 +54,18 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
+		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, const std::string& fakeName, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
+			Name(name), FakeName(fakeName), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
 		{
-			
-		}
+
+		};
 
 	public:
 		EffectType EffectType;
 		RegisteredEffect* RegisteredEffect;
 		DWORD64 ThreadId;
 		std::string Name;
+		std::string FakeName;
 		int Timer;
 		int MaxTime;
 		bool HideText = true;

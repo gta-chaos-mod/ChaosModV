@@ -47,8 +47,13 @@ void EffectDispatcher::DrawEffectTexts()
 			continue;
 		}
 
+		std::string name = effect.Name;
+		if (!effect.FakeName.empty()) {
+			name = effect.FakeName;
+		}
+
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(name.c_str());
 		SET_TEXT_SCALE(.5f, .5f);
 		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
 		SET_TEXT_OUTLINE();
@@ -111,7 +116,7 @@ void EffectDispatcher::UpdateEffects()
 
 	for (ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId))
+		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId) && effect.FakeName.empty())
 		{
 			effect.HideText = false;
 		}
@@ -241,6 +246,10 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 			std::ostringstream ossEffectName;
 			ossEffectName << effectData.Name;
+			
+			std::ostringstream ossFakeEffectName;
+			ossFakeEffectName << effectData.FakeName;
+
 
 			if (suffix && strlen(suffix) > 0)
 			{
@@ -252,7 +261,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			// Play a sound if corresponding .mp3 file exists
 			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
 
-			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
+			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), ossFakeEffectName.str(), effectTime);
 		}
 	}
 
