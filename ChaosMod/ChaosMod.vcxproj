@@ -90,6 +90,7 @@
     <ClCompile Include="EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscCaeser.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
