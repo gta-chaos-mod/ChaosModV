@@ -483,7 +483,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
 	{EFFECT_VEH_WEAPONS, {"Vehicles Shoot Rockets (Left Click/RB)", "veh_weapons", true}},
 	{EFFECT_MISC_AIRSTRIKE, {"Airstrike Inbound", "misc_airstrike", true}},
-	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true}},
+	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true, "Player Swap"}},
 	{EFFECT_PEDS_MINIONS, {"Minions", "peds_minions", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
 	{EFFECT_LOOSE_TRIGGER, {"Loose Triggers", "peds_loosetrigger", true}},
