@@ -260,7 +260,7 @@ enum EffectType
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, const char* fakeName = nullptr)
+	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, const char* fakeName = "")
 		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), FakeName(fakeName) {}
 
 public:

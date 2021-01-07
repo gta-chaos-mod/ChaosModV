@@ -68,6 +68,7 @@ void ParseEffectsFile()
 		std::vector<int> values { true, static_cast<int>(EffectTimedType::TIMED_DEFAULT), -1, 5, false, false };
 		// HACK: Store EffectCustomName seperately
 		std::string valueEffectName = effectInfo.Name;
+		std::string valueEffectFakeName = effectInfo.FakeName;
 
 		std::string value = effectsFile.ReadValue(effectInfo.Id);
 
@@ -76,12 +77,13 @@ void ParseEffectsFile()
 			int splitIndex = value.find(",");
 			for (int j = 0; ; j++)
 			{
-				if (j == 6)
+				if (j > 5)
 				{
 					// HACK for EffectCustomName :(
 					if (value != "0")
 					{
-						valueEffectName = value;
+						if (j == 6) valueEffectName = value;
+						if (j == 7) valueEffectFakeName = value;
 					}
 
 					break;
@@ -117,6 +119,7 @@ void ParseEffectsFile()
 		effectData.Permanent = values[4];
 		effectData.ExcludedFromVoting = values[5];
 		effectData.Name = valueEffectName;
+		effectData.FakeName = valueEffectFakeName;
 
 		enabledEffects.emplace(effectType, effectData);
 

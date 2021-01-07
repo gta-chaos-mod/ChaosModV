@@ -42,13 +42,13 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText)
-		{
+		const bool hasFake = !effect.FakeName.empty() && effect.RenderFakeName;
+		if (effect.HideText && !hasFake) {
 			continue;
 		}
 
 		std::string name = effect.Name;
-		if (!effect.FakeName.empty()) {
+		if (hasFake) {
 			name = effect.FakeName;
 		}
 
@@ -116,8 +116,13 @@ void EffectDispatcher::UpdateEffects()
 
 	for (ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId) && effect.FakeName.empty())
+		const bool threadComplete = ThreadManager::HasThreadOnStartExecuted(effect.ThreadId);
+		if (effect.RenderFakeName && !effect.FakeName.empty() && threadComplete)
 		{
+			effect.RenderFakeName = false;
+		}
+		
+		if (effect.HideText && threadComplete) {
 			effect.HideText = false;
 		}
 	}
