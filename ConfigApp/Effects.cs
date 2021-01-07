@@ -290,7 +290,7 @@ namespace ConfigApp
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
             EFFECT_HIGH_PITCH,
-            EFFECT_MISC_CAESER,
+            EFFECT_PEDS_CAESER,
             _EFFECT_ENUM_MAX
         }
 
@@ -546,7 +546,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
-            {EffectType.EFFECT_MISC_CAESER, new EffectInfo("Caeser", EffectCategory.MISC, "misc_caeser", false)}
+            {EffectType.EFFECT_PEDS_CAESER, new EffectInfo("Caeser", EffectCategory.PEDS, "peds_caeser", false)}
         };
     }
 }
