@@ -69,7 +69,6 @@ private:
 		int Timer;
 		int MaxTime;
 		bool HideText = true;
-		bool RenderFakeName = true;
 	};
 
 	std::vector<ActiveEffect> m_activeEffects;
