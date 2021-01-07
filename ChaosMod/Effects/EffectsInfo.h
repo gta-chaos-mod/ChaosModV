@@ -255,6 +255,7 @@ enum EffectType
 	EFFECT_PLAYER_BEES,
 	EFFECT_PLAYER_VR,
 	EFFECT_HIGH_PITCH,
+	EFFECT_PLAYER_GTA_2,
 	_EFFECT_ENUM_MAX
 };
 
@@ -501,8 +502,8 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
 	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV }, true}},
-	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA }}},
+	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2 }, true}},
+	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2 }}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
@@ -524,4 +525,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
 	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
+	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}}
 };
