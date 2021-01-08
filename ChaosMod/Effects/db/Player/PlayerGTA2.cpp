@@ -15,7 +15,7 @@ static void OnStart() {
 
 	camera = CREATE_CAM("DEFAULT_SCRIPTED_FLY_CAMERA", 1);
 	ATTACH_CAM_TO_ENTITY(camera, player, 0.f, 0.f, height, true);
-	SET_CAM_ROT(camera, -90.f, 0.f, rot.z, 2);
+	SET_CAM_ROT(camera, -90.f, 0.f, 0.0, 2);
 	RENDER_SCRIPT_CAMS(true, true, 500, 0, 1, 0);
 	baseFov = GET_CAM_FOV(camera);
 }
@@ -27,7 +27,7 @@ static void OnTick() {
 	float offset = speed * speedFactor;
 
 	SET_CAM_FOV(camera, baseFov + offset);
-	SET_CAM_ROT(camera, -90.f, 0.f, rot.z, 2);
+	SET_CAM_ROT(camera, -90.f, 0.f, 0.0, 2);
 }
 
 static void OnStop() {
