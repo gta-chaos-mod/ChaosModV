@@ -4,7 +4,7 @@
 * Effect by kolyaventuri
 */
 
-static const float height = 40.f;
+static const float height = 35.f;
 static const float speedFactor = 1.f + (0.5f / (180.f / 2.236936f));
 static float baseFov;
 static Cam camera;
@@ -18,6 +18,8 @@ static void OnStart() {
 	SET_CAM_ROT(camera, -90.f, 0.f, 0.0, 2);
 	RENDER_SCRIPT_CAMS(true, true, 500, 0, 1, 0);
 	baseFov = GET_CAM_FOV(camera);
+
+	SET_CAM_AFFECTS_AIMING(camera, false);
 }
 
 static void OnTick() {
@@ -32,6 +34,7 @@ static void OnTick() {
 
 static void OnStop() {
 	RENDER_SCRIPT_CAMS(false, true, 500, 0, 1, 0);
+	SET_CAM_AFFECTS_AIMING(camera, true);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_GTA_2, OnStart, OnStop, OnTick);
