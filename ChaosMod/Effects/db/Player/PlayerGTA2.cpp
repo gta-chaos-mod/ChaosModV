@@ -35,6 +35,7 @@ static void OnTick() {
 static void OnStop() {
 	RENDER_SCRIPT_CAMS(false, true, 500, 0, 1, 0);
 	SET_CAM_AFFECTS_AIMING(camera, true);
+	DESTROY_CAM(camera, true);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_GTA_2, OnStart, OnStop, OnTick);
