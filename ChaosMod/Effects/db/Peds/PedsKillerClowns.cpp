@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -41,6 +41,18 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOf
 	return randomCoord;
 }
 
+static void OnStop()
+{
+	REMOVE_NAMED_PTFX_ASSET("scr_rcbarry2");
+
+	for (Ped ped : clownEnemies)
+	{
+		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+	}
+
+	clownEnemies.clear();
+}
+
 static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
@@ -52,6 +64,12 @@ static void OnStart()
 
 static void OnTick()
 {
+	REQUEST_NAMED_PTFX_ASSET("scr_rcbarry2");
+	while (!HAS_NAMED_PTFX_ASSET_LOADED("scr_rcbarry2"))
+	{
+		WAIT(0);
+	}
+
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	int current_time = GET_GAME_TIMER();
@@ -99,4 +117,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_KILLER_CLOWNS, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_KILLER_CLOWNS, OnStart, OnStop, OnTick);

@@ -255,6 +255,8 @@ enum EffectType
 	EFFECT_VEH_BRAKEBOOST,
 	EFFECT_PLAYER_BEES,
 	EFFECT_PLAYER_VR,
+	EFFECT_HIGH_PITCH,
+	EFFECT_NO_SKY,
 	_EFFECT_ENUM_MAX
 };
 
@@ -458,7 +460,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_ANGRY_JIMMY, {"Spawn Jealous Jimmy", "peds_angryjimmy"}},
 	{EFFECT_OHKO_VEHICLES, {"Vehicles Explode On Impact", "vehs_ohko", true}},
 	{EFFECT_VEH_SPAM_DOORS, {"Spammy Vehicle Doors", "vehs_spamdoors", true}},
-	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }}},
+	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }, true}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, { EFFECT_VEH_SPEED_MINIMUM }, true}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
 	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
@@ -486,7 +488,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true}},
 	{EFFECT_PEDS_MINIONS, {"Minions", "peds_minions", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
-	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
+	{EFFECT_LOOSE_TRIGGER, {"Loose Triggers", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
@@ -523,5 +525,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true, {}, true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
-	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}}
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
+	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
+	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
 };
