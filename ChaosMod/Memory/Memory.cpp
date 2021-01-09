@@ -100,4 +100,15 @@ namespace Memory
 
 		return result;
 	}
+
+	void WriteByte(BYTE* addr, BYTE byte, int count)
+	{
+		DWORD dummy;
+		VirtualProtect(addr, count, PAGE_EXECUTE_READWRITE, &dummy);
+
+		for (int i = 0; i < count; i++)
+		{
+			addr[i] = byte;
+		}
+	}
 }

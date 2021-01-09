@@ -255,7 +255,8 @@ enum EffectType
 	EFFECT_PLAYER_BEES,
 	EFFECT_PLAYER_VR,
 	EFFECT_HIGH_PITCH,
-	EFFECT_PLAYER_GTA_2,
+	EFFECT_NO_SKY,
+  EFFECT_PLAYER_GTA_2,
 	_EFFECT_ENUM_MAX
 };
 
@@ -459,7 +460,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_ANGRY_JIMMY, {"Spawn Jealous Jimmy", "peds_angryjimmy"}},
 	{EFFECT_OHKO_VEHICLES, {"Vehicles Explode On Impact", "vehs_ohko", true}},
 	{EFFECT_VEH_SPAM_DOORS, {"Spammy Vehicle Doors", "vehs_spamdoors", true}},
-	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }}},
+	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }, true}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, { EFFECT_VEH_SPEED_MINIMUM }, true}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
 	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
@@ -525,5 +526,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
 	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
-	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}}
+	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
+  {EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}}
 };

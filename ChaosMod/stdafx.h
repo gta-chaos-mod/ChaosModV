@@ -20,6 +20,7 @@
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
 #include "Memory/Entity.h"
+#include "Memory/Misc.h"
 
 #include "Memory/Hooks/Hook.h"
 
