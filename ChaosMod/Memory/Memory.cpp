@@ -32,10 +32,21 @@ namespace Memory
 
 		if (DoesFileExist("chaosmod\\.skipintro"))
 		{
-			Handle handle = FindPattern("E8 ? ? ? ? E9 ? ? ? ? 83 F9 0A 74 0C");
+			// Splash screen
+			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
 			if (handle.IsValid())
 			{
-				WriteByte(handle.Into().Get<BYTE>(), 0xC3);
+				WriteByte(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+			}
+
+			// Legal screen
+			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01");
+			if (handle.IsValid())
+			{
+				handle = handle.Into();
+
+				WriteByte(handle.Get<BYTE>(), 0xC3);
+				WriteByte(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
 			}
 		}
 
