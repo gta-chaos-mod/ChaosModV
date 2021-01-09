@@ -18,7 +18,6 @@ static void UpdateLocation() {
 
 static void OnStart() {
 	camera = CREATE_CAM("DEFAULT_SCRIPTED_FLY_CAMERA", 1);
-	//ATTACH_CAM_TO_ENTITY(camera, player, 0.f, 0.f, height, true);
 
 	SET_CAM_ROT(camera, -90.f, 0.f, 0.0, 2);
 	UpdateLocation();
