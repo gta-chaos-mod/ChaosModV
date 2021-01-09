@@ -38,6 +38,15 @@ namespace Memory
 				WriteByte(handle.Into().Get<BYTE>(), 0xC3);
 			}
 		}
+
+		if (DoesFileExist("chaosmod\\.skipdlcs"))
+		{
+			Handle handle = FindPattern("40 53 48 81 EC ? ? ? ? 48 8D 15");
+			if (handle.IsValid())
+			{
+				WriteByte(handle.At(0x8E).Get<BYTE>(), 0x90, 24);
+			}
+		}
 	}
 
 	void Uninit()
