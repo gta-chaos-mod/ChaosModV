@@ -291,6 +291,7 @@ namespace ConfigApp
             EFFECT_PLAYER_VR,
             EFFECT_HIGH_PITCH,
             EFFECT_NO_SKY,
+            EFFECT_PLAYER_GTA_2,
             _EFFECT_ENUM_MAX
         }
 
@@ -547,6 +548,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
+            {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)}
         };
     }
 }
