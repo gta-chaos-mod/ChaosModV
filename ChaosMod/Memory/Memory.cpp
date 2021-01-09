@@ -29,6 +29,15 @@ namespace Memory
 		}
 	
 		MH_EnableHook(MH_ALL_HOOKS);
+
+		if (DoesFileExist("chaosmod\\.skipintro"))
+		{
+			Handle handle = FindPattern("E8 ? ? ? ? E9 ? ? ? ? 83 F9 0A 74 0C");
+			if (handle.IsValid())
+			{
+				WriteByte(handle.Into().Get<BYTE>(), 0xC3);
+			}
+		}
 	}
 
 	void Uninit()

@@ -328,6 +328,7 @@
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\CrashHandler.h" />
     <ClInclude Include="Util\EntityIterator.h" />
+    <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
