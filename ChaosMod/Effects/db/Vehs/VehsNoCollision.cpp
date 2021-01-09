@@ -9,16 +9,23 @@ static void OnTick()
 	Ped player = PLAYER_PED_ID();
 	if (IS_PED_IN_ANY_VEHICLE(player, false))
 	{
+		const float maxDistance = 50;
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(player, false);
-		std::vector<Vehicle> foundVehs = GetNearbyVehicles(player, 50, 100);
-		std::vector<Ped> foundPeds = GetNearbyPeds(player, 50, 100);
-		for (Vehicle veh : foundVehs)
+		Vector3 playerPos = GET_ENTITY_COORDS(playerVeh, false);
+
+		for (Vehicle veh : GetAllVehs())
 		{
-			SET_ENTITY_NO_COLLISION_ENTITY(veh, playerVeh, true);
+			if (GET_ENTITY_COORDS(veh, false).distanceTo(playerPos) < maxDistance)
+			{
+				SET_ENTITY_NO_COLLISION_ENTITY(veh, playerVeh, true);
+			}
 		}
-		for (Ped ped : foundPeds)
+		for (Ped ped : GetAllPeds())
 		{
-			SET_ENTITY_NO_COLLISION_ENTITY(ped, playerVeh, true);
+			if (GET_ENTITY_COORDS(ped, false).distanceTo(playerPos) < maxDistance)
+			{
+				SET_ENTITY_NO_COLLISION_ENTITY(ped, playerVeh, true);
+			}
 		}
 	}
 }

@@ -37,28 +37,3 @@ inline void TeleportPlayer(const Vector3& coords, bool noOffset = false)
 {
 	TeleportPlayer(coords.x, coords.y, coords.z, noOffset);
 }
-
-inline std::vector<Ped> GetNearbyPeds(Ped aroundPed, float radius, int maxAmount)
-{
-	Vector3 position = GET_ENTITY_COORDS(aroundPed, false);
-	int amount = maxAmount;
-	int* handles = new int[amount * 2 + 2];
-	handles[0] = amount;
-
-	std::vector<Ped> found;
-	int foundAmount = GET_PED_NEARBY_PEDS(aroundPed, handles, -1);
-	for (int i = 0; i < foundAmount; i++)
-	{
-		int index = i * 2 + 2;
-		if (handles[index] != 0 && DOES_ENTITY_EXIST(handles[index]))
-		{
-			Ped ped = handles[index];
-			if (GET_ENTITY_COORDS(ped, false).distanceTo(position) < radius)
-			{
-				found.push_back(ped);
-			}
-		}
-	}
-	delete[] handles;
-	return found;
-}
