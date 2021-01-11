@@ -29,6 +29,35 @@ namespace Memory
 		}
 	
 		MH_EnableHook(MH_ALL_HOOKS);
+
+		if (DoesFileExist("chaosmod\\.skipintro"))
+		{
+			// Splash screen
+			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
+			if (handle.IsValid())
+			{
+				WriteByte(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+			}
+
+			// Legal screen
+			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01");
+			if (handle.IsValid())
+			{
+				handle = handle.Into();
+
+				WriteByte(handle.Get<BYTE>(), 0xC3);
+				WriteByte(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+			}
+		}
+
+		if (DoesFileExist("chaosmod\\.skipdlcs"))
+		{
+			Handle handle = FindPattern("40 53 48 81 EC ? ? ? ? 48 8D 15");
+			if (handle.IsValid())
+			{
+				WriteByte(handle.At(0x8E).Get<BYTE>(), 0x90, 24);
+			}
+		}
 	}
 
 	void Uninit()
@@ -99,5 +128,16 @@ namespace Memory
 		}
 
 		return result;
+	}
+
+	void WriteByte(BYTE* addr, BYTE byte, int count)
+	{
+		DWORD dummy;
+		VirtualProtect(addr, count, PAGE_EXECUTE_READWRITE, &dummy);
+
+		for (int i = 0; i < count; i++)
+		{
+			addr[i] = byte;
+		}
 	}
 }

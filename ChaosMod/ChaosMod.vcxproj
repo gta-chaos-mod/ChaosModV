@@ -92,7 +92,9 @@
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInverseControls.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
@@ -108,6 +110,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
@@ -280,6 +283,7 @@
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -308,7 +312,9 @@
     <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
     <ClInclude Include="Memory\Hooks\HandleToEntityStructHook.h" />
     <ClInclude Include="Memory\Hooks\Hook.h" />
+    <ClInclude Include="Memory\Hooks\AudioPitchHook.h" />
     <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="Memory\Misc.h" />
     <ClInclude Include="Memory\PedModels.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\Vehicle.h" />
@@ -322,6 +328,7 @@
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\CrashHandler.h" />
     <ClInclude Include="Util\EntityIterator.h" />
+    <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
