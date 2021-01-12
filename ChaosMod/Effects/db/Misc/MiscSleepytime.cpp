@@ -79,8 +79,6 @@ static void OnTick() {
 
 		CLEAR_PED_TASKS_IMMEDIATELY(player);
 		SET_PED_TO_RAGDOLL(player, 10000, 10000, 0, true, true, false);
-		SET_ENTITY_AS_MISSION_ENTITY(doctor, 1, 1);
-		DELETE_PED(&doctor);
 	}
 
 	if (hasBeenStabbed) {
@@ -99,6 +97,12 @@ static void OnTick() {
 				}
 				break;
 			case TiredMode::waiting:
+				DISABLE_ALL_CONTROL_ACTIONS(0);
+				if (DOES_ENTITY_EXIST(doctor)) {
+					SET_ENTITY_AS_MISSION_ENTITY(doctor, 1, 1);
+					DELETE_PED(&doctor);
+				}
+
 				if (GET_GAME_TIMER() > nextTimestamp)
 				{
 					currentMode = TiredMode::done;
