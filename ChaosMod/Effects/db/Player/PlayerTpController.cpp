@@ -217,16 +217,17 @@ static void OnStartMission()
 
 static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission);
 
+static const std::vector<std::pair<std::string, Vector3>> tpLocations =
+{
+	{ "LS Airport", { -1388.6f, -3111.61f, 13.94f } }, // LSIA
+	{ "Top Of Maze Bank Tower", { -75.7f, -818.62f, 326.16f }}, // Maze Tower
+	{ "Fort Zancudo", { -2267.89f, 3121.04f, 32.5f } }, // Fort Zancudo
+	{ "Mount Chiliad", { 503.33f, 5531.91f, 777.45f } }, // Mount Chilliad
+	{ "Heaven", { 935.f, 3800.f, 2300.f } } // Heaven
+};
 static void OnStartFakeTp()
 {
-	static const Vector3 tpLocations[] =
-	{
-		{ -1388.6f, -3111.61f, 13.94f }, // LSIA
-		{ -75.7f, -818.62f, 326.16f }, // Maze Tower
-		{ -2267.89f, 3121.04f, 32.5f }, // Fort Zancudo
-		{ 503.33f, 5531.91f, 777.45f }, // Mount Chilliad
-		{ 935.f, 3800.f, 2300.f } // Heaven
-	};
+	std::pair<std::string, Vector3> randLocation = tpLocations.at(g_random.GetRandomInt(0, tpLocations.size() - 1));
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();
@@ -246,7 +247,7 @@ static void OnStartFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	TeleportPlayer(tpLocations[g_random.GetRandomInt(0, 4)]);
+	TeleportPlayer(randLocation.second);
 
 	WAIT(g_random.GetRandomInt(2000, 4000));
 
