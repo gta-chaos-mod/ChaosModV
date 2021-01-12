@@ -20,6 +20,7 @@
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
 #include "Memory/Entity.h"
+#include "Memory/Misc.h"
 
 #include "Memory/Hooks/Hook.h"
 
@@ -32,6 +33,7 @@
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
 #include "Util/CrashHandler.h"
+#include "Util/File.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

@@ -290,7 +290,9 @@ namespace ConfigApp
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
             EFFECT_HIGH_PITCH,
-            EFFECT_PEDS_CAESER,
+            EFFECT_NO_SKY,
+            EFFECT_PLAYER_GTA_2,
+            EFFECT_PEDS_CAESAR,
             _EFFECT_ENUM_MAX
         }
 
@@ -470,7 +472,7 @@ namespace ConfigApp
             {EffectType.EFFECT_ANGRY_JIMMY, new EffectInfo("Spawn Jealous Jimmy", EffectCategory.PEDS, "peds_angryjimmy")},
             {EffectType.EFFECT_OHKO_VEHICLES, new EffectInfo("Vehicles Explode On Impact", EffectCategory.VEHICLE, "vehs_ohko", true)},
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spammy Vehicle Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
-            {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true)},
+            {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true, true)},
             {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo("Flying Cars", EffectCategory.VEHICLE, "vehs_flyingcars", true)},
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, true)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
@@ -546,7 +548,9 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
-            {EffectType.EFFECT_PEDS_CAESER, new EffectInfo("Caeser", EffectCategory.PEDS, "peds_caeser", false)}
+            {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
+            {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
+            {EffectType.EFFECT_PEDS_CAESAR, new EffectInfo("Caesar", EffectCategory.PEDS, "peds_caeser", false)}
         };
     }
 }

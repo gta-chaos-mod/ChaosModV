@@ -42,4 +42,4 @@ static void OnStart() {
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_CAESER, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_CAESAR, OnStart);
