@@ -236,6 +236,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 			ossEffectName << std::endl;
 
+			// Play global sound (if existing)
+			Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+
 			// Play a sound if corresponding .mp3 file exists
 			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
 
