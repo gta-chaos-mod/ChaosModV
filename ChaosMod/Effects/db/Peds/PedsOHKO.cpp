@@ -2,8 +2,6 @@
 
 static void OnStop()
 {
-	Memory::SetHealthArmorBarHidden(false);
-
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), 1.f);
 
 	for (Ped ped : GetAllPeds())
@@ -17,8 +15,6 @@ static void OnStop()
 
 static void OnTick()
 {
-	Memory::SetHealthArmorBarHidden(true);
-
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 
 	for (Ped ped : GetAllPeds())

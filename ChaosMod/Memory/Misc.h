@@ -19,22 +19,4 @@ namespace Memory
 
 		WriteByte(patchByte, state ? 0xC3 : 0x48);
 	}
-
-	inline void SetHealthArmorBarHidden(bool state)
-	{
-		static BYTE* patchByte = nullptr;
-
-		if (!patchByte)
-		{
-			Handle handle = FindPattern("40 53 48 83 EC 20 48 83 0D");
-			if (!handle.IsValid())
-			{
-				return;
-			}
-
-			patchByte = handle.At(0x93).Into().Get<BYTE>();
-		}
-
-		WriteByte(patchByte, state ? 0xC3 : 0x48);
-	}
 }

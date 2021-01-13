@@ -141,4 +141,33 @@ namespace Memory
 			addr[i] = byte;
 		}
 	}
+
+	const char* const GetTypeName(__int64 vptr)
+	{
+		if (vptr)
+		{
+			__int64 vftable = *reinterpret_cast<__int64*>(vptr);
+			if (vftable)
+			{
+				__int64 rtti = *reinterpret_cast<__int64*>(vftable - 8);
+
+				if (rtti)
+				{
+					__int64 rva = *reinterpret_cast<DWORD*>(rtti + 12);
+
+					if (rva)
+					{
+						__int64 typeDesc = m_baseAddr + rva;
+
+						if (typeDesc)
+						{
+							return reinterpret_cast<char*>(typeDesc + 16);
+						}
+					}
+				}
+			}
+		}
+
+		return "UNK";
+	}
 }
