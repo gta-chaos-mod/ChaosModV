@@ -119,9 +119,6 @@ void ParseEffectsFile()
 		effectData.Name = valueEffectName;
 
 		enabledEffects.emplace(effectType, effectData);
-
-		static std::ofstream log("chaosmod/enabledeffectslog.txt");
-		log << effectInfo.Name << std::endl;
 	}
 
 	g_enabledEffects = enabledEffects;

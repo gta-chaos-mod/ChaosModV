@@ -19,12 +19,11 @@ namespace Memory
 
 		MH_Initialize();
 
-		std::ofstream log("chaosmod/hooklog.txt");
 		for (RegisteredHook* registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
 			if (!registeredHook->RunHook())
 			{
-				log << "Error while executing " << registeredHook->GetName() << " hook" << std::endl;
+				LOG("Error while executing " << registeredHook->GetName() << " hook");
 			}
 		}
 	
@@ -114,6 +113,8 @@ namespace Memory
 				count = 0;
 			}
 		}
+
+		LOG("Couldn't find pattern \"" << pattern << "\"");
 
 		return Handle();
 	}

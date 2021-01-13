@@ -34,6 +34,8 @@
 #include "Util/Script.h"
 #include "Util/CrashHandler.h"
 #include "Util/File.h"
+#include "Util/Misc.h"
+#include "Util/Logging.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
