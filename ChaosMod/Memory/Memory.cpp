@@ -150,18 +150,15 @@ namespace Memory
 			if (vftable)
 			{
 				__int64 rtti = *reinterpret_cast<__int64*>(vftable - 8);
-
 				if (rtti)
 				{
 					__int64 rva = *reinterpret_cast<DWORD*>(rtti + 12);
-
 					if (rva)
 					{
 						__int64 typeDesc = m_baseAddr + rva;
-
 						if (typeDesc)
 						{
-							return reinterpret_cast<char*>(typeDesc + 16);
+							return reinterpret_cast<const char*>(typeDesc + 16);
 						}
 					}
 				}

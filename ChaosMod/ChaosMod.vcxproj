@@ -284,6 +284,7 @@
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
+    <ClCompile Include="Memory\Hooks\TestHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
