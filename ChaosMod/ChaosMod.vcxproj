@@ -109,6 +109,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsTPose.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
