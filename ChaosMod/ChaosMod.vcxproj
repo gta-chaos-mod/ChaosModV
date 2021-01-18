@@ -90,7 +90,6 @@
     <ClCompile Include="EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
-    <ClCompile Include="Effects\db\Meta\MetaFpsLimit.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
