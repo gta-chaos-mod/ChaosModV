@@ -18,13 +18,13 @@ static bool OnHook()
 
 	//
 
-	handle = Memory::FindPattern("40 53 48 83 ec 20 8b d9 e8 0b e0 f5 00 8b cb e8 2c 70 46 01");
+	/*handle = Memory::FindPattern("40 53 48 83 ec 20 8b d9 e8 0b e0 f5 00 8b cb e8 2c 70 46 01");
 	if (!handle.IsValid())
 	{
 		return false;
 	}
 
-	Memory::AddHook(handle.Get<void>(), HK_FUN_7ff78845e500, &OG_FUN_7ff78845e500);
+	Memory::AddHook(handle.Get<void>(), HK_FUN_7ff78845e500, &OG_FUN_7ff78845e500);*/
 
 	return true;
 }
