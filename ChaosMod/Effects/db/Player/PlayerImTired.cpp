@@ -67,6 +67,52 @@ static void OnTick()
 		break;
 	}
 	BlackOut(alpha);
+
+	// Sleepy Driving Mechanics used from player is Sleepy
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
+		{
+			return;
+		}
+
+		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		static bool enableSleepySteering = false;
+		static float steering;
+
+		if (enableSleepySteering)
+		{
+			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
+		}
+
+		DWORD64 curTick = GET_GAME_TIMER();
+
+		if (timeUntilSteer < curTick)
+		{
+			timeUntilSteer = GET_GAME_TIMER();
+
+			if (enableSleepySteering)
+			{
+				// Give player back control
+
+				timeUntilSteer += g_random.GetRandomInt(100, 500);
+			}
+			else
+			{
+				// Take control from player
+
+				steering = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
+
+				timeUntilSteer += g_random.GetRandomInt(50, 300);
+			}
+
+			enableSleepySteering = !enableSleepySteering;
+		}
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, OnStop, OnTick);
