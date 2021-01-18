@@ -279,7 +279,7 @@ struct EffectInfo
 {
 public:
 	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, EffectExecutionType type = EffectExecutionType::DEFAULT)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), executionType(type) {}
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), ExecutionType(type) {}
 
 public:
 	const char* Name;
@@ -287,7 +287,7 @@ public:
 	const bool IsTimed;
 	const bool IsShortDuration;
 	const std::vector<EffectType> IncompatibleWith;
-	const EffectExecutionType executionType;
+	const EffectExecutionType ExecutionType;
 };
 
 const std::unordered_map<EffectType, EffectInfo> g_effectsMap =

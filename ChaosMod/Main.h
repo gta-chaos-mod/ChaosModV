@@ -10,7 +10,7 @@
 #include <map>
 
 inline std::map<EffectType, EffectData> g_enabledEffects;
-inline MetaEffectInfo g_metaInfo = MetaEffectInfo();
+inline MetaEffectInfo g_metaInfo;
 
 class Main
 {

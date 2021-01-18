@@ -126,5 +126,5 @@ struct EffectData
 	bool Permanent;
 	bool ExcludedFromVoting;
 	std::string Name;
-	bool isMeta;
+	bool Meta;
 };

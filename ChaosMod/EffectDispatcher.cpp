@@ -139,7 +139,7 @@ void EffectDispatcher::UpdateEffects()
 		{
 			ActiveEffect& effect = *it;
 			EffectData& effectData = g_enabledEffects.at(effect.EffectType);
-			if (effectData.isMeta)
+			if (effectData.Meta)
 			{
 				effect.Timer--;
 			} 
@@ -173,7 +173,7 @@ void EffectDispatcher::UpdateMetaEffects()
 		std::vector<EffectType> availableMetaEffects;
 		for (const auto& pair : g_enabledEffects)
 		{
-			if (pair.second.isMeta)
+			if (pair.second.Meta)
 			{
 				availableMetaEffects.push_back(pair.first);
 			}
@@ -307,7 +307,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		EffectType effectType = pair.first;
 		const EffectData& effectData = pair.second;
 		
-		if (!effectData.Permanent && !effectData.isMeta && (!m_disableTwiceInRow || effectType != m_lastEffect))
+		if (!effectData.Permanent && !effectData.Meta && (!m_disableTwiceInRow || effectType != m_lastEffect))
 		{
 			choosableEffects.emplace(effectType, effectData);
 		}

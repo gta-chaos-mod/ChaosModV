@@ -118,7 +118,7 @@ void ParseEffectsFile()
 		effectData.Permanent = values[4];
 		effectData.ExcludedFromVoting = values[5];
 		effectData.Name = valueEffectName;
-		effectData.isMeta = effectInfo.executionType == EffectExecutionType::META;
+		effectData.Meta = effectInfo.ExecutionType == EffectExecutionType::META;
 
 		enabledEffects.emplace(effectType, effectData);
 	}
@@ -162,7 +162,6 @@ void Main::Init()
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
 	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchSecsBeforeChatVoting, enableTwitchPollVoting, twitchOverlayMode, enableTwitchChanceSystem,
 		enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable);
-	g_metaInfo = MetaEffectInfo();
 }
 
 void Main::Reset()
