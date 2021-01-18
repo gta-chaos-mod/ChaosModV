@@ -94,6 +94,7 @@
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInverseControls.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
