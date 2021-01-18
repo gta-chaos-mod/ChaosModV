@@ -68,7 +68,7 @@ static void OnTick()
 	}
 	BlackOut(alpha);
 
-	// Sleepy Driving Mechanics used from player is Sleepy
+	// Sleepy Driving Mechanics used from player is Drunk
 
 	Ped playerPed = PLAYER_PED_ID();
 
