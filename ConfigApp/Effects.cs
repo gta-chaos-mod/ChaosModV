@@ -560,7 +560,7 @@ namespace ConfigApp
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
             {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
-            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)}
+            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)},
             {EffectType.EFFECT_META_TIMER_SPEED_X0_5, new EffectInfo("0.5x Timer Speed", EffectCategory.META, "meta_timerspeed_0_5x", true)},
             {EffectType.EFFECT_META_TIMER_SPEED_X2, new EffectInfo("2x Timer Speed", EffectCategory.META, "meta_timerspeed_2x", true)},
             {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true)},

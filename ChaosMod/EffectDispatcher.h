@@ -79,6 +79,7 @@ private:
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
 	bool m_dispatchEffectsOnTimer = true;
+	bool m_metaEffectsEnabled = true;
 	int m_metaEffectTimer = m_metaEffectSpawnTime;
 	const bool m_enableTwitchVoting;
 	const TwitchOverlayMode m_twitchOverlayMode;

@@ -166,29 +166,31 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::UpdateMetaEffects()
 {	
-	m_metaEffectTimer -= 1;
-	if (m_metaEffectTimer <= 0)
+	if (m_metaEffectsEnabled)
 	{
-		m_metaEffectTimer = m_metaEffectSpawnTime;
-		std::vector<EffectType> availableMetaEffects;
-		for (const auto& pair : g_enabledEffects)
+		m_metaEffectTimer -= 1;
+		if (m_metaEffectTimer <= 0)
 		{
-			if (pair.second.Meta)
+			m_metaEffectTimer = m_metaEffectSpawnTime;
+			std::vector<EffectType> availableMetaEffects;
+			for (const auto& pair : g_enabledEffects)
 			{
-				availableMetaEffects.push_back(pair.first);
+				if (pair.second.Meta)
+				{
+					availableMetaEffects.push_back(pair.first);
+				}
+			}
+			if (!availableMetaEffects.empty()) 
+			{
+				EffectType randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
+				DispatchEffect(randomMetaEffect, " (Meta)");
+			}
+			else
+			{
+				m_metaEffectsEnabled = false;
+				m_metaEffectTimer = INT_MAX;
 			}
 		}
-		if (!availableMetaEffects.empty()) 
-		{
-			EffectType randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
-			DispatchEffect(randomMetaEffect, " (Meta)");
-		}
-		else
-		{
-			// maybe add a flag instead 
-			m_metaEffectTimer = INT_MAX;
-		}
-
 	}
 }
 
@@ -373,6 +375,8 @@ void EffectDispatcher::Reset()
 	ResetTimer();
 
 	m_enableNormalEffectDispatch = false;
+	m_metaEffectsEnabled = true;
+	m_metaEffectTimer = m_metaEffectSpawnTime;
 
 	for (const auto& pair : g_enabledEffects)
 	{
