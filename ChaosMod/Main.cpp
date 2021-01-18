@@ -119,9 +119,6 @@ void ParseEffectsFile()
 		effectData.Name = valueEffectName;
 
 		enabledEffects.emplace(effectType, effectData);
-
-		static std::ofstream log("chaosmod/enabledeffectslog.txt");
-		log << effectInfo.Name << std::endl;
 	}
 
 	g_enabledEffects = enabledEffects;
@@ -165,78 +162,69 @@ void Main::Init()
 		enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable);
 }
 
-void Main::MainLoop()
+void Main::Reset()
+{
+	g_effectDispatcher.reset();
+
+	if (m_enableDebugMenu)
+	{
+		m_debugMenu.reset();
+	}
+
+	m_twitchVoting.reset();
+
+	ClearEntityPool();
+
+	Init(); // Restart the main part of the mod completely
+}
+
+void Main::Loop()
 {
 	int splashTextTime = 15000;
 	int twitchVotingWarningTextTime = 15000;
 
 	DWORD64 lastTick = GetTickCount64();
 
+	SetUnhandledExceptionFilter(CrashHandler);
+
+	g_mainThread = GetCurrentFiber();
+
+	ThreadManager::ClearThreads();
+
+	Reset();
+
 	while (true)
 	{
 		WAIT(0);
 
-		if (IS_SCREEN_FADED_OUT() || m_disableMod)
+		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
-			WAIT(100);
-
-			continue;
-		}
-
-		DWORD64 curTick = GetTickCount64();
-
-		if (m_clearEffectsTextTime > 0)
-		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Effects Cleared!");
-			SET_TEXT_SCALE(.8f, .8f);
-			SET_TEXT_COLOUR(255, 100, 100, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .86f, 0);
-			
-			m_clearEffectsTextTime -= curTick - lastTick;
-		}
-
-		if (splashTextTime > 0)
-		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.8.2 by pongo1231\n\nSee credits.txt for list of contributors");
-			SET_TEXT_SCALE(.65f, .65f);
-			SET_TEXT_COLOUR(0, 255, 255, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.2f, .3f, 0);
-
-			splashTextTime -= curTick - lastTick;
-		}
-
-		if (m_twitchVoting && m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
-		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
-			SET_TEXT_SCALE(.8f, .8f);
-			SET_TEXT_COLOUR(255, 100, 100, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .7f, 0);
-
-			twitchVotingWarningTextTime -= curTick - lastTick;
-		}
-
-		lastTick = curTick;
-
-		if (g_effectDispatcher)
-		{
-			if (!m_disableDrawTimerBar)
+			static bool justReenabled = false;
+			if (m_disableMod)
 			{
-				g_effectDispatcher->DrawTimerBar();
-			}
-			if (!m_disableDrawEffectTexts)
-			{
-				g_effectDispatcher->DrawEffectTexts();
-			}
-		}
+				if (!justReenabled)
+				{
+					justReenabled = true;
 
-		if (m_enableDebugMenu && !ThreadManager::IsAnyThreadRunningOnStart())
-		{
+					Reset();
+				}
+
+				continue;
+			}
+			else if (justReenabled)
+			{
+				justReenabled = false;
+			}
+
+			if (m_clearAllEffects)
+			{
+				m_clearAllEffects = false;
+
+				g_effectDispatcher->Reset();
+
+				ClearEntityPool();
+			}
+
 			if (m_debugMenu && m_debugMenu->IsVisible())
 			{
 				// Arrow Up
@@ -262,65 +250,54 @@ void Main::MainLoop()
 				m_debugMenu->Tick();
 			}
 		}
-	}
-}
-
-void Main::RunEffectLoop()
-{
-	g_mainThread = GetCurrentFiber();
-
-	while (true)
-	{
-		WAIT(0);
-
-		if (IS_SCREEN_FADED_OUT())
+		else if (IS_SCREEN_FADED_OUT())
 		{
-			SET_TIME_SCALE(1.f); // Prevent potential softlock if Lag effect is running during screen fadeout
+			SET_TIME_SCALE(1.f); // Prevent potential softlock for certain effects
 
 			WAIT(100);
 
 			continue;
 		}
 
-		if (!ThreadManager::IsAnyThreadRunningOnStart())
+		DWORD64 curTick = GetTickCount64();
+
+		if (m_clearEffectsTextTime > 0)
 		{
-			static bool justReenabled = false;
-			if (m_disableMod)
-			{
-				if (!justReenabled)
-				{
-					justReenabled = true;
-
-					g_effectDispatcher.reset();
-
-					if (m_enableDebugMenu)
-					{
-						m_debugMenu.reset();
-					}
-
-					m_twitchVoting.reset();
-
-					ClearEntityPool();
-				}
-
-				continue;
-			}
-			else if (justReenabled)
-			{
-				justReenabled = false;
-
-				Init(); // Restart the main part of the mod completely
-			}
-
-			if (m_clearAllEffects)
-			{
-				m_clearAllEffects = false;
-
-				g_effectDispatcher->Reset();
-
-				ClearEntityPool();
-			}
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Effects Cleared!");
+			SET_TEXT_SCALE(.8f, .8f);
+			SET_TEXT_COLOUR(255, 100, 100, 255);
+			SET_TEXT_CENTRE(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .86f, 0);
+			
+			m_clearEffectsTextTime -= curTick - lastTick;
 		}
+
+		if (splashTextTime > 0)
+		{
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.8.3b2 by pongo1231\n\nSee credits.txt for list of contributors");
+			SET_TEXT_SCALE(.65f, .65f);
+			SET_TEXT_COLOUR(0, 255, 255, 255);
+			SET_TEXT_CENTRE(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.2f, .3f, 0);
+
+			splashTextTime -= curTick - lastTick;
+		}
+
+		if (m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
+		{
+			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
+			SET_TEXT_SCALE(.8f, .8f);
+			SET_TEXT_COLOUR(255, 100, 100, 255);
+			SET_TEXT_CENTRE(true);
+			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .7f, 0);
+
+			twitchVotingWarningTextTime -= curTick - lastTick;
+		}
+
+		g_effectDispatcher->UpdateEffects();
 
 		if (m_twitchVoting->IsEnabled())
 		{
@@ -332,7 +309,16 @@ void Main::RunEffectLoop()
 			g_effectDispatcher->UpdateTimer();
 		}
 
-		g_effectDispatcher->UpdateEffects();
+		if (!m_disableDrawTimerBar)
+		{
+			g_effectDispatcher->DrawTimerBar();
+		}
+		if (!m_disableDrawEffectTexts)
+		{
+			g_effectDispatcher->DrawEffectTexts();
+		}
+
+		lastTick = curTick;
 	}
 }
 

@@ -290,6 +290,10 @@ namespace ConfigApp
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
             EFFECT_MISC_PORTRAIT_MODE,
+            EFFECT_HIGH_PITCH,
+            EFFECT_NO_SKY,
+            EFFECT_PLAYER_GTA_2,
+            EFFECT_PEDS_TPOSE,
             _EFFECT_ENUM_MAX
         }
 
@@ -469,7 +473,7 @@ namespace ConfigApp
             {EffectType.EFFECT_ANGRY_JIMMY, new EffectInfo("Spawn Jealous Jimmy", EffectCategory.PEDS, "peds_angryjimmy")},
             {EffectType.EFFECT_OHKO_VEHICLES, new EffectInfo("Vehicles Explode On Impact", EffectCategory.VEHICLE, "vehs_ohko", true)},
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spammy Vehicle Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
-            {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true)},
+            {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true, true)},
             {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo("Flying Cars", EffectCategory.VEHICLE, "vehs_flyingcars", true)},
             {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, true)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
@@ -504,7 +508,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
-            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Trigger", EffectCategory.PEDS, "peds_loosetrigger", true)},
+            {EffectType.EFFECT_LOOSE_TRIGGER, new EffectInfo("Loose Triggers", EffectCategory.PEDS, "peds_loosetrigger", true)},
             {EffectType.EFFECT_PEDS_MINIONS, new EffectInfo("Minions", EffectCategory.PEDS, "peds_minions", true)},
             {EffectType.EFFECT_MISC_FLAMETHROWER, new EffectInfo("Flamethrowers", EffectCategory.MISC, "misc_flamethrower", true)},
             {EffectType.EFFECT_MISC_DVDSCREENSAVER, new EffectInfo("DVD Screensaver", EffectCategory.MISC, "misc_dvdscreensaver", true, true)},
@@ -540,11 +544,15 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
             {EffectType.EFFECT_PLAYER_DEAD_EYE,  new EffectInfo("Dead Eye", EffectCategory.PLAYER, "player_dead_eye", true)},
             {EffectType.EFFECT_PLAYER_HACKING, new EffectInfo("Realistic Hacking", EffectCategory.PLAYER, "player_hacking")},
-            {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true)},
+            {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true, true)},
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
-            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true)},
+            {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
             {EffectType.EFFECT_MISC_PORTRAIT_MODE, new EffectInfo("Portrait Mode", EffectCategory.MISC, "misc_portrait", true)},
+            {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
+            {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
+            {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
+            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)}
         };
     }
 }

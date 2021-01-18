@@ -234,7 +234,7 @@ static void OnStartFakeTp()
 	
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Hooks::EnableFakeTpHook(playerPos);
+	Hooks::EnableFakeTpHook();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
 	if (playerVeh)
