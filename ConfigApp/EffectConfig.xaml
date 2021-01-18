@@ -22,6 +22,6 @@
         <CheckBox x:Name="effectconf_exclude_voting_enable" HorizontalAlignment="Left" Margin="385,237,0,0" VerticalAlignment="Top" Height="18" Click="OnClicked"/>
         <Label Content="Rename Effect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="effectconf_effect_custom_name" HorizontalAlignment="Left" Height="23" Margin="426,13,0,0" VerticalAlignment="Top" Width="134" MaxLength="30" />
-        <TextBlock x:Name="effectconf_mp3_label" Text="To play a sound when this effect triggers, drop a .mp3 file as chaosmod/sounds/" HorizontalAlignment="Left" Margin="15,280,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="effectconf_mp3_label" Text="To play a sound when this effect triggers: chaosmod/sounds/" HorizontalAlignment="Left" Margin="15,280,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

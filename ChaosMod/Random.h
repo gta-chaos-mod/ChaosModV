@@ -20,7 +20,7 @@ public:
 		return distr(random);
 	}
 
-	inline int GetRandomFloat(float lower, float upper) {
+	inline float GetRandomFloat(float lower, float upper) {
 		std::uniform_real_distribution<float> distr(lower, upper);
 		return distr(random);
 	}

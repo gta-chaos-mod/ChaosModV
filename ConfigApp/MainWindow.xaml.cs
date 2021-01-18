@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -60,19 +59,13 @@ namespace ConfigApp
             InitTwitchTab();
         }
 
-        void CheckForUpdates()
+        private async void CheckForUpdates()
         {
             HttpClient httpClient = new HttpClient();
 
-            Task<string> task = httpClient.GetStringAsync("https://ducky.rivinshosting.com/chaos/version.txt");
-            while (!task.IsCompleted)
+            try
             {
-
-            }
-
-            if (!task.IsFaulted)
-            {
-                string newVersion = task.Result;
+                string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
 
                 if (Info.VERSION != newVersion)
                 {
@@ -82,6 +75,10 @@ namespace ConfigApp
                 {
                     update_available_label.Content = "You are on the newest version of the mod!";
                 }
+            }
+            catch (HttpRequestException)
+            {
+                update_available_label.Content = "Unable to check for new updates!";
             }
         }
 

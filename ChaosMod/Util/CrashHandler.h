@@ -1,5 +1,7 @@
 #pragma once
 
+#include "File.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -27,8 +29,7 @@ static LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
 
 	DWORD flags = MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory;
 
-	struct stat temp;
-	if (stat("chaosmod\\.fulldumps", &temp) != -1)
+	if (DoesFileExist("chaosmod\\.fulldumps"))
 	{
 		flags = MiniDumpWithFullMemory | MiniDumpWithHandleData | MiniDumpWithModuleHeaders | MiniDumpWithUnloadedModules | MiniDumpWithProcessThreadData
 			| MiniDumpWithFullMemoryInfo | MiniDumpWithThreadInfo;

@@ -121,9 +121,6 @@ void ParseEffectsFile()
 		effectData.isMeta = effectInfo.executionType == EffectExecutionType::META;
 
 		enabledEffects.emplace(effectType, effectData);
-
-		static std::ofstream log("chaosmod/enabledeffectslog.txt");
-		log << effectInfo.Name << std::endl;
 	}
 
 	g_enabledEffects = enabledEffects;
@@ -292,7 +289,7 @@ void Main::Loop()
 		if (splashTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.8.2.1 by pongo1231\n\nSee credits.txt for list of contributors");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.8.3b3 by pongo1231\n\nSee credits.txt for list of contributors");
 			SET_TEXT_SCALE(.65f, .65f);
 			SET_TEXT_COLOUR(0, 255, 255, 255);
 			SET_TEXT_CENTRE(true);

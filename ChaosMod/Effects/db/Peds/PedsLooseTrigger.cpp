@@ -14,6 +14,8 @@ static void OnStop()
 
 static void OnTick()
 {
+	int count = 3;
+
 	Ped playerPed = PLAYER_PED_ID();
 	for (Ped ped : GetAllPeds())
 	{
@@ -28,6 +30,13 @@ static void OnTick()
 					Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
 					Vector3 targetOffset = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(weapon, 0, 1, 0);
 					SET_PED_SHOOTS_AT_COORD(ped, targetOffset.x, targetOffset.y, targetOffset.z, true);
+
+					if (--count == 0)
+					{
+						count = 3;
+
+						WAIT(0);
+					}
 				}
 			}
 		}

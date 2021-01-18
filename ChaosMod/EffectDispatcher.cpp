@@ -206,18 +206,6 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 	// Reset weight of this effect to reduce / stop chance of same effect happening multiple times in a row
 	effectData.Weight = m_disableTwiceInRow ? 0 : effectData.WeightMult;
 
-#ifdef _DEBUG
-	// Write weight distribution to file
-	std::ofstream weightLog("chaosmod/effectweights.txt");
-
-	for (const auto& pair : g_enabledEffects)
-	{
-		const EffectData& effectData = pair.second;
-
-		weightLog << effectData.Name << " " << effectData.Weight << " (" << effectData.WeightMult << ")" << std::endl;
-	}
-#endif
-
 	float effectTime = effectInfo.IsTimed
 		? effectData.CustomTime >= 0
 			? effectData.CustomTime
@@ -226,8 +214,7 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 				: m_effectTimedDur
 		: -1;
 
-	static std::ofstream log("chaosmod/effectslog.txt");
-	log << effectInfo.Name << std::endl;
+	LOG("Dispatched effect \"" << effectInfo.Name << "\"");
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -293,6 +280,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			}
 
 			ossEffectName << std::endl;
+
+			// Play global sound (if existing)
+			Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 
 			// Play a sound if corresponding .mp3 file exists
 			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
