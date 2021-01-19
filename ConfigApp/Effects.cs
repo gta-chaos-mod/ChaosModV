@@ -289,9 +289,11 @@ namespace ConfigApp
             EFFECT_VEH_BRAKEBOOST,
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
+            EFFECT_MISC_PORTRAIT_MODE,
             EFFECT_HIGH_PITCH,
             EFFECT_NO_SKY,
             EFFECT_PLAYER_GTA_2,
+            EFFECT_PEDS_TPOSE,
             EFFECT_NAP_TIME,
             _EFFECT_ENUM_MAX
         }
@@ -547,9 +549,11 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
+            {EffectType.EFFECT_MISC_PORTRAIT_MODE, new EffectInfo("Portrait Mode", EffectCategory.MISC, "misc_portrait", true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
             {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
+            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)},
             {EffectType.EFFECT_NAP_TIME, new EffectInfo("It's Nap Time", EffectCategory.PEDS, "peds_sleep", true)}
         };
     }

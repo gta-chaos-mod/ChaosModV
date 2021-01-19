@@ -12,7 +12,8 @@ namespace Memory
 
 	Handle FindPattern(const std::string& pattern);
 	MH_STATUS AddHook(void* target, void* detour, void** orig);
-	void WriteByte(BYTE* addr, BYTE byte, int count = 1);
+	template <typename T>
+	void Write(T* addr, T value, int count = 1);
 
 	const char* const GetTypeName(__int64 vptr);
 }

@@ -254,10 +254,12 @@ enum EffectType
 	EFFECT_VEH_BRAKEBOOST,
 	EFFECT_PLAYER_BEES,
 	EFFECT_PLAYER_VR,
+	EFFECT_MISC_PORTRAIT_MODE,
 	EFFECT_HIGH_PITCH,
 	EFFECT_NO_SKY,
 	EFFECT_PLAYER_GTA_2,
-	EFFECT_NAP_TIME,
+	EFFECT_PEDS_TPOSE,
+  EFFECT_NAP_TIME,
 	_EFFECT_ENUM_MAX
 };
 
@@ -526,8 +528,11 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
 	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
 	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
+	{EFFECT_MISC_PORTRAIT_MODE, {"Portrait Mode", "misc_portrait", true}},
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
 	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
 	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
-	{EFFECT_NAP_TIME, { "It's Nap Time", "peds_sleep", true }}
+	{EFFECT_PEDS_TPOSE, {"GTA 2077", "peds_tpose", true, { EFFECT_IN_THE_HOOD, EFFECT_SLIDY_PEDS }, true}},
+  {EFFECT_NAP_TIME, { "It's Nap Time", "peds_sleep", true }}
+
 };
