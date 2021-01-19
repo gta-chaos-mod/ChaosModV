@@ -164,6 +164,17 @@ void Main::Init()
 
 void Main::Reset()
 {
+	static bool firstLoad = true;
+
+	if (!firstLoad)
+	{
+		LOG("===========");
+		LOG("MOD RELOAD!");
+		LOG("===========");
+	}
+
+	firstLoad = false;
+
 	g_effectDispatcher.reset();
 
 	if (m_enableDebugMenu)
@@ -174,6 +185,8 @@ void Main::Reset()
 	m_twitchVoting.reset();
 
 	ClearEntityPool();
+
+	LuaLoader::Load();
 
 	Init(); // Restart the main part of the mod completely
 }

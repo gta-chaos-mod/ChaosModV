@@ -281,6 +281,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="LuaLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
@@ -300,6 +301,7 @@
     <ClCompile Include="Util\PoolSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="..\vendor\lua\lua54.lib" />
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
@@ -309,6 +311,7 @@
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
+    <ClInclude Include="LuaLoader.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
