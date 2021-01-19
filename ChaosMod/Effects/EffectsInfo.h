@@ -259,6 +259,7 @@ enum EffectType
 	EFFECT_NO_SKY,
 	EFFECT_PLAYER_GTA_2,
 	EFFECT_PEDS_TPOSE,
+	EFFECT_VEHS_CRUMBLE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -532,4 +533,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
 	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
 	{EFFECT_PEDS_TPOSE, {"GTA 2077", "peds_tpose", true, { EFFECT_IN_THE_HOOD, EFFECT_SLIDY_PEDS }, true}},
+	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}}
 };
