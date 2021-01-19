@@ -345,7 +345,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_FAGGIO, {"Spawn Faggio", "spawn_faggio"}},
 	{EFFECT_SPAWN_RUINER3, {"Spawn Ruined Ruiner", "spawn_ruiner3"}},
 	{EFFECT_SPAWN_BALETRAILER, {"Spawn Bale Trailer", "spawn_baletrailer"}},
-	{EFFECT_SPAWN_ROMERO, {"Where's the Funeral?", "spawn_romero"}},
+	{EFFECT_SPAWN_ROMERO, {"Where's The Funeral?", "spawn_romero"}},
 	{EFFECT_SPAWN_RANDOM, {"Spawn Random Vehicle", "spawn_random"}},
 	{EFFECT_NO_VEHS, {"No Traffic", "notraffic", true}},
 	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", "playerveh_explode"}},
