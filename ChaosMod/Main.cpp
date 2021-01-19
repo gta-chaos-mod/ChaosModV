@@ -186,7 +186,7 @@ void Main::Reset()
 
 	ClearEntityPool();
 
-	LuaLoader::Load();
+	LuaManager::Load();
 
 	Init(); // Restart the main part of the mod completely
 }

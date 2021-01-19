@@ -9,7 +9,7 @@
 #include "Mp3Manager.h"
 #include "OptionsFile.h"
 #include "ThreadManager.h"
-#include "LuaLoader.h"
+#include "LuaManager.h"
 
 #include "Effects/Effect.h"
 
