@@ -70,19 +70,31 @@ static const char* _TryParseString(void* ptr)
 	}
 }
 
-static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& va)
+static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
 {
 	nativeInit(hash);
-	for (const auto& v : va)
+
+	for (const sol::stack_proxy& arg : args)
 	{
-		nativePush64(v);
+		if (arg.is<int>())
+		{
+			nativePush(arg.get<int>());
+		}
+		else if (arg.is<float>())
+		{
+			nativePush(arg.get<float>());
+		}
+		else if (arg.is<std::string>())
+		{
+			nativePush(arg.get<std::string>().c_str());
+		}
 	}
 
 	void** returned = reinterpret_cast<void**>(nativeCall());
 
 	if (returned)
 	{
-		void* result = *reinterpret_cast<void**>(nativeCall());
+		void* result = *reinterpret_cast<void**>(returned);
 
 		switch (returnType)
 		{
@@ -96,12 +108,6 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 	}
 
 	return sol::make_object(lua, sol::lua_nil);
-}
-
-template <const std::vector<Entity>& F()>
-static sol::as_table_t<const std::vector<Entity>> LuaEntityIteratorAsTable()
-{
-	return sol::as_table(F());
 }
 
 namespace LuaManager
