@@ -6,22 +6,19 @@
 
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu(std::vector<EffectType> effects)
+DebugMenu::DebugMenu()
 {
-	if (effects.empty())
+	if (g_enabledEffects.empty())
 	{
 		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
 		return;
 	}
 
-	m_effects.reserve(effects.size());
-
-	for (const auto& pair : g_effectsMap)
+	for (const auto& pair : g_enabledEffects)
 	{
-		if (std::find(effects.begin(), effects.end(), pair.first) != effects.end())
-		{
-			m_effects.emplace_back(pair.first, pair.second.Name);
-		}
+		const EffectData& effectData = pair.second;
+
+		m_effects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
 	}
 
 	std::sort(m_effects.begin(), m_effects.end(), [](DebugEffect a, DebugEffect b)
@@ -51,7 +48,7 @@ void DebugMenu::Tick()
 	{
 		m_dispatchEffect = false;
 
-		g_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
+		g_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectIdentifier);
 	}
 
 	float y = .1f;
@@ -128,7 +125,7 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 		}
 		break;
 	case VK_RETURN:
-		if (m_effects[m_selected].EffectType != -1)
+		if (m_effects[m_selected].EffectIdentifier.GetEffectType() != -1)
 		{
 			m_dispatchEffect = true;
 		}

@@ -11,6 +11,10 @@
 #include "ThreadManager.h"
 #include "LuaManager.h"
 
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectTimedType.h"
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
 
 #include "Memory/Memory.h"

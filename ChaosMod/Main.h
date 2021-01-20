@@ -1,14 +1,11 @@
 #pragma once
 
 #include "DebugMenu.h"
-#include "EffectDispatcher.h"
 #include "TwitchVoting.h"
 
 #include <Windows.h>
 #include <memory>
 #include <map>
-
-inline std::map<EffectType, EffectData> g_enabledEffects;
 
 class Main
 {

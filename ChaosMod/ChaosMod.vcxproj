@@ -308,10 +308,13 @@
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
+    <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
+    <ClInclude Include="Effects\EffectTimedType.h" />
+    <ClInclude Include="Effects\EnabledEffectsMap.h" />
     <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
