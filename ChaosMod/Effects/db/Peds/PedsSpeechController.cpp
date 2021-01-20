@@ -46,4 +46,27 @@ static void OnTickUnfriendly()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_PEDS_INSULT, nullptr, nullptr, OnTickUnfriendly);
+static RegisterEffect registerEffect2(EFFECT_PEDS_KIFFLOM, nullptr, nullptr, OnTickUnfriendly);
+
+static void OnTickKifflom()
+{
+	static DWORD64 lastTick = 0;
+	DWORD64 curTick = GET_GAME_TIMER();
+
+	if (lastTick < curTick - 1000)
+	{
+		lastTick = curTick;
+
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
+			{
+				constexpr const char* speechesKifflom{ "KIFFLOM_GREET" };
+
+				_PLAY_AMBIENT_SPEECH1(ped, speechesKifflom, "SPEECH_PARAMS_FORCE_SHOUTED", 1);
+			}
+		}
+	}
+}
+
+static RegisterEffect registerEffect3(EFFECT_PEDS_KIFFLOM, nullptr, nullptr, OnTickKifflom);
