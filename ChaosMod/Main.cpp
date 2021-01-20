@@ -184,10 +184,6 @@ void Main::Reset()
 
 	if (!firstLoad)
 	{
-		LOG("===========");
-		LOG("MOD RELOAD!");
-		LOG("===========");
-
 		g_effectDispatcher.reset();
 
 		if (m_enableDebugMenu)
@@ -242,7 +238,11 @@ void Main::Loop()
 			{
 				justReenabled = false;
 
-				Init(); // Restart the main part of the mod completely
+				// Clear log
+				g_log = std::ofstream("chaosmod/chaoslog.txt");
+
+				// Restart the main part of the mod completely
+				Init();
 			}
 
 			if (m_clearAllEffects)

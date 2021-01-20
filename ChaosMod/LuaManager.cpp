@@ -43,6 +43,53 @@ private:
 
 static std::map<std::string, LuaScript> s_registeredScripts;
 
+enum class LuaNativeReturnType
+{
+	NONE,
+	INT,
+	STRING
+};
+
+static const char* _TryParseString(void* ptr)
+{
+	__try
+	{
+		char* string = reinterpret_cast<char*>(ptr);
+
+		for (char* c = string; *c; c++)
+		{
+
+		}
+
+		return string;
+	}
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	{
+		return nullptr;
+	}
+}
+
+static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& va)
+{
+	nativeInit(hash);
+	for (const auto& v : va)
+	{
+		nativePush(v);
+	}
+
+	void* result = *reinterpret_cast<void**>(nativeCall());
+
+	switch (returnType)
+	{
+	case LuaNativeReturnType::INT:
+		return sol::make_object(lua, reinterpret_cast<int>(result));
+	case LuaNativeReturnType::STRING:
+		return sol::make_object(lua, _TryParseString(result));
+	}
+
+	return sol::make_object(lua, sol::lua_nil);
+}
+
 namespace LuaManager
 {
 	void Load()
@@ -62,7 +109,12 @@ namespace LuaManager
 
 				sol::state lua;
 
-				lua["print"] = [fileName](const char* text) { LuaPrint(fileName, text); };
+				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
+				lua["__noReturn"] = LuaNativeReturnType::NONE;
+				lua["__returnAsInt"] = LuaNativeReturnType::INT;
+				lua["__returnAsString"] = LuaNativeReturnType::STRING;
+				lua["_invoke"] = LuaInvoke;
+				lua["WAIT"] = WAIT;
 
 				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
 
