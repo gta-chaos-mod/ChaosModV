@@ -47,7 +47,8 @@ enum class LuaNativeReturnType
 {
 	NONE,
 	INT,
-	STRING
+	STRING,
+	FLOAT
 };
 
 static const char* _TryParseString(void* ptr)
@@ -74,20 +75,33 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 	nativeInit(hash);
 	for (const auto& v : va)
 	{
-		nativePush(v);
+		nativePush64(v);
 	}
 
-	void* result = *reinterpret_cast<void**>(nativeCall());
+	void** returned = reinterpret_cast<void**>(nativeCall());
 
-	switch (returnType)
+	if (returned)
 	{
-	case LuaNativeReturnType::INT:
-		return sol::make_object(lua, reinterpret_cast<int>(result));
-	case LuaNativeReturnType::STRING:
-		return sol::make_object(lua, _TryParseString(result));
+		void* result = *reinterpret_cast<void**>(nativeCall());
+
+		switch (returnType)
+		{
+		case LuaNativeReturnType::INT:
+			return sol::make_object(lua, reinterpret_cast<int>(result));
+		case LuaNativeReturnType::STRING:
+			return sol::make_object(lua, _TryParseString(result));
+		case LuaNativeReturnType::FLOAT:
+			return sol::make_object(lua, *reinterpret_cast<float*>(&result));
+		}
 	}
 
 	return sol::make_object(lua, sol::lua_nil);
+}
+
+template <const std::vector<Entity>& F()>
+static sol::as_table_t<const std::vector<Entity>> LuaEntityIteratorAsTable()
+{
+	return sol::as_table(F());
 }
 
 namespace LuaManager
@@ -108,13 +122,23 @@ namespace LuaManager
 				LOG("Running script \"" << fileName << "\"");
 
 				sol::state lua;
+				lua.open_libraries(sol::lib::base);
+				lua.open_libraries(sol::lib::math);
+				lua.open_libraries(sol::lib::table);
+				lua.open_libraries(sol::lib::string);
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
-				lua["__noReturn"] = LuaNativeReturnType::NONE;
-				lua["__returnAsInt"] = LuaNativeReturnType::INT;
-				lua["__returnAsString"] = LuaNativeReturnType::STRING;
+				lua["ReturnType"] = lua.create_table_with(
+					"None", LuaNativeReturnType::NONE,
+					"Integer", LuaNativeReturnType::INT,
+					"String", LuaNativeReturnType::STRING,
+					"Float", LuaNativeReturnType::FLOAT
+				);
 				lua["_invoke"] = LuaInvoke;
 				lua["WAIT"] = WAIT;
+				lua["GetAllPeds"] = GetAllPeds;
+				lua["GetAllVehicles"] = GetAllVehs;
+				lua["GetAllProps"] = GetAllProps;
 
 				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
 

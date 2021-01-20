@@ -176,7 +176,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	{
 		ActiveEffect& activeEffect = *it;
 
-		if (activeEffect.EffectIdentifier == effectIdentifier && effectData.TimedType != EffectTimedType::TIMED_UNK && effectData.TimedType != EffectTimedType::TIMED_NORMAL)
+		if (activeEffect.EffectIdentifier == effectIdentifier && effectData.TimedType != EffectTimedType::TIMED_UNK && effectData.TimedType != EffectTimedType::TIMED_NOTTIMED)
 		{
 			alreadyExists = true;
 			activeEffect.Timer = activeEffect.MaxTime;
