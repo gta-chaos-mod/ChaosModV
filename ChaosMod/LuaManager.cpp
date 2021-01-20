@@ -221,7 +221,11 @@ namespace LuaManager
 								{
 									const std::string& timedTypeText = *timedTypeTextOpt;
 
-									if (timedTypeText == "Normal")
+									if (timedTypeText == "None")
+									{
+										effectData.TimedType = EffectTimedType::TIMED_NOTTIMED;
+									}
+									else if (timedTypeText == "Normal")
 									{
 										effectData.TimedType = EffectTimedType::TIMED_NORMAL;
 									}
