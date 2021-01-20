@@ -137,6 +137,11 @@ static void ParseEffectsFile()
 			effectData.CustomName = valueEffectName;
 		}
 		effectData.Id = effectInfo.Id;
+		
+		for (EffectType effectType : effectInfo.IncompatibleWith)
+		{
+			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
+		}
 
 		g_enabledEffects.emplace(effectType, effectData);
 	}
@@ -162,7 +167,10 @@ void Main::Init()
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, timerColor, textColor, effectTimerColor,
 		enableTwitchVoting, twitchOverlayMode);
 
-	m_debugMenu = std::make_unique<DebugMenu>();
+	if (m_enableDebugMenu)
+	{
+		m_debugMenu = std::make_unique<DebugMenu>();
+	}
 
 	struct stat temp;
 	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
@@ -179,22 +187,20 @@ void Main::Reset()
 		LOG("===========");
 		LOG("MOD RELOAD!");
 		LOG("===========");
+
+		g_effectDispatcher.reset();
+
+		if (m_enableDebugMenu)
+		{
+			m_debugMenu.reset();
+		}
+
+		m_twitchVoting.reset();
+
+		ClearEntityPool();
 	}
 
 	firstLoad = false;
-
-	g_effectDispatcher.reset();
-
-	if (m_enableDebugMenu)
-	{
-		m_debugMenu.reset();
-	}
-
-	m_twitchVoting.reset();
-
-	ClearEntityPool();
-
-	Init(); // Restart the main part of the mod completely
 }
 
 void Main::Loop()
@@ -211,6 +217,8 @@ void Main::Loop()
 	ThreadManager::ClearThreads();
 
 	Reset();
+
+	Init();
 
 	while (true)
 	{
@@ -233,6 +241,8 @@ void Main::Loop()
 			else if (justReenabled)
 			{
 				justReenabled = false;
+
+				Init(); // Restart the main part of the mod completely
 			}
 
 			if (m_clearAllEffects)

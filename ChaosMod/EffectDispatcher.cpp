@@ -169,51 +169,47 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	// Also check for incompatible effects
 	bool alreadyExists = false;
 
-	if (!effectIdentifier.IsScript())
+	const std::vector<std::string>& incompatibleIds = effectData.IncompatibleIds;
+
+	std::vector<ActiveEffect>::iterator it;
+	for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 	{
-		EffectType effectType = effectIdentifier.GetEffectType();
-		const EffectInfo& effectInfo = g_effectsMap.at(effectType);
+		ActiveEffect& activeEffect = *it;
 
-		const std::vector<EffectType>& incompatibleEffects = effectInfo.IncompatibleWith;
-
-		std::vector<ActiveEffect>::iterator it;
-		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
+		if (activeEffect.EffectIdentifier == effectIdentifier && effectData.TimedType != EffectTimedType::TIMED_UNK && effectData.TimedType != EffectTimedType::TIMED_NORMAL)
 		{
-			ActiveEffect& effect = *it;
+			alreadyExists = true;
+			activeEffect.Timer = activeEffect.MaxTime;
 
-			if (effectInfo.IsTimed && effect.EffectIdentifier == effectIdentifier)
-			{
-				alreadyExists = true;
-				effect.Timer = effect.MaxTime;
-			}
+			break;
+		}
 
-			bool found = false;
-			if (std::find(incompatibleEffects.begin(), incompatibleEffects.end(), effect.EffectIdentifier.GetEffectType()) != incompatibleEffects.end())
+		bool found = false;
+		if (std::find(incompatibleIds.begin(), incompatibleIds.end(), g_enabledEffects.at(activeEffect.EffectIdentifier).Id) != incompatibleIds.end())
+		{
+			found = true;
+		}
+
+		// Check if current effect is marked as incompatible in active effect
+		if (!found)
+		{
+			const std::vector<std::string>& activeIncompatibleIds = g_enabledEffects.at(activeEffect.EffectIdentifier).IncompatibleIds;
+
+			if (std::find(activeIncompatibleIds.begin(), activeIncompatibleIds.end(), effectData.Id) != activeIncompatibleIds.end())
 			{
 				found = true;
 			}
+		}
 
-			// Check if current effect is marked as incompatible in active effect
-			if (!found)
-			{
-				const std::vector<EffectType>& activeIncompatibleEffects = g_effectsMap.at(effect.EffectIdentifier.GetEffectType()).IncompatibleWith;
+		if (found)
+		{
+			ThreadManager::StopThread(activeEffect.ThreadId);
 
-				if (std::find(activeIncompatibleEffects.begin(), activeIncompatibleEffects.end(), effectType) != activeIncompatibleEffects.end())
-				{
-					found = true;
-				}
-			}
-
-			if (found)
-			{
-				ThreadManager::StopThread(effect.ThreadId);
-
-				it = m_activeEffects.erase(it);
-			}
-			else
-			{
-				it++;
-			}
+			it = m_activeEffects.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 

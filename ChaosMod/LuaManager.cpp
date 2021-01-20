@@ -135,6 +135,20 @@ namespace LuaManager
 									effectData.WeightMult = *weightMultOpt;
 								}
 
+								sol::optional<sol::table> incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
+								if (incompatibleIdsOpt)
+								{
+									const sol::table& incompatibleIds = *incompatibleIdsOpt;
+
+									for (const auto& entry : incompatibleIds)
+									{
+										if (entry.second.valid() && entry.second.is<std::string>())
+										{
+											effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
+										}
+									}
+								}
+
 								s_registeredScripts.emplace(scriptId, LuaScript(fileName, lua));
 
 								g_enabledEffects.emplace(scriptId, effectData);

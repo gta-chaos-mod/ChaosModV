@@ -3,6 +3,7 @@
 #include "EffectTimedType.h"
 
 #include <string>
+#include <vector>
 
 struct EffectData
 {
@@ -15,4 +16,5 @@ struct EffectData
 	bool HasCustomName = false;
 	std::string CustomName;
 	std::string Id;
+	std::vector<std::string> IncompatibleIds;
 };
