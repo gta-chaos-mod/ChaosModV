@@ -43,12 +43,23 @@ private:
 
 static std::map<std::string, LuaScript> s_registeredScripts;
 
+static struct LuaVector3
+{
+	float x;
+	DWORD _paddingX;
+	float y;
+	DWORD _paddingY;
+	float z;
+	DWORD _paddingZ;
+};
+
 enum class LuaNativeReturnType
 {
 	NONE,
 	INT,
+	FLOAT,
 	STRING,
-	FLOAT
+	VECTOR3
 };
 
 static const char* _TryParseString(void* ptr)
@@ -84,9 +95,9 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 		{
 			nativePush(arg.get<float>());
 		}
-		else if (arg.is<std::string>())
+		else if (arg.is<const char*>())
 		{
-			nativePush(arg.get<std::string>().c_str());
+			nativePush(arg.get<const char*>());
 		}
 	}
 
@@ -94,16 +105,25 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 
 	if (returned)
 	{
-		void* result = *reinterpret_cast<void**>(returned);
+		void* result = *returned;
 
 		switch (returnType)
 		{
 		case LuaNativeReturnType::INT:
 			return sol::make_object(lua, reinterpret_cast<int>(result));
-		case LuaNativeReturnType::STRING:
-			return sol::make_object(lua, _TryParseString(result));
 		case LuaNativeReturnType::FLOAT:
 			return sol::make_object(lua, *reinterpret_cast<float*>(&result));
+		case LuaNativeReturnType::STRING:
+			return sol::make_object(lua, _TryParseString(result));
+		case LuaNativeReturnType::VECTOR3:
+		{
+			LuaVector3 vector3;
+			vector3.x = *reinterpret_cast<float*>(returned);
+			vector3.y = *reinterpret_cast<float*>(returned + 1);
+			vector3.z = *reinterpret_cast<float*>(returned + 2);
+
+			return sol::make_object(lua, vector3);
+		}
 		}
 	}
 
@@ -134,17 +154,32 @@ namespace LuaManager
 				lua.open_libraries(sol::lib::string);
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
+
 				lua["ReturnType"] = lua.create_table_with(
 					"None", LuaNativeReturnType::NONE,
 					"Integer", LuaNativeReturnType::INT,
 					"String", LuaNativeReturnType::STRING,
-					"Float", LuaNativeReturnType::FLOAT
+					"Float", LuaNativeReturnType::FLOAT,
+					"Vector3", LuaNativeReturnType::VECTOR3
 				);
+
+				lua["Vector3"] = lua.new_usertype<LuaVector3>("Vector3",
+					"x", &LuaVector3::x,
+					"y", &LuaVector3::y,
+					"z", &LuaVector3::z);
+
 				lua["_invoke"] = LuaInvoke;
 				lua["WAIT"] = WAIT;
+
 				lua["GetAllPeds"] = GetAllPeds;
+				lua["CreatePoolPed"] = CreatePoolPed;
+
 				lua["GetAllVehicles"] = GetAllVehs;
+				lua["CreatePoolVehicle"] = CreatePoolVehicle;
+				lua["CreateTempVehicle"] = CreateTempVehicle;
+
 				lua["GetAllProps"] = GetAllProps;
+				lua["CreatePoolProp"] = CreatePoolProp;
 
 				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
 
