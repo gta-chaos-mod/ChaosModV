@@ -17,15 +17,14 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 	return colors;
 }
 
-static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, int& metaEffectSpawnTime, bool& enableClearEffectsShortcut,
+static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
 	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, bool& enableDebugMenu, bool& enablePauseTimerShortcut, std::array<int, 3>& timerColor,
-	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
+	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor, int& metaEffectSpawnTime, int& metaEffectTimedDur, int& metaEffectShortDur)
 {
 	OptionsFile configFile("chaosmod/config.ini");
 
 	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
 	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
-	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 120);
 	seed = configFile.ReadValueInt("Seed", 0);
 	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
 	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
@@ -37,6 +36,11 @@ static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed
 	timerColor = ParseColor(configFile.ReadValue("EffectTimerColor", "#FF4040FF"));
 	textColor = ParseColor(configFile.ReadValue("EffectTextColor", "#FFFFFFFF"));
 	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
+	// Meta Config
+	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 120);
+	metaEffectTimedDur = configFile.ReadValueInt("MetaEffectDur", 90);
+	metaEffectShortDur = configFile.ReadValueInt("MetaShortEffectDur", 45);
+
 }
 
 static void ParseTwitchFile(bool& enableTwitchVoting, int& twitchSecsBeforeVoting, TwitchOverlayMode& twitchOverlayMode, bool& enableTwitchChanceSystem,
@@ -151,23 +155,23 @@ static void ParseEffectsFile()
 
 void Main::Init()
 {
-	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime;
+	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime, metaEffectTimedDur, metaEffectShortDur;
 	bool enableTwitchVoting, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
 	TwitchOverlayMode twitchOverlayMode;
 
-	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, metaEffectSpawnTime, m_clearEffectsShortcutEnabled, m_disableDrawTimerBar,
-		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor);
+	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, m_disableDrawTimerBar,
+		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor, 
+		metaEffectSpawnTime, metaEffectTimedDur, metaEffectShortDur);
 	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance,
 		enableTwitchRandomEffectVoteable);
 	ParseEffectsFile();
 
-	LuaManager::Load();
+	//LuaManager::Load();
 
 	g_random.SetSeed(seed);
-
-	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, metaEffectSpawnTime, timerColor, textColor, effectTimerColor,
-		enableTwitchVoting, twitchOverlayMode);
+	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, metaEffectSpawnTime, metaEffectTimedDur, 
+		metaEffectShortDur, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchOverlayMode);
 
 	if (m_enableDebugMenu)
 	{

@@ -17,7 +17,7 @@ enum class TwitchOverlayMode;
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
 		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 		TwitchOverlayMode twitchOverlayMode);
 	~EffectDispatcher();
@@ -47,7 +47,10 @@ private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
 	const int m_effectTimedShortDur;
+
 	const int m_metaEffectSpawnTime;
+	const int m_metaEffectTimedDur;
+	const int m_metaEffectShortDur;
 
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;

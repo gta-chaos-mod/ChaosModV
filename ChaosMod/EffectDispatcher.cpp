@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
 	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 	TwitchOverlayMode twitchOverlayMode)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime),
-	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
+	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime), 
+	m_metaEffectTimedDur(metaEffectTimedDur), m_metaEffectShortDur(metaEffectShortDur), m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor),
+	m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
 }
@@ -286,10 +287,10 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			switch (effectData.TimedType)
 			{
 			case EffectTimedType::TIMED_NORMAL:
-				effectTime = m_effectTimedDur;
+				effectTime = effectData.IsMeta ? m_metaEffectTimedDur : m_effectTimedDur;
 				break;
 			case EffectTimedType::TIMED_SHORT:
-				effectTime = m_effectTimedShortDur;
+				effectTime = effectData.IsMeta ? m_metaEffectShortDur : m_effectTimedShortDur;
 				break;
 			case EffectTimedType::TIMED_CUSTOM:
 				effectTime = effectData.CustomTime;
