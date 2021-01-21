@@ -53,6 +53,11 @@ static void OnStart()
 		}
 
 		Ped playerPed = PLAYER_PED_ID();
+
+		if (currentMode != FakeDeathState::cleanup) {
+			SET_PLAYER_INVINCIBLE(playerPed, true);
+		}
+
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
@@ -139,6 +144,7 @@ static void OnStart()
 			SET_TIME_SCALE(1);
 			STOP_GAMEPLAY_CAM_SHAKING(true);
 			REMOVE_ANIM_DICT("mp_suicide");
+			SET_PLAYER_INVINCIBLE(playerPed, false);
 			scaleForm = 0;
 			break;
 		}

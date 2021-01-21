@@ -5,11 +5,18 @@ static std::map<Entity, Entity> vehicleMap;
 __int64(*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
 {
+	if (entity <= 0)
+	{
+		return 0;
+	}
 	Entity vehToContinue = entity;
 
 	while (vehicleMap.count(vehToContinue) > 0)
 	{
 		vehToContinue = vehicleMap[vehToContinue];
+    if (vehToContinue <= 0) {
+      return 0;
+    }
 	}
 	return _OG_HandleToEntityStruct(vehToContinue);
 }

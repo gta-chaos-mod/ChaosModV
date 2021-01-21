@@ -1,5 +1,7 @@
 #pragma once
 
+#include "File.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -27,14 +29,19 @@ static LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
 
 	DWORD flags = MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory;
 
-	struct stat temp;
-	if (stat("chaosmod\\.fulldumps", &temp) != -1)
+	if (DoesFileExist("chaosmod\\.fulldumps"))
 	{
 		flags = MiniDumpWithFullMemory | MiniDumpWithHandleData | MiniDumpWithModuleHeaders | MiniDumpWithUnloadedModules | MiniDumpWithProcessThreadData
 			| MiniDumpWithFullMemoryInfo | MiniDumpWithThreadInfo;
 	}
 
-	MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, static_cast<MINIDUMP_TYPE>(flags), &exInfo, NULL, NULL);
+	typedef BOOL(WINAPI* _MiniDumpWriteDump)(HANDLE hProcess, DWORD ProcessId, HANDLE hFile, MINIDUMP_TYPE DumpType, PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+		PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
+
+	HMODULE lib = LoadLibrary("dbghelp.dll");
+	_MiniDumpWriteDump dumpFunc = reinterpret_cast<_MiniDumpWriteDump>(GetProcAddress(lib, "MiniDumpWriteDump"));
+
+	dumpFunc(GetCurrentProcess(), GetCurrentProcessId(), file, static_cast<MINIDUMP_TYPE>(flags), &exInfo, NULL, NULL);
 
 	CloseHandle(file);
 

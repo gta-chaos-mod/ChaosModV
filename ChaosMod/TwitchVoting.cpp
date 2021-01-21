@@ -137,17 +137,25 @@ void TwitchVoting::Tick()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_chosenEffectType == _EFFECT_ENUM_MAX)
+			if (*m_chosenEffectIdentifier == _EFFECT_ENUM_MAX)
 			{
 				g_effectDispatcher->DispatchRandomEffect();
 			}
 			else
 			{
-				g_effectDispatcher->DispatchEffect(m_chosenEffectType);
+				g_effectDispatcher->DispatchEffect(*m_chosenEffectIdentifier);
 			}
 			g_effectDispatcher->ResetTimer();
 
 			m_isVotingRunning = false;
+		}
+
+		if (g_metaInfo.AdditionalEffectsToDispatch > 0) 
+		{
+			for (int i = 0; i < g_metaInfo.AdditionalEffectsToDispatch; i++)
+			{
+				g_effectDispatcher->DispatchRandomEffect();
+			}
 		}
 	}
 	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
@@ -156,7 +164,7 @@ void TwitchVoting::Tick()
 
 		m_isVotingRunning = true;
 
-		m_chosenEffectType = _EFFECT_ENUM_MAX;
+		*m_chosenEffectIdentifier = _EFFECT_ENUM_MAX;
 
 		if (m_enableTwitchPollVoting)
 		{
@@ -171,15 +179,15 @@ void TwitchVoting::Tick()
 		}
 
 		m_effectChoices.clear();
-		std::map<EffectType, EffectData*> choosableEffects;
+		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 		for (auto& pair : g_enabledEffects)
 		{
-			EffectType effectType = pair.first;
+			const EffectIdentifier& effectIdentifier = pair.first;
 			EffectData& effectData = pair.second;
 
-			if (!effectData.Permanent && !effectData.ExcludedFromVoting)
+			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
-				choosableEffects.emplace(effectType, &effectData);
+				choosableEffects.emplace(effectIdentifier, effectData);
 			}
 		}
 
@@ -190,7 +198,7 @@ void TwitchVoting::Tick()
 			{
 				if (m_enableTwitchRandomEffectVoteable)
 				{
-					m_effectChoices.emplace_back(EFFECT_NOTHING /* Just give it some random effect */, "Random Effect", !m_alternatedVotingRound ? 4 : 8);
+					m_effectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_NOTHING /* Just give it some random effect */, "Random Effect", !m_alternatedVotingRound ? 4 : 8));
 				}
 
 				break;
@@ -199,31 +207,31 @@ void TwitchVoting::Tick()
 			int effectsTotalWeight = 0;
 			for (const auto& pair : choosableEffects)
 			{
-				effectsTotalWeight += pair.second->Weight;
+				effectsTotalWeight += pair.second.Weight;
 			}
 
 			int index = g_random.GetRandomInt(0, effectsTotalWeight);
 
 			int addedUpWeight = 0;
-			ChoosableEffect targetChoice;
+			std::unique_ptr<ChoosableEffect> targetChoice;
 
 			for (auto& pair : choosableEffects)
 			{
-				EffectData* effectData = pair.second;
+				EffectData& effectData = pair.second;
 
-				if (effectData->Permanent)
+				if (effectData.TimedType == EffectTimedType::TIMED_PERMANENT)
 				{
 					continue;
 				}
 
-				addedUpWeight += effectData->Weight;
+				addedUpWeight += effectData.Weight;
 
 				if (index <= addedUpWeight)
 				{
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
-					effectData->Weight = 0;
+					effectData.Weight = 0;
 
-					targetChoice = ChoosableEffect(pair.first, effectData->Name,
+					targetChoice = std::make_unique<ChoosableEffect>(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
 						!m_alternatedVotingRound
 							? i + 1
 							: m_enableTwitchRandomEffectVoteable
@@ -234,15 +242,17 @@ void TwitchVoting::Tick()
 				}
 			}
 
-			m_effectChoices.push_back(targetChoice);
-			choosableEffects.erase(targetChoice.EffectType);
+			EffectIdentifier effectIdentifier = targetChoice->EffectIdentifier;
+
+			m_effectChoices.push_back(std::move(targetChoice));
+			choosableEffects.erase(effectIdentifier);
 		}
 
 		std::ostringstream oss;
 		oss << "vote";
-		for (const ChoosableEffect& choosableEffect : m_effectChoices)
+		for (const std::unique_ptr<ChoosableEffect>& choosableEffect : m_effectChoices)
 		{
-			oss << ":" << choosableEffect.EffectName;
+			oss << ":" << choosableEffect->EffectName;
 		}
 		SendToPipe(oss.str());
 
@@ -257,19 +267,19 @@ void TwitchVoting::Tick()
 		int totalVotes = 0;
 		if (m_enableTwitchChanceSystem)
 		{
-			for (const ChoosableEffect& choosableEffect : m_effectChoices)
+			for (const std::unique_ptr<ChoosableEffect>& choosableEffect : m_effectChoices)
 			{
-				int chanceVotes = choosableEffect.ChanceVotes + (m_enableVotingChanceSystemRetainChance ? 1 : 0);
+				int chanceVotes = choosableEffect->ChanceVotes + (m_enableVotingChanceSystemRetainChance ? 1 : 0);
 
 				totalVotes += chanceVotes;
 			}
 		}
 
 		float y = .1f;
-		for (const ChoosableEffect& choosableEffect : m_effectChoices)
+		for (const std::unique_ptr<ChoosableEffect>& choosableEffect : m_effectChoices)
 		{
 			std::ostringstream oss;
-			oss << choosableEffect.Match << ": " << choosableEffect.EffectName;
+			oss << choosableEffect->Match << ": " << choosableEffect->EffectName;
 
 			// Also show chance percentages if chance system is enabled
 			if (m_enableTwitchChanceSystem)
@@ -281,7 +291,7 @@ void TwitchVoting::Tick()
 				}
 				else
 				{
-					int chanceVotes = choosableEffect.ChanceVotes + (m_enableVotingChanceSystemRetainChance ? 1 : 0);
+					int chanceVotes = choosableEffect->ChanceVotes + (m_enableVotingChanceSystemRetainChance ? 1 : 0);
 
 					percentage = !chanceVotes ? .0f : std::roundf(static_cast<float>(chanceVotes) / static_cast<float>(totalVotes) * 100.f) / 100.f;
 				}
@@ -336,7 +346,7 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		int result = std::stoi(msg.substr(msg.find(":") + 1));
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_chosenEffectType = result == 3 ? _EFFECT_ENUM_MAX : m_effectChoices[result].EffectType;
+		m_chosenEffectIdentifier = std::make_unique<EffectIdentifier>(result == 3 ? _EFFECT_ENUM_MAX : m_effectChoices[result]->EffectIdentifier);
 	}
 	else if (msg._Starts_with("currentvotes"))
 	{
@@ -347,7 +357,7 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		{
 			const std::string& split = valuesStr.substr(0, splitIndex);
 
-			TryParseInt(split, m_effectChoices[i].ChanceVotes);
+			TryParseInt(split, m_effectChoices[i]->ChanceVotes);
 
 			valuesStr = valuesStr.substr(splitIndex + 1);
 
