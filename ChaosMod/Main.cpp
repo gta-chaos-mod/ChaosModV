@@ -17,7 +17,7 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 	return colors;
 }
 
-static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
+static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, int& metaEffectSpawnTime, bool& enableClearEffectsShortcut,
 	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, bool& enableDebugMenu, bool& enablePauseTimerShortcut, std::array<int, 3>& timerColor,
 	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor)
 {
@@ -25,6 +25,7 @@ static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed
 
 	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
 	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
+	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 120);
 	seed = configFile.ReadValueInt("Seed", 0);
 	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
 	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
@@ -130,6 +131,7 @@ static void ParseEffectsFile()
 		effectData.WeightMult = values[3];
 		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
 		effectData.ExcludedFromVoting = values[5];
+		effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
 		effectData.Name = effectInfo.Name;
 		if (!valueEffectName.empty())
 		{
@@ -149,12 +151,12 @@ static void ParseEffectsFile()
 
 void Main::Init()
 {
-	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting;
+	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime;
 	bool enableTwitchVoting, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;
 	TwitchOverlayMode twitchOverlayMode;
 
-	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, m_disableDrawTimerBar,
+	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, metaEffectSpawnTime, m_clearEffectsShortcutEnabled, m_disableDrawTimerBar,
 		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor);
 	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance,
 		enableTwitchRandomEffectVoteable);
@@ -164,7 +166,7 @@ void Main::Init()
 
 	g_random.SetSeed(seed);
 
-	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, timerColor, textColor, effectTimerColor,
+	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, metaEffectSpawnTime, timerColor, textColor, effectTimerColor,
 		enableTwitchVoting, twitchOverlayMode);
 
 	if (m_enableDebugMenu)
@@ -219,7 +221,6 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
-
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;

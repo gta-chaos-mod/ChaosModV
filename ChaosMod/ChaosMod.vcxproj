@@ -88,6 +88,10 @@
     <ClCompile Include="DebugMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EffectDispatcher.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
@@ -313,6 +317,7 @@
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
+    <ClInclude Include="Effects\MetaEffectInfo.h" />
     <ClInclude Include="Effects\EffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
     <ClInclude Include="LuaManager.h" />

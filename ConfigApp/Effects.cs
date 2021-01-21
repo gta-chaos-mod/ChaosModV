@@ -29,7 +29,8 @@ namespace ConfigApp
             PEDS,
             TIME,
             WEATHER,
-            MISC
+            MISC,
+            META
         }
 
         public enum EffectTimedType
@@ -294,6 +295,13 @@ namespace ConfigApp
             EFFECT_HIGH_PITCH,
             EFFECT_NO_SKY,
             EFFECT_PLAYER_GTA_2,
+            EFFECT_META_TIMER_SPEED_X2,
+            EFFECT_META_TIMER_SPEED_X5,
+            EFFECT_META_TIMER_SPEED_X0_5,
+            EFFECT_META_EFFECT_DURATION_X2,
+            EFFECT_META_EFFECT_DURATION_X0_5,
+            EFFECT_META_HIDE_CHAOS_UI,
+            EFFECT_META_ADDITIONAL_EFFECTS,
             EFFECT_VEHS_CRUMBLE,
             _EFFECT_ENUM_MAX
         }
@@ -554,6 +562,13 @@ namespace ConfigApp
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
             {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X0_5, new EffectInfo("0.5x Timer Speed", EffectCategory.META, "meta_timerspeed_0_5x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X2, new EffectInfo("2x Timer Speed", EffectCategory.META, "meta_timerspeed_2x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X2, new EffectInfo("2x Effect Duration", EffectCategory.META, "meta_effect_duration_2x", true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
+            {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
+            {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
         };
     }

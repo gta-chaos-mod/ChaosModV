@@ -122,6 +122,11 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+
+            // Meta Effects
+            meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "120");
+            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "90");
+            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "45");
         }
 
         private void WriteConfigFile()
@@ -140,6 +145,11 @@ namespace ConfigApp
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
 
+            // Meta Effects
+            m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
+            m_configFile.WriteValue("MetaEffectDur", meta_effects_timed_dur.Text);
+            m_configFile.WriteValue("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
+            
             m_configFile.WriteFile();
         }
 
@@ -270,6 +280,7 @@ namespace ConfigApp
             TreeMenuItem timeParentItem = new TreeMenuItem("Time");
             TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
             TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
+            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
 
             SortedDictionary<string, Tuple<EffectType, EffectCategory>> sortedEffects = new SortedDictionary<string, Tuple<EffectType, EffectCategory>>();
 
@@ -307,6 +318,9 @@ namespace ConfigApp
                     case EffectCategory.MISC:
                         miscParentItem.AddChild(menuItem);
                         break;
+                    case EffectCategory.META:
+                        metaParentItem.AddChild(menuItem);
+                        break;
                 }
             }
 
@@ -317,6 +331,10 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(timeParentItem);
             effects_user_effects_tree_view.Items.Add(weatherParentItem);
             effects_user_effects_tree_view.Items.Add(miscParentItem);
+
+            meta_effects_tree_view.Items.Clear();
+            meta_effects_tree_view.Items.Add(metaParentItem);
+            
         }
 
         void InitTwitchTab()

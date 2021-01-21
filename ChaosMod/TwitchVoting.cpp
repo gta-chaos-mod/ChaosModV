@@ -149,6 +149,14 @@ void TwitchVoting::Tick()
 
 			m_isVotingRunning = false;
 		}
+
+		if (g_metaInfo.AdditionalEffectsToDispatch > 0) 
+		{
+			for (int i = 0; i < g_metaInfo.AdditionalEffectsToDispatch; i++)
+			{
+				g_effectDispatcher->DispatchRandomEffect();
+			}
+		}
 	}
 	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
 	{
@@ -177,7 +185,7 @@ void TwitchVoting::Tick()
 			const EffectIdentifier& effectIdentifier = pair.first;
 			EffectData& effectData = pair.second;
 
-			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.ExcludedFromVoting)
+			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
 				choosableEffects.emplace(effectIdentifier, effectData);
 			}

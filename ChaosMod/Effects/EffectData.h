@@ -17,4 +17,5 @@ struct EffectData
 	std::string CustomName;
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
+	bool IsMeta;
 };
