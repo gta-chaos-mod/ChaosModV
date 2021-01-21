@@ -319,7 +319,22 @@ namespace LuaManager
 							const std::string& scriptId = *scriptIdOpt;
 							const std::string& scriptName = *scriptNameOpt;
 
-							if (s_registeredScripts.find(scriptId) != s_registeredScripts.end())
+							bool idAlreadyExists = s_registeredScripts.find(scriptId) != s_registeredScripts.end();
+
+							if (!idAlreadyExists)
+							{
+								for (const auto& pair : g_effectsMap)
+								{
+									if (pair.second.Id == scriptId)
+									{
+										idAlreadyExists = true;
+
+										break;
+									}
+								}
+							}
+
+							if (idAlreadyExists)
 							{
 								LOG("Could not register script \"" << fileName << "\" (with name \"" << scriptName << "\") as \"" << scriptId << "\" (already exists!)");
 							}
