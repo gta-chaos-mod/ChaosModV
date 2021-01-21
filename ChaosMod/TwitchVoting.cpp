@@ -150,9 +150,9 @@ void TwitchVoting::Tick()
 			m_isVotingRunning = false;
 		}
 
-		if (g_metaInfo.additionalEffectsToDispatch > 0) 
+		if (g_metaInfo.AdditionalEffectsToDispatch > 0) 
 		{
-			for (int i = 0; i < g_metaInfo.additionalEffectsToDispatch; i++)
+			for (int i = 0; i < g_metaInfo.AdditionalEffectsToDispatch; i++)
 			{
 				g_effectDispatcher->DispatchRandomEffect();
 			}
@@ -185,7 +185,7 @@ void TwitchVoting::Tick()
 			const EffectIdentifier& effectIdentifier = pair.first;
 			EffectData& effectData = pair.second;
 
-			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.Meta && !effectData.ExcludedFromVoting)
+			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
 				choosableEffects.emplace(effectIdentifier, effectData);
 			}

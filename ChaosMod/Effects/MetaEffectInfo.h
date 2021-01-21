@@ -6,8 +6,10 @@
 
 struct MetaEffectInfo
 {
-	float effectDurationModifier = 1;
-	float timerSpeedModifier = 1;
-	bool shouldHideChaosUI = false;
-	bool additionalEffectsToDispatch = 0;
+	float EffectDurationModifier = 1;
+	float TimerSpeedModifier = 1;
+	bool ShouldHideChaosUI = false;
+	bool AdditionalEffectsToDispatch = 0;
 };
+
+inline MetaEffectInfo g_metaInfo;

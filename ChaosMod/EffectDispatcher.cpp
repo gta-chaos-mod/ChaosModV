@@ -16,7 +16,7 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_enableNormalEffectDispatch || g_metaInfo.shouldHideChaosUI)
+	if (!m_enableNormalEffectDispatch || g_metaInfo.ShouldHideChaosUI)
 	{
 		return;
 	}
@@ -42,7 +42,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText || (g_metaInfo.shouldHideChaosUI && effect.EffectType != EFFECT_META_HIDE_CHAOS_UI))
+		if (effect.HideText || (g_metaInfo.ShouldHideChaosUI && effect.EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI))
 		{
 			continue;
 		}
@@ -84,15 +84,17 @@ void EffectDispatcher::UpdateTimer()
 
 		m_timerTimer = currentUpdateTime;
 		delta = 0;
+
+		UpdateMetaEffects();
 	}
 
-	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.timerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
+	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.TimerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
-		if (g_metaInfo.additionalEffectsToDispatch > 0)
+		if (g_metaInfo.AdditionalEffectsToDispatch > 0)
 		{
-			for (int i = 0; i < g_metaInfo.additionalEffectsToDispatch; i++)
+			for (int i = 0; i < g_metaInfo.AdditionalEffectsToDispatch; i++)
 			{
 				g_effectDispatcher->DispatchRandomEffect();
 			}
@@ -131,21 +133,19 @@ void EffectDispatcher::UpdateEffects()
 	{
 		m_effectsTimer = currentUpdateTime;
 
-		UpdateMetaEffects();
-
 		int activeEffectsSize = m_activeEffects.size();
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
 			ActiveEffect& effect = *it;
-			EffectData& effectData = g_enabledEffects.at(effect.EffectType);
-			if (effectData.Meta)
+			EffectData& effectData = g_enabledEffects.at(effect.EffectIdentifier);
+			if (effectData.IsMeta)
 			{
 				effect.Timer--;
 			} 
 			else
 			{
-				effect.Timer -= 1 / g_metaInfo.effectDurationModifier;
+				effect.Timer -= 1 / g_metaInfo.EffectDurationModifier;
 			}
 
 			if ((effect.MaxTime > 0 && effect.Timer <= 0)
@@ -171,17 +171,17 @@ void EffectDispatcher::UpdateMetaEffects()
 		if (m_metaEffectTimer <= 0)
 		{
 			m_metaEffectTimer = m_metaEffectSpawnTime;
-			std::vector<EffectType> availableMetaEffects;
+			std::vector<EffectIdentifier> availableMetaEffects;
 			for (const auto& pair : g_enabledEffects)
 			{
-				if (pair.second.Meta)
+				if (pair.second.IsMeta)
 				{
 					availableMetaEffects.push_back(pair.first);
 				}
 			}
 			if (!availableMetaEffects.empty()) 
 			{
-				EffectType randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
+				const EffectIdentifier& randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
 				DispatchEffect(randomMetaEffect, " (Meta)");
 			}
 			else
@@ -316,7 +316,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		const EffectIdentifier& effectIdentifier = pair.first;
 		const EffectData& effectData = pair.second;
 
-		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.Meta)
+		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
 			choosableEffects.emplace(effectIdentifier, effectData);
 		}

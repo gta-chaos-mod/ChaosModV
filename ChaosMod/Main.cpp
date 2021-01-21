@@ -131,7 +131,7 @@ static void ParseEffectsFile()
 		effectData.WeightMult = values[3];
 		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
 		effectData.ExcludedFromVoting = values[5];
-		effectData.Meta = effectInfo.ExecutionType == EffectExecutionType::META;
+		effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
 		effectData.Name = effectInfo.Name;
 		if (!valueEffectName.empty())
 		{

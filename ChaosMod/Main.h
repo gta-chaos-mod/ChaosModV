@@ -2,13 +2,10 @@
 
 #include "DebugMenu.h"
 #include "TwitchVoting.h"
-#include "Effects/MetaEffectInfo.h"
 
 #include <Windows.h>
 #include <memory>
 #include <map>
-
-inline MetaEffectInfo g_metaInfo;
 
 class Main
 {

@@ -146,10 +146,3 @@ public:
 private:
 	RegisteredEffect m_registeredEffect;
 };
-
-enum class EffectTimedType
-{
-	TIMED_DEFAULT = -1,
-	TIMED_NORMAL,
-	TIMED_SHORT
-};
