@@ -183,7 +183,7 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 			}
 			else
 			{
-				nativePush(holder.data);
+				nativePush(&holder.data);
 			}
 		}
 	}
