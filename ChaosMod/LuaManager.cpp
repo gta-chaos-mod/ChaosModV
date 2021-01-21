@@ -147,6 +147,7 @@ static struct LuaHolder
 enum class LuaNativeReturnType
 {
 	NONE,
+	BOOL,
 	INT,
 	FLOAT,
 	STRING,
@@ -159,7 +160,11 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 
 	for (const sol::stack_proxy& arg : args)
 	{
-		if (arg.is<int>())
+		if (arg.is<bool>())
+		{
+			nativePush(arg.get<bool>());
+		}
+		else if (arg.is<int>())
 		{
 			nativePush(arg.get<int>());
 		}
@@ -195,6 +200,8 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 
 		switch (returnType)
 		{
+		case LuaNativeReturnType::BOOL:
+			return sol::make_object(lua, reinterpret_cast<bool>(result));
 		case LuaNativeReturnType::INT:
 			return sol::make_object(lua, reinterpret_cast<int>(result));
 		case LuaNativeReturnType::FLOAT:
@@ -246,6 +253,7 @@ namespace LuaManager
 
 				lua["ReturnType"] = lua.create_table_with(
 					"None", LuaNativeReturnType::NONE,
+					"Boolean", LuaNativeReturnType::BOOL,
 					"Integer", LuaNativeReturnType::INT,
 					"String", LuaNativeReturnType::STRING,
 					"Float", LuaNativeReturnType::FLOAT,
@@ -262,6 +270,7 @@ namespace LuaManager
 
 				lua.new_usertype<LuaHolder>("_Holder",
 					"IsValid", &LuaHolder::IsValid,
+					"AsBoolean", &LuaHolder::As<bool>,
 					"AsInteger", &LuaHolder::As<int>,
 					"AsFloat", &LuaHolder::As<float>,
 					"AsString", &LuaHolder::As<char*>);
@@ -310,7 +319,22 @@ namespace LuaManager
 							const std::string& scriptId = *scriptIdOpt;
 							const std::string& scriptName = *scriptNameOpt;
 
-							if (s_registeredScripts.find(scriptId) != s_registeredScripts.end())
+							bool idAlreadyExists = s_registeredScripts.find(scriptId) != s_registeredScripts.end();
+
+							if (!idAlreadyExists)
+							{
+								for (const auto& pair : g_effectsMap)
+								{
+									if (pair.second.Id == scriptId)
+									{
+										idAlreadyExists = true;
+
+										break;
+									}
+								}
+							}
+
+							if (idAlreadyExists)
 							{
 								LOG("Could not register script \"" << fileName << "\" (with name \"" << scriptName << "\") as \"" << scriptId << "\" (already exists!)");
 							}
