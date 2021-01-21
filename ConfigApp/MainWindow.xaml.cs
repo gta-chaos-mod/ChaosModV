@@ -104,7 +104,6 @@ namespace ConfigApp
             misc_user_effects_random_seed.Text = m_configFile.ReadValue("Seed");
             misc_user_effects_timed_short_dur.Text = m_configFile.ReadValue("EffectTimedShortDur", "30");
             misc_user_effects_clear_enable.IsChecked = m_configFile.ReadValueBool("EnableClearEffectsShortcut", true);
-            misc_user_effects_twice_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTwiceInRow", false);
             misc_user_effects_drawtimer_disable.IsChecked = m_configFile.ReadValueBool("DisableTimerBarDraw", false);
             misc_user_effects_drawtext_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTextDraw", false);
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
@@ -137,7 +136,6 @@ namespace ConfigApp
             m_configFile.WriteValue("Seed", misc_user_effects_random_seed.Text);
             m_configFile.WriteValue("EffectTimedShortDur", misc_user_effects_timed_short_dur.Text);
             m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
-            m_configFile.WriteValue("DisableEffectTwiceInRow", misc_user_effects_twice_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableTimerBarDraw", misc_user_effects_drawtimer_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableEffectTextDraw", misc_user_effects_drawtext_disable.IsChecked.Value);
             m_configFile.WriteValue("EnableToggleModShortcut", misc_user_toggle_mod_shortcut.IsChecked.Value);

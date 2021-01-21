@@ -3,6 +3,9 @@
 #include "ThreadManager.h"
 
 #include "Effects/Effect.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffectsMap.h"
 
 #include <vector>
 #include <array>
@@ -14,7 +17,7 @@ enum class TwitchOverlayMode;
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow, int metaEffectSpawnTime,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime,
 		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 		TwitchOverlayMode twitchOverlayMode);
 	~EffectDispatcher();
@@ -34,7 +37,7 @@ public:
 	}
 	void UpdateEffects();
 	void UpdateMetaEffects();
-	void DispatchEffect(EffectType effectType, const char* suffix = nullptr);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* suffix = nullptr);
 	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
 	void Reset();
@@ -44,9 +47,8 @@ private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
 	const int m_effectTimedShortDur;
-	const bool m_disableTwiceInRow;
 	const int m_metaEffectSpawnTime;
-	EffectType m_lastEffect = _EFFECT_ENUM_MAX;
+
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;
 	const std::array<int, 3> m_effectTimerColor;
@@ -56,14 +58,16 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, float timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Name(name), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
+		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* registeredEffect, const std::string& name, float timer) : EffectIdentifier(effectIdentifier), RegisteredEffect(registeredEffect),
+			Name(name), Timer(timer), MaxTime(Timer)
 		{
-			
+			EffectTimedType timedType = g_enabledEffects.at(effectIdentifier).TimedType;
+
+			ThreadId = ThreadManager::CreateThread(registeredEffect, timedType != EffectTimedType::TIMED_UNK && timedType != EffectTimedType::TIMED_NOTTIMED);
 		}
 
 	public:
-		EffectType EffectType;
+		EffectIdentifier EffectIdentifier;
 		RegisteredEffect* RegisteredEffect;
 		DWORD64 ThreadId;
 		std::string Name;

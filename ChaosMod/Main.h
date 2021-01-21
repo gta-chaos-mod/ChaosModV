@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DebugMenu.h"
-#include "EffectDispatcher.h"
 #include "TwitchVoting.h"
 #include "Effects/MetaEffectInfo.h"
 
@@ -9,7 +8,6 @@
 #include <memory>
 #include <map>
 
-inline std::map<EffectType, EffectData> g_enabledEffects;
 inline MetaEffectInfo g_metaInfo;
 
 class Main

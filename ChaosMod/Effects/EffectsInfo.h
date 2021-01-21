@@ -72,6 +72,7 @@ enum EffectType
 	EFFECT_SPAWN_FAGGIO,
 	EFFECT_SPAWN_RUINER3,
 	EFFECT_SPAWN_BALETRAILER,
+	EFFECT_SPAWN_ROMERO,
 	EFFECT_SPAWN_RANDOM,
 	EFFECT_NO_VEHS,
 	EFFECT_EXPLODE_CUR_VEH,
@@ -258,7 +259,6 @@ enum EffectType
 	EFFECT_HIGH_PITCH,
 	EFFECT_NO_SKY,
 	EFFECT_PLAYER_GTA_2,
-	EFFECT_PEDS_TPOSE,
 	EFFECT_META_TIMER_SPEED_X0_5,
 	EFFECT_META_TIMER_SPEED_X2,
 	EFFECT_META_TIMER_SPEED_X5,
@@ -266,6 +266,7 @@ enum EffectType
 	EFFECT_META_EFFECT_DURATION_X0_5,
 	EFFECT_META_HIDE_CHAOS_UI,
 	EFFECT_META_ADDITIONAL_EFFECTS,
+	EFFECT_VEHS_CRUMBLE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -360,6 +361,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_FAGGIO, {"Spawn Faggio", "spawn_faggio"}},
 	{EFFECT_SPAWN_RUINER3, {"Spawn Ruined Ruiner", "spawn_ruiner3"}},
 	{EFFECT_SPAWN_BALETRAILER, {"Spawn Bale Trailer", "spawn_baletrailer"}},
+	{EFFECT_SPAWN_ROMERO, {"Where's The Funeral?", "spawn_romero"}},
 	{EFFECT_SPAWN_RANDOM, {"Spawn Random Vehicle", "spawn_random"}},
 	{EFFECT_NO_VEHS, {"No Traffic", "notraffic", true}},
 	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", "playerveh_explode"}},
@@ -545,7 +547,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
 	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
 	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
-	{EFFECT_PEDS_TPOSE, {"GTA 2077", "peds_tpose", true, { EFFECT_IN_THE_HOOD, EFFECT_SLIDY_PEDS }, true}},
 	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
@@ -553,4 +554,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_META_EFFECT_DURATION_X0_5, {"0.5x Effect Duration", "meta_effect_duration_0_5x", true, { EFFECT_META_EFFECT_DURATION_X2 }, false, EffectExecutionType::META}},
 	{EFFECT_META_HIDE_CHAOS_UI, {"What's Happening??", "meta_hide_chaos_ui", true, {}, false, EffectExecutionType::META}},
 	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
+	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 };
