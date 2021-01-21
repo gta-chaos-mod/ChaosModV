@@ -223,6 +223,11 @@ namespace LuaManager
 
 		ClearRegisteredScriptEffects();
 
+		if (!DoesFileExist("chaosmod\\custom_scripts"))
+		{
+			return;
+		}
+
 		for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator("chaosmod\\custom_scripts"))
 		{
 			if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".lua" && entry.file_size() > 0)
