@@ -294,6 +294,7 @@ namespace ConfigApp
             EFFECT_NO_SKY,
             EFFECT_PLAYER_GTA_2,
             EFFECT_PEDS_TPOSE,
+            EFFECT_VEHS_CRUMBLE,
             _EFFECT_ENUM_MAX
         }
 
@@ -552,7 +553,8 @@ namespace ConfigApp
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
             {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
-            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)}
+            {EffectType.EFFECT_PEDS_TPOSE, new EffectInfo("GTA 2077", EffectCategory.PEDS, "peds_tpose", true, true)},
+            {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)}
         };
     }
 }
