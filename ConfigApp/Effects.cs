@@ -303,6 +303,7 @@ namespace ConfigApp
             EFFECT_META_HIDE_CHAOS_UI,
             EFFECT_META_ADDITIONAL_EFFECTS,
             EFFECT_VEHS_CRUMBLE,
+            EFFECT_MISC_FPS_LIMIT,
             _EFFECT_ENUM_MAX
         }
 
@@ -570,6 +571,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
+            {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
         };
     }
 }
