@@ -77,8 +77,6 @@
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
                     <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1" Grid.ColumnSpan="2"/>
                     <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="233,71,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="339,215,0,135" Width="325" Grid.Column="1" Grid.RowSpan="2"/>
-                    <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="669,221,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2"/>
                     <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="339,139,0,0"
                         VerticalAlignment="Top" Width="325" Grid.Column="1"/>
                     <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="339,68,0,0"
