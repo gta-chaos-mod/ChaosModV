@@ -85,8 +85,6 @@ void EffectDispatcher::UpdateTimer()
 
 		m_timerTimer = currentUpdateTime;
 		delta = 0;
-
-		UpdateMetaEffects();
 	}
 
 	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.TimerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
@@ -168,6 +166,13 @@ void EffectDispatcher::UpdateMetaEffects()
 {	
 	if (m_metaEffectsEnabled)
 	{
+		DWORD64 currentUpdateTime = GetTickCount64();
+		if (currentUpdateTime - m_metaTimer < 1000)
+		{
+			return;
+		}
+		m_metaTimer = currentUpdateTime;
+
 		m_metaEffectTimer -= 1;
 		if (m_metaEffectTimer <= 0)
 		{
@@ -401,4 +406,6 @@ void EffectDispatcher::ResetTimer()
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();
+	m_metaTimer = GetTickCount64();
+	m_metaEffectTimer = m_metaEffectSpawnTime;
 }

@@ -167,7 +167,7 @@ void Main::Init()
 		enableTwitchRandomEffectVoteable);
 	ParseEffectsFile();
 
-	//LuaManager::Load();
+	LuaManager::Load();
 
 	g_random.SetSeed(seed);
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, metaEffectSpawnTime, metaEffectTimedDur, 
@@ -341,6 +341,7 @@ void Main::Loop()
 		if (!m_pauseTimer)
 		{
 			g_effectDispatcher->UpdateTimer();
+			g_effectDispatcher->UpdateMetaEffects();
 		}
 
 		if (!m_disableDrawTimerBar)

@@ -85,6 +85,7 @@ private:
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
+	DWORD64 m_metaTimer;
 	bool m_dispatchEffectsOnTimer = true;
 	bool m_metaEffectsEnabled = true;
 	int m_metaEffectTimer = m_metaEffectSpawnTime;
