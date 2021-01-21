@@ -1,13 +1,68 @@
 #include <stdafx.h>
 
-static void LuaPrint(const std::string& text)
+static __forceinline void LuaPrint(const std::string& text)
 {
 	g_log << "[Lua] " << text << std::endl;
 }
 
-static void LuaPrint(const std::string& name, const std::string& text)
+static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
 	g_log << "[Lua] " << name << ": " << text << std::endl;
+}
+
+static __forceinline char* _TryParseString(void* ptr)
+{
+	__try
+	{
+		char* string = reinterpret_cast<char*>(ptr);
+
+		for (char* c = string; *c; c++)
+		{
+
+		}
+
+		return string;
+	}
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	{
+		return nullptr;
+	}
+}
+
+static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float* z)
+{
+	__try
+	{
+		*x = *reinterpret_cast<float*>(ptr);
+		*y = *reinterpret_cast<float*>(ptr + 1);
+		*z = *reinterpret_cast<float*>(ptr + 2);
+	}
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+static __forceinline bool _CallNative(void*** result)
+{
+	__try
+	{
+		*result = reinterpret_cast<void**>(nativeCall());
+	}
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <typename T>
+static __forceinline T Generate()
+{
+	return T();
 }
 
 struct LuaScript
@@ -53,6 +108,22 @@ static struct LuaVector3
 	DWORD _paddingZ;
 };
 
+static struct LuaHolder
+{
+	void* data;
+
+	template <typename T>
+	inline T As()
+	{
+		if constexpr (std::is_same<T, char*>())
+		{
+			return _TryParseString(data);
+		}
+
+		return *reinterpret_cast<T*>(&data);
+	}
+};
+
 enum class LuaNativeReturnType
 {
 	NONE,
@@ -62,26 +133,7 @@ enum class LuaNativeReturnType
 	VECTOR3
 };
 
-static const char* _TryParseString(void* ptr)
-{
-	__try
-	{
-		char* string = reinterpret_cast<char*>(ptr);
-
-		for (char* c = string; *c; c++)
-		{
-
-		}
-
-		return string;
-	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
-	{
-		return nullptr;
-	}
-}
-
-static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
+static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
 {
 	nativeInit(hash);
 
@@ -99,11 +151,14 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 		{
 			nativePush(arg.get<const char*>());
 		}
+		else if (arg.is<LuaHolder>())
+		{
+			nativePush(&arg.get<LuaHolder>().data);
+		}
 	}
 
-	void** returned = reinterpret_cast<void**>(nativeCall());
-
-	if (returned)
+	void** returned;
+	if (_CallNative(&returned) && returned)
 	{
 		void* result = *returned;
 
@@ -118,11 +173,10 @@ static sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNative
 		case LuaNativeReturnType::VECTOR3:
 		{
 			LuaVector3 vector3;
-			vector3.x = *reinterpret_cast<float*>(returned);
-			vector3.y = *reinterpret_cast<float*>(returned + 1);
-			vector3.z = *reinterpret_cast<float*>(returned + 2);
-
-			return sol::make_object(lua, vector3);
+			if (_TryParseVector3(returned, &vector3.x, &vector3.y, &vector3.z))
+			{
+				return sol::make_object(lua, vector3);
+			}
 		}
 		}
 	}
@@ -152,8 +206,10 @@ namespace LuaManager
 				lua.open_libraries(sol::lib::math);
 				lua.open_libraries(sol::lib::table);
 				lua.open_libraries(sol::lib::string);
+				lua.open_libraries(sol::lib::bit32);
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
+				lua["GetTickCount"] = GetTickCount64;
 
 				lua["ReturnType"] = lua.create_table_with(
 					"None", LuaNativeReturnType::NONE,
@@ -163,10 +219,17 @@ namespace LuaManager
 					"Vector3", LuaNativeReturnType::VECTOR3
 				);
 
-				lua["Vector3"] = lua.new_usertype<LuaVector3>("Vector3",
+				lua.new_usertype<LuaHolder>("_Holder",
+					"AsInteger", &LuaHolder::As<int>,
+					"AsFloat", &LuaHolder::As<float>,
+					"AsString", &LuaHolder::As<char*>);
+				lua["Holder"] = Generate<LuaHolder>;
+
+				lua.new_usertype<LuaVector3>("_Vector3",
 					"x", &LuaVector3::x,
 					"y", &LuaVector3::y,
 					"z", &LuaVector3::z);
+				lua["Vector3"] = Generate<LuaVector3>;
 
 				lua["_invoke"] = LuaInvoke;
 				lua["WAIT"] = WAIT;
