@@ -59,10 +59,10 @@ static __forceinline bool _CallNative(void*** result)
 	return true;
 }
 
-template <typename T>
-static __forceinline T Generate()
+template <typename T, typename... A>
+static __forceinline T Generate(const A&... args)
 {
-	return T();
+	return T(args...);
 }
 
 struct LuaScript
@@ -100,6 +100,13 @@ static std::map<std::string, LuaScript> s_registeredScripts;
 
 static struct LuaVector3
 {
+	LuaVector3() = default;
+
+	LuaVector3(float x, float y, float z) : x(x), y(y), z(z)
+	{
+
+	}
+
 	float x;
 	DWORD _paddingX;
 	float y;
@@ -110,17 +117,30 @@ static struct LuaVector3
 
 static struct LuaHolder
 {
-	void* data;
+	LuaHolder() = default;
+
+	LuaHolder(const sol::object& obj) : obj(obj)
+	{
+
+	}
+
+	void* data = nullptr;
+	const sol::object obj;
 
 	template <typename T>
-	inline T As()
+	__forceinline T As()
 	{
-		if constexpr (std::is_same<T, char*>())
+		if constexpr(std::is_same<T, char*>())
 		{
 			return _TryParseString(data);
 		}
 
 		return *reinterpret_cast<T*>(&data);
+	}
+
+	__forceinline bool IsValid() const
+	{
+		return data || obj.valid();
 	}
 };
 
@@ -153,7 +173,18 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 		}
 		else if (arg.is<LuaHolder>())
 		{
-			nativePush(&arg.get<LuaHolder>().data);
+			LuaHolder& holder = arg.get<LuaHolder>();
+
+			if (holder.obj.valid())
+			{
+				DWORD64 data = holder.obj.as<DWORD64>();
+
+				nativePush(&data);
+			}
+			else
+			{
+				nativePush(holder.data);
+			}
 		}
 	}
 
@@ -220,16 +251,17 @@ namespace LuaManager
 				);
 
 				lua.new_usertype<LuaHolder>("_Holder",
+					"IsValid", &LuaHolder::IsValid,
 					"AsInteger", &LuaHolder::As<int>,
 					"AsFloat", &LuaHolder::As<float>,
 					"AsString", &LuaHolder::As<char*>);
-				lua["Holder"] = Generate<LuaHolder>;
+				lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 				lua.new_usertype<LuaVector3>("_Vector3",
 					"x", &LuaVector3::x,
 					"y", &LuaVector3::y,
 					"z", &LuaVector3::z);
-				lua["Vector3"] = Generate<LuaVector3>;
+				lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 				lua["_invoke"] = LuaInvoke;
 				lua["WAIT"] = WAIT;
