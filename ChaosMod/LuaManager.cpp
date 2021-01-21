@@ -356,6 +356,13 @@ namespace LuaManager
 									effectData.WeightMult = *weightMultOpt;
 								}
 
+								sol::optional<bool> isMetaOpt = scriptInfo["IsMeta"];
+
+								if (isMetaOpt)
+								{
+									effectData.IsMeta = *isMetaOpt;
+								}
+
 								sol::optional<sol::table> incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
 								if (incompatibleIdsOpt)
 								{
