@@ -239,9 +239,6 @@ namespace LuaManager
 				lua.open_libraries(sol::lib::string);
 				lua.open_libraries(sol::lib::bit32);
 
-				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
-				lua["GetTickCount"] = GetTickCount64;
-
 				lua["ReturnType"] = lua.create_table_with(
 					"None", LuaNativeReturnType::NONE,
 					"Integer", LuaNativeReturnType::INT,
@@ -249,6 +246,14 @@ namespace LuaManager
 					"Float", LuaNativeReturnType::FLOAT,
 					"Vector3", LuaNativeReturnType::VECTOR3
 				);
+
+				if (DoesFileExist("chaosmod\\natives_def.lua"))
+				{
+					lua.unsafe_script_file("chaosmod\\natives_def.lua");
+				}
+
+				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
+				lua["GetTickCount"] = GetTickCount64;
 
 				lua.new_usertype<LuaHolder>("_Holder",
 					"IsValid", &LuaHolder::IsValid,
