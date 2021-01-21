@@ -150,3 +150,12 @@ static void OnStartBaletrailer()
 }
 
 static RegisterEffect registerEffect14(EFFECT_SPAWN_BALETRAILER, OnStartBaletrailer);
+
+static void OnStartRomero()
+{
+	Vector3 playerPos = GetPlayerPos();
+
+	CreatePoolVehicle(GET_HASH_KEY("ROMERO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+}
+
+static RegisterEffect registerEffect15(EFFECT_SPAWN_ROMERO, OnStartRomero);

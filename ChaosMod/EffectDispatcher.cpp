@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime,
 	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 	TwitchOverlayMode twitchOverlayMode)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_disableTwiceInRow(disableTwiceInRow),
+	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime),
 	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
@@ -16,7 +16,7 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_enableNormalEffectDispatch)
+	if (!m_enableNormalEffectDispatch || g_metaInfo.ShouldHideChaosUI)
 	{
 		return;
 	}
@@ -42,7 +42,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText)
+		if (effect.HideText || (g_metaInfo.ShouldHideChaosUI && effect.EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI))
 		{
 			continue;
 		}
@@ -84,11 +84,21 @@ void EffectDispatcher::UpdateTimer()
 
 		m_timerTimer = currentUpdateTime;
 		delta = 0;
+
+		UpdateMetaEffects();
 	}
 
-	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime * 1000)) > 1.f && m_dispatchEffectsOnTimer)
+	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.TimerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
+
+		if (g_metaInfo.AdditionalEffectsToDispatch > 0)
+		{
+			for (int i = 0; i < g_metaInfo.AdditionalEffectsToDispatch; i++)
+			{
+				g_effectDispatcher->DispatchRandomEffect();
+			}
+		}
 
 		m_timerTimerRuns = 0;
 	}
@@ -128,15 +138,21 @@ void EffectDispatcher::UpdateEffects()
 		for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 		{
 			ActiveEffect& effect = *it;
+			EffectData& effectData = g_enabledEffects.at(effect.EffectIdentifier);
+			if (effectData.IsMeta)
+			{
+				effect.Timer--;
+			} 
+			else
+			{
+				effect.Timer -= 1 / g_metaInfo.EffectDurationModifier;
+			}
 
-			effect.Timer--;
-
-			if (effect.Timer == 0
+			if ((effect.MaxTime > 0 && effect.Timer <= 0)
 				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
 			{
 				ThreadManager::StopThread(effect.ThreadId);
 
-				//effect.RegisteredEffect->Stop();
 				it = m_activeEffects.erase(it);
 			}
 			else
@@ -147,49 +163,76 @@ void EffectDispatcher::UpdateEffects()
 	}
 }
 
-void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
+void EffectDispatcher::UpdateMetaEffects()
+{	
+	if (m_metaEffectsEnabled)
+	{
+		m_metaEffectTimer -= 1;
+		if (m_metaEffectTimer <= 0)
+		{
+			m_metaEffectTimer = m_metaEffectSpawnTime;
+			std::vector<EffectIdentifier> availableMetaEffects;
+			for (const auto& pair : g_enabledEffects)
+			{
+				if (pair.second.IsMeta)
+				{
+					availableMetaEffects.push_back(pair.first);
+				}
+			}
+			if (!availableMetaEffects.empty()) 
+			{
+				const EffectIdentifier& randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
+				DispatchEffect(randomMetaEffect, " (Meta)");
+			}
+			else
+			{
+				m_metaEffectsEnabled = false;
+				m_metaEffectTimer = INT_MAX;
+			}
+		}
+	}
+}
+
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* suffix)
 {
+	EffectData& effectData = g_enabledEffects.at(effectIdentifier);
+	if (effectData.TimedType == EffectTimedType::TIMED_PERMANENT)
+	{
+		return;
+	}
+
 	// Increase weight for all effects first
 	for (auto& pair : g_enabledEffects)
 	{
 		pair.second.Weight += pair.second.WeightMult;
 	}
 
-	const EffectInfo& effectInfo = g_effectsMap.at(effectType);
-	EffectData& effectData = g_enabledEffects.at(effectType);
-
 	// Reset weight of this effect to reduce / stop chance of same effect happening multiple times in a row
-	effectData.Weight = m_disableTwiceInRow ? 0 : effectData.WeightMult;
+	effectData.Weight = effectData.WeightMult;
 
-	int effectTime = effectInfo.IsTimed
-		? effectData.CustomTime >= 0
-			? effectData.CustomTime
-			: effectData.TimedType == EffectTimedType::TIMED_SHORT
-				? m_effectTimedShortDur
-				: m_effectTimedDur
-		: -1;
-
-	LOG("Dispatched effect \"" << effectInfo.Name << "\"");
+	LOG("Dispatched effect \"" << effectData.Name << "\"");
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
 	bool alreadyExists = false;
 
-	const std::vector<EffectType>& incompatibleEffects = effectInfo.IncompatibleWith;
+	const std::vector<std::string>& incompatibleIds = effectData.IncompatibleIds;
 
 	std::vector<ActiveEffect>::iterator it;
 	for (it = m_activeEffects.begin(); it != m_activeEffects.end(); )
 	{
-		ActiveEffect& effect = *it;
+		ActiveEffect& activeEffect = *it;
 
-		if (effectInfo.IsTimed && effect.EffectType == effectType)
+		if (activeEffect.EffectIdentifier == effectIdentifier && effectData.TimedType != EffectTimedType::TIMED_UNK && effectData.TimedType != EffectTimedType::TIMED_NOTTIMED)
 		{
 			alreadyExists = true;
-			effect.Timer = effect.MaxTime;
+			activeEffect.Timer = activeEffect.MaxTime;
+
+			break;
 		}
 
 		bool found = false;
-		if (std::find(incompatibleEffects.begin(), incompatibleEffects.end(), effect.EffectType) != incompatibleEffects.end())
+		if (std::find(incompatibleIds.begin(), incompatibleIds.end(), g_enabledEffects.at(activeEffect.EffectIdentifier).Id) != incompatibleIds.end())
 		{
 			found = true;
 		}
@@ -197,9 +240,9 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 		// Check if current effect is marked as incompatible in active effect
 		if (!found)
 		{
-			const std::vector<EffectType>& activeIncompatibleEffects = g_effectsMap.at(effect.EffectType).IncompatibleWith;
+			const std::vector<std::string>& activeIncompatibleIds = g_enabledEffects.at(activeEffect.EffectIdentifier).IncompatibleIds;
 
-			if (std::find(activeIncompatibleEffects.begin(), activeIncompatibleEffects.end(), effectType) != activeIncompatibleEffects.end())
+			if (std::find(activeIncompatibleIds.begin(), activeIncompatibleIds.end(), effectData.Id) != activeIncompatibleIds.end())
 			{
 				found = true;
 			}
@@ -207,9 +250,8 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 		if (found)
 		{
-			ThreadManager::StopThread(effect.ThreadId);
+			ThreadManager::StopThread(activeEffect.ThreadId);
 
-			//effect.RegisteredEffect->Stop();
 			it = m_activeEffects.erase(it);
 		}
 		else
@@ -220,14 +262,12 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 
 	if (!alreadyExists)
 	{
-		RegisteredEffect* registeredEffect = GetRegisteredEffect(effectType);
+		RegisteredEffect* registeredEffect = GetRegisteredEffect(effectIdentifier);
 
 		if (registeredEffect)
 		{
-			//registeredEffect->Start();
-
 			std::ostringstream ossEffectName;
-			ossEffectName << effectData.Name;
+			ossEffectName << (effectData.HasCustomName ? effectData.CustomName : effectData.Name);
 
 			if (suffix && strlen(suffix) > 0)
 			{
@@ -240,9 +280,23 @@ void EffectDispatcher::DispatchEffect(EffectType effectType, const char* suffix)
 			Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 
 			// Play a sound if corresponding .mp3 file exists
-			Mp3Manager::PlayChaosSoundFile(effectInfo.Id);
+			Mp3Manager::PlayChaosSoundFile(effectData.Id);
 
-			m_activeEffects.emplace_back(effectType, registeredEffect, ossEffectName.str(), effectTime);
+			int effectTime = -1;
+			switch (effectData.TimedType)
+			{
+			case EffectTimedType::TIMED_NORMAL:
+				effectTime = m_effectTimedDur;
+				break;
+			case EffectTimedType::TIMED_SHORT:
+				effectTime = m_effectTimedShortDur;
+				break;
+			case EffectTimedType::TIMED_CUSTOM:
+				effectTime = effectData.CustomTime;
+				break;
+			}
+
+			m_activeEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectTime);
 		}
 	}
 
@@ -256,15 +310,15 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		return;
 	}
 
-	std::map<EffectType, EffectData> choosableEffects;
+	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto& pair : g_enabledEffects)
 	{
-		EffectType effectType = pair.first;
+		const EffectIdentifier& effectIdentifier = pair.first;
 		const EffectData& effectData = pair.second;
 
-		if (!effectData.Permanent && (!m_disableTwiceInRow || effectType != m_lastEffect))
+		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
-			choosableEffects.emplace(effectType, effectData);
+			choosableEffects.emplace(effectIdentifier, effectData);
 		}
 	}
 
@@ -277,10 +331,10 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	int index = g_random.GetRandomInt(0, effectsTotalWeight);
 
 	int addedUpWeight = 0;
-	auto targetEffectType = _EFFECT_ENUM_MAX;
+	const EffectIdentifier* targetEffectIdentifier = nullptr;
 	for (const auto& pair : choosableEffects)
 	{
-		if (pair.second.Permanent)
+		if (pair.second.TimedType == EffectTimedType::TIMED_PERMANENT)
 		{
 			continue;
 		}
@@ -289,19 +343,14 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 		if (index <= addedUpWeight)
 		{
-			targetEffectType = pair.first;
+			targetEffectIdentifier = &pair.first;
 			break;
 		}
 	}
 
-	if (targetEffectType != _EFFECT_ENUM_MAX)
+	if (targetEffectIdentifier)
 	{
-		if (m_disableTwiceInRow)
-		{
-			m_lastEffect = targetEffectType;
-		}
-
-		DispatchEffect(targetEffectType, suffix);
+		DispatchEffect(*targetEffectIdentifier, suffix);
 	}
 }
 
@@ -309,16 +358,8 @@ void EffectDispatcher::ClearEffects()
 {
 	ThreadManager::StopThreads();
 
-	/*for (RegisteredEffect* effect : m_permanentEffects)
-	{
-		effect->Stop();
-	}*/
 	m_permanentEffects.clear();
 
-	/*for (ActiveEffect& effect : m_activeEffects)
-	{
-		effect.RegisteredEffect->Stop();
-	}*/
 	m_activeEffects.clear();
 }
 
@@ -328,10 +369,12 @@ void EffectDispatcher::Reset()
 	ResetTimer();
 
 	m_enableNormalEffectDispatch = false;
+	m_metaEffectsEnabled = true;
+	m_metaEffectTimer = m_metaEffectSpawnTime;
 
 	for (const auto& pair : g_enabledEffects)
 	{
-		if (pair.second.Permanent)
+		if (pair.second.TimedType == EffectTimedType::TIMED_PERMANENT)
 		{
 			// Always run permanent timed effects in background
 			RegisteredEffect* registeredEffect = GetRegisteredEffect(pair.first);

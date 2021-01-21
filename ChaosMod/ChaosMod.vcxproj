@@ -88,6 +88,10 @@
     <ClCompile Include="DebugMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EffectDispatcher.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
@@ -111,7 +115,6 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsTPose.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
@@ -128,6 +131,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
@@ -282,6 +286,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="LuaManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
@@ -301,15 +306,22 @@
     <ClCompile Include="Util\PoolSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="..\vendor\lua\lua54.lib" />
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
+    <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
+    <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
+    <ClInclude Include="Effects\MetaEffectInfo.h" />
+    <ClInclude Include="Effects\EffectTimedType.h" />
+    <ClInclude Include="Effects\EnabledEffectsMap.h" />
+    <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />

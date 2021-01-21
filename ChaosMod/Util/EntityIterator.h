@@ -123,7 +123,7 @@ inline std::vector<Entity> GetAllOfEntityType(ReturnedEntityType entityType)
 				{
 					int handle = _addEntityToPoolFunc(addr);
 
-					if ((handle >> 8) < pedPool->Size && DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(handle))
 					{
 						entities.push_back(handle);
 					}
@@ -143,7 +143,7 @@ inline std::vector<Entity> GetAllOfEntityType(ReturnedEntityType entityType)
 				{
 					int handle = _addEntityToPoolFunc(addr);
 
-					if ((handle >> 8) < vehPool->Size && DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(handle))
 					{
 						entities.push_back(handle);
 					}
@@ -163,7 +163,7 @@ inline std::vector<Entity> GetAllOfEntityType(ReturnedEntityType entityType)
 				{
 					int handle = _addEntityToPoolFunc(addr);
 
-					if ((handle >> 8) < propPool->Size && DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(handle))
 					{
 						entities.push_back(handle);
 					}
