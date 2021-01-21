@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime,
+EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
 	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 	TwitchOverlayMode twitchOverlayMode)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime),
-	m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor), m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
+	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime), 
+	m_metaEffectTimedDur(metaEffectTimedDur), m_metaEffectShortDur(metaEffectShortDur), m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor),
+	m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
 {
 	Reset();
 }
@@ -84,8 +85,6 @@ void EffectDispatcher::UpdateTimer()
 
 		m_timerTimer = currentUpdateTime;
 		delta = 0;
-
-		UpdateMetaEffects();
 	}
 
 	if ((m_percentage = (delta + (m_timerTimerRuns * 1000)) / (m_effectSpawnTime / g_metaInfo.TimerSpeedModifier * 1000)) > 1.f && m_dispatchEffectsOnTimer)
@@ -167,6 +166,13 @@ void EffectDispatcher::UpdateMetaEffects()
 {	
 	if (m_metaEffectsEnabled)
 	{
+		DWORD64 currentUpdateTime = GetTickCount64();
+		if (currentUpdateTime - m_metaTimer < 1000)
+		{
+			return;
+		}
+		m_metaTimer = currentUpdateTime;
+
 		m_metaEffectTimer -= 1;
 		if (m_metaEffectTimer <= 0)
 		{
@@ -286,10 +292,10 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			switch (effectData.TimedType)
 			{
 			case EffectTimedType::TIMED_NORMAL:
-				effectTime = m_effectTimedDur;
+				effectTime = effectData.IsMeta ? m_metaEffectTimedDur : m_effectTimedDur;
 				break;
 			case EffectTimedType::TIMED_SHORT:
-				effectTime = m_effectTimedShortDur;
+				effectTime = effectData.IsMeta ? m_metaEffectShortDur : m_effectTimedShortDur;
 				break;
 			case EffectTimedType::TIMED_CUSTOM:
 				effectTime = effectData.CustomTime;
@@ -400,4 +406,6 @@ void EffectDispatcher::ResetTimer()
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();
+	m_metaTimer = GetTickCount64();
+	m_metaEffectTimer = m_metaEffectSpawnTime;
 }
