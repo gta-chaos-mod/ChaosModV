@@ -58,10 +58,13 @@ namespace Shared
 
         public void WriteValue(string key, string value)
         {
-            // Don't allow empty strings as an ugly workaround for easily not saving empty text fields
             if (value != null && value.Trim().Length > 0)
             {
                 m_options[key] = value;
+            }
+            else
+            {
+                m_options.Remove(key);
             }
         }
 

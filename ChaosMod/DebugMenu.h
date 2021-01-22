@@ -1,24 +1,27 @@
 #pragma once
-#include "EffectDispatcher.h"
+
+#include "Effects/EffectIdentifier.h"
+
 #include <vector>
 #include <memory>
-
-enum EffectType : int;
 
 typedef unsigned long DWORD;
 
 struct DebugEffect
 {
-	DebugEffect(EffectType effectType, const char* effectName) : EffectType(effectType), EffectName(effectName) {}
+	DebugEffect(const EffectIdentifier& effectIdentifier, const std::string& effectName) : EffectIdentifier(effectIdentifier), EffectName(effectName)
+	{
+	
+	}
 
-	EffectType EffectType;
+	EffectIdentifier EffectIdentifier;
 	std::string EffectName;
 };
 
 class DebugMenu
 {
 public:
-	DebugMenu(std::vector<EffectType> effects);
+	DebugMenu();
 
 	void Tick();
 	void HandleInput(DWORD key, bool onRepeat);
