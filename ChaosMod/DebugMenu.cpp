@@ -8,17 +8,21 @@
 
 DebugMenu::DebugMenu()
 {
-	if (g_enabledEffects.empty())
-	{
-		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
-		return;
-	}
-
 	for (const auto& pair : g_enabledEffects)
 	{
 		const EffectData& effectData = pair.second;
 
-		m_effects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
+		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT)
+		{
+			m_effects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
+		}
+	}
+
+	if (m_effects.empty())
+	{
+		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
+
+		return;
 	}
 
 	std::sort(m_effects.begin(), m_effects.end(), [](DebugEffect a, DebugEffect b)
