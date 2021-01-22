@@ -137,7 +137,7 @@ void TwitchVoting::Tick()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (*m_chosenEffectIdentifier == _EFFECT_ENUM_MAX)
+			if (m_chosenEffectIdentifier->GetEffectType() == _EFFECT_ENUM_MAX && m_chosenEffectIdentifier->GetScriptId().empty())
 			{
 				g_effectDispatcher->DispatchRandomEffect();
 			}
@@ -164,7 +164,7 @@ void TwitchVoting::Tick()
 
 		m_isVotingRunning = true;
 
-		*m_chosenEffectIdentifier = _EFFECT_ENUM_MAX;
+		m_chosenEffectIdentifier = std::make_unique<EffectIdentifier>(_EFFECT_ENUM_MAX);
 
 		if (m_enableTwitchPollVoting)
 		{
