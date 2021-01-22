@@ -188,7 +188,7 @@ void EffectDispatcher::UpdateMetaEffects()
 			if (!availableMetaEffects.empty()) 
 			{
 				const EffectIdentifier& randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
-				DispatchEffect(randomMetaEffect, " (Meta)");
+				DispatchEffect(randomMetaEffect, "(Meta)");
 			}
 			else
 			{
