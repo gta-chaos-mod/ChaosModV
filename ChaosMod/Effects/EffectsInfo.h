@@ -269,6 +269,7 @@ enum EffectType
 	EFFECT_META_ADDITIONAL_EFFECTS,
 	EFFECT_VEHS_CRUMBLE,
 	EFFECT_MISC_FPS_LIMIT,
+	EFFECT_VEHS_FUELSPILL,
 	_EFFECT_ENUM_MAX
 };
 
@@ -559,4 +560,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
 	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
+	{EFFECT_VEHS_FUELSPILL, {"Fuel Spill", "veh_fuelspill", true, {}, true}},
 };
