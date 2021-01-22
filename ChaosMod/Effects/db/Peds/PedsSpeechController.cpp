@@ -46,7 +46,7 @@ static void OnTickUnfriendly()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_PEDS_KIFFLOM, nullptr, nullptr, OnTickUnfriendly);
+static RegisterEffect registerEffect2(EFFECT_PEDS_INSULT, nullptr, nullptr, OnTickUnfriendly);
 
 static void OnTickKifflom()
 {
@@ -61,9 +61,7 @@ static void OnTickKifflom()
 		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
 			{
-				constexpr const char* speechesKifflom{ "KIFFLOM_GREET" };
-
-				_PLAY_AMBIENT_SPEECH1(ped, speechesKifflom, "SPEECH_PARAMS_FORCE_SHOUTED", 1);
+				_PLAY_AMBIENT_SPEECH1(ped, "KIFFLOM_GREET", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 			}
 		}
 	}
