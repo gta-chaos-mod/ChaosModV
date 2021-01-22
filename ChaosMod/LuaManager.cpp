@@ -267,6 +267,7 @@ namespace LuaManager
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
 				lua["GetTickCount"] = GetTickCount64;
+				lua["GET_HASH_KEY"] = GET_HASH_KEY;
 
 				lua.new_usertype<LuaHolder>("_Holder",
 					"IsValid", &LuaHolder::IsValid,
