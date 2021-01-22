@@ -377,6 +377,7 @@ void EffectDispatcher::Reset()
 	m_enableNormalEffectDispatch = false;
 	m_metaEffectsEnabled = true;
 	m_metaEffectTimer = m_metaEffectSpawnTime;
+	m_metaTimer = GetTickCount64();
 
 	for (const auto& pair : g_enabledEffects)
 	{
@@ -406,6 +407,4 @@ void EffectDispatcher::ResetTimer()
 	m_timerTimer = GetTickCount64();
 	m_timerTimerRuns = 0;
 	m_effectsTimer = GetTickCount64();
-	m_metaTimer = GetTickCount64();
-	m_metaEffectTimer = m_metaEffectSpawnTime;
 }
