@@ -186,23 +186,16 @@ void Main::Init()
 
 void Main::Reset()
 {
-	static bool firstLoad = true;
+	g_effectDispatcher.reset();
 
-	if (!firstLoad)
+	if (m_enableDebugMenu)
 	{
-		g_effectDispatcher.reset();
-
-		if (m_enableDebugMenu)
-		{
-			m_debugMenu.reset();
-		}
-
-		m_twitchVoting.reset();
-
-		ClearEntityPool();
+		m_debugMenu.reset();
 	}
 
-	firstLoad = false;
+	m_twitchVoting.reset();
+
+	ClearEntityPool();
 }
 
 void Main::Loop()
@@ -225,6 +218,7 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
+
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;
@@ -259,7 +253,7 @@ void Main::Loop()
 				ClearEntityPool();
 			}
 
-			if (m_debugMenu && m_debugMenu->IsVisible())
+			if (m_enableDebugMenu && m_debugMenu->IsVisible())
 			{
 				// Arrow Up
 				DISABLE_CONTROL_ACTION(1, 27, true);
