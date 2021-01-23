@@ -155,6 +155,37 @@ static void ParseEffectsFile()
 
 void Main::Init()
 {
+	static std::streambuf* oldStreamBuf;
+	if (DoesFileExist("chaosmod\\.enableconsole"))
+	{
+		if (GetConsoleWindow())
+		{
+			system("cls");
+		}
+		else
+		{
+			AllocConsole();
+
+			SetConsoleTitle("Chaos Mod");
+			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
+
+			oldStreamBuf = std::cout.rdbuf();
+
+			g_consoleOut = std::ofstream("CONOUT$");
+			std::cout.rdbuf(g_consoleOut.rdbuf());
+
+			std::cout.clear();
+		}
+	}
+	else if (GetConsoleWindow())
+	{
+		std::cout.rdbuf(oldStreamBuf);
+
+		g_consoleOut.close();
+
+		FreeConsole();
+	}
+
 	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime, metaEffectTimedDur, metaEffectShortDur;
 	bool enableTwitchVoting, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable;
 	std::array<int, 3> timerColor, textColor, effectTimerColor;

@@ -2,12 +2,12 @@
 
 static __forceinline void LuaPrint(const std::string& text)
 {
-	g_log << "[Lua] " << text << std::endl;
+	RAW_LOG("[Lua] " << text);
 }
 
 static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
-	g_log << "[Lua] " << name << ": " << text << std::endl;
+	RAW_LOG("[Lua] " << name << ": " << text);
 }
 
 static __forceinline char* _TryParseString(void* ptr)

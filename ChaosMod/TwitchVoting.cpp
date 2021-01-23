@@ -23,7 +23,13 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 	char buffer[128];
 	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe");
 #ifdef _DEBUG
-	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, 0, NULL, NULL, &startupInfo, &procInfo);
+	DWORD attributes = NULL;
+	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
+	{
+		attributes = CREATE_NO_WINDOW;
+	}
+
+	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
 #else
 	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
