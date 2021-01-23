@@ -67,6 +67,8 @@ static __forceinline T Generate(const A&... args)
 
 struct LuaScript
 {
+	LuaScript() = default;
+
 	LuaScript(const std::string& fileName, sol::state& lua) : m_fileName(fileName), m_lua(std::move(lua))
 	{
 
@@ -96,7 +98,7 @@ private:
 	sol::state m_lua;
 };
 
-static std::map<std::string, LuaScript> s_registeredScripts;
+static std::unordered_map<std::string, LuaScript> s_registeredScripts;
 
 static struct LuaVector3
 {
@@ -445,14 +447,7 @@ namespace LuaManager
 
 	void Execute(const std::string& scriptId, const char* funcName)
 	{
-		const auto& result = s_registeredScripts.find(scriptId);
-
-		if (result == s_registeredScripts.end())
-		{
-			return;
-		}
-
-		const LuaScript& script = result->second;
+		const LuaScript& script = s_registeredScripts[scriptId];
 
 		script.Execute(funcName);
 	}
