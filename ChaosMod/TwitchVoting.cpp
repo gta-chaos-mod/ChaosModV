@@ -110,7 +110,7 @@ void TwitchVoting::Tick()
 		}
 	}
 
-	if (g_effectDispatcher->GetRemainingTimerTime() == 1)
+	if (g_effectDispatcher->GetRemainingTimerTime() <= 1 && !m_hasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -137,8 +137,6 @@ void TwitchVoting::Tick()
 			{
 				m_noVoteRound = false;
 			}
-
-			m_isVotingRunning = false;
 		}
 		else
 		{
@@ -152,8 +150,6 @@ void TwitchVoting::Tick()
 				g_effectDispatcher->DispatchEffect(*m_chosenEffectIdentifier);
 			}
 			g_effectDispatcher->ResetTimer();
-
-			m_isVotingRunning = false;
 		}
 
 		if (g_metaInfo.AdditionalEffectsToDispatch > 0) 
@@ -163,12 +159,16 @@ void TwitchVoting::Tick()
 				g_effectDispatcher->DispatchRandomEffect();
 			}
 		}
+
+		m_isVotingRoundDone = true;
 	}
-	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting))
+	else if (!m_isVotingRunning && m_receivedFirstPing && (m_twitchSecsBeforeVoting == 0 || g_effectDispatcher->GetRemainingTimerTime() <= m_twitchSecsBeforeVoting) && m_isVotingRoundDone)
 	{
 		// New voting round
 
 		m_isVotingRunning = true;
+		m_hasReceivedResult = false;
+		m_isVotingRoundDone = false;
 
 		m_chosenEffectIdentifier = std::make_unique<EffectIdentifier>(_EFFECT_ENUM_MAX);
 
@@ -350,6 +350,8 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 	else if (msg._Starts_with("voteresult"))
 	{
 		int result = std::stoi(msg.substr(msg.find(":") + 1));
+
+		m_hasReceivedResult = true;
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
 		m_chosenEffectIdentifier = std::make_unique<EffectIdentifier>(result == 3 ? _EFFECT_ENUM_MAX : m_effectChoices[result]->EffectIdentifier);

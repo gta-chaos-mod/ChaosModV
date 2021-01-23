@@ -12,6 +12,8 @@
 #include <memory>
 #include <map>
 
+#include "Effects/MetaEffectInfo.h"
+
 enum class TwitchOverlayMode;
 
 class EffectDispatcher
@@ -29,11 +31,11 @@ public:
 	void OverrideTimerDontDispatch(bool state);
 	inline bool ShouldDispatchEffectNow() const
 	{
-		return GetRemainingTimerTime() == 0;
+		return GetRemainingTimerTime() <= 0;
 	}
 	inline int GetRemainingTimerTime() const
 	{
-		return m_effectSpawnTime - m_timerTimerRuns;
+		return m_effectSpawnTime / g_metaInfo.TimerSpeedModifier - m_timerTimerRuns;
 	}
 	void UpdateEffects();
 	void UpdateMetaEffects();

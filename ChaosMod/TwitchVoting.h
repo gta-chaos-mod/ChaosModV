@@ -41,6 +41,8 @@ private:
 	const bool m_enableTwitchChanceSystem;
 	const bool m_enableVotingChanceSystemRetainChance;
 	const bool m_enableTwitchRandomEffectVoteable;
+	bool m_hasReceivedResult = false;
+	bool m_isVotingRoundDone = true;
 
 	bool m_isVotingRunning = false;
 
