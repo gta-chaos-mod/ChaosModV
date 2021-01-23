@@ -47,18 +47,14 @@ static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float
 
 static __forceinline bool _CallNative(void*** result)
 {
-	void** _result;
-
 	__try
 	{
-		_result = reinterpret_cast<void**>(nativeCall());
+		*result = reinterpret_cast<void**>(nativeCall());
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER)
 	{
 		return false;
 	}
-
-	*result = _result;
 
 	return true;
 }
