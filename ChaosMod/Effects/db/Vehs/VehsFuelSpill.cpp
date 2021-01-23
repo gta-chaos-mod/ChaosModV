@@ -8,7 +8,7 @@ static void OnTick()
 {
 	for (auto veh : GetAllVehs())
 	{
-		SET_VEHICLE_PETROL_TANK_HEALTH(veh, 0);
+		SET_VEHICLE_PETROL_TANK_HEALTH(veh, 0.f);
 	}
 }
 
