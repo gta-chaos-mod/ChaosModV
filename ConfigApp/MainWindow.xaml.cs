@@ -124,9 +124,9 @@ namespace ConfigApp
             }
 
             // Meta Effects
-            meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "480");
-            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "110");
-            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "75");
+            meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
+            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "100");
+            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "70");
         }
 
         private void WriteConfigFile()
