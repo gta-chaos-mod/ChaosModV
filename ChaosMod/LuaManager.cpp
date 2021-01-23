@@ -23,7 +23,7 @@ static __forceinline char* _TryParseString(void* ptr)
 
 		return string;
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
 	{
 		return nullptr;
 	}
@@ -37,7 +37,7 @@ static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float
 		*y = *reinterpret_cast<float*>(ptr + 1);
 		*z = *reinterpret_cast<float*>(ptr + 2);
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
 	{
 		return false;
 	}
@@ -47,14 +47,18 @@ static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float
 
 static __forceinline bool _CallNative(void*** result)
 {
+	void** _result;
+
 	__try
 	{
-		*result = reinterpret_cast<void**>(nativeCall());
+		_result = reinterpret_cast<void**>(nativeCall());
 	}
-	__except (GetExceptionCode())
+	__except (EXCEPTION_EXECUTE_HANDLER)
 	{
 		return false;
 	}
+
+	*result = _result;
 
 	return true;
 }
@@ -72,20 +76,20 @@ struct LuaScript
 
 	}
 
-	void Execute(const char* funcName) const
+	void Execute(const char* const funcName) const
 	{
-		sol::protected_function func = m_lua[funcName];
+		const sol::protected_function& func = m_lua[funcName];
 
 		if (!func.valid())
 		{
 			return;
 		}
 
-		sol::protected_function_result result = func();
+		const sol::protected_function_result& result = func();
 
 		if (!result.valid())
 		{
-			sol::error error = result;
+			const sol::error& error = result;
 
 			LuaPrint(m_fileName, error.what());
 		}
@@ -196,7 +200,7 @@ static __forceinline sol::object LuaInvoke(const std::string& fileName, const so
 	void** returned;
 	if (!_CallNative(&returned))
 	{
-		LuaPrint(fileName, "Error while invoking native 0x" + nativeHash);
+		LuaPrint(fileName, (std::ostringstream() << "Error while invoking native 0x" << nativeHash).str());
 	}
 	else if (returned)
 	{
@@ -305,24 +309,24 @@ namespace LuaManager
 				lua["GetAllPedModels"] = Memory::GetAllPedModels;
 				lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
 
-				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
+				const sol::protected_function_result& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 
 				if (!result.valid())
 				{
-					sol::error error = result;
+					const sol::error& error = result;
 
 					LuaPrint(fileName, error.what());
 				}
 				else
 				{
-					sol::optional<sol::table> scriptInfoOpt = lua["ScriptInfo"];
+					const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
 
 					if (scriptInfoOpt)
 					{
 						const sol::table& scriptInfo = *scriptInfoOpt;
 
-						sol::optional<std::string> scriptNameOpt = scriptInfo["Name"];
-						sol::optional<std::string> scriptIdOpt = scriptInfo["ScriptId"];
+						const sol::optional<std::string>& scriptNameOpt = scriptInfo["Name"];
+						const sol::optional<std::string>& scriptIdOpt = scriptInfo["ScriptId"];
 
 						if (scriptNameOpt && scriptIdOpt)
 						{
@@ -378,7 +382,7 @@ namespace LuaManager
 									}
 									else if (timedTypeText == "Custom")
 									{
-										sol::optional<int> durationOpt = scriptInfo["CustomTime"];
+										const sol::optional<int>& durationOpt = scriptInfo["CustomTime"];
 
 										if (durationOpt && *durationOpt > 0)
 										{
@@ -388,21 +392,21 @@ namespace LuaManager
 									}
 								}
 
-								sol::optional<int> weightMultOpt = scriptInfo["WeightMultiplier"];
+								const sol::optional<int>& weightMultOpt = scriptInfo["WeightMultiplier"];
 
 								if (weightMultOpt && *weightMultOpt > 0)
 								{
 									effectData.WeightMult = *weightMultOpt;
 								}
 
-								sol::optional<bool> isMetaOpt = scriptInfo["IsMeta"];
+								const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
 
 								if (isMetaOpt)
 								{
 									effectData.IsMeta = *isMetaOpt;
 								}
 
-								sol::optional<sol::table> incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
+								const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
 								if (incompatibleIdsOpt)
 								{
 									const sol::table& incompatibleIds = *incompatibleIdsOpt;

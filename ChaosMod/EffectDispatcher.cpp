@@ -388,7 +388,6 @@ void EffectDispatcher::Reset()
 
 			if (registeredEffect)
 			{
-				//registeredEffect->Start();
 				m_permanentEffects.push_back(registeredEffect);
 
 				ThreadManager::CreateThread(registeredEffect, true);

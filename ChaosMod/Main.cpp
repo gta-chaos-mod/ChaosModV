@@ -266,6 +266,13 @@ void Main::Loop()
 			}
 			else if (justReenabled)
 			{
+				if (ThreadManager::IsAnyThreadRunning())
+				{
+					ThreadManager::RunThreads();
+
+					continue;
+				}
+
 				justReenabled = false;
 
 				// Clear log
