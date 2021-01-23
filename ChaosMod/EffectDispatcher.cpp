@@ -180,7 +180,7 @@ void EffectDispatcher::UpdateMetaEffects()
 			std::vector<EffectIdentifier> availableMetaEffects;
 			for (const auto& pair : g_enabledEffects)
 			{
-				if (pair.second.IsMeta)
+				if (pair.second.IsMeta && pair.second.TimedType != EffectTimedType::TIMED_PERMANENT)
 				{
 					availableMetaEffects.push_back(pair.first);
 				}
