@@ -51,7 +51,7 @@ static __forceinline bool _CallNative(void*** result)
 	{
 		*result = reinterpret_cast<void**>(nativeCall());
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (GetExceptionCode())
 	{
 		return false;
 	}
@@ -154,9 +154,9 @@ enum class LuaNativeReturnType
 	VECTOR3
 };
 
-static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
+static __forceinline sol::object LuaInvoke(const std::string& fileName, const sol::this_state& lua, DWORD64 nativeHash, LuaNativeReturnType returnType, const sol::variadic_args& args)
 {
-	nativeInit(hash);
+	nativeInit(nativeHash);
 
 	for (const sol::stack_proxy& arg : args)
 	{
@@ -194,7 +194,11 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 	}
 
 	void** returned;
-	if (_CallNative(&returned) && returned)
+	if (!_CallNative(&returned))
+	{
+		LuaPrint(fileName, "Error while invoking native 0x" + nativeHash);
+	}
+	else if (returned)
 	{
 		void* result = *returned;
 
@@ -283,7 +287,8 @@ namespace LuaManager
 					"z", &LuaVector3::z);
 				lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
-				lua["_invoke"] = LuaInvoke;
+				lua["_invoke"] = [fileName](const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
+					{ return LuaInvoke(fileName, lua, hash, returnType, args); };
 				lua["WAIT"] = WAIT;
 
 				lua["GetAllPeds"] = GetAllPeds;
@@ -295,6 +300,10 @@ namespace LuaManager
 
 				lua["GetAllProps"] = GetAllProps;
 				lua["CreatePoolProp"] = CreatePoolProp;
+
+				lua["GetAllWeapons"] = Memory::GetAllWeapons;
+				lua["GetAllPedModels"] = Memory::GetAllPedModels;
+				lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
 
 				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
 
