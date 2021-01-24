@@ -29,13 +29,13 @@ static __forceinline char* _TryParseString(void* ptr)
 	}
 }
 
-static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float* z)
+static __forceinline bool _TryParseVector3(void** ptr, float& x, float& y, float& z)
 {
 	__try
 	{
-		*x = *reinterpret_cast<float*>(ptr);
-		*y = *reinterpret_cast<float*>(ptr + 1);
-		*z = *reinterpret_cast<float*>(ptr + 2);
+		x = *reinterpret_cast<float*>(ptr);
+		y = *reinterpret_cast<float*>(ptr + 1);
+		z = *reinterpret_cast<float*>(ptr + 2);
 	}
 	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
 	{
@@ -109,11 +109,11 @@ static struct LuaVector3
 
 	}
 
-	float x;
+	float x = 0.f;
 	DWORD _paddingX;
-	float y;
+	float y = 0.f;
 	DWORD _paddingY;
-	float z;
+	float z = 0.f;
 	DWORD _paddingZ;
 };
 
@@ -132,9 +132,15 @@ static struct LuaHolder
 	template <typename T>
 	__forceinline T As()
 	{
-		if constexpr(std::is_same<T, char*>())
+		if constexpr (std::is_same<T, char*>())
 		{
 			return _TryParseString(data);
+		}
+		else if constexpr (std::is_same<T, LuaVector3>())
+		{
+			float x, y, z;
+
+			return _TryParseVector3(&data, x, y, z) ? LuaVector3(x, y, z) : LuaVector3();
 		}
 
 		return *reinterpret_cast<T*>(&data);
@@ -217,7 +223,7 @@ static __forceinline sol::object LuaInvoke(const std::string& fileName, const so
 		case LuaNativeReturnType::VECTOR3:
 		{
 			LuaVector3 vector3;
-			if (_TryParseVector3(returned, &vector3.x, &vector3.y, &vector3.z))
+			if (_TryParseVector3(returned, vector3.x, vector3.y, vector3.z))
 			{
 				return sol::make_object(lua, vector3);
 			}
@@ -280,7 +286,8 @@ namespace LuaManager
 					"AsBoolean", &LuaHolder::As<bool>,
 					"AsInteger", &LuaHolder::As<int>,
 					"AsFloat", &LuaHolder::As<float>,
-					"AsString", &LuaHolder::As<char*>);
+					"AsString", &LuaHolder::As<char*>,
+					"AsVector3", &LuaHolder::As<LuaVector3>);
 				lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 				lua.new_usertype<LuaVector3>("_Vector3",
