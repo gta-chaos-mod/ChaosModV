@@ -24,6 +24,7 @@ const char* ROULETTE_WORDS[] =
     "BURHAC!!",
     "SAURUS88",
     "TORIKSLV",
+    "TOASTYYY",
 };
 
 const char* WIN_PHRASES[] =
