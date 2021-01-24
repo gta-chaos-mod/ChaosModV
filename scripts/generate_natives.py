@@ -1,22 +1,21 @@
-def parse_line(line, _out):
-    if not "static " in line or len(line.split("//")[0].strip()) == 0:
-        return
-    
-    print(line)
+import json
+import urllib.request
 
-    split = line.split("static ")[1].split(" ")
-    return_type = split[0]
+def parse_native(nativeHash, nativeData, _out):
+    return_type = nativeData["return_type"]
 
-    split = line.split("(")[0].split(" ")
-    native_name = split[len(split) - 1]
+    native_name = nativeData["name"]
 
-    split = line.split(">(")[1].split(");")[0].split(", ")
+    print(native_name)
 
-    hash = split[0]
-    args = split[1:]
-    for i in range(len(args)):
-        if args[i] == "end" or args[i] == "repeat":
-            args[i] = "_" + args[i]
+    args = []
+    for arg in nativeData["params"]:
+        argName = arg["name"]
+
+        if argName == "end" or argName == "repeat":
+            argName = "_" + argName
+        
+        args.append(argName)
 
     _out.write("function " + native_name + "(")
     for i in range(len(args)):
@@ -33,7 +32,7 @@ def parse_line(line, _out):
         target_type = "_i"
     elif return_type == "float":
         target_type = "_f"
-    elif return_type == "const char*":
+    elif return_type == "const char*" or return_type == "char*":
         target_type = "_s"
     elif return_type == "Vector3":
         target_type = "_v"
@@ -41,7 +40,7 @@ def parse_line(line, _out):
     _out.write("   ")
     if target_type != "_":
         _out.write("return ")
-    _out.write("_invoke(" + hash + "," + target_type)
+    _out.write("_invoke(" + nativeHash + "," + target_type)
 
     if len(args) > 0:
         _out.write(",")
@@ -51,9 +50,18 @@ def parse_line(line, _out):
                 _out.write(",")
     _out.write(")\nend\n\n")
 
-with open("../vendor/scripthookv/inc/natives.h", "r") as _in:
-    with open("natives_def.lua", "w") as _out:
-        _out.write("local _,_b,_i,_f,_s,_v=ReturnType.None,ReturnType.Boolean,ReturnType.Integer,ReturnType.Float,ReturnType.String,ReturnType.Vector3\n\n")
+# Thanks to alloc8or for the natives.json
+try:
+    result = urllib.request.urlopen("https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json").read()
+except urllib.error.URLError:
+    print("Errow while fetching natives.json, aborting!")
+    exit()
 
-        for line in _in:
-            parse_line(line, _out)
+json = json.loads(result)
+
+with open("natives_def.lua", "w") as _out:
+    _out.write("local _,_b,_i,_f,_s,_v=ReturnType.None,ReturnType.Boolean,ReturnType.Integer,ReturnType.Float,ReturnType.String,ReturnType.Vector3\n\n")
+
+    for _, nativeNamespace in json.items():
+        for nativeHash, nativeData in nativeNamespace.items():
+            parse_native(nativeHash, nativeData, _out)
