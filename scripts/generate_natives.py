@@ -54,7 +54,7 @@ def parse_native(nativeHash, nativeData, _out):
 try:
     result = urllib.request.urlopen("https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json").read()
 except urllib.error.URLError:
-    print("Errow while fetching natives.json, aborting!")
+    print("Error while fetching natives.json, aborting!")
     exit()
 
 json = json.loads(result)
