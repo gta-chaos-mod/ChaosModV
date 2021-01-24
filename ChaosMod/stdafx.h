@@ -56,6 +56,7 @@
 #include <WinUser.h>
 #include <Psapi.h>
 #include <minidumpapiset.h>
+#include <TlHelp32.h>
 
 #include <fstream>
 #include <array>
