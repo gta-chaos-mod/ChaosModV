@@ -38,8 +38,8 @@ static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed
 	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
 	// Meta Config
 	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 600);
-	metaEffectTimedDur = configFile.ReadValueInt("MetaEffectDur", 100);
-	metaEffectShortDur = configFile.ReadValueInt("MetaShortEffectDur", 70);
+	metaEffectTimedDur = configFile.ReadValueInt("MetaEffectDur", 90);
+	metaEffectShortDur = configFile.ReadValueInt("MetaShortEffectDur", 60);
 
 }
 
