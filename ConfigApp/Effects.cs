@@ -575,7 +575,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
-            {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "misc_nochaos", true)},
+            {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
         };
     }
 }
