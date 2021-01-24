@@ -567,7 +567,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_KIFFLOM, new EffectInfo("Kifflom!", EffectCategory.PEDS, "peds_kifflom", true)},
             {EffectType.EFFECT_META_TIMER_SPEED_X0_5, new EffectInfo("0.5x Timer Speed", EffectCategory.META, "meta_timerspeed_0_5x", true)},
             {EffectType.EFFECT_META_TIMER_SPEED_X2, new EffectInfo("2x Timer Speed", EffectCategory.META, "meta_timerspeed_2x", true)},
-            {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true, true)},
             {EffectType.EFFECT_META_EFFECT_DURATION_X2, new EffectInfo("2x Effect Duration", EffectCategory.META, "meta_effect_duration_2x", true)},
             {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
             {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
