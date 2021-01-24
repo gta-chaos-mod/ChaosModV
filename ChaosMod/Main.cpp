@@ -253,7 +253,7 @@ void Main::Loop()
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;
-			if (m_disableMod)
+			if (m_disableMod && !justReenabled)
 			{
 				if (!justReenabled)
 				{
@@ -264,22 +264,31 @@ void Main::Loop()
 
 				continue;
 			}
-			else if (justReenabled)
+			else
 			{
-				if (ThreadManager::IsAnyThreadRunning())
+				if (justReenabled)
 				{
-					ThreadManager::RunThreads();
+					if (ThreadManager::IsAnyThreadRunning())
+					{
+						ThreadManager::RunThreads();
 
-					continue;
+						continue;
+					}
+					else if (!m_disableMod)
+					{
+						justReenabled = false;
+
+						// Clear log
+						g_log = std::ofstream("chaosmod/chaoslog.txt");
+
+						// Restart the main part of the mod completely
+						Init();
+					}
+					else
+					{
+						continue;
+					}
 				}
-
-				justReenabled = false;
-
-				// Clear log
-				g_log = std::ofstream("chaosmod/chaoslog.txt");
-
-				// Restart the main part of the mod completely
-				Init();
 			}
 
 			if (m_clearAllEffects)
