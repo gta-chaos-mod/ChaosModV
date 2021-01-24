@@ -314,11 +314,14 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 
 			ossEffectName << std::endl;
 
-			// Play global sound (if existing)
-			Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+			if (!g_metaInfo.ShouldHideChaosUI)
+			{
+				// Play global sound (if existing)
+				Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 
-			// Play a sound if corresponding .mp3 file exists
-			Mp3Manager::PlayChaosSoundFile(effectData.Id);
+				// Play a sound if corresponding .mp3 file exists
+				Mp3Manager::PlayChaosSoundFile(effectData.Id);
+			}
 
 			int effectTime = -1;
 			switch (effectData.TimedType)
