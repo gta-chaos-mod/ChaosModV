@@ -172,24 +172,52 @@ void EffectDispatcher::UpdateMetaEffects()
 		{
 			return;
 		}
+
 		m_metaTimer = currentUpdateTime;
 
-		m_metaEffectTimer -= 1;
-		if (m_metaEffectTimer <= 0)
+		if (--m_metaEffectTimer <= 0)
 		{
 			m_metaEffectTimer = m_metaEffectSpawnTime;
-			std::vector<EffectIdentifier> availableMetaEffects;
-			for (const auto& pair : g_enabledEffects)
+
+			std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
+
+			int totalWeight = 0;
+			for (auto& pair : g_enabledEffects)
 			{
 				if (pair.second.IsMeta && pair.second.TimedType != EffectTimedType::TIMED_PERMANENT)
 				{
-					availableMetaEffects.push_back(pair.first);
+					totalWeight += pair.second.Weight;
+
+					availableMetaEffects.push_back(std::make_tuple(pair.first, &pair.second));
 				}
 			}
+
 			if (!availableMetaEffects.empty()) 
 			{
-				const EffectIdentifier& randomMetaEffect = availableMetaEffects[g_random.GetRandomInt(0, availableMetaEffects.size() - 1)];
-				DispatchEffect(randomMetaEffect, "(Meta)");
+				// TODO: Stop duplicating effect weight logic everywhere
+				int index = g_random.GetRandomInt(0, totalWeight);
+
+				totalWeight = 0;
+
+				const EffectIdentifier* effectIdentifier = nullptr;
+				for (auto& pair : availableMetaEffects)
+				{
+					auto& [effect, effectData] = pair;
+
+					totalWeight += effectData->Weight;
+
+					effectData->Weight += effectData->WeightMult;
+
+					if (!effectIdentifier && index <= totalWeight)
+					{
+						effectIdentifier = &effect;
+					}
+				}
+
+				if (effectIdentifier)
+				{
+					DispatchEffect(*effectIdentifier, "(Meta)");
+				}
 			}
 			else
 			{
@@ -211,10 +239,13 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	// Increase weight for all effects first
 	for (auto& pair : g_enabledEffects)
 	{
-		pair.second.Weight += pair.second.WeightMult;
+		if (!pair.second.IsMeta)
+		{
+			pair.second.Weight += pair.second.WeightMult;
+		}
 	}
 
-	// Reset weight of this effect to reduce / stop chance of same effect happening multiple times in a row
+	// Reset weight of this effect to reduce chance of same effect happening multiple times in a row
 	effectData.Weight = effectData.WeightMult;
 
 	LOG("Dispatched effect \"" << effectData.Name << "\"");

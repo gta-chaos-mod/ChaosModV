@@ -17,4 +17,4 @@ static void OnTick()
 	g_metaInfo.DisableChaos = true;
 }
 
-static RegisterEffect registerEffect_0_5x(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTick);

@@ -42,7 +42,7 @@ public:
 	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* suffix = nullptr);
 	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
-	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier(_EFFECT_ENUM_MAX));
+	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
 	void Reset();
 	void ResetTimer();
 
