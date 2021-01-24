@@ -17,7 +17,7 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_enableNormalEffectDispatch || g_metaInfo.ShouldHideChaosUI)
+	if (!m_enableNormalEffectDispatch)
 	{
 		return;
 	}
@@ -43,7 +43,8 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText || (g_metaInfo.ShouldHideChaosUI && effect.EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI))
+		if (effect.HideText || (g_metaInfo.ShouldHideChaosUI && effect.EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI)
+			|| (g_metaInfo.DisableChaos && effect.EffectIdentifier.GetEffectType() != EFFECT_META_NO_CHAOS))
 		{
 			continue;
 		}
@@ -367,6 +368,25 @@ void EffectDispatcher::ClearEffects()
 	m_permanentEffects.clear();
 
 	m_activeEffects.clear();
+}
+
+void EffectDispatcher::ClearActiveEffects(EffectIdentifier exclude)
+{
+	for (std::vector<ActiveEffect>::iterator it = m_activeEffects.begin(); it != m_activeEffects.end(); )
+	{
+		const ActiveEffect& effect = *it;
+
+		if (effect.EffectIdentifier != exclude)
+		{
+			ThreadManager::StopThread(effect.ThreadId);
+
+			it = m_activeEffects.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 void EffectDispatcher::Reset()

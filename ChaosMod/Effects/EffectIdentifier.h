@@ -21,6 +21,11 @@ struct EffectIdentifier
 		return m_isScript == other.IsScript() && m_isScript ? m_scriptId == other.GetScriptId() : m_effectType == other.GetEffectType();
 	}
 
+	inline bool operator!=(const EffectIdentifier& other) const
+	{
+		return !(*this == other);
+	}
+
 	inline bool IsScript() const
 	{
 		return m_isScript;

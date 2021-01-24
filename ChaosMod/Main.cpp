@@ -351,7 +351,7 @@ void Main::Loop()
 		if (splashTextTime > 0)
 		{
 			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.9.0.1 by pongo1231\n\nSee credits.txt for list of contributors");
+			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.9.0.2 by pongo1231\n\nSee credits.txt for list of contributors");
 			SET_TEXT_SCALE(.65f, .65f);
 			SET_TEXT_COLOUR(0, 255, 255, 255);
 			SET_TEXT_CENTRE(true);
@@ -381,11 +381,15 @@ void Main::Loop()
 
 		if (!m_pauseTimer)
 		{
-			g_effectDispatcher->UpdateTimer();
+			if (!g_metaInfo.DisableChaos)
+			{
+				g_effectDispatcher->UpdateTimer();
+			}
+
 			g_effectDispatcher->UpdateMetaEffects();
 		}
 
-		if (!m_disableDrawTimerBar)
+		if (!m_disableDrawTimerBar && !g_metaInfo.ShouldHideChaosUI && !g_metaInfo.DisableChaos)
 		{
 			g_effectDispatcher->DrawTimerBar();
 		}

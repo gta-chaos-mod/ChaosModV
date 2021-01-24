@@ -10,6 +10,7 @@ struct MetaEffectInfo
 	float TimerSpeedModifier = 1;
 	bool ShouldHideChaosUI = false;
 	int AdditionalEffectsToDispatch = 0;
+	bool DisableChaos = false;
 };
 
 inline MetaEffectInfo g_metaInfo;
