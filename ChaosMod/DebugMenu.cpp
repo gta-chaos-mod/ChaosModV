@@ -6,22 +6,23 @@
 
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu(std::vector<EffectType> effects)
+DebugMenu::DebugMenu()
 {
-	if (effects.empty())
+	for (const auto& pair : g_enabledEffects)
 	{
-		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
-		return;
+		const EffectData& effectData = pair.second;
+
+		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT)
+		{
+			m_effects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
+		}
 	}
 
-	m_effects.reserve(effects.size());
-
-	for (const auto& pair : g_effectsMap)
+	if (m_effects.empty())
 	{
-		if (std::find(effects.begin(), effects.end(), pair.first) != effects.end())
-		{
-			m_effects.emplace_back(pair.first, pair.second.Name);
-		}
+		m_effects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
+
+		return;
 	}
 
 	std::sort(m_effects.begin(), m_effects.end(), [](DebugEffect a, DebugEffect b)
@@ -51,7 +52,7 @@ void DebugMenu::Tick()
 	{
 		m_dispatchEffect = false;
 
-		g_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectType);
+		g_effectDispatcher->DispatchEffect(m_effects[m_selected].EffectIdentifier);
 	}
 
 	float y = .1f;
@@ -103,7 +104,7 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 	{
 		DWORD curTime = GetTickCount64();
 
-		if (m_repeatTime > curTime - 250)
+		if (key == VK_RETURN || m_repeatTime > curTime - 250)
 		{
 			return;
 		}
@@ -128,7 +129,7 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 		}
 		break;
 	case VK_RETURN:
-		if (m_effects[m_selected].EffectType != -1)
+		if (m_effects[m_selected].EffectIdentifier.GetEffectType() != -1)
 		{
 			m_dispatchEffect = true;
 		}

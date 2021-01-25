@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 enum EffectType
@@ -72,6 +72,7 @@ enum EffectType
 	EFFECT_SPAWN_FAGGIO,
 	EFFECT_SPAWN_RUINER3,
 	EFFECT_SPAWN_BALETRAILER,
+	EFFECT_SPAWN_ROMERO,
 	EFFECT_SPAWN_RANDOM,
 	EFFECT_NO_VEHS,
 	EFFECT_EXPLODE_CUR_VEH,
@@ -226,7 +227,7 @@ enum EffectType
 	EFFECT_PLAYER_POOF,
 	EFFECT_PLAYER_SIMEONSAYS,
 	EFFECT_VEH_LOCKCAMERA,
-	EFFECT_MISC_REPLACEVEHICLE,
+	EFFECT_VEH_REPLACEVEHICLE,
 	EFFECT_PLAYER_TIRED,
 	EFFECT_SCREEN_LS_NOIRE,
 	EFFECT_MISC_SUPER_STUNT,
@@ -240,7 +241,6 @@ enum EffectType
 	EFFECT_MISC_RAMPJAM,
 	EFFECT_MISC_VEHICLE_RAIN,
 	EFFECT_MISC_CRASH,
-	EFFECT_PLAYER_EASY_AIM,
 	EFFECT_PLAYER_GRAVITY,
 	EFFECT_VEH_BOUNCY,
 	EFFECT_PEDS_STOP_AND_STARE,
@@ -248,14 +248,42 @@ enum EffectType
 	EFFECT_PLAYER_PACIFIST,
 	EFFECT_VEH_TURN_RIGHT,
 	EFFECT_PEDS_BUSBOIS,
+	EFFECT_PLAYER_DEAD_EYE,
+	EFFECT_PLAYER_QUAKE_FOV,
+	EFFECT_PLAYER_HACKING,
+	EFFECT_PEDS_NAILGUNS,
+	EFFECT_VEH_BRAKEBOOST,
+	EFFECT_PLAYER_BEES,
+	EFFECT_PLAYER_VR,
+	EFFECT_MISC_PORTRAIT_MODE,
+	EFFECT_HIGH_PITCH,
+	EFFECT_NO_SKY,
+	EFFECT_PLAYER_GTA_2,
+	EFFECT_PEDS_KIFFLOM,
+	EFFECT_META_TIMER_SPEED_X0_5,
+	EFFECT_META_TIMER_SPEED_X2,
+	EFFECT_META_TIMER_SPEED_X5,
+	EFFECT_META_EFFECT_DURATION_X2,
+	EFFECT_META_EFFECT_DURATION_X0_5,
+	EFFECT_META_HIDE_CHAOS_UI,
+	EFFECT_META_ADDITIONAL_EFFECTS,
+	EFFECT_VEHS_CRUMBLE,
+	EFFECT_MISC_FPS_LIMIT,
+	EFFECT_META_NO_CHAOS,
 	_EFFECT_ENUM_MAX
+};
+
+enum EffectExecutionType
+{
+	DEFAULT,
+	META
 };
 
 struct EffectInfo
 {
 public:
-	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList) {}
+	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, EffectExecutionType type = EffectExecutionType::DEFAULT)
+		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), ExecutionType(type) {}
 
 public:
 	const char* Name;
@@ -263,9 +291,10 @@ public:
 	const bool IsTimed;
 	const bool IsShortDuration;
 	const std::vector<EffectType> IncompatibleWith;
+	const EffectExecutionType ExecutionType;
 };
 
-const std::map<EffectType, EffectInfo> g_effectsMap =
+const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 {
 	{EFFECT_PLAYER_SUICIDE, {"Suicide", "player_suicide", false, {EFFECT_PLAYER_INVINCIBLE}}},
 	{EFFECT_PLUS_2_STARS, {"+2 Wanted Stars", "player_plus2stars", false, {EFFECT_NEVER_WANTED}}},
@@ -304,8 +333,9 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_NO_PHONE, {"No Phone", "player_nophone", true}},
 	{EFFECT_SET_INTO_CLOSEST_VEH, {"Set Player Into Closest Vehicle", "player_tpclosestveh"}},
 	{EFFECT_PEDS_EXIT_VEH, {"Everyone Exits Their Vehicles", "playerveh_exit"}},
-	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG }, true}},
-	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }, true}},
+	{EFFECT_GAMESPEED_X02, {"x0.2 Gamespeed", "time_x02", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }, true}},
+	{EFFECT_GAMESPEED_X05, {"x0.5 Gamespeed", "time_x05", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }, true}},
+	{EFFECT_PLAYER_DEAD_EYE, {"Dead Eye", "player_dead_eye", true, { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }}},
 	{EFFECT_GAMESPEED_LAG, {"Lag", "time_lag", true, {}, true}},
 	{EFFECT_PEDS_RIOT, {"Peds Riot", "peds_riot", true, { EFFECT_PEDS_COPS }}},
 	{EFFECT_RED_VEHS, {"Red Traffic", "vehs_red", true, { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS }}},
@@ -334,6 +364,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_FAGGIO, {"Spawn Faggio", "spawn_faggio"}},
 	{EFFECT_SPAWN_RUINER3, {"Spawn Ruined Ruiner", "spawn_ruiner3"}},
 	{EFFECT_SPAWN_BALETRAILER, {"Spawn Bale Trailer", "spawn_baletrailer"}},
+	{EFFECT_SPAWN_ROMERO, {"Where's The Funeral?", "spawn_romero"}},
 	{EFFECT_SPAWN_RANDOM, {"Spawn Random Vehicle", "spawn_random"}},
 	{EFFECT_NO_VEHS, {"No Traffic", "notraffic", true}},
 	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", "playerveh_explode"}},
@@ -450,7 +481,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_ANGRY_JIMMY, {"Spawn Jealous Jimmy", "peds_angryjimmy"}},
 	{EFFECT_OHKO_VEHICLES, {"Vehicles Explode On Impact", "vehs_ohko", true}},
 	{EFFECT_VEH_SPAM_DOORS, {"Spammy Vehicle Doors", "vehs_spamdoors", true}},
-	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }}},
+	{EFFECT_VEH_SPEED_MINIMUM, {"Need For Speed", "veh_speed_goal", true, { EFFECT_VEH_SET_TOPSPEED_30MPH }, true}},
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, { EFFECT_VEH_SPEED_MINIMUM }, true}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
 	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
@@ -469,7 +500,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PEDS_INTORANDOMVEHS, {"Set Everyone Into Random Vehicles", "peds_intorandomvehs"}},
 	{EFFECT_PLAYER_HEAVY_RECOIL, { "Heavy Recoil", "player_heavyrecoil", true}},
 	{EFFECT_PEDS_CAT_GUNS, {"Catto Guns", "peds_catguns", true}},
-	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true}},
+	{EFFECT_PLAYER_FORCEFIELD, {"Forcefield", "player_forcefield", true, {}, true}},
 	{EFFECT_MISC_OIL_LEAKS, {"Oil Trails", "misc_oilleaks", true}},
 	{EFFECT_PEDS_GUNSMOKE, {"Gunsmoke", "peds_gunsmoke", true}},
 	{EFFECT_PLAYER_KEEP_RUNNING, {"Help My W Key Is Stuck", "player_keeprunning", true}},
@@ -478,7 +509,7 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_FAKE_PLAYER_SWAP, {"Player Swap", "player_playerswap", true, {}, true}},
 	{EFFECT_PEDS_MINIONS, {"Minions", "peds_minions", true}},
 	{EFFECT_PEDS_MERCENARIES, {"Mercenaries", "peds_mercenaries", true}},
-	{EFFECT_LOOSE_TRIGGER, {"Loose Trigger", "peds_loosetrigger", true}},
+	{EFFECT_LOOSE_TRIGGER, {"Loose Triggers", "peds_loosetrigger", true}},
 	{EFFECT_MISC_FLAMETHROWER, {"Flamethrowers", "misc_flamethrower", true}},
 	{EFFECT_MISC_DVDSCREENSAVER, {"DVD Screensaver", "misc_dvdscreensaver", true, {}, true}},
 	{EFFECT_PLAYER_FAKEDEATH, {"Fake Death", "player_fakedeath"}},
@@ -490,10 +521,11 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_POOF, {"Deadly Aim", "player_poof", true}},
 	{EFFECT_PLAYER_SIMEONSAYS, {"Simeon Says", "player_simeonsays", true, {}, true}},
 	{EFFECT_VEH_LOCKCAMERA,  {"Lock Vehicle Camera", "veh_lockcamera", true}},
-	{EFFECT_MISC_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
+	{EFFECT_VEH_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
 	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true}},
+	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2 }, true}},
+	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2 }}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
@@ -502,12 +534,31 @@ const std::map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_RAMPJAM, {"Ramp Jam (Press Jump In Vehicle)", "misc_rampjam", true}},
 	{EFFECT_MISC_VEHICLE_RAIN, {"Vehicle Rain", "misc_vehicle_rain", true, {}, true}},
 	{EFFECT_MISC_CRASH, {"Fake Crash", "misc_fakecrash"}},
-	{EFFECT_PLAYER_EASY_AIM, {"Bullet Time", "player_easy_aim", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_SUPERHOT}}},
 	{EFFECT_PLAYER_GRAVITY, {"Gravity Field", "player_gravity", true, {}, true}},
 	{EFFECT_VEH_BOUNCY, {"Bouncy Vehicles", "veh_bouncy", true, {}, false}},
 	{EFFECT_PEDS_STOP_AND_STARE, {"Stop and Stare", "peds_stop_stare"}},
-	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true, {}, true}},
+	{EFFECT_PEDS_FLIP, {"Spinning Peds", "peds_flip", true}},
 	{EFFECT_PLAYER_PACIFIST, {"Pacifist", "player_pacifist", true, {}, false}},
 	{EFFECT_VEH_TURN_RIGHT, {"Everyone Turn Right", "veh_turnright", true, {}, true}},
 	{EFFECT_PEDS_BUSBOIS, {"Bus Bois", "peds_busbois"}},
+	{EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
+	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true, {}, true}},
+	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
+	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
+	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
+	{EFFECT_MISC_PORTRAIT_MODE, {"Portrait Mode", "misc_portrait", true}},
+	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
+	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
+	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
+	{EFFECT_PEDS_KIFFLOM, {"Kifflom!", "peds_kifflom", true}},
+	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, true, EffectExecutionType::META}},
+	{EFFECT_META_EFFECT_DURATION_X2, {"2x Effect Duration", "meta_effect_duration_2x", true, { EFFECT_META_EFFECT_DURATION_X0_5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_EFFECT_DURATION_X0_5, {"0.5x Effect Duration", "meta_effect_duration_0_5x", true, { EFFECT_META_EFFECT_DURATION_X2 }, false, EffectExecutionType::META}},
+	{EFFECT_META_HIDE_CHAOS_UI, {"What's Happening??", "meta_hide_chaos_ui", true, {}, false, EffectExecutionType::META}},
+	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
+	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
+	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
+	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
 };

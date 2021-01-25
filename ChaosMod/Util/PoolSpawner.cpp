@@ -2,7 +2,7 @@
 
 #include "PoolSpawner.h"
 
-#define ENTITY_POOL_MAX 30
+#define ENTITY_POOL_MAX 20
 
 static std::list<Entity> m_entities;
 

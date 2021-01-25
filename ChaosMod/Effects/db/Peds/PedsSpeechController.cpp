@@ -3,7 +3,7 @@
 static void OnTickFriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -27,7 +27,7 @@ static RegisterEffect registerEffect1(EFFECT_PEDS_SAY_HI, nullptr, nullptr, OnTi
 static void OnTickUnfriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -47,3 +47,24 @@ static void OnTickUnfriendly()
 }
 
 static RegisterEffect registerEffect2(EFFECT_PEDS_INSULT, nullptr, nullptr, OnTickUnfriendly);
+
+static void OnTickKifflom()
+{
+	static DWORD64 lastTick = 0;
+	DWORD64 curTick = GET_GAME_TIMER();
+
+	if (lastTick < curTick - 1000)
+	{
+		lastTick = curTick;
+
+		for (Ped ped : GetAllPeds())
+		{
+			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
+			{
+				_PLAY_AMBIENT_SPEECH1(ped, "KIFFLOM_GREET", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
+			}
+		}
+	}
+}
+
+static RegisterEffect registerEffect3(EFFECT_PEDS_KIFFLOM, nullptr, nullptr, OnTickKifflom);

@@ -85,8 +85,8 @@ IMPORT void nativeInit(UINT64 hash);
 IMPORT void nativePush64(UINT64 val);
 IMPORT PUINT64 nativeCall();
 
-static void WAIT(DWORD time) { scriptWait(time); }
-static void TERMINATE() { WAIT(MAXDWORD); }
+//static void WAIT(DWORD time) { scriptWait(time); }
+static void TERMINATE() { scriptWait(MAXDWORD); }
 
 // Returns pointer to global variable
 // make sure that you check game version before accessing globals because

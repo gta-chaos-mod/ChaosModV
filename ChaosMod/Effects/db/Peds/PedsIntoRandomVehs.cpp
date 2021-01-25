@@ -4,14 +4,17 @@ static void OnStart()
 {
 	for (Ped ped : GetAllPeds())
 	{
+		WAIT(0);
+
 		if (!IS_PED_IN_ANY_VEHICLE(ped, true))
 		{
 			continue;
 		}
+
 		Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 		SET_ENTITY_COORDS(ped, pedPos.x, pedPos.y, pedPos.z + 5.f, false, false, false, false);
-		WAIT(0);
 	}
+
 	WAIT(0);
 
 	for (Ped ped : GetAllPeds())
@@ -21,6 +24,7 @@ static void OnStart()
 		{
 			continue;
 		}
+
 		std::vector<Vehicle> vehs;
 		for (Vehicle veh : GetAllVehs())
 		{
@@ -29,6 +33,12 @@ static void OnStart()
 				vehs.push_back(veh);
 			}
 		}
+
+		if (vehs.empty())
+		{
+			return;
+		}
+
 		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
@@ -41,6 +51,7 @@ static void OnStart()
 				break;
 			}
 		}
+
 		WAIT(0);
 	}
 }

@@ -31,14 +31,15 @@ static void OnStop()
 
 static void OnTick()
 {
-	int count = 10;
+	int count = 5;
 
 	float force = 100;
 	float velocityMultiplier = 3;
 	for (Vehicle veh : GetAllVehs())
 	{
-		Ped driver = GET_PED_IN_VEHICLE_SEAT(veh, -1, false);
-		if (!IS_PED_A_PLAYER(driver))
+		bool doBeyblade = IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
+
+		if (doBeyblade)
 		{
 			APPLY_FORCE_TO_ENTITY(veh, 3, force, 0, 0, 0, 4, 0, 0, true, true, true, true, true);
 			APPLY_FORCE_TO_ENTITY(veh, 3, -force, 0, 0, 0, -4, 0, 0, true, true, true, true, true);
@@ -51,13 +52,13 @@ static void OnTick()
 				velocity.y *= velocityMultiplier;
 				SET_ENTITY_VELOCITY(veh, velocity.x, velocity.y, velocity.z);
 			}
+		}
 
-			if (--count == 0)
-			{
-				count = 10;
+		if (--count == 0)
+		{
+			count = 5;
 
-				WAIT(0);
-			}
+			WAIT(0);
 		}
 	}
 }

@@ -14,8 +14,8 @@ static void OnStop()
 
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{

@@ -234,7 +234,7 @@ static void OnStartFakeTp()
 	
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Hooks::EnableFakeTpHook(playerPos);
+	Hooks::EnableFakeTpHook();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
 	if (playerVeh)
@@ -248,7 +248,7 @@ static void OnStartFakeTp()
 
 	TeleportPlayer(tpLocations[g_random.GetRandomInt(0, 4)]);
 
-	WAIT(g_random.GetRandomInt(2000, 4000));
+	WAIT(g_random.GetRandomInt(3500, 6000));
 
 	TeleportPlayer(playerPos);
 

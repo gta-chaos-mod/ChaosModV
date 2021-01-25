@@ -3,17 +3,32 @@
 #include <string>
 
 #include "EffectsInfo.h"
+#include "EffectIdentifier.h"
+#include "EffectTimedType.h"
+
+#include "../LuaManager.h"
 
 struct RegisteredEffect
 {
-	RegisteredEffect() : m_effectType(_EFFECT_ENUM_MAX), m_onStart(nullptr), m_onStop(nullptr), m_onTick(nullptr) {}
+	RegisteredEffect() : m_effectIdentifier(_EFFECT_ENUM_MAX), m_onStart(nullptr), m_onStop(nullptr), m_onTick(nullptr)
+	{
+	
+	}
 
 	RegisteredEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), void(*onTick)())
-		: m_effectType(effectType), m_onStart(onStart), m_onStop(onStop), m_onTick(onTick) {}
+		: m_effectIdentifier(effectType), m_onStart(onStart), m_onStop(onStop), m_onTick(onTick)
+	{
+
+	}
+
+	RegisteredEffect(const std::string& scriptId) : m_effectIdentifier(scriptId)
+	{
+
+	}
 
 	RegisteredEffect& operator=(const RegisteredEffect& registeredEffect)
 	{
-		m_effectType = registeredEffect.m_effectType;
+		m_effectIdentifier = registeredEffect.m_effectIdentifier;
 		m_onStart = registeredEffect.m_onStart;
 		m_onStop = registeredEffect.m_onStop;
 		m_onTick = registeredEffect.m_onTick;
@@ -22,70 +37,100 @@ struct RegisteredEffect
 		return *this;
 	}
 
-	friend bool operator==(const RegisteredEffect* registeredEffect, EffectType effectType)
+	bool operator==(const EffectIdentifier& effectIdentifier)
 	{
-		return registeredEffect->m_effectType == effectType;
+		return m_effectIdentifier == effectIdentifier;
 	}
 
 	void Start()
 	{
-		if (m_onStart && !m_isRunning)
-		{
-			m_onStart();
-		}
-
-		if (m_onTick)
+		if (!m_isRunning)
 		{
 			m_isRunning = true;
+
+			if (m_effectIdentifier.IsScript())
+			{
+				LuaManager::Execute(m_effectIdentifier.GetScriptId(), "OnStart");
+			}
+			else if (m_onStart)
+			{
+				m_onStart();
+			}
 		}
 	}
 
 	void Stop()
 	{
-		if (m_onStop && (!m_onTick || m_isRunning))
+		if (m_isRunning)
 		{
-			m_onStop();
-		}
+			m_isRunning = false;
 
-		m_isRunning = false;
+			if (m_effectIdentifier.IsScript())
+			{
+				LuaManager::Execute(m_effectIdentifier.GetScriptId(), "OnStop");
+			}
+			else if (m_onStop)
+			{
+				m_onStop();
+			}
+		}
 	}
 
-	void Tick()
+	inline void Tick()
 	{
-		if (m_onTick && m_isRunning)
+		if (m_isRunning)
 		{
-			m_onTick();
+			if (m_effectIdentifier.IsScript())
+			{
+				LuaManager::Execute(m_effectIdentifier.GetScriptId(), "OnTick");
+			}
+			else if (m_onTick)
+			{
+				m_onTick();
+			}
 		}
 	}
 
-	bool IsRunning() const
+	inline bool IsRunning() const
 	{
 		return m_isRunning;
 	}
 
-	RegisteredEffect* m_nextEffect = nullptr;
+	inline bool IsScript() const
+	{
+		return m_effectIdentifier.IsScript();
+	}
 
 private:
-	EffectType m_effectType;
+	EffectIdentifier m_effectIdentifier;
 	void(*m_onStart)();
 	void(*m_onStop)();
 	void(*m_onTick)();
 	bool m_isRunning = false;
 };
 
-inline RegisteredEffect* g_pRegisteredEffects = nullptr;
+inline std::vector<RegisteredEffect> g_registeredEffects;
 
-inline RegisteredEffect* GetRegisteredEffect(EffectType effectType)
+inline RegisteredEffect* GetRegisteredEffect(const EffectIdentifier& effectIdentifier)
 {
-	for (RegisteredEffect* registeredEffect = g_pRegisteredEffects; registeredEffect; registeredEffect = registeredEffect->m_nextEffect)
+	const auto& result = std::find(g_registeredEffects.begin(), g_registeredEffects.end(), effectIdentifier);
+
+	return result != g_registeredEffects.end() ? &*result : nullptr;
+}
+
+inline void ClearRegisteredScriptEffects()
+{
+	for (std::vector<RegisteredEffect>::iterator it = g_registeredEffects.begin(); it != g_registeredEffects.end(); )
 	{
-		if (registeredEffect == effectType)
+		if (it->IsScript())
 		{
-			return registeredEffect;
+			it = g_registeredEffects.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
-
-	return nullptr;
 }
 
 class RegisterEffect
@@ -95,32 +140,9 @@ public:
 	{
 		m_registeredEffect = RegisteredEffect(effectType, onStart, onStop, onTick);
 
-		if (g_pRegisteredEffects)
-		{
-			m_registeredEffect.m_nextEffect = g_pRegisteredEffects;
-		}
-
-		g_pRegisteredEffects = &m_registeredEffect;
+		g_registeredEffects.push_back(m_registeredEffect);
 	}
 
 private:
 	RegisteredEffect m_registeredEffect;
-};
-
-enum class EffectTimedType
-{
-	TIMED_DEFAULT = -1,
-	TIMED_NORMAL,
-	TIMED_SHORT
-};
-
-struct EffectData
-{
-	EffectTimedType TimedType;
-	int CustomTime;
-	int WeightMult;
-	int Weight;
-	bool Permanent;
-	bool ExcludedFromVoting;
-	std::string Name;
 };

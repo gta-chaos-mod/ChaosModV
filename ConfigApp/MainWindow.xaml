@@ -29,7 +29,7 @@
                     </TreeView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray" HorizontalAlignment="Left" Width="40" Height="22" VerticalAlignment="Top">
+            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="107*"/>
@@ -77,8 +77,6 @@
                         VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
                     <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1" Grid.ColumnSpan="2"/>
                     <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="233,71,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Label Content="Prevent same effect from happening twice in a row" HorizontalAlignment="Left" Margin="339,215,0,135" Width="325" Grid.Column="1" Grid.RowSpan="2"/>
-                    <CheckBox x:Name="misc_user_effects_twice_disable" HorizontalAlignment="Left" Margin="669,221,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.RowSpan="2"/>
                     <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="339,139,0,0"
                         VerticalAlignment="Top" Width="325" Grid.Column="1"/>
                     <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="339,68,0,0"
@@ -92,6 +90,54 @@
                     <CheckBox x:Name="misc_user_effects_menu_enable" HorizontalAlignment="Left" Margin="669,71,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
                     <Label Content="Enable pause timer shortcut (CTRL + .)" HorizontalAlignment="Left" Margin="532,132,0,0" Width="225" Grid.Column="1" Grid.Row="1"/>
                     <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" HorizontalAlignment="Left" Margin="766,138,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" Height="16"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="115*"/>
+                        <ColumnDefinition Width="376*"/>
+                        <ColumnDefinition Width="562*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="37*"/>
+                        <RowDefinition Height="28*"/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="meta_effects_spawn_dur" Height="23" Margin="248.333,3,0,0" TextWrapping="Wrap"
+                         VerticalAlignment="Top" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1" HorizontalAlignment="Left" Width="60"/>
+                    <Label Content="How often should a new meta start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
+                    <Label Content="How long should meta effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,70,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
+                    <TextBox x:Name="meta_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="248.333,73,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
+                    <Label Content="How long should short timed meta effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,140,0,0"
+                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
+                    <TextBox x:Name="meta_effects_short_timed_dur" HorizontalAlignment="Left" Height="23" Margin="248.333,143,0,0" TextWrapping="Wrap"
+                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
+
+                    <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}" Margin="0,3,10,9.667" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Right" Width="514">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Height="21">
+                                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center"/>
+                                    <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="20" Margin="10,0" VerticalAlignment="Center" Click="effect_user_config_Click"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
                 </Grid>
             </TabItem>
             <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
@@ -146,11 +192,13 @@
                         <RowDefinition Height="12*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Visit the mod page for more information" HorizontalAlignment="Left" Margin="15,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0" Grid.RowSpan="2"/>
-                    <Button Content="GTA5-Mods" HorizontalAlignment="Left" Margin="317,20,0,0" VerticalAlignment="Top" Width="75" Click="contribute_modpage_click" Grid.RowSpan="2"/>
-                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="317,29,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.Row="1"/>
+                    <Button Content="GTA5-Mods" HorizontalAlignment="Left" Margin="342,20,0,0" VerticalAlignment="Top" Width="75" Click="contribute_modpage_click" Grid.RowSpan="2"/>
+                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="342,29,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.Row="1"/>
                     <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,64,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
-                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="317,69,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
+                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="342,69,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
                     <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,25,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="282"/>
+                    <Label Content="Join our Discord for announcements, support and more!" HorizontalAlignment="Left" Margin="15,105,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="312"/>
+                    <Button Content="Discord" HorizontalAlignment="Left" Margin="342,110,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_discord_click"/>
                 </Grid>
             </TabItem>
         </TabControl>
