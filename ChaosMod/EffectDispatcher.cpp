@@ -149,7 +149,8 @@ void EffectDispatcher::UpdateEffects()
 			}
 
 			if ((effect.MaxTime > 0 && effect.Timer <= 0)
-				|| effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))
+				|| ((!g_enabledEffects.at(effect.EffectIdentifier).IsMeta)
+					&& (effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))))
 			{
 				ThreadManager::StopThread(effect.ThreadId);
 
