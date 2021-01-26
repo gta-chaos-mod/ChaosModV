@@ -29,8 +29,8 @@ static void OnStart()
 			else
 			{
 				clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
-				CLONE_PED_TO_TARGET(ped, clone);
 			}
+			CLONE_PED_TO_TARGET(ped, clone);
 
 			// See if corpse is in any vehicle
 			// If yes, set clone into seat corpse is occupying later
