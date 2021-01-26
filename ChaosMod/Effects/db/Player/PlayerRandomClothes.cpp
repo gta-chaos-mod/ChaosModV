@@ -25,8 +25,6 @@ static void OnStart()
 			SET_PED_PROP_INDEX(playerPed, i, propDrawable, propTexture, true);
 		}
 	}
-
-	SET_PED_RANDOM_PROPS(playerPed);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_RANDOMCLOTHES, OnStart);
