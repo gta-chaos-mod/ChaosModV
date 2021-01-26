@@ -105,6 +105,10 @@ static void OnStart()
     lives = 2;
     selectInputReturn = 0;
     finished = false;
+
+    // Fix issue where phone is stuck on the screen.
+    MOBILE::DESTROY_MOBILE_PHONE();
+ 
     PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), false, 0);
 
     scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
