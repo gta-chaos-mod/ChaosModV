@@ -1,15 +1,18 @@
+# Generates native definitions for lua scripts
+# Move the generated natives_def.lua file into your chaosmod folder
+
 import json
 import urllib.request
 
-def parse_native(nativeHash, nativeData, _out):
-    return_type = nativeData["return_type"]
+def parse_native(native_hash, native_data, _out):
+    return_type = native_data["return_type"]
 
-    native_name = nativeData["name"]
+    native_name = native_data["name"]
 
     print(native_name)
 
     args = []
-    for arg in nativeData["params"]:
+    for arg in native_data["params"]:
         argName = arg["name"]
 
         if argName == "end" or argName == "repeat":
@@ -40,7 +43,7 @@ def parse_native(nativeHash, nativeData, _out):
     _out.write("   ")
     if target_type != "_":
         _out.write("return ")
-    _out.write("_invoke(" + nativeHash + "," + target_type)
+    _out.write("_invoke(" + native_hash + "," + target_type)
 
     if len(args) > 0:
         _out.write(",")
@@ -57,11 +60,11 @@ except urllib.error.URLError:
     print("Error while fetching natives.json, aborting!")
     exit()
 
-json = json.loads(result)
+json_in = json.loads(result)
 
 with open("natives_def.lua", "w") as _out:
     _out.write("local _,_b,_i,_f,_s,_v=ReturnType.None,ReturnType.Boolean,ReturnType.Integer,ReturnType.Float,ReturnType.String,ReturnType.Vector3\n\n")
 
-    for _, nativeNamespace in json.items():
-        for nativeHash, nativeData in nativeNamespace.items():
-            parse_native(nativeHash, nativeData, _out)
+    for _, native_namespace in json_in.items():
+        for native_hash, native_data in native_namespace.items():
+            parse_native(native_hash, native_data, _out)
