@@ -347,7 +347,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 				break;
 			}
 
-			m_activeEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectTime);
+			m_activeEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), ossFakeEffectName.str(), effectTime);
 		}
 	}
 
