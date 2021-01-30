@@ -249,7 +249,7 @@ static void OnStartFakeTp()
 
 	TeleportPlayer(randLocation.second);
 
-	WAIT(g_random.GetRandomInt(2000, 4000));
+	WAIT(g_random.GetRandomInt(3500, 6000));
 
 	TeleportPlayer(playerPos);
 

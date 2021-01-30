@@ -19,7 +19,18 @@ static void OnStart()
 			int pedType = GET_PED_TYPE(ped);
 			Hash pedModel = GET_ENTITY_MODEL(ped);
 
-			Ped clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
+			bool isMissionEntityCorpse = IS_ENTITY_A_MISSION_ENTITY(ped);
+
+			Ped clone;
+			if (isMissionEntityCorpse)
+			{
+				clone = CreatePoolPed(pedType, pedModel, .0f, .0f, .0f, .0f);
+			}
+			else
+			{
+				clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
+			}
+
 			CLONE_PED_TO_TARGET(ped, clone);
 
 			// See if corpse is in any vehicle
@@ -49,8 +60,6 @@ static void OnStart()
 			}
 
 			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
-
-			bool isMissionEntityCorpse = IS_ENTITY_A_MISSION_ENTITY(ped);
 
 			// Deleting the corpse requires the corpse to be a mission entity
 			SET_ENTITY_AS_MISSION_ENTITY(ped, false, false);

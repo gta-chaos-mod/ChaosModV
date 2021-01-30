@@ -3,18 +3,23 @@
 #include "ThreadManager.h"
 
 #include "Effects/Effect.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffectsMap.h"
 
 #include <vector>
 #include <array>
 #include <memory>
 #include <map>
 
+#include "Effects/MetaEffectInfo.h"
+
 enum class TwitchOverlayMode;
 
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, bool disableTwiceInRow,
+	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
 		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
 		TwitchOverlayMode twitchOverlayMode);
 	~EffectDispatcher();
@@ -26,16 +31,18 @@ public:
 	void OverrideTimerDontDispatch(bool state);
 	inline bool ShouldDispatchEffectNow() const
 	{
-		return GetRemainingTimerTime() == 0;
+		return GetRemainingTimerTime() <= 0;
 	}
 	inline int GetRemainingTimerTime() const
 	{
-		return m_effectSpawnTime - m_timerTimerRuns;
+		return m_effectSpawnTime / g_metaInfo.TimerSpeedModifier - m_timerTimerRuns;
 	}
 	void UpdateEffects();
-	void DispatchEffect(EffectType effectType, const char* suffix = nullptr);
+	void UpdateMetaEffects();
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* suffix = nullptr);
 	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
+	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
 	void Reset();
 	void ResetTimer();
 
@@ -43,8 +50,11 @@ private:
 	const int m_effectSpawnTime;
 	const int m_effectTimedDur;
 	const int m_effectTimedShortDur;
-	const bool m_disableTwiceInRow;
-	EffectType m_lastEffect = _EFFECT_ENUM_MAX;
+
+	const int m_metaEffectSpawnTime;
+	const int m_metaEffectTimedDur;
+	const int m_metaEffectShortDur;
+
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;
 	const std::array<int, 3> m_effectTimerColor;
@@ -54,20 +64,22 @@ private:
 	struct ActiveEffect
 	{
 	public:
-		ActiveEffect(EffectType effectType, RegisteredEffect* registeredEffect, const std::string& name, const std::string& fakeName, int timer) : EffectType(effectType), RegisteredEffect(registeredEffect),
-			Name(name), FakeName(fakeName), ThreadId(ThreadManager::CreateThread(registeredEffect, g_effectsMap.at(effectType).IsTimed)), Timer(timer), MaxTime(Timer)
+		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* registeredEffect, const std::string& name, const std::string& fakeName, float timer) : EffectIdentifier(effectIdentifier), RegisteredEffect(registeredEffect),
+			Name(name), FakeName(fakeName), Timer(timer), MaxTime(Timer)
 		{
+			EffectTimedType timedType = g_enabledEffects.at(effectIdentifier).TimedType;
 
-		};
+			ThreadId = ThreadManager::CreateThread(registeredEffect, timedType != EffectTimedType::TIMED_UNK && timedType != EffectTimedType::TIMED_NOTTIMED);
+		}
 
 	public:
-		EffectType EffectType;
+		EffectIdentifier EffectIdentifier;
 		RegisteredEffect* RegisteredEffect;
 		DWORD64 ThreadId;
 		std::string Name;
 		std::string FakeName;
-		int Timer;
-		int MaxTime;
+		float Timer;
+		float MaxTime;
 		bool HideText = true;
 	};
 
@@ -77,7 +89,10 @@ private:
 	DWORD64 m_timerTimer;
 	int m_timerTimerRuns;
 	DWORD64 m_effectsTimer;
+	DWORD64 m_metaTimer;
 	bool m_dispatchEffectsOnTimer = true;
+	bool m_metaEffectsEnabled = true;
+	int m_metaEffectTimer = m_metaEffectSpawnTime;
 	const bool m_enableTwitchVoting;
 	const TwitchOverlayMode m_twitchOverlayMode;
 };

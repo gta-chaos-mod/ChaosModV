@@ -114,9 +114,22 @@ namespace ThreadManager
 
 	bool IsAnyThreadRunningOnStart()
 	{
-		for (std::unique_ptr<EffectThread>& thread : m_threads)
+		for (const std::unique_ptr<EffectThread>& thread : m_threads)
 		{
 			if (!thread->HasOnStartExecuted())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool IsAnyThreadRunning()
+	{
+		for (const std::unique_ptr<EffectThread>& thread : m_threads)
+		{
+			if (!thread->HasStopped())
 			{
 				return true;
 			}

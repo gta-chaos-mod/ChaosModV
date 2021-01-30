@@ -29,7 +29,8 @@ namespace ConfigApp
             PEDS,
             TIME,
             WEATHER,
-            MISC
+            MISC,
+            META
         }
 
         public enum EffectTimedType
@@ -107,6 +108,7 @@ namespace ConfigApp
             EFFECT_SPAWN_FAGGIO,
             EFFECT_SPAWN_RUINER3,
             EFFECT_SPAWN_BALETRAILER,
+            EFFECT_SPAWN_ROMERO,
             EFFECT_SPAWN_RANDOM,
             EFFECT_NO_VEHS,
             EFFECT_EXPLODE_CUR_VEH,
@@ -289,9 +291,21 @@ namespace ConfigApp
             EFFECT_VEH_BRAKEBOOST,
             EFFECT_PLAYER_BEES,
             EFFECT_PLAYER_VR,
+            EFFECT_MISC_PORTRAIT_MODE,
             EFFECT_HIGH_PITCH,
             EFFECT_NO_SKY,
             EFFECT_PLAYER_GTA_2,
+            EFFECT_PEDS_KIFFLOM,
+            EFFECT_META_TIMER_SPEED_X2,
+            EFFECT_META_TIMER_SPEED_X5,
+            EFFECT_META_TIMER_SPEED_X0_5,
+            EFFECT_META_EFFECT_DURATION_X2,
+            EFFECT_META_EFFECT_DURATION_X0_5,
+            EFFECT_META_HIDE_CHAOS_UI,
+            EFFECT_META_ADDITIONAL_EFFECTS,
+            EFFECT_VEHS_CRUMBLE,
+            EFFECT_MISC_FPS_LIMIT,
+            EFFECT_META_NO_CHAOS,
             _EFFECT_ENUM_MAX
         }
 
@@ -364,6 +378,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_FAGGIO, new EffectInfo("Spawn Faggio", EffectCategory.VEHICLE, "spawn_faggio")},
             {EffectType.EFFECT_SPAWN_RUINER3, new EffectInfo("Spawn Ruined Ruiner", EffectCategory.VEHICLE, "spawn_ruiner3")},
             {EffectType.EFFECT_SPAWN_BALETRAILER, new EffectInfo("Spawn Bale Trailer", EffectCategory.VEHICLE, "spawn_baletrailer") },
+            {EffectType.EFFECT_SPAWN_ROMERO, new EffectInfo("Where's The Funeral?", EffectCategory.VEHICLE, "spawn_romero") },
             {EffectType.EFFECT_SPAWN_RANDOM, new EffectInfo("Spawn Random Vehicle", EffectCategory.VEHICLE, "spawn_random")},
             {EffectType.EFFECT_NO_VEHS, new EffectInfo("No Traffic", EffectCategory.VEHICLE, "notraffic", true)},
             {EffectType.EFFECT_EXPLODE_CUR_VEH, new EffectInfo("Explode Current Vehicle", EffectCategory.VEHICLE, "playerveh_explode")},
@@ -546,9 +561,21 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
             {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
+            {EffectType.EFFECT_MISC_PORTRAIT_MODE, new EffectInfo("Portrait Mode", EffectCategory.MISC, "misc_portrait", true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},
             {EffectType.EFFECT_NO_SKY, new EffectInfo("No Sky", EffectCategory.MISC, "misc_nosky", true)},
-            {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)}
+            {EffectType.EFFECT_PLAYER_GTA_2, new EffectInfo("GTA 2", EffectCategory.PLAYER, "player_gta_2", true, true)},
+            {EffectType.EFFECT_PEDS_KIFFLOM, new EffectInfo("Kifflom!", EffectCategory.PEDS, "peds_kifflom", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X0_5, new EffectInfo("0.5x Timer Speed", EffectCategory.META, "meta_timerspeed_0_5x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X2, new EffectInfo("2x Timer Speed", EffectCategory.META, "meta_timerspeed_2x", true)},
+            {EffectType.EFFECT_META_TIMER_SPEED_X5, new EffectInfo("5x Timer Speed", EffectCategory.META, "meta_timerspeed_5x", true, true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X2, new EffectInfo("2x Effect Duration", EffectCategory.META, "meta_effect_duration_2x", true)},
+            {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
+            {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
+            {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
+            {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
+            {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
+            {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
         };
     }
 }

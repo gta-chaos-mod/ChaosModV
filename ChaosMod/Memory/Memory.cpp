@@ -19,12 +19,11 @@ namespace Memory
 
 		MH_Initialize();
 
-		std::ofstream log("chaosmod/hooklog.txt");
 		for (RegisteredHook* registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
 			if (!registeredHook->RunHook())
 			{
-				log << "Error while executing " << registeredHook->GetName() << " hook" << std::endl;
+				LOG("Error while executing " << registeredHook->GetName() << " hook");
 			}
 		}
 	
@@ -36,7 +35,7 @@ namespace Memory
 			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
 			if (handle.IsValid())
 			{
-				WriteByte(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+				Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
 			}
 
 			// Legal screen
@@ -45,8 +44,8 @@ namespace Memory
 			{
 				handle = handle.Into();
 
-				WriteByte(handle.Get<BYTE>(), 0xC3);
-				WriteByte(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+				Write<BYTE>(handle.Get<BYTE>(), 0xC3);
+				Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
 			}
 		}
 
@@ -55,7 +54,7 @@ namespace Memory
 			Handle handle = FindPattern("40 53 48 81 EC ? ? ? ? 48 8D 15");
 			if (handle.IsValid())
 			{
-				WriteByte(handle.At(0x8E).Get<BYTE>(), 0x90, 24);
+				Write<BYTE>(handle.At(0x8E).Get<BYTE>(), 0x90, 24);
 			}
 		}
 	}
@@ -115,6 +114,8 @@ namespace Memory
 			}
 		}
 
+		LOG("Couldn't find pattern \"" << pattern << "\"");
+
 		return Handle();
 	}
 
@@ -130,14 +131,43 @@ namespace Memory
 		return result;
 	}
 
-	void WriteByte(BYTE* addr, BYTE byte, int count)
+	template <typename T>
+	void Write(T* addr, T value, int count)
 	{
-		DWORD dummy;
-		VirtualProtect(addr, count, PAGE_EXECUTE_READWRITE, &dummy);
+		DWORD oldProtect;
+		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
 
 		for (int i = 0; i < count; i++)
 		{
-			addr[i] = byte;
+			addr[i] = value;
 		}
+
+		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
+	}
+
+	const char* const GetTypeName(__int64 vptr)
+	{
+		if (vptr)
+		{
+			__int64 vftable = *reinterpret_cast<__int64*>(vptr);
+			if (vftable)
+			{
+				__int64 rtti = *reinterpret_cast<__int64*>(vftable - 8);
+				if (rtti)
+				{
+					__int64 rva = *reinterpret_cast<DWORD*>(rtti + 12);
+					if (rva)
+					{
+						__int64 typeDesc = m_baseAddr + rva;
+						if (typeDesc)
+						{
+							return reinterpret_cast<const char*>(typeDesc + 16);
+						}
+					}
+				}
+			}
+		}
+
+		return "UNK";
 	}
 }

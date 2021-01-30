@@ -3,6 +3,7 @@
 #include "EffectDispatcher.h"
 
 #include <vector>
+#include <memory>
 
 enum class TwitchOverlayMode
 {
@@ -40,29 +41,26 @@ private:
 	const bool m_enableTwitchChanceSystem;
 	const bool m_enableVotingChanceSystemRetainChance;
 	const bool m_enableTwitchRandomEffectVoteable;
+	bool m_hasReceivedResult = false;
+	bool m_isVotingRoundDone = true;
 
 	bool m_isVotingRunning = false;
 
 	struct ChoosableEffect
 	{
-		ChoosableEffect()
+		ChoosableEffect(const EffectIdentifier& effectIdentifier, const std::string& name, int match) : EffectIdentifier(effectIdentifier), EffectName(name), Match(match)
 		{
 
 		}
 
-		ChoosableEffect(EffectType effectType, std::string name, int match) : EffectType(effectType), EffectName(name), Match(match)
-		{
-
-		}
-
-		EffectType EffectType;
+		EffectIdentifier EffectIdentifier;
 		std::string EffectName;
 		int Match;
 		int ChanceVotes = 0;
 	};
-	std::vector<ChoosableEffect> m_effectChoices;
+	std::vector<std::unique_ptr<ChoosableEffect>> m_effectChoices;
 
-	EffectType m_chosenEffectType;
+	std::unique_ptr<EffectIdentifier> m_chosenEffectIdentifier;
 
 	bool HandleMsg(const std::string& msg);
 	void SendToPipe(std::string&& msg);

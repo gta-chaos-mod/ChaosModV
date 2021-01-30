@@ -17,6 +17,6 @@ namespace Memory
 			patchByte = handle.Into().Get<BYTE>();
 		}
 
-		WriteByte(patchByte, state ? 0xC3 : 0x48);
+		Write<BYTE>(patchByte, state ? 0xC3 : 0x48);
 	}
 }
