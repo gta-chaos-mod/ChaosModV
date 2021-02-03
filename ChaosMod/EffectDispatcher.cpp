@@ -138,7 +138,8 @@ void EffectDispatcher::UpdateEffects()
 
 	for (ActiveEffect& effect : m_activeEffects)
 	{
-		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId)) {
+		if (effect.HideText && ThreadManager::HasThreadOnStartExecuted(effect.ThreadId))
+		{
 			effect.HideText = false;
 		}
 	}
