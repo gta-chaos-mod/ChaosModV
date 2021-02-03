@@ -228,6 +228,8 @@ static const std::vector<std::pair<std::string, Vector3>> tpLocations =
 static void OnStartFakeTp()
 {
 	std::pair<std::string, Vector3> randLocation = tpLocations.at(g_random.GetRandomInt(0, tpLocations.size() - 1));
+	std::string overrideName = "Teleport To " + randLocation.first;
+	g_effectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName.c_str());
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();

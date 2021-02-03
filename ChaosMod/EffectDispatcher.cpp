@@ -27,6 +27,16 @@ void EffectDispatcher::DrawTimerBar()
 	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
+// (kolyaventuri): Make sure you know what you're doing if you use this
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, std::string overrideName)
+{
+	for (ActiveEffect& effect : m_activeEffects) {
+		if (effect.EffectIdentifier.GetEffectType() == effectType) {
+			effect.FakeName = overrideName;
+		}
+	}
+}
+
 void EffectDispatcher::DrawEffectTexts()
 {
 	if (!m_enableNormalEffectDispatch)

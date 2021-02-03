@@ -45,6 +45,7 @@ public:
 	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
 	void Reset();
 	void ResetTimer();
+	void OverrideEffectName(const EffectType& effectType, const std::string overrideName);
 
 private:
 	const int m_effectSpawnTime;
