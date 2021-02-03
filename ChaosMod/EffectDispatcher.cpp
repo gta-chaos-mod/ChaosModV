@@ -27,7 +27,7 @@ void EffectDispatcher::DrawTimerBar()
 	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
-// (kolyaventuri): Make sure you know what you're doing if you use this
+// (kolyaventuri): Forces the name of the provided effect to change
 void EffectDispatcher::OverrideEffectName(const EffectType& effectType, std::string overrideName)
 {
 	for (ActiveEffect& effect : m_activeEffects) {
