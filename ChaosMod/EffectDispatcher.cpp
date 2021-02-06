@@ -62,7 +62,8 @@ void EffectDispatcher::DrawEffectTexts()
 		}
 
 		std::string name = effect.FakeName;
-		if (!effect.HideText || name.empty()) {
+		if (!effect.HideText || name.empty())
+		{
 			name = effect.Name;
 		}
 
