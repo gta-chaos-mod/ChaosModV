@@ -21,10 +21,16 @@ static void OnStart()
 			SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
 			entities.push_back(ped);
 		}
+		else
+		{
+			maxEntities++;
+		}
 	}
 
 	auto playerPed = PLAYER_PED_ID();
 
+	auto playerInVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false);
+	auto playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	for (auto veh : GetAllVehs())
 	{
 		if (maxEntities == 0)
@@ -34,7 +40,7 @@ static void OnStart()
 
 		maxEntities--;
 
-		if ((!IS_PED_IN_ANY_VEHICLE(playerPed, false) || veh != GET_VEHICLE_PED_IS_IN(playerPed, false)) && !IS_ENTITY_A_MISSION_ENTITY(veh))
+		if ((!playerInVeh || veh != playerVeh) && !IS_ENTITY_A_MISSION_ENTITY(veh))
 		{
 			SET_ENTITY_AS_MISSION_ENTITY(veh, true, true);
 			entities.push_back(veh);
@@ -45,7 +51,7 @@ static void OnStart()
 
 	for (auto entity : entities)
 	{
-		SET_ENTITY_COORDS(entity, playerPos.x, playerPos.y + 2, playerPos.z, false, false, false, false);
+		SET_ENTITY_COORDS(entity, playerPos.x, playerPos.y, playerPos.z + 2, false, false, false, false);
 	}
 
 	WAIT(0);
@@ -80,11 +86,15 @@ static void OnStart()
 
 	for (Entity entity : entities)
 	{
+		
 		Vector3 entityCoord = GET_ENTITY_COORDS(entity, false);
-		//boom
-		for (int i = 0; i < 30; i++)
+		if (GET_DISTANCE_BETWEEN_COORDS(entityCoord.x, entityCoord.y, entityCoord.z, playerPos.x, playerPos.y, playerPos.z, true) <= 20)
 		{
-			APPLY_FORCE_TO_ENTITY(entity, 1, entityCoord.x - playerPos.x, entityCoord.y - playerPos.y, entityCoord.z - playerPos.z, 0, 0, 0, 0, false, false, true, false, true);
+			//boom
+			for (int i = 0; i < 30; i++)
+			{
+				APPLY_FORCE_TO_ENTITY(entity, 1, entityCoord.x - playerPos.x, entityCoord.y - playerPos.y, entityCoord.z - playerPos.z, 0, 0, 0, 0, false, false, true, false, true);
+			}
 		}
 	}
 }
