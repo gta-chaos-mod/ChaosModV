@@ -14,16 +14,13 @@ static void OnStart()
 			break;
 		}
 
-		maxEntities--;
+		
 
 		if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_A_MISSION_ENTITY(ped))
 		{
 			SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
 			entities.push_back(ped);
-		}
-		else
-		{
-			maxEntities++;
+			maxEntities--;
 		}
 	}
 
