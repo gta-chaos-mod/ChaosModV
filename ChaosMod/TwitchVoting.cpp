@@ -4,16 +4,23 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem,
-	bool enableVotingChanceSystemRetainChance, bool enableTwitchRandomEffectVoteable)
-	: m_enableTwitchVoting(enableTwitchVoting), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting), m_enableTwitchPollVoting(enableTwitchPollVoting),
-	m_twitchOverlayMode(twitchOverlayMode), m_enableTwitchChanceSystem(enableTwitchChanceSystem), m_enableVotingChanceSystemRetainChance(enableVotingChanceSystemRetainChance),
-	m_enableTwitchRandomEffectVoteable(enableTwitchRandomEffectVoteable)
+TwitchVoting::TwitchVoting()
 {
+	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+
 	if (!m_enableTwitchVoting)
 	{
 		return;
 	}
+
+	m_twitchSecsBeforeVoting = g_optionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+
+	m_twitchOverlayMode = static_cast<TwitchOverlayMode>(g_optionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
+	m_enableTwitchChanceSystem = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_enableVotingChanceSystemRetainChance = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+
+	m_enableTwitchRandomEffectVoteable = g_optionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	g_effectDispatcher->OverrideTimerDontDispatch(true);
 
@@ -365,7 +372,7 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		{
 			const std::string& split = valuesStr.substr(0, splitIndex);
 
-			TryParseInt(split, m_effectChoices[i]->ChanceVotes);
+			TryParse<int>(split, m_effectChoices[i]->ChanceVotes);
 
 			valuesStr = valuesStr.substr(splitIndex + 1);
 

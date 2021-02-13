@@ -7,7 +7,6 @@
 #include "Main.h"
 #include "TwitchVoting.h"
 #include "Mp3Manager.h"
-#include "OptionsFile.h"
 #include "ThreadManager.h"
 #include "LuaManager.h"
 
@@ -42,6 +41,9 @@
 #include "Util/File.h"
 #include "Util/Misc.h"
 #include "Util/Logging.h"
+#include "Util/OptionsFile.h"
+#include "Util/OptionsManager.h"
+#include "Util/OptionDefaults.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

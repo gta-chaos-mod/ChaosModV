@@ -19,9 +19,7 @@ enum class TwitchOverlayMode;
 class EffectDispatcher
 {
 public:
-	EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
-		std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
-		TwitchOverlayMode twitchOverlayMode);
+	EffectDispatcher(const std::array<int, 3>& timerColor, const std::array<int, 3>& textColor, const std::array<int, 3>& effectTimerColor);
 	~EffectDispatcher();
 
 public:
@@ -47,19 +45,19 @@ public:
 	void ResetTimer();
 
 private:
-	const int m_effectSpawnTime;
-	const int m_effectTimedDur;
-	const int m_effectTimedShortDur;
+	int m_effectSpawnTime;
+	int m_effectTimedDur;
+	int m_effectTimedShortDur;
 
-	const int m_metaEffectSpawnTime;
-	const int m_metaEffectTimedDur;
-	const int m_metaEffectShortDur;
+	int m_metaEffectSpawnTime;
+	int m_metaEffectTimedDur;
+	int m_metaEffectShortDur;
 
 	const std::array<int, 3> m_timerColor;
 	const std::array<int, 3> m_textColor;
 	const std::array<int, 3> m_effectTimerColor;
 
-	float m_percentage;
+	float m_percentage = 0.f;
 
 	struct ActiveEffect
 	{
@@ -92,8 +90,8 @@ private:
 	bool m_dispatchEffectsOnTimer = true;
 	bool m_metaEffectsEnabled = true;
 	int m_metaEffectTimer = m_metaEffectSpawnTime;
-	const bool m_enableTwitchVoting;
-	const TwitchOverlayMode m_twitchOverlayMode;
+	bool m_enableTwitchVoting;
+	TwitchOverlayMode m_twitchOverlayMode;
 };
 
 inline std::unique_ptr<EffectDispatcher> g_effectDispatcher;

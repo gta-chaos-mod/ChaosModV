@@ -1,12 +1,20 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
-	TwitchOverlayMode twitchOverlayMode)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime), 
-	m_metaEffectTimedDur(metaEffectTimedDur), m_metaEffectShortDur(metaEffectShortDur), m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor),
-	m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
+EffectDispatcher::EffectDispatcher(const std::array<int, 3>& timerColor, const std::array<int, 3>& textColor, const std::array<int, 3>& effectTimerColor)
+	: m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
+	m_effectSpawnTime = g_optionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
+	m_effectTimedDur = g_optionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
+	m_effectTimedShortDur = g_optionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
+
+	m_metaEffectSpawnTime = g_optionsManager.GetConfigValue<int>("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
+	m_metaEffectTimedDur = g_optionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
+	m_metaEffectShortDur = g_optionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
+
+	m_enableTwitchVoting = g_optionsManager.GetConfigValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+
+	m_twitchOverlayMode = static_cast<TwitchOverlayMode>(g_optionsManager.GetConfigValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
 	Reset();
 }
 
