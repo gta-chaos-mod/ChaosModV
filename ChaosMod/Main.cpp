@@ -148,6 +148,8 @@ void Main::Init()
 	}
 
 	ParseEffectsFile();
+    
+    g_optionsManager.Reset();
 
 	m_clearEffectsShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 	m_toggleModShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
