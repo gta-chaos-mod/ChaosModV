@@ -28,7 +28,7 @@ TwitchVoting::TwitchVoting()
 	PROCESS_INFORMATION procInfo = {};
 
 	char buffer[128];
-	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe");
+	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe --startProxy");
 #ifdef _DEBUG
 	DWORD attributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
