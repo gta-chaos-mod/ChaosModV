@@ -1,19 +1,55 @@
 #include <stdafx.h>
 
-//Effect by ProfessorBiddle, modified
+static void SleepAllThreads(DWORD ms)
+{
+	std::vector<HANDLE> threads;
+
+	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+	
+	THREADENTRY32 threadEntry {};
+	threadEntry.dwSize = sizeof(threadEntry);
+
+	Thread32First(handle, &threadEntry);
+	do
+	{
+		if (threadEntry.dwSize >= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(threadEntry.th32OwnerProcessID))
+		{
+			if (threadEntry.th32ThreadID != GetCurrentThreadId() && threadEntry.th32OwnerProcessID == GetCurrentProcessId())
+			{
+				HANDLE thread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
+
+				threads.push_back(thread);
+			}
+		}
+
+		threadEntry.dwSize = sizeof(threadEntry);
+	}
+	while (Thread32Next(handle, &threadEntry));
+
+	for (HANDLE thread : threads)
+	{
+		SuspendThread(thread);
+	}
+
+	Sleep(ms);
+
+	for (HANDLE thread : threads)
+	{
+		ResumeThread(thread);
+
+		CloseHandle(thread);
+	}
+
+	CloseHandle(handle);
+}
 
 static void OnStart()
 {
-	PlaySound(reinterpret_cast<LPCSTR>(SND_ALIAS_SYSTEMHAND), NULL, SND_ALIAS_ID);
+	SleepAllThreads(500);
 
-	DWORD64 lastTimestamp = GetTickCount64();
+	WAIT(500);
 
-	int time = g_random.GetRandomInt(3000, 5000);
-
-	while (lastTimestamp < GetTickCount64() - time)
-	{
-		
-	}
+	SleepAllThreads(g_random.GetRandomInt(3000, 5000));
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart);

@@ -2,6 +2,8 @@
 
 #include "Effects/Effect.h"
 
+#include "Util/CrashHandler.h"
+
 #include <list>
 #include <memory>
 
@@ -34,10 +36,14 @@ namespace ThreadManager
 	void SwitchToMainThread();
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
 	bool IsAnyThreadRunningOnStart();
+	bool IsAnyThreadRunning();
+	void ClearThreads();
 };
 
 static void EffectThreadFunc(void* data)
 {
+	SetUnhandledExceptionFilter(CrashHandler);
+
 	extern void WAIT(DWORD ms);
 
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData*>(data);

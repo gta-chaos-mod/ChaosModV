@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Create a report to help us improve
-title: "[Bug]"
+title: "[Bug] My Nasty Bug"
 labels: bug
 assignees: ''
 
@@ -13,11 +13,5 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 Steps to reproduce the behavior
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Additional context**
-Add any other context about the problem here.
+**Crash Dump (if a game crash)**
+Attach the latest .dmp file (names are Year-Month-Day-Hour-Minute.dmp) located in chaosmod/crashes/, ignore if bug doesn't cause a game crash

@@ -63,16 +63,16 @@ static void OnStart() {
 		SET_PED_INTO_VEHICLE(clone, cloneVeh, vehicleSeat);
 	}
 
-	// (kolyaventuri): Apply camera effectsf
+	AUDIO::PLAY_SOUND_FRONTEND(-1, "1st_Person_Transition", "PLAYER_SWITCH_CUSTOM_SOUNDSET", 0);
+}
+
+static void OnTick() {
+	// (kolyaventuri): Apply camera effects
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
 	}
 
-	AUDIO::PLAY_SOUND_FRONTEND(-1, "1st_Person_Transition", "PLAYER_SWITCH_CUSTOM_SOUNDSET", 0);
-}
-
-static void OnTick() {
 	Ped player = PLAYER_PED_ID();
 
 	// (kolyaventuri): Replicate weapon

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -60,19 +59,13 @@ namespace ConfigApp
             InitTwitchTab();
         }
 
-        void CheckForUpdates()
+        private async void CheckForUpdates()
         {
             HttpClient httpClient = new HttpClient();
 
-            Task<string> task = httpClient.GetStringAsync("https://ducky.rivinshosting.com/chaos/version.txt");
-            while (!task.IsCompleted)
+            try
             {
-
-            }
-
-            if (!task.IsFaulted)
-            {
-                string newVersion = task.Result;
+                string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
 
                 if (Info.VERSION != newVersion)
                 {
@@ -82,6 +75,10 @@ namespace ConfigApp
                 {
                     update_available_label.Content = "You are on the newest version of the mod!";
                 }
+            }
+            catch (HttpRequestException)
+            {
+                update_available_label.Content = "Unable to check for new updates!";
             }
         }
 
@@ -107,7 +104,6 @@ namespace ConfigApp
             misc_user_effects_random_seed.Text = m_configFile.ReadValue("Seed");
             misc_user_effects_timed_short_dur.Text = m_configFile.ReadValue("EffectTimedShortDur", "30");
             misc_user_effects_clear_enable.IsChecked = m_configFile.ReadValueBool("EnableClearEffectsShortcut", true);
-            misc_user_effects_twice_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTwiceInRow", false);
             misc_user_effects_drawtimer_disable.IsChecked = m_configFile.ReadValueBool("DisableTimerBarDraw", false);
             misc_user_effects_drawtext_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTextDraw", false);
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
@@ -126,6 +122,11 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+
+            // Meta Effects
+            meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
+            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "90");
+            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "60");
         }
 
         private void WriteConfigFile()
@@ -135,7 +136,6 @@ namespace ConfigApp
             m_configFile.WriteValue("Seed", misc_user_effects_random_seed.Text);
             m_configFile.WriteValue("EffectTimedShortDur", misc_user_effects_timed_short_dur.Text);
             m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
-            m_configFile.WriteValue("DisableEffectTwiceInRow", misc_user_effects_twice_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableTimerBarDraw", misc_user_effects_drawtimer_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableEffectTextDraw", misc_user_effects_drawtext_disable.IsChecked.Value);
             m_configFile.WriteValue("EnableToggleModShortcut", misc_user_toggle_mod_shortcut.IsChecked.Value);
@@ -145,6 +145,11 @@ namespace ConfigApp
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
 
+            // Meta Effects
+            m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
+            m_configFile.WriteValue("MetaEffectDur", meta_effects_timed_dur.Text);
+            m_configFile.WriteValue("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
+            
             m_configFile.WriteFile();
         }
 
@@ -275,6 +280,7 @@ namespace ConfigApp
             TreeMenuItem timeParentItem = new TreeMenuItem("Time");
             TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
             TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
+            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
 
             SortedDictionary<string, Tuple<EffectType, EffectCategory>> sortedEffects = new SortedDictionary<string, Tuple<EffectType, EffectCategory>>();
 
@@ -312,6 +318,9 @@ namespace ConfigApp
                     case EffectCategory.MISC:
                         miscParentItem.AddChild(menuItem);
                         break;
+                    case EffectCategory.META:
+                        metaParentItem.AddChild(menuItem);
+                        break;
                 }
             }
 
@@ -322,6 +331,10 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(timeParentItem);
             effects_user_effects_tree_view.Items.Add(weatherParentItem);
             effects_user_effects_tree_view.Items.Add(miscParentItem);
+
+            meta_effects_tree_view.Items.Clear();
+            meta_effects_tree_view.Items.Add(metaParentItem);
+            
         }
 
         void InitTwitchTab()

@@ -1,10 +1,8 @@
 #include <stdafx.h>
 
-#include "Main.h"
+static Main m_main;
 
-Main m_main;
-
-void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+static void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
 	m_main.OnKeyboardInput(key, repeats, scanCode, isExtended, isWithAlt, wasDownBefore, isUpNow);
 }
@@ -15,12 +13,12 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		Memory::Init();
-		m_main.Init();
 
-		scriptRegister(hInstance, []() { m_main.MainLoop(); });
-		scriptRegisterAdditionalThread(hInstance, []() { m_main.RunEffectLoop(); });
+		scriptRegister(hInstance, []() { m_main.Loop(); });
 
 		keyboardHandlerRegister(OnKeyboardInput);
+
+		SetUnhandledExceptionFilter(CrashHandler);
 
 		break;
 	case DLL_PROCESS_DETACH:
@@ -29,6 +27,13 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 		scriptUnregister(hInstance);
 
 		keyboardHandlerUnregister(OnKeyboardInput);
+
+		if (GetConsoleWindow())
+		{
+			g_consoleOut.close();
+
+			FreeConsole();
+		}
 
 		break;
 	}

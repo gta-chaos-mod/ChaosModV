@@ -61,6 +61,16 @@ namespace ThreadManager
 
 	void RunThreads()
 	{
+		static int lastFrame = GET_FRAME_COUNT();
+		int curFrame = GET_FRAME_COUNT();
+
+		if (lastFrame == curFrame)
+		{
+			return;
+		}
+
+		lastFrame = curFrame;
+
 		DWORD64 curTimestamp = GetTickCount64();
 
 		for (std::list<std::unique_ptr<EffectThread>>::iterator it = m_threads.begin(); it != m_threads.end(); )
@@ -104,7 +114,7 @@ namespace ThreadManager
 
 	bool IsAnyThreadRunningOnStart()
 	{
-		for (std::unique_ptr<EffectThread>& thread : m_threads)
+		for (const std::unique_ptr<EffectThread>& thread : m_threads)
 		{
 			if (!thread->HasOnStartExecuted())
 			{
@@ -113,5 +123,23 @@ namespace ThreadManager
 		}
 
 		return false;
+	}
+
+	bool IsAnyThreadRunning()
+	{
+		for (const std::unique_ptr<EffectThread>& thread : m_threads)
+		{
+			if (!thread->HasStopped())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	void ClearThreads()
+	{
+		m_threads.clear();
 	}
 }

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#pragma warning( disable : 4789 )
+
 #include "main.h"
 
 // Zorg93
