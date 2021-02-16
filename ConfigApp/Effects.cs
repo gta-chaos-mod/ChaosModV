@@ -418,7 +418,7 @@ namespace ConfigApp
             {EffectType.EFFECT_IN_THE_HOOD, new EffectInfo("In The Hood", EffectCategory.PEDS, "peds_dance", true)},
             {EffectType.EFFECT_FORCED_CINEMATIC, new EffectInfo("Cinematic Vehicle Cam", EffectCategory.VEHICLE, "player_forcedcinematiccam", true)},
             {EffectType.EFFECT_PEDS_FLEE, new EffectInfo("All Nearby Peds Are Fleeing", EffectCategory.PEDS, "peds_flee")},
-            {EffectType.EFFECT_BREAK_VEH_DOORS, new EffectInfo("Break All Doors Of Every Vehicle", EffectCategory.VEHICLE, "playerveh_breakdoors")},
+            {EffectType.EFFECT_BREAK_VEH_DOORS, new EffectInfo("Break Doors Of Every Vehicle", EffectCategory.VEHICLE, "playerveh_breakdoors")},
             {EffectType.EFFECT_ZOMBIES, new EffectInfo("Explosive Zombies", EffectCategory.PEDS, "zombies", true)},
             {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, "meteorrain", true)},
             {EffectType.EFFECT_BLACKOUT, new EffectInfo("Blackout", EffectCategory.MISC, "world_blackout", true)},

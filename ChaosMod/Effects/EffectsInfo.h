@@ -404,7 +404,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_IN_THE_HOOD, {"In The Hood", "peds_dance", true}},
 	{EFFECT_FORCED_CINEMATIC, {"Cinematic Vehicle Cam", "player_forcedcinematiccam", true, { EFFECT_FORCED_FP }}},
 	{EFFECT_PEDS_FLEE, {"All Nearby Peds Are Fleeing", "peds_flee"}},
-	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Every Vehicle", "playerveh_breakdoors"}},
+	{EFFECT_BREAK_VEH_DOORS, {"Break Doors Of Every Vehicle", "playerveh_breakdoors"}},
 	{EFFECT_ZOMBIES, {"Explosive Zombies", "zombies", true}},
 	{EFFECT_METEOR_RAIN, {"Meteor Shower", "meteorrain", true}},
 	{EFFECT_BLACKOUT, {"Blackout", "world_blackout", true}},
