@@ -319,8 +319,12 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 
 			if (!g_metaInfo.ShouldHideChaosUI)
 			{
-				// Play global sound (if existing)
-				Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+				// Play global sound (if one exists)
+				// Workaround: Force no global sound for "Fake Crash" and "Fake Death"
+				if (effectIdentifier.GetEffectType() != EFFECT_MISC_CRASH && effectIdentifier.GetEffectType() != EFFECT_PLAYER_FAKEDEATH)
+				{
+					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+				}
 
 				// Play a sound if corresponding .mp3 file exists
 				Mp3Manager::PlayChaosSoundFile(effectData.Id);
