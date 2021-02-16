@@ -1,12 +1,11 @@
 #include <stdafx.h>
 
-static std::map<Entity, Entity> vehicleMap;
+static std::unordered_map<Entity, Entity> vehicleMap;
 
 __int64(*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
 {
 	Entity vehToContinue = entity;
-
 	while (vehicleMap.count(vehToContinue) > 0)
 	{
 		vehToContinue = vehicleMap[vehToContinue];
@@ -34,5 +33,24 @@ namespace Hooks
 	void ProxyEntityHandle(Entity origHandle, Entity newHandle)
 	{
 		vehicleMap.emplace(origHandle, newHandle);
+		// CleanUp
+		bool found = false;
+		do 
+		{
+			found = false;
+			for (std::unordered_map<Entity, Entity>::iterator it = vehicleMap.begin(); it != vehicleMap.end(); )
+			{
+				if (!DOES_ENTITY_EXIST(it->second))
+				{
+					it = vehicleMap.erase(it);
+					found = true;
+				}
+				else
+				{
+					it++;
+				}
+			}
+		} 
+		while (found);
 	}
 }
