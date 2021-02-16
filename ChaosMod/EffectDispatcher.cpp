@@ -59,7 +59,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(effect.Name.c_str());
-		SET_TEXT_SCALE(.5f, .5f);
+		SET_TEXT_SCALE(.47f, .47f);
 		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
 		SET_TEXT_OUTLINE();
 		SET_TEXT_WRAP(.0f, .91f);
@@ -68,8 +68,8 @@ void EffectDispatcher::DrawEffectTexts()
 
 		if (effect.Timer > 0)
 		{
-			DRAW_RECT(.95f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.95f, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0], m_effectTimerColor[1],
+			DRAW_RECT(.95f, y + .018f, .05f, .019f, 0, 0, 0, 127, false);
+			DRAW_RECT(.95f, y + .018f, .0485f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
 		}
 
