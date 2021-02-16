@@ -28,6 +28,13 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		keyboardHandlerUnregister(OnKeyboardInput);
 
+		if (GetConsoleWindow())
+		{
+			g_consoleOut.close();
+
+			FreeConsole();
+		}
+
 		break;
 	}
 

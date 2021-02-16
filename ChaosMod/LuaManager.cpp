@@ -2,12 +2,12 @@
 
 static __forceinline void LuaPrint(const std::string& text)
 {
-	g_log << "[Lua] " << text << std::endl;
+	RAW_LOG("[Lua] " << text);
 }
 
 static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
-	g_log << "[Lua] " << name << ": " << text << std::endl;
+	RAW_LOG("[Lua] " << name << ": " << text);
 }
 
 static __forceinline char* _TryParseString(void* ptr)
@@ -23,21 +23,21 @@ static __forceinline char* _TryParseString(void* ptr)
 
 		return string;
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
 	{
 		return nullptr;
 	}
 }
 
-static __forceinline bool _TryParseVector3(void** ptr, float* x, float* y, float* z)
+static __forceinline bool _TryParseVector3(void** ptr, float& x, float& y, float& z)
 {
 	__try
 	{
-		*x = *reinterpret_cast<float*>(ptr);
-		*y = *reinterpret_cast<float*>(ptr + 1);
-		*z = *reinterpret_cast<float*>(ptr + 2);
+		x = *reinterpret_cast<float*>(ptr);
+		y = *reinterpret_cast<float*>(ptr + 1);
+		z = *reinterpret_cast<float*>(ptr + 2);
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
 	{
 		return false;
 	}
@@ -51,7 +51,7 @@ static __forceinline bool _CallNative(void*** result)
 	{
 		*result = reinterpret_cast<void**>(nativeCall());
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+	__except (EXCEPTION_EXECUTE_HANDLER)
 	{
 		return false;
 	}
@@ -67,25 +67,27 @@ static __forceinline T Generate(const A&... args)
 
 struct LuaScript
 {
+	LuaScript() = default;
+
 	LuaScript(const std::string& fileName, sol::state& lua) : m_fileName(fileName), m_lua(std::move(lua))
 	{
 
 	}
 
-	void Execute(const char* funcName) const
+	void Execute(const char* const funcName) const
 	{
-		sol::protected_function func = m_lua[funcName];
+		const sol::protected_function& func = m_lua[funcName];
 
 		if (!func.valid())
 		{
 			return;
 		}
 
-		sol::protected_function_result result = func();
+		const sol::protected_function_result& result = func();
 
 		if (!result.valid())
 		{
-			sol::error error = result;
+			const sol::error& error = result;
 
 			LuaPrint(m_fileName, error.what());
 		}
@@ -96,7 +98,7 @@ private:
 	sol::state m_lua;
 };
 
-static std::map<std::string, LuaScript> s_registeredScripts;
+static std::unordered_map<std::string, LuaScript> s_registeredScripts;
 
 static struct LuaVector3
 {
@@ -107,11 +109,11 @@ static struct LuaVector3
 
 	}
 
-	float x;
+	float x = 0.f;
 	DWORD _paddingX;
-	float y;
+	float y = 0.f;
 	DWORD _paddingY;
-	float z;
+	float z = 0.f;
 	DWORD _paddingZ;
 };
 
@@ -130,9 +132,15 @@ static struct LuaHolder
 	template <typename T>
 	__forceinline T As()
 	{
-		if constexpr(std::is_same<T, char*>())
+		if constexpr (std::is_same<T, char*>())
 		{
 			return _TryParseString(data);
+		}
+		else if constexpr (std::is_same<T, LuaVector3>())
+		{
+			float x, y, z;
+
+			return _TryParseVector3(&data, x, y, z) ? LuaVector3(x, y, z) : LuaVector3();
 		}
 
 		return *reinterpret_cast<T*>(&data);
@@ -154,9 +162,9 @@ enum class LuaNativeReturnType
 	VECTOR3
 };
 
-static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
+static __forceinline sol::object LuaInvoke(const std::string& fileName, const sol::this_state& lua, DWORD64 nativeHash, LuaNativeReturnType returnType, const sol::variadic_args& args)
 {
-	nativeInit(hash);
+	nativeInit(nativeHash);
 
 	for (const sol::stack_proxy& arg : args)
 	{
@@ -194,7 +202,11 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 	}
 
 	void** returned;
-	if (_CallNative(&returned) && returned)
+	if (!_CallNative(&returned))
+	{
+		LuaPrint(fileName, (std::ostringstream() << "Error while invoking native 0x" << nativeHash).str());
+	}
+	else if (returned)
 	{
 		void* result = *returned;
 
@@ -211,7 +223,7 @@ static __forceinline sol::object LuaInvoke(const sol::this_state& lua, DWORD64 h
 		case LuaNativeReturnType::VECTOR3:
 		{
 			LuaVector3 vector3;
-			if (_TryParseVector3(returned, &vector3.x, &vector3.y, &vector3.z))
+			if (_TryParseVector3(returned, vector3.x, vector3.y, vector3.z))
 			{
 				return sol::make_object(lua, vector3);
 			}
@@ -267,13 +279,15 @@ namespace LuaManager
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
 				lua["GetTickCount"] = GetTickCount64;
+				lua["GET_HASH_KEY"] = GET_HASH_KEY;
 
 				lua.new_usertype<LuaHolder>("_Holder",
 					"IsValid", &LuaHolder::IsValid,
 					"AsBoolean", &LuaHolder::As<bool>,
 					"AsInteger", &LuaHolder::As<int>,
 					"AsFloat", &LuaHolder::As<float>,
-					"AsString", &LuaHolder::As<char*>);
+					"AsString", &LuaHolder::As<char*>,
+					"AsVector3", &LuaHolder::As<LuaVector3>);
 				lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 				lua.new_usertype<LuaVector3>("_Vector3",
@@ -282,7 +296,8 @@ namespace LuaManager
 					"z", &LuaVector3::z);
 				lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
-				lua["_invoke"] = LuaInvoke;
+				lua["_invoke"] = [fileName](const sol::this_state& lua, DWORD64 hash, LuaNativeReturnType returnType, const sol::variadic_args& args)
+					{ return LuaInvoke(fileName, lua, hash, returnType, args); };
 				lua["WAIT"] = WAIT;
 
 				lua["GetAllPeds"] = GetAllPeds;
@@ -295,24 +310,28 @@ namespace LuaManager
 				lua["GetAllProps"] = GetAllProps;
 				lua["CreatePoolProp"] = CreatePoolProp;
 
-				sol::protected_function_result result = lua.safe_script_file(path.string(), sol::load_mode::text);
+				lua["GetAllWeapons"] = Memory::GetAllWeapons;
+				lua["GetAllPedModels"] = Memory::GetAllPedModels;
+				lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
+
+				const sol::protected_function_result& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 
 				if (!result.valid())
 				{
-					sol::error error = result;
+					const sol::error& error = result;
 
 					LuaPrint(fileName, error.what());
 				}
 				else
 				{
-					sol::optional<sol::table> scriptInfoOpt = lua["ScriptInfo"];
+					const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
 
 					if (scriptInfoOpt)
 					{
 						const sol::table& scriptInfo = *scriptInfoOpt;
 
-						sol::optional<std::string> scriptNameOpt = scriptInfo["Name"];
-						sol::optional<std::string> scriptIdOpt = scriptInfo["ScriptId"];
+						const sol::optional<std::string>& scriptNameOpt = scriptInfo["Name"];
+						const sol::optional<std::string>& scriptIdOpt = scriptInfo["ScriptId"];
 
 						if (scriptNameOpt && scriptIdOpt)
 						{
@@ -368,7 +387,7 @@ namespace LuaManager
 									}
 									else if (timedTypeText == "Custom")
 									{
-										sol::optional<int> durationOpt = scriptInfo["CustomTime"];
+										const sol::optional<int>& durationOpt = scriptInfo["CustomTime"];
 
 										if (durationOpt && *durationOpt > 0)
 										{
@@ -378,21 +397,21 @@ namespace LuaManager
 									}
 								}
 
-								sol::optional<int> weightMultOpt = scriptInfo["WeightMultiplier"];
+								const sol::optional<int>& weightMultOpt = scriptInfo["WeightMultiplier"];
 
 								if (weightMultOpt && *weightMultOpt > 0)
 								{
 									effectData.WeightMult = *weightMultOpt;
 								}
 
-								sol::optional<bool> isMetaOpt = scriptInfo["IsMeta"];
+								const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
 
 								if (isMetaOpt)
 								{
 									effectData.IsMeta = *isMetaOpt;
 								}
 
-								sol::optional<sol::table> incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
+								const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
 								if (incompatibleIdsOpt)
 								{
 									const sol::table& incompatibleIds = *incompatibleIdsOpt;
@@ -435,14 +454,7 @@ namespace LuaManager
 
 	void Execute(const std::string& scriptId, const char* funcName)
 	{
-		const auto& result = s_registeredScripts.find(scriptId);
-
-		if (result == s_registeredScripts.end())
-		{
-			return;
-		}
-
-		const LuaScript& script = result->second;
+		const LuaScript& script = s_registeredScripts[scriptId];
 
 		script.Execute(funcName);
 	}

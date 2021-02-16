@@ -23,7 +23,8 @@ static bool OnHook()
 {
 	Handle handle;
 
-	handle = Memory::FindPattern("E9 ? ? ? ? C3 90 90 E9 2C 65 E8 48");
+	// Not really a fan of this sig either but the best I could do :shrug:
+	handle = Memory::FindPattern("E9 ? ? ? ? C3 90 ? ? ? ? E8 ? ? ? ? 90 E9 ? ? ? ? 90");
 	if (!handle.IsValid())
 	{
 		return false;

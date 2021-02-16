@@ -259,6 +259,7 @@ enum EffectType
 	EFFECT_HIGH_PITCH,
 	EFFECT_NO_SKY,
 	EFFECT_PLAYER_GTA_2,
+	EFFECT_PEDS_KIFFLOM,
 	EFFECT_META_TIMER_SPEED_X0_5,
 	EFFECT_META_TIMER_SPEED_X2,
 	EFFECT_META_TIMER_SPEED_X5,
@@ -268,6 +269,7 @@ enum EffectType
 	EFFECT_META_ADDITIONAL_EFFECTS,
 	EFFECT_VEHS_CRUMBLE,
 	EFFECT_MISC_FPS_LIMIT,
+	EFFECT_META_NO_CHAOS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -402,7 +404,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_IN_THE_HOOD, {"In The Hood", "peds_dance", true}},
 	{EFFECT_FORCED_CINEMATIC, {"Cinematic Vehicle Cam", "player_forcedcinematiccam", true, { EFFECT_FORCED_FP }}},
 	{EFFECT_PEDS_FLEE, {"All Nearby Peds Are Fleeing", "peds_flee"}},
-	{EFFECT_BREAK_VEH_DOORS, {"Break All Doors Of Every Vehicle", "playerveh_breakdoors"}},
+	{EFFECT_BREAK_VEH_DOORS, {"Break Doors Of Every Vehicle", "playerveh_breakdoors"}},
 	{EFFECT_ZOMBIES, {"Explosive Zombies", "zombies", true}},
 	{EFFECT_METEOR_RAIN, {"Meteor Shower", "meteorrain", true}},
 	{EFFECT_BLACKOUT, {"Blackout", "world_blackout", true}},
@@ -548,13 +550,15 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
 	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
 	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
+	{EFFECT_PEDS_KIFFLOM, {"Kifflom!", "peds_kifflom", true}},
 	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
-	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
+	{EFFECT_META_TIMER_SPEED_X5, {"5x Timer Speed", "meta_timerspeed_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, true, EffectExecutionType::META}},
 	{EFFECT_META_EFFECT_DURATION_X2, {"2x Effect Duration", "meta_effect_duration_2x", true, { EFFECT_META_EFFECT_DURATION_X0_5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_EFFECT_DURATION_X0_5, {"0.5x Effect Duration", "meta_effect_duration_0_5x", true, { EFFECT_META_EFFECT_DURATION_X2 }, false, EffectExecutionType::META}},
 	{EFFECT_META_HIDE_CHAOS_UI, {"What's Happening??", "meta_hide_chaos_ui", true, {}, false, EffectExecutionType::META}},
 	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
 	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
+	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
 };

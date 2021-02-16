@@ -36,6 +36,7 @@ namespace ThreadManager
 	void SwitchToMainThread();
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
 	bool IsAnyThreadRunningOnStart();
+	bool IsAnyThreadRunning();
 	void ClearThreads();
 };
 

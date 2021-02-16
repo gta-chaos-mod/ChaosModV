@@ -6,6 +6,8 @@
 
 struct EffectIdentifier
 {
+	EffectIdentifier() = default;
+
 	EffectIdentifier(EffectType effectType) : m_effectType(effectType), m_isScript(false)
 	{
 		
@@ -19,6 +21,11 @@ struct EffectIdentifier
 	inline bool operator==(const EffectIdentifier& other) const
 	{
 		return m_isScript == other.IsScript() && m_isScript ? m_scriptId == other.GetScriptId() : m_effectType == other.GetEffectType();
+	}
+
+	inline bool operator!=(const EffectIdentifier& other) const
+	{
+		return !(*this == other);
 	}
 
 	inline bool IsScript() const
@@ -39,5 +46,5 @@ struct EffectIdentifier
 private:
 	EffectType m_effectType = _EFFECT_ENUM_MAX;
 	std::string m_scriptId;
-	bool m_isScript;
+	bool m_isScript = false;
 };

@@ -7,7 +7,6 @@
 #include "Main.h"
 #include "TwitchVoting.h"
 #include "Mp3Manager.h"
-#include "OptionsFile.h"
 #include "ThreadManager.h"
 #include "LuaManager.h"
 
@@ -40,8 +39,11 @@
 #include "Util/Script.h"
 #include "Util/CrashHandler.h"
 #include "Util/File.h"
-#include "Util/Misc.h"
+#include "Util/Text.h"
 #include "Util/Logging.h"
+#include "Util/OptionsFile.h"
+#include "Util/OptionsManager.h"
+#include "Util/OptionDefaults.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
@@ -56,6 +58,7 @@
 #include <WinUser.h>
 #include <Psapi.h>
 #include <minidumpapiset.h>
+#include <TlHelp32.h>
 
 #include <fstream>
 #include <array>
