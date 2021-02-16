@@ -45,12 +45,31 @@ namespace Memory
 
 				v5 = *(reinterpret_cast<DWORD64*>(*qword_7FF6D9EF9740) + v4);
 
-				Hash weapon = *reinterpret_cast<Hash*>(v5 + 16);
-
-				// Filter out the weird invalid weapons
-				if (GET_WEAPONTYPE_MODEL(weapon))
+				// Only include actual ped weapons
+				if (strcmp(Memory::GetTypeName(v5), ".?AVCWeaponInfo@@"))
 				{
-					weapons.push_back(weapon);
+					continue;
+				}
+
+				// Check if weapon has valid model & slot
+				if (*reinterpret_cast<DWORD*>(v5 + 20) && *reinterpret_cast<DWORD*>(v5 + 28))
+				{
+					Hash weaponHash = *reinterpret_cast<Hash*>(v5 + 16);
+
+					// Blacklist the remaining invalid weapons I found
+					switch (weaponHash)
+					{
+					case 4256881901:
+					case 2294779575:
+					case 1834887169:
+					case 1752584910:
+					case 849905853:
+					case 375527679:
+					case 28811031:
+						continue;
+					}
+
+					weapons.push_back(weaponHash);
 				}
 			}
 		}

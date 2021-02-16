@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 inline std::ofstream g_log("chaosmod/chaoslog.txt");
 
