@@ -39,7 +39,7 @@
 #include "Util/Script.h"
 #include "Util/CrashHandler.h"
 #include "Util/File.h"
-#include "Util/Misc.h"
+#include "Util/Text.h"
 #include "Util/Logging.h"
 #include "Util/OptionsFile.h"
 #include "Util/OptionsManager.h"
