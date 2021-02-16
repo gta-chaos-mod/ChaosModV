@@ -31,8 +31,8 @@ void EffectDispatcher::DrawTimerBar()
 	}
 
 	// New Effect Bar
-	DRAW_RECT(.5f, .0f, 1.f, .05f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(.5f, .01f, 1.f, .02f, 0, 0, 0, 127, false);
+	DRAW_RECT(m_percentage * .5f, .01f, m_percentage, .0175f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 void EffectDispatcher::DrawEffectTexts()
