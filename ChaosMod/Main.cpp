@@ -184,7 +184,8 @@ void Main::Init()
 
 	LOG("Initializing Twitch voting");
 	m_twitchVoting = std::make_unique<TwitchVoting>();
-
+	m_proxyManager = std::make_unique<ProxyManager>();
+	
 	LOG("Completed Init!");
 }
 
@@ -198,6 +199,7 @@ void Main::Reset()
 	}
 
 	m_twitchVoting.reset();
+	m_proxyManager.reset();
 
 	ClearEntityPool();
 }
@@ -337,6 +339,8 @@ void Main::Loop()
 		{
 			m_twitchVoting->Tick();
 		}
+
+		m_proxyManager->Tick();
 
 		if (!m_pauseTimer)
 		{

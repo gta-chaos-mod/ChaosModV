@@ -13,6 +13,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchOverlayConfig", "TwitchOverlayConfig\TwitchOverlayConfig.csproj", "{387AFFEC-A58C-42BC-A64A-3FC6D5855436}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebVotingProxy", "WebVotingProxy\WebVotingProxy.csproj", "{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Shared.projitems*{387affec-a58c-42bc-a64a-3fc6d5855436}*SharedItemsImports = 4
@@ -41,6 +43,14 @@ Global
 		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Debug|x64.Build.0 = Debug|Any CPU
 		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Release|x64.ActiveCfg = Release|Any CPU
 		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Release|x64.Build.0 = Release|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Debug|x64.Build.0 = Debug|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Release|x64.ActiveCfg = Release|Any CPU
+		{85F50259-05E7-4BE7-BA0F-6D5B0ADF9A34}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
