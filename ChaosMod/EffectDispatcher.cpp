@@ -31,8 +31,8 @@ void EffectDispatcher::DrawTimerBar()
 	}
 
 	// New Effect Bar
-	DRAW_RECT(.5f, .01f, 1.f, .02f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .501f, .01f, m_percentage - .001f, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+	DRAW_RECT(m_percentage * .5f, .01f, m_percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 void EffectDispatcher::DrawEffectTexts()
@@ -69,7 +69,7 @@ void EffectDispatcher::DrawEffectTexts()
 		if (effect.Timer > 0)
 		{
 			DRAW_RECT(.96f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-			DRAW_RECT(.96f, y + .0185f, .0485f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
+			DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
 		}
 
