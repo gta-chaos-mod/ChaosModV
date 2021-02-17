@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace TwitchChatVotingProxy.ChaosPipe
+namespace ChaosPipe
 {
-    interface IChaosPipeClient
+    public interface IChaosPipeClient
     {
         event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         /// <summary>

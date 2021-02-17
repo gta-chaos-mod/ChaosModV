@@ -1,6 +1,6 @@
 ﻿using System;
+using ChaosPipe;
 using Serilog;
-using WebVotingProxy.ChaosPipe;
 using WebVotingProxy.VotingReceiver;
 
 namespace WebVotingProxy

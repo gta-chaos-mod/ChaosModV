@@ -62,15 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChaosModController.cs" />
-    <Compile Include="ChaosPipe\ChaosPipeClient.cs" />
-    <Compile Include="ChaosPipe\IChaosPipeClient.cs" />
-    <Compile Include="ChaosPipe\OnGetCurrentVotesArgs.cs" />
-    <Compile Include="ChaosPipe\OnGetResultArgs.cs" />
-    <Compile Include="ChaosPipe\OnNewVoteArgs.cs" />
-    <Compile Include="IVoteOption.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VoteOption.cs" />
     <Compile Include="VotingReceiver\MasterClient.cs" />
     <Compile Include="VotingReceiver\OnMessageArgs.cs" />
   </ItemGroup>
@@ -78,6 +71,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ChaosPipe\ChaosPipe.csproj">
+      <Project>{49d8c3ad-d173-4f20-bb2d-b4ab4b4271c1}</Project>
+      <Name>ChaosPipe</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace WebVotingProxy.ChaosPipe
+namespace ChaosPipe
 {
-    internal class OnGetCurrentVotesArgs
+    public class OnGetCurrentVotesArgs
     {
         public List<int> CurrentVotes { get; set; }
     }

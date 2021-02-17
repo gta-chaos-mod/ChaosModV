@@ -1,6 +1,6 @@
-﻿namespace WebVotingProxy.ChaosPipe
+﻿namespace ChaosPipe
 {
-    internal class OnNewVoteArgs
+    public class OnNewVoteArgs
     {
         public string[] VoteOptionNames { get; }
 

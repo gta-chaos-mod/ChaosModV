@@ -1,6 +1,6 @@
-﻿namespace WebVotingProxy.ChaosPipe
+﻿namespace ChaosPipe
 {
-    internal class OnGetVoteResultArgs
+    public class OnGetVoteResultArgs
     {
         /// <summary>
         /// The chosen option that should be sent to the chaos mod pipe

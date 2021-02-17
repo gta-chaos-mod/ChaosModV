@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Timers;
 using Serilog;
 
-namespace WebVotingProxy.ChaosPipe
+namespace ChaosPipe
 {
-    internal class ChaosPipeClient : IChaosPipeClient
+    public class ChaosPipeClient : IChaosPipeClient
     {
         /// <summary>
         ///     Speed at which the chaos mod pipe gets processed
