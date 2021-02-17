@@ -77,13 +77,14 @@ static void OnStart()
 
 		if (oldVehHandle)
 		{
-			if (IS_ENTITY_A_MISSION_ENTITY(oldVehHandle))
-			{
-			  Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
-			}
+                        bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldVehHandle);
 			Entity copy = oldVehHandle;
 			SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
 			DELETE_VEHICLE(&copy);
+			if (shouldUseHook)
+			{
+			  Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+			}
 		}
 	}
 }
