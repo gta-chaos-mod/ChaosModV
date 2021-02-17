@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using ChaosPipe;
 using Serilog;
 using WebVotingProxy.VotingReceiver;
@@ -31,6 +32,8 @@ namespace WebVotingProxy
             }
 
             masterClient.Client.EmitAsync("room:request").GetAwaiter().GetResult();
+            while(string.IsNullOrEmpty(masterClient.RoomId))
+                Thread.Sleep(100);
             var chaosPipe = new ChaosPipeClient();
             while (true)
             {
