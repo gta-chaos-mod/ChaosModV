@@ -2,43 +2,52 @@
 //Effect by ProfessorBiddle, requested thousands of times on discord
 static void OnTick()
 {
-	int hits0, hits1, hits2;
-	STAT_GET_INT(GET_HASH_KEY("SP0_HITS"), &hits0, -1);
-	STAT_GET_INT(GET_HASH_KEY("SP1_HITS"), &hits1, -1);
-	STAT_GET_INT(GET_HASH_KEY("SP2_HITS"), &hits2, -1);
-	
-	WAIT(0);
-
 	Ped playerPed = PLAYER_PED_ID();
 
-	int hits0Post, hits1Post, hits2Post;
+	Hash playerHash = GET_ENTITY_MODEL(playerPed);
+	Hash hitHash;
+	int playerHits, playerHitsNew;
 
-	switch (GET_ENTITY_MODEL(playerPed))
+	//get current hits
+	switch (playerHash)
 	{
 	case 225514697: // Michael 
-		STAT_GET_INT(GET_HASH_KEY("SP0_HITS"), &hits0Post, -1);
-		if (hits0Post > hits0)
-		{
-			START_ENTITY_FIRE(playerPed);
-			SET_ENTITY_HEALTH(playerPed, 0, 0);
-		}
+		hitHash = GET_HASH_KEY("SP0_HITS");
 		break;
 	case 2602752943: // Franklin
-		STAT_GET_INT(GET_HASH_KEY("SP1_HITS"), &hits1Post, -1);
-		if (hits1Post > hits1)
-		{
-			START_ENTITY_FIRE(playerPed);
-			SET_ENTITY_HEALTH(playerPed, 0, 0);
-		}
+		hitHash = GET_HASH_KEY("SP0_HITS");
 		break;
 	case 2608926626: // Trevor
-		STAT_GET_INT(GET_HASH_KEY("SP2_HITS"), &hits2Post, -1);
-		if (hits2Post > hits2)
+		hitHash = GET_HASH_KEY("SP0_HITS");
+		break;
+	}
+	STAT_GET_INT(hitHash, &playerHits, -1);
+
+	WAIT(0);
+
+	//check if player changed
+	playerPed = PLAYER_PED_ID();
+	Hash newPlayerHash = GET_ENTITY_MODEL(playerPed);
+	if (newPlayerHash = playerHash)
+	{
+		switch (playerHash)
+		{
+		case 225514697: // Michael 
+			hitHash = GET_HASH_KEY("SP0_HITS");
+			break;
+		case 2602752943: // Franklin
+			hitHash = GET_HASH_KEY("SP0_HITS");
+			break;
+		case 2608926626: // Trevor
+			hitHash = GET_HASH_KEY("SP0_HITS");
+			break;
+		}
+		STAT_GET_INT(hitHash, &playerHitsNew, -1);
+		if (playerHitsNew > playerHits)
 		{
 			START_ENTITY_FIRE(playerPed);
 			SET_ENTITY_HEALTH(playerPed, 0, 0);
 		}
-		break;
 	}
 }
 static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, nullptr, nullptr, OnTick);
