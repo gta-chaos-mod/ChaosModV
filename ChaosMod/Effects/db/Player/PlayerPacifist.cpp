@@ -19,6 +19,7 @@ static void OnTick()
 		STAT_GET_INT(GET_HASH_KEY("SP0_HITS"), &hits0Post, -1);
 		if (hits0Post > hits0)
 		{
+			START_ENTITY_FIRE(playerPed);
 			SET_ENTITY_HEALTH(playerPed, 0, 0);
 		}
 		break;
@@ -26,6 +27,7 @@ static void OnTick()
 		STAT_GET_INT(GET_HASH_KEY("SP1_HITS"), &hits1Post, -1);
 		if (hits1Post > hits1)
 		{
+			START_ENTITY_FIRE(playerPed);
 			SET_ENTITY_HEALTH(playerPed, 0, 0);
 		}
 		break;
@@ -33,6 +35,7 @@ static void OnTick()
 		STAT_GET_INT(GET_HASH_KEY("SP2_HITS"), &hits2Post, -1);
 		if (hits2Post > hits2)
 		{
+			START_ENTITY_FIRE(playerPed);
 			SET_ENTITY_HEALTH(playerPed, 0, 0);
 		}
 		break;
