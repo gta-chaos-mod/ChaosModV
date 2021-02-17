@@ -216,6 +216,9 @@ void ProxyBase::PullMainTickProccess(DWORD64 curTick, bool bShowIngameHud)
 
 	if (m_isVotingRunning && !m_noVoteRound && !m_enablePollVoting && bShowIngameHud)
 	{
+		// Print voteables on screen
+
+		// Count total votes if chance system is enabled
 		int totalVotes = 0;
 		if (m_enableChanceSystem)
 		{
@@ -232,6 +235,8 @@ void ProxyBase::PullMainTickProccess(DWORD64 curTick, bool bShowIngameHud)
 		{
 			std::ostringstream oss;
 			oss << choosableEffect->Match << ": " << choosableEffect->EffectName;
+
+			// Also show chance percentages if chance system is enabled
 			if (m_enableChanceSystem)
 			{
 				float percentage;
@@ -251,14 +256,7 @@ void ProxyBase::PullMainTickProccess(DWORD64 curTick, bool bShowIngameHud)
 
 			oss << std::endl;
 
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
-			SET_TEXT_SCALE(.42f, .42f);
-			SET_TEXT_COLOUR(220, 220, 220, 255);
-			SET_TEXT_OUTLINE();
-			SET_TEXT_WRAP(.0f, .95f);
-			SET_TEXT_RIGHT_JUSTIFY(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.95f, y, 0);
+			DrawScreenText(oss.str(), { .95f, y }, .41f, { 210, 210, 210 }, true, ScreenTextAdjust::RIGHT, { .0f, .95f });
 
 			y += .05f;
 		}
