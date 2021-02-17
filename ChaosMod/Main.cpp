@@ -125,6 +125,8 @@ void Main::Init()
 		}
 		else
 		{
+			LOG("Creating log console");
+
 			AllocConsole();
 
 			SetConsoleTitle("Chaos Mod");
@@ -140,6 +142,8 @@ void Main::Init()
 	}
 	else if (GetConsoleWindow())
 	{
+		LOG("Destroying log console");
+
 		std::cout.rdbuf(oldStreamBuf);
 
 		g_consoleOut.close();
@@ -147,9 +151,10 @@ void Main::Init()
 		FreeConsole();
 	}
 
+	LOG("Parsing effects.ini");
 	ParseEffectsFile();
-    
-    g_optionsManager.Reset();
+	
+	g_optionsManager.Reset();
 
 	m_clearEffectsShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 	m_toggleModShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
@@ -164,10 +169,12 @@ void Main::Init()
 	const std::array<int, 3>& textColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
 	const std::array<int, 3>& effectTimerColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
+	LOG("Running custom scripts");
 	LuaManager::Load();
 
 	g_random.SetSeed(g_optionsManager.GetConfigValue<int>("Seed", 0));
 
+	LOG("Initializing effects dispatcher");
 	g_effectDispatcher = std::make_unique<EffectDispatcher>(timerColor, textColor, effectTimerColor);
 
 	if (m_enableDebugMenu)
@@ -175,7 +182,10 @@ void Main::Init()
 		m_debugMenu = std::make_unique<DebugMenu>();
 	}
 
+	LOG("Initializing Twitch voting");
 	m_twitchVoting = std::make_unique<TwitchVoting>();
+
+	LOG("Completed Init!");
 }
 
 void Main::Reset()
