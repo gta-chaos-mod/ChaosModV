@@ -297,6 +297,7 @@
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\TestHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
+    <ClCompile Include="ProxyBase.cpp" />
     <ClCompile Include="ProxyManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -339,6 +340,7 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="nativesNoNamespaces.h" />
+    <ClInclude Include="ProxyBase.h" />
     <ClInclude Include="ProxyManager.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />

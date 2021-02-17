@@ -19,7 +19,7 @@ namespace WebVotingProxy.VotingReceiver
         internal MasterClient()
         {
             _logger = Log.Logger.ForContext<MasterClient>();
-            Client = new SocketIO("http://localhost:45811/", new SocketIOOptions
+            Client = new SocketIO("http://open.eternitylife.de:45844/", new SocketIOOptions
             {
                 Reconnection = true
             });
