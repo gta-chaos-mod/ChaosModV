@@ -28,7 +28,7 @@ static void OnTick()
 	//check if player changed
 	playerPed = PLAYER_PED_ID();
 	Hash newPlayerHash = GET_ENTITY_MODEL(playerPed);
-	if (newPlayerHash = playerHash)
+	if (newPlayerHash == playerHash)
 	{
 		switch (playerHash)
 		{
