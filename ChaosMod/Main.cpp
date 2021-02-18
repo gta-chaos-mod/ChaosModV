@@ -331,6 +331,10 @@ void Main::Loop()
 			DrawScreenText("Chaos Mod v1.9.0.3 by pongo1231\n\nSee credits.txt for list of contributors",
 				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
 
+#ifdef _DEBUG
+			DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
+#endif
+
 			splashTextTime -= curTick - lastTick;
 		}
 
