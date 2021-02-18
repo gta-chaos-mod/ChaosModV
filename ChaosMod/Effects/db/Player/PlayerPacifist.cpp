@@ -1,14 +1,22 @@
 #include <stdafx.h>
 //Effect by ProfessorBiddle, requested thousands of times on discord
+
+int playerHits, playerHitsLast;
+
+static void OnStart()
+{
+	playerHits = -1;
+	//set to effectively infinite to prevent death on activation
+	playerHitsLast = 2147483647;
+}
+
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
 	Hash playerHash = GET_ENTITY_MODEL(playerPed);
 	Hash hitHash;
-	int playerHits, playerHitsNew;
-
-	//get current hits
+	//get correct character hash
 	switch (playerHash)
 	{
 	case 225514697: // Michael 
@@ -21,33 +29,14 @@ static void OnTick()
 		hitHash = GET_HASH_KEY("SP2_HITS");
 		break;
 	}
+	//get stat for current character
 	STAT_GET_INT(hitHash, &playerHits, -1);
-
-	WAIT(0);
-
-	//check if player changed
-	playerPed = PLAYER_PED_ID();
-	Hash newPlayerHash = GET_ENTITY_MODEL(playerPed);
-	if (newPlayerHash == playerHash)
+	//check if stat this tick is larger than stat last tick
+	if (playerHits > playerHitsLast)
 	{
-		switch (playerHash)
-		{
-		case 225514697: // Michael 
-			hitHash = GET_HASH_KEY("SP0_HITS");
-			break;
-		case 2602752943: // Franklin
-			hitHash = GET_HASH_KEY("SP1_HITS");
-			break;
-		case 2608926626: // Trevor
-			hitHash = GET_HASH_KEY("SP2_HITS");
-			break;
-		}
-		STAT_GET_INT(hitHash, &playerHitsNew, -1);
-		if (playerHitsNew > playerHits)
-		{
-			START_ENTITY_FIRE(playerPed);
-			SET_ENTITY_HEALTH(playerPed, 0, 0);
-		}
+		START_ENTITY_FIRE(playerPed);
+		SET_ENTITY_HEALTH(playerPed, 0, 0);
 	}
+	playerHitsLast = playerHits;
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick);
