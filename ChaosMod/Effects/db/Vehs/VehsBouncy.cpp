@@ -16,7 +16,7 @@ static void OnTick()
 			Vector3 vel = GET_ENTITY_VELOCITY(veh);
 			if ((vel.x < 10) && (vel.y < 10) && (vel.z < 10))
 			{
-				velFactor = 600.f;
+				velFactor = 300.f;
 			}
 			else
 			{
