@@ -15,10 +15,10 @@ static void OnTick()
 		hitHash = GET_HASH_KEY("SP0_HITS");
 		break;
 	case 2602752943: // Franklin
-		hitHash = GET_HASH_KEY("SP0_HITS");
+		hitHash = GET_HASH_KEY("SP1_HITS");
 		break;
 	case 2608926626: // Trevor
-		hitHash = GET_HASH_KEY("SP0_HITS");
+		hitHash = GET_HASH_KEY("SP2_HITS");
 		break;
 	}
 	STAT_GET_INT(hitHash, &playerHits, -1);
@@ -36,10 +36,10 @@ static void OnTick()
 			hitHash = GET_HASH_KEY("SP0_HITS");
 			break;
 		case 2602752943: // Franklin
-			hitHash = GET_HASH_KEY("SP0_HITS");
+			hitHash = GET_HASH_KEY("SP1_HITS");
 			break;
 		case 2608926626: // Trevor
-			hitHash = GET_HASH_KEY("SP0_HITS");
+			hitHash = GET_HASH_KEY("SP2_HITS");
 			break;
 		}
 		STAT_GET_INT(hitHash, &playerHitsNew, -1);
