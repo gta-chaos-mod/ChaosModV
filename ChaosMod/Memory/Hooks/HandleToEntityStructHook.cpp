@@ -13,10 +13,10 @@ __int64 _HK_HandleToEntityStruct(Entity entity)
 	while (vehicleMap.count(vehToContinue) > 0)
 	{
 		vehToContinue = vehicleMap[vehToContinue];
-    	        if (vehToContinue <= 0) 
-                {
-     		        return 0;
-    	        }
+    	if (vehToContinue <= 0) 
+        {
+     		return 0;
+    	}
 	}
 	return _OG_HandleToEntityStruct(vehToContinue);
 }
