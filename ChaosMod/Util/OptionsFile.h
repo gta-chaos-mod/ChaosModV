@@ -62,7 +62,7 @@ public:
 		return defaultValue;
 	}
 
-	inline const std::string& ReadValueString(const std::string& key, std::string defaultValue = std::string()) const
+	inline std::string ReadValueString(const std::string& key, std::string defaultValue = std::string()) const
 	{
 		const auto& result = m_options.find(key);
 

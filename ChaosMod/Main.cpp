@@ -151,7 +151,7 @@ void Main::Init()
 		FreeConsole();
 	}
 
-	LOG("Parsing effects.ini");
+	LOG("Parsing config files");
 	ParseEffectsFile();
 	
 	g_optionsManager.Reset();
