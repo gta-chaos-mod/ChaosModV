@@ -202,14 +202,24 @@ void Main::Reset()
 	ClearEntityPool();
 }
 
+void Main::RunLoop()
+{
+	__try
+	{
+		Loop();
+	}
+	__except (CrashHandler(GetExceptionInformation()))
+	{
+
+	}
+}
+
 void Main::Loop()
 {
 	int splashTextTime = 15000;
 	int twitchVotingWarningTextTime = 15000;
 
 	DWORD64 lastTick = GetTickCount64();
-
-	SetUnhandledExceptionFilter(CrashHandler);
 
 	g_mainThread = GetCurrentFiber();
 
