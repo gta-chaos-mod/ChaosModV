@@ -12,6 +12,23 @@ static void OnStart()
 
 static void OnTick()
 {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	Weapon wepGive;
 	Ped playerPed = PLAYER_PED_ID();
 	if (IS_PED_SHOOTING(playerPed))
