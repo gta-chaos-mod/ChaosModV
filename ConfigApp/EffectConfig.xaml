@@ -19,7 +19,7 @@
             <RowDefinition Height="45" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -63,7 +63,7 @@
                   Click="OnClicked"/>
         <TextBlock x:Name="effectconf_mp3_label" Text="Sound to play when this effect is active: chaosmod/sounds/" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Button Content="Save" Height="40" Width="75" Margin="0,0,10,0" Grid.Row="8" Grid.Column="2"
+        <Button Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
                 Click="OnSave"/>
     </Grid>
