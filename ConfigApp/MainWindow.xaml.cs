@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Security;
+using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -55,6 +58,27 @@ namespace ConfigApp
             ParseEffectsFile();
 
             InitTwitchTab();
+
+            // Check write permissions
+            try
+            {
+                if (!File.Exists(".writetest"))
+                {
+                    using (File.Create(".writetest"))
+                    {
+                    
+                    }
+
+                    File.Delete(".writetest");
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
+                    "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                Application.Current.Shutdown();
+            }
         }
 
         private async void CheckForUpdates()
