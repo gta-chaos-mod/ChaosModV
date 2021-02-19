@@ -162,17 +162,17 @@
                         <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" Width="60" Height="25" Grid.Row="6" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" />
-                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="7" Grid.Column="0"
+                        <Label Content="Don't draw timer bar" Grid.Row="7" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="7" Grid.Column="2"
+                        <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Row="7" Grid.Column="2"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                         <Label Content="Don't draw effect text" Grid.Row="8" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_drawtext_disable" Grid.Row="8" Grid.Column="2"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Don't draw timer bar" Grid.Row="0" Grid.Column="2"
+                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="0" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Row="0" Grid.Column="4"
+                        <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="0" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                         <Label Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="1" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
