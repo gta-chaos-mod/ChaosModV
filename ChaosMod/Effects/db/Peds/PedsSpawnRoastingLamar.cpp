@@ -8,7 +8,7 @@ static Ped lamarPed;
 
 static void OnStart()
 {
-	static const Hash model = GET_HASH_KEY("ig_lamardavis");
+	static const Hash lamarModel = GET_HASH_KEY("ig_lamardavis");
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_ROASTING_LAMAR", &relationshipGroup);
@@ -18,7 +18,9 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	lamarPed = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	LoadModel(lamarModel);
+	lamarPed = CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(lamarModel);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
