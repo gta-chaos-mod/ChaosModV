@@ -224,7 +224,7 @@
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="40" />
-                                <RowDefinition Height="40" />
+                                <RowDefinition Height="45" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
@@ -240,7 +240,7 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <PasswordBox x:Name="twitch_user_channel_oauth" Width="120" Height="20" Grid.Row="2" Grid.Column="2"
                                          HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers&#xA;    (Keep at 0 to enable chat voting instantly, can't be 1)"
+                            <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers&#xA;(Keep at 0 to allow chat to immediately vote, value can't be 1)"
                                    Grid.Row="3" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" Width="60" Height="20" Grid.Row="3" Grid.Column="2"
