@@ -204,7 +204,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Read the twitch__integration.txt text file included with the mod for more information."
+                            <Label Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the twitch__readme.txt file included with the mod (inside the README folder) for more information."
                                    Grid.Row="0"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_agreed" Content="Enable Twitch Voting" Grid.Row="1"
