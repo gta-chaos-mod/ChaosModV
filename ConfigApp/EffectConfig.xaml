@@ -33,7 +33,7 @@
         <CheckBox Name="effectconf_timer_type_enable" Grid.Row="1" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center"
                   Click="OnClicked" />
-        <ComboBox Name="effectconf_timer_type" Height="20" Width="120" Margin="40,0,0,0" Grid.Row="1" Grid.Column="2"
+        <ComboBox Name="effectconf_timer_type" Height="25" Width="120" Margin="40,0,0,0" Grid.Row="1" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center"
                   IsEnabled="False" />
         <Label Content="Override Timed Effect Timer Length (Seconds)" Grid.Row="2" Grid.Column="0"
@@ -54,7 +54,7 @@
         <Label x:Name="effectconf_effect_weight_mult_title" Content="Set Effect Weight Multiplier (Affects chances of this effect occuring)&#xD;&#xA;lowest: 1, highest: 10, default: 5"
                Grid.Row="4" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <ComboBox x:Name="effectconf_effect_weight_mult" Height="20" Width="45" Grid.Row="4" Grid.Column="2"
+        <ComboBox x:Name="effectconf_effect_weight_mult" Height="25" Width="45" Grid.Row="4" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" />
         <Label x:Name="effectconf_exclude_voting_enable_title" Content="Exclude Effect from Voting (Twitch)" Grid.Row="5" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
