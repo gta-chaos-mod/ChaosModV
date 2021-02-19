@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -125,8 +123,8 @@ namespace ConfigApp
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
-            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "90");
-            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "60");
+            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "95");
+            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "65");
         }
 
         private void WriteConfigFile()
