@@ -306,6 +306,7 @@ namespace ConfigApp
             EFFECT_VEHS_CRUMBLE,
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
+            EFFECT_MISC_FLASHBANG,
             _EFFECT_ENUM_MAX
         }
 
@@ -575,6 +576,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
+            {EffectType.EFFECT_MISC_FLASHBANG, new EffectInfo("Flashbang", EffectCategory.MISC, "misc_flashbang", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
         };
     }
