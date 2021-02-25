@@ -561,6 +561,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_META_ADDITIONAL_EFFECTS, {"Combo Time", "meta_spawn_multiple_effects", true, {}, false, EffectExecutionType::META}},
 	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
-	{EFFECT_MISC_FLASHBANG, { "Flashbang", "misc_flashbang", true, {}, true } },
+	{EFFECT_MISC_FLASHBANG, { "Flashbang", "misc_flashbang"}},
 	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
 };
