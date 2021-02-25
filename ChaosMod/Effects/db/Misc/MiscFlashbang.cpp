@@ -1,6 +1,5 @@
 /*
-	Effect idea by The_Punisher117 & niclasdriver
-	Source code snippets from Lucas7yoshi (Effect Roll Credits)
+	Effect by The_Punisher117 & niclasdriver
 */
 
 #include <stdafx.h>
@@ -18,4 +17,4 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLASHBANG, OnStart, nullptr, nullptr);
+static RegisterEffect registerEffect(EFFECT_MISC_FLASHBANG, OnStart);
