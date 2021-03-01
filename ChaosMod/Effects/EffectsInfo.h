@@ -485,7 +485,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_LESTER, {"Pwned", "misc_lester", true, { EFFECT_VEH_SPEED_MINIMUM }, true}},
 	{EFFECT_MISC_CREDITS, {"Roll Credits", "misc_credits", true, {}, true}},
 	{EFFECT_MISC_EARTHQUAKE, {"Earthquake", "misc_earthquake", true, {}, true}},
-	{EFFECT_SPAWN_DANCING_APES, {"Spawn Dance Troop", "peds_spawndancingapes"}},
+	{EFFECT_SPAWN_DANCING_APES, {"Spawn Dance Troupe", "peds_spawndancingapes"}},
 	{EFFECT_ONE_BULLET_WEP, {"One Bullet Mags", "misc_onebullet", true}},
 	{EFFECT_PHONES, {"Whose Phone Is Ringing?", "peds_phones", true}},
 	{EFFECT_MIDAS_TOUCH, {"Midas Touch", "misc_midas", true}},

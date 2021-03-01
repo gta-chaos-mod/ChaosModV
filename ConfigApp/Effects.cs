@@ -499,7 +499,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_ATTACK_PLAYER, new EffectInfo("All Peds Attack Player", EffectCategory.PEDS, "peds_attackplayer", true)},
             {EffectType.EFFECT_CLONE_PLAYER, new EffectInfo("Clone Player", EffectCategory.PLAYER, "player_clone")},
             {EffectType.EFFECT_SLIDY_PEDS, new EffectInfo("Slidy Peds", EffectCategory.PEDS, "peds_slidy", true, true)},
-            {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troop", EffectCategory.PEDS, "peds_spawndancingapes")},
+            {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troupe", EffectCategory.PEDS, "peds_spawndancingapes")},
             {EffectType.EFFECT_ONE_BULLET_WEP, new EffectInfo("One Bullet Mags", EffectCategory.PEDS, "misc_onebullet", true)},
             {EffectType.EFFECT_PHONES, new EffectInfo("Whose Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true)},
             {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.PLAYER, "misc_midas", true)},
