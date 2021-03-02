@@ -1,7 +1,7 @@
 ---
 name: Feature Suggestion
 about: Suggestion for a new feature for this mod
-title: "[Feature Suggestion]"
+title: "[Feature Suggestion] My Neat Feature"
 labels: Feature Request
 assignees: ''
 

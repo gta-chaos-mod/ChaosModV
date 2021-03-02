@@ -12,6 +12,15 @@ namespace TwitchChatVotingProxy
 
         private static void Main(string[] args)
         {
+            if (args.Length < 1 || args[0] != "--startProxy")
+            {
+                Console.WriteLine("Please don't start the voting proxy process manually as it's only supposed to be launched by the mod itself."
+                    + "\nPass --startProxy as an argument if you want to start the proxy yourself for debugging purposes.");
+
+                Console.ReadKey();
+
+                return;
+            }
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()

@@ -297,7 +297,6 @@
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\TestHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
-    <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -339,7 +338,8 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="nativesNoNamespaces.h" />
-    <ClInclude Include="OptionsFile.h" />
+    <ClInclude Include="Util\OptionDefaults.h" />
+    <ClInclude Include="Util\OptionsFile.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ThreadManager.h" />
@@ -349,9 +349,10 @@
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Logging.h" />
-    <ClInclude Include="Util\Misc.h" />
+    <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
     <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Util\TryParse.h" />

@@ -6,6 +6,8 @@ See the [GTA5-Mods mod page](https://www.gta5-mods.com/scripts/chaos-mod-v-beta)
 
 Feel free to join the Discord Server for community support or simply to stay up to date on this (and other) mods.
 
+Also make sure to check the [Wiki](https://github.com/gta-chaos-mod/ChaosModV/wiki)!
+
 [![](https://discord.com/api/guilds/785656433529716757/widget.png)](https://discord.gg/w2tDeKVaF9)
 
 ## Building

@@ -1,5 +1,5 @@
 # Generates lua native snippets for Visual Studio Code
-# Move the generated lua.json file to %APPDATA/Code/User/snippets/lua.json
+# Move the generated lua.json file to %APPDATA%/Code/User/snippets/lua.json
 
 import json
 import urllib.request

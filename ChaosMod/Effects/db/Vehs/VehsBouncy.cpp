@@ -6,6 +6,7 @@
 
 static void OnTick()
 {
+	float velFactor;
 	for (auto veh : GetAllVehs())
 	{
 		SET_ENTITY_INVINCIBLE(veh, true);
@@ -13,13 +14,18 @@ static void OnTick()
 		if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh))
 		{
 			Vector3 vel = GET_ENTITY_VELOCITY(veh);
-			APPLY_FORCE_TO_ENTITY(veh, 0, vel.x * -60.f, vel.y * -60.f, vel.z * -60.f, .0f, .0f, .0f, 0, true, true, true, false, true);
+			if ((vel.x < 10) && (vel.y < 10) && (vel.z < 10))
+			{
+				velFactor = 300.f;
+			}
+			else
+			{
+				velFactor = 60.f;
+			}
+			APPLY_FORCE_TO_ENTITY(veh, 0, vel.x * -velFactor, vel.y * -velFactor, vel.z * -velFactor, .0f, .0f, .0f, 0, true, true, true, false, true);
 			
 		}
 	}
-
-
-	
 }
 static void OnStop()
 {

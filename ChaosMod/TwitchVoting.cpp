@@ -4,16 +4,30 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem,
-	bool enableVotingChanceSystemRetainChance, bool enableTwitchRandomEffectVoteable)
-	: m_enableTwitchVoting(enableTwitchVoting), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting), m_enableTwitchPollVoting(enableTwitchPollVoting),
-	m_twitchOverlayMode(twitchOverlayMode), m_enableTwitchChanceSystem(enableTwitchChanceSystem), m_enableVotingChanceSystemRetainChance(enableVotingChanceSystemRetainChance),
-	m_enableTwitchRandomEffectVoteable(enableTwitchRandomEffectVoteable)
+TwitchVoting::TwitchVoting()
 {
+	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+
 	if (!m_enableTwitchVoting)
 	{
 		return;
 	}
+
+	if (g_enabledEffects.size() < 3)
+	{
+		ErrorOutWithMsg("You need at least 3 enabled effects to enable Twitch voting. Reverting to normal mode.");
+
+		return;
+	}
+
+	m_twitchSecsBeforeVoting = g_optionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+
+	m_twitchOverlayMode = static_cast<TwitchOverlayMode>(g_optionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
+	m_enableTwitchChanceSystem = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_enableVotingChanceSystemRetainChance = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+
+	m_enableTwitchRandomEffectVoteable = g_optionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	g_effectDispatcher->OverrideTimerDontDispatch(true);
 
@@ -21,7 +35,7 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 	PROCESS_INFORMATION procInfo = {};
 
 	char buffer[128];
-	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe");
+	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe --startProxy");
 #ifdef _DEBUG
 	DWORD attributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -36,7 +50,7 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 
 	if (!result)
 	{
-		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Switching to normal mode.").str());
+		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Reverting to normal mode.").str());
 
 		return;
 	}
@@ -307,14 +321,7 @@ void TwitchVoting::Tick()
 
 			oss << std::endl;
 
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
-			SET_TEXT_SCALE(.42f, .42f);
-			SET_TEXT_COLOUR(220, 220, 220, 255);
-			SET_TEXT_OUTLINE();
-			SET_TEXT_WRAP(.0f, .95f);
-			SET_TEXT_RIGHT_JUSTIFY(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.95f, y, 0);
+			DrawScreenText(oss.str(), { .95f, y }, .41f, { 210, 210, 210 }, true, ScreenTextAdjust::RIGHT, { .0f, .95f });
 
 			y += .05f;
 		}
@@ -365,7 +372,7 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		{
 			const std::string& split = valuesStr.substr(0, splitIndex);
 
-			TryParseInt(split, m_effectChoices[i]->ChanceVotes);
+			TryParse<int>(split, m_effectChoices[i]->ChanceVotes);
 
 			valuesStr = valuesStr.substr(splitIndex + 1);
 

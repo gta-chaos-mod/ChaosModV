@@ -13,7 +13,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	g_metaInfo.AdditionalEffectsToDispatch = g_random.GetRandomInt(1, 2);
+	g_metaInfo.AdditionalEffectsToDispatch = 2;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_ADDITIONAL_EFFECTS, nullptr, OnStop, OnTick);
