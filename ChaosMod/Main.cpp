@@ -1,6 +1,11 @@
 #include "stdafx.h"
-
 #include "Main.h"
+
+struct DiscordState {
+	discord::User currentUser;
+	std::unique_ptr<discord::Core> core;
+};
+DiscordState state{};
 
 std::array<int, 3> ParseColor(const std::string& colorText)
 {
@@ -185,6 +190,31 @@ void Main::Init()
 	LOG("Initializing Twitch voting");
 	m_twitchVoting = std::make_unique<TwitchVoting>();
 
+	LOG("Setting up Discord Game SDK");
+	discord::Core* core{};
+	auto result = discord::Core::Create(805142647458103388, DiscordCreateFlags_Default, &core);
+	state.core.reset(core);
+
+	if (!state.core) {
+		LOG("Failed to instantiate discord core! (Error! " << static_cast<int>(result) << ")");
+		std::exit(-1);
+	}
+
+	discord::Activity activity{};
+	activity.SetDetails("Current Effect: None!");
+	activity.SetState("Last Effect: None!");
+	activity.GetAssets().SetLargeImage("chaoslarge");
+	activity.GetAssets().SetLargeText("ChaosModV");
+	activity.SetType(discord::ActivityType::Playing);
+
+	state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+		LOG(((result == discord::Result::Ok) ? "Succeeded" : "Failed") << " updating activity!");
+	});
+
+	state.core->SetLogHook(discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) {
+		LOG("([DISCORD] [LogLevel " << static_cast<uint32_t>(level) << "]) " << message);
+	});
+
 	LOG("Completed Init!");
 }
 
@@ -232,7 +262,7 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
-
+		state.core->RunCallbacks();
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;
