@@ -367,7 +367,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_SPAWN_ROMERO, {"Where's The Funeral?", "spawn_romero"}},
 	{EFFECT_SPAWN_RANDOM, {"Spawn Random Vehicle", "spawn_random"}},
 	{EFFECT_NO_VEHS, {"No Traffic", "notraffic", true}},
-	{EFFECT_EXPLODE_CUR_VEH, {"Explode Current Vehicle", "playerveh_explode"}},
+	{EFFECT_EXPLODE_CUR_VEH, {"Detonate Current Vehicle", "playerveh_explode"}},
 	{EFFECT_PEDS_INVISIBLE, {"Everyone Is A Ghost", "peds_ghost", true}},
 	{EFFECT_VEHS_INVISIBLE, {"Invisible Vehicles", "vehs_ghost", true, { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_RAINBOW_VEHS }}},
 	{EFFECT_NO_RADAR, {"No Radar", "no_radar", true, { EFFECT_NO_HUD }}},

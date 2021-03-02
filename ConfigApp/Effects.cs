@@ -381,7 +381,7 @@ namespace ConfigApp
             {EffectType.EFFECT_SPAWN_ROMERO, new EffectInfo("Where's The Funeral?", EffectCategory.VEHICLE, "spawn_romero") },
             {EffectType.EFFECT_SPAWN_RANDOM, new EffectInfo("Spawn Random Vehicle", EffectCategory.VEHICLE, "spawn_random")},
             {EffectType.EFFECT_NO_VEHS, new EffectInfo("No Traffic", EffectCategory.VEHICLE, "notraffic", true)},
-            {EffectType.EFFECT_EXPLODE_CUR_VEH, new EffectInfo("Explode Current Vehicle", EffectCategory.VEHICLE, "playerveh_explode")},
+            {EffectType.EFFECT_EXPLODE_CUR_VEH, new EffectInfo("Detonate Current Vehicle", EffectCategory.VEHICLE, "playerveh_explode")},
             {EffectType.EFFECT_PEDS_INVISIBLE, new EffectInfo("Everyone Is A Ghost", EffectCategory.PEDS, "peds_ghost", true)},
             {EffectType.EFFECT_VEHS_INVISIBLE, new EffectInfo("Invisible Vehicles", EffectCategory.VEHICLE, "vehs_ghost", true)},
             {EffectType.EFFECT_NO_RADAR, new EffectInfo("No Radar", EffectCategory.MISC, "no_radar", true)},
