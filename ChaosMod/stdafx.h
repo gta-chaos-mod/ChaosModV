@@ -52,7 +52,7 @@
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"
 
-#include "../vendor/discord/include/discord.h"
+#include "../vendor/discord/include/discord_rpc.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
