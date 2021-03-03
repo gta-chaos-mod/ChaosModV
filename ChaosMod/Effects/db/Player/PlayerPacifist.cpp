@@ -1,7 +1,7 @@
 #include <stdafx.h>
 //Effect by ProfessorBiddle, requested thousands of times on discord
 
-int playerHits, playerHitsLast;
+static int playerHits, playerHitsLast;
 
 static void OnStart()
 {
