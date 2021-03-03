@@ -152,7 +152,6 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerFakePlayerSwap.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
