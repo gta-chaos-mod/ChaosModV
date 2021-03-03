@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <Util/DiscordRPC.h>
 
 EffectDispatcher::EffectDispatcher(const std::array<int, 3>& timerColor, const std::array<int, 3>& textColor, const std::array<int, 3>& effectTimerColor)
 	: m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
@@ -59,12 +60,14 @@ void EffectDispatcher::DrawEffectTexts()
 
 		DrawScreenText(effect.Name, { .915f, y }, .47f, { m_textColor[0], m_textColor[1], m_textColor[2] }, true,
 			ScreenTextAdjust::RIGHT, { .0f, .915f });
+		CurrentEffect = effect.Name;
 
 		if (effect.Timer > 0)
 		{
 			DRAW_RECT(.96f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
 			DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
+			PreviousEffect = effect.Name;
 		}
 
 		y += .075f;
@@ -155,7 +158,6 @@ void EffectDispatcher::UpdateEffects()
 					&& (effect.Timer < -m_effectTimedDur + (activeEffectsSize > 3 ? ((activeEffectsSize - 3) * 20 < 160 ? (activeEffectsSize - 3) * 20 : 160) : 0))))
 			{
 				ThreadManager::StopThread(effect.ThreadId);
-
 				it = m_activeEffects.erase(it);
 			}
 			else

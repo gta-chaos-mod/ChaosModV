@@ -44,6 +44,9 @@ public:
 	void Reset();
 	void ResetTimer();
 
+	std::string CurrentEffect;
+	std::string PreviousEffect;
+
 private:
 	int m_effectSpawnTime;
 	int m_effectTimedDur;

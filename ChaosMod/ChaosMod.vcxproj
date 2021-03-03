@@ -304,6 +304,7 @@
     <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
+    <ClCompile Include="Util\DiscordRPC.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>

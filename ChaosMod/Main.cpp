@@ -186,7 +186,7 @@ void Main::Init()
 	m_twitchVoting = std::make_unique<TwitchVoting>();
 
 	LOG("Setting up Discord Game SDK");
-	discordInit();
+	Discord::discordInit();
 	
 	LOG("Completed Init!");
 }
@@ -235,7 +235,7 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
-		gameLoop();
+		Discord::gameLoop(g_effectDispatcher->CurrentEffect, g_effectDispatcher->PreviousEffect);
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;
