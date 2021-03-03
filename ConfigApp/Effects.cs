@@ -555,7 +555,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_HACKING, new EffectInfo("Realistic Hacking", EffectCategory.PLAYER, "player_hacking")},
             {EffectType.EFFECT_PEDS_NAILGUNS, new EffectInfo("Nailguns", EffectCategory.PEDS, "peds_nailguns", true, true)},
             {EffectType.EFFECT_VEH_BRAKEBOOST,  new EffectInfo("Brake Boosting", EffectCategory.VEHICLE, "veh_brakeboost", true)},
-            {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true, true)},
+            {EffectType.EFFECT_PLAYER_BEES, new EffectInfo("Bees", EffectCategory.PLAYER, "player_bees", true)},
             {EffectType.EFFECT_PLAYER_VR, new EffectInfo("Virtual Reality", EffectCategory.PLAYER, "player_vr", true, true)},
             {EffectType.EFFECT_MISC_PORTRAIT_MODE, new EffectInfo("Portrait Mode", EffectCategory.MISC, "misc_portrait", true)},
             {EffectType.EFFECT_HIGH_PITCH, new EffectInfo("High Pitch", EffectCategory.MISC, "misc_highpitch", true)},

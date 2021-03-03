@@ -540,7 +540,7 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_HACKING, {"Realistic Hacking", "player_hacking"}},
 	{EFFECT_PEDS_NAILGUNS, {"Nailguns", "peds_nailguns", true, {}, true}},
 	{EFFECT_VEH_BRAKEBOOST, {"Brake Boosting", "veh_brakeboost", true}},
-	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }, true}},
+	{EFFECT_PLAYER_BEES, {"Bees", "player_bees", true, { EFFECT_PEDS_OHKO }}},
 	{EFFECT_PLAYER_VR, {"Virtual Reality", "player_vr", true, {}, true}},
 	{EFFECT_MISC_PORTRAIT_MODE, {"Portrait Mode", "misc_portrait", true}},
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
