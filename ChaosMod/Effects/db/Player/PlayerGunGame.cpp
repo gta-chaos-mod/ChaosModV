@@ -2,7 +2,7 @@
 
 //Effect by ProfessorBiddle
 
-int playerKills, playerKillsLast;
+static int playerKills, playerKillsLast;
 
 static void OnStart()
 {
