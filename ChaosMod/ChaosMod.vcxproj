@@ -139,6 +139,7 @@
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
+	<ClCompile Include="Effects\db\Misc\MiscAustralienGuy.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
