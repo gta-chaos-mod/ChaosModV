@@ -67,7 +67,6 @@ void EffectDispatcher::DrawEffectTexts()
 			DRAW_RECT(.96f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
 			DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
-			PreviousEffect = effect.Name;
 		}
 
 		y += .075f;
@@ -104,7 +103,7 @@ void EffectDispatcher::UpdateTimer()
 				g_effectDispatcher->DispatchRandomEffect();
 			}
 		}
-
+		PreviousEffect = CurrentEffect;
 		m_timerTimerRuns = 0;
 	}
 }
@@ -436,6 +435,9 @@ void EffectDispatcher::Reset()
 {
 	ClearEffects();
 	ResetTimer();
+
+	CurrentEffect = "None";
+	PreviousEffect = "None";
 
 	m_enableNormalEffectDispatch = false;
 	m_metaEffectsEnabled = true;

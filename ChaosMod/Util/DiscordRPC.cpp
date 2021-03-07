@@ -11,10 +11,10 @@ void Discord::updateDiscordPresence(std::string CurrentEffect, std::string Previ
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
 
-        sprintf_s(CurEffBuffer, sizeof(CurEffBuffer), "Current Effect: %s", CurrentEffect);
+        sprintf_s(CurEffBuffer, sizeof(CurEffBuffer), "Current Effect: %s", CurrentEffect.c_str());
         discordPresence.details = CurEffBuffer;
 
-        sprintf_s(PrevEffBuffer, sizeof(PrevEffBuffer), "Previous Effect: %s", PreviousEffect);
+        sprintf_s(PrevEffBuffer, sizeof(PrevEffBuffer), "Previous Effect: %s", PreviousEffect.c_str());
         discordPresence.state = PrevEffBuffer;
 
         discordPresence.startTimestamp = StartTime;
@@ -34,6 +34,7 @@ void Discord::handleDiscordReady(const DiscordUser* connectedUser)
 
 void Discord::discordInit()
 {
+    StartTime = time(0);
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
     handlers.ready = handleDiscordReady;
@@ -42,7 +43,6 @@ void Discord::discordInit()
 
 void Discord::gameLoop(std::string CurrentEffect, std::string PreviousEffect)
 {
-    StartTime = time(0);
     updateDiscordPresence(CurrentEffect, PreviousEffect);
 #ifdef DISCORD_DISABLE_IO_THREAD
     Discord_UpdateConnection();
