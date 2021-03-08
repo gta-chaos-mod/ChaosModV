@@ -37,4 +37,4 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_AUSTRALIENGUY, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_COLARAIN, OnStart, OnStop, OnTick);
