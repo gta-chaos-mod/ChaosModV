@@ -29,6 +29,7 @@ static void OnStart()
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(lamarPed, relationshipGroup);
 	SET_PED_AS_GROUP_MEMBER(lamarPed, GET_PLAYER_GROUP(PLAYER_ID()));
+	SET_ENTITY_INVINCIBLE(lamarPed, true);
 
 	_PLAY_AMBIENT_SPEECH1(lamarPed, "GENERIC_HI", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 	WAIT(1500);
@@ -62,6 +63,7 @@ static void OnStop()
 		}
 
 		SET_PED_AS_NO_LONGER_NEEDED(&lamarPed);
+		SET_ENTITY_INVINCIBLE(lamarPed, false);
 	}
 }
 
