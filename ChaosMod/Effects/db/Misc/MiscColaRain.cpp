@@ -24,17 +24,6 @@ static void OnTick()
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_HEALTH_STANDARD"), playerPos.x + g_random.GetRandomInt(-30, 30),
 		playerPos.y + g_random.GetRandomInt(-30, 30), playerPos.z + g_random.GetRandomInt(5, 10), 0, GET_ENTITY_MAX_HEALTH(GET_PLAYER_PED(PLAYER_ID())), model, false, true);
-
-	if (g_random.GetRandomInt(0, 200) == 69) {
-		for (Ped ped : GetAllPeds())
-		{
-			if (!IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
-			{
-				SET_ENTITY_HEALTH(ped, 101, 0);
-				SET_PED_ARMOUR(ped, 0);
-			}
-		}
-	}
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_COLARAIN, OnStart, OnStop, OnTick);
