@@ -235,6 +235,10 @@
     <Compile Include="EffectData.cs" />
     <Compile Include="EffectsTreeMenuItem.cs" />
     <Compile Include="Info.cs" />
+    <Compile Include="Lang.cs" />
+    <Compile Include="Lang\LangTemplate.cs" />
+    <Compile Include="Lang\esES.cs" />
+    <Compile Include="Lang\enEN.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

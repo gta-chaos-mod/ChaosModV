@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
-using System.Security;
-using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Shared; 
-
+using Shared;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
+        public static int selectedLang;
         private bool m_initializedTitle = false;
 
         private OptionsFile m_configFile = new OptionsFile("config.ini");
@@ -25,21 +24,19 @@ namespace ConfigApp
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
 
+        //public string m_lang;
+
         public MainWindow()
         {
             Init();
+            lang_list.ItemsSource = Lang.langs;
         }
+
+        private int update;
 
         private void Init()
         {
             InitializeComponent();
-
-            twitch_user_overlay_mode.ItemsSource = new string[]
-            {
-                "Chat Messages",
-                "In-Game Overlay",
-                "OBS Overlay"
-            };
 
             if (!m_initializedTitle)
             {
@@ -74,8 +71,8 @@ namespace ConfigApp
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
-                    "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Lang.get_error("no_write_permission_msg", CultureInfo.InstalledUICulture.ToString()), Lang.get_error("no_write_permission_title", CultureInfo.InstalledUICulture.ToString()),
+                    MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Application.Current.Shutdown();
             }
@@ -91,16 +88,19 @@ namespace ConfigApp
 
                 if (Info.VERSION != newVersion)
                 {
+                    update = 1;
                     update_available_button.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    update_available_label.Content = "You are on the newest version of the mod!";
+                    update = 0;
+                    update_available_label.Content = Lang.app_labels("no_update_available_label", lang_list.SelectedIndex);
                 }
             }
             catch (HttpRequestException)
             {
-                update_available_label.Content = "Unable to check for new updates!";
+                update = 2;
+                update_available_label.Content = Lang.app_labels("update_error", lang_list.SelectedIndex);
             }
         }
 
@@ -144,6 +144,14 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+            if (m_configFile.HasKey("Language"))
+            {
+                lang_list.SelectedIndex = m_configFile.ReadValueInt("Language", 0);
+            }
+            else
+            {
+                lang_list.SelectedIndex = Lang.check_for_lang(CultureInfo.InstalledUICulture.ToString());
+            }
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -171,6 +179,7 @@ namespace ConfigApp
             m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
             m_configFile.WriteValue("MetaEffectDur", meta_effects_timed_dur.Text);
             m_configFile.WriteValue("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
+            m_configFile.WriteValue("Language", lang_list.SelectedIndex);
             
             m_configFile.WriteFile();
         }
@@ -283,7 +292,7 @@ namespace ConfigApp
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
-                    + $",{(string.IsNullOrEmpty(effectData.CustomName) ? "0" : effectData.CustomName)}");
+                    + $",{(int.Equals(lang_list.SelectedIndex, 0) ? "0" : getTranslation(EffectsMap[effectType].Id))}");
             }
 
             m_effectsFile.WriteFile();
@@ -294,13 +303,13 @@ namespace ConfigApp
             m_treeMenuItemsMap = new Dictionary<EffectType, TreeMenuItem>();
             m_effectDataMap = new Dictionary<EffectType, EffectData>();
 
-            TreeMenuItem playerParentItem = new TreeMenuItem("Player");
-            TreeMenuItem vehicleParentItem = new TreeMenuItem("Vehicle");
-            TreeMenuItem pedsParentItem = new TreeMenuItem("Peds");
-            TreeMenuItem timeParentItem = new TreeMenuItem("Time");
-            TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
-            TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
-            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
+            TreeMenuItem playerParentItem = new TreeMenuItem(Lang.app_tags(0, lang_list.SelectedIndex));
+            TreeMenuItem vehicleParentItem = new TreeMenuItem(Lang.app_tags(1, lang_list.SelectedIndex));
+            TreeMenuItem pedsParentItem = new TreeMenuItem(Lang.app_tags(2, lang_list.SelectedIndex));
+            TreeMenuItem timeParentItem = new TreeMenuItem(Lang.app_tags(3, lang_list.SelectedIndex));
+            TreeMenuItem weatherParentItem = new TreeMenuItem(Lang.app_tags(4, lang_list.SelectedIndex));
+            TreeMenuItem miscParentItem = new TreeMenuItem(Lang.app_tags(5, lang_list.SelectedIndex));
+            TreeMenuItem metaParentItem = new TreeMenuItem(Lang.app_tags(6, lang_list.SelectedIndex));
 
             SortedDictionary<string, Tuple<EffectType, EffectCategory>> sortedEffects = new SortedDictionary<string, Tuple<EffectType, EffectCategory>>();
 
@@ -308,7 +317,7 @@ namespace ConfigApp
             {
                 EffectInfo effectInfo = EffectsMap[effectType];
 
-                sortedEffects.Add(effectInfo.Name, new Tuple<EffectType, EffectCategory>(effectType, effectInfo.EffectCategory));
+                sortedEffects.Add(Lang.app_effects(effectInfo.Id.ToString(), lang_list.SelectedIndex), new Tuple<EffectType, EffectCategory>(effectType, effectInfo.EffectCategory));
             }
             
             foreach (var effect in sortedEffects)
@@ -405,12 +414,12 @@ namespace ConfigApp
             WriteTwitchFile();
             WriteEffectsFile();
 
-            MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(Lang.get_error("save_complete_msg", lang_list.SelectedIndex.ToString()), "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void user_reset_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your config?", "ChaosModV",
+            MessageBoxResult result = MessageBox.Show(Lang.get_error("reset_click_msg", lang_list.SelectedIndex.ToString()), "ChaosModV",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
@@ -419,7 +428,7 @@ namespace ConfigApp
 
                 m_effectsFile.ResetFile();
 
-                result = MessageBox.Show("Do you want to reset your Twitch settings too?", "ChaosModV",
+                result = MessageBox.Show(Lang.get_error("reset_twitch_msg", lang_list.SelectedIndex.ToString()), "ChaosModV",//"Do you want to reset your Twitch settings too?", "ChaosModV",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
@@ -433,7 +442,7 @@ namespace ConfigApp
 
                 Init();
 
-                MessageBox.Show("Config has been reverted to default settings!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Lang.get_error("reset_complete_msg", lang_list.SelectedIndex.ToString()), "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -497,6 +506,77 @@ namespace ConfigApp
         private void contribute_discord_click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+        }
+
+        private void lang_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.Title = Lang.app_labels("title", lang_list.SelectedIndex);
+            InitEffectsTreeView();
+            user_reset.Content = Lang.app_labels("user_reset", lang_list.SelectedIndex);
+            user_save.Content = Lang.app_labels("user_save", lang_list.SelectedIndex);
+            lang_label.Content = Lang.app_labels("lang_label", lang_list.SelectedIndex);
+            effects_tab.Header = Lang.app_labels("effects_tab", lang_list.SelectedIndex);
+            meta_tab.Header = Lang.app_labels("meta_tab", lang_list.SelectedIndex);
+            misc_tab.Header = Lang.app_labels("misc_tab", lang_list.SelectedIndex);
+            twitch_tab.Header = Lang.app_labels("twitch_tab", lang_list.SelectedIndex);
+            more_tab.Header = Lang.app_labels("more_tab", lang_list.SelectedIndex);
+            meta_normal_label.Content = Lang.app_labels("meta_cooldown_label", lang_list.SelectedIndex);
+            meta_duration_label.Content = Lang.app_labels("meta_duration_label", lang_list.SelectedIndex);
+            meta_short_label.Content = Lang.app_labels("meta_short_label", lang_list.SelectedIndex);
+            effect_timer.Content = Lang.app_labels("effect_timer", lang_list.SelectedIndex);
+            effect_duration.Content = Lang.app_labels("effect_duration", lang_list.SelectedIndex);
+            effect_duration_short.Content = Lang.app_labels("effect_duration_short", lang_list.SelectedIndex);
+            effects_seed.Content = Lang.app_labels("effects_seed", lang_list.SelectedIndex);
+            timebar_color.Content = Lang.app_labels("timebar_color", lang_list.SelectedIndex);
+            effect_textcolor.Content = Lang.app_labels("effect_textcolor", lang_list.SelectedIndex);
+            effect_timer_color.Content = Lang.app_labels("effect_timer_color", lang_list.SelectedIndex);
+            timebar_draw.Content = Lang.app_labels("effect_duration_short", lang_list.SelectedIndex);
+            effect_text_draw.Content = Lang.app_labels("timebar_draw", lang_list.SelectedIndex);
+            clear_effects.Content = Lang.app_labels("clear_effects", lang_list.SelectedIndex);
+            mod_toggle.Content = Lang.app_labels("mod_toggle", lang_list.SelectedIndex);
+            effect_menu.Content = Lang.app_labels("effect_menu", lang_list.SelectedIndex);
+            timebar_pause.Content = Lang.app_labels("timebar_pause", lang_list.SelectedIndex);
+            twitch_info.Content = Lang.app_labels("twitch_info", lang_list.SelectedIndex);
+            twitch_user_agreed.Content = Lang.app_labels("twitch_user_agreed", lang_list.SelectedIndex);
+            twitch_user_channel_name_label.Content = Lang.app_labels("twitch_user_channel_name_label", lang_list.SelectedIndex);
+            twitch_user_user_name_label.Content = Lang.app_labels("twitch_user_user_name_label", lang_list.SelectedIndex);
+            twitch_user_channel_oauth_label.Content = Lang.app_labels("twitch_user_channel_oauth_label", lang_list.SelectedIndex);
+            twitch_user_effects_secs_before_chat_voting_label.Content = Lang.app_labels("twitch_user_effects_secs_before_chat_voting_label", lang_list.SelectedIndex);
+            twitch_user_overlay_mode_label.Content = Lang.app_labels("twitch_user_overlay_mode_label", lang_list.SelectedIndex);
+            twitch_user_random_voteable_enable_label.Content = Lang.app_labels("twitch_user_random_voteable_enable_label", lang_list.SelectedIndex);
+            proportional_vote.Content = Lang.app_labels("proportional_vote", lang_list.SelectedIndex);
+            twitch_user_chance_system_enable_label.Content = Lang.app_labels("twitch_user_chance_system_enable_label", lang_list.SelectedIndex);
+            twitch_user_chance_system_retain_chance_enable_label.Content = Lang.app_labels("twitch_user_chance_system_retain_chance_enable_label", lang_list.SelectedIndex);
+            mod_page.Content = Lang.app_labels("mod_page", lang_list.SelectedIndex);
+            donation.Content = Lang.app_labels("donation", lang_list.SelectedIndex);
+            contribute.Content = Lang.app_labels("contribute", lang_list.SelectedIndex);
+            discord.Content = Lang.app_labels("discord", lang_list.SelectedIndex);
+
+            if (lang_list.SelectedIndex != 0) 
+            {
+                translatedby.Visibility = Visibility.Visible;
+                translatedby.Content = Lang.app_labels("translatedby", lang_list.SelectedIndex);
+            }
+            else
+            {
+                translatedby.Visibility = Visibility.Hidden;
+                translatedby.Content = "";
+            }
+
+            if (update == 0)
+            {
+                update_available_label.Content = Lang.app_labels("no_update_available_label", lang_list.SelectedIndex);
+            }
+            else if (update == 1)
+            {
+                update_available_label.Content = Lang.app_labels("update_available_label", lang_list.SelectedIndex);
+            }
+            else
+            {
+                update_available_label.Content = Lang.app_labels("update_error", lang_list.SelectedIndex);
+            }
+
+            ParseEffectsFile();
         }
     }
 }
