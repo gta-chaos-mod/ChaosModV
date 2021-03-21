@@ -225,8 +225,6 @@ void Main::Loop()
 
 	ThreadManager::ClearThreads();
 
-	Reset();
-
 	Init();
 
 	while (true)

@@ -16,14 +16,13 @@ public:
 	{
 		m_options.clear();
 
-		if (!DoesFileExist(m_fileName))
-		{
-			return;
-		}
+		bool exists = true;
 
 		std::ifstream file(m_fileName);
 		if (file.fail())
 		{
+			LOG("Config file " << m_fileName << " not found!");
+
 			return;
 		}
 

@@ -4,10 +4,14 @@
 
 #include <stdafx.h>
 
-static int m_alpha = 0;
+static int s_alpha;
+static float s_alphaTimer;
 
 static void OnStart()
 {
+	s_alpha = 0;
+	s_alphaTimer = 0.f;
+
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
 	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
 	{
@@ -17,7 +21,6 @@ static void OnStart()
 	PLAY_END_CREDITS_MUSIC(true);
 	SET_CREDITS_ACTIVE(true);
 	SET_MOBILE_PHONE_RADIO_STATE(true);
-	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
 
 	int song = g_random.GetRandomInt(0, 2);
 	if (song == 0)
@@ -34,31 +37,32 @@ static void OnStart()
 	}
 }
 
+static void OnStop()
+{
+	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), false);
+
+	SET_CREDITS_ACTIVE(false);
+	PLAY_END_CREDITS_MUSIC(false);
+	SET_MOBILE_PHONE_RADIO_STATE(false);
+
+	SET_USER_RADIO_CONTROL_ENABLED(true);
+}
+
 static void OnTick()
 {
 	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), true);
 
-	DISABLE_ALL_CONTROL_ACTIONS(0);
 	SET_RADIO_TO_STATION_NAME("RADIO_16_SILVERLAKE");
 
-	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, m_alpha, false);
+	SET_USER_RADIO_CONTROL_ENABLED(false);
 
-	if (m_alpha < 255)
+	if (s_alpha < 255 && (s_alphaTimer += GET_FRAME_TIME()) > 0.1f)
 	{
-		m_alpha++;
+		s_alphaTimer = 0;
+		s_alpha++;
 	}
-}
 
-static void OnStop()
-{
-	m_alpha = 0;
-
-	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), false);
-
-	SET_CREDITS_ACTIVE(false);
-
-	PLAY_END_CREDITS_MUSIC(false);
-	SET_MOBILE_PHONE_RADIO_STATE(false);
+	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, s_alpha, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, OnTick);

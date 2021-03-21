@@ -25,6 +25,22 @@ const char* ROULETTE_WORDS[] =
     "SAURUS88",
     "TORIKSLV",
     "TOASTYYY",
+    "ELIAS_GR",
+    "KOLYA_VE",
+    "LU7YOSHI",
+    "P.BIDDLE",
+    "SLOTHBEE",
+    "ELI_RICK",
+    "JUHANA!!",
+    "LOSCHIKA",
+    "BYHEMECH",
+    "$$WASTED",
+    "JOSHUAX8",
+    "SSOBOSS1",
+    "DZWDZWDZ",
+    "BIRD1338",
+    "BRANDWAR",
+    "YZIMRONI",
 };
 
 const char* WIN_PHRASES[] =
