@@ -6,8 +6,6 @@
 
 static void OnTick()
 {
-
-	LOG(GET_ENTITY_SPEED(PLAYER_PED_ID()));
 	for (Ped pd : GetAllPeds())
 	{
 		if (GET_ENTITY_SPEED(pd) > 5.2)
