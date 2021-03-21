@@ -269,6 +269,7 @@ enum EffectType
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
 	EFFECT_PEDS_ROASTING,
+	EFFECT_VEHS_CRUISE_CONTROL,
 	_EFFECT_ENUM_MAX
 };
 
@@ -558,5 +559,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
 	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
-	{EFFECT_PEDS_ROASTING, {"Roasting", "peds_roasting", true, {}, true}}
+	{EFFECT_PEDS_ROASTING, {"Roasting", "peds_roasting", true, {}, true}},
+	{EFFECT_VEHS_CRUISE_CONTROL, {"Cruise Control", "vehs_cruise_control", true}},
 };
