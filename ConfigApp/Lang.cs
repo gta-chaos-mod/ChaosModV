@@ -57,6 +57,17 @@ namespace ConfigApp
                 return enEN.PopupMSGs[key];
             }
         }
+        public static string effect_config(string key, int language)
+        {
+            if (language == 1)
+            {
+                return esES.EffectConfig[key];
+            }
+            else
+            {
+                return enEN.EffectConfig[key];
+            }
+        }
         public static int check_for_lang(string locale)
         {
             if (locale == "es-ES")

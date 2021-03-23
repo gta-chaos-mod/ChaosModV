@@ -4,6 +4,19 @@ namespace ConfigApp
 {
     class esES
     {
+        public static readonly Dictionary<string, string> EffectConfig = new Dictionary<string, string>()
+        {
+            { "effectconf_timer_type1", "Normal" },
+            { "effectconf_timer_type2", "Corto" },
+            { "effect_rename", "Cambiar nombre de efecto" },
+            { "effect_override_timer_type", "Ajustar el tipo de efecto temporizado" },
+            { "effect_override_timer_manual", "Ajustar la duración del efecto temporizado (segundos)" },
+            { "effect_make_permanent", "Hacer permanente (puede no funcionar bien con todos los efectos)" },
+            { "effectconf_effect_weight_mult_title", "Establecer peso del efecto (posibilidades de que ocurra el efecto)\nmás bajo: 1, más alto: 10, predeterminado: 5" },
+            { "effectconf_exclude_voting_enable_title", "Excluir efecto de la votación (Twitch)" },
+            { "effectconf_mp3_label", "Sonido para reproducir cuando este efecto se active:\nchaosmod/sounds/" },
+            { "button_save", "Guardar" }
+        };
         public static readonly Dictionary<string, string> PopupMSGs = new Dictionary<string, string>()
         {
             { "no_write_permission_msg", "No hay permisos para escribir en el directorio actual. Intente ejecutar el programa como administrador o permitir el acceso de escritura al directorio actual." },

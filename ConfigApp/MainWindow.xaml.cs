@@ -292,11 +292,20 @@ namespace ConfigApp
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
-                    + $",{(int.Equals(lang_list.SelectedIndex, 0) ? "0" : getTranslation(EffectsMap[effectType].Id))}");
+                    + $",{((effectData.CustomName != getTranslation(EffectsMap[effectType].Id) && (effectData.CustomName != "")) ? effectData.CustomName : getTranslation(EffectsMap[effectType].Id))}");
             }
 
             m_effectsFile.WriteFile();
         }
+
+        /*private string checkCustomEffect(string effectName)
+        {
+            if (effectName != )
+            {
+
+            }
+            return "string";
+        }*/
 
         private void InitEffectsTreeView()
         {
@@ -471,7 +480,7 @@ namespace ConfigApp
                 EffectInfo effectInfo = EffectsMap[effectType];
                 EffectData effectData = GetEffectData(effectType);
 
-                EffectConfig effectConfig = new EffectConfig(effectData, effectInfo);
+                EffectConfig effectConfig = new EffectConfig(effectData, effectInfo, lang_list.SelectedIndex);
                 effectConfig.ShowDialog();
 
                 if (effectConfig.IsSaved)

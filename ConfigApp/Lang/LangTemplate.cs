@@ -4,6 +4,19 @@ namespace ConfigApp
 {
     class Template
     {
+        public static readonly Dictionary<string, string> EffectConfig = new Dictionary<string, string>()
+        {
+            { "effectconf_timer_type1", "" },                   //Normal
+            { "effectconf_timer_type2", "" },                   //Short
+            { "effect_rename", "" },                            //Rename Effect
+            { "effect_override_timer_type", "" },               //Override Timed Effect Type
+            { "effect_override_timer_manual", "" },             //Override Timed Effect Timer Length (Seconds)
+            { "effect_make_permanent", "" },                    //Make Permanent (Might not work well with every effect)
+            { "effectconf_effect_weight_mult_title", "" },      //Set Effect Weight Multiplier (Affects chances of this effect occuring) lowest: 1, highest: 10, default: 5
+            { "effectconf_exclude_voting_enable_title", "" },   //Exclude Effect from Voting (Twitch)
+            { "effectconf_mp3_label", "" },                     //Sound to play when this effect is active:     chaosmod/sounds/
+            { "button_save", "" }                               //save
+        };
         public static readonly Dictionary<string, string> PopupMSGs = new Dictionary<string, string>()
         {
             { "no_write_permission_msg", "" },  //No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.
