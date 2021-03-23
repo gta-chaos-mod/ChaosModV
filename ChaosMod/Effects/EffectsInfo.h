@@ -269,6 +269,7 @@ enum EffectType
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
 	EFFECT_PEDS_ROASTING,
+	EFFECT_PLAYER_BINOCULARS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -522,8 +523,10 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEH_REPLACEVEHICLE, {"Replace Current Vehicle", "misc_replacevehicle"}},
 	{EFFECT_PLAYER_TIRED,  {"I'm So Tired", "player_tired", true}},
 	{EFFECT_MISC_SUPER_STUNT, {"Super Stunt", "misc_superstunt"}},
-	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2 }, true}},
-	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2 }}},
+	{EFFECT_FLIP_CAMERA, {"Turn Turtle", "player_flip_camera", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_BINOCULARS }, true}},
+	{EFFECT_PLAYER_QUAKE_FOV, {"Quake FOV", "player_quake_fov", true, { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_BINOCULARS }}},
+	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_BINOCULARS }, true}},
+	{EFFECT_PLAYER_BINOCULARS, {"Binoculars", "player_binoculars", true, { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV }, true}},
 	{EFFECT_PLAYER_WALK_ON_WATER, {"Walk On Water", "player_walkonwater", true }},
 	{EFFECT_RAPID_FIRE, {"Rapid Fire", "player_rapid_fire", true}},
 	{EFFECT_PLAYER_ON_DEMAND_CARTOON, {"On-Demand TV", "player_on_demand_cartoon", true}},
@@ -546,7 +549,6 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_PORTRAIT_MODE, {"Portrait Mode", "misc_portrait", true}},
 	{EFFECT_HIGH_PITCH, {"High Pitch", "misc_highpitch", true, { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }}},
 	{EFFECT_NO_SKY, {"No Sky", "misc_nosky", true}},
-	{EFFECT_PLAYER_GTA_2, {"GTA 2", "player_gta_2", true, { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA }, true}},
 	{EFFECT_PEDS_KIFFLOM, {"Kifflom!", "peds_kifflom", true}},
 	{EFFECT_META_TIMER_SPEED_X0_5, {"0.5x Timer Speed", "meta_timerspeed_0_5x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
 	{EFFECT_META_TIMER_SPEED_X2, {"2x Timer Speed", "meta_timerspeed_2x", true, { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 }, false, EffectExecutionType::META}},
@@ -558,5 +560,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_VEHS_CRUMBLE, {"Crumbling Vehicles", "vehs_crumble", true, {}, true}},
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
 	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
-	{EFFECT_PEDS_ROASTING, {"Roasting", "peds_roasting", true, {}, true}}
+	{EFFECT_PEDS_ROASTING, {"Roasting", "peds_roasting", true, {}, true}},
 };
