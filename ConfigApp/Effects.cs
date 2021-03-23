@@ -305,7 +305,7 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
-			EFFECT_PLAYER_JUMP_JUMP,
+            EFFECT_PLAYER_JUMP_JUMP,
             _EFFECT_ENUM_MAX
         }
 
@@ -574,7 +574,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
-            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)}
+            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
 			{EffectType.EFFECT_PLAYER_JUMP_JUMP, new EffectInfo("Jump! Jump!", EffectCategory.PLAYER, "player_jump_jump", true)},
         };
     }
