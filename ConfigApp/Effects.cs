@@ -5,11 +5,10 @@ namespace ConfigApp
 {
     public class Effects
     {
-        public static string getTranslation(string id)
+        public static string getTranslation(string id, int lang = -1)
         {
-            CultureInfo lang = CultureInfo.InstalledUICulture;
-            //MessageBox.Show(lang.ToString());
-            if (lang.ToString() == "es-ES") { return(esES.EffectsMap[id]); }
+            if (lang == -1) { lang = MainWindow.cacheLang; }
+            if (lang == 1) { return(esES.EffectsMap[id]); }
             else { return (enEN.EffectsMap[id]); }
         }
         public struct EffectInfo

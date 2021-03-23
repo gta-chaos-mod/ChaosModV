@@ -14,7 +14,7 @@ namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        public static int selectedLang;
+        public static int cacheLang;
         private bool m_initializedTitle = false;
 
         private OptionsFile m_configFile = new OptionsFile("config.ini");
@@ -23,8 +23,6 @@ namespace ConfigApp
 
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
-
-        //public string m_lang;
 
         public MainWindow()
         {
@@ -292,20 +290,11 @@ namespace ConfigApp
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
-                    + $",{((effectData.CustomName != getTranslation(EffectsMap[effectType].Id) && (effectData.CustomName != "")) ? effectData.CustomName : getTranslation(EffectsMap[effectType].Id))}");
+                    + $",{((effectData.CustomName == getTranslation(EffectsMap[effectType].Id, cacheLang) | (effectData.CustomName == "")) ? getTranslation(EffectsMap[effectType].Id, lang_list.SelectedIndex) : effectData.CustomName)}");
             }
 
             m_effectsFile.WriteFile();
         }
-
-        /*private string checkCustomEffect(string effectName)
-        {
-            if (effectName != )
-            {
-
-            }
-            return "string";
-        }*/
 
         private void InitEffectsTreeView()
         {
@@ -519,6 +508,8 @@ namespace ConfigApp
 
         private void lang_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            WriteEffectsFile();
+            cacheLang = lang_list.SelectedIndex;
             this.Title = Lang.app_labels("title", lang_list.SelectedIndex);
             InitEffectsTreeView();
             user_reset.Content = Lang.app_labels("user_reset", lang_list.SelectedIndex);
@@ -584,8 +575,27 @@ namespace ConfigApp
             {
                 update_available_label.Content = Lang.app_labels("update_error", lang_list.SelectedIndex);
             }
-
+                
             ParseEffectsFile();
+        }
+
+        private void rename_written_effects(int lang)
+        {
+            for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
+            {
+                EffectData effectData = GetEffectData(effectType);
+
+                string customName;
+                string translatedName = getTranslation(EffectsMap[effectType].Id, lang);
+                if (effectData.CustomName == "" && effectData.CustomName != translatedName) { customName = getTranslation(EffectsMap[effectType].Id, lang_list.SelectedIndex); }
+                else { customName = effectData.CustomName; }
+
+                m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
+                    + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
+                    + $",{customName}");
+                
+                m_effectsFile.WriteFile();
+            }
         }
     }
 }
