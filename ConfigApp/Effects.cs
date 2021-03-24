@@ -305,7 +305,7 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
-			EFFECT_PLAYER_AIMBOT,
+            EFFECT_PLAYER_AIMBOT,
             _EFFECT_ENUM_MAX
         }
 
