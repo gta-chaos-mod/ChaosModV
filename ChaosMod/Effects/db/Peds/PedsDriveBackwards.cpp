@@ -13,4 +13,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_DRIVE_BACKWARDS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_DRIVE_BACKWARDS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Peds Drive Backwards",
+		.Id = "peds_drive_backwards",
+		.IsTimed = true
+	}
+);

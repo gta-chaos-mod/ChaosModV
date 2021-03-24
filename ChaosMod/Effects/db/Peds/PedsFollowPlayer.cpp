@@ -76,4 +76,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FOLLOW_PLAYER, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_FOLLOW_PLAYER, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "You Are Famous",
+		.Id = "player_famous",
+		.IsTimed = true
+	}
+);

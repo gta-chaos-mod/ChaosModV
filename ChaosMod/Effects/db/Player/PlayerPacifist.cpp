@@ -47,4 +47,10 @@ static void OnTick()
 	}
 	lastPlayerHits = playerHits;
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Pacifist",
+		.Id = "player_pacifist",
+		.IsTimed = true
+	}
+);

@@ -10,4 +10,10 @@ static void OnTick()
 		_SET_GAMEPLAY_CAM_RELATIVE_ROTATION((float)0.0, (float)0.0, (float)0.0);
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_LOCKCAMERA, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_LOCKCAMERA, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Lock Vehicle Camera",
+		.Id = "veh_lockcamera",
+		.IsTimed = true
+	}
+);

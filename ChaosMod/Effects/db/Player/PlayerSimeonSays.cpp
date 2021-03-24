@@ -139,4 +139,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Simeon Says",
+		.Id = "player_simeonsays",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

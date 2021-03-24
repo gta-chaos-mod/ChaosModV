@@ -28,4 +28,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_GAMESPEED_SUPERHOT, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_GAMESPEED_SUPERHOT, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Superhot",
+		.Id = "time_superhot",
+		.IsTimed = true
+	}
+);
