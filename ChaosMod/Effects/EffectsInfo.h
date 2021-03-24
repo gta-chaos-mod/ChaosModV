@@ -560,5 +560,5 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_MISC_FPS_LIMIT, {"Console Experience", "misc_fps_limit", true, {}, true}},
 	{EFFECT_META_NO_CHAOS, {"No Chaos", "meta_nochaos", true, { EFFECT_META_HIDE_CHAOS_UI }, false, EffectExecutionType::META}},
 	{EFFECT_PEDS_ROASTING, {"Roasting", "peds_roasting", true, {}, true}},
-	{EFFECT_VEHS_CRUISE_CONTROL, {"Cruise Control", "vehs_cruise_control", true}},
+	{EFFECT_VEHS_CRUISE_CONTROL, {"Cruise Control", "vehs_cruise_control", true, {}, true}},
 };
