@@ -216,6 +216,11 @@ static void OnStart()
             }
         }
 
+        if (!IS_SCREEN_FADED_IN())
+        {
+            act = TimerAction::REMOVE;
+        }
+
         if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
         {
             switch (act)
