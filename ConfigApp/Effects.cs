@@ -305,7 +305,7 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
-			EFFECT_PEDS_SLIPPERY_PEDS,
+            EFFECT_PEDS_SLIPPERY_PEDS,
             _EFFECT_ENUM_MAX
         }
 
@@ -575,7 +575,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
-			{EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo("Can't tie my shoes", EffectCategory.PEDS, "peds_slippery_peds", true)},
+            {EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo("Can't tie my shoes", EffectCategory.PEDS, "peds_slippery_peds", true)},
         };
     }
 }
