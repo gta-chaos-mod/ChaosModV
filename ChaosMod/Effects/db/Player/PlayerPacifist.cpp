@@ -1,13 +1,13 @@
 #include <stdafx.h>
 //Effect by ProfessorBiddle, requested thousands of times on discord
 
-static int playerHits, playerHitsLast;
+static int lastPlayerHits;
+static Hash currentPedHash;
 
 static void OnStart()
 {
-	playerHits = -1;
-	//set to effectively infinite to prevent death on activation
-	playerHitsLast = 2147483647;
+	currentPedHash = -1;
+	lastPlayerHits = -1;
 }
 
 static void OnTick()
@@ -15,6 +15,12 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 
 	Hash playerHash = GET_ENTITY_MODEL(playerPed);
+	if (playerHash != currentPedHash)
+	{
+		currentPedHash = playerHash;
+		lastPlayerHits = -1;
+	}
+
 	Hash hitHash;
 	//get correct character hash
 	switch (playerHash)
@@ -29,14 +35,16 @@ static void OnTick()
 		hitHash = GET_HASH_KEY("SP2_HITS");
 		break;
 	}
+
 	//get stat for current character
+	int playerHits;
 	STAT_GET_INT(hitHash, &playerHits, -1);
 	//check if stat this tick is larger than stat last tick
-	if (playerHits > playerHitsLast)
+	if (lastPlayerHits >= 0 && playerHits > lastPlayerHits)
 	{
 		START_ENTITY_FIRE(playerPed);
 		SET_ENTITY_HEALTH(playerPed, 0, 0);
 	}
-	playerHitsLast = playerHits;
+	lastPlayerHits = playerHits;
 }
 static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick);
