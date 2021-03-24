@@ -15,6 +15,7 @@ static void OnTick()
 	SET_PED_INFINITE_AMMO_CLIP(playerPed, true);
 	if (IS_PED_WEAPON_READY_TO_SHOOT(playerPed))
 	{
+		int count = 5;
 		float maxRange = GET_MAX_RANGE_OF_CURRENT_PED_WEAPON(playerPed);
 		Vector3 playerCoord = GET_ENTITY_COORDS(playerPed, false);
 		for (Ped ped : GetAllPeds())
@@ -28,9 +29,16 @@ static void OnTick()
 				{
 					Vector3 headVector = GET_PED_BONE_COORDS(ped, 0x796E, 0, 0, 0); // Head
 					SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
+					// Only one shot per Tick
+					if (--count <= 0)
+					{
+						count = 5;
+						WAIT(0);
+					}
 				}
 			}
 		}
+		WAIT(0);
 	}
 }
 
