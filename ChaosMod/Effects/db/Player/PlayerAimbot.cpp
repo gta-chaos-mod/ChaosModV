@@ -32,13 +32,11 @@ static void OnTick()
 					// Only 5 shots per Tick
 					if (--count <= 0)
 					{
-						count = 5;
-						WAIT(0);
+						break;
 					}
 				}
 			}
 		}
-		WAIT(0);
 	}
 }
 
