@@ -29,7 +29,7 @@ static void OnTick()
 				{
 					Vector3 headVector = GET_PED_BONE_COORDS(ped, 0x796E, 0, 0, 0); // Head
 					SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
-					// Only one shot per Tick
+					// Only 5 shots per Tick
 					if (--count <= 0)
 					{
 						count = 5;
