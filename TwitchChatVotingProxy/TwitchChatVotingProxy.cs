@@ -1,6 +1,6 @@
 ﻿using Serilog;
 using System;
-using TwitchChatVotingProxy.ChaosPipe;
+using ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
 

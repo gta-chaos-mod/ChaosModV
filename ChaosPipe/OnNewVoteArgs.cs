@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TwitchChatVotingProxy.ChaosPipe
+﻿namespace ChaosPipe
 {
-    class OnNewVoteArgs
+    public class OnNewVoteArgs
     {
         public string[] VoteOptionNames { get; }
 

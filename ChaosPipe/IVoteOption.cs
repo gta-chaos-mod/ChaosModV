@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace TwitchChatVotingProxy
+namespace ChaosPipe
 {
-    interface IVoteOption
+    public interface IVoteOption
     {
         /// <summary>
         /// Label (name) of the voting option

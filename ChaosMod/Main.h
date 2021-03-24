@@ -2,6 +2,7 @@
 
 #include "DebugMenu.h"
 #include "TwitchVoting.h"
+#include "ProxyManager.h"
 
 #include <Windows.h>
 #include <memory>
@@ -16,6 +17,7 @@ public:
 private:
 	std::unique_ptr<DebugMenu> m_debugMenu;
 	std::unique_ptr<TwitchVoting> m_twitchVoting;
+	std::unique_ptr<ProxyManager> m_proxyManager;
 
 	bool m_clearAllEffects = false;
 	bool m_pauseTimer = false;

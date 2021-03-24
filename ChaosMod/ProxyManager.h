@@ -7,23 +7,13 @@
 #include <vector>
 #include <memory>
 
-enum class TwitchOverlayMode
-{
-	CHAT_MESSAGES,
-	OVERLAY_INGAME,
-	OVERLAY_OBS
-};
-
-class TwitchVoting : public ProxyBase
+class ProxyManager : public ProxyBase
 {
 public:
-	TwitchVoting();
-
+	ProxyManager();
 	void Tick();
-	
-private:
-	TwitchOverlayMode m_twitchOverlayMode;
 
 protected:
 	virtual bool OnMessageUnhandled(const std::string& msg);
 };
+
