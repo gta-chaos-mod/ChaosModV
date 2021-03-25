@@ -8,4 +8,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOCK_VEHS, OnStart);
+static RegisterEffect registerEffect(EFFECT_LOCK_VEHS, OnStart, EffectInfo
+	{
+		.Name = "Lock All Vehicles",
+		.Id = "vehs_lockdoors"
+	}
+);

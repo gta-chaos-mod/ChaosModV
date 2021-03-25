@@ -20,4 +20,9 @@ static void OnStart()
 	APPLY_FORCE_TO_ENTITY(entityToFlip, 1, 0, 0, 10, 2, 0, 0, 0, true, true, true, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_KICKFLIP, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_KICKFLIP, OnStart, EffectInfo
+	{
+		.Name = "Kickflip",
+		.Id = "player_kickflip"
+	}
+);

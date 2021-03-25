@@ -22,4 +22,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_LAUNCH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_LAUNCH, OnStart, EffectInfo
+	{
+		.Name = "Launch Player Up",
+		.Id = "player_upupaway"
+	}
+);

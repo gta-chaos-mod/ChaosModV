@@ -39,4 +39,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_ATTACK_PLAYER, nullptr, OnStart, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_ATTACK_PLAYER, nullptr, OnStart, OnTick, EffectInfo
+	{
+		.Name = "All Peds Attack Player",
+		.Id = "peds_attackplayer",
+		.IsTimed = true
+	}
+);

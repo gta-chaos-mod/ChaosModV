@@ -20,4 +20,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_BREAK_VEH_DOORS, OnStart);
+static RegisterEffect registerEffect(EFFECT_BREAK_VEH_DOORS, OnStart, EffectInfo
+	{
+		.Name = "Break Doors Of Every Vehicle",
+		.Id = "playerveh_breakdoors"
+	}
+);

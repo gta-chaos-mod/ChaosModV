@@ -72,4 +72,10 @@ static void OnTick()
 
 }
 
-static RegisterEffect registerEffect(EFFECT_MIDAS_TOUCH, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MIDAS_TOUCH, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Midas Touch",
+		.Id = "misc_midas",
+		.IsTimed = true
+	}
+);

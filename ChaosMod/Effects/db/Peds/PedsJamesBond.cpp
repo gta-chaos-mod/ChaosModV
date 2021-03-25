@@ -53,4 +53,9 @@ static void OnStart()
 	TASK_COMBAT_PED(bond, playerPed, 0, 16);
 }
 
-static RegisterEffect registerEffect(EFFECT_JAMES_BOND, OnStart);
+static RegisterEffect registerEffect(EFFECT_JAMES_BOND, OnStart, EffectInfo
+	{
+		.Name = "Spawn Deadly Agent",
+		.Id = "peds_jamesbond"
+	}
+);

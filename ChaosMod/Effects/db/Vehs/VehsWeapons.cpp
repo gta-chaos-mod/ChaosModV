@@ -48,4 +48,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_WEAPONS, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_WEAPONS, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Vehicles Shoot Rockets (Left Click/RB)",
+		.Id = "veh_weapons",
+		.IsTimed = true
+	}
+);

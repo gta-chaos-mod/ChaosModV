@@ -97,4 +97,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_REVIVE, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_REVIVE, OnStart, EffectInfo
+	{
+		.Name = "Revive Dead Peds",
+		.Id = "peds_revive"
+	}
+);
