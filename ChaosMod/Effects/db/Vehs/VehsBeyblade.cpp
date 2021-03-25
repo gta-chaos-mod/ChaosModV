@@ -4,22 +4,6 @@
 
 #include <stdafx.h>
 
-static struct VehEntry
-{
-	VehEntry(Vehicle veh) : Veh(veh)
-	{
-		
-	}
-
-	bool operator==(Vehicle veh)
-	{
-		return Veh == veh;
-	}
-
-	const Vehicle Veh;
-	DWORD64 LastTimestamp = 0;
-};
-
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -63,4 +47,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Beyblades",
+		.Id = "vehs_beyblade",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -47,6 +47,9 @@ static void OnTickLag()
 		}
 		else if (m_state == 3)
 		{
+			// save current camera heading to apply after teleporting
+			float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();
+
 			for (const auto& pair : m_toTpPeds)
 			{
 				const Ped& ped = pair.first;
@@ -72,6 +75,11 @@ static void OnTickLag()
 				float heading = GET_ENTITY_HEADING(veh);
 				float forwardSpeed = GET_ENTITY_SPEED(veh);
 
+				// if the vehicle is reversing use a negative forward speed
+				if (GET_ENTITY_SPEED_VECTOR(veh, true).y < 0) {
+					forwardSpeed *= -1;
+				}
+
 				const Vector3& tpPos = pair.second;
 
 				SET_ENTITY_COORDS_NO_OFFSET(veh, tpPos.x, tpPos.y, tpPos.z, false, false, false);
@@ -83,8 +91,17 @@ static void OnTickLag()
 			}
 
 			m_toTpVehs.clear();
+
+			SET_GAMEPLAY_CAM_RELATIVE_HEADING(camHeading);
 		}
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_GAMESPEED_LAG, OnStart, nullptr, OnTickLag);
+static RegisterEffect registerEffect3(EFFECT_GAMESPEED_LAG, OnStart, nullptr, OnTickLag, EffectInfo
+	{
+		.Name = "Lag",
+		.Id = "time_lag",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

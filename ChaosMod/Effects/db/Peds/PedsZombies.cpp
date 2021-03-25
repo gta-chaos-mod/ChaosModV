@@ -104,4 +104,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ZOMBIES, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_ZOMBIES, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Explosive Zombies",
+		.Id = "zombies",
+		.IsTimed = true
+	}
+);

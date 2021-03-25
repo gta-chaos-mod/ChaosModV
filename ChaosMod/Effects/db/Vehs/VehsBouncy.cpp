@@ -34,4 +34,10 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect2(EFFECT_VEH_BOUNCY, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect2(EFFECT_VEH_BOUNCY, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Bouncy Vehicles",
+		.Id = "veh_bouncy",
+		.IsTimed = true
+	}
+);

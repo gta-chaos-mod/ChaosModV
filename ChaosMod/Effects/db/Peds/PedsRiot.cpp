@@ -59,4 +59,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Peds Riot",
+		.Id = "peds_riot",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PEDS_COPS }
+	}
+);

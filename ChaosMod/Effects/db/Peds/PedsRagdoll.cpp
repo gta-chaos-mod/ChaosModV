@@ -14,4 +14,10 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RAGDOLL, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_RAGDOLL, OnStart, EffectInfo
+	{
+		.Name = "Ragdoll Everyone",
+		.Id = "peds_ragdoll",
+		.IncompatibleWith = { EFFECT_NO_RAGDOLL }
+	}
+);

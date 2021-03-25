@@ -36,4 +36,12 @@ static void OnStop()
     flippedCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Turn Turtle",
+		.Id = "player_flip_camera",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2 }
+	}
+);

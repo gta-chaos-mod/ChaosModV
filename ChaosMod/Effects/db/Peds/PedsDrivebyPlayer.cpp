@@ -17,4 +17,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_DRIVEBY, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_DRIVEBY, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Peds Drive-By Player",
+		.Id = "peds_driveby",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

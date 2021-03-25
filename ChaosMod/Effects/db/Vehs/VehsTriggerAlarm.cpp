@@ -25,4 +25,10 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_TRIGGER_ALARM, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEHS_TRIGGER_ALARM, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Alarmy Vehicles",
+		.Id = "vehs_alarmloop",
+		.IsTimed = true
+	}
+);

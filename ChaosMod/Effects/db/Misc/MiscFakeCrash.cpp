@@ -52,4 +52,9 @@ static void OnStart()
 	SleepAllThreads(g_random.GetRandomInt(3000, 5000));
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart);
+static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+	{
+		.Name = "Fake Crash",
+		.Id = "misc_fakecrash"
+	}
+);

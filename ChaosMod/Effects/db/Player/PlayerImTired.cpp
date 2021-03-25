@@ -101,4 +101,10 @@ static void OnTick()
 	BlackOut(alpha);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "I'm So Tired",
+		.Id = "player_tired",
+		.IsTimed = true
+	}
+);
