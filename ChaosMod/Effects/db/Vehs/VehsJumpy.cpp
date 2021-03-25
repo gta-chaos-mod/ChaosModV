@@ -19,4 +19,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Jumpy Vehicles",
+		.Id = "vehs_jumpy",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

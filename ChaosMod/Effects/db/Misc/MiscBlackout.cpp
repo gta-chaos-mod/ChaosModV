@@ -15,4 +15,10 @@ static void OnTick()
 	SET_ARTIFICIAL_LIGHTS_STATE(true);
 }
 
-static RegisterEffect registerEffect(EFFECT_BLACKOUT, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_BLACKOUT, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Blackout",
+		.Id = "world_blackout",
+		.IsTimed = true
+	}
+);

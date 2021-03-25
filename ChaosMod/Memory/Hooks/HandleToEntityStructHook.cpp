@@ -1,7 +1,6 @@
 #include <stdafx.h>
 
-static Entity m_origHandle = 0;
-static Entity m_proxyHandle = 0;
+static std::unordered_map<Entity, Entity> vehicleMap;
 
 __int64(*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
@@ -10,13 +9,16 @@ __int64 _HK_HandleToEntityStruct(Entity entity)
 	{
 		return 0;
 	}
-
-	if (entity == m_origHandle)
+	Entity vehToContinue = entity;
+	while (vehicleMap.count(vehToContinue) > 0)
 	{
-		return _OG_HandleToEntityStruct(m_proxyHandle);
+		vehToContinue = vehicleMap[vehToContinue];
+    	if (vehToContinue <= 0) 
+        {
+     		return 0;
+    	}
 	}
-
-	return _OG_HandleToEntityStruct(entity);
+	return _OG_HandleToEntityStruct(vehToContinue);
 }
 
 static bool OnHook()
@@ -38,7 +40,25 @@ namespace Hooks
 {
 	void ProxyEntityHandle(Entity origHandle, Entity newHandle)
 	{
-		m_origHandle = origHandle;
-		m_proxyHandle = newHandle;
+		vehicleMap.emplace(origHandle, newHandle);
+		// CleanUp
+		bool found = false;
+		do 
+		{
+			found = false;
+			for (std::unordered_map<Entity, Entity>::iterator it = vehicleMap.begin(); it != vehicleMap.end(); )
+			{
+				if (!DOES_ENTITY_EXIST(it->second))
+				{
+					it = vehicleMap.erase(it);
+					found = true;
+				}
+				else
+				{
+					it++;
+				}
+			}
+		} 
+		while (found);
 	}
 }

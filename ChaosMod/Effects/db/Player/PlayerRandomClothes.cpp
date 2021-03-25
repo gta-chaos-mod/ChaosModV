@@ -27,4 +27,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_RANDOMCLOTHES, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_RANDOMCLOTHES, OnStart, EffectInfo
+	{
+		.Name = "Randomize Player Clothes",
+		.Id = "player_randclothes"
+	}
+);

@@ -306,6 +306,7 @@ namespace ConfigApp
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
             EFFECT_PLAYER_BINOCULARS,
+            EFFECT_VEHS_CRUISE_CONTROL,
             _EFFECT_ENUM_MAX
         }
 
@@ -516,7 +517,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_FORCEFIELD, new EffectInfo("Forcefield", EffectCategory.PLAYER, "player_forcefield", true, true)},
             {EffectType.EFFECT_MISC_OIL_LEAKS, new EffectInfo("Oil Trails", EffectCategory.MISC, "misc_oilleaks", true)},
             {EffectType.EFFECT_PEDS_GUNSMOKE, new EffectInfo("Gunsmoke", EffectCategory.PEDS, "peds_gunsmoke", true)},
-            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
+            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true, true)},
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
@@ -576,6 +577,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
             {EffectType.EFFECT_PLAYER_BINOCULARS, new EffectInfo("Binoculars", EffectCategory.PLAYER, "player_binoculars", true)},
+            {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
         };
     }
 }

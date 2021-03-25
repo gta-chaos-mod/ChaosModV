@@ -48,4 +48,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_BUSBOIS, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_BUSBOIS, OnStart, EffectInfo
+	{
+		.Name = "Bus Bois",
+		.Id = "peds_busbois"
+	}
+);

@@ -136,4 +136,12 @@ static void OnStart()
     m_timeReserve = WAIT_TIME;
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_SPEED_MINIMUM, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_SPEED_MINIMUM, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Need For Speed",
+		.Id = "veh_speed_goal",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_VEH_SET_TOPSPEED_30MPH }
+	}
+);
