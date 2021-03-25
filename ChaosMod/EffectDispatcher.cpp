@@ -351,6 +351,29 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	m_percentage = .0f;
 }
 
+const EffectIdentifier EffectDispatcher::GetRandomEffect(std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects)
+{
+	int effectsTotalWeight = 0;
+	for (const auto& pair : choosableEffects)
+	{
+		effectsTotalWeight += pair.second.Weight;
+	}
+
+	int index = g_random.GetRandomInt(0, effectsTotalWeight);
+	int addedUpWeight = 0;
+	for (const auto& pair : choosableEffects)
+	{
+		addedUpWeight += pair.second.Weight;
+
+		if (index <= addedUpWeight)
+		{
+			return pair.first;
+		}
+	}
+	// Should never happen ;)
+	return EffectIdentifier();
+}
+
 void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 {
 	if (!m_enableNormalEffectDispatch)
@@ -359,6 +382,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
+	std::map<EffectGroupType, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
 	for (const auto& pair : g_enabledEffects)
 	{
 		const EffectIdentifier& effectIdentifier = pair.first;
@@ -366,39 +390,38 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
-			choosableEffects.emplace(effectIdentifier, effectData);
+			if (effectData.GroupType == EffectGroupType::DEFAULT_GROUP)
+			{
+				choosableEffects.emplace(effectIdentifier, effectData);
+			}
+			else
+			{
+				std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> identifiers;
+				if (groupEffectsByGroup.find(effectData.GroupType) == groupEffectsByGroup.end())
+				{
+					identifiers = { };
+					choosableEffects.emplace(EffectIdentifier(effectData.GroupType), EffectData());
+				}
+				else {
+					identifiers = groupEffectsByGroup[effectData.GroupType];
+				}
+				identifiers.emplace(effectIdentifier, effectData);
+				groupEffectsByGroup.emplace(effectData.GroupType, identifiers);
+			}
 		}
 	}
-
-	int effectsTotalWeight = 0;
-	for (const auto& pair : choosableEffects)
+	EffectIdentifier selectedRes = GetRandomEffect(choosableEffects);
+	if (!selectedRes.isDefault())
 	{
-		effectsTotalWeight += pair.second.Weight;
-	}
-
-	int index = g_random.GetRandomInt(0, effectsTotalWeight);
-
-	int addedUpWeight = 0;
-	const EffectIdentifier* targetEffectIdentifier = nullptr;
-	for (const auto& pair : choosableEffects)
-	{
-		if (pair.second.TimedType == EffectTimedType::TIMED_PERMANENT)
+		if (selectedRes.GetGroupType() != EffectGroupType::DEFAULT_GROUP)
 		{
-			continue;
+			std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> groupEffects = groupEffectsByGroup[selectedRes.GetGroupType()];
+			selectedRes = GetRandomEffect(groupEffects);
 		}
-
-		addedUpWeight += pair.second.Weight;
-
-		if (index <= addedUpWeight)
+		if (!selectedRes.isDefault())
 		{
-			targetEffectIdentifier = &pair.first;
-			break;
+			DispatchEffect(selectedRes, suffix);
 		}
-	}
-
-	if (targetEffectIdentifier)
-	{
-		DispatchEffect(*targetEffectIdentifier, suffix);
 	}
 }
 

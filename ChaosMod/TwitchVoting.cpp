@@ -200,6 +200,7 @@ void TwitchVoting::Tick()
 
 		m_effectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
+		std::map<EffectGroupType, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
 		for (auto& pair : g_enabledEffects)
 		{
 			const EffectIdentifier& effectIdentifier = pair.first;
@@ -207,7 +208,25 @@ void TwitchVoting::Tick()
 
 			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
-				choosableEffects.emplace(effectIdentifier, effectData);
+				if (effectData.GroupType == EffectGroupType::DEFAULT_GROUP)
+				{
+					choosableEffects.emplace(effectIdentifier, effectData);
+				}
+				else
+				{
+					// Save effect to corresponding map and add placeholder effect to "choosableEffects
+					std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> identifiers;
+					if (groupEffectsByGroup.find(effectData.GroupType) == groupEffectsByGroup.end())
+					{
+						identifiers = { };
+						choosableEffects.emplace(EffectIdentifier(effectData.GroupType), EffectData());
+					}
+					else {
+						identifiers = groupEffectsByGroup[effectData.GroupType];
+					}
+					identifiers[effectIdentifier] = effectData;
+					groupEffectsByGroup[effectData.GroupType] = identifiers;
+				}
 			}
 		}
 
@@ -224,42 +243,33 @@ void TwitchVoting::Tick()
 				break;
 			}
 
-			int effectsTotalWeight = 0;
-			for (const auto& pair : choosableEffects)
-			{
-				effectsTotalWeight += pair.second.Weight;
-			}
-
-			int index = g_random.GetRandomInt(0, effectsTotalWeight);
-
-			int addedUpWeight = 0;
 			std::unique_ptr<ChoosableEffect> targetChoice;
 
-			for (auto& pair : choosableEffects)
+			EffectIdentifier randomEffect = EffectDispatcher::GetRandomEffect(choosableEffects);
+			if (!randomEffect.isDefault() && randomEffect.GetGroupType() != EffectGroupType::DEFAULT_GROUP)
 			{
-				EffectData& effectData = pair.second;
+				// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 
-				if (effectData.TimedType == EffectTimedType::TIMED_PERMANENT)
-				{
-					continue;
-				}
+				choosableEffects.at(randomEffect).Weight = 0;
+				std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choices = groupEffectsByGroup[randomEffect.GetGroupType()];
+				randomEffect = EffectDispatcher::GetRandomEffect(choices);
+			}
+			else 
+			{
+				// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 
-				addedUpWeight += effectData.Weight;
-
-				if (index <= addedUpWeight)
-				{
-					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
-					effectData.Weight = 0;
-
-					targetChoice = std::make_unique<ChoosableEffect>(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
-						!m_alternatedVotingRound
-							? i + 1
-							: m_enableTwitchRandomEffectVoteable
-								? i + 5
-								: i + 4
+				choosableEffects.at(randomEffect).Weight = 0;
+			}
+			if (!randomEffect.isDefault())
+			{
+				auto data = g_enabledEffects.at(randomEffect);	
+				targetChoice = std::make_unique<ChoosableEffect>(randomEffect, data.HasCustomName ? data.CustomName : data.Name,
+					!m_alternatedVotingRound
+					? i + 1
+					: m_enableTwitchRandomEffectVoteable
+					? i + 5
+					: i + 4
 					);
-					break;
-				}
 			}
 
 			EffectIdentifier effectIdentifier = targetChoice->EffectIdentifier;

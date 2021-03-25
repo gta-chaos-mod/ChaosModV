@@ -43,6 +43,7 @@ public:
 	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
 	void Reset();
 	void ResetTimer();
+	static const EffectIdentifier GetRandomEffect(std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects);
 
 private:
 	int m_effectSpawnTime;
