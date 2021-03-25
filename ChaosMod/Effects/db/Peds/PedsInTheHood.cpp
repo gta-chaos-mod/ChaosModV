@@ -18,4 +18,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_IN_THE_HOOD, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_IN_THE_HOOD, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "In The Hood",
+		.Id = "peds_dance",
+		.IsTimed = true
+	}
+);

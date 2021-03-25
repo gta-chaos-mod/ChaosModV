@@ -23,4 +23,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_REPAIR, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_REPAIR, OnStart, EffectInfo
+	{
+		.Name = "Repair All Vehicles",
+		.Id = "playerveh_repair"
+	}
+);

@@ -200,4 +200,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_MERCENARIES, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_MERCENARIES, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Mercenaries",
+		.Id = "peds_mercenaries",
+		.IsTimed = true
+	}
+);

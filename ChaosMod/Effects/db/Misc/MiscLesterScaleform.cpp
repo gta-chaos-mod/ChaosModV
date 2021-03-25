@@ -30,4 +30,12 @@ static void OnStart()
 	END_SCALEFORM_MOVIE_METHOD();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_LESTER, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_LESTER, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Pwned",
+		.Id = "misc_lester",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_VEH_SPEED_MINIMUM }
+	}
+);

@@ -136,13 +136,35 @@ inline void ClearRegisteredScriptEffects()
 class RegisterEffect
 {
 public:
-	RegisterEffect(EffectType effectType, void(*onStart)() = nullptr, void(*onStop)() = nullptr, void(*onTick)() = nullptr)
+	RegisterEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), void(*onTick)(), EffectInfo effectInfo)
+	{
+		_RegisterEffect(effectType, onStart, onStop, onTick, effectInfo);
+	}
+
+	RegisterEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), EffectInfo effectInfo)
+	{
+		_RegisterEffect(effectType, onStart, onStop, nullptr, effectInfo);
+	}
+
+	RegisterEffect(EffectType effectType, void(*onStart)(), EffectInfo effectInfo)
+	{
+		_RegisterEffect(effectType, onStart, nullptr, nullptr, effectInfo);
+	}
+
+	RegisterEffect(EffectType effectType, EffectInfo effectInfo)
+	{
+		_RegisterEffect(effectType, nullptr, nullptr, nullptr, effectInfo);
+	}
+
+private:
+	void _RegisterEffect(EffectType effectType, void(*onStart)(), void(*onStop)(), void(*onTick)(), EffectInfo effectInfo)
 	{
 		m_registeredEffect = RegisteredEffect(effectType, onStart, onStop, onTick);
 
 		g_registeredEffects.push_back(m_registeredEffect);
+
+		g_effectsMap[effectType] = effectInfo;
 	}
 
-private:
 	RegisteredEffect m_registeredEffect;
 };

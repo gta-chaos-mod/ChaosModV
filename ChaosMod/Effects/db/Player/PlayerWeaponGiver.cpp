@@ -10,4 +10,9 @@ static void OnStartAll()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_GIVE_ALL_WEPS, OnStartAll);
+static RegisterEffect registerEffect(EFFECT_GIVE_ALL_WEPS, OnStartAll, EffectInfo
+	{
+		.Name = "Give All Weapons",
+		.Id = "player_allweps"
+	}
+);

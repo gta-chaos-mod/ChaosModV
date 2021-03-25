@@ -47,4 +47,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Beyblades",
+		.Id = "vehs_beyblade",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

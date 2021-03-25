@@ -81,4 +81,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Portal Guns",
+		.Id = "peds_portal_gun",
+		.IsTimed = true
+	}
+);
