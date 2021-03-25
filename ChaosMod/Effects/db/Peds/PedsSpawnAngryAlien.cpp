@@ -59,6 +59,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_ANGRY_ALIEN, OnStart, EffectInfo
 	{
 		.Name = "Spawn Angry Alien",
-		.Id = "peds_angryalien"
+		.Id = "peds_angryalien",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

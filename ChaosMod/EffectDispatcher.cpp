@@ -382,7 +382,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-	std::map<EffectGroupType, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
+	std::map<EffectGroup, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
 	for (const auto& pair : g_enabledEffects)
 	{
 		const EffectIdentifier& effectIdentifier = pair.first;
@@ -390,32 +390,32 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 
 		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
-			if (effectData.GroupType == EffectGroupType::DEFAULT_GROUP)
+			if (effectData.EffectGroup == EffectGroup::DEFAULT)
 			{
 				choosableEffects.emplace(effectIdentifier, effectData);
 			}
 			else
 			{
 				std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> identifiers;
-				if (groupEffectsByGroup.find(effectData.GroupType) == groupEffectsByGroup.end())
+				if (groupEffectsByGroup.find(effectData.EffectGroup) == groupEffectsByGroup.end())
 				{
 					identifiers = { };
-					choosableEffects.emplace(EffectIdentifier(effectData.GroupType), EffectData());
+					choosableEffects.emplace(EffectIdentifier(effectData.EffectGroup), EffectData());
 				}
 				else {
-					identifiers = groupEffectsByGroup[effectData.GroupType];
+					identifiers = groupEffectsByGroup[effectData.EffectGroup];
 				}
 				identifiers.emplace(effectIdentifier, effectData);
-				groupEffectsByGroup.emplace(effectData.GroupType, identifiers);
+				groupEffectsByGroup.emplace(effectData.EffectGroup, identifiers);
 			}
 		}
 	}
 	EffectIdentifier selectedRes = GetRandomEffect(choosableEffects);
 	if (!selectedRes.isDefault())
 	{
-		if (selectedRes.GetGroupType() != EffectGroupType::DEFAULT_GROUP)
+		if (selectedRes.GetGroup() != EffectGroup::DEFAULT)
 		{
-			std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> groupEffects = groupEffectsByGroup[selectedRes.GetGroupType()];
+			std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> groupEffects = groupEffectsByGroup[selectedRes.GetGroup()];
 			selectedRes = GetRandomEffect(groupEffects);
 		}
 		if (!selectedRes.isDefault())

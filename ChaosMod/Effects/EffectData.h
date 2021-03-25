@@ -13,7 +13,7 @@ struct EffectData
 	int Weight = WeightMult;
 	bool ExcludedFromVoting = false;
 	std::string Name;
-	EffectGroupType GroupType;
+	EffectGroup EffectGroup;
 	bool HasCustomName = false;
 	std::string CustomName;
 	std::string Id;

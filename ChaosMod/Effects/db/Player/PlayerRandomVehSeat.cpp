@@ -79,6 +79,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_VEH_SET_RANDOM_SEAT, OnStart, EffectInfo
 	{
 		.Name = "Set Player Into Random Vehicle Seat",
-		.Id = "veh_randomseat"
+		.Id = "veh_randomseat",
+		.EffectGroup = EffectGroup::TELEPORT
 	}
 );

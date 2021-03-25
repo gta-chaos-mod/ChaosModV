@@ -204,6 +204,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_MERCENARIES, OnStart, OnStop, O
 	{
 		.Name = "Mercenaries",
 		.Id = "peds_mercenaries",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

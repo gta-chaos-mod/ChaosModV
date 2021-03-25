@@ -23,6 +23,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart, EffectInfo
 	{
 		.Name = "Spawn Companion Doggo",
-		.Id = "spawn_chop"
+		.Id = "spawn_chop",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

@@ -108,6 +108,7 @@ static RegisterEffect registerEffect(EFFECT_ZOMBIES, OnStart, OnStop, OnTick, Ef
 	{
 		.Name = "Explosive Zombies",
 		.Id = "zombies",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

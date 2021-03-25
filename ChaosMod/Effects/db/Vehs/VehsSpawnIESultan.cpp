@@ -59,6 +59,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart, EffectInfo
 	{
 		.Name = "Spawn Blue Sultan",
-		.Id = "spawn_bluesultan"
+		.Id = "spawn_bluesultan",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

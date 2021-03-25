@@ -18,7 +18,7 @@ struct EffectIdentifier
 
 	}
 
-	EffectIdentifier(EffectGroupType groupType) : m_groupType(groupType)
+	EffectIdentifier(EffectGroup group) : m_group(group)
 	{
 
 	}
@@ -29,9 +29,9 @@ struct EffectIdentifier
 		{
 			return m_scriptId == other.GetScriptId();
 		}
-		else if (m_groupType != EffectGroupType::DEFAULT_GROUP)
+		else if (m_group != EffectGroup::DEFAULT)
 		{
-			return m_groupType == other.GetGroupType();
+			return m_group == other.GetGroup();
 		}
 		else {
 			return m_effectType == other.GetEffectType();
@@ -58,19 +58,19 @@ struct EffectIdentifier
 		return m_scriptId;
 	}
 
-	inline const EffectGroupType GetGroupType() const
+	inline const EffectGroup GetGroup() const
 	{
-		return m_groupType;
+		return m_group;
 	}
 
 	inline bool isDefault() const
 	{
-		return m_effectType == _EFFECT_ENUM_MAX && !m_isScript && m_groupType == EffectGroupType::DEFAULT_GROUP;
+		return m_effectType == _EFFECT_ENUM_MAX && !m_isScript && m_group == EffectGroup::DEFAULT;
 	}
 
 private:
 	EffectType m_effectType = _EFFECT_ENUM_MAX;
 	std::string m_scriptId;
-	EffectGroupType m_groupType = EffectGroupType::DEFAULT_GROUP;
+	EffectGroup m_group = EffectGroup::DEFAULT;
 	bool m_isScript = false;
 };

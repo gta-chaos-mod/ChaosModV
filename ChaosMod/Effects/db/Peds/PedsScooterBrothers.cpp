@@ -38,6 +38,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_PEDS_SCOOTERBROTHERS, OnStart, EffectInfo
 	{
 		.Name = "Scooter Brothers",
-		.Id = "peds_scooterbrothers"
+		.Id = "peds_scooterbrothers",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

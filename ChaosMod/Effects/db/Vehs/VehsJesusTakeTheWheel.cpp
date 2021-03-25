@@ -65,6 +65,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_JESUS_TAKE_THE_WHEEL, OnStart, EffectInfo
 	{
 		.Name = "Jesus Take The Wheel",
-		.Id = "veh_jesustakethewheel"
+		.Id = "veh_jesustakethewheel",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

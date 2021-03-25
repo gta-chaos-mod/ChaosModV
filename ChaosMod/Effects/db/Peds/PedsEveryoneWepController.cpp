@@ -14,7 +14,8 @@ static void OnStartRPG()
 static RegisterEffect registerEffect1(EFFECT_EVERYONE_RPG, OnStartRPG, EffectInfo
 	{
 		.Name = "Give Everyone An RPG",
-		.Id = "peds_giverpg"
+		.Id = "peds_giverpg",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartTazer()
@@ -31,7 +32,8 @@ static void OnStartTazer()
 static RegisterEffect registerEffect2(EFFECT_EVERYONE_TAZER, OnStartTazer, EffectInfo
 	{
 		.Name = "Give Everyone A Stun Gun",
-		.Id = "peds_stungun"
+		.Id = "peds_stungun",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartMinigun()
@@ -48,7 +50,8 @@ static void OnStartMinigun()
 static RegisterEffect registerEffect3(EFFECT_EVERYONE_MINIGUN, OnStartMinigun, EffectInfo
 	{
 		.Name = "Give Everyone A Minigun",
-		.Id = "peds_minigun"
+		.Id = "peds_minigun",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartUpNAtomizer()
@@ -65,7 +68,8 @@ static void OnStartUpNAtomizer()
 static RegisterEffect registerEffect4(EFFECT_EVERYONE_UPNATOMIZER, OnStartUpNAtomizer, EffectInfo
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
-		.Id = "peds_upnatomizer"
+		.Id = "peds_upnatomizer",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartRandom()
@@ -84,7 +88,8 @@ static void OnStartRandom()
 static RegisterEffect registerEffect5(EFFECT_EVERYONE_RANDOMWEP, OnStartRandom, EffectInfo
 	{
 		.Name = "Give Everyone A Random Weapon",
-		.Id = "peds_randomwep"
+		.Id = "peds_randomwep",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartRailgun()
@@ -101,7 +106,8 @@ static void OnStartRailgun()
 static RegisterEffect registerEffect6(EFFECT_EVERYONE_RAILGUN, OnStartRailgun, EffectInfo
 	{
 		.Name = "Give Everyone A Railgun",
-		.Id = "peds_railgun"
+		.Id = "peds_railgun",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );
 static void OnStartBattleAxe()
@@ -118,6 +124,7 @@ static void OnStartBattleAxe()
 static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAxe, EffectInfo
 	{
 		.Name = "Give Everyone A Battle Axe",
-		.Id = "peds_battleaxe"
+		.Id = "peds_battleaxe",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );

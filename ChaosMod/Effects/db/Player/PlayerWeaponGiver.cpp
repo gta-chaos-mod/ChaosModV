@@ -13,6 +13,7 @@ static void OnStartAll()
 static RegisterEffect registerEffect(EFFECT_GIVE_ALL_WEPS, OnStartAll, EffectInfo
 	{
 		.Name = "Give All Weapons",
-		.Id = "player_allweps"
+		.Id = "player_allweps",
+		.EffectGroup = EffectGroup::GIVE_WEAPON
 	}
 );

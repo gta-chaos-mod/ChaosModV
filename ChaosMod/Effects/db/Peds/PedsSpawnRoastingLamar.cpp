@@ -89,6 +89,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_ROASTING, OnStart, OnStop, OnTi
 		.Name = "Roasting",
 		.Id = "peds_roasting",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

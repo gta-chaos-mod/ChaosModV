@@ -56,6 +56,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_JAMES_BOND, OnStart, EffectInfo
 	{
 		.Name = "Spawn Deadly Agent",
-		.Id = "peds_jamesbond"
+		.Id = "peds_jamesbond",
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

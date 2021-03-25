@@ -122,6 +122,7 @@ static RegisterEffect registerEffect(EFFECT_KILLER_CLOWNS, OnStart, OnStop, OnTi
 		.Name = "Killer Clowns",
 		.Id = "peds_killerclowns",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.EffectGroup = EffectGroup::PED_SPAWN
 	}
 );

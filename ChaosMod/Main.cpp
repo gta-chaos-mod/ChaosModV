@@ -98,7 +98,7 @@ static void ParseEffectsFile()
 		effectData.ExcludedFromVoting = values[5];
 		effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
 		effectData.Name = effectInfo.Name;
-		effectData.GroupType = effectInfo.GroupType;
+		effectData.EffectGroup = effectInfo.EffectGroup;
 		if (!valueEffectName.empty())
 		{
 			effectData.HasCustomName = true;

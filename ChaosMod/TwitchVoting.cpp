@@ -200,7 +200,7 @@ void TwitchVoting::Tick()
 
 		m_effectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-		std::map<EffectGroupType, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
+		std::map<EffectGroup, std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>> groupEffectsByGroup;
 		for (auto& pair : g_enabledEffects)
 		{
 			const EffectIdentifier& effectIdentifier = pair.first;
@@ -208,7 +208,7 @@ void TwitchVoting::Tick()
 
 			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
-				if (effectData.GroupType == EffectGroupType::DEFAULT_GROUP)
+				if (effectData.EffectGroup == EffectGroup::DEFAULT)
 				{
 					choosableEffects.emplace(effectIdentifier, effectData);
 				}
@@ -216,16 +216,17 @@ void TwitchVoting::Tick()
 				{
 					// Save effect to corresponding map and add placeholder effect to "choosableEffects
 					std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> identifiers;
-					if (groupEffectsByGroup.find(effectData.GroupType) == groupEffectsByGroup.end())
+					if (groupEffectsByGroup.find(effectData.EffectGroup) == groupEffectsByGroup.end())
 					{
 						identifiers = { };
-						choosableEffects.emplace(EffectIdentifier(effectData.GroupType), EffectData());
+						// Add "Dummy" effect to place in for the whole group
+						choosableEffects.emplace(EffectIdentifier(effectData.EffectGroup), EffectData());
 					}
 					else {
-						identifiers = groupEffectsByGroup[effectData.GroupType];
+						identifiers = groupEffectsByGroup[effectData.EffectGroup];
 					}
 					identifiers[effectIdentifier] = effectData;
-					groupEffectsByGroup[effectData.GroupType] = identifiers;
+					groupEffectsByGroup[effectData.EffectGroup] = identifiers;
 				}
 			}
 		}
@@ -246,36 +247,40 @@ void TwitchVoting::Tick()
 			std::unique_ptr<ChoosableEffect> targetChoice;
 
 			EffectIdentifier randomEffect = EffectDispatcher::GetRandomEffect(choosableEffects);
-			if (!randomEffect.isDefault() && randomEffect.GetGroupType() != EffectGroupType::DEFAULT_GROUP)
-			{
-				// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
-
-				choosableEffects.at(randomEffect).Weight = 0;
-				std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choices = groupEffectsByGroup[randomEffect.GetGroupType()];
-				randomEffect = EffectDispatcher::GetRandomEffect(choices);
-			}
-			else 
-			{
-				// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
-
-				choosableEffects.at(randomEffect).Weight = 0;
-			}
 			if (!randomEffect.isDefault())
 			{
-				auto data = g_enabledEffects.at(randomEffect);	
-				targetChoice = std::make_unique<ChoosableEffect>(randomEffect, data.HasCustomName ? data.CustomName : data.Name,
-					!m_alternatedVotingRound
-					? i + 1
-					: m_enableTwitchRandomEffectVoteable
-					? i + 5
-					: i + 4
-					);
+				// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
+				choosableEffects.at(randomEffect).Weight = 0;
+				if (randomEffect.GetGroup() != EffectGroup::DEFAULT)
+				{
+					std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher>* choices = &groupEffectsByGroup[randomEffect.GetGroup()];
+					randomEffect = EffectDispatcher::GetRandomEffect(*choices);
+					// Remove choice to be selected again
+					choices->erase(randomEffect);
+					if (choices->empty())
+					{
+						// Remove whole Group if no effects left
+						choosableEffects.erase(EffectIdentifier(randomEffect.GetGroup()));
+					}
+
+				}
+				if (!randomEffect.isDefault())
+				{
+					auto data = g_enabledEffects.at(randomEffect);
+					targetChoice = std::make_unique<ChoosableEffect>(randomEffect, data.HasCustomName ? data.CustomName : data.Name,
+						!m_alternatedVotingRound
+						? i + 1
+						: m_enableTwitchRandomEffectVoteable
+						? i + 5
+						: i + 4
+						);
+				}
+
+				EffectIdentifier effectIdentifier = targetChoice->EffectIdentifier;
+
+				m_effectChoices.push_back(std::move(targetChoice));
+				choosableEffects.erase(effectIdentifier);
 			}
-
-			EffectIdentifier effectIdentifier = targetChoice->EffectIdentifier;
-
-			m_effectChoices.push_back(std::move(targetChoice));
-			choosableEffects.erase(effectIdentifier);
 		}
 
 		std::ostringstream oss;
