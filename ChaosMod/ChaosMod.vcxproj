@@ -315,6 +315,8 @@
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects\EffectData.h" />
+    <ClInclude Include="Effects\EffectExecutionType.h" />
+    <ClInclude Include="Effects\EffectGroup.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />

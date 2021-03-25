@@ -10,7 +10,8 @@ static void OnStartLSIA()
 static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectInfo
 	{
 		.Name = "Teleport To LS Airport",
-		.Id = "tp_lsairport"
+		.Id = "tp_lsairport",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 static void OnStartMazeTower()
@@ -21,7 +22,8 @@ static void OnStartMazeTower()
 static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, EffectInfo
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
-		.Id = "tp_mazebanktower"
+		.Id = "tp_mazebanktower",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 static void OnStartFortZancudo()
@@ -39,7 +41,8 @@ static void OnStartFortZancudo()
 static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo, EffectInfo
 	{
 		.Name = "Teleport To Fort Zancudo",
-		.Id = "tp_fortzancudo"
+		.Id = "tp_fortzancudo",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 static void OnStartMountChilliad()
@@ -57,7 +60,8 @@ static void OnStartMountChilliad()
 static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad, EffectInfo
 	{
 		.Name = "Teleport To Mount Chiliad",
-		.Id = "tp_mountchilliad"
+		.Id = "tp_mountchilliad",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 static void OnStartSkyFall()
@@ -68,7 +72,8 @@ static void OnStartSkyFall()
 static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectInfo
 	{
 		.Name = "Teleport To Heaven",
-		.Id = "tp_skyfall"
+		.Id = "tp_skyfall",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 static void OnStartWaypoint()
@@ -201,7 +206,8 @@ static void OnStartRandom()
 static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
 	{
 		.Name = "Teleport To Random Location",
-		.Id = "tp_random"
+		.Id = "tp_random",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );
 
@@ -304,6 +310,7 @@ static void OnStartFakeTp()
 static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp, EffectInfo
 	{
 		.Name = "Fake Teleport",
-		.Id = "tp_fake"
+		.Id = "tp_fake",
+		.EffectGroup = EffectGroup::BIG_TELEPORT
 	}
 );

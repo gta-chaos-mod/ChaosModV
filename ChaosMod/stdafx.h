@@ -16,6 +16,8 @@
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
 #include "Effects/MetaEffectInfo.h"
+#include "Effects/EffectGroup.h"
+#include "Effects/EffectExecutionType.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle.h"

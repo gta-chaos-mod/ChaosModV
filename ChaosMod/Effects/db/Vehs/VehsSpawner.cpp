@@ -17,7 +17,8 @@ static void OnStartRhino()
 static RegisterEffect registerEffect1(EFFECT_SPAWN_TANK, OnStartRhino, EffectInfo
 	{
 		.Name = "Spawn Rhino",
-		.Id = "spawn_rhino"
+		.Id = "spawn_rhino",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartAdder()
@@ -30,7 +31,8 @@ static void OnStartAdder()
 static RegisterEffect registerEffect2(EFFECT_SPAWN_ADDER, OnStartAdder, EffectInfo
 	{
 		.Name = "Spawn Adder",
-		.Id = "spawn_adder"
+		.Id = "spawn_adder",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartDump()
@@ -43,7 +45,8 @@ static void OnStartDump()
 static RegisterEffect registerEffect3(EFFECT_SPAWN_DUMP, OnStartDump, EffectInfo
 	{
 		.Name = "Spawn Dump",
-		.Id = "spawn_dump"
+		.Id = "spawn_dump",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartMonster()
@@ -56,7 +59,8 @@ static void OnStartMonster()
 static RegisterEffect registerEffect4(EFFECT_SPAWN_MONSTER, OnStartMonster, EffectInfo
 	{
 		.Name = "Spawn Monster",
-		.Id = "spawn_monster"
+		.Id = "spawn_monster",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartBMX()
@@ -69,7 +73,8 @@ static void OnStartBMX()
 static RegisterEffect registerEffect5(EFFECT_SPAWN_BMX, OnStartBMX, EffectInfo
 	{
 		.Name = "Spawn BMX",
-		.Id = "spawn_bmx"
+		.Id = "spawn_bmx",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartTug()
@@ -82,7 +87,8 @@ static void OnStartTug()
 static RegisterEffect registerEffect6(EFFECT_SPAWN_TUG, OnStartTug, EffectInfo
 	{
 		.Name = "Spawn Tug",
-		.Id = "spawn_tug"
+		.Id = "spawn_tug",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartCargoplane()
@@ -95,7 +101,8 @@ static void OnStartCargoplane()
 static RegisterEffect registerEffect7(EFFECT_SPAWN_CARGO, OnStartCargoplane, EffectInfo
 	{
 		.Name = "Spawn Cargo Plane",
-		.Id = "spawn_cargo"
+		.Id = "spawn_cargo",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartBus()
@@ -108,7 +115,8 @@ static void OnStartBus()
 static RegisterEffect registerEffect8(EFFECT_SPAWN_BUS, OnStartBus, EffectInfo
 	{
 		.Name = "Spawn Bus",
-		.Id = "spawn_bus"
+		.Id = "spawn_bus",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartBlimp()
@@ -121,7 +129,8 @@ static void OnStartBlimp()
 static RegisterEffect registerEffect9(EFFECT_SPAWN_BLIMP, OnStartBlimp, EffectInfo
 	{
 		.Name = "Spawn Blimp",
-		.Id = "spawn_blimp"
+		.Id = "spawn_blimp",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartBuzzard()
@@ -134,7 +143,8 @@ static void OnStartBuzzard()
 static RegisterEffect registerEffect10(EFFECT_SPAWN_BUZZARD, OnStartBuzzard, EffectInfo
 	{
 		.Name = "Spawn Buzzard",
-		.Id = "spawn_buzzard"
+		.Id = "spawn_buzzard",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartFaggio()
@@ -147,7 +157,8 @@ static void OnStartFaggio()
 static RegisterEffect registerEffect11(EFFECT_SPAWN_FAGGIO, OnStartFaggio, EffectInfo
 	{
 		.Name = "Spawn Faggio",
-		.Id = "spawn_faggio"
+		.Id = "spawn_faggio",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartRuiner3()
@@ -160,7 +171,8 @@ static void OnStartRuiner3()
 static RegisterEffect registerEffect12(EFFECT_SPAWN_RUINER3, OnStartRuiner3, EffectInfo
 	{
 		.Name = "Spawn Ruined Ruiner",
-		.Id = "spawn_ruiner3"
+		.Id = "spawn_ruiner3",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartRandom()
@@ -191,7 +203,8 @@ static void OnStartRandom()
 static RegisterEffect registerEffect13(EFFECT_SPAWN_RANDOM, OnStartRandom, EffectInfo
 	{
 		.Name = "Spawn Random Vehicle",
-		.Id = "spawn_random"
+		.Id = "spawn_random",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartBaletrailer()
@@ -204,7 +217,8 @@ static void OnStartBaletrailer()
 static RegisterEffect registerEffect14(EFFECT_SPAWN_BALETRAILER, OnStartBaletrailer, EffectInfo
 	{
 		.Name = "Spawn Bale Trailer",
-		.Id = "spawn_baletrailer"
+		.Id = "spawn_baletrailer",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartRomero()
@@ -217,6 +231,7 @@ static void OnStartRomero()
 static RegisterEffect registerEffect15(EFFECT_SPAWN_ROMERO, OnStartRomero, EffectInfo
 	{
 		.Name = "Where's The Funeral?",
-		.Id = "spawn_romero"
+		.Id = "spawn_romero",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );

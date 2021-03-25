@@ -19,7 +19,8 @@ static void OnStartUFO()
 static RegisterEffect registerEffect(EFFECT_SPAWN_UFO, OnStartUFO, EffectInfo
 	{
 		.Name = "Spawn UFO",
-		.Id = "misc_spawnufo"
+		.Id = "misc_spawnufo",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );
 static void OnStartFerrisWheel()
@@ -30,6 +31,7 @@ static void OnStartFerrisWheel()
 static RegisterEffect registerEffect2(EFFECT_SPAWN_FERRISWHEEL, OnStartFerrisWheel, EffectInfo
 	{
 		.Name = "Spawn Ferris Wheel",
-		.Id = "misc_spawnferriswheel"
+		.Id = "misc_spawnferriswheel",
+		.EffectGroup = EffectGroup::SPAWN
 	}
 );

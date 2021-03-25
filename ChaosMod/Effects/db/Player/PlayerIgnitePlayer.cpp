@@ -21,6 +21,7 @@ static RegisterEffect registerEffect(EFFECT_IGNITE, OnStart, EffectInfo
 	{
 		.Name = "Ignite Player",
 		.Id = "player_ignite",
-		.IncompatibleWith = {EFFECT_PLAYER_INVINCIBLE}
+		.IncompatibleWith = { EFFECT_PLAYER_INVINCIBLE },
+		.EffectGroup = EffectGroup::PLAYERKILL
 	}
 );

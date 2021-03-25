@@ -164,6 +164,17 @@ private:
 		g_registeredEffects.push_back(m_registeredEffect);
 
 		g_effectsMap[effectType] = effectInfo;
+
+		EffectGroup effectGroup = effectInfo.EffectGroup;
+		if (effectGroup != EffectGroup::DEFAULT)
+		{
+			if (!g_effectGroupMemberCount[effectGroup])
+			{
+				g_effectGroupMemberCount[effectGroup] = 0;
+			}
+
+			g_effectGroupMemberCount[effectGroup]++;
+		}
 	}
 
 	RegisteredEffect m_registeredEffect;

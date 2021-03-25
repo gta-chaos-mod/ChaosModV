@@ -1,15 +1,9 @@
 #pragma once
 
-#include <unordered_map>
-#include <vector>
+#include "EffectGroup.h"
+#include "EffectExecutionType.h"
 
-enum class EffectGroup
-{
-	DEFAULT,
-	TELEPORT,
-	SPAWN,
-	PLAYERKILL
-};
+#include <unordered_map>
 
 enum EffectType
 {
@@ -281,12 +275,6 @@ enum EffectType
 	_EFFECT_ENUM_MAX
 };
 
-enum class EffectExecutionType
-{
-	DEFAULT,
-	META
-};
-
 struct EffectInfo
 {
 	const char* Name;
@@ -299,3 +287,4 @@ struct EffectInfo
 };
 
 inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
+inline std::unordered_map<EffectGroup, int> g_effectGroupMemberCount;
