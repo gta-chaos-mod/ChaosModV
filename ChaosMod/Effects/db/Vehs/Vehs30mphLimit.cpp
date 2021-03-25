@@ -20,4 +20,11 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_SET_TOPSPEED_30MPH, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_SET_TOPSPEED_30MPH, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "30MPH Speed Limit",
+		.Id = "veh_30mphlimit",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -18,4 +18,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BRAKEBOOST, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_BRAKEBOOST, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Brake Boosting",
+		.Id = "veh_brakeboost",
+		.IsTimed = true
+	}
+);

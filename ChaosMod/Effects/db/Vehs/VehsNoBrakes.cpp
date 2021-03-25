@@ -16,4 +16,10 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 153, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_NO_BRAKES, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_NO_BRAKES, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "No Braking Allowed",
+		.Id = "playerveh_nobrakes",
+		.IsTimed = true
+	}
+);

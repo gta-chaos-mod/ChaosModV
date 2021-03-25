@@ -16,4 +16,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_INVISIBLE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_INVISIBLE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Everyone Is A Ghost",
+		.Id = "peds_ghost",
+		.IsTimed = true
+	}
+);

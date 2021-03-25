@@ -10,7 +10,7 @@ struct EffectData
 	EffectTimedType TimedType = EffectTimedType::TIMED_UNK;
 	int CustomTime = -1;
 	int WeightMult = 5;
-	int Weight = WeightMult;
+	float Weight = WeightMult;
 	bool ExcludedFromVoting = false;
 	std::string Name;
 	bool HasCustomName = false;
@@ -18,4 +18,5 @@ struct EffectData
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
 	bool IsMeta = false;
+	EffectGroup EffectGroup = EffectGroup::DEFAULT;
 };

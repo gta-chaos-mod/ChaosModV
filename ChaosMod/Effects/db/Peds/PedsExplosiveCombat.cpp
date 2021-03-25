@@ -18,4 +18,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_COMBAT, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_COMBAT, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Explosive Combat",
+		.Id = "player_explosivecombat",
+		.IsTimed = true
+	}
+);

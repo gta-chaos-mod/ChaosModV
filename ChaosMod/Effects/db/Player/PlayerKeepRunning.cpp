@@ -34,4 +34,11 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 68, true);  //  	INPUT_VEH_AIM
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_KEEP_RUNNING, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_KEEP_RUNNING, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Help My W Key Is Stuck",
+		.Id = "player_keeprunning",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

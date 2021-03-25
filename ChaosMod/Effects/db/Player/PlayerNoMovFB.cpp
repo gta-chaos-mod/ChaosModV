@@ -24,4 +24,11 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 281, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_MOV_NO_UD, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MOV_NO_UD, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Disable Forwards / Backwards Movement",
+		.Id = "player_noforwardbackward",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);
