@@ -27,4 +27,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_JUMP_JUMP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_JUMP_JUMP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Jump! Jump!",
+		.Id = "player_jump_jump",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

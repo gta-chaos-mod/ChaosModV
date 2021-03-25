@@ -577,7 +577,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
-            {EffectType.EFFECT_PLAYER_JUMP_JUMP, new EffectInfo("Jump! Jump!", EffectCategory.PLAYER, "player_jump_jump", true)},
+            {EffectType.EFFECT_PLAYER_JUMP_JUMP, new EffectInfo("Jump! Jump!", EffectCategory.PLAYER, "player_jump_jump", true, true)},
         };
     }
 }
