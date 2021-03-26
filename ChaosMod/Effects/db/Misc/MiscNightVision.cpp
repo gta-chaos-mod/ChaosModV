@@ -10,4 +10,10 @@ static void OnTick()
 	SET_NIGHTVISION(true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_NIGHTVISION, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_NIGHTVISION, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Night Vision",
+		.Id = "player_nightvision",
+		.IsTimed = true
+	}
+);

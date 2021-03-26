@@ -12,4 +12,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRES, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRES, OnStart, EffectInfo
+	{
+		.Name = "Pop Tires Of Every Vehicle",
+		.Id = "playerveh_poptires"
+	}
+);

@@ -9,6 +9,7 @@
 #include "Mp3Manager.h"
 #include "ThreadManager.h"
 #include "LuaManager.h"
+#include "FailsafeManager.h"
 
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectTimedType.h"
@@ -16,6 +17,8 @@
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
 #include "Effects/MetaEffectInfo.h"
+#include "Effects/EffectGroup.h"
+#include "Effects/EffectExecutionType.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle.h"

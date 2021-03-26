@@ -37,4 +37,10 @@ static void OnTick()
 	GRAPHICS::DRAW_TV_CHANNEL(0.125f, 0.125f, 0.25f, 0.25f, 0.0f, 255, 255, 255, 255);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_ON_DEMAND_CARTOON, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_ON_DEMAND_CARTOON, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "On-Demand TV",
+		.Id = "player_on_demand_cartoon",
+		.IsTimed = true
+	}
+);

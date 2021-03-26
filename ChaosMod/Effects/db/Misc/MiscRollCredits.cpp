@@ -65,4 +65,11 @@ static void OnTick()
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, s_alpha, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Roll Credits",
+		.Id = "misc_credits",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -75,6 +75,7 @@ namespace ConfigApp
             EFFECT_TP_RANDOM,
             EFFECT_TP_MISSION,
             EFFECT_TP_FAKE,
+            EFFECT_TP_TO_STORE,
             EFFECT_NO_PHONE,
             EFFECT_SET_INTO_CLOSEST_VEH,
             EFFECT_PEDS_EXIT_VEH,
@@ -217,7 +218,6 @@ namespace ConfigApp
             EFFECT_OHKO_VEHICLES,
             EFFECT_VEH_SPAM_DOORS,
             EFFECT_VEH_SPEED_MINIMUM,
-            EFFECT_MISC_LESTER,
             EFFECT_MISC_CREDITS,
             EFFECT_MISC_EARTHQUAKE,
             EFFECT_TP_FRONT,
@@ -233,7 +233,6 @@ namespace ConfigApp
             EFFECT_PHONES,
             EFFECT_MIDAS_TOUCH,
             EFFECT_SPAWN_RANDOM_HOSTILE,
-            EFFECT_VEH_NO_BRAKES,
             EFFECT_PLAYER_PORTAL_GUN,
             EFFECT_MISC_FIREWORKS,
             EFFECT_VEH_DESPAWN,
@@ -305,6 +304,7 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
+            EFFECT_VEHS_CRUISE_CONTROL,
             EFFECT_PEDS_HANDS_UP,
             _EFFECT_ENUM_MAX
         }
@@ -345,6 +345,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_RANDOM, new EffectInfo("Teleport To Random Location", EffectCategory.PLAYER, "tp_random")},
             {EffectType.EFFECT_TP_MISSION, new EffectInfo("Teleport To Random Mission", EffectCategory.PLAYER, "tp_mission")},
             {EffectType.EFFECT_TP_FAKE, new EffectInfo("Fake Teleport", EffectCategory.PLAYER, "tp_fake")},
+            {EffectType.EFFECT_TP_TO_STORE, new EffectInfo("Teleport to Random Store", EffectCategory.PLAYER, "player_tp_store")},
             {EffectType.EFFECT_NO_PHONE, new EffectInfo("No Phone", EffectCategory.MISC, "player_nophone", true)},
             {EffectType.EFFECT_SET_INTO_CLOSEST_VEH, new EffectInfo("Set Player Into Closest Vehicle", EffectCategory.PLAYER, "player_tpclosestveh")},
             {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo("Everyone Exits Their Vehicles", EffectCategory.PEDS, "playerveh_exit")},
@@ -488,7 +489,6 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo("Spammy Vehicle Doors", EffectCategory.VEHICLE, "vehs_spamdoors", true)},
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo("Need For Speed", EffectCategory.VEHICLE, "veh_speed_goal", true, true)},
             {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo("Flying Cars", EffectCategory.VEHICLE, "vehs_flyingcars", true)},
-            {EffectType.EFFECT_MISC_LESTER, new EffectInfo("Pwned", EffectCategory.MISC, "misc_lester", true, true)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo("Roll Credits", EffectCategory.MISC, "misc_credits", true, true)},
             {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo("Earthquake", EffectCategory.MISC, "misc_earthquake", true, true)},
             {EffectType.EFFECT_TP_FRONT, new EffectInfo("Teleport Player A Few Meters", EffectCategory.PLAYER, "player_tpfront")},
@@ -504,7 +504,6 @@ namespace ConfigApp
             {EffectType.EFFECT_PHONES, new EffectInfo("Whose Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true)},
             {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo("Midas Touch", EffectCategory.PLAYER, "misc_midas", true)},
             {EffectType.EFFECT_SPAWN_RANDOM_HOSTILE, new EffectInfo("Spawn Random Enemy", EffectCategory.PEDS, "peds_spawnrandomhostile")},
-            {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo("No Braking Allowed", EffectCategory.VEHICLE, "playerveh_nobrakes", true)},
             {EffectType.EFFECT_PLAYER_PORTAL_GUN, new EffectInfo("Portal Guns", EffectCategory.PEDS, "peds_portal_gun", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo("Fireworks!", EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_SPAWN_BALLA_SQUAD, new EffectInfo("Spawn Balla Squad", EffectCategory.PEDS, "peds_spawnballasquad")},
@@ -516,7 +515,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_FORCEFIELD, new EffectInfo("Forcefield", EffectCategory.PLAYER, "player_forcefield", true, true)},
             {EffectType.EFFECT_MISC_OIL_LEAKS, new EffectInfo("Oil Trails", EffectCategory.MISC, "misc_oilleaks", true)},
             {EffectType.EFFECT_PEDS_GUNSMOKE, new EffectInfo("Gunsmoke", EffectCategory.PEDS, "peds_gunsmoke", true)},
-            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true)},
+            {EffectType.EFFECT_PLAYER_KEEP_RUNNING, new EffectInfo("Help My W Key Is Stuck", EffectCategory.PLAYER, "player_keeprunning", true, true)},
             {EffectType.EFFECT_VEH_WEAPONS, new EffectInfo("Vehicles Shoot Rockets", EffectCategory.VEHICLE, "veh_weapons", true)},
             {EffectType.EFFECT_MISC_AIRSTRIKE, new EffectInfo("Airstrike Inbound", EffectCategory.MISC, "misc_airstrike", true)},
             {EffectType.EFFECT_PEDS_MERCENARIES, new EffectInfo("Mercenaries", EffectCategory.PEDS, "peds_mercenaries", true)},
@@ -550,7 +549,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_GRAVITY,  new EffectInfo("Gravity Field", EffectCategory.PLAYER, "player_gravity", true, true)},
             {EffectType.EFFECT_VEHS_BOUNCY,  new EffectInfo("Bouncy Vehicles", EffectCategory.VEHICLE, "veh_bouncy", true, false)},
             {EffectType.EFFECT_PEDS_STOP_AND_STARE, new EffectInfo("Stop And Stare", EffectCategory.PEDS, "peds_stop_stare")},
-            {EffectType.EFFECT_PEDS_FLIP,  new EffectInfo("Spinning Peds", EffectCategory.PEDS, "peds_flip", true)},
+            {EffectType.EFFECT_PEDS_FLIP,  new EffectInfo("Spinning Peds", EffectCategory.PEDS, "peds_flip", true, true)},
             {EffectType.EFFECT_PLAYER_PACIFIST,  new EffectInfo("Pacifist", EffectCategory.PLAYER, "player_pacifist", true, false)},
             {EffectType.EFFECT_PEDS_BUSBOIS,  new EffectInfo("Bus Bois", EffectCategory.PEDS, "peds_busbois")},
             {EffectType.EFFECT_PLAYER_DEAD_EYE,  new EffectInfo("Dead Eye", EffectCategory.PLAYER, "player_dead_eye", true)},
@@ -575,7 +574,8 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
-            {EffectType.EFFECT_PEDS_HANDS_UP,  new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")}
+            {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PEDS_HANDS_UP, new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")}
         };
     }
 }
