@@ -39,7 +39,7 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)
 
 	if (weaponHash)
 	{
-		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true); // give the alien an up n atomizer
+		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
 	}
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
