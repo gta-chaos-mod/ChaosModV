@@ -34,7 +34,7 @@ Vector3 Stores[] = {
     { -659.7f, -933.34f, 21.83f },      // Ammunition (Cypress Flats)
     { -1304.25f, -397.22f, 36.70f },    // Ammunition (MorningWood)
     { 253.42f, -53.13f, 69.94f },       // Ammunition (Hawick)
-    { 2565.4f, 292.08f, 108.63f },      // Ammunition (Montañas Tataviam)
+    { 2565.4f, 292.08f, 108.63f },      // Ammunition (MontaÃ±as Tataviam)
     { 1693.57f, 3763.2f, 34.71f },      // Ammunition (Sandy Shores)
     { -330.04f, 6087.03f, 31.45f },     // Ammunition (Sandy Shores)
     { -1117.48f, 2701.36f, 18.55f },    // Ammunition (Sandy Shores)
@@ -62,4 +62,10 @@ static void OnStart()
     TeleportPlayer(Stores[g_random.GetRandomInt(0, 42)]);
 }
 
-static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, nullptr, nullptr);
+static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo
+	{
+		.Name = "Teleport to Random Store",
+		.Id = "tp_random_store"
+        .EffectGroup = EffectGroup::TELEPORT
+	}
+);
