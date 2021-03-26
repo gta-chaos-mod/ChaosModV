@@ -455,6 +455,21 @@ void EffectDispatcher::ClearActiveEffects(EffectIdentifier exclude)
 	}
 }
 
+void EffectDispatcher::ClearMostRecentEffect()
+{
+	if (!m_activeEffects.empty())
+	{
+		const ActiveEffect& mostRecentEffect = m_activeEffects[m_activeEffects.size() - 1];
+
+		if (mostRecentEffect.Timer > 0)
+		{
+			ThreadManager::StopThread(mostRecentEffect.ThreadId);
+
+			m_activeEffects.erase(m_activeEffects.end() - 1);
+		}
+	}
+}
+
 void EffectDispatcher::Reset()
 {
 	ClearEffects();

@@ -227,6 +227,8 @@ void Main::Loop()
 
 	ThreadManager::ClearThreads();
 
+	FailsafeManager::Reset();
+
 	Init();
 
 	while (true)
@@ -273,6 +275,8 @@ void Main::Loop()
 					}
 				}
 			}
+
+			FailsafeManager::Run();
 
 			if (m_clearAllEffects)
 			{

@@ -288,6 +288,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsCruiseControl.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="FailsafeManager.cpp" />
     <ClCompile Include="LuaManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="Effects\MetaEffectInfo.h" />
     <ClInclude Include="Effects\EffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
+    <ClInclude Include="FailsafeManager.h" />
     <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />

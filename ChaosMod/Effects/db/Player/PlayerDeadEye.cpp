@@ -90,7 +90,7 @@ static void OnTick()
 							for (int id : boneIds)
 							{
 								Vector3 boneCoord = GET_PED_BONE_COORDS(entityHandle, id, 0, 0, 0);
-								float distance = hitCoords.distanceTo(boneCoord);
+								float distance = hitCoords.DistanceTo(boneCoord);
 								if (bestBone < 0 || bestDistance < 0 || distance < bestDistance)
 								{
 									bestDistance = distance;
