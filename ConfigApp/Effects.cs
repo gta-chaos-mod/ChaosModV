@@ -305,6 +305,7 @@ namespace ConfigApp
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
             EFFECT_VEHS_CRUISE_CONTROL,
+            EFFECT_PEDS_SPAWN_BIKER,
             _EFFECT_ENUM_MAX
         }
 
@@ -574,6 +575,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
         };
     }
 }

@@ -227,6 +227,7 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
@@ -352,6 +353,7 @@
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Logging.h" />
+    <ClInclude Include="Util\Peds.h" />
     <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
