@@ -41,6 +41,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart, EffectInfo
 	{
 		.Name = "Spawn Dance Troupe",
-		.Id = "peds_spawndancingapes"
+		.Id = "peds_spawndancingapes",
+		.EffectGroup = EffectGroup::PEDS
 	}
 );

@@ -64,6 +64,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_SPAWN_IMPOTENTRAGE, OnStart, EffectInfo
 	{
 		.Name = "Spawn Impotent Rage",
-		.Id = "peds_spawnimrage"
+		.Id = "peds_spawnimrage",
+		.EffectGroup = EffectGroup::PEDS
 	}
 );

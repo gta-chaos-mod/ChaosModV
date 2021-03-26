@@ -11,6 +11,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_STRIP_WEAPONS, OnStart, EffectInfo
 	{
 		.Name = "Remove Weapons From Everyone",
-		.Id = "peds_remweps"
+		.Id = "peds_remweps",
+		.EffectGroup = EffectGroup::WEAPONS
 	}
 );
