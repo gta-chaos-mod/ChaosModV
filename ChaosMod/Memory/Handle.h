@@ -43,6 +43,8 @@ public:
 			Handle handle = At(1);
 			return handle.At(handle.Value<DWORD>()).At(4);
 		}
+
+		return 0;
 	}
 
 private:

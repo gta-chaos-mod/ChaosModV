@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
+using System.Security;
+using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -58,21 +58,36 @@ namespace ConfigApp
             ParseEffectsFile();
 
             InitTwitchTab();
+
+            // Check write permissions
+            try
+            {
+                if (!File.Exists(".writetest"))
+                {
+                    using (File.Create(".writetest"))
+                    {
+                    
+                    }
+
+                    File.Delete(".writetest");
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
+                    "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                Application.Current.Shutdown();
+            }
         }
 
-        void CheckForUpdates()
+        private async void CheckForUpdates()
         {
             HttpClient httpClient = new HttpClient();
 
-            Task<string> task = httpClient.GetStringAsync("https://ducky.rivinshosting.com/chaos/version.txt");
-            while (!task.IsCompleted)
+            try
             {
-
-            }
-
-            if (!task.IsFaulted)
-            {
-                string newVersion = task.Result;
+                string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
 
                 if (Info.VERSION != newVersion)
                 {
@@ -82,6 +97,10 @@ namespace ConfigApp
                 {
                     update_available_label.Content = "You are on the newest version of the mod!";
                 }
+            }
+            catch (HttpRequestException)
+            {
+                update_available_label.Content = "Unable to check for new updates!";
             }
         }
 
@@ -107,7 +126,6 @@ namespace ConfigApp
             misc_user_effects_random_seed.Text = m_configFile.ReadValue("Seed");
             misc_user_effects_timed_short_dur.Text = m_configFile.ReadValue("EffectTimedShortDur", "30");
             misc_user_effects_clear_enable.IsChecked = m_configFile.ReadValueBool("EnableClearEffectsShortcut", true);
-            misc_user_effects_twice_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTwiceInRow", false);
             misc_user_effects_drawtimer_disable.IsChecked = m_configFile.ReadValueBool("DisableTimerBarDraw", false);
             misc_user_effects_drawtext_disable.IsChecked = m_configFile.ReadValueBool("DisableEffectTextDraw", false);
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
@@ -126,6 +144,11 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+
+            // Meta Effects
+            meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
+            meta_effects_timed_dur.Text = m_configFile.ReadValue("MetaEffectDur", "95");
+            meta_effects_short_timed_dur.Text = m_configFile.ReadValue("MetaShortEffectDur", "65");
         }
 
         private void WriteConfigFile()
@@ -135,7 +158,6 @@ namespace ConfigApp
             m_configFile.WriteValue("Seed", misc_user_effects_random_seed.Text);
             m_configFile.WriteValue("EffectTimedShortDur", misc_user_effects_timed_short_dur.Text);
             m_configFile.WriteValue("EnableClearEffectsShortcut", misc_user_effects_clear_enable.IsChecked.Value);
-            m_configFile.WriteValue("DisableEffectTwiceInRow", misc_user_effects_twice_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableTimerBarDraw", misc_user_effects_drawtimer_disable.IsChecked.Value);
             m_configFile.WriteValue("DisableEffectTextDraw", misc_user_effects_drawtext_disable.IsChecked.Value);
             m_configFile.WriteValue("EnableToggleModShortcut", misc_user_toggle_mod_shortcut.IsChecked.Value);
@@ -145,6 +167,11 @@ namespace ConfigApp
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
 
+            // Meta Effects
+            m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
+            m_configFile.WriteValue("MetaEffectDur", meta_effects_timed_dur.Text);
+            m_configFile.WriteValue("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
+            
             m_configFile.WriteFile();
         }
 
@@ -156,7 +183,6 @@ namespace ConfigApp
             twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
             twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
             twitch_user_channel_oauth.Password = m_twitchFile.ReadValue("TwitchChannelOAuth");
-            twitch_user_poll_passphrase.Text = m_twitchFile.ReadValue("TwitchVotingPollPass");
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
@@ -170,7 +196,6 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
             m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
             m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
-            m_twitchFile.WriteValue("TwitchVotingPollPass", twitch_user_poll_passphrase.Text);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
             m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
@@ -275,6 +300,7 @@ namespace ConfigApp
             TreeMenuItem timeParentItem = new TreeMenuItem("Time");
             TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
             TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
+            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
 
             SortedDictionary<string, Tuple<EffectType, EffectCategory>> sortedEffects = new SortedDictionary<string, Tuple<EffectType, EffectCategory>>();
 
@@ -312,6 +338,9 @@ namespace ConfigApp
                     case EffectCategory.MISC:
                         miscParentItem.AddChild(menuItem);
                         break;
+                    case EffectCategory.META:
+                        metaParentItem.AddChild(menuItem);
+                        break;
                 }
             }
 
@@ -322,6 +351,10 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(timeParentItem);
             effects_user_effects_tree_view.Items.Add(weatherParentItem);
             effects_user_effects_tree_view.Items.Add(miscParentItem);
+
+            meta_effects_tree_view.Items.Clear();
+            meta_effects_tree_view.Items.Add(metaParentItem);
+            
         }
 
         void InitTwitchTab()
@@ -339,8 +372,6 @@ namespace ConfigApp
             twitch_user_channel_oauth.IsEnabled = agreed;
             twitch_user_user_name_label.IsEnabled = agreed;
             twitch_user_user_name.IsEnabled = agreed;
-            twitch_user_poll_passphrase_label.IsEnabled = agreed;
-            twitch_user_poll_passphrase.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting_label.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_overlay_mode_label.IsEnabled = agreed;
@@ -351,30 +382,6 @@ namespace ConfigApp
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable_label.IsEnabled = agreed;
-
-            // Ensure correct layout / widget properties if poll system is enabled
-            // disable for now
-            if (File.Exists(".twitchpoll") && false)
-            {
-                twitch_user_poll_passphrase_label.Visibility = Visibility.Visible;
-                twitch_user_poll_passphrase.Visibility = Visibility.Visible;
-
-                twitch_user_channel_name_label.Visibility = Visibility.Hidden;
-                twitch_user_channel_name.Visibility = Visibility.Hidden;
-                twitch_user_user_name_label.Visibility = Visibility.Hidden;
-                twitch_user_user_name.Visibility = Visibility.Hidden;
-                twitch_user_channel_oauth_label.Visibility = Visibility.Hidden;
-                twitch_user_channel_oauth.Visibility = Visibility.Hidden;
-
-                twitch_user_overlay_mode_label.IsEnabled = false;
-                twitch_user_overlay_mode.IsEnabled = false;
-                twitch_user_chance_system_enable_label.IsEnabled = false;
-                twitch_user_chance_system_enable.IsEnabled = false;
-                twitch_user_chance_system_retain_chance_enable_label.IsEnabled = false;
-                twitch_user_chance_system_retain_chance_enable.IsEnabled = false;
-                twitch_user_random_voteable_enable.IsEnabled = false;
-                twitch_user_random_voteable_enable_label.IsEnabled = false;
-            }
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -398,12 +405,16 @@ namespace ConfigApp
             WriteTwitchFile();
             WriteEffectsFile();
 
+            // Reload saved config to show the "new" (saved) settings
+            ParseConfigFile();
+            ParseTwitchFile();
+
             MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void user_reset_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your Config?", "ChaosModV",
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your config?", "ChaosModV",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
@@ -426,7 +437,7 @@ namespace ConfigApp
 
                 Init();
 
-                MessageBox.Show("Config has been set back to default!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Config has been reverted to default settings!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -485,6 +496,11 @@ namespace ConfigApp
         private void contribute_donate_click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://paypal.me/EmrCue");
+        }
+
+        private void contribute_discord_click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
         }
     }
 }

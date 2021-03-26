@@ -7,7 +7,7 @@ static void OnTick()
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GetTickCount64();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
@@ -41,4 +41,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_VEHICLE_RAIN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_VEHICLE_RAIN, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Vehicle Rain",
+		.Id = "misc_vehicle_rain",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

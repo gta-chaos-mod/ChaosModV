@@ -49,4 +49,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Random Traffic",
+		.Id = "veh_randtraffic",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -47,9 +47,25 @@ static void OnTick()
 			{
 				rot.y += 1.0;
 			}
+
+			if (IS_CONTROL_PRESSED(0, 111)) //Tilt Down
+			{
+				rot.x -= 1.0;
+			}
+
+			if (IS_CONTROL_PRESSED(0, 112)) //Tilt Up
+			{
+				rot.x += 1.0;
+			}
 			SET_ENTITY_ROTATION(veh, rot.x, rot.y, rot.z, 2, 1);
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_FLYING_CAR, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_FLYING_CAR, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Flying Cars",
+		.Id = "vehs_flyingcars",
+		.IsTimed = true
+	}
+);

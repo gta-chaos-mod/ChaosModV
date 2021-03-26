@@ -10,8 +10,8 @@ static void OnStop()
 
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -65,4 +65,10 @@ static void OnTick()
 	SET_PED_CONFIG_FLAG(PLAYER_PED_ID(), 292, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FROZEN, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_FROZEN, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Peds Are Brainless",
+		.Id = "peds_frozen",
+		.IsTimed = true
+	}
+);

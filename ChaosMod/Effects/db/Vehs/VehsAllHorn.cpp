@@ -8,4 +8,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_HORN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEHS_HORN, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "All Vehicles Honk",
+		.Id = "vehs_honkconstant",
+		.IsTimed = true
+	}
+);

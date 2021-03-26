@@ -31,33 +31,22 @@ static std::map<std::string, std::vector<int>> actionKeys = {
 static int scaleForm = 0;
 static int lastTime = 0;
 static int waitTime = 2000;
+static bool dead = false;
 
 static std::string action;
 
 static bool opposite;
 
-static void OnStart()
+static void ShowPopup()
 {
-	action = actions[g_random.GetRandomInt(0, actions.size() - 1)];
-	
-	int rand_int = g_random.GetRandomInt(0, 1);
-
 	std::string message = "Simeon Says: ";
-	
-	if (rand_int == 0)
+
+	if (opposite)
 	{
-		opposite = false;
-	}
-	else
-	{
-		opposite = true;
 		message.append("Don't ");
 	}
 
 	message.append(action);
-
-	scaleForm = 0;
-	lastTime = 0;
 
 	scaleForm = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
@@ -77,7 +66,27 @@ static void OnStart()
 		DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);
 	}
 	SET_TIME_SCALE(1);
-	scaleForm = 0;
+}
+
+static void OnStart()
+{
+	action = actions[g_random.GetRandomInt(0, actions.size() - 1)];
+	
+	int rand_int = g_random.GetRandomInt(0, 1);
+
+	if (rand_int == 0)
+	{
+		opposite = false;
+	}
+	else
+	{
+		opposite = true;
+	}
+
+	lastTime = 0;
+	dead = false;
+
+	ShowPopup();
 }
 
 static void OnTick()
@@ -112,7 +121,17 @@ static void OnTick()
 		}
 	}
 
-	if (kill && !IS_PED_DEAD_OR_DYING(playerPed, false))
+	if (IS_PED_DEAD_OR_DYING(playerPed, false) || !IS_SCREEN_FADED_IN())
+	{
+		dead = true;
+	}
+	else if (dead)
+	{
+		ShowPopup();
+
+		dead = false;
+	}
+	else if (kill)
 	{
 		Vector3 pos = GET_ENTITY_COORDS(playerPed, false);
 		SET_ENTITY_HEALTH(playerPed, 0, 0);
@@ -120,4 +139,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Simeon Says",
+		.Id = "player_simeonsays",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -15,4 +15,10 @@ static void OnTick()
 		playerPos.y + g_random.GetRandomInt(-20, 20), playerPos.z + g_random.GetRandomInt(5, 10), 0, 1000, model, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_MONEYDROPS, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_MONEYDROPS, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Money Rain",
+		.Id = "player_moneydrops",
+		.IsTimed = true
+	}
+);

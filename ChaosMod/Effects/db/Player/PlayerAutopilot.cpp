@@ -90,8 +90,8 @@ static void OnTick()
 	}
 
 	// Run every 300 ms
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 	if (lastTick > curTick - 300)
 	{
 		return;
@@ -343,4 +343,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_AUTOPILOT, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_AUTOPILOT, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Autopilot",
+		.Id = "player_break",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

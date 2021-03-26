@@ -27,4 +27,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_RAMPJAM, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_RAMPJAM, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Ramp Jam (Press Jump In Vehicle)",
+		.Id = "misc_rampjam",
+		.IsTimed = true
+	}
+);

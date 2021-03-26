@@ -4,7 +4,7 @@ static void OnStop()
 {
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), 1.f);
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_DEAD_OR_DYING(ped, true))
 		{
@@ -17,7 +17,7 @@ static void OnTick()
 {
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_DEAD_OR_DYING(ped, true) && GET_ENTITY_HEALTH(ped) > 101)
 		{
@@ -27,4 +27,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "One Hit KO",
+		.Id = "player_ohko",
+		.IsTimed = true
+	}
+);

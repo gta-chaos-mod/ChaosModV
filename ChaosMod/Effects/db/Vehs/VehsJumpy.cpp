@@ -2,8 +2,8 @@
 
 static void OnTick()
 {
-	static auto lastTick = GetTickCount64();
-	auto curTick = GetTickCount64();
+	static auto lastTick = GET_GAME_TIMER();
+	auto curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 100)
 	{
@@ -19,4 +19,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Jumpy Vehicles",
+		.Id = "vehs_jumpy",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

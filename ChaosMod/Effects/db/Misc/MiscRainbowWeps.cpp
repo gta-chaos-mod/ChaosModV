@@ -2,8 +2,8 @@
 
 static void OnTick()
 {
-	static auto lastTick = GetTickCount64();
-	auto curTick = GetTickCount64();
+	static auto lastTick = GET_GAME_TIMER();
+	auto curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 100)
 	{
@@ -26,4 +26,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RAINBOWWEPS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RAINBOWWEPS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Rainbow Weapons",
+		.Id = "peds_rainbowweps",
+		.IsTimed = true
+	}
+);

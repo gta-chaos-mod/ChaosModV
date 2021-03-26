@@ -14,4 +14,10 @@ static void OnTick()
 	SET_SUPER_JUMP_THIS_FRAME(player);
 }
 
-static RegisterEffect registerEffect(EFFECT_SUPER_RUN, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_SUPER_RUN, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Super Run & Super Jump",
+		.Id = "player_superrun",
+		.IsTimed = true 
+	}
+);

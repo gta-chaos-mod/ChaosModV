@@ -29,8 +29,8 @@ static void OnTick()
 		m_savedPlayerVeh = playerVeh;
 	}
 
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 curTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 curTick = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 2000)
 	{
@@ -76,4 +76,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FOLLOW_PLAYER, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_FOLLOW_PLAYER, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "You Are Famous",
+		.Id = "player_famous",
+		.IsTimed = true
+	}
+);

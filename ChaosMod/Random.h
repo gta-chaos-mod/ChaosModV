@@ -20,6 +20,11 @@ public:
 		return distr(random);
 	}
 
+	inline float GetRandomFloat(float lower, float upper) {
+		std::uniform_real_distribution<float> distr(lower, upper);
+		return distr(random);
+	}
+
 private:
 	std::random_device random_device;
 	std::mt19937 random = std::mt19937(random_device());

@@ -1,19 +1,31 @@
 #include <stdafx.h>
 
+#include "Memory/Hooks/EntityCoordsHook.h"
+
 static void OnStartLSIA()
 {
 	TeleportPlayer(-1388.6f, -3111.61f, 13.94f);
 }
 
-static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA);
-
+static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectInfo
+	{
+		.Name = "Teleport To LS Airport",
+		.Id = "tp_lsairport",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 static void OnStartMazeTower()
 {
 	TeleportPlayer(-75.7f, -818.62f, 326.16f);
 }
 
-static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower);
-
+static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, EffectInfo
+	{
+		.Name = "Teleport To Top Of Maze Bank Tower",
+		.Id = "tp_mazebanktower",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 static void OnStartFortZancudo()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
@@ -26,8 +38,13 @@ static void OnStartFortZancudo()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo);
-
+static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo, EffectInfo
+	{
+		.Name = "Teleport To Fort Zancudo",
+		.Id = "tp_fortzancudo",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 static void OnStartMountChilliad()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
@@ -40,15 +57,25 @@ static void OnStartMountChilliad()
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad);
-
+static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad, EffectInfo
+	{
+		.Name = "Teleport To Mount Chiliad",
+		.Id = "tp_mountchilliad",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 static void OnStartSkyFall()
 {
 	TeleportPlayer(935.f, 3800.f, 2300.f);
 }
 
-static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall);
-
+static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectInfo
+	{
+		.Name = "Teleport To Heaven",
+		.Id = "tp_skyfall",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 static void OnStartWaypoint()
 {
 	Vector3 coords;
@@ -120,8 +147,12 @@ static void OnStartWaypoint()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint);
-
+static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint, EffectInfo
+	{
+		.Name = "Teleport To Waypoint",
+		.Id = "player_tptowaypoint"
+	}
+);
 static void OnStartFront()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -130,8 +161,12 @@ static void OnStartFront()
 	TeleportPlayer(newPos.x, newPos.y, newPos.z);
 }
 
-static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront);
-
+static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront, EffectInfo
+	{
+		.Name = "Teleport Player A Few Meters",
+		.Id = "player_tpfront"
+	}
+);
 static void OnStartRandom()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -168,8 +203,13 @@ static void OnStartRandom()
 	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
 }
 
-static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom);
-
+static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
+	{
+		.Name = "Teleport To Random Location",
+		.Id = "tp_random",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);
 
 static void OnStartMission()
 {
@@ -213,4 +253,64 @@ static void OnStartMission()
 	}
 }
 
-static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission);
+static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, EffectInfo
+	{
+		.Name = "Teleport To Random Mission",
+		.Id = "tp_mission"
+	}
+);
+static void OnStartFakeTp()
+{
+	static const Vector3 tpLocations[] =
+	{
+		{ -1388.6f, -3111.61f, 13.94f }, // LSIA
+		{ -75.7f, -818.62f, 326.16f }, // Maze Tower
+		{ -2267.89f, 3121.04f, 32.5f }, // Fort Zancudo
+		{ 503.33f, 5531.91f, 777.45f }, // Mount Chilliad
+		{ 935.f, 3800.f, 2300.f } // Heaven
+	};
+
+	Player player = PLAYER_ID();
+	Ped playerPed = PLAYER_PED_ID();
+	Vehicle playerVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : 0;
+	
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+	Hooks::EnableFakeTpHook();
+
+	SET_ENTITY_INVINCIBLE(playerPed, true);
+	if (playerVeh)
+	{
+		SET_ENTITY_INVINCIBLE(playerVeh, true);
+	}
+
+	SET_PLAYER_WANTED_LEVEL(player, 0, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+	SET_MAX_WANTED_LEVEL(0);
+
+	TeleportPlayer(tpLocations[g_random.GetRandomInt(0, 4)]);
+
+	WAIT(g_random.GetRandomInt(3500, 6000));
+
+	TeleportPlayer(playerPos);
+
+	WAIT(0);
+
+	SET_ENTITY_INVINCIBLE(playerPed, false);
+	if (playerVeh)
+	{
+		SET_ENTITY_INVINCIBLE(playerVeh, false);
+	}
+
+	SET_MAX_WANTED_LEVEL(5);
+
+	Hooks::DisableFakeTpHook();
+}
+
+static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp, EffectInfo
+	{
+		.Name = "Fake Teleport",
+		.Id = "tp_fake",
+		.EffectGroup = EffectGroup::TELEPORT
+	}
+);

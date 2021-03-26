@@ -69,7 +69,7 @@ static void OnTick()
 				Vector3 vel = GET_ENTITY_VELOCITY(toTeleport);
 				float forward = GET_ENTITY_SPEED(toTeleport);
 
-				SET_ENTITY_COORDS(toTeleport, impactCoords.x, impactCoords.y, impactCoords.z, false, false, false, false);
+				SET_ENTITY_COORDS(toTeleport, impactCoords.x, impactCoords.y, impactCoords.z, true, true, true, false);
 				SET_ENTITY_VELOCITY(toTeleport, vel.x, vel.y, vel.z);
 
 				if (IS_ENTITY_A_VEHICLE(toTeleport))
@@ -81,4 +81,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Portal Guns",
+		.Id = "peds_portal_gun",
+		.IsTimed = true
+	}
+);

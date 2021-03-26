@@ -36,4 +36,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_GTAO_TRAFFIC, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_GTAO_TRAFFIC, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Traffic Magnet",
+		.Id = "traffic_gtao",
+		.IsTimed = true
+	}
+);

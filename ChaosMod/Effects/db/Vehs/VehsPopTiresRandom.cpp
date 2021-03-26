@@ -6,8 +6,8 @@
 
 static void OnTick()
 {
-	static DWORD64 lastTick = GetTickCount64();
-	DWORD64 currentTick = GetTickCount64();
+	static DWORD64 lastTick = GET_GAME_TIMER();
+	DWORD64 currentTick = GET_GAME_TIMER();
 
 	if (lastTick < currentTick - 1750) // 1750MS = every 1.75 seconds.
 	{
@@ -31,4 +31,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Random Tire Popping",
+		.Id = "veh_poptire",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

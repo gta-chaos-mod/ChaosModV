@@ -39,11 +39,11 @@ static void OnStart()
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}
 
-	DWORD64 lastTick = GetTickCount64();
+	DWORD64 lastTick = GET_GAME_TIMER();
 
 	while (!REQUEST_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES", true, 0))
 	{
-		DWORD64 curTick = GetTickCount64();
+		DWORD64 curTick = GET_GAME_TIMER();
 
 		if (lastTick < curTick - 500)
 		{
@@ -61,4 +61,10 @@ static void OnStart()
 	RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_IMPOTENTRAGE, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_IMPOTENTRAGE, OnStart, EffectInfo
+	{
+		.Name = "Spawn Impotent Rage",
+		.Id = "peds_spawnimrage",
+		.EffectGroup = EffectGroup::PEDS
+	}
+);
