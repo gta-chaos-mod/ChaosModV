@@ -65,7 +65,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo
 	{
 		.Name = "Teleport to Random Store",
-		.Id = "tp_random_store"
-        .EffectGroup = EffectGroup::TELEPORT
+		.Id = "player_tp_store"
+              .EffectGroup = EffectGroup::TELEPORT
 	}
 );
