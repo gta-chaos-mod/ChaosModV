@@ -46,32 +46,30 @@ namespace FailsafeManager
 			{
 				s_failCounts = 0;
 			}
-			else
+
+			switch (++s_failCounts)
 			{
-				switch (++s_failCounts)
-				{
-				case 3:
-					LOG("[3 Fails] Clear most recent effect");
+			case 3:
+				LOG("[3 Fails] Clear most recent effect");
 
-					g_effectDispatcher->ClearMostRecentEffect();
+				g_effectDispatcher->ClearMostRecentEffect();
 
-					break;
-				case 4:
-					LOG("[4 Fails] Clear all spawned entities within 500 meters");
+				break;
+			case 4:
+				LOG("[4 Fails] Clear all spawned entities within 500 meters");
 
-					ClearEntityPool(500);
+				ClearEntityPool(500);
 
-					break;
-				case 5:
-					LOG("[5 Fails] Clear all effects and spawned entities");
-					
-					g_effectDispatcher->ClearEffects();
-					ClearEntityPool();
+				break;
+			case 5:
+				LOG("[5 Fails] Clear all effects and spawned entities");
 
-					s_failCounts = 0;
+				g_effectDispatcher->ClearEffects();
+				ClearEntityPool();
 
-					break;
-				}
+				s_failCounts = 0;
+
+				break;
 			}
 
 			s_failTimestamp = curTimestamp;
