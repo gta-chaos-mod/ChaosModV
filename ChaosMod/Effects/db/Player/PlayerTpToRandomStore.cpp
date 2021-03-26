@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-Vector3 Stores[] = {
+static Vector3 Stores[] = {
 
     // Convenience Stores
     { 372.29217529297f, 326.39370727539f, 103.56636047363f },   // 247 Clinton
