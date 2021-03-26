@@ -264,7 +264,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
