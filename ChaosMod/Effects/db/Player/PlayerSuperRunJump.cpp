@@ -18,6 +18,7 @@ static RegisterEffect registerEffect(EFFECT_SUPER_RUN, nullptr, OnStop, OnTick, 
 	{
 		.Name = "Super Run & Super Jump",
 		.Id = "player_superrun",
-		.IsTimed = true 
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_NO_SPRINT_JUMP }
 	}
 );

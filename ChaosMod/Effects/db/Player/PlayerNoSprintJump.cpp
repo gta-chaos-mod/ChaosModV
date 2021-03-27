@@ -10,6 +10,7 @@ static RegisterEffect registerEffect(EFFECT_NO_SPRINT_JUMP, nullptr, nullptr, On
 	{
 		.Name = "No Sprint & No Jump",
 		.Id = "player_nosprint",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SUPER_RUN }
 	}
 );
