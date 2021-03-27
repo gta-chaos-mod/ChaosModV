@@ -26,6 +26,7 @@ public:
 	void Tick();
 	
 private:
+	bool m_receivedHello = false;
 	bool m_enableTwitchVoting;
 	int m_twitchSecsBeforeVoting;
 	bool m_enableTwitchPollVoting = false;

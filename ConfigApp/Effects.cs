@@ -311,7 +311,11 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
+            EFFECT_PLAYER_BINOCULARS,
+            EFFECT_PEDS_SLIPPERY_PEDS,
             EFFECT_VEHS_CRUISE_CONTROL,
+            EFFECT_PLAYER_AIMBOT,
+            EFFECT_PEDS_SPAWN_BIKER,
             _EFFECT_ENUM_MAX
         }
 
@@ -580,7 +584,11 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo(getTranslation("misc_fps_limit"), EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo(getTranslation("meta_nochaos"), EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo(getTranslation("peds_roasting"), EffectCategory.PEDS, "peds_roasting", true, true)},
-            {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo(getTranslation("peds_roasting"), EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PLAYER_BINOCULARS, new EffectInfo(getTranslation("player_binoculars"), EffectCategory.PLAYER, "player_binoculars", true)},
+            {EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo(getTranslation("peds_slippery_peds"), EffectCategory.PEDS, "peds_slippery_peds", true, true)},
+            {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo(getTranslation("vehs_cruise_control"), EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo(getTranslation("player_aimbot"), EffectCategory.PLAYER, "player_aimbot", true)},
+            {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo(getTranslation("peds_spawn_biker"), EffectCategory.PEDS, "peds_spawn_biker")},
         };
     }
 }

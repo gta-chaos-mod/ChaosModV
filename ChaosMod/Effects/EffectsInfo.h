@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EffectGroup.h"
+#include "EffectGroups.h"
 #include "EffectExecutionType.h"
 
 #include <unordered_map>
@@ -270,7 +270,11 @@ enum EffectType
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
 	EFFECT_PEDS_ROASTING,
+	EFFECT_PLAYER_BINOCULARS,
 	EFFECT_VEHS_CRUISE_CONTROL,
+	EFFECT_PLAYER_AIMBOT,
+	EFFECT_PEDS_SLIPPERY_PEDS,
+	EFFECT_PEDS_SPAWN_BIKER,
 	_EFFECT_ENUM_MAX
 };
 
@@ -281,9 +285,8 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EffectType> IncompatibleWith;
-	EffectGroup EffectGroup = EffectGroup::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
 inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
-inline std::unordered_map<EffectGroup, int> g_effectGroupMemberCount;
