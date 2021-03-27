@@ -69,8 +69,13 @@ static void ParseEffectsFile()
 			}
 		}
 
-		if (!values[0]) // enabled == false?
+		if (!values[0]) // enabled == false
 		{
+			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
+			{
+				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
+			}
+
 			continue;
 		}
 
