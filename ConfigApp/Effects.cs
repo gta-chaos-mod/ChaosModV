@@ -308,6 +308,7 @@ namespace ConfigApp
             EFFECT_PEDS_SLIPPERY_PEDS,
             EFFECT_VEHS_CRUISE_CONTROL,
             EFFECT_PLAYER_AIMBOT,
+            EFFECT_PEDS_SPAWN_BIKER,
             _EFFECT_ENUM_MAX
         }
 
@@ -580,6 +581,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo("Can't tie my shoes", EffectCategory.PEDS, "peds_slippery_peds", true, true)},
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
+            {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
         };
     }
 }
