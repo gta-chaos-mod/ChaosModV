@@ -41,6 +41,7 @@ public:
 	void DispatchRandomEffect(const char* suffix = nullptr);
 	void ClearEffects();
 	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
+	void ClearMostRecentEffect();
 	void Reset();
 	void ResetTimer();
 

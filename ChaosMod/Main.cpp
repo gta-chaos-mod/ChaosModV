@@ -69,8 +69,13 @@ static void ParseEffectsFile()
 			}
 		}
 
-		if (!values[0]) // enabled == false?
+		if (!values[0]) // enabled == false
 		{
+			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
+			{
+				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
+			}
+
 			continue;
 		}
 
@@ -110,7 +115,7 @@ static void ParseEffectsFile()
 			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
 		}
 
-		effectData.EffectGroup = effectInfo.EffectGroup;
+		effectData.EffectGroupType = effectInfo.EffectGroupType;
 
 		g_enabledEffects.emplace(effectType, effectData);
 	}
@@ -227,6 +232,10 @@ void Main::Loop()
 
 	ThreadManager::ClearThreads();
 
+	FailsafeManager::Reset();
+
+	Reset();
+
 	Init();
 
 	while (true)
@@ -273,6 +282,8 @@ void Main::Loop()
 					}
 				}
 			}
+
+			FailsafeManager::Run();
 
 			if (m_clearAllEffects)
 			{
@@ -328,7 +339,7 @@ void Main::Loop()
 
 		if (splashTextTime > 0)
 		{
-			DrawScreenText("Chaos Mod v1.9.0.4 by pongo1231\n\nSee credits.txt for list of contributors",
+			DrawScreenText("Chaos Mod v1.9.1.1 by pongo1231\n\nSee credits.txt for list of contributors",
 				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
 
 #ifdef _DEBUG

@@ -8,9 +8,9 @@ namespace ConfigApp
         [STAThread]
         public static void Main(string[] args)
         {
-            Mutex mutex = new Mutex(false, "com.pongo1231.chaosmodv");
+            Mutex mutex = new Mutex(false, "ChaosModVConfigMutex");
 
-            if (!mutex.WaitOne(TimeSpan.FromSeconds(5), false))
+            if (!mutex.WaitOne(100))
             {
                 return;
             }

@@ -8,7 +8,8 @@ static void OnStartExtraSunny()
 static RegisterEffect registerEffect(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny, EffectInfo
 	{
 		.Name = "Extra Sunny Weather",
-		.Id = "weather_extrasunny"
+		.Id = "weather_extrasunny",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );
 static void OnStartThunder()
@@ -19,7 +20,8 @@ static void OnStartThunder()
 static RegisterEffect registerEffect2(EFFECT_WEATHER_THUNDER, OnStartThunder, EffectInfo
 	{
 		.Name = "Stormy Weather",
-		.Id = "weather_stormy"
+		.Id = "weather_stormy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );
 static void OnStartFoggy()
@@ -30,7 +32,8 @@ static void OnStartFoggy()
 static RegisterEffect registerEffect3(EFFECT_WEATHER_FOGGY, OnStartFoggy, EffectInfo
 	{
 		.Name = "Foggy Weather",
-		.Id = "weather_foggy"
+		.Id = "weather_foggy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );
 static void OnStartNeutral()
@@ -41,7 +44,8 @@ static void OnStartNeutral()
 static RegisterEffect registerEffect4(EFFECT_WEATHER_NEUTRAL, OnStartNeutral, EffectInfo
 	{
 		.Name = "Neutral Weather",
-		.Id = "weather_neutral"
+		.Id = "weather_neutral",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );
 static void OnStartXmas()
@@ -52,7 +56,8 @@ static void OnStartXmas()
 static RegisterEffect registerEffect5(EFFECT_WEATHER_XMAS, OnStartXmas, EffectInfo
 	{
 		.Name = "Snowy Weather",
-		.Id = "weather_snowy"
+		.Id = "weather_snowy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );
 static void OnTickRandom()
@@ -78,6 +83,7 @@ static RegisterEffect registerEffect6(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nul
 	{
 		.Name = "Disco Weather",
 		.Id = "weather_randomizer",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
 	}
 );

@@ -4,7 +4,7 @@ typedef int Ped;
 typedef int Vehicle;
 typedef unsigned long Hash;
 
-void ClearEntityPool();
+void ClearEntityPool(int distance = 0);
 
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading);
 Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading);
