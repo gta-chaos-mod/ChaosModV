@@ -266,6 +266,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
