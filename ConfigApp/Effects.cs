@@ -466,7 +466,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_RANDOMCLOTHES, new EffectInfo("Randomize Player Clothes", EffectCategory.PLAYER, "player_randclothes")},
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("Traffic Magnet", EffectCategory.VEHICLE, "traffic_gtao", true)},
-            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan")},
+            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.PEDS, "spawn_bluesultan")},
             {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")},
             {EffectType.EFFECT_VEHS_FULLACCEL, new EffectInfo("Full Acceleration", EffectCategory.VEHICLE, "traffic_fullaccel", true, true)},
             {EffectType.EFFECT_SPAWN_UFO, new EffectInfo("Spawn UFO", EffectCategory.MISC, "misc_spawnufo")},
