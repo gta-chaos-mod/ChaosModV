@@ -45,6 +45,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 pipeWriter = new StreamWriter(pipe);
                 pipeWriter.AutoFlush = true;
 
+                SendMessageToPipe("hello");
+
                 logger.Information("successfully connected to chaos mod pipe");
 
                 pipeTick.Enabled = true;

@@ -229,6 +229,8 @@ void Main::Loop()
 
 	FailsafeManager::Reset();
 
+	Reset();
+
 	Init();
 
 	while (true)
