@@ -19,4 +19,9 @@ static void OnStart()
 	SET_ENTITY_AS_NO_LONGER_NEEDED(&ramp);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_SUPER_STUNT, OnStart, nullptr, nullptr);
+static RegisterEffect registerEffect(EFFECT_MISC_SUPER_STUNT, OnStart, nullptr, nullptr, EffectInfo
+	{
+		.Name = "Super Stunt",
+		.Id = "misc_superstunt"
+	}
+);

@@ -31,4 +31,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Random Tire Popping",
+		.Id = "veh_poptire",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

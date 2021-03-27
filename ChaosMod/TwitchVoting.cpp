@@ -202,8 +202,7 @@ void TwitchVoting::Tick()
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 		for (auto& pair : g_enabledEffects)
 		{
-			const EffectIdentifier& effectIdentifier = pair.first;
-			EffectData& effectData = pair.second;
+			auto& [effectIdentifier, effectData] = pair;
 
 			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
@@ -224,34 +223,36 @@ void TwitchVoting::Tick()
 				break;
 			}
 
-			int effectsTotalWeight = 0;
+			float totalWeight = 0.f;
 			for (const auto& pair : choosableEffects)
 			{
-				effectsTotalWeight += pair.second.Weight;
+				const EffectData& effectData = pair.second;
+
+				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
+					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
+					: effectData.Weight;
 			}
 
-			int index = g_random.GetRandomInt(0, effectsTotalWeight);
+			float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-			int addedUpWeight = 0;
+			totalWeight = 0.f;
+
 			std::unique_ptr<ChoosableEffect> targetChoice;
 
 			for (auto& pair : choosableEffects)
 			{
-				EffectData& effectData = pair.second;
+				auto& [effectIdentifier, effectData] = pair;
 
-				if (effectData.TimedType == EffectTimedType::TIMED_PERMANENT)
-				{
-					continue;
-				}
+				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
+					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
+					: effectData.Weight;
 
-				addedUpWeight += effectData.Weight;
-
-				if (index <= addedUpWeight)
+				if (chosen <= totalWeight)
 				{
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 					effectData.Weight = 0;
 
-					targetChoice = std::make_unique<ChoosableEffect>(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
+					targetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
 						!m_alternatedVotingRound
 							? i + 1
 							: m_enableTwitchRandomEffectVoteable

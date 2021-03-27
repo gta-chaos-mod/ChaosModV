@@ -412,6 +412,10 @@ namespace ConfigApp
             WriteTwitchFile();
             WriteEffectsFile();
 
+            // Reload saved config to show the "new" (saved) settings
+            ParseConfigFile();
+            ParseTwitchFile();
+
             MessageBox.Show(Lang.get_error("save_complete_msg", lang_list.SelectedIndex.ToString()), "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

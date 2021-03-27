@@ -34,8 +34,12 @@ static void OnStartMaxUpgrades()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades);
-
+static RegisterEffect registerEffect(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades, EffectInfo
+	{
+		.Name = "Add Max Upgrades To Every Vehicle",
+		.Id = "playerveh_maxupgrades"
+	}
+);
 static void OnStartRandomUpgrades()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -73,4 +77,9 @@ static void OnStartRandomUpgrades()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_VEH_RANDOM_UPGRADES, OnStartRandomUpgrades);
+static RegisterEffect registerEffect2(EFFECT_VEH_RANDOM_UPGRADES, OnStartRandomUpgrades, EffectInfo
+	{
+		.Name = "Add Random Upgrades To Every Vehicle",
+		.Id = "playerveh_randupgrades"
+	}
+);
