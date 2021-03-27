@@ -19,6 +19,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_SLIPPERY_PEDS, nullptr, nullptr
 	{
 		.Name = "Can't tie my shoes",
 		.Id = "peds_slippery_peds",
-		.IsTimed = true
+		.IsTimed = true,
+		.IsShortDuration = true
 	}
 );
