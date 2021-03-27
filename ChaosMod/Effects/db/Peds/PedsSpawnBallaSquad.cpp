@@ -50,6 +50,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_BALLA_SQUAD, OnStart, EffectIn
 	{
 		.Name = "Spawn Balla Squad",
 		.Id = "peds_spawnballasquad",
-		.EffectGroupType = EffectGroupType::PEDS
+		.EffectGroupType = EffectGroupType::SPAWN_PEDS
 	}
 );
