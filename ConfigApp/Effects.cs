@@ -309,6 +309,7 @@ namespace ConfigApp
             EFFECT_VEHS_CRUISE_CONTROL,
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
+            EFFECT_PLAYER_BLIMP_STRATS,
             _EFFECT_ENUM_MAX
         }
 
@@ -582,6 +583,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
+            {EffectType.EFFECT_PLAYER_BLIMP_STRATS, new EffectInfo("Blimp Strats", EffectCategory.PLAYER, "player_blimp_strats")},
         };
     }
 }
