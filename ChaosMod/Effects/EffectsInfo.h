@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EffectGroup.h"
+#include "EffectGroups.h"
 #include "EffectExecutionType.h"
 
 #include <unordered_map>
@@ -153,6 +153,7 @@ enum EffectType
 	EFFECT_PLAYER_MONEYDROPS,
 	EFFECT_VEH_TPRANDOMPEDS,
 	EFFECT_PEDS_REVIVE,
+	EFFECT_TP_TO_STORE,
 	EFFECT_SNOW,
 	EFFECT_WHALE_RAIN,
 	EFFECT_VEH_MAX_UPGRADES,
@@ -183,7 +184,6 @@ enum EffectType
 	EFFECT_OHKO_VEHICLES,
 	EFFECT_VEH_SPAM_DOORS,
 	EFFECT_VEH_SPEED_MINIMUM,
-	EFFECT_MISC_LESTER,
 	EFFECT_MISC_CREDITS,
 	EFFECT_MISC_EARTHQUAKE,
 	EFFECT_TP_FRONT,
@@ -199,7 +199,6 @@ enum EffectType
 	EFFECT_PHONES,
 	EFFECT_MIDAS_TOUCH,
 	EFFECT_SPAWN_RANDOM_HOSTILE,
-	EFFECT_VEH_NO_BRAKES,
 	EFFECT_PEDS_PORTAL_GUN,
 	EFFECT_MISC_FIREWORKS,
 	EFFECT_VEH_DESPAWN,
@@ -271,6 +270,7 @@ enum EffectType
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
 	EFFECT_PEDS_ROASTING,
+	EFFECT_PLAYER_BINOCULARS,
 	EFFECT_VEHS_CRUISE_CONTROL,
 	EFFECT_PLAYER_AIMBOT,
 	_EFFECT_ENUM_MAX
@@ -283,9 +283,8 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EffectType> IncompatibleWith;
-	EffectGroup EffectGroup = EffectGroup::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
 inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
-inline std::unordered_map<EffectGroup, int> g_effectGroupMemberCount;

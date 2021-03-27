@@ -72,7 +72,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
@@ -139,7 +139,6 @@
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
@@ -166,6 +165,7 @@
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
@@ -264,10 +264,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
@@ -289,6 +289,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsCruiseControl.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="FailsafeManager.cpp" />
     <ClCompile Include="LuaManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
@@ -317,7 +318,7 @@
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectExecutionType.h" />
-    <ClInclude Include="Effects\EffectGroup.h" />
+    <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="Effects\MetaEffectInfo.h" />
     <ClInclude Include="Effects\EffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
+    <ClInclude Include="FailsafeManager.h" />
     <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
