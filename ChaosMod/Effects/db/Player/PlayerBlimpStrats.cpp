@@ -21,6 +21,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_BLIMP_STRATS, OnStart, nullpt
     {
         .Name = "Blimp Strats",
         .Id = "player_blimp_strats",
-	.EffectGroupType = EffectGroupType::TELEPORT
+        .EffectGroupType = EffectGroupType::TELEPORT
     }
 );
