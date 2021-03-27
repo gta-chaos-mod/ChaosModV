@@ -42,6 +42,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_RANDOM_HOSTILE, OnStart, Effec
 	{
 		.Name = "Spawn Random Enemy",
 		.Id = "peds_spawnrandomhostile",
-		.EffectGroup = EffectGroup::PEDS
+		.EffectGroupType = EffectGroupType::PEDS
 	}
 );

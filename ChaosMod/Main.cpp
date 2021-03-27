@@ -110,7 +110,7 @@ static void ParseEffectsFile()
 			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
 		}
 
-		effectData.EffectGroup = effectInfo.EffectGroup;
+		effectData.EffectGroupType = effectInfo.EffectGroupType;
 
 		g_enabledEffects.emplace(effectType, effectData);
 	}

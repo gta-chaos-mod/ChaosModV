@@ -243,9 +243,7 @@ void TwitchVoting::Tick()
 			{
 				const EffectData& effectData = pair.second;
 
-				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-					: effectData.Weight;
+				totalWeight += GetEffectWeight(effectData);
 			}
 
 			float chosen = g_random.GetRandomFloat(0.f, totalWeight);
@@ -258,9 +256,7 @@ void TwitchVoting::Tick()
 			{
 				auto& [effectIdentifier, effectData] = pair;
 
-				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-					: effectData.Weight;
+				totalWeight += GetEffectWeight(effectData);
 
 				if (chosen <= totalWeight)
 				{

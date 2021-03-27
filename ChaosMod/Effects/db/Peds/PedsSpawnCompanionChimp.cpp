@@ -39,6 +39,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHIMP, OnStart, Effe
 	{
 		.Name = "Spawn Companion Chimp",
 		.Id = "spawn_chimp",
-		.EffectGroup = EffectGroup::PEDS
+		.EffectGroupType = EffectGroupType::PEDS
 	}
 );

@@ -263,7 +263,6 @@
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectExecutionType.h" />
-    <ClInclude Include="Effects\EffectGroup.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\MetaEffectInfo.h" />
     <ClInclude Include="Effects\EffectTimedType.h" />
@@ -284,6 +283,7 @@
     <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\Script.h" />
+    <ClInclude Include="Effects\EffectGroups.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
