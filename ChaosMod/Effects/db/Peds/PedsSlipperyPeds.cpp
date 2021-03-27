@@ -17,7 +17,7 @@ static void OnTick()
 
 static RegisterEffect registerEffect(EFFECT_PEDS_SLIPPERY_PEDS, nullptr, nullptr, OnTick, EffectInfo
 	{
-		.Name = "Can't tie my shoes",
+		.Name = "Can't Tie My Shoes",
 		.Id = "peds_slippery_peds",
 		.IsTimed = true,
 		.IsShortDuration = true
