@@ -409,7 +409,7 @@ namespace ConfigApp
             ParseConfigFile();
             ParseTwitchFile();
 
-            MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void user_reset_Click(object sender, RoutedEventArgs e)
