@@ -20,13 +20,15 @@ static void OnTick()
 		if (IS_VEHICLE_ON_ALL_WHEELS(veh))
 		{
 			float speed = GET_ENTITY_SPEED(veh);
+
 			if (speed > currentVel || speed < currentVel / 2 || speed < 1)
 			{
 				currentVel = speed;
 			}
 			else if (speed < currentVel)
 			{
-				SET_VEHICLE_FORWARD_SPEED(veh, currentVel);
+				bool isReversing = GET_ENTITY_SPEED_VECTOR(veh, true).y < 0;
+				SET_VEHICLE_FORWARD_SPEED(veh, isReversing ? -currentVel : currentVel);
 			}
 		}
 	}

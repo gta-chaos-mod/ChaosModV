@@ -191,9 +191,7 @@ void EffectDispatcher::UpdateMetaEffects()
 				{
 					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-						? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-						: effectData.Weight;
+					totalWeight += GetEffectWeight(effectData);
 
 					availableMetaEffects.push_back(std::make_tuple(effectIdentifier, &pair.second));
 				}
@@ -211,11 +209,9 @@ void EffectDispatcher::UpdateMetaEffects()
 				{
 					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData->Weight;
+					totalWeight += GetEffectWeight(*effectData);
 
-					effectData->Weight += effectData->EffectGroup != EffectGroup::DEFAULT
-						? effectData->Weight / g_effectGroupMemberCount[effectData->EffectGroup]
-						: effectData->Weight;
+					effectData->Weight += effectData->Weight;
 
 					if (!targetEffectIdentifier && chosen <= totalWeight)
 					{
@@ -257,7 +253,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
-	if (effectData.EffectGroup == EffectGroup::DEFAULT)
+	if (effectData.EffectGroupType == EffectGroupType::DEFAULT)
 	{
 		effectData.Weight = effectData.WeightMult;
 	}
@@ -265,7 +261,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	{
 		for (auto& pair : g_enabledEffects)
 		{
-			if (pair.second.EffectGroup == effectData.EffectGroup)
+			if (pair.second.EffectGroupType == effectData.EffectGroupType)
 			{
 				pair.second.Weight = pair.second.WeightMult;
 			}
@@ -395,9 +391,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	{
 		const EffectData& effectData = pair.second;
 
-		totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-			? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-			: effectData.Weight;
+		totalWeight += GetEffectWeight(effectData);
 	}
 
 	float chosen = g_random.GetRandomFloat(0.f, totalWeight);
@@ -409,9 +403,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
-		totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-			? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-			: effectData.Weight;
+		totalWeight += GetEffectWeight(effectData);
 
 		if (chosen <= totalWeight)
 		{

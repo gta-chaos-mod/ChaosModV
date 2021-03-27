@@ -64,6 +64,10 @@ void ClearEntityPool(int distance)
 
 				it = m_entities.erase(it);
 			}
+			else
+			{
+				it++;
+			}
 		}
 		else
 		{

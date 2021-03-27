@@ -304,7 +304,9 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
+            EFFECT_PLAYER_BINOCULARS,
             EFFECT_VEHS_CRUISE_CONTROL,
+            EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
             _EFFECT_ENUM_MAX
         }
@@ -467,7 +469,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_RANDOMCLOTHES, new EffectInfo("Randomize Player Clothes", EffectCategory.PLAYER, "player_randclothes")},
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("Traffic Magnet", EffectCategory.VEHICLE, "traffic_gtao", true)},
-            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan")},
+            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.PEDS, "spawn_bluesultan")},
             {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")},
             {EffectType.EFFECT_VEHS_FULLACCEL, new EffectInfo("Full Acceleration", EffectCategory.VEHICLE, "traffic_fullaccel", true, true)},
             {EffectType.EFFECT_SPAWN_UFO, new EffectInfo("Spawn UFO", EffectCategory.MISC, "misc_spawnufo")},
@@ -574,7 +576,9 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
             {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
+            {EffectType.EFFECT_PLAYER_BINOCULARS, new EffectInfo("Binoculars", EffectCategory.PLAYER, "player_binoculars", true)},
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
         };
     }

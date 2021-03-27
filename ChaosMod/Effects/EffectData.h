@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EffectGroups.h"
 #include "EffectTimedType.h"
 
 #include <string>
@@ -18,5 +19,15 @@ struct EffectData
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
 	bool IsMeta = false;
-	EffectGroup EffectGroup = EffectGroup::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
 };
+
+inline float GetEffectWeight(const EffectData& effectData)
+{
+	EffectGroupType effectGroupType = effectData.EffectGroupType;
+	float effectWeight = effectData.Weight;
+
+	return effectGroupType != EffectGroupType::DEFAULT
+		? effectWeight / g_effectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
+		: effectWeight;
+}
