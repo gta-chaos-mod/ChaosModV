@@ -8,7 +8,8 @@ static void OnStartMorning()
 static RegisterEffect registerEffect1(EFFECT_TIME_MORNING, OnStartMorning, EffectInfo
 	{
 		.Name = "Set Time To Morning",
-		.Id = "time_morning"
+		.Id = "time_morning",
+		.EffectGroupType = EffectGroupType::TIME_CHANGE
 	}
 );
 static void OnStartDay()
@@ -19,7 +20,8 @@ static void OnStartDay()
 static RegisterEffect registerEffect2(EFFECT_TIME_DAY, OnStartDay, EffectInfo
 	{
 		.Name = "Set Time To Daytime",
-		.Id = "time_day"
+		.Id = "time_day",
+		.EffectGroupType = EffectGroupType::TIME_CHANGE
 	}
 );
 static void OnStartEvening()
@@ -30,7 +32,8 @@ static void OnStartEvening()
 static RegisterEffect registerEffect3(EFFECT_TIME_EVENING, OnStartEvening, EffectInfo
 	{
 		.Name = "Set Time To Evening",
-		.Id = "time_evening"
+		.Id = "time_evening",
+		.EffectGroupType = EffectGroupType::TIME_CHANGE
 	}
 );
 static void OnStartNight()
@@ -41,7 +44,8 @@ static void OnStartNight()
 static RegisterEffect registerEffect4(EFFECT_TIME_NIGHT, OnStartNight, EffectInfo
 	{
 		.Name = "Set Time To Night",
-		.Id = "time_night"
+		.Id = "time_night",
+		.EffectGroupType = EffectGroupType::TIME_CHANGE
 	}
 );
 static void OnTickTimelapse()
@@ -53,6 +57,7 @@ static RegisterEffect registerEffect6(EFFECT_QUICK_TIME, nullptr, nullptr, OnTic
 	{
 		.Name = "Timelapse",
 		.Id = "time_quickday",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectGroupType = EffectGroupType::TIME_CHANGE
 	}
 );
