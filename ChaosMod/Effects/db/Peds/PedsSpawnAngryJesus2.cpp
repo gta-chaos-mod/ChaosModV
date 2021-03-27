@@ -61,6 +61,6 @@ static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS2, OnStart, EffectInfo
 	{
 		.Name = "Spawn Extreme Griefer Jesus",
 		.Id = "spawn_grieferjesus2",
-		.EffectGroup = EffectGroup::PEDS
+		.EffectGroupType = EffectGroupType::SPAWN_ENEMY
 	}
 );

@@ -69,8 +69,13 @@ static void ParseEffectsFile()
 			}
 		}
 
-		if (!values[0]) // enabled == false?
+		if (!values[0]) // enabled == false
 		{
+			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
+			{
+				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
+			}
+
 			continue;
 		}
 
@@ -110,7 +115,7 @@ static void ParseEffectsFile()
 			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
 		}
 
-		effectData.EffectGroup = effectInfo.EffectGroup;
+		effectData.EffectGroupType = effectInfo.EffectGroupType;
 
 		g_enabledEffects.emplace(effectType, effectData);
 	}
@@ -228,6 +233,8 @@ void Main::Loop()
 	ThreadManager::ClearThreads();
 
 	FailsafeManager::Reset();
+
+	Reset();
 
 	Init();
 
