@@ -125,6 +125,7 @@ namespace ConfigApp
             {"tp_random", "Teletransporte Aleatorio"},
             {"tp_mission", "Teletransporte A Mision Aleatoria"},
             {"tp_fake", "Teletransporte Falso"},
+            { "player_tp_store", "Teleport to Random Store"},
             {"player_nophone", "Sin Telefono"},
             {"player_tpclosestveh", "Meter Jugador En Vehiculo Mas Cercano"},
             {"playerveh_exit", "Todos Salen De Sus Vehiculos"},
@@ -268,7 +269,6 @@ namespace ConfigApp
             {"vehs_spamdoors", "Puertas Automaticas"},
             {"veh_speed_goal", "Need For Speed"},
             {"vehs_flyingcars", "Coches Voladores"},
-            {"misc_lester", "Pwned"},
             {"misc_credits", "Pasar Los Creditos"},
             {"misc_earthquake", "Terremoto"},
             {"player_tpfront", "Teletransportar Jugador Adelante"},
@@ -284,7 +284,6 @@ namespace ConfigApp
             {"peds_phones", "De Quien Es El Movil?"},
             {"misc_midas", "Toque Dorado"},
             {"peds_spawnrandomhostile", "Spawn Enemigo Aleatorio"},
-            {"playerveh_nobrakes", "Sin Frenos"},
             {"peds_portal_gun", "Armas De Portales"},
             {"misc_fireworks", "Fuegos Artificiales!"},
             {"peds_spawnballasquad", "Spawn Grupo Balla"},
@@ -354,7 +353,12 @@ namespace ConfigApp
             {"vehs_crumble", "Vehiculos Hechos Chatarra"},
             {"misc_fps_limit", "Experiencia De Consola"},
             {"meta_nochaos", "Sin Caos"},
-            {"peds_roasting", "Humillacion"}
+            {"peds_roasting", "Humillacion"},
+            { "player_binoculars", "Prismaticos"},
+            { "peds_slippery_peds", "No puedo atarme los zapatos"},
+            { "vehs_cruise_control", "Control De Crucero"},
+            { "player_aimbot", "Aimbot"},
+            { "peds_spawn_biker", "Spawn Motero"},
         };
     }
 }

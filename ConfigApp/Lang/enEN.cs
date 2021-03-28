@@ -124,6 +124,7 @@ namespace ConfigApp
             {"tp_random", "Teleport To Random Location"},
             {"tp_mission", "Teleport To Random Mission"},
             {"tp_fake", "Fake Teleport"},
+            {"player_tp_store", "Teleport to Random Store" },
             {"player_nophone", "No Phone"},
             {"player_tpclosestveh", "Set Player Into Closest Vehicle"},
             {"playerveh_exit", "Everyone Exits Their Vehicles"},
@@ -267,7 +268,6 @@ namespace ConfigApp
             {"vehs_spamdoors", "Spammy Vehicle Doors"},
             {"veh_speed_goal", "Need For Speed"},
             {"vehs_flyingcars", "Flying Cars"},
-            {"misc_lester", "Pwned"},
             {"misc_credits", "Roll Credits"},
             {"misc_earthquake", "Earthquake"},
             {"player_tpfront", "Teleport Player A Few Meters"},
@@ -283,7 +283,6 @@ namespace ConfigApp
             {"peds_phones", "Whose Phone Is Ringing"},
             {"misc_midas", "Midas Touch"},
             {"peds_spawnrandomhostile", "Spawn Random Enemy"},
-            {"playerveh_nobrakes", "No Braking Allowed"},
             {"peds_portal_gun", "Portal Guns"},
             {"misc_fireworks", "Fireworks!"},
             {"peds_spawnballasquad", "Spawn Balla Squad"},
@@ -353,7 +352,12 @@ namespace ConfigApp
             {"vehs_crumble", "Crumbling Vehicles"},
             {"misc_fps_limit", "Console Experience"},
             {"meta_nochaos", "No Chaos"},
-            {"peds_roasting", "Roasting"}
+            {"peds_roasting", "Roasting"},
+            { "player_binoculars", "Binoculars"},
+            { "peds_slippery_peds", "Can't Tie My Shoes"},
+            { "vehs_cruise_control", "Cruise Control"},
+            { "player_aimbot", "Aimbot"},
+            { "peds_spawn_biker", "Spawn Biker"},
         };
     }
 }

@@ -82,6 +82,7 @@ namespace ConfigApp
             EFFECT_TP_RANDOM,
             EFFECT_TP_MISSION,
             EFFECT_TP_FAKE,
+            EFFECT_TP_TO_STORE,
             EFFECT_NO_PHONE,
             EFFECT_SET_INTO_CLOSEST_VEH,
             EFFECT_PEDS_EXIT_VEH,
@@ -224,7 +225,6 @@ namespace ConfigApp
             EFFECT_OHKO_VEHICLES,
             EFFECT_VEH_SPAM_DOORS,
             EFFECT_VEH_SPEED_MINIMUM,
-            EFFECT_MISC_LESTER,
             EFFECT_MISC_CREDITS,
             EFFECT_MISC_EARTHQUAKE,
             EFFECT_TP_FRONT,
@@ -240,7 +240,6 @@ namespace ConfigApp
             EFFECT_PHONES,
             EFFECT_MIDAS_TOUCH,
             EFFECT_SPAWN_RANDOM_HOSTILE,
-            EFFECT_VEH_NO_BRAKES,
             EFFECT_PLAYER_PORTAL_GUN,
             EFFECT_MISC_FIREWORKS,
             EFFECT_VEH_DESPAWN,
@@ -312,6 +311,11 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
+            EFFECT_PLAYER_BINOCULARS,
+            EFFECT_PEDS_SLIPPERY_PEDS,
+            EFFECT_VEHS_CRUISE_CONTROL,
+            EFFECT_PLAYER_AIMBOT,
+            EFFECT_PEDS_SPAWN_BIKER,
             _EFFECT_ENUM_MAX
         }
 
@@ -351,6 +355,7 @@ namespace ConfigApp
             {EffectType.EFFECT_TP_RANDOM, new EffectInfo(getTranslation("tp_random"), EffectCategory.PLAYER, "tp_random")},
             {EffectType.EFFECT_TP_MISSION, new EffectInfo(getTranslation("tp_mission"), EffectCategory.PLAYER, "tp_mission")},
             {EffectType.EFFECT_TP_FAKE, new EffectInfo(getTranslation("tp_fake"), EffectCategory.PLAYER, "tp_fake")},
+            {EffectType.EFFECT_TP_TO_STORE, new EffectInfo(getTranslation("player_tp_store"), EffectCategory.PLAYER, "player_tp_store")},
             {EffectType.EFFECT_NO_PHONE, new EffectInfo(getTranslation("player_nophone"), EffectCategory.MISC, "player_nophone", true)},
             {EffectType.EFFECT_SET_INTO_CLOSEST_VEH, new EffectInfo(getTranslation("player_tpclosestveh"), EffectCategory.PLAYER, "player_tpclosestveh")},
             {EffectType.EFFECT_PEDS_EXIT_VEH, new EffectInfo(getTranslation("playerveh_exit"), EffectCategory.PEDS, "playerveh_exit")},
@@ -494,7 +499,6 @@ namespace ConfigApp
             {EffectType.EFFECT_VEH_SPAM_DOORS, new EffectInfo(getTranslation("vehs_spamdoors"), EffectCategory.VEHICLE, "vehs_spamdoors", true)},
             {EffectType.EFFECT_VEH_SPEED_MINIMUM, new EffectInfo(getTranslation("veh_speed_goal"), EffectCategory.VEHICLE, "veh_speed_goal", true, true)},
             {EffectType.EFFECT_VEH_FLYING_CAR, new EffectInfo(getTranslation("vehs_flyingcars"), EffectCategory.VEHICLE, "vehs_flyingcars", true)},
-            {EffectType.EFFECT_MISC_LESTER, new EffectInfo(getTranslation("misc_lester"), EffectCategory.MISC, "misc_lester", true, true)},
             {EffectType.EFFECT_MISC_CREDITS, new EffectInfo(getTranslation("misc_credits"), EffectCategory.MISC, "misc_credits", true, true)},
             {EffectType.EFFECT_MISC_EARTHQUAKE, new EffectInfo(getTranslation("misc_earthquake"), EffectCategory.MISC, "misc_earthquake", true, true)},
             {EffectType.EFFECT_TP_FRONT, new EffectInfo(getTranslation("player_tpfront"), EffectCategory.PLAYER, "player_tpfront")},
@@ -510,7 +514,6 @@ namespace ConfigApp
             {EffectType.EFFECT_PHONES, new EffectInfo(getTranslation("peds_phones"), EffectCategory.PEDS, "peds_phones", true)},
             {EffectType.EFFECT_MIDAS_TOUCH, new EffectInfo(getTranslation("misc_midas"), EffectCategory.PLAYER, "misc_midas", true)},
             {EffectType.EFFECT_SPAWN_RANDOM_HOSTILE, new EffectInfo(getTranslation("peds_spawnrandomhostile"), EffectCategory.PEDS, "peds_spawnrandomhostile")},
-            {EffectType.EFFECT_VEH_NO_BRAKES, new EffectInfo(getTranslation("playerveh_nobrakes"), EffectCategory.VEHICLE, "playerveh_nobrakes", true)},
             {EffectType.EFFECT_PLAYER_PORTAL_GUN, new EffectInfo(getTranslation("peds_portal_gun"), EffectCategory.PEDS, "peds_portal_gun", true)},
             {EffectType.EFFECT_MISC_FIREWORKS, new EffectInfo(getTranslation("misc_fireworks"), EffectCategory.MISC, "misc_fireworks", true)},
             {EffectType.EFFECT_SPAWN_BALLA_SQUAD, new EffectInfo(getTranslation("peds_spawnballasquad"), EffectCategory.PEDS, "peds_spawnballasquad")},
@@ -580,7 +583,12 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo(getTranslation("vehs_crumble"), EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo(getTranslation("misc_fps_limit"), EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo(getTranslation("meta_nochaos"), EffectCategory.META, "meta_nochaos", true)},
-            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo(getTranslation("peds_roasting"), EffectCategory.PEDS, "peds_roasting", true, true)}
+            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo(getTranslation("peds_roasting"), EffectCategory.PEDS, "peds_roasting", true, true)},
+            {EffectType.EFFECT_PLAYER_BINOCULARS, new EffectInfo(getTranslation("player_binoculars"), EffectCategory.PLAYER, "player_binoculars", true)},
+            {EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo(getTranslation("peds_slippery_peds"), EffectCategory.PEDS, "peds_slippery_peds", true, true)},
+            {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo(getTranslation("vehs_cruise_control"), EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
+            {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo(getTranslation("player_aimbot"), EffectCategory.PLAYER, "player_aimbot", true)},
+            {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo(getTranslation("peds_spawn_biker"), EffectCategory.PEDS, "peds_spawn_biker")},
         };
     }
 }
