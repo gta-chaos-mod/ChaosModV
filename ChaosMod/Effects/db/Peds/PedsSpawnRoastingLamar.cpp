@@ -84,4 +84,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_ROASTING, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_ROASTING, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Roasting",
+		.Id = "peds_roasting",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectGroupType = EffectGroupType::SPAWN_COMPANION
+	}
+);

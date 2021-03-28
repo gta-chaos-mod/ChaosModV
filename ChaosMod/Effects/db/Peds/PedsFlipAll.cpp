@@ -20,4 +20,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FLIP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_FLIP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Spinning Peds",
+		.Id = "peds_flip",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

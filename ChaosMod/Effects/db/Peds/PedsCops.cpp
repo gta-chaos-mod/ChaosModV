@@ -13,4 +13,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_COPS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_COPS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "All Peds Are Cops",
+		.Id = "peds_cops",
+		.IsTimed = true,
+		.IncompatibleWith = {EFFECT_PEDS_RIOT }
+	}
+);

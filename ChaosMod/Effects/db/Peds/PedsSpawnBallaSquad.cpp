@@ -46,4 +46,10 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_BALLA_SQUAD, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_BALLA_SQUAD, OnStart, EffectInfo
+	{
+		.Name = "Spawn Balla Squad",
+		.Id = "peds_spawnballasquad",
+		.EffectGroupType = EffectGroupType::SPAWN_ENEMY
+	}
+);

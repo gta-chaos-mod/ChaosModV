@@ -41,4 +41,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_VEHICLE_RAIN, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_VEHICLE_RAIN, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Vehicle Rain",
+		.Id = "misc_vehicle_rain",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -16,4 +16,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RAGDOLL_ON_TOUCH, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RAGDOLL_ON_TOUCH, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Sensitive Touch",
+		.Id = "peds_sensitivetouch",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_NO_RAGDOLL }
+	}
+);

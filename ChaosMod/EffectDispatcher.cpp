@@ -184,42 +184,44 @@ void EffectDispatcher::UpdateMetaEffects()
 
 			std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
 
-			int totalWeight = 0;
+			float totalWeight = 0.f;
 			for (auto& pair : g_enabledEffects)
 			{
 				if (pair.second.IsMeta && pair.second.TimedType != EffectTimedType::TIMED_PERMANENT)
 				{
-					totalWeight += pair.second.Weight;
+					auto& [effectIdentifier, effectData] = pair;
 
-					availableMetaEffects.push_back(std::make_tuple(pair.first, &pair.second));
+					totalWeight += GetEffectWeight(effectData);
+
+					availableMetaEffects.push_back(std::make_tuple(effectIdentifier, &pair.second));
 				}
 			}
 
 			if (!availableMetaEffects.empty()) 
 			{
 				// TODO: Stop duplicating effect weight logic everywhere
-				int index = g_random.GetRandomInt(0, totalWeight);
+				float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-				totalWeight = 0;
+				totalWeight = 0.f;
 
-				const EffectIdentifier* effectIdentifier = nullptr;
+				const EffectIdentifier* targetEffectIdentifier = nullptr;
 				for (auto& pair : availableMetaEffects)
 				{
-					auto& [effect, effectData] = pair;
+					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData->Weight;
+					totalWeight += GetEffectWeight(*effectData);
 
-					effectData->Weight += effectData->WeightMult;
+					effectData->Weight += effectData->Weight;
 
-					if (!effectIdentifier && index <= totalWeight)
+					if (!targetEffectIdentifier && chosen <= totalWeight)
 					{
-						effectIdentifier = &effect;
+						targetEffectIdentifier = &effectIdentifier;
 					}
 				}
 
-				if (effectIdentifier)
+				if (targetEffectIdentifier)
 				{
-					DispatchEffect(*effectIdentifier, "(Meta)");
+					DispatchEffect(*targetEffectIdentifier, "(Meta)");
 				}
 			}
 			else
@@ -242,14 +244,29 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	// Increase weight for all effects first
 	for (auto& pair : g_enabledEffects)
 	{
-		if (!pair.second.IsMeta)
+		EffectData& effectData = pair.second;
+
+		if (!effectData.IsMeta)
 		{
-			pair.second.Weight += pair.second.WeightMult;
+			effectData.Weight += effectData.WeightMult;
 		}
 	}
 
-	// Reset weight of this effect to reduce chance of same effect happening multiple times in a row
-	effectData.Weight = effectData.WeightMult;
+	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
+	if (effectData.EffectGroupType == EffectGroupType::DEFAULT)
+	{
+		effectData.Weight = effectData.WeightMult;
+	}
+	else
+	{
+		for (auto& pair : g_enabledEffects)
+		{
+			if (pair.second.EffectGroupType == effectData.EffectGroupType)
+			{
+				pair.second.Weight = pair.second.WeightMult;
+			}
+		}
+	}
 
 	LOG("Dispatched effect \"" << effectData.Name << "\"");
 
@@ -361,8 +378,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto& pair : g_enabledEffects)
 	{
-		const EffectIdentifier& effectIdentifier = pair.first;
-		const EffectData& effectData = pair.second;
+		const auto& [effectIdentifier, effectData] = pair;
 
 		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
@@ -370,28 +386,29 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		}
 	}
 
-	int effectsTotalWeight = 0;
+	float totalWeight = 0.f;
 	for (const auto& pair : choosableEffects)
 	{
-		effectsTotalWeight += pair.second.Weight;
+		const EffectData& effectData = pair.second;
+
+		totalWeight += GetEffectWeight(effectData);
 	}
 
-	int index = g_random.GetRandomInt(0, effectsTotalWeight);
+	float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-	int addedUpWeight = 0;
+	totalWeight = 0.f;
+
 	const EffectIdentifier* targetEffectIdentifier = nullptr;
 	for (const auto& pair : choosableEffects)
 	{
-		if (pair.second.TimedType == EffectTimedType::TIMED_PERMANENT)
-		{
-			continue;
-		}
+		const auto& [effectIdentifier, effectData] = pair;
 
-		addedUpWeight += pair.second.Weight;
+		totalWeight += GetEffectWeight(effectData);
 
-		if (index <= addedUpWeight)
+		if (chosen <= totalWeight)
 		{
-			targetEffectIdentifier = &pair.first;
+			targetEffectIdentifier = &effectIdentifier;
+
 			break;
 		}
 	}
@@ -426,6 +443,21 @@ void EffectDispatcher::ClearActiveEffects(EffectIdentifier exclude)
 		else
 		{
 			it++;
+		}
+	}
+}
+
+void EffectDispatcher::ClearMostRecentEffect()
+{
+	if (!m_activeEffects.empty())
+	{
+		const ActiveEffect& mostRecentEffect = m_activeEffects[m_activeEffects.size() - 1];
+
+		if (mostRecentEffect.Timer > 0)
+		{
+			ThreadManager::StopThread(mostRecentEffect.ThreadId);
+
+			m_activeEffects.erase(m_activeEffects.end() - 1);
 		}
 	}
 }
