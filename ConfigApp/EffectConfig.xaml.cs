@@ -17,9 +17,18 @@ namespace ConfigApp
             }
         }
 
-        public EffectConfig(EffectData effectData, EffectInfo effectInfo)
+        public EffectConfig(EffectData effectData, EffectInfo effectInfo, int lang)
         {
             InitializeComponent();
+
+            effect_rename.Content = Lang.effect_config("effect_rename", lang);
+            effect_override_timer_type.Content = Lang.effect_config("effect_override_timer_type", lang);
+            effect_override_timer_manual.Content = Lang.effect_config("effect_override_timer_manual", lang);
+            effect_make_permanent.Content = Lang.effect_config("effect_make_permanent", lang);
+            effectconf_effect_weight_mult_title.Content = Lang.effect_config("effectconf_effect_weight_mult_title", lang);
+            effectconf_exclude_voting_enable_title.Content = Lang.effect_config("effectconf_exclude_voting_enable_title", lang);
+            effectconf_mp3_label.Text = Lang.effect_config("effectconf_mp3_label", lang) + $"{effectInfo.Id}.mp3";
+            button_save.Content = Lang.effect_config("button_save", lang);
 
             Title = effectInfo.Name;
 
@@ -54,7 +63,7 @@ namespace ConfigApp
 
             effectconf_exclude_voting_enable.IsChecked = effectData.ExcludedFromVoting;
 
-            effectconf_effect_custom_name.Text = effectData.CustomName;
+            effectconf_effect_custom_name.Text = $"{(Title == effectData.CustomName ? "" : effectData.CustomName)}";
 
             effectconf_mp3_label.Text += $"{effectInfo.Id}.mp3";
 

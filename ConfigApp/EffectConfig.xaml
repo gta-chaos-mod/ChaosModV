@@ -23,12 +23,12 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Label Content="Rename Effect" Grid.Row="0" Grid.Column="0"
+        <Label x:Name="effect_rename" Content="Rename Effect" Grid.Row="0" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
         <TextBox x:Name="effectconf_effect_custom_name" Height="20" Width="120" Grid.Row="0" Grid.Column="2"
                  HorizontalAlignment="Left" VerticalAlignment="Center"
                  MaxLength="30" />
-        <Label Content="Override Timed Effect Type" Grid.Row="1" Grid.Column="0"
+        <Label x:Name="effect_override_timer_type" Content="Override Timed Effect Type" Grid.Row="1" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
         <CheckBox Name="effectconf_timer_type_enable" Grid.Row="1" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center"
@@ -36,7 +36,7 @@
         <ComboBox Name="effectconf_timer_type" Height="25" Width="120" Margin="40,0,0,0" Grid.Row="1" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center"
                   IsEnabled="False" />
-        <Label Content="Override Timed Effect Timer Length (Seconds)" Grid.Row="2" Grid.Column="0"
+        <Label x:Name="effect_override_timer_manual" Content="Override Timed Effect Timer Length (Seconds)" Grid.Row="2" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
         <CheckBox Name="effectconf_timer_time_enable" Grid.Row="2" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center"
@@ -46,14 +46,14 @@
                  IsEnabled="False"
                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" />
-        <Label Content="Make Permanent (Might not work well with every effect)" Grid.Row="3" Grid.Column="0"
-               HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <Label x:Name="effect_make_permanent" Content="Make Permanent (Might not work well with every effect)" Grid.Row="3" Grid.Column="0"
+               HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right" />
         <CheckBox x:Name="effectconf_timer_permanent_enable" Grid.Row="3" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center"
                   Click="OnClicked" />
         <Label x:Name="effectconf_effect_weight_mult_title" Content="Set Effect Weight Multiplier (Affects chances of this effect occuring)&#xD;&#xA;lowest: 1, highest: 10, default: 5"
                Grid.Row="4" Grid.Column="0"
-               HorizontalAlignment="Right" VerticalAlignment="Center" />
+               HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right" />
         <ComboBox x:Name="effectconf_effect_weight_mult" Height="25" Width="45" Grid.Row="4" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" />
         <Label x:Name="effectconf_exclude_voting_enable_title" Content="Exclude Effect from Voting (Twitch)" Grid.Row="5" Grid.Column="0"
@@ -63,7 +63,7 @@
                   Click="OnClicked"/>
         <TextBlock x:Name="effectconf_mp3_label" Text="Sound to play when this effect is active: chaosmod/sounds/" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Button Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
+        <Button x:Name="button_save" Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
                 Click="OnSave"/>
     </Grid>

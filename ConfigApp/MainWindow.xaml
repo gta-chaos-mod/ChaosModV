@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
+        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="400" />
@@ -16,7 +16,7 @@
 
         <Grid Grid.Row="0">
             <TabControl Background="{x:Null}" BorderBrush="LightGray">
-                <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <TabItem x:Name="effects_tab" Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <TreeView x:Name="effects_user_effects_tree_view" Background="{x:Null}" BorderBrush="White" VerticalAlignment="Stretch">
                             <TreeView.Resources>
@@ -53,21 +53,21 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                            <Label x:Name="meta_normal_label" Content="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="meta_effects_spawn_dur" Height="20" Width="60" Grid.Row="0" Grid.Column="2"
                                      HorizontalAlignment="Left" VerticalAlignment="Center"
                                      MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                      CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                      Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                            <Label Content="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                            <Label x:Name="meta_duration_label" Content="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="meta_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
                                      HorizontalAlignment="Left" VerticalAlignment="Center"
                                      MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                      CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                      Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                            <Label Content="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                            <Label x:Name="meta_short_label" Content="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="meta_effects_short_timed_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
                                      HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -97,7 +97,7 @@
                     </Grid>
                 </TabItem>
             
-                <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
+                <TabItem x:Name="misc_tab" Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="310" />
@@ -119,73 +119,77 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <Label Content="How often should a new effect start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                        <Label x:Name="effect_timer" Content="How often should a new effect start (in seconds)?" Grid.Row="0" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox x:Name="misc_user_effects_spawn_dur" Width="60" Height="20" Grid.Row="0" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                  Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                        <Label Content="How long should timed effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                        <Label x:Name="effect_duration" Content="How long should timed effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                  Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                        <Label Content="How long should short timed effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                        <Label x:Name="effect_duration_short" Content="How long should short timed effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                  Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                        <Label Content="Random Seed (Leave empty for random seed every time)" Grid.Row="3" Grid.Column="0"
+                        <Label x:Name="effects_seed" Content="Random Seed (Leave empty for random seed every time)" Grid.Row="3" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox x:Name="misc_user_effects_random_seed" Height="20" Width="60" Grid.Row="3" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="9" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                  Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                        <Label Content="Timer Bar Color" Grid.Row="4" Grid.Column="0"
+                        <Label x:Name="timebar_color" Content="Timer Bar Color" Grid.Row="4" Grid.Column="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <xctk:ColorPicker Name="misc_user_effects_timer_color" Width="60" Height="25" Grid.Row="4" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False" />
-                        <Label Content="Effect Text Color" Grid.Row="5" Grid.Column="0"
+                        <Label x:Name="effect_textcolor" Content="Effect Text Color" Grid.Row="5" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <xctk:ColorPicker x:Name="misc_user_effects_text_color" Width="60" Height="25" Grid.Row="5" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False" />
-                        <Label Content="Effect Timer Bar Color" Grid.Row="6" Grid.Column="0"
+                        <Label x:Name="effect_timer_color" Content="Effect Timer Bar Color" Grid.Row="6" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" Width="60" Height="25" Grid.Row="6" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" />
-                        <Label Content="Don't draw timer bar" Grid.Row="7" Grid.Column="0"
+                        <Label x:Name="timebar_draw" Content="Don't draw timer bar" Grid.Row="7" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Row="7" Grid.Column="2"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Don't draw effect text" Grid.Row="8" Grid.Column="0"
+                        <Label x:Name="effect_text_draw" Content="Don't draw effect text" Grid.Row="8" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_drawtext_disable" Grid.Row="8" Grid.Column="2"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="0" Grid.Column="2"
+                        <Label x:Name="clear_effects" Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="0" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="0" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="1" Grid.Column="2"
+                        <Label x:Name="mod_toggle" Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="1" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_toggle_mod_shortcut" Grid.Row="1" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Grid.Row="2" Grid.Column="2"
+                        <Label x:Name="effect_menu" Content="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Grid.Row="2" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_menu_enable" Grid.Row="2" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="Enable pause timer shortcut (CTRL + .)" Grid.Row="3" Grid.Column="2"
+                        <Label x:Name="timebar_pause" Content="Enable pause timer shortcut (CTRL + .)" Grid.Row="3" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="3" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label x:Name="lang_label" Content="Language" Grid.Row="8" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <ComboBox x:Name="lang_list" Width="120" Height="25" Grid.Row="8" Grid.Column="4"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="lang_list_SelectionChanged" />
                     </Grid>
                 </TabItem>
             
@@ -204,7 +208,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the twitch__readme.txt file included with the mod (inside the README folder) for more information."
+                            <Label x:Name="twitch_info" Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the twitch__readme.txt file included with the mod (inside the README folder) for more information."
                                    Grid.Row="0"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_agreed" Content="Enable Twitch Voting" Grid.Row="1"
@@ -259,7 +263,7 @@
                         </Grid>
 
                         <Grid Grid.Row="2">
-                            <Label Content="---------- Proportional Voting Mode ----------"
+                            <Label x:Name="proportional_vote" Content="---------- Proportional Voting Mode ----------"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Grid>
 
@@ -311,28 +315,31 @@
                             <RowDefinition Height="40" />
                             <RowDefinition Height="40" />
                             <RowDefinition />
+                            <RowDefinition Height="40" />
                         </Grid.RowDefinitions>
 
-                        <Label Content="Visit the mod page for more information" Grid.Row="0" Grid.Column="0"
+                        <Label x:Name="mod_page" Content="Visit the mod page for more information" Grid.Row="0" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="GTA5-Mods" Width="75" Grid.Row="0" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Click="contribute_modpage_click" />
-                        <Label Content="Enjoying the mod? Buy me a coffee! :)" Grid.Row="1" Grid.Column="0"
+                        <Label x:Name="donation" Content="Enjoying the mod? Buy me a coffee! :)" Grid.Row="1" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="PayPal" Width="75" Grid.Row="1" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Click="contribute_donate_click" />
-                        <Label Content="Want to contribute to the mod? It's open source!" Grid.Row="2" Grid.Column="0"
+                        <Label x:Name="contribute" Content="Want to contribute to the mod? It's open source!" Grid.Row="2" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="GitHub" Width="75" Grid.Row="2" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Click="contribute_github_click" />
-                        <Label Content="Join our Discord for announcements, support and more!" Grid.Row="3" Grid.Column="0"
+                        <Label x:Name="discord" Content="Join our Discord for announcements, support and more!" Grid.Row="3" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="Discord" Width="75" Grid.Row="3" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Click="contribute_discord_click"/>
+                        <Label x:Name="translatedby" Content="" Grid.Row="5" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" />
                     </Grid>
                 </TabItem>
             </TabControl>
@@ -340,9 +347,12 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="4.5*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="0.7*" />
+                <ColumnDefinition Width="1.3*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
@@ -353,10 +363,10 @@
             <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
                     HorizontalAlignment="Left" VerticalAlignment="Center"
                     Visibility="Hidden" Click="contribute_modpage_click" />
-            <Button x:Name="user_reset" Content="Reset" Height="40" Grid.Column="3"
+            <Button x:Name="user_reset" Content="Reset" Height="40" Grid.Column="6"
                     VerticalAlignment="Center"
                     Click="user_reset_Click" />
-            <Button x:Name="user_save" Content="Save" Height="40" Grid.Column="4"
+            <Button x:Name="user_save" Content="Save" Height="40" Grid.Column="7"
                     VerticalAlignment="Center"
                     Click="user_save_Click" />
         </Grid>
