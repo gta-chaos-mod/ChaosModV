@@ -71,7 +71,7 @@ static void ParseEffectsFile()
 
 		if (!values[0]) // enabled == false
 		{
-			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
+			if (effectInfo.EffectGroupType != EffectGroupType::NONE)
 			{
 				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
 			}

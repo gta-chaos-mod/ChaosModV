@@ -4,7 +4,7 @@
 
 enum class EffectGroupType
 {
-	DEFAULT,
+	NONE,
 	TELEPORT,         // Effects which teleport the player potentially far away without (explicitly) being helpful
 	SPAWN_GENERIC,    // Effects which spawn "generic" objects (like vehicles or props)
 	SPAWN_ENEMY,      // Effects which spawn enemy peds

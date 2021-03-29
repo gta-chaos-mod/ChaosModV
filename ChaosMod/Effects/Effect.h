@@ -166,7 +166,7 @@ private:
 		g_effectsMap[effectType] = effectInfo;
 
 		EffectGroupType effectGroupType = effectInfo.EffectGroupType;
-		if (effectGroupType != EffectGroupType::DEFAULT)
+		if (effectGroupType != EffectGroupType::NONE)
 		{
 			if (!g_effectGroupMemberCount[effectGroupType])
 			{

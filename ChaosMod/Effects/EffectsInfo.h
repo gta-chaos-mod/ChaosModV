@@ -285,7 +285,7 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::NONE;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 

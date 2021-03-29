@@ -19,7 +19,7 @@ struct EffectData
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
 	bool IsMeta = false;
-	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::NONE;
 };
 
 inline float GetEffectWeight(const EffectData& effectData)
@@ -27,7 +27,7 @@ inline float GetEffectWeight(const EffectData& effectData)
 	EffectGroupType effectGroupType = effectData.EffectGroupType;
 	float effectWeight = effectData.Weight;
 
-	return effectGroupType != EffectGroupType::DEFAULT
+	return effectGroupType != EffectGroupType::NONE
 		? effectWeight / g_effectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
 		: effectWeight;
 }
