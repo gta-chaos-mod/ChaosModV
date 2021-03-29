@@ -5,12 +5,12 @@
 
 static __forceinline void LuaPrint(const std::string& text)
 {
-	RAW_LOG("[Lua] " << text);
+	COLOR_PREFIX_LOG("[Lua]", text);
 }
 
 static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
-	RAW_LOG("[Lua] " << name << ": " << text);
+	COLOR_PREFIX_LOG("[" << name << "]", ": " << text);
 }
 
 static __forceinline char* _TryParseString(void* ptr)

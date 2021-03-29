@@ -146,6 +146,12 @@ void Main::Init()
 			std::cout.rdbuf(g_consoleOut.rdbuf());
 
 			std::cout.clear();
+
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			DWORD conMode;
+			GetConsoleMode(handle, &conMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), conMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 	}
 	else if (GetConsoleWindow())
