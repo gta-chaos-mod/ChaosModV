@@ -23,6 +23,8 @@ public:
 	~EffectDispatcher();
 
 public:
+	float FakeTimerBarPercentage = 0.f;
+
 	void DrawTimerBar();
 	void DrawEffectTexts();
 	void UpdateTimer();

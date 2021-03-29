@@ -30,9 +30,11 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
+	float percentage = FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_percentage;
+
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .01f, m_percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 void EffectDispatcher::DrawEffectTexts()
