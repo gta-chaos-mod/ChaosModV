@@ -11,7 +11,7 @@ They can either vote by clicking the action or by entering the number, like othe
 
 ## Enable the web functionality
 
-1. Download the [latest release](https://github.com/CaveFire/ChaosModV/releases) and copy the contents to your gta installation folder.
+1. Download the [latest release](https://github.com/CaveFire/WebChaosModV/releases) and copy the contents to your gta installation folder.
 2. Open the app "ChaosModVConfig.exe" (as an administrator) go to the "Twitch" tab.
 3. Check the "Enable Twitch Voting" checkbox.
 4. Enter something in the textboxes "Channel Name", "Username" and "OAuth Token". It doesn't matter whats in there, as long as there is something in there.
