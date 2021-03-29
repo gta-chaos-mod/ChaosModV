@@ -7,10 +7,14 @@ using System.Collections.Generic;
 // TODO: fix voting mode
 namespace TwitchChatVotingProxy.OverlayServer
 {
+
     class OverlayServer : IOverlayServer
     {
+
+        public WebSocketServer WSS;
+
         private OverlayServerConfig config;
-        private List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
+        public List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
         private ILogger logger = Log.Logger.ForContext<OverlayServer>();
 
         public OverlayServer(OverlayServerConfig config)
@@ -19,14 +23,15 @@ namespace TwitchChatVotingProxy.OverlayServer
 
             try
             {
-                var WSS = new Fleck.WebSocketServer($"ws://127.0.0.1:{config.Port}");
+                WSS = new WebSocketServer($"ws://127.0.0.1:9091");
                 // Set the websocket listeners
                 WSS.Start(connection =>
                 {
                     connection.OnOpen += () => OnWsConnectionOpen(connection);
                     connection.OnClose += () => OnWSConnectionClose(connection);
                 });
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Fatal(e, "failed so start websocket server");
             }
@@ -72,7 +77,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 logger.Information($"websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Remove(connection);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e, "error occurred as client disconnected");
             }
@@ -87,7 +93,14 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 logger.Information($"new websocket client {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Add(connection);
-            } catch (Exception e)
+
+                connection.OnMessage += (message) =>
+                {
+                    Console.WriteLine("received input from wss:  " + message);
+                    TwitchChatVotingProxy.votingReceiver.OnMessageReceived(connection.ConnectionInfo.ClientIpAddress, message);
+                };
+            }
+            catch (Exception e)
             {
                 logger.Error(e, "error occurred as client connected");
             }
@@ -107,7 +120,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             if (strVotingMode != null)
             {
                 msg.votingMode = strVotingMode;
-            } else
+            }
+            else
             {
                 logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
                 msg.votingMode = "UNKNOWN_VOTING_MODE";

@@ -1,6 +1,5 @@
 ﻿using Serilog;
 using System;
-using System.Threading;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
@@ -10,6 +9,7 @@ namespace TwitchChatVotingProxy
     class TwitchChatVotingProxy
     {
         private static ILogger logger;
+        public static WSVotingReceiver votingReceiver;
 
         private static void Main(string[] args)
         {
@@ -32,9 +32,11 @@ namespace TwitchChatVotingProxy
             logger.Information("===============================");
             logger.Information("Starting chaos mod twitch proxy");
             logger.Information("===============================");
-            
+
+
             // Read big config file WIP
             var config = new Config.Config("./chaosmod/twitch.ini");
+
 
             // Validate voting mode
             EVotingMode votingMode;
@@ -45,47 +47,40 @@ namespace TwitchChatVotingProxy
             }
             else votingMode = (EVotingMode)config.VotingMode;
 
-            Mutex mutex = new Mutex(false, "ChaosModVVotingMutex");
-            mutex.WaitOne();
-
+            /*
+            // Create twitch config
+            TwitchVotingReceiverConfig twitchVotingReceiverConfig;
             try
             {
-                // Create twitch config
-                TwitchVotingReceiverConfig twitchVotingReceiverConfig;
-                try
-                {
-                    twitchVotingReceiverConfig = new TwitchVotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
-                }
-                catch (Exception e)
-                {
-                    logger.Fatal(e, "failed to create twitch voting receiver config");
-                    return;
-                }
-
-                // Check if OBS overlay should be shown
-                OverlayServer.OverlayServer overlayServer = null;
-                if (config.OverlayMode == EOverlayMode.OVERLAY_OBS)
-                {
-                    // Create overlay server config
-                    OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.RetainInitalVotes, config.OverlayServerPort);
-
-                    // Create component
-                    overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
-                }
-
-                // Create components
-                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
-                var chaosPipe = new ChaosPipeClient();
-
-                // Start the chaos mod controller
-                new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
-
-                while (chaosPipe.IsConnected()) { }
-            }
-            finally
+                 twitchVotingReceiverConfig = new TwitchVotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
+            } catch (Exception e)
             {
-                mutex.ReleaseMutex();
+                logger.Fatal(e, "failed to create twitch voting receiver config");
+                return;
             }
+
+            */
+
+            // Check if OBS overlay should be shown
+            OverlayServer.OverlayServer overlayServer = null;
+            if (config.OverlayMode == EOverlayMode.OVERLAY_OBS)
+            {
+                // Create overlay server config
+                OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.RetainInitalVotes, config.OverlayServerPort);
+
+                // Create component
+                overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
+            }
+
+            // Create components
+            //var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
+            TwitchChatVotingProxy.votingReceiver = new WSVotingReceiver(null);
+            var chaosPipe = new ChaosPipeClient();
+
+            // Start the chaos mod controller
+            new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
+
+            while (true) { }
 
             logger.Information("Pipe disconnected, ending program");
         }
