@@ -421,11 +421,14 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 }
 
-void EffectDispatcher::ClearEffects()
+void EffectDispatcher::ClearEffects(bool includePermanent)
 {
 	ThreadManager::StopThreads();
 
-	m_permanentEffects.clear();
+	if (includePermanent)
+	{
+		m_permanentEffects.clear();
+	}
 
 	m_activeEffects.clear();
 }

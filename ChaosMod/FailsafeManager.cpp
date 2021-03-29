@@ -64,7 +64,7 @@ namespace FailsafeManager
 			case 5:
 				LOG("[5 Fails] Clear all effects and spawned entities");
 
-				g_effectDispatcher->ClearEffects();
+				g_effectDispatcher->ClearEffects(false);
 				ClearEntityPool();
 
 				s_failCounts = 0;
