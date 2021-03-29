@@ -20,6 +20,7 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 static void ParseEffectsFile()
 {
 	g_enabledEffects.clear();
+	g_currentEffectGroupMemberCount = g_allEffectGroupMemberCount;
 
 	OptionsFile effectsFile("chaosmod/effects.ini");
 
@@ -73,7 +74,7 @@ static void ParseEffectsFile()
 		{
 			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
 			{
-				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
+				g_currentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
 			}
 
 			continue;
