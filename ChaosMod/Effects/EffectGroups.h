@@ -34,4 +34,5 @@ inline const std::unordered_map<EffectGroupType, EffectGroup> g_effectGroups
 	{EffectGroupType::WEATHER_CHANGE, {}},
 };
 
-inline std::unordered_map<EffectGroupType, int> g_effectGroupMemberCount;
+inline std::unordered_map<EffectGroupType, int> g_allEffectGroupMemberCount;
+inline std::unordered_map<EffectGroupType, int> g_currentEffectGroupMemberCount;

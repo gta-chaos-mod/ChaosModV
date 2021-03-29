@@ -168,12 +168,12 @@ private:
 		EffectGroupType effectGroupType = effectInfo.EffectGroupType;
 		if (effectGroupType != EffectGroupType::NONE)
 		{
-			if (!g_effectGroupMemberCount[effectGroupType])
+			if (!g_allEffectGroupMemberCount[effectGroupType])
 			{
-				g_effectGroupMemberCount[effectGroupType] = 0;
+				g_allEffectGroupMemberCount[effectGroupType] = 0;
 			}
 
-			g_effectGroupMemberCount[effectGroupType]++;
+			g_allEffectGroupMemberCount[effectGroupType]++;
 		}
 	}
 

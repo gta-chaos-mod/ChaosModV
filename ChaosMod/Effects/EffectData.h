@@ -28,6 +28,6 @@ inline float GetEffectWeight(const EffectData& effectData)
 	float effectWeight = effectData.Weight;
 
 	return effectGroupType != EffectGroupType::NONE
-		? effectWeight / g_effectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
+		? effectWeight / g_currentEffectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
 		: effectWeight;
 }
