@@ -4,7 +4,7 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting()
+TwitchVoting::TwitchVoting(const std::array<int, 3>& textColor) : m_textColor(textColor)
 {
 	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
@@ -333,7 +333,7 @@ void TwitchVoting::Tick()
 
 			oss << std::endl;
 
-			DrawScreenText(oss.str(), { .95f, y }, .41f, { 210, 210, 210 }, true, ScreenTextAdjust::RIGHT, { .0f, .95f });
+			DrawScreenText(oss.str(), { .95f, y }, .41f, { m_textColor[0], m_textColor[1], m_textColor[2] }, true, ScreenTextAdjust::RIGHT, { .0f, .95f }, true);
 
 			y += .05f;
 		}
