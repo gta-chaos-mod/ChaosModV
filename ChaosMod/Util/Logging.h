@@ -24,17 +24,17 @@ inline std::ofstream g_consoleOut;
 	{ \
 		if (!GetConsoleWindow()) \
 		{ \
-			RAW_LOG(_prefix << " " << _text); \
+			RAW_LOG(_prefix << " " << _text << std::endl); \
 		} \
 		else \
 		{ \
-			_LOG(_prefix << " " << _text, g_log); \
-			_LOG("\033[" << 90 + (std::hash<std::string>{}((std::ostringstream() << _prefix).str()) % 6) << "m" << _prefix << "\033[0m " << _text, std::cout); \
+			_LOG(_prefix << " " << _text << std::endl, g_log); \
+			_LOG("\033[" << 90 + (std::hash<std::string>{}((std::ostringstream() << _prefix).str()) % 6) << "m" << _prefix << "\033[0m " << _text << std::endl, std::cout); \
 		} \
 	} \
 	while (0)
 
-#define LOG(_text) COLOR_PREFIX_LOG("[" << __FILENAME__ << "]", _text << std::endl)
+#define LOG(_text) COLOR_PREFIX_LOG("[" << __FILENAME__ << "]", _text)
 
 #ifdef _DEBUG
 #define DEBUG_LOG(_text) LOG(_text)
