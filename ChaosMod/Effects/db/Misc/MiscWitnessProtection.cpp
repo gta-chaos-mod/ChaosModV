@@ -10,32 +10,41 @@ struct OrbitPed
     float angle;
 };
 static std::vector<OrbitPed> orbitingPeds;
+static int pedCount = 20;
 
 static void OnStart()
 {
-    static Hash pedHash = GET_HASH_KEY("MP_M_FIBSec_01");
-    LoadModel(pedHash);
     Ped player = PLAYER_PED_ID();
     Vector3 pos = GET_ENTITY_COORDS(player, false);
-    int pedCount = 20;
-    for (int i = 0; i < pedCount; i++)
-    {
-        Ped ped = CREATE_PED(-1, pedHash, pos.x, pos.y, pos.z, 0, true, false);
-        SET_ENTITY_HAS_GRAVITY(ped, false);
-        SET_PED_CAN_RAGDOLL(ped, false);
-        SET_ENTITY_COLLISION(ped, false, true);
-        SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
-        float offset = (360 / pedCount) * i;
-        OrbitPed orbPed = { ped, offset };
-        orbitingPeds.push_back(orbPed);
-    }
 }
 
 static void OnTick()
 {
     Ped player = PLAYER_PED_ID();
+    int count = 5;
+    // Create new bodyguards if non available
+    if (orbitingPeds.empty())
+    {
+        static Hash pedHash = GET_HASH_KEY("MP_M_FIBSec_01");
+        LoadModel(pedHash);
+        for (int i = 0; i < pedCount; i++)
+        {
+            Ped ped = CREATE_PED(-1, pedHash, 0, 0, 0, 0, true, false);
+            SET_ENTITY_HAS_GRAVITY(ped, false);
+            SET_PED_CAN_RAGDOLL(ped, false);
+            SET_ENTITY_COLLISION(ped, false, true);
+            SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
+            float offset = (360 / pedCount) * i;
+            OrbitPed orbPed = { ped, offset };
+            orbitingPeds.push_back(orbPed);
+            if (-count == 0)
+            {
+                WAIT(0);
+                count = 5;
+            }
+        }
+    }
     Entity entityToCircle = player;
-
     if (IS_PED_IN_ANY_VEHICLE(player, false))
     {
         entityToCircle = GET_VEHICLE_PED_IS_IN(player, false);
@@ -47,7 +56,6 @@ static void OnTick()
     float height = max.z - min.z;
     float zCorrection = (-height / 2) + 0.3;
     float heading = GET_ENTITY_HEADING(entityToCircle);
-    int count = 5;
     for (std::vector<OrbitPed>::iterator it = orbitingPeds.begin(); it != orbitingPeds.end(); )
     {
         OrbitPed pedInfo = *it;
