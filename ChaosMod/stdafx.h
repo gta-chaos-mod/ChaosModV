@@ -38,6 +38,7 @@
 #include "Util/Player.h"
 #include "Util/Peds.h"
 #include "Util/Vehicle.h"
+#include "Util/Types.h"
 #include "Util/TryParse.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"

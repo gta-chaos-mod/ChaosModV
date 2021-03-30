@@ -180,6 +180,7 @@
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscWitnessProtection.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp" />
@@ -365,6 +366,7 @@
     <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
+    <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
