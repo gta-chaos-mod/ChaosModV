@@ -199,11 +199,19 @@ void Main::Init()
 	LOG("Initializing Twitch voting");
 	m_twitchVoting = std::make_unique<TwitchVoting>();
 
+	FailsafeManager::Init();
+
 	LOG("Completed Init!");
 }
 
 void Main::Reset()
 {
+	// Check if this isn't the first time this is being run
+	if (g_effectDispatcher)
+	{
+		LOG("Mod has been disabled using shortcut!");
+	}
+
 	g_effectDispatcher.reset();
 
 	if (m_enableDebugMenu)
@@ -238,8 +246,6 @@ void Main::Loop()
 	g_mainThread = GetCurrentFiber();
 
 	ThreadManager::ClearThreads();
-
-	FailsafeManager::Reset();
 
 	Reset();
 

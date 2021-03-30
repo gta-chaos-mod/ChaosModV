@@ -1,43 +1,45 @@
 #include <stdafx.h>
 
+static bool s_enabled = false;
+
 static int s_failCounts;
 static int s_failTimestamp;
 static int s_lastState;
 
+static int* s_stateGlobal;
+
 namespace FailsafeManager
 {
-	void Reset()
+	void Init()
 	{
+		eGameVersion gameVer = getGameVersion();
+		s_enabled = gameVer >= VER_1_0_2215_0_STEAM && gameVer < VER_SIZE || DoesFileExist("chaosmod\\.forcefailsafe");
+
+		if (!s_enabled)
+		{
+			LOG("Failsafe is incompatible with this version. :(");
+			LOG("Use the .forcefailsafe feature flag to enable it anyways.");
+
+			return;
+		}
+
+		LOG("Failsafe enabled");
+
 		s_failCounts = 0;
 		s_failTimestamp = 0;
 		s_lastState = -1;
+
+		s_stateGlobal = reinterpret_cast<int*>(getGlobalPtr(98955));
 	}
 
 	void Run()
 	{
-		static bool enabled = getGameVersion() >= VER_1_0_2215_0_STEAM || DoesFileExist("chaosmod\\.forcefailsafe");
-		static bool firstTime = true;
-		if (!enabled)
+		if (!s_enabled)
 		{
-			if (firstTime)
-			{
-				LOG("Failsafe is incompatible with this version. :(");
-				LOG("Use the .forcefailsafe feature flag to enable it anyways.");
-			}
-
 			return;
 		}
-		
-		if (firstTime)
-		{
-			LOG("Failsafe enabled");
-		}
 
-		firstTime = false;
-
-		int curState = *reinterpret_cast<int*>(getGlobalPtr(98955)); // Global found in replay_controller.ysc:119 as of build 2215
-
-		if (!curState && s_lastState)
+		if (!*s_stateGlobal && s_lastState)
 		{
 			// Use game timer to exclude loading times
 			int curTimestamp = GET_GAME_TIMER();
@@ -75,6 +77,6 @@ namespace FailsafeManager
 			s_failTimestamp = curTimestamp;
 		}
 
-		s_lastState = curState;
+		s_lastState = *s_stateGlobal;
 	}
 }
