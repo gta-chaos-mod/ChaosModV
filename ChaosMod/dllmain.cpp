@@ -12,13 +12,18 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Memory::Init();
+		__try
+		{
+			Memory::Init();
+		}
+		__except (CrashHandler(GetExceptionInformation()))
+		{
 
-		scriptRegister(hInstance, []() { m_main.Loop(); });
+		}
+
+		scriptRegister(hInstance, []() { m_main.RunLoop(); });
 
 		keyboardHandlerRegister(OnKeyboardInput);
-
-		SetUnhandledExceptionFilter(CrashHandler);
 
 		break;
 	case DLL_PROCESS_DETACH:

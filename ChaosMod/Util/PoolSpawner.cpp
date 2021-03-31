@@ -37,21 +37,43 @@ static void HandleEntity(Entity entity)
 	}
 }
 
-void ClearEntityPool()
+void ClearEntityPool(int distance)
 {
-	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); it++)
+	Vector3 playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+
+	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
 	{
 		Entity frontEntity = *it;
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
-			SET_ENTITY_AS_MISSION_ENTITY(frontEntity, true, true);
+			bool remove = distance <= 0;
 
-			DELETE_ENTITY(&frontEntity);
+			if (!remove)
+			{
+				Vector3 entityCoords = GET_ENTITY_COORDS(frontEntity, false);
+
+				remove = playerCoords.DistanceTo(entityCoords) < distance;
+			}
+
+			if (remove)
+			{
+				SET_ENTITY_AS_MISSION_ENTITY(frontEntity, true, true);
+
+				DELETE_ENTITY(&frontEntity);
+
+				it = m_entities.erase(it);
+			}
+			else
+			{
+				it++;
+			}
+		}
+		else
+		{
+			it = m_entities.erase(it);
 		}
 	}
-
-	m_entities.clear();
 }
 
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading)

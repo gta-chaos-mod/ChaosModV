@@ -1,7 +1,7 @@
 ---
 name: Effect Suggestion
 about: Suggestion for a new effect
-title: "[Effect Suggestion]"
+title: "[Effect Suggestion] My Super Cool Effect Idea"
 labels: Effect Suggestion
 assignees: ''
 

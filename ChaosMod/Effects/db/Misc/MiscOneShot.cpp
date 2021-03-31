@@ -24,4 +24,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ONE_BULLET_WEP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_ONE_BULLET_WEP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "One Bullet Mags",
+		.Id = "misc_onebullet",
+		.IsTimed = true
+	}
+);

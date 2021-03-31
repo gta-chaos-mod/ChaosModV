@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -55,7 +55,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
     </ClCompile>
@@ -72,7 +72,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
@@ -118,6 +118,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
@@ -139,7 +140,6 @@
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTPGuns.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscLesterScaleform.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPoly.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
@@ -153,7 +153,6 @@
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerFakePlayerSwap.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
@@ -167,6 +166,7 @@
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
@@ -176,7 +176,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsTurnRight.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
@@ -229,6 +228,9 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSlipperyPeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
@@ -266,9 +268,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsNoBrakes.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
@@ -287,8 +290,10 @@
     <ClCompile Include="Effects\db\Vehs\VehsTirePoppin.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSlipperyVehs.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawner.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsCruiseControl.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
+    <ClCompile Include="FailsafeManager.cpp" />
     <ClCompile Include="LuaManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
@@ -298,7 +303,6 @@
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\TestHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
-    <ClCompile Include="OptionsFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -317,6 +321,8 @@
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects\EffectData.h" />
+    <ClInclude Include="Effects\EffectExecutionType.h" />
+    <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
@@ -324,6 +330,7 @@
     <ClInclude Include="Effects\MetaEffectInfo.h" />
     <ClInclude Include="Effects\EffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
+    <ClInclude Include="FailsafeManager.h" />
     <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
@@ -340,7 +347,8 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="nativesNoNamespaces.h" />
-    <ClInclude Include="OptionsFile.h" />
+    <ClInclude Include="Util\OptionDefaults.h" />
+    <ClInclude Include="Util\OptionsFile.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ThreadManager.h" />
@@ -350,9 +358,11 @@
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Logging.h" />
-    <ClInclude Include="Util\Misc.h" />
+    <ClInclude Include="Util\Peds.h" />
+    <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
     <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Util\TryParse.h" />

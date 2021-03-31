@@ -113,7 +113,7 @@ struct Vector3
 		return std::sqrt((this->x * this->x) + (this->y * this->y) + (this->z * this->z));
 	}
 
-	float distanceTo(Vector3 otherVector)
+	float DistanceTo(Vector3 otherVector)
 	{
 		return (otherVector - *this).Length();
 	}

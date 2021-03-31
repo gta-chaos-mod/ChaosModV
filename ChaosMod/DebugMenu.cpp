@@ -128,6 +128,60 @@ void DebugMenu::HandleInput(DWORD key, bool onRepeat)
 			m_selected = 0;
 		}
 		break;
+	case VK_RIGHT:
+	{
+		char searchChar = std::tolower(m_effects[m_selected].EffectName[0]);
+
+		bool found = false;
+		while (!found)
+		{
+			if (searchChar++ == SCHAR_MAX)
+			{
+				searchChar = SCHAR_MIN;
+			}
+
+			for (int i = 0; i < m_effects.size(); i++)
+			{
+				if (std::tolower(m_effects[i].EffectName[0]) == searchChar)
+				{
+					m_selected = i;
+
+					found = true;
+
+					break;
+				}
+			}
+		}
+
+		break;
+	}
+	case VK_LEFT:
+	{
+		char searchChar = std::tolower(m_effects[m_selected].EffectName[0]);
+
+		bool found = false;
+		while (!found)
+		{
+			if (searchChar-- == SCHAR_MIN)
+			{
+				searchChar = SCHAR_MAX;
+			}
+
+			for (int i = 0; i < m_effects.size(); i++)
+			{
+				if (std::tolower(m_effects[i].EffectName[0]) == searchChar)
+				{
+					m_selected = i;
+
+					found = true;
+
+					break;
+				}
+			}
+		}
+
+		break;
+	}
 	case VK_RETURN:
 		if (m_effects[m_selected].EffectIdentifier.GetEffectType() != -1)
 		{

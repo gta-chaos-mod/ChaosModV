@@ -27,4 +27,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_INVERTVELOCITY, OnStart);
+static RegisterEffect registerEffect(EFFECT_INVERTVELOCITY, OnStart, EffectInfo
+	{
+		.Name = "Invert Current Velocity",
+		.Id = "invertvelocity"
+	}
+);

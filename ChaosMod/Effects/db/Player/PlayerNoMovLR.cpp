@@ -25,4 +25,11 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 279, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_MOV_NO_LR, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MOV_NO_LR, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Disable Left / Right Movement",
+		.Id = "player_noleftright",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

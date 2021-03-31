@@ -13,6 +13,7 @@ static void OnTick()
 	{
 		cE = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		SET_VEHICLE_COLOURS(cE, 158, 158); // 158 = Pure Gold
+		SET_VEHICLE_EXTRA_COLOURS(cE, 160, 158);
 	}
 
 	for (Vehicle veh : GetAllVehs())
@@ -20,6 +21,7 @@ static void OnTick()
 		if (IS_ENTITY_TOUCHING_ENTITY(cE, veh))
 		{
 			SET_VEHICLE_COLOURS(veh, 158, 158); // 158 = Pure Gold
+			SET_VEHICLE_EXTRA_COLOURS(veh, 160, 158);
 		}
 	}
 
@@ -70,4 +72,10 @@ static void OnTick()
 
 }
 
-static RegisterEffect registerEffect(EFFECT_MIDAS_TOUCH, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MIDAS_TOUCH, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Midas Touch",
+		.Id = "misc_midas",
+		.IsTimed = true
+	}
+);

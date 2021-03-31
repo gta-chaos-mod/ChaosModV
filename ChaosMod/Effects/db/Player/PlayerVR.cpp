@@ -114,4 +114,11 @@ static void OnStop() {
 	CLEAR_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_VR, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_VR, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Virtual Reality",
+		.Id = "player_vr",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

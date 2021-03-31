@@ -42,4 +42,10 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS, OnStart);
+static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS, OnStart, EffectInfo
+	{
+		.Name = "Spawn Griefer Jesus",
+		.Id = "spawn_grieferjesus",
+		.EffectGroupType = EffectGroupType::SPAWN_ENEMY_SPECIAL
+	}
+);

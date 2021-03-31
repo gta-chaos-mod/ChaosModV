@@ -11,54 +11,16 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 TryParseInt(colorText.substr(i, 2), colors[j++], 16);
+		 TryParse<int>(colorText.substr(i, 2), colors[j++], 16);
 	}
 
 	return colors;
 }
 
-static void ParseConfigFile(int& effectSpawnTime, int& effectTimedDur, int& seed, int& effectTimedShortDur, bool& enableClearEffectsShortcut,
-	bool& disableTimerDrawing, bool& disableEffectTextDrawing, bool& enableToggleModShortcut, bool& enableDebugMenu, bool& enablePauseTimerShortcut, std::array<int, 3>& timerColor,
-	std::array<int, 3>& textColor, std::array<int, 3>& effectTimerColor, int& metaEffectSpawnTime, int& metaEffectTimedDur, int& metaEffectShortDur)
-{
-	OptionsFile configFile("chaosmod/config.ini");
-
-	effectSpawnTime = configFile.ReadValueInt("NewEffectSpawnTime", 30);
-	effectTimedDur = configFile.ReadValueInt("EffectTimedDur", 90);
-	seed = configFile.ReadValueInt("Seed", 0);
-	effectTimedShortDur = configFile.ReadValueInt("EffectTimedShortDur", 30);
-	enableClearEffectsShortcut = configFile.ReadValueInt("EnableClearEffectsShortcut", true);
-	disableTimerDrawing = configFile.ReadValueInt("DisableTimerBarDraw", false);
-	disableEffectTextDrawing = configFile.ReadValueInt("DisableEffectTextDraw", false);
-	enableToggleModShortcut = configFile.ReadValueInt("EnableToggleModShortcut", true);
-	enableDebugMenu = configFile.ReadValueInt("EnableDebugMenu", false);
-	enablePauseTimerShortcut = configFile.ReadValueInt("EnablePauseTimerShortcut", false);
-	timerColor = ParseColor(configFile.ReadValue("EffectTimerColor", "#FF4040FF"));
-	textColor = ParseColor(configFile.ReadValue("EffectTextColor", "#FFFFFFFF"));
-	effectTimerColor = ParseColor(configFile.ReadValue("EffectTimedTimerColor", "#FFB4B4B4"));
-	// Meta Config
-	metaEffectSpawnTime = configFile.ReadValueInt("NewMetaEffectSpawnTime", 600);
-	metaEffectTimedDur = configFile.ReadValueInt("MetaEffectDur", 90);
-	metaEffectShortDur = configFile.ReadValueInt("MetaShortEffectDur", 60);
-
-}
-
-static void ParseTwitchFile(bool& enableTwitchVoting, int& twitchSecsBeforeVoting, TwitchOverlayMode& twitchOverlayMode, bool& enableTwitchChanceSystem,
-	bool& enableVotingChanceSystemRetainChance, bool& enableTwitchRandomEffectVoteable)
-{
-	OptionsFile twitchFile("chaosmod/twitch.ini");
-
-	enableTwitchVoting = twitchFile.ReadValueInt("EnableTwitchVoting", false);
-	twitchSecsBeforeVoting = twitchFile.ReadValueInt("TwitchVotingSecsBeforeVoting", 0);
-	twitchOverlayMode = static_cast<TwitchOverlayMode>(twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0));
-	enableTwitchChanceSystem = twitchFile.ReadValueInt("TwitchVotingChanceSystem", false);
-	enableVotingChanceSystemRetainChance = twitchFile.ReadValueInt("TwitchVotingChanceSystemRetainChance", true);
-	enableTwitchRandomEffectVoteable = twitchFile.ReadValueInt("TwitchRandomEffectVoteableEnable", true);
-}
-
 static void ParseEffectsFile()
 {
 	g_enabledEffects.clear();
+	g_currentEffectGroupMemberCount = g_allEffectGroupMemberCount;
 
 	OptionsFile effectsFile("chaosmod/effects.ini");
 
@@ -73,7 +35,7 @@ static void ParseEffectsFile()
 		// HACK: Store EffectCustomName seperately
 		std::string valueEffectName;
 
-		std::string value = effectsFile.ReadValue(effectInfo.Id);
+		std::string value = effectsFile.ReadValueString(effectInfo.Id);
 
 		if (!value.empty())
 		{
@@ -94,7 +56,7 @@ static void ParseEffectsFile()
 				{
 					const std::string& split = value.substr(0, splitIndex);
 
-					TryParseInt(split, values[j]);
+					TryParse<int>(split, values[j]);
 				}
 
 				if (splitIndex == value.npos)
@@ -108,8 +70,13 @@ static void ParseEffectsFile()
 			}
 		}
 
-		if (!values[0]) // enabled == false?
+		if (!values[0]) // enabled == false
 		{
+			if (effectInfo.EffectGroupType != EffectGroupType::NONE)
+			{
+				g_currentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
+			}
+
 			continue;
 		}
 
@@ -149,6 +116,8 @@ static void ParseEffectsFile()
 			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
 		}
 
+		effectData.EffectGroupType = effectInfo.EffectGroupType;
+
 		g_enabledEffects.emplace(effectType, effectData);
 	}
 }
@@ -164,6 +133,8 @@ void Main::Init()
 		}
 		else
 		{
+			LOG("Creating log console");
+
 			AllocConsole();
 
 			SetConsoleTitle("Chaos Mod");
@@ -175,10 +146,18 @@ void Main::Init()
 			std::cout.rdbuf(g_consoleOut.rdbuf());
 
 			std::cout.clear();
+
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			DWORD conMode;
+			GetConsoleMode(handle, &conMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), conMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 	}
 	else if (GetConsoleWindow())
 	{
+		LOG("Destroying log console");
+
 		std::cout.rdbuf(oldStreamBuf);
 
 		g_consoleOut.close();
@@ -186,37 +165,53 @@ void Main::Init()
 		FreeConsole();
 	}
 
-	int effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, twitchSecsBeforeChatVoting, metaEffectSpawnTime, metaEffectTimedDur, metaEffectShortDur;
-	bool enableTwitchVoting, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable;
-	std::array<int, 3> timerColor, textColor, effectTimerColor;
-	TwitchOverlayMode twitchOverlayMode;
-
-	ParseConfigFile(effectSpawnTime, effectTimedDur, seed, effectTimedShortDur, m_clearEffectsShortcutEnabled, m_disableDrawTimerBar,
-		m_disableDrawEffectTexts, m_toggleModShortcutEnabled, m_enableDebugMenu, m_enablePauseTimerShortcut, timerColor, textColor, effectTimerColor, 
-		metaEffectSpawnTime, metaEffectTimedDur, metaEffectShortDur);
-	ParseTwitchFile(enableTwitchVoting, twitchSecsBeforeChatVoting, twitchOverlayMode, enableTwitchChanceSystem, enableVotingChanceSystemRetainChance,
-		enableTwitchRandomEffectVoteable);
+	LOG("Parsing config files");
 	ParseEffectsFile();
+	
+	g_optionsManager.Reset();
 
+	m_clearEffectsShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	m_toggleModShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	m_enablePauseTimerShortcut = g_optionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+
+	m_enableDebugMenu = g_optionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+
+	m_disableDrawTimerBar = g_optionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
+	m_disableDrawEffectTexts = g_optionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+
+	const std::array<int, 3>& timerColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	const std::array<int, 3>& textColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	const std::array<int, 3>& effectTimerColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+
+	LOG("Running custom scripts");
 	LuaManager::Load();
 
-	g_random.SetSeed(seed);
-	g_effectDispatcher = std::make_unique<EffectDispatcher>(effectSpawnTime, effectTimedDur, effectTimedShortDur, metaEffectSpawnTime, metaEffectTimedDur, 
-		metaEffectShortDur, timerColor, textColor, effectTimerColor, enableTwitchVoting, twitchOverlayMode);
+	g_random.SetSeed(g_optionsManager.GetConfigValue<int>("Seed", 0));
+
+	LOG("Initializing effects dispatcher");
+	g_effectDispatcher = std::make_unique<EffectDispatcher>(timerColor, textColor, effectTimerColor);
 
 	if (m_enableDebugMenu)
 	{
 		m_debugMenu = std::make_unique<DebugMenu>();
 	}
 
-	struct stat temp;
-	bool enableTwitchPollVoting = stat("chaosmod/.twitchpoll", &temp) != -1 && false; // disable polls for now
-	m_twitchVoting = std::make_unique<TwitchVoting>(enableTwitchVoting, twitchSecsBeforeChatVoting, enableTwitchPollVoting, twitchOverlayMode, enableTwitchChanceSystem,
-		enableVotingChanceSystemRetainChance, enableTwitchRandomEffectVoteable);
+	LOG("Initializing Twitch voting");
+	m_twitchVoting = std::make_unique<TwitchVoting>(textColor);
+
+	FailsafeManager::Init();
+
+	LOG("Completed Init!");
 }
 
 void Main::Reset()
 {
+	// Check if this isn't the first time this is being run
+	if (g_effectDispatcher)
+	{
+		LOG("Mod has been disabled using shortcut!");
+	}
+
 	g_effectDispatcher.reset();
 
 	if (m_enableDebugMenu)
@@ -229,14 +224,24 @@ void Main::Reset()
 	ClearEntityPool();
 }
 
+void Main::RunLoop()
+{
+	__try
+	{
+		Loop();
+	}
+	__except (CrashHandler(GetExceptionInformation()))
+	{
+
+	}
+}
+
 void Main::Loop()
 {
 	int splashTextTime = 15000;
 	int twitchVotingWarningTextTime = 15000;
 
 	DWORD64 lastTick = GetTickCount64();
-
-	SetUnhandledExceptionFilter(CrashHandler);
 
 	g_mainThread = GetCurrentFiber();
 
@@ -291,6 +296,8 @@ void Main::Loop()
 				}
 			}
 
+			FailsafeManager::Run();
+
 			if (m_clearAllEffects)
 			{
 				m_clearAllEffects = false;
@@ -338,36 +345,26 @@ void Main::Loop()
 
 		if (m_clearEffectsTextTime > 0)
 		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Effects Cleared!");
-			SET_TEXT_SCALE(.8f, .8f);
-			SET_TEXT_COLOUR(255, 100, 100, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .86f, 0);
+			DrawScreenText("Effects Cleared!", { .86f, .86f }, .8f, { 255, 100, 100 }, true);
 			
 			m_clearEffectsTextTime -= curTick - lastTick;
 		}
 
 		if (splashTextTime > 0)
 		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Chaos Mod v1.9.0.3 by pongo1231\n\nSee credits.txt for list of contributors");
-			SET_TEXT_SCALE(.65f, .65f);
-			SET_TEXT_COLOUR(0, 255, 255, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.2f, .3f, 0);
+			DrawScreenText("Chaos Mod v1.9.1.2 by pongo1231\n\nSee credits.txt for list of contributors",
+				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
+
+#ifdef _DEBUG
+			DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
+#endif
 
 			splashTextTime -= curTick - lastTick;
 		}
 
 		if (m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
 		{
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Twitch Voting Enabled!");
-			SET_TEXT_SCALE(.8f, .8f);
-			SET_TEXT_COLOUR(255, 100, 100, 255);
-			SET_TEXT_CENTRE(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.86f, .7f, 0);
+			DrawScreenText("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 }, true);
 
 			twitchVotingWarningTextTime -= curTick - lastTick;
 		}
