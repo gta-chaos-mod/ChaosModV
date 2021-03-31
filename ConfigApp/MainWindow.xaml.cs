@@ -72,9 +72,9 @@ namespace ConfigApp
                     File.Delete(".writetest");
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e) when (e is UnauthorizedAccessException || e is FileNotFoundException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
+                MessageBox.Show("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.",
                     "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Application.Current.Shutdown();
