@@ -7,7 +7,7 @@ Effect by Last0xygen
 static void OnStart()
 {
     static Hash enemyHash = GET_HASH_KEY("u_m_y_rsranger_01");
-    static Hash weaponHash = GET_HASH_KEY("weapon_rayminigun");
+    static Hash weaponHash = GET_HASH_KEY("weapon_raycarbine");
     Ped ped = CreateHostilePed(enemyHash, weaponHash);
 }
 
