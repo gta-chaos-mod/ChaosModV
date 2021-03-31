@@ -9,17 +9,11 @@ static int m_targetPitch;
 static void OnStart()
 {
 	m_targetPitch = g_random.GetRandomInt(-900, -300);
-
-	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
-	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", true);
 }
 
 static void OnStop()
 {
 	Hooks::ResetAudioPitch();
-
-	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", false);
-	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", false);
 }
 
 static void OnTick()
@@ -27,4 +21,11 @@ static void OnTick()
 	Hooks::SetAudioPitch(m_targetPitch);
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_PITCH, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_LOW_PITCH, OnStart, OnStop, OnTick, EffectInfo
+	{
+		// These are always required, you may have to add more designators depending on your effect
+		.Name = "Low Pitch",
+		.Id = "misc_low_pitch",
+		.IsTimed = true
+	}
+);
