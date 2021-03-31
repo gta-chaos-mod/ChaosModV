@@ -2,21 +2,29 @@
 
 static void OnTick()
 {
-	static auto lastTick = GET_GAME_TIMER();
-	auto curTick = GET_GAME_TIMER();
+	static int lastTick = GET_GAME_TIMER();
+	int curTick = GET_GAME_TIMER();
 
-	if (lastTick < curTick - 100)
+	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
+	if (lastTick < curTick - 50)
 	{
 		lastTick = curTick;
 
-		for (auto veh : GetAllVehs())
+		for (Vehicle veh : GetAllVehs())
 		{
-			if (!IS_ENTITY_IN_AIR(veh))
+			if (veh != playerVeh && !IS_ENTITY_IN_AIR(veh))
 			{
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 200.f, true, false, true, true);
+				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 500.f, true, false, true, true);
 			}
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Jumpy Vehicles",
+		.Id = "vehs_jumpy",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

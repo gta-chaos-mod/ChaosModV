@@ -69,4 +69,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SETINTORANDVEH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SETINTORANDVEH, OnStart, EffectInfo
+	{
+		.Name = "Set Player Into Random Vehicle",
+		.Id = "player_setintorandveh"
+	}
+);

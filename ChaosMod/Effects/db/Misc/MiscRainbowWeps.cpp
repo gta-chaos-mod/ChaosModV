@@ -26,4 +26,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RAINBOWWEPS, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RAINBOWWEPS, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Rainbow Weapons",
+		.Id = "peds_rainbowweps",
+		.IsTimed = true
+	}
+);

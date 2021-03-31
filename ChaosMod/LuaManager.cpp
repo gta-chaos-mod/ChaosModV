@@ -1,13 +1,16 @@
 #include <stdafx.h>
 
+#define LUA_SCRIPTS_DIR "chaosmod\\custom_scripts"
+#define LUA_NATIVESDEF_DIR "chaosmod\\natives_def.lua"
+
 static __forceinline void LuaPrint(const std::string& text)
 {
-	RAW_LOG("[Lua] " << text);
+	COLOR_PREFIX_LOG("[Lua]", text);
 }
 
 static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
-	RAW_LOG("[Lua] " << name << ": " << text);
+	COLOR_PREFIX_LOG("[" << name << "]", text);
 }
 
 static __forceinline char* _TryParseString(void* ptr)
@@ -242,19 +245,20 @@ namespace LuaManager
 
 		ClearRegisteredScriptEffects();
 
-		if (!DoesFileExist("chaosmod\\custom_scripts"))
+		if (!DoesFileExist(LUA_SCRIPTS_DIR))
 		{
 			return;
 		}
 
-		for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator("chaosmod\\custom_scripts"))
+		for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(LUA_SCRIPTS_DIR))
 		{
 			if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".lua" && entry.file_size() > 0)
 			{
 				const std::filesystem::path& path = entry.path();
 				const std::string& fileName = path.filename().string();
 
-				LOG("Running script \"" << fileName << "\"");
+				const std::string& pathStr = path.string();
+				LOG("Running script " << pathStr.substr(strlen(LUA_SCRIPTS_DIR) + 1));
 
 				sol::state lua;
 				lua.open_libraries(sol::lib::base);
@@ -272,9 +276,9 @@ namespace LuaManager
 					"Vector3", LuaNativeReturnType::VECTOR3
 				);
 
-				if (DoesFileExist("chaosmod\\natives_def.lua"))
+				if (DoesFileExist(LUA_NATIVESDEF_DIR))
 				{
-					lua.unsafe_script_file("chaosmod\\natives_def.lua");
+					lua.unsafe_script_file(LUA_NATIVESDEF_DIR);
 				}
 
 				lua["print"] = [fileName](const std::string& text) { LuaPrint(fileName, text); };
@@ -355,7 +359,7 @@ namespace LuaManager
 
 							if (idAlreadyExists)
 							{
-								LOG("Could not register script \"" << fileName << "\" (with name \"" << scriptName << "\") as \"" << scriptId << "\" (already exists!)");
+								LOG("Could not register script \"" << fileName << "\" (with effect name \"" << scriptName << "\") as effect with id \"" << scriptId << "\" (already exists!)");
 							}
 							else
 							{
@@ -431,7 +435,7 @@ namespace LuaManager
 
 								g_registeredEffects.emplace_back(scriptId);
 
-								LOG("Registered script \"" << fileName << "\" as \"" << scriptId << "\" with name \"" << scriptName << "\"");
+								LOG("Registered script \"" << fileName << "\" as effect with id \"" << scriptId << "\" and name \"" << scriptName << "\"");
 							}
 						}
 					}

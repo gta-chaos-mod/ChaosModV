@@ -82,4 +82,11 @@ static void OnStop() {
 	pedGuns.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_NAILGUNS, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_NAILGUNS, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Nailguns",
+		.Id = "peds_nailguns",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

@@ -19,4 +19,11 @@ static void OnTick()
 	Hooks::SetAudioPitch(m_targetPitch);
 }
 
-static RegisterEffect registerEffect(EFFECT_HIGH_PITCH, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_HIGH_PITCH, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "High Pitch",
+		.Id = "misc_highpitch",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }
+	}
+);

@@ -10,4 +10,11 @@ static void OnTick()
 	SET_SEETHROUGH(true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_HEATVISION, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_HEATVISION, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Heat Vision",
+		.Id = "player_heatvision",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

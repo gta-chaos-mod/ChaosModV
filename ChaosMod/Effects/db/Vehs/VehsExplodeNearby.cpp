@@ -22,4 +22,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLODE_VEHS, OnStart);
+static RegisterEffect registerEffect(EFFECT_EXPLODE_VEHS, OnStart, EffectInfo
+	{
+		.Name = "Explode All Nearby Vehicles",
+		.Id = "vehs_explode"
+	}
+);

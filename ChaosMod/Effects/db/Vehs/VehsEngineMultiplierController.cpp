@@ -18,8 +18,14 @@ static void OnTickX2()
 	}
 }
 
-static RegisterEffect registerEffect1(EFFECT_2XENGINE_VEHS, nullptr, OnStop, OnTickX2);
-
+static RegisterEffect registerEffect1(EFFECT_2XENGINE_VEHS, nullptr, OnStop, OnTickX2, EffectInfo
+	{
+		.Name = "2x Vehicle Engine Speed",
+		.Id = "vehs_x2engine",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_10XENGINE_VEHS, EFFECT_05XENGINE_VEHS }
+	}
+);
 static void OnTickX10()
 {
 	for (auto veh : GetAllVehs())
@@ -29,8 +35,14 @@ static void OnTickX10()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_10XENGINE_VEHS, nullptr, OnStop, OnTickX10);
-
+static RegisterEffect registerEffect2(EFFECT_10XENGINE_VEHS, nullptr, OnStop, OnTickX10, EffectInfo
+	{
+		.Name = "10x Vehicle Engine Speed",
+		.Id = "vehs_x10engine",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_2XENGINE_VEHS, EFFECT_05XENGINE_VEHS }
+	}
+);
 static void OnTickX05()
 {
 	for (auto veh : GetAllVehs())
@@ -40,4 +52,11 @@ static void OnTickX05()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_05XENGINE_VEHS, nullptr, OnStop, OnTickX05);
+static RegisterEffect registerEffect3(EFFECT_05XENGINE_VEHS, nullptr, OnStop, OnTickX05, EffectInfo
+	{
+		.Name = "0.5x Vehicle Engine Speed",
+		.Id = "vehs_x05engine",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_2XENGINE_VEHS, EFFECT_10XENGINE_VEHS }
+	}
+);

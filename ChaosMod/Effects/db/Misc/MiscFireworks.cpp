@@ -38,4 +38,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FIREWORKS, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_FIREWORKS, OnStart, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Fireworks!",
+		.Id = "misc_fireworks",
+		.IsTimed = true
+	}
+);
