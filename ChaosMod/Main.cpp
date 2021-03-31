@@ -197,7 +197,7 @@ void Main::Init()
 	}
 
 	LOG("Initializing Twitch voting");
-	m_twitchVoting = std::make_unique<TwitchVoting>();
+	m_twitchVoting = std::make_unique<TwitchVoting>(textColor);
 
 	FailsafeManager::Init();
 
