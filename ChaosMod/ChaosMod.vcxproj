@@ -120,6 +120,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerGunGame.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsStopAndStare.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
