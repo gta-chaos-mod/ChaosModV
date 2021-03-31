@@ -54,4 +54,10 @@ static void OnTick()
 	playerKillsLast = playerKills;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_GUN_GAME, OnStart, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_GUN_GAME, OnStart, nullptr, OnTick, EffectInfo
+	{
+		// These are always required, you may have to add more designators depending on your effect
+		.Name = "Gun Game",
+		.Id = "player_gun_game",
+		.IsTimed = true
+	}
