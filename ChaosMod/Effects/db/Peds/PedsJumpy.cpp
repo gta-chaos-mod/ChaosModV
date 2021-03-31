@@ -15,7 +15,6 @@ static RegisterEffect registerEffect(EFFECT_SLIDY_PEDS, nullptr, nullptr, OnTick
 	{
 		.Name = "Slidy Peds",
 		.Id = "peds_slidy",
-		.IsTimed = true,
-		.IsShortDuration = true
+		.IsTimed = true
 	}
 );
