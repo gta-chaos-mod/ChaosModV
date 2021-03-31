@@ -583,7 +583,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
-            {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger", false)},
+            {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
         };
     }
 }
