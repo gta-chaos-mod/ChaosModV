@@ -42,4 +42,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_DESPAWN, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_DESPAWN, OnStart, EffectInfo
+	{
+		.Name = "Remove Current Vehicle",
+		.Id = "playerveh_despawn"
+	}
+);

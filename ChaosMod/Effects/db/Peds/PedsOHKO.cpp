@@ -27,4 +27,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "One Hit KO",
+		.Id = "player_ohko",
+		.IsTimed = true
+	}
+);

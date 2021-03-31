@@ -26,4 +26,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SHOT_RAGDOLL, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SHOT_RAGDOLL, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Player Ragdolls When Shot",
+		.Id = "player_ragdollondmg",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_NO_RAGDOLL }
+	}
+);

@@ -21,4 +21,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_HEAVY_RECOIL, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_HEAVY_RECOIL, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Heavy Recoil",
+		.Id = "player_heavyrecoil",
+		.IsTimed = true
+	}
+);

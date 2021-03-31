@@ -22,8 +22,15 @@ static void OnTickX02()
 	SET_TIME_SCALE(.2f);
 }
 
-static RegisterEffect registerEffect1(EFFECT_GAMESPEED_X02, nullptr, OnStop, OnTickX02);
-
+static RegisterEffect registerEffect1(EFFECT_GAMESPEED_X02, nullptr, OnStop, OnTickX02, EffectInfo
+	{
+		.Name = "x0.2 Gamespeed",
+		.Id = "time_x02",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }
+	}
+);
 static void OnTickX05()
 {
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
@@ -34,4 +41,12 @@ static void OnTickX05()
 	SET_TIME_SCALE(.5f);
 }
 
-static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnTickX05);
+static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnTickX05, EffectInfo
+	{
+		.Name = "x0.5 Gamespeed",
+		.Id = "time_x05",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }
+	}
+);

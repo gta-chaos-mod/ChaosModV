@@ -62,8 +62,6 @@ namespace ConfigApp
 
             if (effectInfo.EffectCategory == EffectCategory.META)
             {
-                effectconf_effect_weight_mult_title.Visibility = Visibility.Hidden;
-                effectconf_effect_weight_mult.Visibility = Visibility.Hidden;
                 effectconf_exclude_voting_enable_title.Visibility = Visibility.Hidden;
                 effectconf_exclude_voting_enable.Visibility = Visibility.Hidden;
                 effectconf_exclude_voting_enable.IsChecked = false;

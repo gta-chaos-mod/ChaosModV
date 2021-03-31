@@ -24,13 +24,13 @@ static bool OnHook()
 	Handle handle;
 
 	// Not really a fan of this sig either but the best I could do :shrug:
-	handle = Memory::FindPattern("E9 ? ? ? ? C3 90 ? ? ? ? E8 ? ? ? ? 90 E9 ? ? ? ? 90");
+	/*handle = Memory::FindPattern("E9 ? ? ? ? C3 90 ? ? ? ? E8 ? ? ? ? 90 E9 ? ? ? ? 90");
 	if (!handle.IsValid())
 	{
 		return false;
 	}
 
-	Memory::AddHook(handle.Into().Get<void>(), HK_GET_ENTITY_COORDS, &OG_GET_ENTITY_COORDS);
+	Memory::AddHook(handle.Into().Get<void>(), HK_GET_ENTITY_COORDS, &OG_GET_ENTITY_COORDS);*/
 
 	return true;
 }
