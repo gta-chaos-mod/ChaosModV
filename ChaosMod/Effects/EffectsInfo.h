@@ -273,6 +273,7 @@ enum EffectType
 	EFFECT_PEDS_ROASTING,
 	EFFECT_PLAYER_BINOCULARS,
 	EFFECT_VEHS_CRUISE_CONTROL,
+	EFFECT_PEDS_HANDS_UP,
 	EFFECT_PLAYER_AIMBOT,
 	EFFECT_PEDS_SLIPPERY_PEDS,
 	EFFECT_PEDS_SPAWN_BIKER,
@@ -291,6 +292,4 @@ struct EffectInfo
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
-
 inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
-
