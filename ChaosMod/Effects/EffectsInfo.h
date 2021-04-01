@@ -269,6 +269,7 @@ enum EffectType
 	EFFECT_VEHS_CRUMBLE,
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
+	EFFECT_PLAYER_BIG_BANG,
 	EFFECT_PEDS_ROASTING,
 	EFFECT_PLAYER_BINOCULARS,
 	EFFECT_VEHS_CRUISE_CONTROL,
@@ -290,4 +291,6 @@ struct EffectInfo
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
+
 inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
+
