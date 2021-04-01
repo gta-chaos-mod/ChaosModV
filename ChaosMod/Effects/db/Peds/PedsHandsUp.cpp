@@ -21,7 +21,6 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_PEDS_HANDS_UP, OnStart, EffectInfo
 	{
 		.Name = "Hands Up!",
-		.Id = "peds_hands_up",
-		.EffectGroup = EffectGroup::PEDS
+		.Id = "peds_hands_up"
 	}
 );
