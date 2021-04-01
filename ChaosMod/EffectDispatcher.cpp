@@ -30,9 +30,11 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
+	float percentage = FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_percentage;
+
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .01f, m_percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 void EffectDispatcher::DrawEffectTexts()
@@ -191,9 +193,7 @@ void EffectDispatcher::UpdateMetaEffects()
 				{
 					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-						? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-						: effectData.Weight;
+					totalWeight += GetEffectWeight(effectData);
 
 					availableMetaEffects.push_back(std::make_tuple(effectIdentifier, &pair.second));
 				}
@@ -211,11 +211,9 @@ void EffectDispatcher::UpdateMetaEffects()
 				{
 					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData->Weight;
+					totalWeight += GetEffectWeight(*effectData);
 
-					effectData->Weight += effectData->EffectGroup != EffectGroup::DEFAULT
-						? effectData->Weight / g_effectGroupMemberCount[effectData->EffectGroup]
-						: effectData->Weight;
+					effectData->Weight += effectData->Weight;
 
 					if (!targetEffectIdentifier && chosen <= totalWeight)
 					{
@@ -257,7 +255,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
-	if (effectData.EffectGroup == EffectGroup::DEFAULT)
+	if (effectData.EffectGroupType == EffectGroupType::NONE)
 	{
 		effectData.Weight = effectData.WeightMult;
 	}
@@ -265,7 +263,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	{
 		for (auto& pair : g_enabledEffects)
 		{
-			if (pair.second.EffectGroup == effectData.EffectGroup)
+			if (pair.second.EffectGroupType == effectData.EffectGroupType)
 			{
 				pair.second.Weight = pair.second.WeightMult;
 			}
@@ -395,9 +393,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	{
 		const EffectData& effectData = pair.second;
 
-		totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-			? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-			: effectData.Weight;
+		totalWeight += GetEffectWeight(effectData);
 	}
 
 	float chosen = g_random.GetRandomFloat(0.f, totalWeight);
@@ -409,9 +405,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
-		totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-			? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-			: effectData.Weight;
+		totalWeight += GetEffectWeight(effectData);
 
 		if (chosen <= totalWeight)
 		{
@@ -427,11 +421,14 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 }
 
-void EffectDispatcher::ClearEffects()
+void EffectDispatcher::ClearEffects(bool includePermanent)
 {
 	ThreadManager::StopThreads();
 
-	m_permanentEffects.clear();
+	if (includePermanent)
+	{
+		m_permanentEffects.clear();
+	}
 
 	m_activeEffects.clear();
 }

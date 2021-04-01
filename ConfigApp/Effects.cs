@@ -304,8 +304,13 @@ namespace ConfigApp
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
             EFFECT_PEDS_ROASTING,
+            EFFECT_PLAYER_BINOCULARS,
+            EFFECT_PEDS_SLIPPERY_PEDS,
             EFFECT_VEHS_CRUISE_CONTROL,
             EFFECT_PEDS_HANDS_UP,
+            EFFECT_PLAYER_AIMBOT,
+            EFFECT_PEDS_SPAWN_BIKER,
+            EFFECT_PEDS_SPAWN_SPACE_RANGER,
             _EFFECT_ENUM_MAX
         }
 
@@ -467,7 +472,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_RANDOMCLOTHES, new EffectInfo("Randomize Player Clothes", EffectCategory.PLAYER, "player_randclothes")},
             {EffectType.EFFECT_PEDS_RAINBOWWEPS, new EffectInfo("Rainbow Weapons", EffectCategory.MISC, "peds_rainbowweps", true)},
             {EffectType.EFFECT_GTAO_TRAFFIC, new EffectInfo("Traffic Magnet", EffectCategory.VEHICLE, "traffic_gtao", true)},
-            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.VEHICLE, "spawn_bluesultan")},
+            {EffectType.EFFECT_SPAWN_IE_SULTAN, new EffectInfo("Spawn Blue Sultan", EffectCategory.PEDS, "spawn_bluesultan")},
             {EffectType.EFFECT_PLAYER_SETINTORANDVEH, new EffectInfo("Set Player Into Random Vehicle", EffectCategory.PLAYER, "player_setintorandveh")},
             {EffectType.EFFECT_VEHS_FULLACCEL, new EffectInfo("Full Acceleration", EffectCategory.VEHICLE, "traffic_fullaccel", true, true)},
             {EffectType.EFFECT_SPAWN_UFO, new EffectInfo("Spawn UFO", EffectCategory.MISC, "misc_spawnufo")},
@@ -498,7 +503,7 @@ namespace ConfigApp
             {EffectType.EFFECT_LAUNCH_ALL_PEDS, new EffectInfo("Launch All Nearby Peds Up", EffectCategory.PEDS, "peds_launchnearby")},
             {EffectType.EFFECT_PEDS_ATTACK_PLAYER, new EffectInfo("All Peds Attack Player", EffectCategory.PEDS, "peds_attackplayer", true)},
             {EffectType.EFFECT_CLONE_PLAYER, new EffectInfo("Clone Player", EffectCategory.PLAYER, "player_clone")},
-            {EffectType.EFFECT_SLIDY_PEDS, new EffectInfo("Slidy Peds", EffectCategory.PEDS, "peds_slidy", true, true)},
+            {EffectType.EFFECT_SLIDY_PEDS, new EffectInfo("Slidy Peds", EffectCategory.PEDS, "peds_slidy", true)},
             {EffectType.EFFECT_SPAWN_DANCING_APES, new EffectInfo("Spawn Dance Troupe", EffectCategory.PEDS, "peds_spawndancingapes")},
             {EffectType.EFFECT_ONE_BULLET_WEP, new EffectInfo("One Bullet Mags", EffectCategory.PEDS, "misc_onebullet", true)},
             {EffectType.EFFECT_PHONES, new EffectInfo("Whose Phone Is Ringing?", EffectCategory.PEDS, "peds_phones", true)},
@@ -573,9 +578,14 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
-            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Roasting", EffectCategory.PEDS, "peds_roasting", true, true)},
+            {EffectType.EFFECT_PEDS_ROASTING, new EffectInfo("Get Roasted", EffectCategory.PEDS, "peds_roasting", true, true)},
+            {EffectType.EFFECT_PLAYER_BINOCULARS, new EffectInfo("Binoculars", EffectCategory.PLAYER, "player_binoculars", true)},
+            {EffectType.EFFECT_PEDS_SLIPPERY_PEDS, new EffectInfo("Can't Tie My Shoes", EffectCategory.PEDS, "peds_slippery_peds", true, true)},
             {EffectType.EFFECT_VEHS_CRUISE_CONTROL, new EffectInfo("Cruise Control", EffectCategory.VEHICLE, "vehs_cruise_control", true, true)},
-            {EffectType.EFFECT_PEDS_HANDS_UP, new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")}
+            {EffectType.EFFECT_PEDS_HANDS_UP, new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")},
+            {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
+            {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
+            {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
         };
     }
 }

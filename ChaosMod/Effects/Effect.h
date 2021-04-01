@@ -165,15 +165,15 @@ private:
 
 		g_effectsMap[effectType] = effectInfo;
 
-		EffectGroup effectGroup = effectInfo.EffectGroup;
-		if (effectGroup != EffectGroup::DEFAULT)
+		EffectGroupType effectGroupType = effectInfo.EffectGroupType;
+		if (effectGroupType != EffectGroupType::NONE)
 		{
-			if (!g_effectGroupMemberCount[effectGroup])
+			if (!g_allEffectGroupMemberCount[effectGroupType])
 			{
-				g_effectGroupMemberCount[effectGroup] = 0;
+				g_allEffectGroupMemberCount[effectGroupType] = 0;
 			}
 
-			g_effectGroupMemberCount[effectGroup]++;
+			g_allEffectGroupMemberCount[effectGroupType]++;
 		}
 	}
 

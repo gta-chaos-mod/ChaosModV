@@ -4,7 +4,7 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting()
+TwitchVoting::TwitchVoting(const std::array<int, 3>& textColor) : m_textColor(textColor)
 {
 	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
@@ -48,6 +48,15 @@ TwitchVoting::TwitchVoting()
 	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
+	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
+	HANDLE mutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
+	if (mutex)
+	{
+		WaitForSingleObject(mutex, INFINITE);
+		ReleaseMutex(mutex);
+		CloseHandle(mutex);
+	}
+
 	if (!result)
 	{
 		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Reverting to normal mode.").str());
@@ -57,10 +66,10 @@ TwitchVoting::TwitchVoting()
 
 	m_pipeHandle = CreateNamedPipe("\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
 		1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
-
+	
 	if (m_pipeHandle == INVALID_HANDLE_VALUE)
 	{
-		ErrorOutWithMsg("Error while creating a named pipe. This is not something that should ever happen.");
+		ErrorOutWithMsg("Error while creating a named pipe, previous instance of voting proxy might be running. Try reloading the mod. Reverting to normal mode.");
 
 		return;
 	}
@@ -72,6 +81,7 @@ TwitchVoting::~TwitchVoting()
 {
 	if (m_pipeHandle != INVALID_HANDLE_VALUE)
 	{
+		FlushFileBuffers(m_pipeHandle);
 		DisconnectNamedPipe(m_pipeHandle);
 		CloseHandle(m_pipeHandle);
 	}
@@ -122,6 +132,11 @@ void TwitchVoting::Tick()
 		{
 			return;
 		}
+	}
+
+	if (!m_receivedHello)
+	{
+		return;
 	}
 
 	if (g_effectDispatcher->GetRemainingTimerTime() <= 1 && !m_hasReceivedResult)
@@ -228,9 +243,7 @@ void TwitchVoting::Tick()
 			{
 				const EffectData& effectData = pair.second;
 
-				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-					: effectData.Weight;
+				totalWeight += GetEffectWeight(effectData);
 			}
 
 			float chosen = g_random.GetRandomFloat(0.f, totalWeight);
@@ -243,9 +256,7 @@ void TwitchVoting::Tick()
 			{
 				auto& [effectIdentifier, effectData] = pair;
 
-				totalWeight += effectData.EffectGroup != EffectGroup::DEFAULT
-					? effectData.Weight / g_effectGroupMemberCount[effectData.EffectGroup]
-					: effectData.Weight;
+				totalWeight += GetEffectWeight(effectData);
 
 				if (chosen <= totalWeight)
 				{
@@ -322,7 +333,7 @@ void TwitchVoting::Tick()
 
 			oss << std::endl;
 
-			DrawScreenText(oss.str(), { .95f, y }, .41f, { 210, 210, 210 }, true, ScreenTextAdjust::RIGHT, { .0f, .95f });
+			DrawScreenText(oss.str(), { .95f, y }, .41f, { m_textColor[0], m_textColor[1], m_textColor[2] }, true, ScreenTextAdjust::RIGHT, { .0f, .95f }, true);
 
 			y += .05f;
 		}
@@ -331,7 +342,13 @@ void TwitchVoting::Tick()
 
 bool TwitchVoting::HandleMsg(const std::string& msg)
 {
-	if (msg == "ping")
+	if (msg == "hello")
+	{
+		m_receivedHello = true;
+
+		LOG("Received Hello from voting proxy");
+	}
+	else if (msg == "ping")
 	{
 		m_lastPing = GetTickCount64();
 		m_noPingRuns = 0;

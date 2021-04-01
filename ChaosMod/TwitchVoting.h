@@ -15,7 +15,7 @@ enum class TwitchOverlayMode
 class TwitchVoting
 {
 public:
-	TwitchVoting();
+	TwitchVoting(const std::array<int, 3>& textColor);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -26,6 +26,7 @@ public:
 	void Tick();
 	
 private:
+	bool m_receivedHello = false;
 	bool m_enableTwitchVoting;
 	int m_twitchSecsBeforeVoting;
 	bool m_enableTwitchPollVoting = false;
@@ -42,6 +43,7 @@ private:
 	bool m_enableTwitchRandomEffectVoteable;
 	bool m_hasReceivedResult = false;
 	bool m_isVotingRoundDone = true;
+	const std::array<int, 3> m_textColor;
 
 	bool m_isVotingRunning = false;
 

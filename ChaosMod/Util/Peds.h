@@ -1,13 +1,10 @@
-/*
-	Effect by MoneyWasted
-*/
+#pragma once
 
-#include <stdafx.h>
+#include "nativesNoNamespaces.h"
+#include "PoolSpawner.h"
 
-static void OnStart()
+inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)
 {
-	static constexpr Hash modelHash = 1459905209;
-
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
@@ -16,7 +13,7 @@ static void OnStart()
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_HOSTILE_JIMMY", &relationshipGroup);
+	ADD_RELATIONSHIP_GROUP("_HOSTILE_PED", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
@@ -40,16 +37,12 @@ static void OnStart()
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_COMBATMG"), 9999, true, true);
+	if (weaponHash)
+	{
+		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
+	}
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+	return ped;
 }
-
-static RegisterEffect registerEffect(EFFECT_ANGRY_JIMMY, OnStart, EffectInfo
-	{
-		.Name = "Spawn Jealous Jimmy",
-		.Id = "peds_angryjimmy",
-		.EffectGroupType = EffectGroupType::SPAWN_ENEMY
-	}
-);

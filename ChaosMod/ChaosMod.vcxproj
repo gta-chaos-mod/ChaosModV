@@ -228,6 +228,9 @@
     <ClCompile Include="Effects\db\Player\PlayerClone.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDrunk.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExitVeh.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSlipperyPeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
@@ -267,6 +270,8 @@
     <ClCompile Include="Effects\db\Vehs\VehsLockAll.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsOneHitKO.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
@@ -317,7 +322,7 @@
     <ClInclude Include="EffectDispatcher.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectExecutionType.h" />
-    <ClInclude Include="Effects\EffectGroup.h" />
+    <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
@@ -353,6 +358,7 @@
     <ClInclude Include="Util\EntityIterator.h" />
     <ClInclude Include="Util\File.h" />
     <ClInclude Include="Util\Logging.h" />
+    <ClInclude Include="Util\Peds.h" />
     <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Mp3Manager.h" />
