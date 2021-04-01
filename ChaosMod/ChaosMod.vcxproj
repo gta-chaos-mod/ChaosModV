@@ -101,6 +101,7 @@
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInverseControls.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
