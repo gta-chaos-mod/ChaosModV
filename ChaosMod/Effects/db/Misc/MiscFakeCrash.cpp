@@ -52,7 +52,9 @@ static void SleepAllThreads(DWORD ms)
 
 static void OnStart()
 {
-	if (g_random.GetRandomInt(0, 1))
+	bool fakeTimer = g_random.GetRandomInt(0, 1);
+
+	if (fakeTimer)
 	{
 		g_effectDispatcher->FakeTimerBarPercentage = g_random.GetRandomFloat(0.f, 1.f);
 	}
@@ -71,7 +73,11 @@ static void OnStart()
 
 	SleepAllThreads(g_random.GetRandomInt(3000, 5000));
 
-	g_effectDispatcher->FakeTimerBarPercentage = 0.f;
+	if (fakeTimer)
+	{
+		g_effectDispatcher->FakeTimerBarPercentage = 0.f;
+	}
+  
 	blackScreen = false;
 }
 
