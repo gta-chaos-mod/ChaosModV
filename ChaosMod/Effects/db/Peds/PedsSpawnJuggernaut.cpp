@@ -11,6 +11,7 @@ static void OnStart()
     static Hash weaponHash = GET_HASH_KEY("weapon_minigun");
     Ped ped = CreateHostilePed(enemyHash, weaponHash);
     SET_PED_ARMOUR(ped, 250);
+    SET_PED_ACCURACY(ped, 3);
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_JUGGERNAUT, OnStart, nullptr, nullptr, EffectInfo
