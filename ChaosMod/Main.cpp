@@ -352,7 +352,7 @@ void Main::Loop()
 
 		if (splashTextTime > 0)
 		{
-			DrawScreenText("Chaos Mod v1.9.1.2 by pongo1231\n\nSee credits.txt for list of contributors",
+			DrawScreenText("Chaos Mod v1.9.1.3 by pongo1231\n\nSee credits.txt for list of contributors",
 				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
 
 #ifdef _DEBUG
