@@ -233,6 +233,10 @@
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\TestHook.cpp" />
     <ClCompile Include="ThreadManager.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSlipperyPeds.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
@@ -284,6 +288,7 @@
     <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
+    <ClInclude Include="Util\Peds.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />

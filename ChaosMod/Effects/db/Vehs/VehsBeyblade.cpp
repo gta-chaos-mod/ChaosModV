@@ -37,6 +37,10 @@ static void OnTick()
 				SET_ENTITY_VELOCITY(veh, velocity.x, velocity.y, velocity.z);
 			}
 		}
+		else
+		{
+			SET_VEHICLE_REDUCE_GRIP(veh, false);
+		}
 
 		if (--count == 0)
 		{
