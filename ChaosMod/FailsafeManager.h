@@ -2,6 +2,6 @@
 
 namespace FailsafeManager
 {
-	void Reset();
+	void Init();
 	void Run();
 }
