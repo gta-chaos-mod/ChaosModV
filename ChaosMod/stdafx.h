@@ -36,6 +36,7 @@
 #include "Util/EntityIterator.h"
 #include "Util/Model.h"
 #include "Util/Player.h"
+#include "Util/Peds.h"
 #include "Util/Vehicle.h"
 #include "Util/TryParse.h"
 #include "Util/PoolSpawner.h"

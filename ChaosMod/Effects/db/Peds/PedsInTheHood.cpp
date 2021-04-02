@@ -9,9 +9,9 @@ static void OnTick()
 {
 	REQUEST_ANIM_DICT("missfbi3_sniping");
 
-	for (auto ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
-		if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3))
+		if (!IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3) && !IS_PED_A_PLAYER(ped) && !IS_ENTITY_A_MISSION_ENTITY(ped))
 		{
 			TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
 		}

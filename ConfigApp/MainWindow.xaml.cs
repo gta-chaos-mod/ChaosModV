@@ -72,9 +72,9 @@ namespace ConfigApp
                     File.Delete(".writetest");
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e) when (e is UnauthorizedAccessException || e is FileNotFoundException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
+                MessageBox.Show("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.",
                     "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Application.Current.Shutdown();
@@ -409,7 +409,7 @@ namespace ConfigApp
             ParseConfigFile();
             ParseTwitchFile();
 
-            MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void user_reset_Click(object sender, RoutedEventArgs e)

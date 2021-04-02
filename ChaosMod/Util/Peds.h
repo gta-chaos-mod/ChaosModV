@@ -1,9 +1,10 @@
-#include <stdafx.h>
+#pragma once
 
-static void OnStart()
+#include "nativesNoNamespaces.h"
+#include "PoolSpawner.h"
+
+inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)
 {
-	static constexpr Hash modelHash = -835930287;
-
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
@@ -12,7 +13,7 @@ static void OnStart()
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
+	ADD_RELATIONSHIP_GROUP("_HOSTILE_PED", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
@@ -36,16 +37,12 @@ static void OnStart()
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
+	if (weaponHash)
+	{
+		GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
+	}
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+	return ped;
 }
-
-static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS, OnStart, EffectInfo
-	{
-		.Name = "Spawn Griefer Jesus",
-		.Id = "spawn_grieferjesus",
-		.EffectGroupType = EffectGroupType::SPAWN_ENEMY_SPECIAL
-	}
-);
