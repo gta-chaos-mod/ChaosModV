@@ -30,9 +30,11 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
+	float percentage = FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_percentage;
+
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .01f, m_percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 void EffectDispatcher::DrawEffectTexts()
@@ -253,7 +255,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
-	if (effectData.EffectGroupType == EffectGroupType::DEFAULT)
+	if (effectData.EffectGroupType == EffectGroupType::NONE)
 	{
 		effectData.Weight = effectData.WeightMult;
 	}
@@ -419,11 +421,14 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 }
 
-void EffectDispatcher::ClearEffects()
+void EffectDispatcher::ClearEffects(bool includePermanent)
 {
 	ThreadManager::StopThreads();
 
-	m_permanentEffects.clear();
+	if (includePermanent)
+	{
+		m_permanentEffects.clear();
+	}
 
 	m_activeEffects.clear();
 }

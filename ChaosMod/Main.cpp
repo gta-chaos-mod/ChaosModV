@@ -20,6 +20,7 @@ std::array<int, 3> ParseColor(const std::string& colorText)
 static void ParseEffectsFile()
 {
 	g_enabledEffects.clear();
+	g_currentEffectGroupMemberCount = g_allEffectGroupMemberCount;
 
 	OptionsFile effectsFile("chaosmod/effects.ini");
 
@@ -71,9 +72,9 @@ static void ParseEffectsFile()
 
 		if (!values[0]) // enabled == false
 		{
-			if (effectInfo.EffectGroupType != EffectGroupType::DEFAULT)
+			if (effectInfo.EffectGroupType != EffectGroupType::NONE)
 			{
-				g_effectGroupMemberCount[effectInfo.EffectGroupType]--;
+				g_currentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
 			}
 
 			continue;
@@ -145,6 +146,12 @@ void Main::Init()
 			std::cout.rdbuf(g_consoleOut.rdbuf());
 
 			std::cout.clear();
+
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			DWORD conMode;
+			GetConsoleMode(handle, &conMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), conMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 	}
 	else if (GetConsoleWindow())
@@ -190,13 +197,21 @@ void Main::Init()
 	}
 
 	LOG("Initializing Twitch voting");
-	m_twitchVoting = std::make_unique<TwitchVoting>();
+	m_twitchVoting = std::make_unique<TwitchVoting>(textColor);
+
+	FailsafeManager::Init();
 
 	LOG("Completed Init!");
 }
 
 void Main::Reset()
 {
+	// Check if this isn't the first time this is being run
+	if (g_effectDispatcher)
+	{
+		LOG("Mod has been disabled using shortcut!");
+	}
+
 	g_effectDispatcher.reset();
 
 	if (m_enableDebugMenu)
@@ -231,8 +246,6 @@ void Main::Loop()
 	g_mainThread = GetCurrentFiber();
 
 	ThreadManager::ClearThreads();
-
-	FailsafeManager::Reset();
 
 	Reset();
 
@@ -339,7 +352,7 @@ void Main::Loop()
 
 		if (splashTextTime > 0)
 		{
-			DrawScreenText("Chaos Mod v1.9.1.2 by pongo1231\n\nSee credits.txt for list of contributors",
+			DrawScreenText("Chaos Mod v1.9.1.3 by pongo1231\n\nSee credits.txt for list of contributors",
 				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
 
 #ifdef _DEBUG

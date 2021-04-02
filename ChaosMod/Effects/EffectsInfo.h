@@ -269,13 +269,16 @@ enum EffectType
 	EFFECT_VEHS_CRUMBLE,
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
+	EFFECT_LOW_PITCH,
 	EFFECT_PEDS_ROASTING,
 	EFFECT_PLAYER_BINOCULARS,
 	EFFECT_VEHS_CRUISE_CONTROL,
+	EFFECT_PEDS_HANDS_UP,
 	EFFECT_PLAYER_AIMBOT,
 	EFFECT_PEDS_SLIPPERY_PEDS,
 	EFFECT_PEDS_SPAWN_BIKER,
 	EFFECT_PLAYER_BLIMP_STRATS,
+	EFFECT_PEDS_SPAWN_SPACE_RANGER,
 	_EFFECT_ENUM_MAX
 };
 
@@ -286,7 +289,7 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::DEFAULT;
+	EffectGroupType EffectGroupType = EffectGroupType::NONE;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 

@@ -5,12 +5,12 @@
 
 static __forceinline void LuaPrint(const std::string& text)
 {
-	RAW_LOG("[Lua] " << text);
+	COLOR_PREFIX_LOG("[Lua]", text);
 }
 
 static __forceinline void LuaPrint(const std::string& name, const std::string& text)
 {
-	RAW_LOG("[Lua] " << name << ": " << text);
+	COLOR_PREFIX_LOG("[" << name << "]", text);
 }
 
 static __forceinline char* _TryParseString(void* ptr)
@@ -359,7 +359,7 @@ namespace LuaManager
 
 							if (idAlreadyExists)
 							{
-								LOG("Could not register script \"" << fileName << "\" (with name \"" << scriptName << "\") as \"" << scriptId << "\" (already exists!)");
+								LOG("Could not register script \"" << fileName << "\" (with effect name \"" << scriptName << "\") as effect with id \"" << scriptId << "\" (already exists!)");
 							}
 							else
 							{
@@ -435,7 +435,7 @@ namespace LuaManager
 
 								g_registeredEffects.emplace_back(scriptId);
 
-								LOG("Registered script \"" << fileName << "\" as \"" << scriptId << "\" with name \"" << scriptName << "\"");
+								LOG("Registered script \"" << fileName << "\" as effect with id \"" << scriptId << "\" and name \"" << scriptName << "\"");
 							}
 						}
 					}
