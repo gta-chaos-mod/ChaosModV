@@ -14,7 +14,7 @@ static void OnStart()
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
+	ADD_RELATIONSHIP_GROUP("_COMPANION_JESUS", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, playerGroup, relationshipGroup);
 
