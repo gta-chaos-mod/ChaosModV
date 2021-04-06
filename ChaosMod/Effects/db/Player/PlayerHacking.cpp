@@ -41,6 +41,7 @@ const char* ROULETTE_WORDS[] =
     "BIRD1338",
     "BRANDWAR",
     "YZIMRONI",
+    "T_AVENGE"
 };
 
 const char* WIN_PHRASES[] =
