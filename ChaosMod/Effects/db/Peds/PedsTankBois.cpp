@@ -53,8 +53,8 @@ static void OnStart()
 
 static RegisterEffect registerEffect(EFFECT_PEDS_TANK_BOIS, OnStart, nullptr, nullptr, EffectInfo
     {
-        .Name = "Tank Bois",
+        .Name = "Tanks A Lot",
         .Id = "peds_tank_bois",
-		.EffectGroupType = EffectGroupType::SPAWN_GENERIC
+        .EffectGroupType = EffectGroupType::SPAWN_GENERIC
     }
 );
