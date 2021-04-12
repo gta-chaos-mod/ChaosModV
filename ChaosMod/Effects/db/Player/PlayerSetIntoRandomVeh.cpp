@@ -42,7 +42,21 @@ static void OnStart()
 			}
 		}
 
-		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+		Vehicle targetVeh;
+
+		for (int i = 0; i < 100; i++)
+		{
+			float groundZ;
+			targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+			Vector3 vehPos = GET_ENTITY_COORDS(targetVeh, false);
+			bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false);
+			bool vehCollision = HAS_COLLISION_LOADED_AROUND_ENTITY(targetVeh);
+			if (useGroundZ && vehCollision)
+			{
+				break;
+			}
+		}
+
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
