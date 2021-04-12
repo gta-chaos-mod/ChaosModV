@@ -325,6 +325,7 @@ namespace ConfigApp
             EFFECT_PLAYER_FLING_PLAYER,
             EFFECT_MISC_STUFFGUNS,
             EFFECT_PEDS_ETERNAL_SCREAMS,
+            EFFECT_PLAYER_BLADE_HUNGER,
             _EFFECT_ENUM_MAX
         }
 
@@ -614,6 +615,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_FLING_PLAYER, new EffectInfo("Fling Player", EffectCategory.PLAYER, "player_fling_player")},
             {EffectType.EFFECT_MISC_STUFFGUNS, new EffectInfo("Improvised Weaponry", EffectCategory.MISC, "misc_stuffguns", true, true)},
             {EffectType.EFFECT_PEDS_ETERNAL_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eternal_screams", true, true)},
+            {EffectType.EFFECT_PLAYER_BLADE_HUNGER, new EffectInfo("The Blade Hungers", EffectCategory.PLAYER, "player_blade_hunger", true)},
         };
     }
 }
