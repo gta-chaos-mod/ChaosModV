@@ -237,7 +237,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsEterScreams.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
