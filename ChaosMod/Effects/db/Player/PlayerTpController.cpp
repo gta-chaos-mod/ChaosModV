@@ -156,7 +156,6 @@ static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint, Effec
 static void OnStartFront()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 50.f, 0.f);
 	float groundZ;
 	GET_GROUND_Z_FOR_3D_COORD(newPos.x, newPos.y, 1000.f, &groundZ, false, false);
