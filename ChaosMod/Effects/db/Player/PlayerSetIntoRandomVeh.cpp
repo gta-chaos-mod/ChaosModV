@@ -8,9 +8,13 @@ static void OnStart()
 
 	std::vector<Vehicle> vehs;
 
+	float groundZ;
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (veh != playerVeh)
+		Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
+		bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false);
+		bool vehCollision = HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
+		if (veh != playerVeh && useGroundZ && vehCollision)
 		{
 			vehs.push_back(veh);
 		}
@@ -41,22 +45,7 @@ static void OnStart()
 				}
 			}
 		}
-
-		Vehicle targetVeh;
-		int numVehs = (vehs.size() - 1);
-		for (int i = 0; i < numVehs; i++)
-		{
-			float groundZ;
-			targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
-			Vector3 vehPos = GET_ENTITY_COORDS(targetVeh, false);
-			bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false);
-			bool vehCollision = HAS_COLLISION_LOADED_AROUND_ENTITY(targetVeh);
-			if (useGroundZ && vehCollision)
-			{
-				break;
-			}
-		}
-
+		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 

@@ -14,29 +14,22 @@ static void OnStart()
 
 		std::vector<Vehicle> vehs;
 
+		float groundZ;
 		for (Vehicle veh : GetAllVehs())
 		{
-			vehs.push_back(veh);
+			Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
+			bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false);
+			bool vehCollision = HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
+			if (useGroundZ && vehCollision)
+			{
+				vehs.push_back(veh);
+			}
 		}
 
 		if (!vehs.empty())
 		{
 			Ped playerPed = PLAYER_PED_ID();
-
-			Vehicle veh;
-			int numVehs = (vehs.size() - 1);
-			for (int i = 0; i < numVehs; i++)
-			{
-				float groundZ;
-				veh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
-				Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
-				bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false);
-				bool vehCollision = HAS_COLLISION_LOADED_AROUND_ENTITY(veh);
-				if (useGroundZ && vehCollision)
-				{
-					break;
-				}
-			}
+			Vehicle veh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 			if (veh != GET_VEHICLE_PED_IS_IN(playerPed, false))
 			{
 				Hash vehModel = GET_ENTITY_MODEL(veh);
