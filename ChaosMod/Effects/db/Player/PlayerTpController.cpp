@@ -158,9 +158,9 @@ static void OnStartFront()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 50.f, 0.f);
 	float groundZ;
-	GET_GROUND_Z_FOR_3D_COORD(newPos.x, newPos.y, 1000.f, &groundZ, false, false);
+	bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(newPos.x, newPos.y, 1000.f, &groundZ, false, false);
 
-	TeleportPlayer(newPos.x, newPos.y, groundZ);
+	TeleportPlayer(newPos.x, newPos.y, useGroundZ ? groundZ : newPos.z);
 }
 
 static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront, EffectInfo
