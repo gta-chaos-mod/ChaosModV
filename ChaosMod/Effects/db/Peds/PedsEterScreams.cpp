@@ -20,7 +20,7 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_ETER_SCREAMS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(EFFECT_PEDS_ETERNAL_SCREAMS, nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Eternal Screams",
 		.Id = "peds_eternal_screams",

@@ -312,7 +312,7 @@ namespace ConfigApp
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
-            EFFECT_PEDS_ETER_SCREAMS,
+            EFFECT_PEDS_ETERNAL_SCREAMS,
             _EFFECT_ENUM_MAX
         }
 
@@ -589,7 +589,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
-            {EffectType.EFFECT_PEDS_ETER_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eter_screams")},
+            {EffectType.EFFECT_PEDS_ETERNAL_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eternal_screams")},
         };
     }
 }
