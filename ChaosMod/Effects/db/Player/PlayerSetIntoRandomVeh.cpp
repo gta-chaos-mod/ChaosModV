@@ -43,8 +43,8 @@ static void OnStart()
 		}
 
 		Vehicle targetVeh;
-
-		for (int i = 0; i < 100; i++)
+		int numVehs = (vehs.size() - 1);
+		for (int i = 0; i < numVehs; i++)
 		{
 			float groundZ;
 			targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
