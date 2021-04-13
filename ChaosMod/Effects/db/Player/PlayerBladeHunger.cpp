@@ -21,14 +21,6 @@ static void OnStart()
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
-
-	for (Hash weapon : Memory::GetAllWeapons())
-	{
-		if (weapon != bladeHash)
-		{
-			REMOVE_WEAPON_FROM_PED(playerPed, weapon);
-		}
-	}
 	
 	GIVE_WEAPON_TO_PED(playerPed, bladeHash, 1, false, true);
 
