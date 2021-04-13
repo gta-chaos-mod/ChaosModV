@@ -12,7 +12,7 @@ static void OnStart()
 	for (Vehicle veh : GetAllVehs())
 	{
 		Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
-		if (((veh != playerVeh) && (GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false))) && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
+		if (veh != playerVeh && GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false) && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
 		{
 			vehs.push_back(veh);
 		}
