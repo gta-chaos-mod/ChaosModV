@@ -129,11 +129,14 @@ static void OnTick()
 					thing = thingVeh;
 					break;
 				}
-				SET_ENTITY_NO_COLLISION_ENTITY(ped, thing, true);
-				SET_ENTITY_COORDS(thing, spawnPos.x, spawnPos.y, spawnPos.z, false, false, false, false);
-				SET_ENTITY_ROTATION(thing, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
-				SET_ENTITY_AS_NO_LONGER_NEEDED(&thing);
+				if (thing != NULL)
+				{
+					SET_ENTITY_NO_COLLISION_ENTITY(ped, thing, true);
+					SET_ENTITY_COORDS(thing, spawnPos.x, spawnPos.y, spawnPos.z, false, false, false, false);
+					SET_ENTITY_ROTATION(thing, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
+					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
+					SET_ENTITY_AS_NO_LONGER_NEEDED(&thing);
+				}
 			}
 		}
 	}
