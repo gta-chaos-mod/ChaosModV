@@ -42,8 +42,6 @@ static bool IsWeaponShotgun(Hash wepHash)
 
 static void OnTick()
 {
-	static const Hash thingHash = GET_HASH_KEY("a_c_thing_01");
-	LoadModel(thingHash);
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -90,42 +88,41 @@ static void OnTick()
 				Entity thing, thingProp;
 				Vehicle thingVeh;
 				Ped thingPed;
-				for (Vehicle veh : GetAllVehs())
-				{
-					vehs.push_back(veh);
-				}
-				if (!vehs.empty())
-				{
-					thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
-				}
-				for (Ped ped : GetAllPeds())
-				{
-					peds.push_back(ped);
-				}
-				if (!peds.empty())
-				{
-					thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
-				}
-				for (Entity prop : GetAllProps())
-				{
-					props.push_back(prop);
-				}
-				if (!props.empty())
-				{
-					thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
-				}
 				
 				switch(objType)
 				{
 				case 0: 
+					for (Entity prop : GetAllProps())
+					{
+						props.push_back(prop);
+					}
+					if (!props.empty())
+					{
+						thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
+					}
 					thing = thingProp;
+					SET_OBJECT_AS_NO_LONGER_NEEDED(&thing);
 					break;
 				case 1:
+					for (Ped ped : GetAllPeds())
+					{
+						peds.push_back(ped);
+					}
+					if (!peds.empty())
+					{
+						thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
+					}
 					thing = thingPed;
-					CLEAR_PED_TASKS_IMMEDIATELY(thingPed);
-					SET_PED_TO_RAGDOLL(thingPed, 2000, 2000, 0, 1, 1, 0);
 					break;
 				case 2:
+					for (Vehicle veh : GetAllVehs())
+					{
+						vehs.push_back(veh);
+					}
+					if (!vehs.empty())
+					{
+						thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+					}
 					thing = thingVeh;
 					break;
 				}
@@ -134,14 +131,13 @@ static void OnTick()
 					SET_ENTITY_NO_COLLISION_ENTITY(ped, thing, true);
 					SET_ENTITY_COORDS(thing, spawnPos.x, spawnPos.y, spawnPos.z, false, false, false, false);
 					SET_ENTITY_ROTATION(thing, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
+					CLEAR_PED_TASKS_IMMEDIATELY(thingPed);
+					SET_PED_TO_RAGDOLL(thingPed, 2000, 2000, 0, 1, 1, 0);
 					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
-					SET_ENTITY_AS_NO_LONGER_NEEDED(&thing);
 				}
 			}
 		}
 	}
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(thingHash);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_STUFFGUNS, nullptr, nullptr, OnTick, EffectInfo
