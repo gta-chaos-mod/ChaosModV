@@ -99,9 +99,8 @@ static void OnTick()
 					if (!props.empty())
 					{
 						thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
-					}
-					thing = thingProp;
-					SET_OBJECT_AS_NO_LONGER_NEEDED(&thing);
+						thing = thingProp;
+					}			
 					break;
 				case 1:
 					for (Ped ped : GetAllPeds())
@@ -111,8 +110,8 @@ static void OnTick()
 					if (!peds.empty())
 					{
 						thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
-					}
-					thing = thingPed;
+						thing = thingPed;
+					}				
 					break;
 				case 2:
 					for (Vehicle veh : GetAllVehs())
@@ -122,8 +121,8 @@ static void OnTick()
 					if (!vehs.empty())
 					{
 						thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+						thing = thingVeh;
 					}
-					thing = thingVeh;
 					break;
 				}
 				if (thing != NULL)
@@ -131,8 +130,17 @@ static void OnTick()
 					SET_ENTITY_NO_COLLISION_ENTITY(ped, thing, true);
 					SET_ENTITY_COORDS(thing, spawnPos.x, spawnPos.y, spawnPos.z, false, false, false, false);
 					SET_ENTITY_ROTATION(thing, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);
-					CLEAR_PED_TASKS_IMMEDIATELY(thingPed);
-					SET_PED_TO_RAGDOLL(thingPed, 2000, 2000, 0, 1, 1, 0);
+					if (GET_ENTITY_TYPE(thing) == 1)
+					{
+						//has to be done after ped is teleported or 'APPLY_FORCE' doesn't work
+						CLEAR_PED_TASKS_IMMEDIATELY(thing);
+						SET_PED_TO_RAGDOLL(thing, 2000, 2000, 0, 1, 1, 0);
+					}
+					if (GET_ENTITY_TYPE(thing) == 3)
+					{
+						//prevent non-moveable objects cluttering up important areas
+						SET_OBJECT_AS_NO_LONGER_NEEDED(&thing);
+					}
 					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
 				}
 			}
