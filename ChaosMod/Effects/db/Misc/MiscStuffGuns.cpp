@@ -82,12 +82,12 @@ static void OnTick()
 				}
 
 				int objType = GET_RANDOM_INT_IN_RANGE(0, 3);
-				std::vector<Vehicle> vehs;
+
+				//these two can't go in the switch, not sure why but it won't build.
 				std::vector<Ped> peds;
 				std::vector<Entity> props;
-				Entity thing, thingProp;
-				Vehicle thingVeh;
-				Ped thingPed;
+
+				Entity thing;
 				
 				switch(objType)
 				{
@@ -98,7 +98,7 @@ static void OnTick()
 					}
 					if (!props.empty())
 					{
-						thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
+						Entity thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
 						thing = thingProp;
 					}			
 					break;
@@ -109,18 +109,19 @@ static void OnTick()
 					}
 					if (!peds.empty())
 					{
-						thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
+						Ped thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
 						thing = thingPed;
 					}				
 					break;
 				case 2:
+					std::vector<Vehicle> vehs;
 					for (Vehicle veh : GetAllVehs())
 					{
 						vehs.push_back(veh);
 					}
 					if (!vehs.empty())
 					{
-						thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+						Vehicle thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 						thing = thingVeh;
 					}
 					break;
