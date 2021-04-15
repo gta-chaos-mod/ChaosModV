@@ -146,7 +146,7 @@ static void OnTick()
 
 static RegisterEffect registerEffect(EFFECT_MISC_STUFFGUNS, nullptr, nullptr, OnTick, EffectInfo
 	{
-		.Name = "Stuff Guns",
+		.Name = "Improvised Weaponry",
 		.Id = "misc_stuffguns",
 		.IsTimed = true,
 		.IsShortDuration = true
