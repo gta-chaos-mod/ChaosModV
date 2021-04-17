@@ -589,7 +589,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
-            {EffectType.EFFECT_PLAYER_PAUSE, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot")},
+            {EffectType.EFFECT_PLAYER_PAUSE, new EffectInfo("Pause", EffectCategory.PLAYER, "player_pause")},
         };
     }
 }
