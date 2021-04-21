@@ -17,5 +17,4 @@ struct EffectsIdentifierHasher
     }
 };
 
-
 inline std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> g_enabledEffects;

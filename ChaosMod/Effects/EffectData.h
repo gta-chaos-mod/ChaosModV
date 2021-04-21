@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+inline bool g_enableGroupWeighting = true;
+
 struct EffectData
 {
 	EffectTimedType TimedType = EffectTimedType::TIMED_UNK;
@@ -27,7 +29,7 @@ inline float GetEffectWeight(const EffectData& effectData)
 	EffectGroupType effectGroupType = effectData.EffectGroupType;
 	float effectWeight = effectData.Weight;
 
-	return effectGroupType != EffectGroupType::NONE
+	return g_enableGroupWeighting && effectGroupType != EffectGroupType::NONE
 		? effectWeight / g_currentEffectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
 		: effectWeight;
 }

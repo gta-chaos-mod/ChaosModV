@@ -213,7 +213,7 @@ void EffectDispatcher::UpdateMetaEffects()
 
 					totalWeight += GetEffectWeight(*effectData);
 
-					effectData->Weight += effectData->Weight;
+					effectData->Weight += effectData->WeightMult;
 
 					if (!targetEffectIdentifier && chosen <= totalWeight)
 					{

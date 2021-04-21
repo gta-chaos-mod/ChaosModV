@@ -186,6 +186,10 @@
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="3" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable Effect Group Weighting (Recommended)" Grid.Row="4" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_enable_group_weighting" Grid.Row="4" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                     </Grid>
                 </TabItem>
             
