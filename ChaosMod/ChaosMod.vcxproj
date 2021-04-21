@@ -324,7 +324,6 @@
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectExecutionType.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
-    <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
