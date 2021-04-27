@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#include "Memory/Hooks/EntityCoordsHook.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStartLSIA()
 {
@@ -276,7 +276,7 @@ static void OnStartFakeTp()
 	
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Hooks::EnableFakeTpHook();
+	Hooks::EnableScriptThreadBlock();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
 	if (playerVeh)
@@ -304,7 +304,7 @@ static void OnStartFakeTp()
 
 	SET_MAX_WANTED_LEVEL(5);
 
-	Hooks::DisableFakeTpHook();
+	Hooks::DisableScriptThreadBlock();
 }
 
 static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp, EffectInfo

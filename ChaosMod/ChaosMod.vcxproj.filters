@@ -227,7 +227,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsCruiseControl.cpp" />
     <ClCompile Include="FailsafeManager.cpp" />
     <ClCompile Include="LuaManager.cpp" />
-    <ClCompile Include="Memory\Hooks\EntityCoordsHook.cpp" />
+    <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
@@ -237,11 +237,13 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="EffectDispatcher.h" />
-    <ClInclude Include="Effects\EffectHandler.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
     <ClInclude Include="Main.h" />
@@ -274,7 +276,7 @@
     <ClInclude Include="FailsafeManager.h" />
     <ClInclude Include="LuaManager.h" />
     <ClInclude Include="Memory\Entity.h" />
-    <ClInclude Include="Memory\Hooks\EntityCoordsHook.h" />
+    <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />
     <ClInclude Include="Memory\Hooks\HandleToEntityStructHook.h" />
     <ClInclude Include="Memory\Hooks\AudioPitchHook.h" />
     <ClInclude Include="Memory\Misc.h" />
