@@ -47,6 +47,9 @@ public:
 	void Reset();
 	void ResetTimer();
 
+	std::string CurrentEffect = "None";
+	std::string PreviousEffect = "None";
+
 private:
 	int m_effectSpawnTime;
 	int m_effectTimedDur;

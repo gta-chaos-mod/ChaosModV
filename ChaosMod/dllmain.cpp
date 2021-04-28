@@ -28,7 +28,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 		break;
 	case DLL_PROCESS_DETACH:
 		Memory::Uninit();
-
+		Discord_Shutdown();
 		scriptUnregister(hInstance);
 
 		keyboardHandlerUnregister(OnKeyboardInput);

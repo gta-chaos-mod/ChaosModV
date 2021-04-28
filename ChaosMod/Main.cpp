@@ -1,6 +1,6 @@
 #include "stdafx.h"
-
 #include "Main.h"
+#include "Util/DiscordRPC.h"
 
 std::array<int, 3> ParseColor(const std::string& colorText)
 {
@@ -203,6 +203,9 @@ void Main::Init()
 
 	FailsafeManager::Init();
 
+	LOG("Setting up Discord Game SDK");
+	Discord::discordInit();
+	
 	LOG("Completed Init!");
 }
 
@@ -256,7 +259,7 @@ void Main::Loop()
 	while (true)
 	{
 		WAIT(0);
-
+		Discord::gameLoop(g_effectDispatcher->CurrentEffect, g_effectDispatcher->PreviousEffect);
 		if (!ThreadManager::IsAnyThreadRunningOnStart())
 		{
 			static bool justReenabled = false;
