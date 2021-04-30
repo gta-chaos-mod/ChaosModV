@@ -252,6 +252,7 @@
     <ClCompile Include="Effects\db\Player\PlayerTpEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWeaponGiver.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBees.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAltStrat.cpp" />
     <ClCompile Include="Effects\db\Time\TimeController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeGameSpeedController.cpp" />
     <ClCompile Include="Effects\db\Vehs\Vehs30mphLimit.cpp" />
