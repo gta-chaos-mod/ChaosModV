@@ -1,3 +1,7 @@
+/*
+    ubscal did this one
+*/
+
 #include <stdafx.h>
 
 static void OnStart()
@@ -36,7 +40,7 @@ static void OnStart()
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_FLAREGUN"), 9999, true, true);
+	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_GADGETPISTOL"), 9999, true, true);
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0x00BAC39B);
