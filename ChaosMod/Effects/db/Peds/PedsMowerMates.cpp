@@ -1,9 +1,12 @@
 #include <stdafx.h>
 
-//effect by ubscal, modified from Scooter Brotehrs
+//effect by ubscal, modified from Bus Bois
 
 static void OnStart()
 {
+	//not sure exactly what to make this, 60 seemed to work ok
+	static const float maxDistance = 60.f;
+
 	static const Hash mowerHash = GET_HASH_KEY("MOWER");
 
 	Ped playerPed = PLAYER_PED_ID();
@@ -12,15 +15,20 @@ static void OnStart()
 	{
 		if (!IS_PED_A_PLAYER(ped) && !IS_PED_DEAD_OR_DYING(ped, false))
 		{
-			if (IS_PED_IN_ANY_VEHICLE(ped, false))
+			Vector3 pedPos = GET_ENTITY_COORDS(ped, true);
+			Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
+			//check if player is far away from entity
+			if (GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, playerPos.x, playerPos.y, playerPos.z, true) <= maxDistance)
 			{
-				Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
-
-				if (GET_ENTITY_MODEL(veh) == mowerHash)
+				if (IS_PED_IN_ANY_VEHICLE(ped, false))
 				{
-					continue;
+					Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
+
+					if (GET_ENTITY_MODEL(veh) == mowerHash)
+					{
+						continue;
+					}
 				}
-			}
 
 				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 				float pedHeading = GET_ENTITY_HEADING(ped);
