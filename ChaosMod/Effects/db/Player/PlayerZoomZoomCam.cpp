@@ -5,7 +5,7 @@
 #include <stdafx.h>
 static Camera zoomCamera = 0;
 float camZoom = 80.f;
-const float camZoomRate = 1.2f;
+const float camZoomRate = 0.6f;
 int n = 0;
 
 static void UpdateCamera()
