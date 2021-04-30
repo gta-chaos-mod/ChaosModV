@@ -25,7 +25,7 @@ static void OnStart()
 
 		SET_ENTITY_PROOFS(FranklinDrive, true, false, false, false, false, false, false, false);
 
-		// Try to fetch waypoint coords (if waypoint exists)
+
 		Vector3 coords;
 		coords.x = -52;
 		coords.y = -1106.88;
