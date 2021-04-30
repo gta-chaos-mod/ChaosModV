@@ -128,3 +128,27 @@ static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAx
 		.EffectGroupType = EffectGroupType::WEAPONS
 	}
 );
+
+
+
+static void OnTickMeleeOnly()
+{
+	static const Hash unarmedHash = GET_HASH_KEY("WEAPON_UNARMED");
+
+		Ped playerPed = PLAYER_PED_ID();
+		SET_CURRENT_PED_WEAPON(playerPed, unarmedHash, true);
+		for (Ped ped : GetAllPeds())
+		{
+			SET_CURRENT_PED_WEAPON(ped, unarmedHash, true);
+		}
+}
+
+
+static RegisterEffect registerEffect8(EFFECT_MELEE_ONLY, nullptr, nullptr, OnTickMeleeOnly, EffectInfo
+	{
+		.Name = "Meele Only",
+		.Id = "peds_meeleonly",
+		.IsTimed = true,
+		.EffectGroupType = EffectGroupType::WEAPONS
+	}
+);
