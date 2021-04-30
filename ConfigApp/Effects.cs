@@ -312,6 +312,7 @@ namespace ConfigApp
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
+            EFFECT_ALT_STRAT,
             _EFFECT_ENUM_MAX
         }
 
@@ -588,6 +589,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
+            {EffectType.EFFECT_ALT_STRAT, new EffectInfo("Alt Strat", EffectCategory.PLAYER, "player_altstrat", true, true)},
         };
     }
 }
