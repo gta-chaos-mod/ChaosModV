@@ -38,7 +38,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 137, true);
 		DISABLE_CONTROL_ACTION(0, 280, true);
 	}
-	if (int_rand_key == 1) // Disable Down
+	else if (int_rand_key == 1) // Disable Down
 	{
 		if (IS_CONTROL_PRESSED(0, 33))
 		{
@@ -63,7 +63,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 139, true);
 		DISABLE_CONTROL_ACTION(0, 281, true);
 	}
-	if (int_rand_key == 2) // Disable Left
+	else if (int_rand_key == 2) // Disable Left
 	{
 		if (IS_CONTROL_PRESSED(0, 34))
 		{
@@ -86,7 +86,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 152, true);
 		DISABLE_CONTROL_ACTION(0, 278, true);
 	}
-	if (int_rand_key == 3) // Disable Right
+	else // Disable Right
 	{
 		if (IS_CONTROL_PRESSED(0, 35))
 		{
