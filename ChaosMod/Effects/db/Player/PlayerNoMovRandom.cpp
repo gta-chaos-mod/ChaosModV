@@ -4,16 +4,16 @@
 
 #include <stdafx.h>
 
-static int int_rand_key;
+static int rand_key;
 
 static void OnStart()
 {
-	int_rand_key = g_random.GetRandomInt(0, 3);
+	rand_key = g_random.GetRandomInt(0, 3);
 }
 
 static void OnTick()
 {
-	if (int_rand_key == 0) // Disable Up
+	if (rand_key == 0) // Disable Up
 	{
 		if (IS_CONTROL_PRESSED(0, 32))
 		{
@@ -38,7 +38,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 137, true);
 		DISABLE_CONTROL_ACTION(0, 280, true);
 	}
-	else if (int_rand_key == 1) // Disable Down
+	else if (rand_key == 1) // Disable Down
 	{
 		if (IS_CONTROL_PRESSED(0, 33))
 		{
@@ -63,7 +63,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 139, true);
 		DISABLE_CONTROL_ACTION(0, 281, true);
 	}
-	else if (int_rand_key == 2) // Disable Left
+	else if (rand_key == 2) // Disable Left
 	{
 		if (IS_CONTROL_PRESSED(0, 34))
 		{
