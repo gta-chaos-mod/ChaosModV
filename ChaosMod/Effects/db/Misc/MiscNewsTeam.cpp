@@ -112,7 +112,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_NEWS_TEAM, OnStart, OnStop, OnT
     {
         .Name = "News Team",
         .Id = "misc_news_team",
-		.IsTimed = true,
-		.IsShortDuration = true
+	.IsTimed = true,
+	.IsShortDuration = true
     }
 );
