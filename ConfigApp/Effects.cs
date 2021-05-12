@@ -312,6 +312,7 @@ namespace ConfigApp
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
+            EFFECT_MISC_NEWS_TEAM,
             _EFFECT_ENUM_MAX
         }
 
@@ -588,6 +589,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
+            {EffectType.EFFECT_MISC_NEWS_TEAM, new EffectInfo("News Team", EffectCategory.MISC, "misc_news_team", true, true)},
         };
     }
 }
