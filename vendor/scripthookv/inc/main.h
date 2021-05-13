@@ -76,9 +76,9 @@ IMPORT void keyboardHandlerUnregister(KeyboardHandler handler);
 /* scripts */
 
 IMPORT void scriptWait(DWORD time);
-IMPORT void scriptRegister(HMODULE module, void(*LP_SCRIPT_MAIN)());
-IMPORT void scriptRegisterAdditionalThread(HMODULE module, void(*LP_SCRIPT_MAIN)());
-IMPORT void scriptUnregister(HMODULE module);
+IMPORT void scriptRegister(HMODULE modul, void(*LP_SCRIPT_MAIN)());
+IMPORT void scriptRegisterAdditionalThread(HMODULE modul, void(*LP_SCRIPT_MAIN)());
+IMPORT void scriptUnregister(HMODULE modul);
 IMPORT void scriptUnregister(void(*LP_SCRIPT_MAIN)()); // deprecated
 
 IMPORT void nativeInit(UINT64 hash);
