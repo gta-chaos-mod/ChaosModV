@@ -16,4 +16,7 @@ namespace Memory
 	void Write(T* addr, T value, int count = 1);
 
 	const char* const GetTypeName(__int64 vptr);
+
 }
+
+Hash joaat(std::string s);

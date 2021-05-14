@@ -31,6 +31,7 @@
 #include "Memory/Misc.h"
 
 #include "Memory/Hooks/Hook.h"
+#include "Memory/Hooks/OnlineVehicleHook.h"
 
 #include "Util/Camera.h"
 #include "Util/EntityIterator.h"
