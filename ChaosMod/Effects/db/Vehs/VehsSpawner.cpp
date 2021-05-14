@@ -235,3 +235,38 @@ static RegisterEffect registerEffect15(EFFECT_SPAWN_ROMERO, OnStartRomero, Effec
 		.EffectGroupType = EffectGroupType::SPAWN_GENERIC
 	}
 );
+
+static void OnStartWizardBroom()
+{
+	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
+	static const Hash broomHash = GET_HASH_KEY("prop_tool_broom");
+	LoadModel(oppressorHash);
+	LoadModel(broomHash);
+
+	Ped player = PLAYER_PED_ID();
+	Vector3 playerPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 1, 0);
+
+	Vehicle veh = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(player));
+	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+	SET_VEHICLE_MOD_KIT(veh, 0);
+	for (int i = 0; i < 50; i++)
+	{
+		int max = GET_NUM_VEHICLE_MODS(veh, i);
+		SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, false);
+	}
+	SET_ENTITY_ALPHA(veh, 0, false);
+	SET_ENTITY_VISIBLE(veh, false, false);
+	
+	Object broom = CREATE_OBJECT(broomHash, playerPos.x, playerPos.y + 2, playerPos.z, true, false, false);
+	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, 0.3, -80.0, 0, 0, true, false, false, false, 0, true);
+	SET_OBJECT_AS_NO_LONGER_NEEDED(&broom);
+}
+
+
+static RegisterEffect registerEffect(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroom, nullptr, nullptr, EffectInfo
+	{
+		.Name = "You're A Wizard, Franklin",
+		.Id = "vehs_spawn_wizard_broom",
+		.EffectGroupType = EffectGroupType::SPAWN_GENERIC
+	}
+);
