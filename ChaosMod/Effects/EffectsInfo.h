@@ -287,7 +287,7 @@ struct EffectInfo
 	const char* Id;
 	bool IsTimed = false;
 	bool IsShortDuration = false;
-	const char* fakeName = "";
+	const char* FakeName = "";
 	std::vector<EffectType> IncompatibleWith;
 	EffectGroupType EffectGroupType = EffectGroupType::NONE;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
