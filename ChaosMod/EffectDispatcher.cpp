@@ -37,14 +37,26 @@ void EffectDispatcher::DrawTimerBar()
 	DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
-// (kolyaventuri): Forces the name of the provided effect to change
-void EffectDispatcher::OverrideEffectName(const EffectType& effectType, std::string& overrideName)
+// (kolyaventuri): Forces the name of the provided effect to change, using any given string
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const std::string& overrideName)
 {
 	for (ActiveEffect& effect : m_activeEffects)
 	{
 		if (effect.EffectIdentifier.GetEffectType() == effectType)
 		{
 			effect.FakeName = overrideName;
+		}
+	}
+}
+
+// (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType) {
+	for (ActiveEffect& effect : m_activeEffects)
+	{
+		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		{
+			EffectInfo fakeEffectInfo = g_effectsMap.find(fakeEffectType)->second;
+			effect.FakeName = fakeEffectInfo.Name;
 		}
 	}
 }

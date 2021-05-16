@@ -46,7 +46,8 @@ public:
 	void ClearMostRecentEffect();
 	void Reset();
 	void ResetTimer();
-	void OverrideEffectName(const EffectType& effectType, std::string& overrideName);
+	void OverrideEffectName(const EffectType& effectType, const std::string& overrideName);
+	void OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType);
 
 private:
 	int m_effectSpawnTime;

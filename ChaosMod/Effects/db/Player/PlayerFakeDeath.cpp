@@ -58,6 +58,9 @@ static void OnStart()
 			SET_PLAYER_INVINCIBLE(playerPed, true);
 		}
 
+		// Eager assumption
+		EffectType fakeEffectType = EFFECT_PLAYER_SUICIDE;
+
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
@@ -67,6 +70,7 @@ static void OnStart()
 				{
 					if (IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 					{
+						// Fake suicide
 						REQUEST_ANIM_DICT("mp_suicide");
 						while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
 						{
@@ -81,6 +85,8 @@ static void OnStart()
 				}
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
+					// Fake veh explosion
+					fakeEffectType = EFFECT_EXPLODE_CUR_VEH;
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 					for (int i = 0; i < 6; i++)
 					{
@@ -90,6 +96,18 @@ static void OnStart()
 					ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 				}
 			}
+			// Set the fake name accordingly
+			if (fakeEffectType == EFFECT_EXPLODE_CUR_VEH)
+			{
+				// "Explode Current Vehicle" became "Detonate Current Vehicle" which behaves differently
+				g_effectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, "Explode Current Vehicle");
+			}
+			else
+			{
+				g_effectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, fakeEffectType);
+			}
+			
+
 			nextModeTime = 0;
 			break;
 		case FakeDeathState::soundStart: // Apply Screen Effect
@@ -154,7 +172,6 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart, EffectInfo
 	{
 		.Name = "Fake Death",
-		.Id = "player_fakedeath",
-		.FakeName = "Suicide"
+		.Id = "player_fakedeath"
 	}
 );
