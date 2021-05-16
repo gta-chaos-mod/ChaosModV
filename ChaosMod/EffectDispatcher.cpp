@@ -38,7 +38,7 @@ void EffectDispatcher::DrawTimerBar()
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change
-void EffectDispatcher::OverrideEffectName(EffectType& effectType, std::string& overrideName)
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, std::string& overrideName)
 {
 	for (ActiveEffect& effect : m_activeEffects)
 	{
@@ -74,7 +74,7 @@ void EffectDispatcher::DrawEffectTexts()
 		}
 
 		std::string name = effect.FakeName;
-		if (!effect.HideText || hasFake)
+		if (!effect.HideText || !hasFake)
 		{
 			name = effect.Name;
 		}
