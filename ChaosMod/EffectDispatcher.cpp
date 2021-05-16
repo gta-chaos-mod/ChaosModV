@@ -38,10 +38,12 @@ void EffectDispatcher::DrawTimerBar()
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change
-void EffectDispatcher::OverrideEffectName(const EffectType& effectType, std::string overrideName)
+void EffectDispatcher::OverrideEffectName(EffectType& effectType, std::string& overrideName)
 {
-	for (ActiveEffect& effect : m_activeEffects) {
-		if (effect.EffectIdentifier.GetEffectType() == effectType) {
+	for (ActiveEffect& effect : m_activeEffects)
+	{
+		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		{
 			effect.FakeName = overrideName;
 		}
 	}
@@ -72,7 +74,7 @@ void EffectDispatcher::DrawEffectTexts()
 		}
 
 		std::string name = effect.FakeName;
-		if (!effect.HideText || name.empty())
+		if (!effect.HideText || hasFake)
 		{
 			name = effect.Name;
 		}
@@ -347,9 +349,6 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			std::ostringstream ossEffectName;
 			ossEffectName << (effectData.HasCustomName ? effectData.CustomName : effectData.Name);
 
-			std::ostringstream ossFakeEffectName;
-			ossFakeEffectName << effectData.FakeName;
-
 			if (suffix && strlen(suffix) > 0)
 			{
 				ossEffectName << " " << suffix;
@@ -384,7 +383,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 				break;
 			}
 
-			m_activeEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), ossFakeEffectName.str(), effectTime);
+			m_activeEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
 		}
 	}
 
