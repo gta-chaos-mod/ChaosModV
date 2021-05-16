@@ -10,8 +10,7 @@
 class Main
 {
 public:
-	void Init();
-	void Loop();
+	void RunLoop();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
 
 private:
@@ -29,5 +28,7 @@ private:
 	bool m_enableDebugMenu = false;
 	bool m_enablePauseTimerShortcut = false;
 
+	void Init();
 	void Reset();
+	void Loop();
 };

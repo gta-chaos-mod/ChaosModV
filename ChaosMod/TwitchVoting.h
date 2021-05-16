@@ -15,8 +15,7 @@ enum class TwitchOverlayMode
 class TwitchVoting
 {
 public:
-	TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem,
-		bool enableVotingChanceSystemRetainChance, bool enableTwitchRandomEffectVoteable);
+	TwitchVoting(const std::array<int, 3>& textColor);
 	~TwitchVoting();
 
 	inline bool IsEnabled() const
@@ -27,9 +26,10 @@ public:
 	void Tick();
 	
 private:
+	bool m_receivedHello = false;
 	bool m_enableTwitchVoting;
-	const int m_twitchSecsBeforeVoting;
-	const bool m_enableTwitchPollVoting;
+	int m_twitchSecsBeforeVoting;
+	bool m_enableTwitchPollVoting = false;
 	HANDLE m_pipeHandle = INVALID_HANDLE_VALUE;
 	DWORD64 m_lastPing = GetTickCount64();
 	DWORD64 m_lastVotesFetchTime = GetTickCount64();
@@ -37,12 +37,13 @@ private:
 	bool m_noVoteRound = false;
 	bool m_receivedFirstPing = false;
 	bool m_alternatedVotingRound = false;
-	const TwitchOverlayMode m_twitchOverlayMode;
-	const bool m_enableTwitchChanceSystem;
-	const bool m_enableVotingChanceSystemRetainChance;
-	const bool m_enableTwitchRandomEffectVoteable;
+	TwitchOverlayMode m_twitchOverlayMode;
+	bool m_enableTwitchChanceSystem;
+	bool m_enableVotingChanceSystemRetainChance;
+	bool m_enableTwitchRandomEffectVoteable;
 	bool m_hasReceivedResult = false;
 	bool m_isVotingRoundDone = true;
+	const std::array<int, 3> m_textColor;
 
 	bool m_isVotingRunning = false;
 

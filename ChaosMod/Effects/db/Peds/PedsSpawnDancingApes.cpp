@@ -38,4 +38,10 @@ static void OnStart()
 	REMOVE_ANIM_DICT("missfbi3_sniping");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart, EffectInfo
+	{
+		.Name = "Spawn Dance Troupe",
+		.Id = "peds_spawndancingapes",
+		.EffectGroupType = EffectGroupType::SPAWN_COMPANION
+	}
+);

@@ -1,12 +1,20 @@
 #include "stdafx.h"
 
-EffectDispatcher::EffectDispatcher(int effectSpawnTime, int effectTimedDur, int effectTimedShortDur, int metaEffectSpawnTime, int metaEffectTimedDur, int metaEffectShortDur,
-	std::array<int, 3> timerColor, std::array<int, 3> textColor, std::array<int, 3> effectTimerColor, bool enableTwitchVoting,
-	TwitchOverlayMode twitchOverlayMode)
-	: m_percentage(.0f), m_effectSpawnTime(effectSpawnTime), m_effectTimedDur(effectTimedDur), m_effectTimedShortDur(effectTimedShortDur), m_metaEffectSpawnTime(metaEffectSpawnTime), 
-	m_metaEffectTimedDur(metaEffectTimedDur), m_metaEffectShortDur(metaEffectShortDur), m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor),
-	m_enableTwitchVoting(enableTwitchVoting), m_twitchOverlayMode(twitchOverlayMode)
+EffectDispatcher::EffectDispatcher(const std::array<int, 3>& timerColor, const std::array<int, 3>& textColor, const std::array<int, 3>& effectTimerColor)
+	: m_timerColor(timerColor), m_textColor(textColor), m_effectTimerColor(effectTimerColor)
 {
+	m_effectSpawnTime = g_optionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
+	m_effectTimedDur = g_optionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
+	m_effectTimedShortDur = g_optionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
+
+	m_metaEffectSpawnTime = g_optionsManager.GetConfigValue<int>("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
+	m_metaEffectTimedDur = g_optionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
+	m_metaEffectShortDur = g_optionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
+
+	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+
+	m_twitchOverlayMode = static_cast<TwitchOverlayMode>(g_optionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
 	Reset();
 }
 
@@ -22,9 +30,11 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
+	float percentage = FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_percentage;
+
 	// New Effect Bar
-	DRAW_RECT(.5f, .0f, 1.f, .05f, 0, 0, 0, 127, false);
-	DRAW_RECT(m_percentage * .5f, .0f, m_percentage, .05f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
+	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+	DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_timerColor[0], m_timerColor[1], m_timerColor[2], 255, false);
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change
@@ -67,19 +77,13 @@ void EffectDispatcher::DrawEffectTexts()
 			name = effect.Name;
 		}
 
-		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(name.c_str());
-		SET_TEXT_SCALE(.5f, .5f);
-		SET_TEXT_COLOUR(m_textColor[0], m_textColor[1], m_textColor[2], 255);
-		SET_TEXT_OUTLINE();
-		SET_TEXT_WRAP(.0f, .91f);
-		SET_TEXT_RIGHT_JUSTIFY(true);
-		END_TEXT_COMMAND_DISPLAY_TEXT(.91f, y, 0);
+		DrawScreenText(name, { .915f, y }, .47f, { m_textColor[0], m_textColor[1], m_textColor[2] }, true,
+			ScreenTextAdjust::RIGHT, { .0f, .915f });
 
 		if (effect.Timer > 0)
 		{
-			DRAW_RECT(.95f, y + .02f, .05f, .02f, 0, 0, 0, 127, false);
-			DRAW_RECT(.95f, y + .02f, .05f * effect.Timer / effect.MaxTime, .02f, m_effectTimerColor[0], m_effectTimerColor[1],
+			DRAW_RECT(.96f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
+			DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, m_effectTimerColor[0], m_effectTimerColor[1],
 				m_effectTimerColor[2], 255, false);
 		}
 
@@ -200,42 +204,44 @@ void EffectDispatcher::UpdateMetaEffects()
 
 			std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
 
-			int totalWeight = 0;
+			float totalWeight = 0.f;
 			for (auto& pair : g_enabledEffects)
 			{
 				if (pair.second.IsMeta && pair.second.TimedType != EffectTimedType::TIMED_PERMANENT)
 				{
-					totalWeight += pair.second.Weight;
+					auto& [effectIdentifier, effectData] = pair;
 
-					availableMetaEffects.push_back(std::make_tuple(pair.first, &pair.second));
+					totalWeight += GetEffectWeight(effectData);
+
+					availableMetaEffects.push_back(std::make_tuple(effectIdentifier, &pair.second));
 				}
 			}
 
 			if (!availableMetaEffects.empty()) 
 			{
 				// TODO: Stop duplicating effect weight logic everywhere
-				int index = g_random.GetRandomInt(0, totalWeight);
+				float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-				totalWeight = 0;
+				totalWeight = 0.f;
 
-				const EffectIdentifier* effectIdentifier = nullptr;
+				const EffectIdentifier* targetEffectIdentifier = nullptr;
 				for (auto& pair : availableMetaEffects)
 				{
-					auto& [effect, effectData] = pair;
+					auto& [effectIdentifier, effectData] = pair;
 
-					totalWeight += effectData->Weight;
+					totalWeight += GetEffectWeight(*effectData);
 
 					effectData->Weight += effectData->WeightMult;
 
-					if (!effectIdentifier && index <= totalWeight)
+					if (!targetEffectIdentifier && chosen <= totalWeight)
 					{
-						effectIdentifier = &effect;
+						targetEffectIdentifier = &effectIdentifier;
 					}
 				}
 
-				if (effectIdentifier)
+				if (targetEffectIdentifier)
 				{
-					DispatchEffect(*effectIdentifier, "(Meta)");
+					DispatchEffect(*targetEffectIdentifier, "(Meta)");
 				}
 			}
 			else
@@ -258,14 +264,29 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	// Increase weight for all effects first
 	for (auto& pair : g_enabledEffects)
 	{
-		if (!pair.second.IsMeta)
+		EffectData& effectData = pair.second;
+
+		if (!effectData.IsMeta)
 		{
-			pair.second.Weight += pair.second.WeightMult;
+			effectData.Weight += effectData.WeightMult;
 		}
 	}
 
-	// Reset weight of this effect to reduce chance of same effect happening multiple times in a row
-	effectData.Weight = effectData.WeightMult;
+	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
+	if (effectData.EffectGroupType == EffectGroupType::NONE)
+	{
+		effectData.Weight = effectData.WeightMult;
+	}
+	else
+	{
+		for (auto& pair : g_enabledEffects)
+		{
+			if (pair.second.EffectGroupType == effectData.EffectGroupType)
+			{
+				pair.second.Weight = pair.second.WeightMult;
+			}
+		}
+	}
 
 	LOG("Dispatched effect \"" << effectData.Name << "\"");
 
@@ -338,8 +359,12 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 
 			if (!g_metaInfo.ShouldHideChaosUI)
 			{
-				// Play global sound (if existing)
-				Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+				// Play global sound (if one exists)
+				// Workaround: Force no global sound for "Fake Crash" and "Fake Death"
+				if (effectIdentifier.GetEffectType() != EFFECT_MISC_CRASH && effectIdentifier.GetEffectType() != EFFECT_PLAYER_FAKEDEATH)
+				{
+					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+				}
 
 				// Play a sound if corresponding .mp3 file exists
 				Mp3Manager::PlayChaosSoundFile(effectData.Id);
@@ -376,8 +401,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto& pair : g_enabledEffects)
 	{
-		const EffectIdentifier& effectIdentifier = pair.first;
-		const EffectData& effectData = pair.second;
+		const auto& [effectIdentifier, effectData] = pair;
 
 		if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta)
 		{
@@ -385,28 +409,29 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 		}
 	}
 
-	int effectsTotalWeight = 0;
+	float totalWeight = 0.f;
 	for (const auto& pair : choosableEffects)
 	{
-		effectsTotalWeight += pair.second.Weight;
+		const EffectData& effectData = pair.second;
+
+		totalWeight += GetEffectWeight(effectData);
 	}
 
-	int index = g_random.GetRandomInt(0, effectsTotalWeight);
+	float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-	int addedUpWeight = 0;
+	totalWeight = 0.f;
+
 	const EffectIdentifier* targetEffectIdentifier = nullptr;
 	for (const auto& pair : choosableEffects)
 	{
-		if (pair.second.TimedType == EffectTimedType::TIMED_PERMANENT)
-		{
-			continue;
-		}
+		const auto& [effectIdentifier, effectData] = pair;
 
-		addedUpWeight += pair.second.Weight;
+		totalWeight += GetEffectWeight(effectData);
 
-		if (index <= addedUpWeight)
+		if (chosen <= totalWeight)
 		{
-			targetEffectIdentifier = &pair.first;
+			targetEffectIdentifier = &effectIdentifier;
+
 			break;
 		}
 	}
@@ -417,11 +442,14 @@ void EffectDispatcher::DispatchRandomEffect(const char* suffix)
 	}
 }
 
-void EffectDispatcher::ClearEffects()
+void EffectDispatcher::ClearEffects(bool includePermanent)
 {
 	ThreadManager::StopThreads();
 
-	m_permanentEffects.clear();
+	if (includePermanent)
+	{
+		m_permanentEffects.clear();
+	}
 
 	m_activeEffects.clear();
 }
@@ -441,6 +469,21 @@ void EffectDispatcher::ClearActiveEffects(EffectIdentifier exclude)
 		else
 		{
 			it++;
+		}
+	}
+}
+
+void EffectDispatcher::ClearMostRecentEffect()
+{
+	if (!m_activeEffects.empty())
+	{
+		const ActiveEffect& mostRecentEffect = m_activeEffects[m_activeEffects.size() - 1];
+
+		if (mostRecentEffect.Timer > 0)
+		{
+			ThreadManager::StopThread(mostRecentEffect.ThreadId);
+
+			m_activeEffects.erase(m_activeEffects.end() - 1);
 		}
 	}
 }

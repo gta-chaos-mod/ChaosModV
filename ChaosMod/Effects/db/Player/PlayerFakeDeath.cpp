@@ -151,4 +151,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart, EffectInfo
+	{
+		.Name = "Fake Death",
+		.Id = "player_fakedeath"
+	}
+);

@@ -90,7 +90,7 @@ static void OnTick()
 							for (int id : boneIds)
 							{
 								Vector3 boneCoord = GET_PED_BONE_COORDS(entityHandle, id, 0, 0, 0);
-								float distance = hitCoords.distanceTo(boneCoord);
+								float distance = hitCoords.DistanceTo(boneCoord);
 								if (bestBone < 0 || bestDistance < 0 || distance < bestDistance)
 								{
 									bestDistance = distance;
@@ -145,4 +145,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Dead Eye",
+		.Id = "player_dead_eye",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }
+	}
+);

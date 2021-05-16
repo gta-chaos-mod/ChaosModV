@@ -13,4 +13,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_POOR, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_POOR, OnStart, EffectInfo
+	{
+		.Name = "Poor Boy",
+		.Id = "poorboi"
+	}
+);

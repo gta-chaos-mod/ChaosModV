@@ -5,36 +5,61 @@ static void OnStartExtraSunny()
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
-static RegisterEffect registerEffect(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny);
-
+static RegisterEffect registerEffect(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny, EffectInfo
+	{
+		.Name = "Extra Sunny Weather",
+		.Id = "weather_extrasunny",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);
 static void OnStartThunder()
 {
 	SET_WEATHER_TYPE_NOW("THUNDER");
 }
 
-static RegisterEffect registerEffect2(EFFECT_WEATHER_THUNDER, OnStartThunder);
-
+static RegisterEffect registerEffect2(EFFECT_WEATHER_THUNDER, OnStartThunder, EffectInfo
+	{
+		.Name = "Stormy Weather",
+		.Id = "weather_stormy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);
 static void OnStartFoggy()
 {
 	SET_WEATHER_TYPE_NOW("FOGGY");
 }
 
-static RegisterEffect registerEffect3(EFFECT_WEATHER_FOGGY, OnStartFoggy);
-
+static RegisterEffect registerEffect3(EFFECT_WEATHER_FOGGY, OnStartFoggy, EffectInfo
+	{
+		.Name = "Foggy Weather",
+		.Id = "weather_foggy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);
 static void OnStartNeutral()
 {
 	SET_WEATHER_TYPE_NOW("NEUTRAL");
 }
 
-static RegisterEffect registerEffect4(EFFECT_WEATHER_NEUTRAL, OnStartNeutral);
-
+static RegisterEffect registerEffect4(EFFECT_WEATHER_NEUTRAL, OnStartNeutral, EffectInfo
+	{
+		.Name = "Neutral Weather",
+		.Id = "weather_neutral",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);
 static void OnStartXmas()
 {
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect5(EFFECT_WEATHER_XMAS, OnStartXmas);
-
+static RegisterEffect registerEffect5(EFFECT_WEATHER_XMAS, OnStartXmas, EffectInfo
+	{
+		.Name = "Snowy Weather",
+		.Id = "weather_snowy",
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);
 static void OnTickRandom()
 {
 	static constexpr const char* weathers[] = { "CLEAR", "EXTRASUNNY" , "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "XMAS", "SNOWLIGHT", "BLIZZARD" };
@@ -54,4 +79,11 @@ static void OnTickRandom()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nullptr, OnTickRandom);
+static RegisterEffect registerEffect6(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nullptr, OnTickRandom, EffectInfo
+	{
+		.Name = "Disco Weather",
+		.Id = "weather_randomizer",
+		.IsTimed = true,
+		.EffectGroupType = EffectGroupType::WEATHER_CHANGE
+	}
+);

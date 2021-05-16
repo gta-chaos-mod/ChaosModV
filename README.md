@@ -6,6 +6,8 @@ See the [GTA5-Mods mod page](https://www.gta5-mods.com/scripts/chaos-mod-v-beta)
 
 Feel free to join the Discord Server for community support or simply to stay up to date on this (and other) mods.
 
+Also make sure to check the [Wiki](https://github.com/gta-chaos-mod/ChaosModV/wiki)!
+
 [![](https://discord.com/api/guilds/785656433529716757/widget.png)](https://discord.gg/w2tDeKVaF9)
 
 ## Building
@@ -31,11 +33,9 @@ git submodule update --recursive
 
 ## Adding new effects
 
-1. Add your new effect info to `ChaosMod/Effects/EffectsInfo.h`
+1. Add a new effect enum entry to `ChaosMod/Effects/EffectsInfo.h`
 
-2. Add the same info to `ConfigApp/Effects.cs`
-
-3. Create a new .cpp file in the appropriate folder under `ChaosMod/Effects/db/` with a fitting name
+2. Create a new .cpp file in the appropriate folder under `ChaosMod/Effects/db/` with a fitting name
 
 Layout of the file should look like this:
 
@@ -61,7 +61,14 @@ static void OnTick()
 	
 }
 
-static RegisterEffect registerEffect(EFFECT_ENUM_ENTRY, OnStart, OnStop, OnTick);
+// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
+static RegisterEffect registerEffect(EFFECT_ENUM_ENTRY, OnStart, OnStop, OnTick, EffectInfo
+	{
+		// These are always required, you may have to add more designators depending on your effect
+		.Name = "Generic Effect",
+		.Id = "player_funny_stuff"
+	}
+);
 ```
 
-Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration.
+3. Add the same info to `ConfigApp/Effects.cs`

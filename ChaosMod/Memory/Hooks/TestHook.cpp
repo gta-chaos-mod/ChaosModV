@@ -2,16 +2,9 @@
 
 #ifdef _DEBUG
 
+
 static bool OnHook()
 {
-	Handle handle;
-
-	//
-
-
-
-	//
-
 	return true;
 }
 

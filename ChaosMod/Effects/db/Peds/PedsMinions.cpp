@@ -32,4 +32,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_MINIONS, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_MINIONS, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Minions",
+		.Id = "peds_minions",
+		.IsTimed = true
+	}
+);

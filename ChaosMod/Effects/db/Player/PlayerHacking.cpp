@@ -25,6 +25,23 @@ const char* ROULETTE_WORDS[] =
     "SAURUS88",
     "TORIKSLV",
     "TOASTYYY",
+    "ELIAS_GR",
+    "KOLYA_VE",
+    "LU7YOSHI",
+    "P.BIDDLE",
+    "SLOTHBEE",
+    "ELI_RICK",
+    "JUHANA!!",
+    "LOSCHIKA",
+    "BYHEMECH",
+    "$$WASTED",
+    "JOSHUAX8",
+    "SSOBOSS1",
+    "DZWDZWDZ",
+    "BIRD1338",
+    "BRANDWAR",
+    "YZIMRONI",
+    "T_AVENGE"
 };
 
 const char* WIN_PHRASES[] =
@@ -200,6 +217,11 @@ static void OnStart()
             }
         }
 
+        if (!IS_SCREEN_FADED_IN())
+        {
+            act = TimerAction::REMOVE;
+        }
+
         if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
         {
             switch (act)
@@ -241,4 +263,9 @@ static void OnStart()
     }
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart, EffectInfo
+	{
+		.Name = "Realistic Hacking",
+		.Id = "player_hacking"
+	}
+);

@@ -45,11 +45,28 @@ static void SleepAllThreads(DWORD ms)
 
 static void OnStart()
 {
+	bool fakeTimer = g_random.GetRandomInt(0, 1);
+
+	if (fakeTimer)
+	{
+		g_effectDispatcher->FakeTimerBarPercentage = g_random.GetRandomFloat(0.f, 1.f);
+	}
+
 	SleepAllThreads(500);
 
 	WAIT(500);
 
 	SleepAllThreads(g_random.GetRandomInt(3000, 5000));
+
+	if (fakeTimer)
+	{
+		g_effectDispatcher->FakeTimerBarPercentage = 0.f;
+	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart);
+static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+	{
+		.Name = "Fake Crash",
+		.Id = "misc_fakecrash"
+	}
+);

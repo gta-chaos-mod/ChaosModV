@@ -4,16 +4,30 @@
 
 #define BUFFER_SIZE 256
 
-TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, bool enableTwitchPollVoting, TwitchOverlayMode twitchOverlayMode, bool enableTwitchChanceSystem,
-	bool enableVotingChanceSystemRetainChance, bool enableTwitchRandomEffectVoteable)
-	: m_enableTwitchVoting(enableTwitchVoting), m_twitchSecsBeforeVoting(twitchSecsBeforeVoting), m_enableTwitchPollVoting(enableTwitchPollVoting),
-	m_twitchOverlayMode(twitchOverlayMode), m_enableTwitchChanceSystem(enableTwitchChanceSystem), m_enableVotingChanceSystemRetainChance(enableVotingChanceSystemRetainChance),
-	m_enableTwitchRandomEffectVoteable(enableTwitchRandomEffectVoteable)
+TwitchVoting::TwitchVoting(const std::array<int, 3>& textColor) : m_textColor(textColor)
 {
+	m_enableTwitchVoting = g_optionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+
 	if (!m_enableTwitchVoting)
 	{
 		return;
 	}
+
+	if (g_enabledEffects.size() < 3)
+	{
+		ErrorOutWithMsg("You need at least 3 enabled effects to enable Twitch voting. Reverting to normal mode.");
+
+		return;
+	}
+
+	m_twitchSecsBeforeVoting = g_optionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+
+	m_twitchOverlayMode = static_cast<TwitchOverlayMode>(g_optionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
+	m_enableTwitchChanceSystem = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_enableVotingChanceSystemRetainChance = g_optionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+
+	m_enableTwitchRandomEffectVoteable = g_optionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	g_effectDispatcher->OverrideTimerDontDispatch(true);
 
@@ -21,7 +35,7 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 	PROCESS_INFORMATION procInfo = {};
 
 	char buffer[128];
-	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe");
+	strcpy_s(buffer, "chaosmod\\TwitchChatVotingProxy.exe --startProxy");
 #ifdef _DEBUG
 	DWORD attributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -34,19 +48,28 @@ TwitchVoting::TwitchVoting(bool enableTwitchVoting, int twitchSecsBeforeVoting, 
 	bool result = CreateProcess(NULL, buffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
+	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
+	HANDLE mutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
+	if (mutex)
+	{
+		WaitForSingleObject(mutex, INFINITE);
+		ReleaseMutex(mutex);
+		CloseHandle(mutex);
+	}
+
 	if (!result)
 	{
-		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Switching to normal mode.").str());
+		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Reverting to normal mode.").str());
 
 		return;
 	}
 
 	m_pipeHandle = CreateNamedPipe("\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
 		1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
-
+	
 	if (m_pipeHandle == INVALID_HANDLE_VALUE)
 	{
-		ErrorOutWithMsg("Error while creating a named pipe. This is not something that should ever happen.");
+		ErrorOutWithMsg("Error while creating a named pipe, previous instance of voting proxy might be running. Try reloading the mod. Reverting to normal mode.");
 
 		return;
 	}
@@ -58,6 +81,7 @@ TwitchVoting::~TwitchVoting()
 {
 	if (m_pipeHandle != INVALID_HANDLE_VALUE)
 	{
+		FlushFileBuffers(m_pipeHandle);
 		DisconnectNamedPipe(m_pipeHandle);
 		CloseHandle(m_pipeHandle);
 	}
@@ -108,6 +132,11 @@ void TwitchVoting::Tick()
 		{
 			return;
 		}
+	}
+
+	if (!m_receivedHello)
+	{
+		return;
 	}
 
 	if (g_effectDispatcher->GetRemainingTimerTime() <= 1 && !m_hasReceivedResult)
@@ -188,8 +217,7 @@ void TwitchVoting::Tick()
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 		for (auto& pair : g_enabledEffects)
 		{
-			const EffectIdentifier& effectIdentifier = pair.first;
-			EffectData& effectData = pair.second;
+			auto& [effectIdentifier, effectData] = pair;
 
 			if (effectData.TimedType != EffectTimedType::TIMED_PERMANENT && !effectData.IsMeta && !effectData.ExcludedFromVoting)
 			{
@@ -210,34 +238,32 @@ void TwitchVoting::Tick()
 				break;
 			}
 
-			int effectsTotalWeight = 0;
+			float totalWeight = 0.f;
 			for (const auto& pair : choosableEffects)
 			{
-				effectsTotalWeight += pair.second.Weight;
+				const EffectData& effectData = pair.second;
+
+				totalWeight += GetEffectWeight(effectData);
 			}
 
-			int index = g_random.GetRandomInt(0, effectsTotalWeight);
+			float chosen = g_random.GetRandomFloat(0.f, totalWeight);
 
-			int addedUpWeight = 0;
+			totalWeight = 0.f;
+
 			std::unique_ptr<ChoosableEffect> targetChoice;
 
 			for (auto& pair : choosableEffects)
 			{
-				EffectData& effectData = pair.second;
+				auto& [effectIdentifier, effectData] = pair;
 
-				if (effectData.TimedType == EffectTimedType::TIMED_PERMANENT)
-				{
-					continue;
-				}
+				totalWeight += GetEffectWeight(effectData);
 
-				addedUpWeight += effectData.Weight;
-
-				if (index <= addedUpWeight)
+				if (chosen <= totalWeight)
 				{
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 					effectData.Weight = 0;
 
-					targetChoice = std::make_unique<ChoosableEffect>(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
+					targetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
 						!m_alternatedVotingRound
 							? i + 1
 							: m_enableTwitchRandomEffectVoteable
@@ -307,14 +333,7 @@ void TwitchVoting::Tick()
 
 			oss << std::endl;
 
-			BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-			ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(oss.str().c_str());
-			SET_TEXT_SCALE(.42f, .42f);
-			SET_TEXT_COLOUR(220, 220, 220, 255);
-			SET_TEXT_OUTLINE();
-			SET_TEXT_WRAP(.0f, .95f);
-			SET_TEXT_RIGHT_JUSTIFY(true);
-			END_TEXT_COMMAND_DISPLAY_TEXT(.95f, y, 0);
+			DrawScreenText(oss.str(), { .95f, y }, .41f, { m_textColor[0], m_textColor[1], m_textColor[2] }, true, ScreenTextAdjust::RIGHT, { .0f, .95f }, true);
 
 			y += .05f;
 		}
@@ -323,7 +342,13 @@ void TwitchVoting::Tick()
 
 bool TwitchVoting::HandleMsg(const std::string& msg)
 {
-	if (msg == "ping")
+	if (msg == "hello")
+	{
+		m_receivedHello = true;
+
+		LOG("Received Hello from voting proxy");
+	}
+	else if (msg == "ping")
 	{
 		m_lastPing = GetTickCount64();
 		m_noPingRuns = 0;
@@ -365,7 +390,7 @@ bool TwitchVoting::HandleMsg(const std::string& msg)
 		{
 			const std::string& split = valuesStr.substr(0, splitIndex);
 
-			TryParseInt(split, m_effectChoices[i]->ChanceVotes);
+			TryParse<int>(split, m_effectChoices[i]->ChanceVotes);
 
 			valuesStr = valuesStr.substr(splitIndex + 1);
 

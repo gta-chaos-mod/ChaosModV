@@ -1,7 +1,11 @@
 #pragma once
 
+#include <wincon.h>
+
 #include <sstream>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 inline std::ofstream g_log("chaosmod/chaoslog.txt");
 
@@ -11,10 +15,26 @@ inline std::ofstream g_consoleOut;
 
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
-#define _LOG(_text, _stream) _stream << _text << std::endl
+#define _LOG(_text, _stream) _stream << _text
 
 #define RAW_LOG(_text) do { _LOG(_text, g_log); _LOG(_text, std::cout); } while (0)
-#define LOG(_text) RAW_LOG("[" << __FILENAME__ << "] " << __FUNCTION__ << ": " << (std::ostringstream() << _text).str())
+
+#define COLOR_PREFIX_LOG(_prefix, _text) \
+	do \
+	{ \
+		if (!GetConsoleWindow()) \
+		{ \
+			RAW_LOG(_prefix << " " << _text << std::endl); \
+		} \
+		else \
+		{ \
+			_LOG(_prefix << " " << _text << std::endl, g_log); \
+			_LOG("\033[" << 90 + (std::hash<std::string>{}((std::ostringstream() << _prefix).str()) % 6) << "m" << _prefix << "\033[0m " << _text << std::endl, std::cout); \
+		} \
+	} \
+	while (0)
+
+#define LOG(_text) COLOR_PREFIX_LOG("[" << __FILENAME__ << "]", _text)
 
 #ifdef _DEBUG
 #define DEBUG_LOG(_text) LOG(_text)
