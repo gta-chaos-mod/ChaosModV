@@ -43,6 +43,30 @@ static void OnStart()
 		}
 
 		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+		Vector3 vehLocation = GET_ENTITY_COORDS(targetVeh, true);
+
+		float groundZ;
+		bool useGroundZ;
+		for (int i = 0; i < 100; i++)
+		{
+			float testZ = (i * 10.f) - 100.f;
+
+			if (i % 5 == 0)
+			{
+				WAIT(0);
+			}
+
+			useGroundZ = GET_GROUND_Z_FOR_3D_COORD(vehLocation.x, vehLocation.y, testZ, &groundZ, false, false);
+			if (useGroundZ)
+			{
+				break;
+			}
+		}
+		if (groundZ > vehLocation.z)
+		{
+			SET_ENTITY_COORDS(targetVeh, vehLocation.x, vehLocation.y, groundZ, 1, 0, 0, 1);
+		}
+		
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
