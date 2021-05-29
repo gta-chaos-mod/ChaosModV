@@ -6,6 +6,9 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 	m_rgTextColor = rgTextColor;
 	m_rgEffectTimerColor = rgEffectTimerColor;
 
+	m_bDisableDrawTimerBar = g_OptionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
+	m_bDisableDrawEffectTexts = g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+
 	m_usEffectSpawnTime = g_OptionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 	m_usEffectTimedDur = g_OptionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
 	m_usEffectTimedShortDur = g_OptionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
@@ -201,7 +204,7 @@ void EffectDispatcher::UpdateMetaEffects()
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_bEnableNormalEffectDispatch)
+	if (!m_bEnableNormalEffectDispatch || m_bDisableDrawTimerBar || g_MetaInfo.m_bShouldHideChaosUI || g_MetaInfo.m_bDisableChaos)
 	{
 		return;
 	}
@@ -215,7 +218,7 @@ void EffectDispatcher::DrawTimerBar()
 
 void EffectDispatcher::DrawEffectTexts()
 {
-	if (!m_bEnableNormalEffectDispatch)
+	if (!m_bEnableNormalEffectDispatch || m_bDisableDrawEffectTexts)
 	{
 		return;
 	}

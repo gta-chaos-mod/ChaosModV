@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TryParse.h"
+#include "Logging.h"
 
 #include <unordered_map>
 #include <iostream>

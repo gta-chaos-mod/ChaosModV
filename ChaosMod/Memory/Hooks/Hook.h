@@ -49,8 +49,6 @@ namespace Memory
 			return m_pNext;
 		}
 	};
-
-	bool AddHook(void* pTarget, void* pDetour, void* ppOrig = nullptr);
 }
 
 class RegisterHook

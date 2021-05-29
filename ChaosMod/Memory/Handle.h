@@ -19,9 +19,9 @@ public:
 		return m_ullAddr;
 	}
 
-	_HANDLEFUNC Handle At(short sOffset) const
+	_HANDLEFUNC Handle At(int iOffset) const
 	{
-		return IsValid() ? m_ullAddr + sOffset : 0;
+		return IsValid() ? m_ullAddr + iOffset : 0;
 	}
 
 	template<typename T>

@@ -8,7 +8,7 @@ struct EffectIdentifier
 {
 	EffectIdentifier() = default;
 
-	EffectIdentifier(EffectType effectType) : m_effectType(effectType), m_isScript(false)
+	EffectIdentifier(EEffectType effectType) : m_effectType(effectType), m_isScript(false)
 	{
 		
 	}
@@ -33,7 +33,7 @@ struct EffectIdentifier
 		return m_isScript;
 	}
 
-	inline EffectType GetEffectType() const
+	inline EEffectType GetEffectType() const
 	{
 		return m_effectType;
 	}
@@ -44,7 +44,7 @@ struct EffectIdentifier
 	}
 
 private:
-	EffectType m_effectType = _EFFECT_ENUM_MAX;
+	EEffectType m_effectType = _EFFECT_ENUM_MAX;
 	std::string m_scriptId;
 	bool m_isScript = false;
 };

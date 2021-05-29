@@ -24,7 +24,7 @@ DebugMenu::DebugMenu()
 
 	if (m_rgEffects.empty())
 	{
-		m_rgEffects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
+		m_rgEffects.emplace_back(static_cast<EEffectType>(-1), "No enabled effects :(");
 
 		return;
 	}
@@ -79,7 +79,7 @@ void DebugMenu::Run()
 	{
 		m_bDispatchEffect = false;
 
-		g_pEffectDispatcher->DispatchEffect(m_rgEffects[m_usSelected].m_EffectIdentifier);
+		g_pEffectDispatcher->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
 	}
 
 	float fY = .1f;
@@ -87,9 +87,9 @@ void DebugMenu::Run()
 
 	for (int i = 0; culRemainingDrawItems > 0; i++)
 	{
-		short sOverflow = MAX_VIS_ITEMS / 2 - (m_rgEffects.size() - 1 - m_usSelected);
+		short sOverflow = MAX_VIS_ITEMS / 2 - (m_rgEffects.size() - 1 - m_iSelectedIdx);
 
-		if (i < 0 || i < m_usSelected - culRemainingDrawItems / 2 - (sOverflow > 0 ? sOverflow : 0))
+		if (i < 0 || i < m_iSelectedIdx - culRemainingDrawItems / 2 - (sOverflow > 0 ? sOverflow : 0))
 		{
 			continue;
 		}
@@ -105,7 +105,7 @@ void DebugMenu::Run()
 		SET_TEXT_PROPORTIONAL(true);
 		SET_TEXT_JUSTIFICATION(0);
 
-		if (i == m_usSelected)
+		if (i == m_iSelectedIdx)
 		{
 			DRAW_RECT(.1f, fY, .2f, .05f, 255, 255, 255, 200, true);
 
@@ -132,6 +132,11 @@ bool _NODISCARD DebugMenu::IsEnabled() const
 
 void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 {
+	if (!m_bIsEnabled || !m_bVisible)
+	{
+		return;
+	}
+
 	if (bOnRepeat)
 	{
 		DWORD ulCurTime = GetTickCount64();
@@ -149,22 +154,22 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	switch (ulKey)
 	{
 	case VK_UP:
-		if (--m_usSelected < 0)
+		if (--m_iSelectedIdx < 0)
 		{
-			m_usSelected = m_rgEffects.size() - 1;
+			m_iSelectedIdx = m_rgEffects.size() - 1;
 		}
 
 		break;
 	case VK_DOWN:
-		if (++m_usSelected >= m_rgEffects.size())
+		if (++m_iSelectedIdx >= m_rgEffects.size())
 		{
-			m_usSelected = 0;
+			m_iSelectedIdx = 0;
 		}
 
 		break;
 	case VK_RIGHT:
 	{
-		char cSearchChar = std::tolower(m_rgEffects[m_usSelected].m_szEffectName[0]);
+		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
 
 		bool bFound = false;
 		while (!bFound)
@@ -174,11 +179,11 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 				cSearchChar = SCHAR_MIN;
 			}
 
-			for (int i = 0; i < m_rgEffects.size(); i++)
+			for (int idx = 0; idx < m_rgEffects.size(); idx++)
 			{
-				if (std::tolower(m_rgEffects[i].m_szEffectName[0]) == cSearchChar)
+				if (std::tolower(m_rgEffects[idx].m_szEffectName[0]) == cSearchChar)
 				{
-					m_usSelected = i;
+					m_iSelectedIdx = idx;
 
 					bFound = true;
 
@@ -191,7 +196,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	}
 	case VK_LEFT:
 	{
-		char cSearchChar = std::tolower(m_rgEffects[m_usSelected].m_szEffectName[0]);
+		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
 
 		bool bFound = false;
 		while (!bFound)
@@ -201,11 +206,11 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 				cSearchChar = SCHAR_MAX;
 			}
 
-			for (int i = 0; i < m_rgEffects.size(); i++)
+			for (int idx = 0; idx < m_rgEffects.size(); idx++)
 			{
-				if (std::tolower(m_rgEffects[i].m_szEffectName[0]) == cSearchChar)
+				if (std::tolower(m_rgEffects[idx].m_szEffectName[0]) == cSearchChar)
 				{
-					m_usSelected = i;
+					m_iSelectedIdx = idx;
 
 					bFound = true;
 
@@ -217,7 +222,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_usSelected].m_EffectIdentifier.GetEffectType() != -1)
+		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != -1)
 		{
 			m_bDispatchEffect = true;
 		}

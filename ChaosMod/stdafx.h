@@ -5,6 +5,7 @@
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
 #include "EffectThreads.h"
+#include "EffectConfig.h"
 
 #include "Components/Component.h"
 #include "Components/DebugMenu.h"

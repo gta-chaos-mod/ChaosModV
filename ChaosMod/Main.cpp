@@ -11,9 +11,6 @@ static bool ms_bClearAllEffects = false;
 
 static bool ms_bClearEffectsShortcutEnabled = false;
 
-static bool ms_bDisableDrawTimerBar = false;
-static bool ms_bDisableDrawEffectTexts = false;
-
 static bool ms_bToggleModShortcutEnabled = false;
 
 static bool ms_bDisableMod = false;
@@ -39,104 +36,7 @@ static void ParseEffectsFile()
 	g_EnabledEffects.clear();
 	g_CurrentEffectGroupMemberCount = g_AllEffectGroupMemberCount;
 
-	OptionsFile effectsFile("chaosmod/effects.ini");
-
-	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
-	{
-		EffectType effectType = static_cast<EffectType>(i);
-		const EffectInfo& effectInfo = g_EffectsMap.at(effectType);
-
-		// Default EffectData values
-		// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
-		std::vector<int> rgValues { true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false };
-		// HACK: Store EffectCustomName seperately
-		std::string szValueEffectName;
-
-		std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
-
-		if (!szValue.empty())
-		{
-			size_t ullSplitIndex = szValue.find(",");
-			for (int j = 0; ; j++)
-			{
-				if (j == 6)
-				{
-					// HACK for EffectCustomName :(
-					if (szValue != "0")
-					{
-						szValueEffectName = szValue;
-					}
-
-					break;
-				}
-				else
-				{
-					const std::string& szSplit = szValue.substr(0, ullSplitIndex);
-
-					Util::TryParse<int>(szSplit, rgValues[j]);
-				}
-
-				if (ullSplitIndex == szValue.npos)
-				{
-					break;
-				}
-
-				szValue = szValue.substr(ullSplitIndex + 1);
-
-				ullSplitIndex = szValue.find(",");
-			}
-		}
-
-		if (!rgValues[0]) // enabled == false
-		{
-			if (effectInfo.EffectGroupType != EffectGroupType::None)
-			{
-				g_CurrentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
-			}
-
-			continue;
-		}
-
-		EffectData effectData;
-		if (!effectInfo.IsTimed)
-		{
-			effectData.TimedType = EEffectTimedType::NotTimed;
-		}
-		else if (rgValues[4])
-		{
-			effectData.TimedType = EEffectTimedType::Permanent;
-		}
-		else if (rgValues[2] > -1)
-		{
-			effectData.TimedType = EEffectTimedType::Custom;
-			effectData.CustomTime = rgValues[2];
-		}
-		else
-		{
-			effectData.TimedType = static_cast<EEffectTimedType>(static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration : rgValues[1]);
-		}
-		
-		effectData.WeightMult = rgValues[3];
-		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
-		effectData.ExcludedFromVoting = rgValues[5];
-		effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
-		effectData.Name = effectInfo.Name;
-		if (!szValueEffectName.empty())
-		{
-			effectData.HasCustomName = true;
-			effectData.CustomName = szValueEffectName;
-		}
-		effectData.Id = effectInfo.Id;
-		
-		for (EffectType effectType : effectInfo.IncompatibleWith)
-		{
-			effectData.IncompatibleIds.push_back(g_EffectsMap.at(effectType).Id);
-		}
-
-		effectData.EffectGroupType = effectInfo.EffectGroupType;
-
-		g_EnabledEffects.emplace(effectType, effectData);
-	}
+	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
 }
 
 static void Reset()
@@ -238,14 +138,8 @@ static void Loop()
 			pComponent->Run();
 		}
 
-		if (!ms_bDisableDrawTimerBar && !g_MetaInfo.m_bShouldHideChaosUI && !g_MetaInfo.m_bDisableChaos)
-		{
-			g_pEffectDispatcher->DrawTimerBar();
-		}
-		if (!ms_bDisableDrawEffectTexts)
-		{
-			g_pEffectDispatcher->DrawEffectTexts();
-		}
+		g_pEffectDispatcher->DrawTimerBar();
+		g_pEffectDispatcher->DrawEffectTexts();
 	}
 }
 
@@ -302,9 +196,6 @@ namespace Main
 		ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 		ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 		ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
-
-		ms_bDisableDrawTimerBar = g_OptionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
-		ms_bDisableDrawEffectTexts = g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
 
 		g_EnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
@@ -382,7 +273,7 @@ namespace Main
 			}
 		}
 
-		if (ms_pDebugMenu && ms_pDebugMenu->IsEnabled() && ms_pDebugMenu->IsVisible())
+		if (ms_pDebugMenu)
 		{
 			ms_pDebugMenu->HandleInput(ulKey, bWasDownBefore);
 		}

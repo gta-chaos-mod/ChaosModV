@@ -9,31 +9,31 @@
 class VehiclePool
 {
 public:
-	UINT64* PoolAddress;
-	UINT32 Size;
+	UINT64* m_pullPoolAddress;
+	UINT32 m_ulSize;
 	char _Padding2[36];
-	UINT32* BitArray;
+	UINT32* m_pulBitArray;
 	char _Padding3[40];
-	UINT32 ItemCount;
+	UINT32 m_ulItemCount;
 
 	inline bool IsValid(UINT32 i)
 	{
-		return (BitArray[i >> 5] >> (i & 0x1F)) & 1;
+		return (m_pulBitArray[i >> 5] >> (i & 0x1F)) & 1;
 	}
 
 	inline UINT64 GetAddress(UINT32 i)
 	{
-		return PoolAddress[i];
+		return m_pullPoolAddress[i];
 	}
 };
 
 class GenericPool
 {
 public:
-	UINT64 PoolStartAddress;
-	BYTE* ByteArray;
-	UINT32 Size;
-	UINT32 ItemSize;
+	UINT64 m_ullPoolStartAddress;
+	BYTE* m_ucByteArray;
+	UINT32 m_ulSize;
+	UINT32 m_ulItemSize;
 
 	inline bool IsValid(UINT32 i)
 	{
@@ -42,131 +42,131 @@ public:
 
 	inline UINT64 GetAddress(UINT32 i)
 	{
-		return Mask(i) & (PoolStartAddress + i * ItemSize);
+		return Mask(i) & (m_ullPoolStartAddress + i * m_ulItemSize);
 	}
 
 private:
 	inline long long Mask(UINT32 i)
 	{
-		long long num1 = ByteArray[i] & 0x80;
+		long long num1 = m_ucByteArray[i] & 0x80;
 		return ~((num1 | -num1) >> 63);
 	}
 };
 
 
-enum class ReturnedEntityType
+enum class EReturnedEntityType
 {
-	PEDS,
-	VEHS,
-	PROPS
+	Peds,
+	Vehs,
+	Props
 };
 
-inline std::vector<Entity> GetAllOfEntityType(ReturnedEntityType entityType)
+inline std::vector<Entity> GetAllOfEntityType(EReturnedEntityType entityType)
 {
-	static GenericPool* pedPool;
-	static VehiclePool* vehPool;
-	static GenericPool* propPool;
+	static GenericPool* pPedPool;
+	static VehiclePool* pVehPool;
+	static GenericPool* pPropPool;
 
 	static int(*_addEntityToPoolFunc)(__int64);
 
-	std::vector<Entity> entities;
+	std::vector<Entity> rgEntities;
 
-	static bool didInit = false;
-	if (!didInit)
+	static bool c_bDidInit = false;
+	if (!c_bDidInit)
 	{
 		Handle handle;
 
 		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
 		if (!handle.IsValid())
 		{
-			return entities;
+			return rgEntities;
 		}
 
-		pedPool = handle.At(2).Into().Value<GenericPool*>();
+		pPedPool = handle.At(2).Into().Value<GenericPool*>();
 
 		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
 		if (!handle.IsValid())
 		{
-			return entities;
+			return rgEntities;
 		}
 
-		vehPool = *handle.At(2).Into().Value<VehiclePool**>();
+		pVehPool = *handle.At(2).Into().Value<VehiclePool**>();
 
 		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
 		if (!handle.IsValid())
 		{
-			return entities;
+			return rgEntities;
 		}
 
-		propPool = handle.At(2).Into().Value<GenericPool*>();
+		pPropPool = handle.At(2).Into().Value<GenericPool*>();
 
 		handle = Memory::FindPattern("48 F7 F9 49 8B 48 08 48 63 D0 C1 E0 08 0F B6 1C 11 03 D8").Addr();
 		if (!handle.IsValid())
 		{
-			return entities;
+			return rgEntities;
 		}
 
 		_addEntityToPoolFunc = handle.At(-0x68).Get<int(__int64)>();
 
-		didInit = true;
+		c_bDidInit = true;
 	}
 
 	switch (entityType)
 	{
-	case ReturnedEntityType::PEDS:
-		for (int i = 0; i < pedPool->Size; i++)
+	case EReturnedEntityType::Peds:
+		for (int i = 0; i < pPedPool->m_ulSize; i++)
 		{
-			if (pedPool->IsValid(i))
+			if (pPedPool->IsValid(i))
 			{
-				__int64 addr = pedPool->GetAddress(i);
+				__int64 ullAddr = pPedPool->GetAddress(i);
 
-				if (addr)
+				if (ullAddr)
 				{
-					int handle = _addEntityToPoolFunc(addr);
+					int iHandle = _addEntityToPoolFunc(ullAddr);
 
-					if (DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(iHandle))
 					{
-						entities.push_back(handle);
+						rgEntities.push_back(iHandle);
 					}
 				}
 			}
 		}
 
 		break;
-	case ReturnedEntityType::VEHS:
-		for (int i = 0; i < vehPool->Size; i++)
+	case EReturnedEntityType::Vehs:
+		for (int i = 0; i < pVehPool->m_ulSize; i++)
 		{
-			if (vehPool->IsValid(i))
+			if (pVehPool->IsValid(i))
 			{
-				__int64 addr = vehPool->GetAddress(i);
+				__int64 ullAddr = pVehPool->GetAddress(i);
 
-				if (addr)
+				if (ullAddr)
 				{
-					int handle = _addEntityToPoolFunc(addr);
+					int iHandle = _addEntityToPoolFunc(ullAddr);
 
-					if (DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(iHandle))
 					{
-						entities.push_back(handle);
+						rgEntities.push_back(iHandle);
 					}
 				}
 			}
 		}
 
 		break;
-	case ReturnedEntityType::PROPS:
-		for (int i = 0; i < propPool->Size; i++)
+	case EReturnedEntityType::Props:
+		for (int i = 0; i < pPropPool->m_ulSize; i++)
 		{
-			if (propPool->IsValid(i))
+			if (pPropPool->IsValid(i))
 			{
-				__int64 addr = propPool->GetAddress(i);
+				__int64 ullAddr = pPropPool->GetAddress(i);
 
-				if (addr)
+				if (ullAddr)
 				{
-					int handle = _addEntityToPoolFunc(addr);
+					int iHandle = _addEntityToPoolFunc(ullAddr);
 
-					if (DOES_ENTITY_EXIST(handle))
+					if (DOES_ENTITY_EXIST(iHandle))
 					{
-						entities.push_back(handle);
+						rgEntities.push_back(iHandle);
 					}
 				}
 			}
@@ -175,53 +175,53 @@ inline std::vector<Entity> GetAllOfEntityType(ReturnedEntityType entityType)
 		break;
 	}
 
-	return entities;
+	return rgEntities;
 }
 
 inline const std::vector<Ped>& GetAllPeds()
 {
-	static std::vector<Ped> peds;
+	static std::vector<Ped> c_rgPeds;
 
-	static int lastFrame = 0;
-	int curFrame = GET_FRAME_COUNT();
-	if (lastFrame < curFrame)
+	static int c_ilastFrame = 0;
+	int iCurFrame = GET_FRAME_COUNT();
+	if (c_ilastFrame < iCurFrame)
 	{
-		lastFrame = curFrame;
+		c_ilastFrame = iCurFrame;
 
-		peds = GetAllOfEntityType(ReturnedEntityType::PEDS);
+		c_rgPeds = GetAllOfEntityType(EReturnedEntityType::Peds);
 	}
 
-	return peds;
+	return c_rgPeds;
 }
 
 inline const std::vector<Vehicle>& GetAllVehs()
 {
-	static std::vector<Vehicle> vehs;
+	static std::vector<Vehicle> rgVehs;
 
-	static int lastFrame = 0;
-	int curFrame = GET_FRAME_COUNT();
-	if (lastFrame < curFrame)
+	static int c_iLastFrame = 0;
+	int iCurFrame = GET_FRAME_COUNT();
+	if (c_iLastFrame < iCurFrame)
 	{
-		lastFrame = curFrame;
+		c_iLastFrame = iCurFrame;
 
-		vehs = GetAllOfEntityType(ReturnedEntityType::VEHS);
+		rgVehs = GetAllOfEntityType(EReturnedEntityType::Vehs);
 	}
 
-	return vehs;
+	return rgVehs;
 }
 
 inline const std::vector<Object>& GetAllProps()
 {
-	static std::vector<Object> props;
+	static std::vector<Object> rgProps;
 
-	static int lastFrame = 0;
-	int curFrame = GET_FRAME_COUNT();
-	if (lastFrame < curFrame)
+	static int iLastFrame = 0;
+	int iCurFrame = GET_FRAME_COUNT();
+	if (iLastFrame < iCurFrame)
 	{
-		lastFrame = curFrame;
+		iLastFrame = iCurFrame;
 
-		props = GetAllOfEntityType(ReturnedEntityType::PROPS);
+		rgProps = GetAllOfEntityType(EReturnedEntityType::Props);
 	}
 
-	return props;
+	return rgProps;
 }

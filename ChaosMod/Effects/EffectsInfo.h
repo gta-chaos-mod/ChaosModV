@@ -5,7 +5,7 @@
 
 #include <unordered_map>
 
-enum EffectType
+enum EEffectType : int
 {
 	EFFECT_PLAYER_SUICIDE,
 	EFFECT_PLUS_2_STARS,
@@ -287,9 +287,9 @@ struct EffectInfo
 	const char* Id;
 	bool IsTimed = false;
 	bool IsShortDuration = false;
-	std::vector<EffectType> IncompatibleWith;
+	std::vector<EEffectType> IncompatibleWith;
 	EffectGroupType EffectGroupType = EffectGroupType::None;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
-inline std::unordered_map<EffectType, EffectInfo> g_EffectsMap;
+inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;

@@ -25,7 +25,7 @@ public:
 	
 	}
 
-	RegisteredEffect(EffectType effectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)())
+	RegisteredEffect(EEffectType effectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)())
 		: m_EffectIdentifier(effectType), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
 	{
 
@@ -132,22 +132,22 @@ private:
 	RegisteredEffect m_RegisteredEffect;
 
 public:
-	RegisterEffect(EffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)(), EffectInfo&& effectInfo)
+	RegisterEffect(EEffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)(), EffectInfo&& effectInfo)
 	{
 		_RegisterEffect(eEffectType, pOnStart, pOnStop, pOnTick, std::move(effectInfo));
 	}
 
-	RegisterEffect(EffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), EffectInfo&& effectInfo)
+	RegisterEffect(EEffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), EffectInfo&& effectInfo)
 	{
 		_RegisterEffect(eEffectType, pOnStart, pOnStop, nullptr, std::move(effectInfo));
 	}
 
-	RegisterEffect(EffectType eEffectType, void(*pOnStart)(), EffectInfo&& effectInfo)
+	RegisterEffect(EEffectType eEffectType, void(*pOnStart)(), EffectInfo&& effectInfo)
 	{
 		_RegisterEffect(eEffectType, pOnStart, nullptr, nullptr, std::move(effectInfo));
 	}
 
-	RegisterEffect(EffectType eEffectType, EffectInfo&& effectInfo)
+	RegisterEffect(EEffectType eEffectType, EffectInfo&& effectInfo)
 	{
 		_RegisterEffect(eEffectType, nullptr, nullptr, nullptr, std::move(effectInfo));
 	}
@@ -157,7 +157,7 @@ public:
 	RegisterEffect& operator=(const RegisterEffect&) = delete;
 
 private:
-	void _RegisterEffect(EffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)(), EffectInfo&& effectInfo)
+	void _RegisterEffect(EEffectType eEffectType, void(*pOnStart)(), void(*pOnStop)(), void(*pOnTick)(), EffectInfo&& effectInfo)
 	{
 		m_RegisteredEffect = RegisteredEffect(eEffectType, pOnStart, pOnStop, pOnTick);
 

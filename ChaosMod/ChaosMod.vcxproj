@@ -298,7 +298,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
-    <ClCompile Include="Memory\Hooks\Hook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\TestHook.cpp" />
@@ -322,6 +321,7 @@
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
+    <ClInclude Include="EffectConfig.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EffectExecutionType.h" />
     <ClInclude Include="Effects\EffectGroups.h" />

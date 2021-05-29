@@ -25,6 +25,18 @@ class EffectDispatcher : public Component
 private:
 	struct ActiveEffect
 	{
+		EffectIdentifier m_EffectIdentifier;
+		RegisteredEffect* m_pRegisteredEffect;
+
+		DWORD64 m_ullThreadId = 0;
+
+		std::string m_szName;
+
+		float m_fTimer = 0.f;
+		float m_fMaxTime = 0.f;
+
+		bool m_bHideText = true;
+
 		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* pRegisteredEffect, const std::string& szName, float fTimer)
 		{
 			m_EffectIdentifier = effectIdentifier;
@@ -37,23 +49,14 @@ private:
 
 			m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
 		}
-
-		EffectIdentifier m_EffectIdentifier;
-		RegisteredEffect* m_pRegisteredEffect;
-
-		DWORD64 m_ullThreadId = 0;
-
-		std::string m_szName;
-
-		float m_fTimer = 0.f;
-		float m_fMaxTime = 0.f;
-
-		bool m_bHideText = true;
 	};
 
 	std::array<BYTE, 3> m_rgTimerColor;
 	std::array<BYTE, 3> m_rgTextColor;
 	std::array<BYTE, 3> m_rgEffectTimerColor;
+
+	bool m_bDisableDrawTimerBar = false;
+	bool m_bDisableDrawEffectTexts = false;
 
 	WORD m_usEffectSpawnTime = 0;
 	WORD m_usEffectTimedDur = 0;

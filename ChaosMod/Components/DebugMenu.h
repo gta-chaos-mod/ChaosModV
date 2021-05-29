@@ -8,7 +8,6 @@
 #define _NODISCARD [[nodiscard]]
 
 using DWORD = unsigned long;
-using WORD = unsigned short;
 
 class DebugMenu : public Component
 {
@@ -28,7 +27,7 @@ private:
 
 	bool m_bIsEnabled;
 
-	WORD m_usSelected = 0;
+	int m_iSelectedIdx = 0;
 	bool m_bVisible = false;
 
 	DWORD m_ulRepeatTime = 0;
