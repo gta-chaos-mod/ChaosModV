@@ -4,6 +4,14 @@
 
 Failsafe::Failsafe()
 {
+	m_bEnabled = g_OptionsManager.GetConfigValue<bool>("EnableFailsafe", OPTION_DEFAULT_FAILSAFE);
+	if (!m_bEnabled)
+	{
+		LOG("Failsafe has been disabled in the config!");
+
+		return;
+	}
+
 	eGameVersion eGameVer = getGameVersion();
 	m_bEnabled = eGameVer >= VER_1_0_2215_0_STEAM && eGameVer < VER_SIZE || DoesFileExist("chaosmod\\.forcefailsafe");
 

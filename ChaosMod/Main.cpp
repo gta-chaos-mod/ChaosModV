@@ -71,6 +71,8 @@ static void Loop()
 	ms_pSplashTexts = std::make_unique<SplashTexts>();
 	ms_pSplashTexts->ShowInitSplash();
 
+	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+
 	Main::Init();
 
 	while (true)
