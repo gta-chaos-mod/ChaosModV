@@ -21,6 +21,8 @@ const char* ROULETTE_WORDS[] =
     "HACKING!",
     "ALXBLADE",
     "DVIPERAU",
+    "HCKERMAN",
+    "JIZZLEDS",
     "BURHAC!!",
     "SAURUS88",
     "TORIKSLV",
@@ -52,7 +54,10 @@ const char* WIN_PHRASES[] =
     "I'll make it harder next time, I promise!",
     "https://youtube.com/watch?v=dQw4w9WgXcQ",
     "I'm not sure what you hacked, but it's now hacked.",
-    "i ran out of phrases to put here. please pity me."
+    "i ran out of phrases to put here. please pity me.",
+    "I should get Linux.",
+    "Yay, hacking!",
+    "ping rockstargames.com"
 };
 
 enum class TimerAction
