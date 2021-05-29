@@ -24,16 +24,16 @@ struct EffectGroup
 
 inline const std::unordered_map<EffectGroupType, EffectGroup> g_EffectGroups
 {
-	{EffectGroupType::Teleport, {}},
+	{EffectGroupType::Teleport, {.WeightMult = 2 }},
 	{EffectGroupType::SpawnGeneric, { .WeightMult = 5 }},
 	{EffectGroupType::SpawnEnemySpecial, {.WeightMult = 5 }},
 	{EffectGroupType::SpawnEnemy, { .WeightMult = 4 }},
 	{EffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
 	{EffectGroupType::Weapons, { .WeightMult = 4 }},
-	{EffectGroupType::PlayerKill, {}},
+	{EffectGroupType::PlayerKill, { .WeightMult = 2 }},
 	{EffectGroupType::TrafficColor, { .WeightMult = 3 }},
-	{EffectGroupType::TimeChange, {}},
-	{EffectGroupType::WeatherChange, {}},
+	{EffectGroupType::TimeChange, {.WeightMult = 2 }},
+	{EffectGroupType::WeatherChange, {.WeightMult = 2 }},
 };
 
 inline std::unordered_map<EffectGroupType, int> g_AllEffectGroupMemberCount;
