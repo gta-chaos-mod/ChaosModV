@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EffectGroups.h"
-#include "EffectTimedType.h"
+#include "EEffectTimedType.h"
 
 #include <string>
 #include <vector>

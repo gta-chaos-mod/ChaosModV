@@ -45,7 +45,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 
 	bool bResult = CreateProcess(NULL, cBuffer, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
 #else
-	bool result = CreateProcess(NULL, cBuffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, cBuffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
 	// A previous instance of the voting proxy could still be running, wait for it to release the mutex

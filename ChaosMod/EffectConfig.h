@@ -89,7 +89,7 @@ namespace EffectConfig
 			effectData.WeightMult = rgValues[3];
 			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
 			effectData.ExcludedFromVoting = rgValues[5];
-			effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
+			effectData.IsMeta = effectInfo.ExecutionType == EEffectExecutionType::Meta;
 			effectData.Name = effectInfo.Name;
 			if (!szValueEffectName.empty())
 			{

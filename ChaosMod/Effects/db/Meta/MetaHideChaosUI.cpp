@@ -21,6 +21,6 @@ static RegisterEffect registerEffect(EFFECT_META_HIDE_CHAOS_UI, nullptr, OnStop,
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",
 		.IsTimed = true,
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

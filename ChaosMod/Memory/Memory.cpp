@@ -129,21 +129,7 @@ namespace Memory
 		return result;
 	}
 
-	template <typename T>
-	void Write(T* pAddr, T value, int iCount)
-	{
-		DWORD ulOldProtect;
-		VirtualProtect(pAddr, sizeof(T) * iCount, PAGE_EXECUTE_READWRITE, &ulOldProtect);
-
-		for (int i = 0; i < iCount; i++)
-		{
-			pAddr[i] = value;
-		}
-
-		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
-	}
-
-	const char* const GetTypeName(__int64 ullVftAddr)
+	const char* GetTypeName(__int64 ullVftAddr)
 	{
 		if (ullVftAddr)
 		{

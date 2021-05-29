@@ -23,6 +23,6 @@ static RegisterEffect registerEffect(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTi
 		.Id = "meta_nochaos",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_HIDE_CHAOS_UI },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

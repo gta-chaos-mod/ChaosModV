@@ -8,8 +8,9 @@ using size_t = unsigned long long;
 
 struct EffectData;
 
-struct EffectsIdentifierHasher
+class EffectsIdentifierHasher
 {
+public:
     size_t operator()(const EffectIdentifier& effectIdentifier) const
     {
         size_t ullHash1 = std::hash<int>()(effectIdentifier.GetEffectType());

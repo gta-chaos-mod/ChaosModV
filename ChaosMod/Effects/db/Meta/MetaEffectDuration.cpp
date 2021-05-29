@@ -21,7 +21,7 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_EFFECT_DURATION_X0_5, null
 		.Id = "meta_effect_duration_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_EFFECT_DURATION_X2 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
@@ -36,6 +36,6 @@ static RegisterEffect registerEffect_2x(EFFECT_META_EFFECT_DURATION_X2, nullptr,
 		.Id = "meta_effect_duration_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_EFFECT_DURATION_X0_5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

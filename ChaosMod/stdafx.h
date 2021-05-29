@@ -15,13 +15,15 @@
 #include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
-#include "Effects/EffectTimedType.h"
+#include "Effects/EEffectTimedType.h"
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
 #include "Effects/MetaEffectInfo.h"
 #include "Effects/EffectGroups.h"
-#include "Effects/EffectExecutionType.h"
+#include "Effects/EEffectExecutionType.h"
+
+#include "Lib/scrThread.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle.h"
@@ -30,7 +32,6 @@
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
-#include "Memory/Entity.h"
 #include "Memory/Misc.h"
 
 #include "Memory/Hooks/Hook.h"
@@ -51,7 +52,7 @@
 #include "Util/OptionsFile.h"
 #include "Util/OptionsManager.h"
 #include "Util/OptionDefaults.h"
-#include "Util/Misc.h"
+#include "Util/Macros.h"
 #include "Util/Natives.h"
 
 #include "../vendor/scripthookv/inc/main.h"

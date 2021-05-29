@@ -1,33 +1,32 @@
 #pragma once
 
 #include <random>
-#include <time.h>
 
 class Random
 {
+private:
+	std::random_device m_RandomDevice;
+	std::mt19937 m_Random = std::mt19937(m_RandomDevice());
+
 public:
-	inline void SetSeed(int seed)
+	inline void SetSeed(int iSeed)
 	{
-		if (seed > 0)
+		if (iSeed > 0)
 		{
-			random.seed(seed);
+			m_Random.seed(iSeed);
 		}
 	}
 
-	inline int GetRandomInt(int lower, int upper)
+	inline int GetRandomInt(int iLower, int iUpper)
 	{
-		std::uniform_int_distribution<> distr(lower, upper);
-		return distr(random);
+		std::uniform_int_distribution<> distr(iLower, iUpper);
+		return distr(m_Random);
 	}
 
-	inline float GetRandomFloat(float lower, float upper) {
-		std::uniform_real_distribution<float> distr(lower, upper);
-		return distr(random);
+	inline float GetRandomFloat(float fLower, float fUpper) {
+		std::uniform_real_distribution<float> distr(fLower, fUpper);
+		return distr(m_Random);
 	}
-
-private:
-	std::random_device random_device;
-	std::mt19937 random = std::mt19937(random_device());
 };
 
 inline Random g_Random;

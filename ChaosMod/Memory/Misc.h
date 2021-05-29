@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Util/Misc.h"
+#include "../Util/Macros.h"
 
 namespace Memory
 {

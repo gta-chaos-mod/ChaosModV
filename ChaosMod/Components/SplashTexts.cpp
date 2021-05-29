@@ -7,6 +7,11 @@ SplashTexts::SplashTexts()
 	m_ullLastTimestamp = GetTickCount64();
 }
 
+void SplashTexts::ShowInitSplash()
+{
+	m_iStartupSplashTime = SPLASH_TEXT_DUR_MS;
+}
+
 void SplashTexts::ShowTwitchVotingSplash()
 {
 	m_iTwitchVotingSplashTime = SPLASH_TEXT_DUR_MS;

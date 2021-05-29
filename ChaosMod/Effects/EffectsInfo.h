@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EffectGroups.h"
-#include "EffectExecutionType.h"
+#include "EEffectExecutionType.h"
 
 #include <unordered_map>
 
@@ -289,7 +289,7 @@ struct EffectInfo
 	bool IsShortDuration = false;
 	std::vector<EEffectType> IncompatibleWith;
 	EffectGroupType EffectGroupType = EffectGroupType::None;
-	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
+	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 
 inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;

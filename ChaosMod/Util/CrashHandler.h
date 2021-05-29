@@ -7,8 +7,6 @@
 
 #include <minidumpapiset.h>
 
-#include <sstream>
-
 inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
 {
 	SYSTEMTIME systemTime;

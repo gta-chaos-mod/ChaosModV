@@ -21,6 +21,6 @@ static RegisterEffect registerEffect(EFFECT_META_ADDITIONAL_EFFECTS, nullptr, On
 		.Name = "Combo Time",
 		.Id = "meta_spawn_multiple_effects",
 		.IsTimed = true,
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

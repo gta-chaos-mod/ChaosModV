@@ -2,7 +2,7 @@
 
 #include "EffectsInfo.h"
 #include "EffectIdentifier.h"
-#include "EffectTimedType.h"
+#include "EEffectTimedType.h"
 
 #include "../LuaScripts.h"
 
@@ -14,9 +14,11 @@ struct RegisteredEffect
 {
 private:
 	EffectIdentifier m_EffectIdentifier = _EFFECT_ENUM_MAX;
+
 	void(*m_pOnStart)() = nullptr;
 	void(*m_pOnStop)() = nullptr;
 	void(*m_pOnTick)() = nullptr;
+
 	bool m_bIsRunning = false;
 
 public:

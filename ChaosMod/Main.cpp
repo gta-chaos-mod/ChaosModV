@@ -68,6 +68,9 @@ static void Loop()
 
 	Reset();
 
+	ms_pSplashTexts = std::make_unique<SplashTexts>();
+	ms_pSplashTexts->ShowInitSplash();
+
 	Main::Init();
 
 	while (true)
@@ -219,13 +222,12 @@ namespace Main
 		LOG("Initializing Failsafe");
 		ms_pFailsafe = std::make_unique<Failsafe>();
 
-		ms_pSplashTexts = std::make_unique<SplashTexts>();
+		LOG("Completed Init!");
+
 		if (ms_pTwitchVoting->IsEnabled())
 		{
 			ms_pSplashTexts->ShowTwitchVotingSplash();
 		}
-
-		LOG("Completed Init!");
 	}
 
 	void RunLoop()

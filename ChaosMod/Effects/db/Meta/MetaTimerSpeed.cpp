@@ -22,7 +22,7 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_TIMER_SPEED_X0_5, nullptr,
 		.Id = "meta_timerspeed_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
@@ -37,7 +37,7 @@ static RegisterEffect registerEffect_2x(EFFECT_META_TIMER_SPEED_X2, nullptr, OnS
 		.Id = "meta_timerspeed_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
@@ -53,6 +53,6 @@ static RegisterEffect registerEffect_5x(EFFECT_META_TIMER_SPEED_X5, nullptr, OnS
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

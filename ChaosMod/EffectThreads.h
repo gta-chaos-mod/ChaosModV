@@ -48,7 +48,7 @@ struct EffectThreadData
 	}
 };
 
-static void EffectThreadFunc(LPVOID pData)
+inline void EffectThreadFunc(LPVOID pData)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
