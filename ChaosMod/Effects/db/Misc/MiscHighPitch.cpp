@@ -6,7 +6,7 @@ static int m_targetPitch;
 
 static void OnStart()
 {
-	m_targetPitch = g_random.GetRandomInt(750, 2000);
+	m_targetPitch = g_Random.GetRandomInt(750, 2000);
 }
 
 static void OnStop()

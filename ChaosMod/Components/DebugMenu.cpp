@@ -1,0 +1,241 @@
+#include "stdafx.h"
+
+#include "DebugMenu.h"
+
+#define MAX_VIS_ITEMS 15
+
+DebugMenu::DebugMenu()
+{
+	m_bIsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	if (!m_bIsEnabled)
+	{
+		return;
+	}
+
+	for (const auto& pair : g_EnabledEffects)
+	{
+		const EffectData& effectData = pair.second;
+
+		if (effectData.TimedType != EEffectTimedType::Permanent)
+		{
+			m_rgEffects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
+		}
+	}
+
+	if (m_rgEffects.empty())
+	{
+		m_rgEffects.emplace_back(static_cast<EffectType>(-1), "No enabled effects :(");
+
+		return;
+	}
+
+	std::sort(m_rgEffects.begin(), m_rgEffects.end(), [](const DebugEffect& a, const DebugEffect& b)
+	{
+		for (int i = 0; ; i++)
+		{
+			if (i >= a.m_szEffectName.size() || std::toupper(a.m_szEffectName[i]) < std::toupper(b.m_szEffectName[i]))
+			{
+				return true;
+			}
+			else if (i >= b.m_szEffectName.size() || std::toupper(b.m_szEffectName[i]) < std::toupper(a.m_szEffectName[i]))
+			{
+				return false;
+			}
+		}
+	});
+}
+
+void DebugMenu::Run()
+{
+	if (!m_bIsEnabled || !m_bVisible)
+	{
+		return;
+	}
+
+	// Arrow Up
+	DISABLE_CONTROL_ACTION(1, 27, true);
+	DISABLE_CONTROL_ACTION(1, 127, true);
+	DISABLE_CONTROL_ACTION(1, 188, true);
+	DISABLE_CONTROL_ACTION(1, 300, true);
+
+	// Arrow Down
+	DISABLE_CONTROL_ACTION(1, 173, true);
+	DISABLE_CONTROL_ACTION(1, 187, true);
+	DISABLE_CONTROL_ACTION(1, 299, true);
+
+	// Enter
+	DISABLE_CONTROL_ACTION(1, 18, true);
+	DISABLE_CONTROL_ACTION(1, 176, true);
+	DISABLE_CONTROL_ACTION(1, 191, true);
+	DISABLE_CONTROL_ACTION(1, 201, true);
+	DISABLE_CONTROL_ACTION(1, 215, true);
+
+	// Backspace
+	DISABLE_CONTROL_ACTION(1, 177, true);
+	DISABLE_CONTROL_ACTION(1, 194, true);
+	DISABLE_CONTROL_ACTION(1, 202, true);
+
+	if (m_bDispatchEffect)
+	{
+		m_bDispatchEffect = false;
+
+		g_pEffectDispatcher->DispatchEffect(m_rgEffects[m_usSelected].m_EffectIdentifier);
+	}
+
+	float fY = .1f;
+	WORD culRemainingDrawItems = MAX_VIS_ITEMS;
+
+	for (int i = 0; culRemainingDrawItems > 0; i++)
+	{
+		short sOverflow = MAX_VIS_ITEMS / 2 - (m_rgEffects.size() - 1 - m_usSelected);
+
+		if (i < 0 || i < m_usSelected - culRemainingDrawItems / 2 - (sOverflow > 0 ? sOverflow : 0))
+		{
+			continue;
+		}
+		else if (i >= m_rgEffects.size())
+		{
+			break;
+		}
+
+		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_rgEffects[i].m_szEffectName.c_str());
+		SET_TEXT_SCALE(.3f, .3f);
+		SET_TEXT_CENTRE(true);
+		SET_TEXT_PROPORTIONAL(true);
+		SET_TEXT_JUSTIFICATION(0);
+
+		if (i == m_usSelected)
+		{
+			DRAW_RECT(.1f, fY, .2f, .05f, 255, 255, 255, 200, true);
+
+			SET_TEXT_COLOUR(0, 0, 0, 255);
+		}
+		else
+		{
+			DRAW_RECT(.1f, fY, .2f, .05f, 0, 0, 0, 200, true);
+
+			SET_TEXT_COLOUR(255, 255, 255, 255);
+		}
+
+		END_TEXT_COMMAND_DISPLAY_TEXT(.1f, fY - .0125f, 0);
+
+		fY += .05f;
+		culRemainingDrawItems--;
+	}
+}
+
+bool _NODISCARD DebugMenu::IsEnabled() const
+{
+	return m_bIsEnabled;
+}
+
+void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
+{
+	if (bOnRepeat)
+	{
+		DWORD ulCurTime = GetTickCount64();
+
+		if (ulKey == VK_RETURN || m_ulRepeatTime > ulCurTime - 250)
+		{
+			return;
+		}
+	}
+	else
+	{
+		m_ulRepeatTime = GetTickCount64();
+	}
+
+	switch (ulKey)
+	{
+	case VK_UP:
+		if (--m_usSelected < 0)
+		{
+			m_usSelected = m_rgEffects.size() - 1;
+		}
+
+		break;
+	case VK_DOWN:
+		if (++m_usSelected >= m_rgEffects.size())
+		{
+			m_usSelected = 0;
+		}
+
+		break;
+	case VK_RIGHT:
+	{
+		char cSearchChar = std::tolower(m_rgEffects[m_usSelected].m_szEffectName[0]);
+
+		bool bFound = false;
+		while (!bFound)
+		{
+			if (cSearchChar++ == SCHAR_MAX)
+			{
+				cSearchChar = SCHAR_MIN;
+			}
+
+			for (int i = 0; i < m_rgEffects.size(); i++)
+			{
+				if (std::tolower(m_rgEffects[i].m_szEffectName[0]) == cSearchChar)
+				{
+					m_usSelected = i;
+
+					bFound = true;
+
+					break;
+				}
+			}
+		}
+
+		break;
+	}
+	case VK_LEFT:
+	{
+		char cSearchChar = std::tolower(m_rgEffects[m_usSelected].m_szEffectName[0]);
+
+		bool bFound = false;
+		while (!bFound)
+		{
+			if (cSearchChar-- == SCHAR_MIN)
+			{
+				cSearchChar = SCHAR_MAX;
+			}
+
+			for (int i = 0; i < m_rgEffects.size(); i++)
+			{
+				if (std::tolower(m_rgEffects[i].m_szEffectName[0]) == cSearchChar)
+				{
+					m_usSelected = i;
+
+					bFound = true;
+
+					break;
+				}
+			}
+		}
+
+		break;
+	}
+	case VK_RETURN:
+		if (m_rgEffects[m_usSelected].m_EffectIdentifier.GetEffectType() != -1)
+		{
+			m_bDispatchEffect = true;
+		}
+
+		break;
+	case VK_BACK:
+		m_bVisible = false;
+
+		break;
+	}
+}
+
+void DebugMenu::SetVisible(bool state)
+{
+	m_bVisible = state;
+}
+
+bool _NODISCARD DebugMenu::IsVisible() const
+{
+	return m_bVisible;
+}

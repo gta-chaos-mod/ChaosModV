@@ -9,7 +9,7 @@
 
 #include <sstream>
 
-static LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
+inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS* exceptionInfo)
 {
 	SYSTEMTIME systemTime;
 	GetSystemTime(&systemTime);

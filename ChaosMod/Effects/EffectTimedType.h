@@ -1,11 +1,11 @@
 #pragma once
 
-enum class EffectTimedType
+enum class EEffectTimedType
 {
-	TIMED_NOTTIMED = -4,
-	TIMED_PERMANENT,
-	TIMED_CUSTOM,
-	TIMED_UNK,
-	TIMED_NORMAL,
-	TIMED_SHORT
+	NotTimed = -4,
+	Permanent,
+	Custom,
+	Unk,
+	Normal,
+	Short
 };

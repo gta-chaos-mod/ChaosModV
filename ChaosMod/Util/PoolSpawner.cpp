@@ -4,18 +4,18 @@
 
 #define ENTITY_POOL_MAX 20
 
-static std::list<Entity> m_entities;
+static std::list<Entity> m_rgEntities;
 
 static void HandleEntity(Entity entity)
 {
-	m_entities.push_back(entity);
+	m_rgEntities.push_back(entity);
 
 	// Clean up entities which don't exist anymore first
-	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
+	for (auto it = m_rgEntities.begin(); it != m_rgEntities.end(); )
 	{
 		if (!DOES_ENTITY_EXIST(*it))
 		{
-			it = m_entities.erase(it);
+			it = m_rgEntities.erase(it);
 		}
 		else
 		{
@@ -24,45 +24,45 @@ static void HandleEntity(Entity entity)
 	}
 
 	// Delete front entity if size above limit
-	if (m_entities.size() > ENTITY_POOL_MAX)
+	if (m_rgEntities.size() > ENTITY_POOL_MAX)
 	{
-		Entity frontEntity = m_entities.front();
+		Entity frontEntity = m_rgEntities.front();
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
 			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
 		}
 
-		m_entities.pop_front();
+		m_rgEntities.pop_front();
 	}
 }
 
-void ClearEntityPool(int distance)
+void ClearEntityPool(int iDistance)
 {
 	Vector3 playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	for (std::list<Entity>::iterator it = m_entities.begin(); it != m_entities.end(); )
+	for (std::list<Entity>::iterator it = m_rgEntities.begin(); it != m_rgEntities.end(); )
 	{
 		Entity frontEntity = *it;
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
-			bool remove = distance <= 0;
+			bool bDoRemove = iDistance <= 0;
 
-			if (!remove)
+			if (!bDoRemove)
 			{
 				Vector3 entityCoords = GET_ENTITY_COORDS(frontEntity, false);
 
-				remove = playerCoords.DistanceTo(entityCoords) < distance;
+				bDoRemove = playerCoords.DistanceTo(entityCoords) < iDistance;
 			}
 
-			if (remove)
+			if (bDoRemove)
 			{
 				SET_ENTITY_AS_MISSION_ENTITY(frontEntity, true, true);
 
 				DELETE_ENTITY(&frontEntity);
 
-				it = m_entities.erase(it);
+				it = m_rgEntities.erase(it);
 			}
 			else
 			{
@@ -71,80 +71,80 @@ void ClearEntityPool(int distance)
 		}
 		else
 		{
-			it = m_entities.erase(it);
+			it = m_rgEntities.erase(it);
 		}
 	}
 }
 
-Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading)
+Ped CreatePoolPed(int iPedType, Hash ulHodelHash, float fPosX, float fPosY, float fPosZ, float fHeading)
 {
-	LoadModel(modelHash);
+	LoadModel(ulHodelHash);
 
-	Ped ped = CREATE_PED(pedType, modelHash, x, y, z, heading, true, false);
+	Ped ped = CREATE_PED(iPedType, ulHodelHash, fPosX, fPosY, fPosZ, fHeading, true, false);
 
 	HandleEntity(ped);
 
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulHodelHash);
 
 	return ped;
 }
 
-Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading)
+Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading)
 {
-	static const std::vector<Hash>& pedModels = Memory::GetAllPedModels();
+	static const std::vector<Hash>& c_rgPedModels = Memory::GetAllPedModels();
 	
 	Ped ped;
-	if (!pedModels.empty())
+	if (!c_rgPedModels.empty())
 	{
-		Hash model = pedModels[g_random.GetRandomInt(0, pedModels.size() - 1)];
+		Hash model = c_rgPedModels[g_Random.GetRandomInt(0, c_rgPedModels.size() - 1)];
 
-		ped = CreatePoolPed(4, model, posX, posY, posZ, heading);
+		ped = CreatePoolPed(4, model, fPosX, fPosY, fPosZ, fHeading);
 	}
 	else
 	{
-		ped = CREATE_RANDOM_PED(posX, posY, posZ);
+		ped = CREATE_RANDOM_PED(fPosX, fPosY, fPosZ);
 
-		SET_ENTITY_HEADING(ped, heading);
+		SET_ENTITY_HEADING(ped, fHeading);
 	}
 
 	return ped;
 }
 
-Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seat)
+Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, int iSeatIdx)
 {
-	LoadModel(modelHash);
+	LoadModel(ulModelHash);
 
-	Ped ped = CREATE_PED_INSIDE_VEHICLE(vehicle, pedType, modelHash, seat, true, false);
+	Ped ped = CREATE_PED_INSIDE_VEHICLE(vehicle, iPedType, ulModelHash, iSeatIdx, true, false);
 
 	HandleEntity(ped);
 
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
 
 	return ped;
 }
 
-Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading)
+Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading)
 {
-	LoadModel(modelHash);
+	LoadModel(ulModelHash);
 
-	Vehicle veh = CREATE_VEHICLE(modelHash, x, y, z, heading, true, false, false);
+	Vehicle veh = CREATE_VEHICLE(ulModelHash, fPosX, fPosY, fPosZ, fHeading, true, false, false);
 
 	HandleEntity(veh);
 
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
 
 	return veh;
 }
 
-Object CreatePoolProp(Object modelHash, float x, float y, float z, bool dynamic)
+Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
 {
-	LoadModel(modelHash);
+	LoadModel(ulModelHash);
 
-	Object prop = CREATE_OBJECT(modelHash, x, y, z, true, false, dynamic);
+	Object prop = CREATE_OBJECT(ulModelHash, fPosX, fPosY, fPosZ, true, false, bDynamic);
 
 	HandleEntity(prop);
 
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
 
 	return prop;
 }

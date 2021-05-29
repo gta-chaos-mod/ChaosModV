@@ -1,15 +1,15 @@
 #pragma once
 
-typedef int Ped;
-typedef int Vehicle;
-typedef unsigned long Hash;
+using Ped = int;
+using Vehicle = int;
+using Hash = unsigned long;
 
-void ClearEntityPool(int distance = 0);
+void ClearEntityPool(int iDistance = 0);
 
-Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading);
-Ped CreateRandomPoolPed(float posX, float posY, float posZ, float heading);
-Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seat);
+Ped CreatePoolPed(int iPedType, Hash ulHodelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
+Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading);
+Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, int iSeatIdx);
 
-Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading);
+Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
 
-Object CreatePoolProp(Object modelHash, float x, float y, float z, bool dynamic);
+Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);

@@ -1,12 +1,5 @@
 #include <stdafx.h>
 
-static Main m_main;
-
-static void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
-{
-	m_main.OnKeyboardInput(key, repeats, scanCode, isExtended, isWithAlt, wasDownBefore, isUpNow);
-}
-
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
@@ -21,9 +14,9 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		}
 
-		scriptRegister(hInstance, []() { m_main.RunLoop(); });
+		scriptRegister(hInstance, Main::RunLoop);
 
-		keyboardHandlerRegister(OnKeyboardInput);
+		keyboardHandlerRegister(Main::OnKeyboardInput);
 
 		break;
 	case DLL_PROCESS_DETACH:
@@ -31,11 +24,11 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		scriptUnregister(hInstance);
 
-		keyboardHandlerUnregister(OnKeyboardInput);
+		keyboardHandlerUnregister(Main::OnKeyboardInput);
 
 		if (GetConsoleWindow())
 		{
-			g_consoleOut.close();
+			g_ConsoleOut.close();
 
 			FreeConsole();
 		}

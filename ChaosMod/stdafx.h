@@ -1,15 +1,17 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
 #include "Random.h"
-#include "DebugMenu.h"
-#include "EffectDispatcher.h"
 #include "Main.h"
-#include "TwitchVoting.h"
 #include "Mp3Manager.h"
-#include "ThreadManager.h"
-#include "LuaManager.h"
-#include "FailsafeManager.h"
+#include "LuaScripts.h"
+#include "EffectThreads.h"
+
+#include "Components/Component.h"
+#include "Components/DebugMenu.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/TwitchVoting.h"
+#include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectTimedType.h"
@@ -48,6 +50,8 @@
 #include "Util/OptionsFile.h"
 #include "Util/OptionsManager.h"
 #include "Util/OptionDefaults.h"
+#include "Util/Misc.h"
+#include "Util/Natives.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
@@ -58,9 +62,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 #include <WinUser.h>
 #include <Psapi.h>
+#include <mciapi.h>
 #include <minidumpapiset.h>
 #include <TlHelp32.h>
 
@@ -72,3 +76,4 @@
 #include <numeric>
 #include <list>
 #include <filesystem>
+#include <map>

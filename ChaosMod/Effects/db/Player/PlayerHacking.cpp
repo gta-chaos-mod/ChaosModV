@@ -137,7 +137,7 @@ static void OnStart()
 
     ScaleformUpdateLives();
 
-    auto word = g_random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
+    auto word = g_Random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_WORD");
     ScaleformPushString(ROULETTE_WORDS[word]);
     GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
@@ -146,7 +146,7 @@ static void OnStart()
     {
         GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
         GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
+        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(10, 100) * 1.0f);
         GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
     }
 
@@ -181,7 +181,7 @@ static void OnStart()
                 {
                     timer = MISC::GET_GAME_TIMER() + 2000;
                     act = TimerAction::REMOVE;
-                    auto phrase = g_random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
+                    auto phrase = g_Random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
                     AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
                     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
                     GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(true);

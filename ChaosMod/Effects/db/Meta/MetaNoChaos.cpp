@@ -4,17 +4,17 @@ static void OnStart()
 {
 	ClearEntityPool();
 
-	g_effectDispatcher->ClearActiveEffects(EFFECT_META_NO_CHAOS);
+	g_pEffectDispatcher->ClearActiveEffects(EFFECT_META_NO_CHAOS);
 }
 
 static void OnStop()
 {
-	g_metaInfo.DisableChaos = false;
+	g_MetaInfo.m_bDisableChaos = false;
 }
 
 static void OnTick()
 {
-	g_metaInfo.DisableChaos = true;
+	g_MetaInfo.m_bDisableChaos = true;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTick, EffectInfo

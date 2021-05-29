@@ -8,7 +8,7 @@ static int m_targetPitch;
 
 static void OnStart()
 {
-	m_targetPitch = g_random.GetRandomInt(-900, -300);
+	m_targetPitch = g_Random.GetRandomInt(-900, -300);
 }
 
 static void OnStop()

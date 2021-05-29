@@ -30,4 +30,4 @@ private:
 	std::mt19937 random = std::mt19937(random_device());
 };
 
-inline Random g_random;
+inline Random g_Random;

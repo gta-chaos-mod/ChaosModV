@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
+#include "Natives.h"
+
 #include "../Memory/Memory.h"
 
 // Thanks to menyoo for most of these!!

@@ -14,7 +14,7 @@ const char* TV_PLAYLISTS[] =
 
 static void OnStart()
 {
-	auto playlist = g_random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1);
+	auto playlist = g_Random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1);
 	GRAPHICS::SET_TV_CHANNEL_PLAYLIST(0, TV_PLAYLISTS[playlist], true);
 	GRAPHICS::SET_TV_AUDIO_FRONTEND(true);
 	GRAPHICS::SET_TV_VOLUME(1.0f); // 0.0 is actually the highest the player can normally tune to.

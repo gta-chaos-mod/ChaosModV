@@ -288,8 +288,8 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::NONE;
+	EffectGroupType EffectGroupType = EffectGroupType::None;
 	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
 };
 
-inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
+inline std::unordered_map<EffectType, EffectInfo> g_EffectsMap;
