@@ -1,8 +1,9 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 #include "TwitchVoting.h"
 
 #define BUFFER_SIZE 256
+#define VOTING_PROXY_START_ARGS LPSTR("chaosmod\\TwitchChatVotingProxy.exe --startProxy")
 
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
 {
@@ -22,7 +23,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 
 	m_iTwitchSecsBeforeVoting = g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_eTwitchOverlayMode = static_cast<ETwitchOverlayMode>(g_OptionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	m_bEnableTwitchChanceSystem = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
 	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
@@ -34,8 +35,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
 
-	char cBuffer[128];
-	strcpy_s(cBuffer, "chaosmod\\TwitchChatVotingProxy.exe --startProxy");
 #ifdef _DEBUG
 	DWORD ulAttributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -43,9 +42,9 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 		ulAttributes = CREATE_NO_WINDOW;
 	}
 
-	bool bResult = CreateProcess(NULL, cBuffer, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
 #else
-	bool bResult = CreateProcess(NULL, cBuffer, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
 	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
@@ -114,7 +113,10 @@ void TwitchVoting::Run()
 	{
 		m_ullLastVotesFetchTime = ullCurTick;
 
-		if (m_bIsVotingRunning && m_bEnableTwitchChanceSystem && !m_bEnableTwitchPollVoting && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
+		if (m_bIsVotingRunning
+			&& m_bEnableTwitchChanceSystem
+			&& !m_bEnableTwitchPollVoting
+			&& m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
 			SendToPipe("getcurrentvotes");
@@ -144,7 +146,8 @@ void TwitchVoting::Run()
 		return;
 	}
 
-	if (g_pEffectDispatcher->GetRemainingTimerTime() <= 1 && !m_bHasReceivedResult)
+	if (g_pEffectDispatcher->GetRemainingTimerTime() <= 1
+		&& !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -175,7 +178,8 @@ void TwitchVoting::Run()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectType() == _EFFECT_ENUM_MAX && m_pChosenEffectIdentifier->GetScriptId().empty())
+			if (m_pChosenEffectIdentifier->GetEffectType() == EFFECT_INVALID
+				&& m_pChosenEffectIdentifier->GetScriptId().empty())
 			{
 				g_pEffectDispatcher->DispatchRandomEffect();
 			}
@@ -196,7 +200,11 @@ void TwitchVoting::Run()
 
 		m_bIsVotingRoundDone = true;
 	}
-	else if (!m_bIsVotingRunning && m_bReceivedFirstPing && (m_iTwitchSecsBeforeVoting == 0 || g_pEffectDispatcher->GetRemainingTimerTime() <= m_iTwitchSecsBeforeVoting) && m_bIsVotingRoundDone)
+	else if (!m_bIsVotingRunning
+		&& m_bReceivedFirstPing
+		&& (m_iTwitchSecsBeforeVoting == 0
+			|| g_pEffectDispatcher->GetRemainingTimerTime() <= m_iTwitchSecsBeforeVoting)
+		&& m_bIsVotingRoundDone)
 	{
 		// New voting round
 
@@ -204,7 +212,7 @@ void TwitchVoting::Run()
 		m_bHasReceivedResult = false;
 		m_bIsVotingRoundDone = false;
 
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(_EFFECT_ENUM_MAX);
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
 
 		if (m_bEnableTwitchPollVoting)
 		{
@@ -224,20 +232,24 @@ void TwitchVoting::Run()
 		{
 			auto& [effectIdentifier, effectData] = pair;
 
-			if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta && !effectData.ExcludedFromVoting)
+			if (effectData.TimedType != EEffectTimedType::Permanent
+				&& !effectData.IsMeta
+				&& !effectData.ExcludedFromVoting)
 			{
 				dictChoosableEffects.emplace(effectIdentifier, effectData);
 			}
 		}
 
-		for (int i = 0; i < 4; i++)
+		for (int idx = 0; idx < 4; idx++)
 		{
 			// 4th voteable is for random effect (if enabled)
-			if (i == 3)
+			if (idx == 3)
 			{
 				if (m_bEnableTwitchRandomEffectVoteable)
 				{
-					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_NOTHING /* Just give it some random effect */, "Random Effect", !m_bAlternatedVotingRound ? 4 : 8));
+					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_INVALID, "Random Effect", !m_bAlternatedVotingRound
+						? 4
+						: 8));
 				}
 
 				break;
@@ -268,12 +280,14 @@ void TwitchVoting::Run()
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 					effectData.Weight = 0;
 
-					pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName ? effectData.CustomName : effectData.Name,
+					pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName
+							? effectData.CustomName
+							: effectData.Name,
 						!m_bAlternatedVotingRound
-							? i + 1
+							? idx + 1
 							: m_bEnableTwitchRandomEffectVoteable
-								? i + 5
-								: i + 4
+								? idx + 5
+								: idx + 4
 					);
 					break;
 				}
@@ -287,16 +301,19 @@ void TwitchVoting::Run()
 
 		std::ostringstream oss;
 		oss << "vote";
-		for (const std::unique_ptr<ChoosableEffect>& choosableEffect : m_rgEffectChoices)
+		for (const auto& pChoosableEffect : m_rgEffectChoices)
 		{
-			oss << ":" << choosableEffect->m_szEffectName;
+			oss << ":" << pChoosableEffect->m_szEffectName;
 		}
 		SendToPipe(oss.str());
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
 	}
 
-	if (m_bIsVotingRunning && !m_bNoVoteRound && !m_bEnableTwitchPollVoting && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
+	if (m_bIsVotingRunning
+		&& !m_bNoVoteRound
+		&& !m_bEnableTwitchPollVoting
+		&& m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 	{
 		// Print voteables on screen
 
@@ -304,16 +321,18 @@ void TwitchVoting::Run()
 		int iTotalVotes = 0;
 		if (m_bEnableTwitchChanceSystem)
 		{
-			for (const std::unique_ptr<ChoosableEffect>& pChoosableEffect : m_rgEffectChoices)
+			for (const auto& pChoosableEffect : m_rgEffectChoices)
 			{
-				int iChanceVotes = pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
+				int iChanceVotes = pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance
+					? 1
+					: 0);
 
 				iTotalVotes += iChanceVotes;
 			}
 		}
 
 		float fY = .1f;
-		for (const std::unique_ptr<ChoosableEffect>& pChoosableEffect : m_rgEffectChoices)
+		for (const auto& pChoosableEffect : m_rgEffectChoices)
 		{
 			std::ostringstream oss;
 			oss << pChoosableEffect->m_iMatch << ": " << pChoosableEffect->m_szEffectName;
@@ -328,7 +347,9 @@ void TwitchVoting::Run()
 				}
 				else
 				{
-					int iChanceVotes = pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
+					int iChanceVotes = pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance
+						? 1
+						: 0);
 
 					fPercentage = !iChanceVotes ? .0f : std::roundf(static_cast<float>(iChanceVotes) / static_cast<float>(iTotalVotes) * 100.f) / 100.f;
 				}
@@ -389,7 +410,7 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 		m_bHasReceivedResult = true;
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3 ? _EFFECT_ENUM_MAX : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3 ? EFFECT_INVALID : m_rgEffectChoices[iResult]->m_EffectIdentifier);
 	}
 	else if (szMsg._Starts_with("currentvotes"))
 	{

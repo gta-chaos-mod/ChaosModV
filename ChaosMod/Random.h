@@ -6,7 +6,7 @@ class Random
 {
 private:
 	std::random_device m_RandomDevice;
-	std::mt19937 m_Random = std::mt19937(m_RandomDevice());
+	std::mt19937 m_Random {m_RandomDevice()};
 
 public:
 	inline void SetSeed(int iSeed)

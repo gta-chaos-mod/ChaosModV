@@ -13,7 +13,7 @@ using BYTE = unsigned char;
 
 using HANDLE = void*;
 
-enum class ETwitchOverlayMode
+enum class ETwitchOverlayMode : int
 {
 	ChatMessages,
 	OverlayIngame,

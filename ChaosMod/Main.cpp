@@ -142,9 +142,6 @@ static void Loop()
 		{
 			pComponent->Run();
 		}
-
-		g_pEffectDispatcher->DrawTimerBar();
-		g_pEffectDispatcher->DrawEffectTexts();
 	}
 }
 

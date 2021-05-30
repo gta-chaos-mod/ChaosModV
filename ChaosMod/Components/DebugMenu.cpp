@@ -14,30 +14,34 @@ DebugMenu::DebugMenu()
 
 	for (const auto& pair : g_EnabledEffects)
 	{
-		const EffectData& effectData = pair.second;
+		const auto& [effectIdentifier, effectData] = pair;
 
 		if (effectData.TimedType != EEffectTimedType::Permanent)
 		{
-			m_rgEffects.emplace_back(pair.first, effectData.HasCustomName ? effectData.CustomName : effectData.Name);
+			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName
+				? effectData.CustomName
+				: effectData.Name);
 		}
 	}
 
 	if (m_rgEffects.empty())
 	{
-		m_rgEffects.emplace_back(static_cast<EEffectType>(-1), "No enabled effects :(");
+		m_rgEffects.emplace_back(EFFECT_INVALID, "No enabled effects :(");
 
 		return;
 	}
 
 	std::sort(m_rgEffects.begin(), m_rgEffects.end(), [](const DebugEffect& a, const DebugEffect& b)
 	{
-		for (int i = 0; ; i++)
+		for (int idx = 0; ; idx++)
 		{
-			if (i >= a.m_szEffectName.size() || std::toupper(a.m_szEffectName[i]) < std::toupper(b.m_szEffectName[i]))
+			if (idx >= a.m_szEffectName.size()
+				|| std::toupper(a.m_szEffectName[idx]) < std::toupper(b.m_szEffectName[idx]))
 			{
 				return true;
 			}
-			else if (i >= b.m_szEffectName.size() || std::toupper(b.m_szEffectName[i]) < std::toupper(a.m_szEffectName[i]))
+			else if (idx >= b.m_szEffectName.size()
+				|| std::toupper(b.m_szEffectName[idx]) < std::toupper(a.m_szEffectName[idx]))
 			{
 				return false;
 			}
@@ -47,7 +51,8 @@ DebugMenu::DebugMenu()
 
 void DebugMenu::Run()
 {
-	if (!m_bIsEnabled || !m_bVisible)
+	if (!m_bIsEnabled
+		|| !m_bVisible)
 	{
 		return;
 	}
@@ -85,27 +90,30 @@ void DebugMenu::Run()
 	float fY = .1f;
 	WORD culRemainingDrawItems = MAX_VIS_ITEMS;
 
-	for (int i = 0; culRemainingDrawItems > 0; i++)
+	for (int idx = 0; culRemainingDrawItems > 0; idx++)
 	{
 		short sOverflow = MAX_VIS_ITEMS / 2 - (m_rgEffects.size() - 1 - m_iSelectedIdx);
 
-		if (i < 0 || i < m_iSelectedIdx - culRemainingDrawItems / 2 - (sOverflow > 0 ? sOverflow : 0))
+		if (idx < 0
+			|| idx < m_iSelectedIdx - culRemainingDrawItems / 2 - (sOverflow > 0
+				? sOverflow
+				: 0))
 		{
 			continue;
 		}
-		else if (i >= m_rgEffects.size())
+		else if (idx >= m_rgEffects.size())
 		{
 			break;
 		}
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_rgEffects[i].m_szEffectName.c_str());
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_rgEffects[idx].m_szEffectName.c_str());
 		SET_TEXT_SCALE(.3f, .3f);
 		SET_TEXT_CENTRE(true);
 		SET_TEXT_PROPORTIONAL(true);
 		SET_TEXT_JUSTIFICATION(0);
 
-		if (i == m_iSelectedIdx)
+		if (idx == m_iSelectedIdx)
 		{
 			DRAW_RECT(.1f, fY, .2f, .05f, 255, 255, 255, 200, true);
 
@@ -125,7 +133,7 @@ void DebugMenu::Run()
 	}
 }
 
-bool _NODISCARD DebugMenu::IsEnabled() const
+_NODISCARD bool DebugMenu::IsEnabled() const
 {
 	return m_bIsEnabled;
 }
@@ -222,7 +230,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != -1)
+		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID)
 		{
 			m_bDispatchEffect = true;
 		}
@@ -235,12 +243,12 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	}
 }
 
-void DebugMenu::SetVisible(bool state)
+void DebugMenu::SetVisible(bool bState)
 {
-	m_bVisible = state;
+	m_bVisible = bState;
 }
 
-bool _NODISCARD DebugMenu::IsVisible() const
+_NODISCARD bool DebugMenu::IsVisible() const
 {
 	return m_bVisible;
 }

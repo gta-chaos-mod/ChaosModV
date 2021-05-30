@@ -13,7 +13,9 @@ Failsafe::Failsafe()
 	}
 
 	eGameVersion eGameVer = getGameVersion();
-	m_bEnabled = eGameVer >= VER_1_0_2215_0_STEAM && eGameVer < VER_SIZE || DoesFileExist("chaosmod\\.forcefailsafe");
+	m_bEnabled = eGameVer >= VER_1_0_2215_0_STEAM
+		&& eGameVer < VER_SIZE
+		|| DoesFileExist("chaosmod\\.forcefailsafe");
 
 	if (!m_bEnabled)
 	{

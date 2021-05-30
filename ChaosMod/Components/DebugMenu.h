@@ -38,10 +38,10 @@ public:
 
 	virtual void Run() override;
 
-	bool _NODISCARD IsEnabled() const;
+	_NODISCARD bool IsEnabled() const;
 
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 
 	void SetVisible(bool bState);
-	bool _NODISCARD IsVisible() const;
+	_NODISCARD bool IsVisible() const;
 };

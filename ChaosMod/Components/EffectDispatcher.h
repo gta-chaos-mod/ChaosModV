@@ -47,7 +47,8 @@ private:
 
 			EEffectTimedType eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
 
-			m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
+			m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk
+				&& eTimedType != EEffectTimedType::NotTimed);
 		}
 	};
 
@@ -109,11 +110,11 @@ public:
 
 	int _NODISCARD GetRemainingTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* suffix = nullptr);
-	void DispatchRandomEffect(const char* suffix = nullptr);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr);
+	void DispatchRandomEffect(const char* szSuffix = nullptr);
 
-	void ClearEffects(bool includePermanent = true);
-	void ClearActiveEffects(EffectIdentifier exclude = EffectIdentifier());
+	void ClearEffects(bool bIncludePermanent = true);
+	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 
 	void Reset();

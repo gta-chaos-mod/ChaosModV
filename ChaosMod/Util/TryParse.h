@@ -23,7 +23,7 @@ namespace Util
 		bool bParsed = *cEnd == '\0';
 		if (bParsed)
 		{
-			result = lParseResult;
+			result = static_cast<T>(lParseResult);
 		}
 
 		return bParsed;

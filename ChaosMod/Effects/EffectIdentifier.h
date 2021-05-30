@@ -7,7 +7,7 @@
 class EffectIdentifier
 {
 private:
-	EEffectType m_eEffectType = _EFFECT_ENUM_MAX;
+	EEffectType m_eEffectType = EFFECT_INVALID;
 	std::string m_szScriptId;
 	bool m_bIsScript = false;
 
@@ -19,7 +19,7 @@ public:
 		
 	}
 
-	EffectIdentifier(const std::string& scriptId) : m_szScriptId(scriptId), m_bIsScript(true)
+	EffectIdentifier(const std::string& szScriptId) : m_szScriptId(szScriptId), m_bIsScript(true)
 	{
 
 	}
