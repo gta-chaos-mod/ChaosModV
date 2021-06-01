@@ -2,23 +2,19 @@
 
 #include "Component.h"
 
-#define SPLASH_TEXT_DUR_MS 15000
+#define SPLASH_TEXT_DUR_SECS 10
 
 class SplashTexts : public Component
 {
 private:
-	DWORD64 m_ullLastTimestamp;
-
-	int m_iStartupSplashTime = 0;
-	int m_iTwitchVotingSplashTime = 0;
-	int m_iClearEffectsSplashTime = 0;
+	float m_fStartupSplashTime = 0.f;
+	float m_fTwitchVotingSplashTime = 0.f;
+	float m_fClearEffectsSplashTime = 0.f;
 
 public:
+	virtual void Run() override;
+
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
 	void ShowClearEffectsSplash();
-
-	SplashTexts();
-
-	virtual void Run() override;
 };
