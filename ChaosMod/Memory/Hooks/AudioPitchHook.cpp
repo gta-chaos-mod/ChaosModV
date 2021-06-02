@@ -1,12 +1,12 @@
 #include <stdafx.h>
 
-static bool m_enabledHook = false;
-static float m_targetPitch = 0;
+static bool ms_bEnabledHook = false;
+static float ms_fTargetPitch = 0;
 
-__int64(*_OG_SetAudioPitch)(__int64* a1, int pitch);
+__int64(*_OG_SetAudioPitch)(__int64* a1, int iPitch);
 __int64 _HK_SetAudioPitch(__int64* a1, int pitch)
 {
-	return _OG_SetAudioPitch(a1, m_enabledHook ? m_targetPitch : pitch);
+	return _OG_SetAudioPitch(a1, ms_bEnabledHook ? ms_fTargetPitch : pitch);
 }
 
 static bool OnHook()
@@ -26,14 +26,14 @@ static RegisterHook registerHook(OnHook, "_SetAudioPitch");
 
 namespace Hooks
 {
-	void SetAudioPitch(int pitch)
+	void SetAudioPitch(int iPitch)
 	{
-		m_enabledHook = true;
-		m_targetPitch = pitch;
+		ms_bEnabledHook = true;
+		ms_fTargetPitch = iPitch;
 	}
 
 	void ResetAudioPitch()
 	{
-		m_enabledHook = false;
+		ms_bEnabledHook = false;
 	}
 }

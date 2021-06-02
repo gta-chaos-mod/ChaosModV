@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-static std::unordered_map<Entity, Entity> vehicleMap;
+static std::unordered_map<Entity, Entity> ms_dictVehicleMap;
 
 __int64(*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
@@ -10,9 +10,9 @@ __int64 _HK_HandleToEntityStruct(Entity entity)
 		return 0;
 	}
 	Entity vehToContinue = entity;
-	while (vehicleMap.count(vehToContinue) > 0)
+	while (ms_dictVehicleMap.count(vehToContinue) > 0)
 	{
-		vehToContinue = vehicleMap[vehToContinue];
+		vehToContinue = ms_dictVehicleMap[vehToContinue];
     	if (vehToContinue <= 0) 
         {
      		return 0;
@@ -40,17 +40,17 @@ namespace Hooks
 {
 	void ProxyEntityHandle(Entity origHandle, Entity newHandle)
 	{
-		vehicleMap.emplace(origHandle, newHandle);
+		ms_dictVehicleMap.emplace(origHandle, newHandle);
 		// CleanUp
 		bool found = false;
 		do 
 		{
 			found = false;
-			for (std::unordered_map<Entity, Entity>::iterator it = vehicleMap.begin(); it != vehicleMap.end(); )
+			for (std::unordered_map<Entity, Entity>::iterator it = ms_dictVehicleMap.begin(); it != ms_dictVehicleMap.end(); )
 			{
 				if (!DOES_ENTITY_EXIST(it->second))
 				{
-					it = vehicleMap.erase(it);
+					it = ms_dictVehicleMap.erase(it);
 					found = true;
 				}
 				else
