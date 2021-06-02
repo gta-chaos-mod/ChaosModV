@@ -2,5 +2,5 @@
 
 namespace Mp3Manager
 {
-	void PlayChaosSoundFile(const std::string& soundFile);
+	void PlayChaosSoundFile(const std::string& szSoundFile);
 }

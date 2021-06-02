@@ -70,9 +70,9 @@ static void ShowPopup()
 
 static void OnStart()
 {
-	action = actions[g_random.GetRandomInt(0, actions.size() - 1)];
+	action = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
 	
-	int rand_int = g_random.GetRandomInt(0, 1);
+	int rand_int = g_Random.GetRandomInt(0, 1);
 
 	if (rand_int == 0)
 	{

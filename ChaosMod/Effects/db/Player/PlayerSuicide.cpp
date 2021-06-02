@@ -26,6 +26,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_SUICIDE, OnStart,
 		.Id = "player_suicide",
 		.IsTimed = false,
 		.IncompatibleWith = { EFFECT_PLAYER_INVINCIBLE },
-		.EffectGroupType = EffectGroupType::PLAYERKILL
+		.EffectGroupType = EffectGroupType::PlayerKill
 	}
 );
