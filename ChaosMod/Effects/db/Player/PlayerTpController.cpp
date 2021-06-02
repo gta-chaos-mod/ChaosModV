@@ -310,7 +310,6 @@ static void OnStartFakeTp()
 static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp, EffectInfo
 	{
 		.Name = "Fake Teleport",
-		.Id = "tp_fake",
-		.EffectGroupType = EffectGroupType::Teleport
+		.Id = "tp_fake"
 	}
 );
