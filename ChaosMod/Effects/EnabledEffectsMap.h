@@ -4,17 +4,20 @@
 
 #include <unordered_map>
 
+using size_t = unsigned long long;
+
 struct EffectData;
 
-struct EffectsIdentifierHasher
+class EffectsIdentifierHasher
 {
-    std::size_t operator()(const EffectIdentifier& effectIdentifier) const
+public:
+    size_t operator()(const EffectIdentifier& effectIdentifier) const
     {
-        std::size_t hash1 = std::hash<int>()(effectIdentifier.GetEffectType());
-        std::size_t hash2 = std::hash<std::string>()(effectIdentifier.GetScriptId());
+        size_t ullHash1 = std::hash<int>()(effectIdentifier.GetEffectType());
+        size_t ullHash2 = std::hash<std::string>()(effectIdentifier.GetScriptId());
 
-        return hash1 ^ hash2;
+        return ullHash1 ^ ullHash2;
     }
 };
 
-inline std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> g_enabledEffects;
+inline std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> g_EnabledEffects;

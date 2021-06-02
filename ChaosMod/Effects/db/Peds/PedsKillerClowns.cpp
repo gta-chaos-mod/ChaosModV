@@ -15,21 +15,21 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOf
 	randomCoord.z = startCoord.z;
 	float groundZ;
 	for (int i = 0; i < 10; i++) {
-		if (g_random.GetRandomInt(0, 1) % 2 == 0)
+		if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 		{
-			randomCoord.x = startCoord.x + g_random.GetRandomInt(minOffset, maxOffset);
+			randomCoord.x = startCoord.x + g_Random.GetRandomInt(minOffset, maxOffset);
 		}
 		else
 		{
-			randomCoord.x = startCoord.x - g_random.GetRandomInt(minOffset, maxOffset);
+			randomCoord.x = startCoord.x - g_Random.GetRandomInt(minOffset, maxOffset);
 		}
-		if (g_random.GetRandomInt(0, 1) % 2 == 0)
+		if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 		{
-			randomCoord.y = startCoord.y + g_random.GetRandomInt(minOffset, maxOffset);
+			randomCoord.y = startCoord.y + g_Random.GetRandomInt(minOffset, maxOffset);
 		}
 		else
 		{
-			randomCoord.y = startCoord.y - g_random.GetRandomInt(minOffset, maxOffset);
+			randomCoord.y = startCoord.y - g_Random.GetRandomInt(minOffset, maxOffset);
 		}
 		randomCoord.z = startCoord.z;
 		if (GET_GROUND_Z_FOR_3D_COORD(randomCoord.x, randomCoord.y, randomCoord.z, &groundZ, false, false))
