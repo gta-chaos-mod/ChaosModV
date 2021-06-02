@@ -39,11 +39,30 @@ static bool opposite;
 
 static void ShowPopup()
 {
-	std::string message = "Simeon Says: ";
+	std::string message;
+	
 
 	if (opposite)
 	{
-		message.append("Don't ");
+		if (g_random.GetRandomInt(0, 1) == 0)
+		{
+			message = "Simeon Says: Don't ";
+		}
+		else
+		{
+			message = "";
+		}
+	} 
+	else
+	{
+		if (g_random.GetRandomInt(0, 1) == 0)
+		{
+			message = "Don't ";
+		}
+		else
+		{
+			message = "Simeon Says: ";
+		}
 	}
 
 	message.append(action);
