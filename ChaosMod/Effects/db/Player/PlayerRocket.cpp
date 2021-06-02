@@ -20,7 +20,7 @@ static void OnStart()
 	int lastTimestamp = GET_GAME_TIMER();
 	int launchTimer = LAUNCH_TIMER;
 	int beepTimer = LAUNCH_TIMER;
-	while (DOES_ENTITY_EXIST(playerPed))
+	while (true)
 	{
 		WAIT(0);
 

@@ -7,7 +7,7 @@
 
 static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
-	int randOffset = g_random.GetRandomInt(0, 360);
+	int randOffset = g_Random.GetRandomInt(0, 360);
 	Vector3 res;
 	res.x = pos.x + (COS(randOffset) * radius);
 	res.y = pos.y + (SIN(randOffset) * radius);
@@ -98,8 +98,8 @@ static void OnTick()
 	if (current_time - lastPositionGoal > 1000)
 	{
 		lastPositionGoal = current_time;
-		targetCoords = GetCoordsAround(Vector3(), g_random.GetRandomFloat(20, 30));
-		TASK_HELI_CHASE(pilot, player, targetCoords.x, targetCoords.y, targetCoords.z + g_random.GetRandomFloat(5, 10));
+		targetCoords = GetCoordsAround(Vector3(), g_Random.GetRandomFloat(20, 30));
+		TASK_HELI_CHASE(pilot, player, targetCoords.x, targetCoords.y, targetCoords.z + g_Random.GetRandomFloat(5, 10));
 		SET_PED_KEEP_TASK(pilot, true);
 	}
 	if (scaleForm > 0)
