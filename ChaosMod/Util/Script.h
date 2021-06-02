@@ -1,23 +1,23 @@
 #pragma once
 
-#include "ThreadManager.h"
+#include "../EffectThreads.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 
-typedef unsigned long DWORD;
+using DWORD = unsigned long;
 
-inline void* g_mainThread = nullptr;
+inline void* g_MainThread = nullptr;
 
-inline void WAIT(DWORD ms)
+inline void WAIT(DWORD ulTimeMs)
 {
-	if (!g_mainThread || GetCurrentFiber() == g_mainThread)
+	if (!g_MainThread || GetCurrentFiber() == g_MainThread)
 	{
-		scriptWait(ms);
+		scriptWait(ulTimeMs);
 	}
 	else
 	{
-		ThreadManager::PutThreadOnPause(ms);
+		EffectThreads::PutThreadOnPause(ulTimeMs);
 
-		ThreadManager::SwitchToMainThread();
+		EffectThreads::SwitchToMainThread();
 	}
 }
