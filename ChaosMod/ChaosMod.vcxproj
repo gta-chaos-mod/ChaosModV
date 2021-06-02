@@ -181,6 +181,7 @@
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNewsTeam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAttackPlayer.cpp" />
