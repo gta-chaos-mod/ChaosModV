@@ -160,7 +160,7 @@
     <ClCompile Include="Effects\db\Player\PlayerImTired.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerOnDemandCartoon.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPacifist.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
