@@ -259,7 +259,6 @@ static void OnStartWizardBroom()
 	
 	Object broom = CREATE_OBJECT(broomHash, playerPos.x, playerPos.y + 2, playerPos.z, true, false, false);
 	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, 0.3, -80.0, 0, 0, true, false, false, false, 0, true);
-	SET_OBJECT_AS_NO_LONGER_NEEDED(&broom);
 }
 
 
