@@ -50,12 +50,12 @@ static void OnStart()
 			forwardSpeed = GET_ENTITY_SPEED(playerPed);
 		}
 
-		Hash randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
+		Hash randomVeh = vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)];
 		
 		// Filter out Truck Trailers and other vehicles with insufficient seats
 		while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(randomVeh) < vehPeds.size() || IS_THIS_MODEL_A_TRAIN(randomVeh) || GET_VEHICLE_MODEL_ACCELERATION(randomVeh) <= 0)
 		{
-			randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
+			randomVeh = vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)];
 		}
 		LoadModel(randomVeh);
 		Vehicle newVehicle = CREATE_VEHICLE(randomVeh, newVehCoords.x, newVehCoords.y, newVehCoords.z, heading, true, true, true);

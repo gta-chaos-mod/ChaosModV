@@ -1,58 +1,64 @@
 #pragma once
 
-#include <unordered_map>
+#include "TryParse.h"
+#include "Logging.h"
 
+#include <unordered_map>
 #include <iostream>
 
 class OptionsFile
 {
+private:
+	const char* m_szFileName;
+	std::unordered_map<std::string, std::string> m_dictOptions;
+
 public:
-	OptionsFile(const char* const fileName) : m_fileName(fileName)
+	OptionsFile(const char* szFileName) : m_szFileName(szFileName)
 	{
 		Reset();
 	}
 
 	void Reset()
 	{
-		m_options.clear();
+		m_dictOptions.clear();
 
-		bool exists = true;
+		bool bExists = true;
 
-		std::ifstream file(m_fileName);
+		std::ifstream file(m_szFileName);
 		if (file.fail())
 		{
-			LOG("Config file " << m_fileName << " not found!");
+			LOG("Config file " << m_szFileName << " not found!");
 
 			return;
 		}
 
-		char buffer[256];
-		while (file.getline(buffer, 256))
+		char cBuffer[256];
+		while (file.getline(cBuffer, 256))
 		{
-			std::string line(buffer);
-			std::string key = line.substr(0, line.find("="));
+			std::string szLine(cBuffer);
+			std::string szKey = szLine.substr(0, szLine.find("="));
 
 			// Ignore line if there's no "="
-			if (line == key)
+			if (szLine == szKey)
 			{
 				continue;
 			}
 
-			std::string value = line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
+			std::string szValue = szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
 
-			m_options.emplace(key, value);
+			m_dictOptions.emplace(szKey, szValue);
 		}
 	}
 
 	template <typename T>
-	inline T ReadValue(const std::string& key, T defaultValue) const
+	inline T ReadValue(const std::string& szKey, T defaultValue) const
 	{
-		const std::string& value = ReadValueString(key);
+		const std::string& szValue = ReadValueString(szKey);
 
-		if (!value.empty())
+		if (!szValue.empty())
 		{
 			T result;
-			if (TryParse<T>(value, result))
+			if (Util::TryParse<T>(szValue, result))
 			{
 				return result;
 			}
@@ -61,21 +67,17 @@ public:
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::string& key, std::string defaultValue = std::string()) const
+	inline std::string ReadValueString(const std::string& szKey, std::string szDefaultValue = std::string()) const
 	{
-		const auto& result = m_options.find(key);
+		const auto& result = m_dictOptions.find(szKey);
 
-		if (result != m_options.end())
+		if (result != m_dictOptions.end())
 		{
 			return result->second;
 		}
 		else
 		{
-			return defaultValue;
+			return szDefaultValue;
 		}
 	}
-
-private:
-	const char* m_fileName;
-	std::unordered_map<std::string, std::string> m_options;
 };
