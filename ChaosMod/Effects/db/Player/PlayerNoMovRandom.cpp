@@ -8,7 +8,7 @@ static int rand_key;
 
 static void OnStart()
 {
-	rand_key = g_random.GetRandomInt(0, 3);
+	rand_key = g_Random.GetRandomInt(0, 3);
 }
 
 static void OnTick()
