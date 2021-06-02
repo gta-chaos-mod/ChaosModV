@@ -1,19 +1,33 @@
 #pragma once
 
+#include <string>
+
+#define _NODISCARD [[nodiscard]]
+
 class Handle;
 enum MH_STATUS : int;
-
-#include <string>
 
 namespace Memory
 {
 	void Init();
 	void Uninit();
 
-	Handle FindPattern(const std::string& pattern);
-	MH_STATUS AddHook(void* target, void* detour, void** orig);
-	template <typename T>
-	void Write(T* addr, T value, int count = 1);
+	_NODISCARD Handle FindPattern(const std::string& szPattern);
+	MH_STATUS AddHook(void* pTarget, void* pTetour, void* ppOrig);
 
-	const char* const GetTypeName(__int64 vptr);
+	template <typename T>
+	inline void Write(T* pAddr, T value, int iCount = 1)
+	{
+		DWORD ulOldProtect;
+		VirtualProtect(pAddr, sizeof(T) * iCount, PAGE_EXECUTE_READWRITE, &ulOldProtect);
+
+		for (int i = 0; i < iCount; i++)
+		{
+			pAddr[i] = value;
+		}
+
+		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
+	}
+
+	const char* GetTypeName(__int64 ullVftAddr);
 }

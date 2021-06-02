@@ -269,7 +269,7 @@ namespace ConfigApp
             EFFECT_FLIP_CAMERA,
             EFFECT_PLAYER_WALK_ON_WATER,
             EFFECT_RAPID_FIRE,
-            EFFECT_PLAYER_ON_DEMAND_CARTOON,
+            EFFECT_MISC_ON_DEMAND_CARTOON,
             EFFECT_PEDS_DRIVE_BACKWARDS,
             EFFECT_VEH_RANDTRAFFIC,
             EFFECT_MISC_RAMPJAM,
@@ -313,6 +313,10 @@ namespace ConfigApp
             EFFECT_PEDS_SPAWN_BIKER,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
             EFFECT_MOV_NO_RANDOM,
+            EFFECT_PLAYER_ROCKET,
+            EFFECT_MISC_NEWS_TEAM,
+            EFFECT_PLAYER_FLING_PLAYER,
+            EFFECT_MISC_STUFFGUNS,
             _EFFECT_ENUM_MAX
         }
 
@@ -547,7 +551,7 @@ namespace ConfigApp
             {EffectType.EFFECT_FLIP_CAMERA, new EffectInfo("Turn Turtle", EffectCategory.PLAYER, "player_flip_camera", true, true)},
             {EffectType.EFFECT_PLAYER_QUAKE_FOV,  new EffectInfo("Quake FOV", EffectCategory.PLAYER, "player_quake_fov", true)},
             {EffectType.EFFECT_RAPID_FIRE, new EffectInfo("Rapid Fire", EffectCategory.PLAYER, "player_rapid_fire", true)},
-            {EffectType.EFFECT_PLAYER_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.PLAYER, "player_on_demand_cartoon", true)},
+            {EffectType.EFFECT_MISC_ON_DEMAND_CARTOON, new EffectInfo("On-Demand TV", EffectCategory.MISC, "player_on_demand_cartoon", true)},
             {EffectType.EFFECT_PEDS_DRIVE_BACKWARDS, new EffectInfo("Peds Drive Backwards", EffectCategory.PEDS, "peds_drive_backwards", true)},
             {EffectType.EFFECT_VEH_RANDTRAFFIC,  new EffectInfo("Random Traffic", EffectCategory.VEHICLE, "veh_randtraffic", true, true)},
             {EffectType.EFFECT_MISC_RAMPJAM, new EffectInfo("Ramp Jam", EffectCategory.MISC, "misc_rampjam", true)},
@@ -590,6 +594,10 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
             {EffectType.EFFECT_MOV_NO_RANDOM, new EffectInfo("Disable Random Direction", EffectCategory.PLAYER, "player_no_random_movement", true)},
+            {EffectType.EFFECT_PLAYER_ROCKET, new EffectInfo("Rocket Man", EffectCategory.PLAYER, "player_rocket")},
+            {EffectType.EFFECT_MISC_NEWS_TEAM, new EffectInfo("News Team", EffectCategory.MISC, "misc_news_team", true, true)},
+            {EffectType.EFFECT_PLAYER_FLING_PLAYER, new EffectInfo("Fling Player", EffectCategory.PLAYER, "player_fling_player")},
+            {EffectType.EFFECT_MISC_STUFFGUNS, new EffectInfo("Improvised Weaponry", EffectCategory.MISC, "misc_stuffguns", true, true)},
         };
     }
 }

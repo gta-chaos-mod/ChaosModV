@@ -42,7 +42,7 @@ static void OnStart()
 			}
 		}
 
-		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+		Vehicle targetVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
