@@ -54,6 +54,7 @@
 #include "Util/Macros.h"
 #include "Util/Natives.h"
 #include "Util/Random.h"
+#include "Util/Weapon.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
