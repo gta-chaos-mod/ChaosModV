@@ -7,8 +7,7 @@ using BOOL = int; // wtf?
 
 namespace Main
 {
-	void Init();
-	void RunLoop();
+	void Run();
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow);
 };

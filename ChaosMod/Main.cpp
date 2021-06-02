@@ -60,7 +60,89 @@ static void Reset()
 	ClearEntityPool();
 }
 
-static void Loop()
+static void Init()
+{
+	static std::streambuf* c_pOldStreamBuf;
+	if (DoesFileExist("chaosmod\\.enableconsole"))
+	{
+		if (GetConsoleWindow())
+		{
+			system("cls");
+		}
+		else
+		{
+			LOG("Creating log console");
+
+			AllocConsole();
+
+			SetConsoleTitle("Chaos Mod");
+			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
+
+			c_pOldStreamBuf = std::cout.rdbuf();
+
+			g_ConsoleOut = std::ofstream("CONOUT$");
+			std::cout.rdbuf(g_ConsoleOut.rdbuf());
+
+			std::cout.clear();
+
+			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+			DWORD ulConMode;
+			GetConsoleMode(handle, &ulConMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ulConMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		}
+	}
+	else if (GetConsoleWindow())
+	{
+		LOG("Destroying log console");
+
+		std::cout.rdbuf(c_pOldStreamBuf);
+
+		g_ConsoleOut.close();
+
+		FreeConsole();
+	}
+
+	LOG("Parsing config files");
+	ParseEffectsFile();
+
+	g_OptionsManager.Reset();
+
+	ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+
+	g_EnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+
+	const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+
+	LOG("Running custom scripts");
+	LuaScripts::Load();
+
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
+
+	LOG("Initializing effects dispatcher");
+	g_pEffectDispatcher = std::make_unique<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
+
+	ms_pDebugMenu = std::make_unique<DebugMenu>();
+
+	LOG("Initializing Twitch voting");
+	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
+
+	LOG("Initializing Failsafe");
+	ms_pFailsafe = std::make_unique<Failsafe>();
+
+	LOG("Completed Init!");
+
+	if (ms_pTwitchVoting->IsEnabled())
+	{
+		ms_pSplashTexts->ShowTwitchVotingSplash();
+	}
+}
+
+static void MainRun()
 {
 	g_MainThread = GetCurrentFiber();
 
@@ -73,7 +155,7 @@ static void Loop()
 
 	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
-	Main::Init();
+	Init();
 
 	while (true)
 	{
@@ -111,7 +193,7 @@ static void Loop()
 						g_Log = std::ofstream("chaosmod/chaoslog.txt");
 
 						// Restart the main part of the mod completely
-						Main::Init();
+						Init();
 					}
 					else
 					{
@@ -147,93 +229,11 @@ static void Loop()
 
 namespace Main
 {
-	void Init()
-	{
-		static std::streambuf* c_pOldStreamBuf;
-		if (DoesFileExist("chaosmod\\.enableconsole"))
-		{
-			if (GetConsoleWindow())
-			{
-				system("cls");
-			}
-			else
-			{
-				LOG("Creating log console");
-
-				AllocConsole();
-
-				SetConsoleTitle("Chaos Mod");
-				DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
-
-				c_pOldStreamBuf = std::cout.rdbuf();
-
-				g_ConsoleOut = std::ofstream("CONOUT$");
-				std::cout.rdbuf(g_ConsoleOut.rdbuf());
-
-				std::cout.clear();
-
-				HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-				DWORD ulConMode;
-				GetConsoleMode(handle, &ulConMode);
-				SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ulConMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-			}
-		}
-		else if (GetConsoleWindow())
-		{
-			LOG("Destroying log console");
-
-			std::cout.rdbuf(c_pOldStreamBuf);
-
-			g_ConsoleOut.close();
-
-			FreeConsole();
-		}
-
-		LOG("Parsing config files");
-		ParseEffectsFile();
-
-		g_OptionsManager.Reset();
-
-		ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
-		ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
-		ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
-
-		g_EnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
-
-		const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
-		const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
-		const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
-
-		LOG("Running custom scripts");
-		LuaScripts::Load();
-
-		g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
-
-		LOG("Initializing effects dispatcher");
-		g_pEffectDispatcher = std::make_unique<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
-
-		ms_pDebugMenu = std::make_unique<DebugMenu>();
-
-		LOG("Initializing Twitch voting");
-		ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
-
-		LOG("Initializing Failsafe");
-		ms_pFailsafe = std::make_unique<Failsafe>();
-
-		LOG("Completed Init!");
-
-		if (ms_pTwitchVoting->IsEnabled())
-		{
-			ms_pSplashTexts->ShowTwitchVotingSplash();
-		}
-	}
-
-	void RunLoop()
+	void Run()
 	{
 		__try
 		{
-			Loop();
+			MainRun();
 		}
 		__except (CrashHandler(GetExceptionInformation()))
 		{
