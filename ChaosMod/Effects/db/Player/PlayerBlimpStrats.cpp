@@ -10,7 +10,7 @@ static void OnStart()
 	Hash blimpHash = GET_HASH_KEY("blimp");
 	LoadModel(blimpHash);
 	Hooks::EnableScriptThreadBlock();
-	Vehicle veh = CreatePoolVehicle(blimpHash, -377.276, 1055.06, 340.962, 80);
+	Vehicle veh = CREATE_VEHICLE(blimpHash, -377.276, 1055.06, 340.962, 80, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	Ped player = PLAYER_PED_ID();
 	SET_ENTITY_INVINCIBLE(player, true);
@@ -20,6 +20,7 @@ static void OnStart()
 	WAIT(3000);
 	SET_ENTITY_INVINCIBLE(player, false);
 	Hooks::DisableScriptThreadBlock();
+	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_BLIMP_STRATS, OnStart, nullptr, nullptr, EffectInfo
