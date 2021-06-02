@@ -41,4 +41,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_EARTHQUAKE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_EARTHQUAKE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Earthquake",
+		.Id = "misc_earthquake",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

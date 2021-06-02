@@ -1,10 +1,13 @@
 #pragma once
 
-#include <unordered_map>
-#include <vector>
+#include "EffectGroups.h"
+#include "EEffectExecutionType.h"
 
-enum EffectType
+#include <unordered_map>
+
+enum EEffectType : int
 {
+	EFFECT_INVALID = -1,
 	EFFECT_PLAYER_SUICIDE,
 	EFFECT_PLUS_2_STARS,
 	EFFECT_5_STARS,
@@ -116,8 +119,6 @@ enum EffectType
 	EFFECT_METEOR_RAIN,
 	EFFECT_BLACKOUT,
 	EFFECT_QUICK_TIME,
-	EFFECT_MOV_NO_UD,
-	EFFECT_MOV_NO_LR,
 	EFFECT_PLAYER_AUTOPILOT,
 	EFFECT_EVERYONE_RPG,
 	EFFECT_EVERYONE_TAZER,
@@ -151,6 +152,7 @@ enum EffectType
 	EFFECT_PLAYER_MONEYDROPS,
 	EFFECT_VEH_TPRANDOMPEDS,
 	EFFECT_PEDS_REVIVE,
+	EFFECT_TP_TO_STORE,
 	EFFECT_SNOW,
 	EFFECT_WHALE_RAIN,
 	EFFECT_VEH_MAX_UPGRADES,
@@ -181,7 +183,6 @@ enum EffectType
 	EFFECT_OHKO_VEHICLES,
 	EFFECT_VEH_SPAM_DOORS,
 	EFFECT_VEH_SPEED_MINIMUM,
-	EFFECT_MISC_LESTER,
 	EFFECT_MISC_CREDITS,
 	EFFECT_MISC_EARTHQUAKE,
 	EFFECT_TP_FRONT,
@@ -195,10 +196,8 @@ enum EffectType
 	EFFECT_SPAWN_DANCING_APES,
 	EFFECT_ONE_BULLET_WEP,
 	EFFECT_PHONES,
-	EFFECT_FAKE_PLAYER_SWAP,
 	EFFECT_MIDAS_TOUCH,
 	EFFECT_SPAWN_RANDOM_HOSTILE,
-	EFFECT_VEH_NO_BRAKES,
 	EFFECT_PEDS_PORTAL_GUN,
 	EFFECT_MISC_FIREWORKS,
 	EFFECT_VEH_DESPAWN,
@@ -235,7 +234,7 @@ enum EffectType
 	EFFECT_FLIP_CAMERA,
 	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
-	EFFECT_PLAYER_ON_DEMAND_CARTOON,
+	EFFECT_MISC_ON_DEMAND_CARTOON,
 	EFFECT_PEDS_DRIVE_BACKWARDS,
 	EFFECT_VEH_RANDTRAFFIC,
 	EFFECT_MISC_RAMPJAM,
@@ -246,7 +245,6 @@ enum EffectType
 	EFFECT_PEDS_STOP_AND_STARE,
 	EFFECT_PEDS_FLIP,
 	EFFECT_PLAYER_PACIFIST,
-	EFFECT_VEH_TURN_RIGHT,
 	EFFECT_PEDS_BUSBOIS,
 	EFFECT_PLAYER_DEAD_EYE,
 	EFFECT_PLAYER_QUAKE_FOV,
@@ -271,28 +269,35 @@ enum EffectType
 	EFFECT_MISC_FPS_LIMIT,
 	EFFECT_META_NO_CHAOS,
 	EFFECT_PLAYER_SPIN_CAMERA,
+	EFFECT_LOW_PITCH,
+	EFFECT_PEDS_ROASTING,
+	EFFECT_PLAYER_BINOCULARS,
+	EFFECT_VEHS_CRUISE_CONTROL,
+	EFFECT_PEDS_HANDS_UP,
+	EFFECT_PLAYER_AIMBOT,
+	EFFECT_PEDS_SLIPPERY_PEDS,
+	EFFECT_PEDS_SPAWN_BIKER,
+	EFFECT_PLAYER_BLIMP_STRATS,
+	EFFECT_PEDS_SPAWN_SPACE_RANGER,
+	EFFECT_PLAYER_ZOOMZOOM_CAM,
+	EFFECT_MISC_SPAWN_ORANGE_BALL,
+	EFFECT_MOV_NO_RANDOM,
+	EFFECT_PLAYER_ROCKET,
+	EFFECT_MISC_NEWS_TEAM,
+	EFFECT_PLAYER_FLING_PLAYER,
+	EFFECT_MISC_STUFFGUNS,
 	_EFFECT_ENUM_MAX
-};
-
-enum EffectExecutionType
-{
-	DEFAULT,
-	META
 };
 
 struct EffectInfo
 {
-public:
-	EffectInfo(const char* name, const char* id, bool isTimed = false, std::vector<EffectType> incompatibleList = {}, bool shortDur = false, EffectExecutionType type = EffectExecutionType::DEFAULT)
-		: Name(name), Id(id), IsTimed(isTimed), IsShortDuration(shortDur), IncompatibleWith(incompatibleList), ExecutionType(type) {}
-
-public:
 	const char* Name;
 	const char* Id;
-	const bool IsTimed;
-	const bool IsShortDuration;
-	const std::vector<EffectType> IncompatibleWith;
-	const EffectExecutionType ExecutionType;
+	bool IsTimed = false;
+	bool IsShortDuration = false;
+	std::vector<EEffectType> IncompatibleWith;
+	EffectGroupType EffectGroupType = EffectGroupType::None;
+	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 
 const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
@@ -565,3 +570,4 @@ const std::unordered_map<EffectType, EffectInfo> g_effectsMap =
 	{EFFECT_PLAYER_SPIN_CAMERA, {"Spinning Camera", "player_spin_camera", true, {EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2}, true}},
 
 };
+inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;

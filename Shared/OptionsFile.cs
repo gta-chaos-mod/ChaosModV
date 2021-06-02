@@ -91,6 +91,8 @@ namespace Shared
                 return;
             }
 
+            m_options.Clear();
+
             foreach (string line in data.Split('\n'))
             {
                 string[] keyValuePair = line.Split('=');

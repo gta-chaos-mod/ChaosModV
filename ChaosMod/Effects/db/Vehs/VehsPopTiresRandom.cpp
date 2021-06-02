@@ -17,7 +17,7 @@ static void OnTick()
 		{
 			for (int i = 0; i < 48; i++) // using code from VehsPopTires.cpp
 			{
-				if (g_random.GetRandomInt(0, 1)) // random true / false to get ideally 50% of tires popped.
+				if (g_Random.GetRandomInt(0, 1)) // random true / false to get ideally 50% of tires popped.
 				{
 					SET_VEHICLE_TYRES_CAN_BURST(veh, true);
 					SET_VEHICLE_TYRE_BURST(veh, i, true, 1000.f);
@@ -31,4 +31,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_POP_TIRE_LOOP, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Random Tire Popping",
+		.Id = "veh_poptire",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

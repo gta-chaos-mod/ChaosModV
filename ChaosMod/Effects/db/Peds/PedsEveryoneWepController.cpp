@@ -11,8 +11,13 @@ static void OnStartRPG()
 	}
 }
 
-static RegisterEffect registerEffect1(EFFECT_EVERYONE_RPG, OnStartRPG);
-
+static RegisterEffect registerEffect1(EFFECT_EVERYONE_RPG, OnStartRPG, EffectInfo
+	{
+		.Name = "Give Everyone An RPG",
+		.Id = "peds_giverpg",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartTazer()
 {
 	static const Hash tazerHash = GET_HASH_KEY("WEAPON_STUNGUN");
@@ -24,8 +29,13 @@ static void OnStartTazer()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_EVERYONE_TAZER, OnStartTazer);
-
+static RegisterEffect registerEffect2(EFFECT_EVERYONE_TAZER, OnStartTazer, EffectInfo
+	{
+		.Name = "Give Everyone A Stun Gun",
+		.Id = "peds_stungun",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartMinigun()
 {
 	static const Hash minigunHash = GET_HASH_KEY("WEAPON_MINIGUN");
@@ -37,8 +47,13 @@ static void OnStartMinigun()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_EVERYONE_MINIGUN, OnStartMinigun);
-
+static RegisterEffect registerEffect3(EFFECT_EVERYONE_MINIGUN, OnStartMinigun, EffectInfo
+	{
+		.Name = "Give Everyone A Minigun",
+		.Id = "peds_minigun",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartUpNAtomizer()
 {
 	static const Hash raypistolHash = GET_HASH_KEY("WEAPON_RAYPISTOL");
@@ -50,23 +65,33 @@ static void OnStartUpNAtomizer()
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_EVERYONE_UPNATOMIZER, OnStartUpNAtomizer);
-
+static RegisterEffect registerEffect4(EFFECT_EVERYONE_UPNATOMIZER, OnStartUpNAtomizer, EffectInfo
+	{
+		.Name = "Give Everyone An Up-N-Atomizer",
+		.Id = "peds_upnatomizer",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartRandom()
 {
 	static const std::vector<Hash>& weps = Memory::GetAllWeapons();
 
 	for (Ped ped : GetAllPeds())
 	{
-		Hash wep = weps[g_random.GetRandomInt(0, weps.size() - 1)];
+		Hash wep = weps[g_Random.GetRandomInt(0, weps.size() - 1)];
 
 		GIVE_WEAPON_TO_PED(ped, wep, 9999, true, true);
 		SET_CURRENT_PED_WEAPON(ped, wep, true);
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_EVERYONE_RANDOMWEP, OnStartRandom);
-
+static RegisterEffect registerEffect5(EFFECT_EVERYONE_RANDOMWEP, OnStartRandom, EffectInfo
+	{
+		.Name = "Give Everyone A Random Weapon",
+		.Id = "peds_randomwep",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartRailgun()
 {
 	static const Hash railgunHash = GET_HASH_KEY("WEAPON_RAILGUN");
@@ -78,8 +103,13 @@ static void OnStartRailgun()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_EVERYONE_RAILGUN, OnStartRailgun);
-
+static RegisterEffect registerEffect6(EFFECT_EVERYONE_RAILGUN, OnStartRailgun, EffectInfo
+	{
+		.Name = "Give Everyone A Railgun",
+		.Id = "peds_railgun",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);
 static void OnStartBattleAxe()
 {
 	static const Hash axeHash = GET_HASH_KEY("WEAPON_BATTLEAXE");
@@ -91,4 +121,10 @@ static void OnStartBattleAxe()
 	}
 }
 
-static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAxe);
+static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAxe, EffectInfo
+	{
+		.Name = "Give Everyone A Battle Axe",
+		.Id = "peds_battleaxe",
+		.EffectGroupType = EffectGroupType::Weapons
+	}
+);

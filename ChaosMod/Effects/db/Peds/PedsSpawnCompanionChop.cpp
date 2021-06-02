@@ -20,4 +20,10 @@ static void OnStart()
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart, EffectInfo
+	{
+		.Name = "Spawn Companion Doggo",
+		.Id = "spawn_chop",
+		.EffectGroupType = EffectGroupType::SpawnCompanion
+	}
+);

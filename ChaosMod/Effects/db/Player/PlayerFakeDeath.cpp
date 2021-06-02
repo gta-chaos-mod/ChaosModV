@@ -61,7 +61,7 @@ static void OnStart()
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
-			if (g_random.GetRandomInt(0, 1) % 2 == 0)
+			if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
@@ -151,4 +151,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart, EffectInfo
+	{
+		.Name = "Fake Death",
+		.Id = "player_fakedeath"
+	}
+);

@@ -16,7 +16,7 @@ static void OnStart()
 
 	for (int i = 0; i < DANCING_APES_AMOUNT; i++)
 	{
-		Hash modelHash = GET_HASH_KEY(g_random.GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
+		Hash modelHash = GET_HASH_KEY(g_Random.GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
 
 		Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
@@ -38,4 +38,10 @@ static void OnStart()
 	REMOVE_ANIM_DICT("missfbi3_sniping");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart, EffectInfo
+	{
+		.Name = "Spawn Dance Troupe",
+		.Id = "peds_spawndancingapes",
+		.EffectGroupType = EffectGroupType::SpawnCompanion
+	}
+);

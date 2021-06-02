@@ -16,4 +16,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_INVISIBLE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEHS_INVISIBLE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Invisible Vehicles",
+		.Id = "vehs_ghost",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_RAINBOW_VEHS }
+	}
+);

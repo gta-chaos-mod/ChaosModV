@@ -42,4 +42,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LAUNCH_ALL_PEDS, OnStart);
+static RegisterEffect registerEffect(EFFECT_LAUNCH_ALL_PEDS, OnStart, EffectInfo
+	{
+		.Name = "Launch All Nearby Peds Up",
+		.Id = "peds_launchnearby"
+	}
+);

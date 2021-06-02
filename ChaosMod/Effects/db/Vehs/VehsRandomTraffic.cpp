@@ -26,17 +26,17 @@ static void OnTick()
 			static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 			if (!vehModels.empty())
 			{
-				Vehicle veh = CreateTempVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], prevPos.x, prevPos.y, prevPos.z, prevRot);
+				Vehicle veh = CreateTempVehicle(vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)], prevPos.x, prevPos.y, prevPos.z, prevRot);
 
 				// Also apply random upgrades
 				SET_VEHICLE_MOD_KIT(veh, 0);
 				for (int i = 0; i < 50; i++)
 				{
 					int max = GET_NUM_VEHICLE_MODS(veh, i);
-					SET_VEHICLE_MOD(veh, i, max > 0 ? g_random.GetRandomInt(0, max - 1) : 0, g_random.GetRandomInt(0, 1));
-					TOGGLE_VEHICLE_MOD(veh, i, g_random.GetRandomInt(0, 1));
+					SET_VEHICLE_MOD(veh, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
+					TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 				}
-				SET_VEHICLE_TYRES_CAN_BURST(veh, g_random.GetRandomInt(0, 1));
+				SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
 
 				//way to know if vehicle is modified
 				SET_VEHICLE_WINDOW_TINT(veh, 3);
@@ -49,4 +49,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Random Traffic",
+		.Id = "veh_randtraffic",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

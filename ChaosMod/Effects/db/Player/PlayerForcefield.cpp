@@ -50,4 +50,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FORCEFIELD, nullptr, nullptr, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FORCEFIELD, nullptr, nullptr, OnTick, EffectInfo
+	{
+		.Name = "Forcefield",
+		.Id = "player_forcefield",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

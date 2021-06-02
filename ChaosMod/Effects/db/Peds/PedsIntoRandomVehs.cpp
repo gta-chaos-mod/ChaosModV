@@ -39,7 +39,7 @@ static void OnStart()
 			return;
 		}
 
-		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+		Vehicle targetVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 		for (int i = -1; i < targetVehMaxSeats - 1; i++)
@@ -56,4 +56,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_INTORANDOMVEHS, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_INTORANDOMVEHS, OnStart, EffectInfo
+	{
+		.Name = "Set Everyone Into Random Vehicles",
+		.Id = "peds_intorandomvehs"
+	}
+);

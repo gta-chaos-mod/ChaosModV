@@ -26,7 +26,7 @@ static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
 	Hash weaponHash;
-	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4)
+	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4 || GET_WEAPONTYPE_GROUP(weaponHash) == 0xB7BBD827)
 	{
 		return;
 	}
@@ -42,8 +42,8 @@ static void OnTick()
 		{
 			if (!didSelect)
 			{
-				Vector3 launchPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
-				Vector3 targPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
+				Vector3 launchPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
+				Vector3 targPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
 
 				int rayHandle = _START_SHAPE_TEST_RAY(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
 				if (rayHandle != 0)
@@ -90,7 +90,7 @@ static void OnTick()
 							for (int id : boneIds)
 							{
 								Vector3 boneCoord = GET_PED_BONE_COORDS(entityHandle, id, 0, 0, 0);
-								float distance = hitCoords.distanceTo(boneCoord);
+								float distance = hitCoords.DistanceTo(boneCoord);
 								if (bestBone < 0 || bestDistance < 0 || distance < bestDistance)
 								{
 									bestDistance = distance;
@@ -145,4 +145,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Dead Eye",
+		.Id = "player_dead_eye",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }
+	}
+);

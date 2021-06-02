@@ -32,4 +32,10 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_BRAD, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_BRAD, OnStart, EffectInfo
+	{
+		.Name = "Spawn Companion Brad",
+		.Id = "spawn_compbrad",
+		.EffectGroupType = EffectGroupType::SpawnCompanion
+	}
+);

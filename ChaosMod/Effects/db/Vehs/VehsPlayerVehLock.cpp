@@ -20,4 +20,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_VEH_LOCK, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_VEH_LOCK, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Lock Player Inside Vehicle",
+		.Id = "playerveh_lock",
+		.IsTimed = true
+	}
+);

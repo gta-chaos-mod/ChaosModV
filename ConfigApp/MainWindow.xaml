@@ -7,204 +7,370 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="513" Width="1064" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
     <Grid>
-        <TabControl Margin="0,0,0,66" Background="{x:Null}" BorderBrush="LightGray">
-            <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="17*"/>
-                        <ColumnDefinition Width="246*"/>
-                    </Grid.ColumnDefinitions>
-                    <TreeView x:Name="effects_user_effects_tree_view" HorizontalAlignment="Left" Width="1052" BorderBrush="White" Background="{x:Null}" Grid.ColumnSpan="2">
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
-                                <StackPanel Orientation="Horizontal" Height="21">
-                                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center"/>
-                                    <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="20" Margin="10,0" VerticalAlignment="Center" Click="effect_user_config_Click"/>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="115*"/>
-                        <ColumnDefinition Width="376*"/>
-                        <ColumnDefinition Width="562*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="37*"/>
-                        <RowDefinition Height="28*"/>
-                    </Grid.RowDefinitions>
-                    <TextBox x:Name="meta_effects_spawn_dur" Height="23" Margin="248.333,3,0,0" TextWrapping="Wrap"
-                         VerticalAlignment="Top" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1" HorizontalAlignment="Left" Width="60"/>
-                    <Label Content="How often should a new meta start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
-                    <Label Content="How long should meta effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,70,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
-                    <TextBox x:Name="meta_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="248.333,73,0,0" TextWrapping="Wrap"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
-                    <Label Content="How long should short timed meta effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,140,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2" Height="26"/>
-                    <TextBox x:Name="meta_effects_short_timed_dur" HorizontalAlignment="Left" Height="23" Margin="248.333,143,0,0" TextWrapping="Wrap"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="400" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-                    <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}" Margin="0,3,10,9.667" Grid.Column="2" Grid.RowSpan="2" HorizontalAlignment="Right" Width="514">
-                        <TreeView.ItemContainerStyle>
-                            <Style TargetType="{x:Type TreeViewItem}">
-                                <Setter Property="IsExpanded" Value="True" />
-                            </Style>
-                        </TreeView.ItemContainerStyle>
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
-                                <StackPanel Orientation="Horizontal" Height="21">
-                                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center"/>
-                                    <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="20" Margin="10,0" VerticalAlignment="Center" Click="effect_user_config_Click"/>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="107*"/>
-                        <ColumnDefinition Width="945*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="37*"/>
-                        <RowDefinition Height="28*"/>
-                    </Grid.RowDefinitions>
-                    <TextBox x:Name="misc_user_effects_spawn_dur" HorizontalAlignment="Left" Height="23" Margin="233,3,0,0" TextWrapping="Wrap"
-                         VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                         MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
-                    <Label Content="How often should a new effect start (in seconds)?" HorizontalAlignment="Left" Margin="10,0,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
-                    <Label Content="How long should timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,70,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="misc_user_effects_timed_dur" HorizontalAlignment="Left" Height="23" Margin="233,73,0,0" TextWrapping="Wrap"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
-                    <Label Content="How long should short timed effects last (in seconds)?" HorizontalAlignment="Left" Margin="10,140,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="misc_user_effects_timed_short_dur" HorizontalAlignment="Left" Height="23" Margin="233,143,0,0" TextWrapping="Wrap"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="3" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Column="1"/>
-                    <Label Content="Random Seed (Leave empty for random seed every time)" HorizontalAlignment="Left" Margin="10,210,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="misc_user_effects_random_seed" HorizontalAlignment="Left" Height="23" Margin="233,214,0,0" TextWrapping="Wrap"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        MaxLength="8" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                        Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.RowSpan="2" Grid.Column="1"/>
-                    <xctk:ColorPicker Name="misc_user_effects_timer_color" HorizontalAlignment="Left" Height="23" Margin="18,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
-                    <Label Content="Timer Bar Color" HorizontalAlignment="Left" Margin="10,132,0,0"
-                        VerticalAlignment="Top" Width="110" Grid.Row="1" Grid.ColumnSpan="2"/>
-                    <Label Content="Effect Text Color" Margin="93,132,742,0"
-                        VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_text_color" HorizontalAlignment="Left" Height="23" Margin="208,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
-                    <Label Content="Effect Timer Bar Color" Margin="283,132,520,0"
-                        VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
-                    <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" HorizontalAlignment="Left" Height="23" Margin="430,135,0,0"
-                        VerticalAlignment="Top" Width="60" Grid.Row="1" SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" Grid.Column="1"/>
-                    <Label Content="Enable clear active effects shortcut (CTRL + -)" HorizontalAlignment="Left" Margin="10,65,0,68" Width="325" Grid.Row="1" Grid.ColumnSpan="2"/>
-                    <CheckBox x:Name="misc_user_effects_clear_enable" HorizontalAlignment="Left" Margin="233,71,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Label Content="Don't draw effect text" HorizontalAlignment="Left" Margin="339,139,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.Column="1"/>
-                    <Label Content="Don't draw timer bar" HorizontalAlignment="Left" Margin="339,68,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.Column="1"/>
-                    <CheckBox x:Name="misc_user_effects_drawtext_disable" HorizontalAlignment="Left" Margin="669,146,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <CheckBox x:Name="misc_user_effects_drawtimer_disable" HorizontalAlignment="Left" Margin="669,75,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Label Content="Enable toggle mod shortcut (CTRL + L)" HorizontalAlignment="Left" Margin="339,2,0,0"
-                        VerticalAlignment="Top" Width="325" Grid.Column="1"/>
-                    <CheckBox x:Name="misc_user_toggle_mod_shortcut" HorizontalAlignment="Left" Margin="669,9,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Label Content="Enable effect menu (allows you to choose effects manually,&#xD;&#xA;open with CTRL + ,)" HorizontalAlignment="Left" Margin="339,65,0,55" Width="325" Grid.Column="1" Grid.Row="1"/>
-                    <CheckBox x:Name="misc_user_effects_menu_enable" HorizontalAlignment="Left" Margin="669,71,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
-                    <Label Content="Enable pause timer shortcut (CTRL + .)" HorizontalAlignment="Left" Margin="532,132,0,0" Width="225" Grid.Column="1" Grid.Row="1"/>
-                    <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" HorizontalAlignment="Left" Margin="766,138,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" Height="16"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="12*"/>
-                    </Grid.RowDefinitions>
-                    <Label Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Read the twitch__integration.txt text file included with the mod for more information." HorizontalAlignment="Left" Margin="10,0,0,0"
-                    VerticalAlignment="Top" Width="1037" Height="60" Grid.RowSpan="2"/>
-                    <CheckBox x:Name="twitch_user_agreed" Content="Enable Twitch Voting" Margin="15,45,695,280" Grid.Row="1" Click="twitch_user_agreed_Clicked" />
-                    <Label x:Name="twitch_user_channel_name_label" Content="Channel Name" HorizontalAlignment="Left" Margin="10,84,0,0"
-                        VerticalAlignment="Top" Width="102" Grid.Row="1"/>
-                    <TextBox x:Name="twitch_user_channel_name" HorizontalAlignment="Left" Height="23" Margin="117,87,0,0"
-                        VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
-                    <Label x:Name="twitch_user_channel_oauth_label" Content="OAuth Token" HorizontalAlignment="Left" Margin="559,84,0,0"
-                        VerticalAlignment="Top" Width="102" Grid.Row="1"/>
-                    <PasswordBox x:Name="twitch_user_channel_oauth" HorizontalAlignment="Left" Height="23" Margin="666,87,0,0"
-                        VerticalAlignment="Top" Width="271" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
-                    <Label x:Name="twitch_user_user_name_label" Content="Username" HorizontalAlignment="Left" Margin="278,84,0,0"
-                        VerticalAlignment="Top" Width="102" Grid.Row="1"/>
-                    <TextBox x:Name="twitch_user_user_name" HorizontalAlignment="Left" Height="23" Margin="378,87,0,0"
-                        VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" />
-                    <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers (Keep at 0 to enable chat voting instantly, can't be 1)" HorizontalAlignment="Left" Margin="10,178,0,0"
-                        VerticalAlignment="Top" Width="627" Grid.Row="1"/>
-                    <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" HorizontalAlignment="Left" Height="23" Margin="642,180,0,0"
-                        VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.173,-0.435" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                        CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Grid.Row="1" />
-                    <Label x:Name="twitch_user_poll_passphrase_label" Content="Passphrase" HorizontalAlignment="Left" Margin="11,85,0,0"
-                        VerticalAlignment="Top" Width="102" Grid.Row="1" Visibility="Hidden" />
-                    <TextBox x:Name="twitch_user_poll_passphrase" HorizontalAlignment="Left" Height="23" Margin="111,88,0,0"
-                        VerticalAlignment="Top" Width="136" RenderTransformOrigin="0.173,-0.435" Grid.Row="1" Visibility="Hidden" />
-                    <Label x:Name="twitch_user_overlay_mode_label" Content="Voting Overlay Mode" HorizontalAlignment="Left" Margin="11,129,0,0"
-                        VerticalAlignment="Top" Width="142" Grid.Row="1"/>
-                    <Label x:Name="twitch_user_chance_system_enable_label" Content="Enable proportional voting mode" HorizontalAlignment="Left" Margin="10,317,0,0"
-                        VerticalAlignment="Top" Width="227" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_chance_system_enable" Margin="238,324,779,0" Grid.Row="1" />
-                    <Label x:Name="twitch_user_chance_system_retain_chance_enable_label" Content="Effects without votes should never lose their initial chance" HorizontalAlignment="Left" Margin="298,317,0,0"
-                        VerticalAlignment="Top" Width="355" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_chance_system_retain_chance_enable" Margin="658,324,359,0" Grid.Row="1" />
-                    <Label Content="---------- Proportional Voting Mode ----------" HorizontalAlignment="Left" Margin="15,275,0,0" Grid.Row="1" VerticalAlignment="Top" Width="297"/>
-                    <ComboBox x:Name="twitch_user_overlay_mode" HorizontalAlignment="Left" Margin="158,133,0,0" Grid.Row="1" VerticalAlignment="Top" Width="119"/>
-                    <Label x:Name="twitch_user_random_voteable_enable_label" Content="Enable &quot;Random Effect&quot; voteable option" HorizontalAlignment="Left" Margin="10,222,0,0"
-                        VerticalAlignment="Top" Width="237" Grid.Row="1"/>
-                    <CheckBox x:Name="twitch_user_random_voteable_enable" Margin="253,228,755,100" Grid.Row="1" />
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="12*"/>
-                    </Grid.RowDefinitions>
-                    <Label Content="Visit the mod page for more information" HorizontalAlignment="Left" Margin="15,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0" Grid.RowSpan="2"/>
-                    <Button Content="GTA5-Mods" HorizontalAlignment="Left" Margin="342,20,0,0" VerticalAlignment="Top" Width="75" Click="contribute_modpage_click" Grid.RowSpan="2"/>
-                    <Button Content="GitHub" HorizontalAlignment="Left" Margin="342,29,0,0" VerticalAlignment="Top" Width="75" Click="contribute_github_click" Grid.Row="1"/>
-                    <Label Content="Enjoying the mod? Buy me a coffee! :)" HorizontalAlignment="Left" Margin="15,64,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="222"/>
-                    <Button Content="PayPal" HorizontalAlignment="Left" Margin="342,69,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_donate_click"/>
-                    <Label Content="Want to contribute to the mod? It's open source!" HorizontalAlignment="Left" Margin="15,25,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="282"/>
-                    <Label Content="Join our Discord for announcements, support and more!" HorizontalAlignment="Left" Margin="15,105,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Width="312"/>
-                    <Button Content="Discord" HorizontalAlignment="Left" Margin="342,110,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="contribute_discord_click"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
-        <Button x:Name="user_save" Content="Save" Click="user_save_Click" Margin="944,418,13,13"/>
-        <Button x:Name="user_reset" Content="Reset" Click="user_reset_Click" Margin="844,418,113,13"/>
-        <Label x:Name="update_available_label" Content="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." HorizontalAlignment="Left" Margin="22,420,0,0" VerticalAlignment="Top" />
-        <Button x:Name="update_available_button" Content="GTA5-Mods" HorizontalAlignment="Left" Margin="500,420,0,0" VerticalAlignment="Top" Width="93" Height="26" Click="contribute_modpage_click" Visibility="Hidden" />
+        <Grid Grid.Row="0">
+            <TabControl Background="{x:Null}" BorderBrush="LightGray">
+                <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <TreeView x:Name="effects_user_effects_tree_view" Background="{x:Null}" BorderBrush="White" VerticalAlignment="Stretch">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                    <StackPanel Orientation="Horizontal" Height="20">
+                                        <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                                        <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
+                    </Grid>
+                </TabItem>
+            
+                <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="500" />
+                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                    
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="330" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="meta_effects_spawn_dur" Height="20" Width="60" Grid.Row="0" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                            <Label Content="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="meta_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                            <Label Content="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="meta_effects_short_timed_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}">
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="IsExpanded" Value="True" />
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                        <StackPanel Orientation="Horizontal" Height="20">
+                                            <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                                            <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            
+                <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="310" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="550" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="How often should a new effect start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_spawn_dur" Width="60" Height="20" Grid.Row="0" Grid.Column="2"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"
+                                 MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                 CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Label Content="How long should timed effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"
+                                 MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                 CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Label Content="How long should short timed effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"
+                                 MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                 CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Label Content="Random Seed (Leave empty for random seed every time)" Grid.Row="3" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_random_seed" Height="20" Width="60" Grid.Row="3" Grid.Column="2"
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"
+                                 MaxLength="9" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                 CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Label Content="Timer Bar Color" Grid.Row="4" Grid.Column="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <xctk:ColorPicker Name="misc_user_effects_timer_color" Width="60" Height="25" Grid.Row="4" Grid.Column="2"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center"
+                                          SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False" />
+                        <Label Content="Effect Text Color" Grid.Row="5" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <xctk:ColorPicker x:Name="misc_user_effects_text_color" Width="60" Height="25" Grid.Row="5" Grid.Column="2"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center"
+                                          SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False" />
+                        <Label Content="Effect Timer Bar Color" Grid.Row="6" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" Width="60" Height="25" Grid.Row="6" Grid.Column="2"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center"
+                                          SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" />
+                        <Label Content="Don't draw timer bar" Grid.Row="7" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Row="7" Grid.Column="2"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Don't draw effect text" Grid.Row="8" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_drawtext_disable" Grid.Row="8" Grid.Column="2"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="0" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="0" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="1" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_toggle_mod_shortcut" Grid.Row="1" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Grid.Row="2" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_menu_enable" Grid.Row="2" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable pause timer shortcut (CTRL + .)" Grid.Row="3" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="3" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Disable mod on startup by default" Grid.Row="4" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_disable_startup" Grid.Row="4" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Enable effect group weighting (Recommended)" Grid.Row="5" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_enable_group_weighting" Grid.Row="5" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="Allow prevention of repetitive mission fails (Failsafe)" Grid.Row="6" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <CheckBox x:Name="misc_user_effects_enable_failsafe" Grid.Row="6" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                    </Grid>
+                </TabItem>
+            
+                <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="120" />
+                            <RowDefinition Height="180" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer runs out by making use of Twitch's chat feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the twitch__readme.txt file included with the mod (inside the README folder) for more information."
+                                   Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <CheckBox x:Name="twitch_user_agreed" Content="Enable Twitch Voting" Grid.Row="1"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Click="twitch_user_agreed_Clicked" />
+                        </Grid>
+                    
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="340" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="400" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label x:Name="twitch_user_channel_name_label" Content="Channel Name" Grid.Row="0" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="twitch_user_channel_name" Width="120" Height="20" Grid.Row="0" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="twitch_user_user_name_label" Content="Username" Grid.Row="1" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="twitch_user_user_name" Width="120" Height="20" Grid.Row="1" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="twitch_user_channel_oauth_label" Content="OAuth Token" Grid.Row="2" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <PasswordBox x:Name="twitch_user_channel_oauth" Width="120" Height="20" Grid.Row="2" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers&#xA;(Keep at 0 to allow chat to immediately vote, value can't be 1)"
+                                   Grid.Row="3" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="twitch_user_effects_secs_before_chat_voting" Width="60" Height="20" Grid.Row="3" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                            <Label x:Name="twitch_user_overlay_mode_label" Content="Voting Overlay Mode" Grid.Row="0" Grid.Column="2"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <ComboBox x:Name="twitch_user_overlay_mode" Width="120" Height="25" Grid.Row="0" Grid.Column="4"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="twitch_user_random_voteable_enable_label" Content="Enable &quot;Random Effect&quot; voteable option" Grid.Row="1" Grid.Column="2"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Label Content="---------- Proportional Voting Mode ----------"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="twitch_user_chance_system_enable_label" Content="Enable proportional voting mode" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <CheckBox x:Name="twitch_user_chance_system_enable" Width="60" Height="20" Grid.Column="2"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="twitch_user_chance_system_retain_chance_enable_label" Content="Effects without votes should never lose their initial chance" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <CheckBox x:Name="twitch_user_chance_system_retain_chance_enable" Width="60" Height="20" Grid.Column="2"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="310" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Visit the mod page for more information" Grid.Row="0" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button Content="GTA5-Mods" Width="75" Grid.Row="0" Grid.Column="2"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Click="contribute_modpage_click" />
+                        <Label Content="Enjoying the mod? Buy me a coffee! :)" Grid.Row="1" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button Content="PayPal" Width="75" Grid.Row="1" Grid.Column="2"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Click="contribute_donate_click" />
+                        <Label Content="Want to contribute to the mod? It's open source!" Grid.Row="2" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button Content="GitHub" Width="75" Grid.Row="2" Grid.Column="2"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Click="contribute_github_click" />
+                        <Label Content="Join our Discord for announcements, support and more!" Grid.Row="3" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button Content="Discord" Width="75" Grid.Row="3" Grid.Column="2"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Click="contribute_discord_click"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="update_available_label" Content="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." Grid.Column="0"
+                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Visibility="Hidden" Click="contribute_modpage_click" />
+            <Button x:Name="user_reset" Content="Reset" Height="40" Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Click="user_reset_Click" />
+            <Button x:Name="user_save" Content="Save" Height="40" Grid.Column="4"
+                    VerticalAlignment="Center"
+                    Click="user_save_Click" />
+        </Grid>
     </Grid>
 </Window>

@@ -8,9 +8,11 @@ static void OnStart()
 
 	std::vector<Vehicle> vehs;
 
+	float groundZ;
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (veh != playerVeh)
+		Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
+		if (veh != playerVeh && GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false) && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
 		{
 			vehs.push_back(veh);
 		}
@@ -41,8 +43,9 @@ static void OnStart()
 				}
 			}
 		}
+    
+		Vehicle targetVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 
-		Vehicle targetVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
 		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
@@ -69,4 +72,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SETINTORANDVEH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SETINTORANDVEH, OnStart, EffectInfo
+	{
+		.Name = "Set Player Into Random Vehicle",
+		.Id = "player_setintorandveh"
+	}
+);
