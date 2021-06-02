@@ -4,41 +4,42 @@
 
 class OptionsManager
 {
+private:
+	OptionsFile m_ConfigFile{ "chaosmod/config.ini" };
+	OptionsFile m_TwitchFile{ "chaosmod/twitch.ini" };
+
 public:
 	void Reset()
 	{
-		m_configFile.Reset();
-		m_twitchFile.Reset();
+		m_ConfigFile.Reset();
+		m_TwitchFile.Reset();
 	}
 
 	template <typename T>
-	inline T GetConfigValue(const std::string& key, T defaultValue)
+	inline T GetConfigValue(const std::string& szKey, T defaultValue)
 	{
-		return GetOptionValue(m_configFile, key, defaultValue);
+		return GetOptionValue(m_ConfigFile, szKey, defaultValue);
 	}
 
 	template <typename T>
-	inline T GetTwitchValue(const std::string& key, T defaultValue)
+	inline T GetTwitchValue(const std::string& szKey, T defaultValue)
 	{
-		return GetOptionValue(m_twitchFile, key, defaultValue);
+		return GetOptionValue(m_TwitchFile, szKey, defaultValue);
 	}
 
 private:
-	OptionsFile m_configFile {"chaosmod/config.ini"};
-	OptionsFile m_twitchFile {"chaosmod/twitch.ini"};
-
 	template <typename T>
-	inline T GetOptionValue(const OptionsFile& optionsFile, const std::string& key, T defaultValue = T())
+	inline T GetOptionValue(const OptionsFile& optionsFile, const std::string& szKey, T defaultValue = T())
 	{
 		if constexpr (std::is_same<std::remove_const<T>::type, std::string>() || std::is_same<std::remove_const<T>::type, char*>())
 		{
-			return optionsFile.ReadValueString(key, defaultValue);
+			return optionsFile.ReadValueString(szKey, defaultValue);
 		}
 		else
 		{
-			return optionsFile.ReadValue(key, defaultValue);
+			return optionsFile.ReadValue(szKey, defaultValue);
 		}
 	}
 };
 
-inline OptionsManager g_optionsManager;
+inline OptionsManager g_OptionsManager;

@@ -2,7 +2,7 @@
 
 static void OnStart()
 {
-	bool friendly = g_random.GetRandomInt(0, 1);
+	bool friendly = g_Random.GetRandomInt(0, 1);
 
 	Hash relationshipGroup;
 	if (friendly)

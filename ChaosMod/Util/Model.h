@@ -1,15 +1,15 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
+#include "Natives.h"
 
 #include "Util/Script.h"
 
-inline void LoadModel(Hash model)
+inline void LoadModel(Hash ulModel)
 {
-	if (IS_MODEL_VALID(model))
+	if (IS_MODEL_VALID(ulModel))
 	{
-		REQUEST_MODEL(model);
-		while (!HAS_MODEL_LOADED(model))
+		REQUEST_MODEL(ulModel);
+		while (!HAS_MODEL_LOADED(ulModel))
 		{
 			WAIT(0);
 		}
