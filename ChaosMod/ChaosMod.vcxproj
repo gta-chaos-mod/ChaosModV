@@ -354,7 +354,7 @@
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
-    <ClInclude Include="Random.h" />
+    <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="EffectThreads.h" />
     <ClInclude Include="Components\TwitchVoting.h" />

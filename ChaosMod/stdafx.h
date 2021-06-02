@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Random.h"
 #include "Main.h"
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
@@ -54,6 +53,7 @@
 #include "Util/OptionDefaults.h"
 #include "Util/Macros.h"
 #include "Util/Natives.h"
+#include "Util/Random.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
