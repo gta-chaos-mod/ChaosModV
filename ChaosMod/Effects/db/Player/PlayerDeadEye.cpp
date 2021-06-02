@@ -26,7 +26,7 @@ static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
 	Hash weaponHash;
-	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4)
+	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4 || GET_WEAPONTYPE_GROUP(weaponHash) == 0xB7BBD827)
 	{
 		return;
 	}
