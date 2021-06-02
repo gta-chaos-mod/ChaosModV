@@ -240,8 +240,6 @@
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRocket.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoMovRandom.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />

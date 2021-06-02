@@ -40,11 +40,10 @@ static bool opposite;
 static void ShowPopup()
 {
 	std::string message;
-	
 
 	if (opposite)
 	{
-		if (g_random.GetRandomInt(0, 1) == 0)
+		if (g_Random.GetRandomInt(0, 1) == 0)
 		{
 			message = "Simeon Says: Don't ";
 		}
@@ -55,7 +54,7 @@ static void ShowPopup()
 	} 
 	else
 	{
-		if (g_random.GetRandomInt(0, 1) == 0)
+		if (g_Random.GetRandomInt(0, 1) == 0)
 		{
 			message = "Don't ";
 		}
