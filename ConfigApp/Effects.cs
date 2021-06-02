@@ -577,7 +577,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
-            {EffectType.EFFECT_PLAYER_SPIN_CAMERA, new EffectInfo("Spinning Camera", EffectCategory.PLAYER, "player_spincam", true)},
+            {EffectType.EFFECT_PLAYER_SPIN_CAMERA, new EffectInfo("Spinning Camera", EffectCategory.PLAYER, "player_spin_camera", true)},
         };
     }
 }
