@@ -19,7 +19,7 @@ static void OnStart()
     Vector3 spawnPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, fixedDistance, 0);
     Object ball = CreatePoolProp(ballHash, spawnPos.x, spawnPos.y, spawnPos.z - 0.2, true);
     // Randomize weight
-    float weight = g_random.GetRandomFloat(1, 100);
+    float weight = g_Random.GetRandomFloat(1, 100);
     SET_OBJECT_PHYSICS_PARAMS(ball, weight, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
     // Ball needs to be shot at to be dynamic, otherwise it will be frozen
     Vector3 min, max;
