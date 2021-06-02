@@ -6,13 +6,13 @@
 
 static void OnStop()
 {
-	g_metaInfo.EffectDurationModifier = 1;
+	g_MetaInfo.m_fEffectDurationModifier = 1;
 }
 
 
 static void OnTick_0_5x()
 {
-	g_metaInfo.EffectDurationModifier = 0.5;
+	g_MetaInfo.m_fEffectDurationModifier = 0.5;
 }
 
 static RegisterEffect registerEffect_0_5x(EFFECT_META_EFFECT_DURATION_X0_5, nullptr, OnStop, OnTick_0_5x, EffectInfo
@@ -21,13 +21,13 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_EFFECT_DURATION_X0_5, null
 		.Id = "meta_effect_duration_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_EFFECT_DURATION_X2 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
 static void OnTick_2x()
 {
-	g_metaInfo.EffectDurationModifier = 2;
+	g_MetaInfo.m_fEffectDurationModifier = 2;
 }
 
 static RegisterEffect registerEffect_2x(EFFECT_META_EFFECT_DURATION_X2, nullptr, OnStop, OnTick_2x, EffectInfo
@@ -36,6 +36,6 @@ static RegisterEffect registerEffect_2x(EFFECT_META_EFFECT_DURATION_X2, nullptr,
 		.Id = "meta_effect_duration_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_EFFECT_DURATION_X0_5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

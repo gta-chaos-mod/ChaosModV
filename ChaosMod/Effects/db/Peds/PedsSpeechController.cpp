@@ -15,7 +15,7 @@ static void OnTickFriendly()
 			{
 				constexpr const char* speechesFriendly[3]{ "GENERIC_HI", "GENERIC_HOWS_IT_GOING", "GENERIC_THANKS" };
 
-				int choice = g_random.GetRandomInt(0, 2);
+				int choice = g_Random.GetRandomInt(0, 2);
 				_PLAY_AMBIENT_SPEECH1(ped, speechesFriendly[choice], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 			}
 		}
@@ -45,7 +45,7 @@ static void OnTickUnfriendly()
 			{
 				constexpr const char* speechesUnfriendly[3]{ "GENERIC_CURSE_HIGH", "GENERIC_INSULT_HIGH", "GENERIC_WAR_CRY" };
 
-				int choice = g_random.GetRandomInt(0, 2);
+				int choice = g_Random.GetRandomInt(0, 2);
 				_PLAY_AMBIENT_SPEECH1(ped, speechesUnfriendly[choice], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 			}
 		}

@@ -20,9 +20,9 @@ static void OnStop()
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 {
 	return Vector3::Init(
-		startCoord.x + g_random.GetRandomInt(-maxOffset, maxOffset),
-		startCoord.y + g_random.GetRandomInt(-maxOffset, maxOffset),
-		startCoord.z + g_random.GetRandomInt(-maxOffset, maxOffset)
+		startCoord.x + g_Random.GetRandomInt(-maxOffset, maxOffset),
+		startCoord.y + g_Random.GetRandomInt(-maxOffset, maxOffset),
+		startCoord.z + g_Random.GetRandomInt(-maxOffset, maxOffset)
 	);
 }
 

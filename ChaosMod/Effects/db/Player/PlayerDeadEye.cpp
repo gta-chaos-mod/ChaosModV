@@ -42,8 +42,8 @@ static void OnTick()
 		{
 			if (!didSelect)
 			{
-				Vector3 launchPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
-				Vector3 targPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
+				Vector3 launchPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
+				Vector3 targPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
 
 				int rayHandle = _START_SHAPE_TEST_RAY(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
 				if (rayHandle != 0)
