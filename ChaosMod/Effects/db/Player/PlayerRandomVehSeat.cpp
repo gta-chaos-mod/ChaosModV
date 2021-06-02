@@ -27,12 +27,13 @@ static void OnStart()
 		if (!vehs.empty())
 		{
 			Ped playerPed = PLAYER_PED_ID();
-			Vehicle veh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+
+			Vehicle veh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 			if (veh != GET_VEHICLE_PED_IS_IN(playerPed, false))
 			{
 				Hash vehModel = GET_ENTITY_MODEL(veh);
 				int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
-				int randomSeat = g_random.GetRandomInt(-1, maxSeats - 2);
+				int randomSeat = g_Random.GetRandomInt(-1, maxSeats - 2);
 
 				if (!IS_VEHICLE_SEAT_FREE(veh, randomSeat, false))
 				{
@@ -65,7 +66,7 @@ static void OnStart()
 				}
 			}
 
-			int seat = choosableSeats[g_random.GetRandomInt(0, choosableSeats.size() - 1)];
+			int seat = choosableSeats[g_Random.GetRandomInt(0, choosableSeats.size() - 1)];
 			if (!IS_VEHICLE_SEAT_FREE(veh, seat, false))
 			{
 				Ped seatPed = GET_PED_IN_VEHICLE_SEAT(veh, seat, false);

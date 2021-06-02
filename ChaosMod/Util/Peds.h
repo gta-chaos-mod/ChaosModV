@@ -1,6 +1,7 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
+#include "../Util/Natives.h"
+
 #include "PoolSpawner.h"
 
 inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)

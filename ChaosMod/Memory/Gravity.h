@@ -3,18 +3,16 @@
 #include "Memory.h"
 #include "Handle.h"
 
-#include <fstream>
-
 namespace Memory
 {
-	inline void SetGravityLevel(float gravity)
+	inline void SetGravityLevel(float fGravity)
 	{
-		static float* gravAddr = nullptr;
-		static void(__cdecl* someFunc1)(float grav);
-		static void(__cdecl* someFunc2)();
-		static void(__cdecl* someFunc3)();
+		static float* pfGravAddr = nullptr;
+		static void(__cdecl* pSomeFunc1)(float grav);
+		static void(__cdecl* pSomeFunc2)();
+		static void(__cdecl* pSomeFunc3)();
 
-		if (!gravAddr)
+		if (!pfGravAddr)
 		{
 			Handle handle = FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
 			if (!handle.IsValid())
@@ -24,19 +22,19 @@ namespace Memory
 
 			handle = handle.Into().At(24);
 
-			gravAddr = handle.At(3).Into().Get<float>();
+			pfGravAddr = handle.At(3).Into().Get<float>();
 
-			someFunc1 = handle.At(8).Into().Get<void(__cdecl)(float)>();
+			pSomeFunc1 = handle.At(8).Into().Get<void(__cdecl)(float)>();
 
-			someFunc2 = handle.At(13).Into().Get<void(__cdecl)()>();
+			pSomeFunc2 = handle.At(13).Into().Get<void(__cdecl)()>();
 
-			someFunc3 = handle.At(18).Into().Get<void(__cdecl)()>();
+			pSomeFunc3 = handle.At(18).Into().Get<void(__cdecl)()>();
 		}
 
-		*gravAddr = gravity;
+		*pfGravAddr = fGravity;
 
-		someFunc1(*gravAddr);
-		someFunc2();
-		someFunc3();
+		pSomeFunc1(*pfGravAddr);
+		pSomeFunc2();
+		pSomeFunc3();
 	}
 }
