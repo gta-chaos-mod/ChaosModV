@@ -1,48 +1,7 @@
 #include <stdafx.h>
 
-static Vector3 DegToRadian(const Vector3& angles)
-{
-	return Vector3::Init(
-		angles.x * .0174532925199433F,
-		angles.y * .0174532925199433F,
-		angles.z * .0174532925199433F
-	);
-}
-
-static Vector3 GetCoordsFromGameplayCam(float distance)
-{
-	Vector3 rot = DegToRadian(GET_GAMEPLAY_CAM_ROT(2));
-	Vector3 coords = GET_GAMEPLAY_CAM_COORD();
-
-	rot.y = distance * cos(rot.x);
-	coords.x = coords.x + rot.y * std::sin(rot.z * -1.f);
-	coords.y = coords.y + rot.y * std::cos(rot.z * -1.f);
-	coords.z = coords.z + distance * sin(rot.x);
-
-	return coords;
-}
-
-static bool IsWeaponShotgun(Hash wepHash)
-{
-	switch (wepHash)
-	{
-	case 487013001:
-	case 2017895192:
-	case -1654528753:
-	case -494615257:
-	case -1466123874:
-	case 984333226:
-	case -275439685:
-	case 317205821:
-		return true;
-	}
-
-	return false;
-}
-
 static void OnTick()
 {
-
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_PED_SHOOTING(ped))
@@ -57,7 +16,7 @@ static void OnTick()
 
 				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y, camCoords.z, true);
 
-				spawnBasePos = GetCoordsFromGameplayCam(distCamToPed + 2.5f);
+				spawnBasePos = Util::GetCoordsFromGameplayCam(distCamToPed + 2.5f);
 				spawnRot = GET_GAMEPLAY_CAM_ROT(2);
 			}
 			else
@@ -66,7 +25,7 @@ static void OnTick()
 				spawnRot = GET_ENTITY_ROTATION(ped, 2);
 			}
 
-			bool isShotgun = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
+			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
 			int thingCount = isShotgun ? 3 : 1;
 			for (int i = 0; i < thingCount; i++)
 			{
@@ -98,7 +57,7 @@ static void OnTick()
 					}
 					if (!props.empty())
 					{
-						Entity thingProp = props[g_random.GetRandomInt(0, props.size() - 1)];
+						Entity thingProp = props[g_Random.GetRandomInt(0, props.size() - 1)];
 						thing = thingProp;
 					}			
 					break;
@@ -109,7 +68,7 @@ static void OnTick()
 					}
 					if (!peds.empty())
 					{
-						Ped thingPed = peds[g_random.GetRandomInt(0, peds.size() - 1)];
+						Ped thingPed = peds[g_Random.GetRandomInt(0, peds.size() - 1)];
 						thing = thingPed;
 					}				
 					break;
@@ -121,7 +80,7 @@ static void OnTick()
 					}
 					if (!vehs.empty())
 					{
-						Vehicle thingVeh = vehs[g_random.GetRandomInt(0, vehs.size() - 1)];
+						Vehicle thingVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 						thing = thingVeh;
 					}
 					break;

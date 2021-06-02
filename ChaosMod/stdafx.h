@@ -48,6 +48,7 @@
 #include "Util/OptionsFile.h"
 #include "Util/OptionsManager.h"
 #include "Util/OptionDefaults.h"
+#include "Util/Weapon.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

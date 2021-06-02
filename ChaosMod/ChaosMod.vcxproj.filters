@@ -293,6 +293,7 @@
     <ClInclude Include="Util\Script.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Util\Peds.h" />
+    <ClInclude Include="Util\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
