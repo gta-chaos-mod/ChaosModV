@@ -15,6 +15,13 @@ static void OnStop()
 
 static void OnTick()
 {
+	Hash playerHash = GET_ENTITY_MODEL(PLAYER_PED_ID());
+	//trevor
+	if (playerHash == 2608926626)
+	{
+		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0);
+	}
+
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 
 	for (Ped ped : GetAllPeds())
