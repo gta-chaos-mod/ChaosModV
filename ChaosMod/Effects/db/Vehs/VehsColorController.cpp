@@ -157,7 +157,7 @@ static void OnTickRainbow()
 		int b = std::sin(veh + freq * cnt + 4) * 127 + 128;
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
-		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g, b, r);
 
 		// Neon lights
 
