@@ -598,7 +598,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PLAYER_BLIMP_STRATS, new EffectInfo("Blimp Strats", EffectCategory.PLAYER, "player_blimp_strats")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
             {EffectType.EFFECT_VEHS_YOU_ARE_A_WIZARD, new EffectInfo("You're A Wizard, Franklin", EffectCategory.VEHICLE, "vehs_spawn_wizard_broom")},
-            {EffectType.EFFECT_ILLEGAL_INNOCENCE, new EffectInfo("Innocence Is Illegal", EffectCategory.PLAYER, "player_illegalinnocence", true)}
+            {EffectType.EFFECT_ILLEGAL_INNOCENCE, new EffectInfo("Innocence Is Illegal", EffectCategory.PLAYER, "player_illegalinnocence", true)},
             {EffectType.EFFECT_PLAYER_ZOOMZOOM_CAM, new EffectInfo("Zoom Zoom Cam", EffectCategory.PLAYER, "player_zoomzoom_cam", true, true)},
             {EffectType.EFFECT_MISC_SPAWN_ORANGE_BALL, new EffectInfo("Spawn Orange Ball", EffectCategory.MISC, "misc_spawn_orange_ball")},
             {EffectType.EFFECT_MOV_NO_RANDOM, new EffectInfo("Disable Random Direction", EffectCategory.PLAYER, "player_no_random_movement", true)},
