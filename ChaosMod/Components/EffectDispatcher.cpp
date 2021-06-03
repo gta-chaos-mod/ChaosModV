@@ -97,7 +97,7 @@ void EffectDispatcher::UpdateEffects()
 	for (ActiveEffect& effect : m_rgActiveEffects)
 	{
 		if (effect.m_bHideText
-			&& EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId))
+			&& EffectThreadsHasThreadOnStartExecuted(effect.m_ullThreadId))
 		{
 			effect.m_bHideText = false;
 		}
@@ -249,7 +249,9 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
-		if (effect.m_bHideText
+		const bool hasFake = !effect.FakeName.empty();
+
+		if ((effect.m_bHideText && !hasFake)
 			|| (g_MetaInfo.m_bShouldHideChaosUI
 				&& effect.m_EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI)
 			|| (g_MetaInfo.m_bDisableChaos
@@ -258,7 +260,14 @@ void EffectDispatcher::DrawEffectTexts()
 			continue;
 		}
 
-		DrawScreenText(effect.m_szName, { .915f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
+		std::string name = effect.m_szFakeName;
+
+		if (!effect.HideText || !hasFake)
+		{
+			name = effect.m_szName;
+		}
+
+		DrawScreenText(name, { .915f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
 			EScreenTextAdjust::Right, { .0f, .915f });
 
 		if (effect.m_fTimer > 0)
@@ -417,7 +426,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 				break;
 			}
 
-			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectTime);
+			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.m_szFakeName, effectTime);
 		}
 	}
 
@@ -560,4 +569,28 @@ void EffectDispatcher::ResetTimer()
 	m_ullTimerTimer = GetTickCount64();
 	m_usTimerTimerRuns = 0;
 	m_ullEffectsTimer = GetTickCount64();
+}
+
+// (kolyaventuri): Forces the name of the provided effect to change, using any given string
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const std::string& overrideName)
+{
+	for (ActiveEffect& effect : m_rgActiveEffects)
+	{
+		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		{
+			effect.FakeName = overrideName;
+		}
+	}
+}
+
+// (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
+void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType) {
+	for (ActiveEffect& effect : m_rgActiveEffects)
+	{
+		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		{
+			EffectInfo fakeEffectInfo = g_effectsMap.find(fakeEffectType)->second;
+			effect.FakeName = fakeEffectInfo.Name;
+		}
+	}
 }

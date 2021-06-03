@@ -31,17 +31,19 @@ private:
 		DWORD64 m_ullThreadId = 0;
 
 		std::string m_szName;
+		std::string m_szFakeName;
 
 		float m_fTimer = 0.f;
 		float m_fMaxTime = 0.f;
 
 		bool m_bHideText = true;
 
-		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* pRegisteredEffect, const std::string& szName, float fTimer)
+		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* pRegisteredEffect, const std::string& szName, const std::string& szFakeName, float fTimer)
 		{
 			m_EffectIdentifier = effectIdentifier;
 			m_pRegisteredEffect = pRegisteredEffect;
 			m_szName = szName;
+			m_szFakeName = szFakeName;
 			m_fTimer = fTimer;
 			m_fMaxTime = fTimer;
 
@@ -119,6 +121,9 @@ public:
 
 	void Reset();
 	void ResetTimer();
+
+	void OverrideEffectName(const EffectType& effectType, const std::string& overrideName);
+	void OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType);
 };
 
 inline std::unique_ptr<EffectDispatcher> g_pEffectDispatcher;
