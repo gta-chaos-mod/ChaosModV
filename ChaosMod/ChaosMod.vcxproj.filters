@@ -240,7 +240,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerPause.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugMenu.h" />
