@@ -59,7 +59,7 @@ static void OnTick()
 	case closingEyes:
 		alpha += closingIterator;
 		// Chance for player who's on foot to ragdoll halfway through blinking
-		if (alpha / closingIterator == floor(255.f / closingIterator / 2.f) && g_random.GetRandomFloat(0.f, 1.f) < .25f)
+		if (alpha / closingIterator == floor(255.f / closingIterator / 2.f) && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
 		{
 			RagdollOnFoot();
 		}
@@ -86,7 +86,7 @@ static void OnTick()
 			{
 				alpha = 0;
 				currentMode = TiredMode::waiting;
-				nextTimestamp = GET_GAME_TIMER() + g_random.GetRandomInt(250, 3000);
+				nextTimestamp = GET_GAME_TIMER() + g_Random.GetRandomInt(250, 3000);
 			}
 		}
 		break;
@@ -94,7 +94,7 @@ static void OnTick()
 		if (GET_GAME_TIMER() > nextTimestamp)
 		{
 			currentMode = TiredMode::closingEyes;
-			steeringDirection = (g_random.GetRandomFloat(0, 1) < .5f) ? 1.0f : -1.0f;
+			steeringDirection = (g_Random.GetRandomFloat(0, 1) < .5f) ? 1.0f : -1.0f;
 		}
 		break;
 	}

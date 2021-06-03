@@ -2,26 +2,30 @@
 
 #include <cstdlib>
 
-template <typename T>
-inline bool TryParse(const std::string& text, T& result, int radix = 10)
+namespace Util
 {
-	char* end;
+	template <typename T>
+	inline bool TryParse(const std::string& szText, T& result, int iRadix = 10)
+	{
+		char* cEnd;
 
-	long parseResult;
-	if constexpr (std::is_same<T, float>())
-	{
-		parseResult = std::strtof(text.c_str(), &end);
+		long lParseResult;
+
+		if constexpr (std::is_same<T, float>())
+		{
+			lParseResult = std::strtof(szText.c_str(), &cEnd);
+		}
+		else
+		{
+			lParseResult = std::strtol(szText.c_str(), &cEnd, iRadix);
+		}
+
+		bool bParsed = *cEnd == '\0';
+		if (bParsed)
+		{
+			result = static_cast<T>(lParseResult);
+		}
+
+		return bParsed;
 	}
-	else
-	{
-		parseResult = std::strtol(text.c_str(), &end, radix);
-	}
-	
-	bool parsed = *end == '\0';
-	if (parsed)
-	{
-		result = parseResult;
-	}
-	
-	return parsed;
 }

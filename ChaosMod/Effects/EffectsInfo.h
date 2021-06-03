@@ -1,12 +1,13 @@
 #pragma once
 
 #include "EffectGroups.h"
-#include "EffectExecutionType.h"
+#include "EEffectExecutionType.h"
 
 #include <unordered_map>
 
-enum EffectType
+enum EEffectType : int
 {
+	EFFECT_INVALID = -1,
 	EFFECT_PLAYER_SUICIDE,
 	EFFECT_PLUS_2_STARS,
 	EFFECT_5_STARS,
@@ -118,8 +119,6 @@ enum EffectType
 	EFFECT_METEOR_RAIN,
 	EFFECT_BLACKOUT,
 	EFFECT_QUICK_TIME,
-	EFFECT_MOV_NO_UD,
-	EFFECT_MOV_NO_LR,
 	EFFECT_PLAYER_AUTOPILOT,
 	EFFECT_EVERYONE_RPG,
 	EFFECT_EVERYONE_TAZER,
@@ -235,7 +234,7 @@ enum EffectType
 	EFFECT_FLIP_CAMERA,
 	EFFECT_PLAYER_WALK_ON_WATER,
 	EFFECT_RAPID_FIRE,
-	EFFECT_PLAYER_ON_DEMAND_CARTOON,
+	EFFECT_MISC_ON_DEMAND_CARTOON,
 	EFFECT_PEDS_DRIVE_BACKWARDS,
 	EFFECT_VEH_RANDTRAFFIC,
 	EFFECT_MISC_RAMPJAM,
@@ -277,7 +276,18 @@ enum EffectType
 	EFFECT_PLAYER_AIMBOT,
 	EFFECT_PEDS_SLIPPERY_PEDS,
 	EFFECT_PEDS_SPAWN_BIKER,
+	EFFECT_MISC_QUICK_SPRUNK_STOP,
+	EFFECT_PLAYER_BLIMP_STRATS,
 	EFFECT_PEDS_SPAWN_SPACE_RANGER,
+	EFFECT_VEHS_WIZARD_BROOM,
+	EFFECT_ILLEGAL_INNOCENCE,
+	EFFECT_PLAYER_ZOOMZOOM_CAM,
+	EFFECT_MISC_SPAWN_ORANGE_BALL,
+	EFFECT_MOV_NO_RANDOM,
+	EFFECT_PLAYER_ROCKET,
+	EFFECT_MISC_NEWS_TEAM,
+	EFFECT_PLAYER_FLING_PLAYER,
+	EFFECT_MISC_STUFFGUNS,
 	_EFFECT_ENUM_MAX
 };
 
@@ -287,10 +297,9 @@ struct EffectInfo
 	const char* Id;
 	bool IsTimed = false;
 	bool IsShortDuration = false;
-	const char* FakeName = "";
-	std::vector<EffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::NONE;
-	EffectExecutionType ExecutionType = EffectExecutionType::DEFAULT;
+	std::vector<EEffectType> IncompatibleWith;
+	EffectGroupType EffectGroupType = EffectGroupType::None;
+	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 
-inline std::unordered_map<EffectType, EffectInfo> g_effectsMap;
+inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;
