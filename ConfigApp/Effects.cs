@@ -311,6 +311,7 @@ namespace ConfigApp
             EFFECT_PEDS_SPAWN_BIKER,
             EFFECT_PLAYER_BLIMP_STRATS,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
+            EFFECT_ILLEGAL_INNOCENCE,
             EFFECT_PLAYER_ZOOMZOOM_CAM,
             EFFECT_MISC_SPAWN_ORANGE_BALL,
             EFFECT_MOV_NO_RANDOM,
@@ -593,6 +594,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
             {EffectType.EFFECT_PLAYER_BLIMP_STRATS, new EffectInfo("Blimp Strats", EffectCategory.PLAYER, "player_blimp_strats")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
+            {EffectType.EFFECT_ILLEGAL_INNOCENCE, new EffectInfo("Innocence Is Illegal", EffectCategory.PLAYER, "player_illegalinnocence", true)}
             {EffectType.EFFECT_PLAYER_ZOOMZOOM_CAM, new EffectInfo("Zoom Zoom Cam", EffectCategory.PLAYER, "player_zoomzoom_cam", true, true)},
             {EffectType.EFFECT_MISC_SPAWN_ORANGE_BALL, new EffectInfo("Spawn Orange Ball", EffectCategory.MISC, "misc_spawn_orange_ball")},
             {EffectType.EFFECT_MOV_NO_RANDOM, new EffectInfo("Disable Random Direction", EffectCategory.PLAYER, "player_no_random_movement", true)},
