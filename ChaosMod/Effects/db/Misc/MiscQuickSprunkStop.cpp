@@ -20,6 +20,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_QUICK_SPRUNK_STOP, OnStart, nul
     {
         .Name = "Quick Sprunk Stop",
         .Id = "misc_quick_sprunk_stop",
-        .EffectGroupType = EffectGroupType::SPAWN_GENERIC
+        .EffectGroupType = EffectGroupType::SpawnGeneric
     }
 );
