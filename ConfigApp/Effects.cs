@@ -152,8 +152,6 @@ namespace ConfigApp
             EFFECT_METEOR_RAIN,
             EFFECT_BLACKOUT,
             EFFECT_QUICK_TIME,
-            EFFECT_MOV_NO_UD,
-            EFFECT_MOV_NO_LR,
             EFFECT_BREAK,
             EFFECT_EVERYONE_RPG,
             EFFECT_EVERYONE_TAZER,
@@ -311,10 +309,18 @@ namespace ConfigApp
             EFFECT_PEDS_HANDS_UP,
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
+            EFFECT_MISC_QUICK_SPRUNK_STOP,
+            EFFECT_PLAYER_BLIMP_STRATS,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
             EFFECT_VEHS_YOU_ARE_A_WIZARD,
+            EFFECT_ILLEGAL_INNOCENCE,
+            EFFECT_PLAYER_ZOOMZOOM_CAM,
+            EFFECT_MISC_SPAWN_ORANGE_BALL,
+            EFFECT_MOV_NO_RANDOM,
+            EFFECT_PLAYER_ROCKET,
             EFFECT_MISC_NEWS_TEAM,
             EFFECT_PLAYER_FLING_PLAYER,
+            EFFECT_MISC_STUFFGUNS,
             _EFFECT_ENUM_MAX
         }
 
@@ -433,8 +439,6 @@ namespace ConfigApp
             {EffectType.EFFECT_METEOR_RAIN, new EffectInfo("Meteor Shower", EffectCategory.MISC, "meteorrain", true)},
             {EffectType.EFFECT_BLACKOUT, new EffectInfo("Blackout", EffectCategory.MISC, "world_blackout", true)},
             {EffectType.EFFECT_QUICK_TIME, new EffectInfo("Timelapse", EffectCategory.TIME, "time_quickday", true)},
-            {EffectType.EFFECT_MOV_NO_UD, new EffectInfo("Disable Forwards / Backwards Movement", EffectCategory.PLAYER, "player_noforwardbackward", true, true)},
-            {EffectType.EFFECT_MOV_NO_LR, new EffectInfo("Disable Left / Right Movement", EffectCategory.PLAYER, "player_noleftright", true, true)},
             {EffectType.EFFECT_BREAK, new EffectInfo("Autopilot", EffectCategory.PLAYER, "player_break", true, true)},
             {EffectType.EFFECT_EVERYONE_RPG, new EffectInfo("Give Everyone An RPG", EffectCategory.PEDS, "peds_giverpg")},
             {EffectType.EFFECT_EVERYONE_TAZER, new EffectInfo("Give Everyone A Stun Gun", EffectCategory.PEDS, "peds_stungun")},
@@ -590,10 +594,18 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_HANDS_UP, new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")},
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
+            {EffectType.EFFECT_MISC_QUICK_SPRUNK_STOP, new EffectInfo("Quick Sprunk Stop", EffectCategory.MISC, "misc_quick_sprunk_stop")},
+            {EffectType.EFFECT_PLAYER_BLIMP_STRATS, new EffectInfo("Blimp Strats", EffectCategory.PLAYER, "player_blimp_strats")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
             {EffectType.EFFECT_VEHS_YOU_ARE_A_WIZARD, new EffectInfo("You're A Wizard, Franklin", EffectCategory.VEHICLE, "vehs_spawn_wizard_broom")},
+            {EffectType.EFFECT_ILLEGAL_INNOCENCE, new EffectInfo("Innocence Is Illegal", EffectCategory.PLAYER, "player_illegalinnocence", true)}
+            {EffectType.EFFECT_PLAYER_ZOOMZOOM_CAM, new EffectInfo("Zoom Zoom Cam", EffectCategory.PLAYER, "player_zoomzoom_cam", true, true)},
+            {EffectType.EFFECT_MISC_SPAWN_ORANGE_BALL, new EffectInfo("Spawn Orange Ball", EffectCategory.MISC, "misc_spawn_orange_ball")},
+            {EffectType.EFFECT_MOV_NO_RANDOM, new EffectInfo("Disable Random Direction", EffectCategory.PLAYER, "player_no_random_movement", true)},
+            {EffectType.EFFECT_PLAYER_ROCKET, new EffectInfo("Rocket Man", EffectCategory.PLAYER, "player_rocket")},
             {EffectType.EFFECT_MISC_NEWS_TEAM, new EffectInfo("News Team", EffectCategory.MISC, "misc_news_team", true, true)},
             {EffectType.EFFECT_PLAYER_FLING_PLAYER, new EffectInfo("Fling Player", EffectCategory.PLAYER, "player_fling_player")},
+            {EffectType.EFFECT_MISC_STUFFGUNS, new EffectInfo("Improvised Weaponry", EffectCategory.MISC, "misc_stuffguns", true, true)},
         };
     }
 }

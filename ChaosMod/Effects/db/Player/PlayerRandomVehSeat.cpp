@@ -14,9 +14,14 @@ static void OnStart()
 
 		std::vector<Vehicle> vehs;
 
+		float groundZ;
 		for (Vehicle veh : GetAllVehs())
 		{
-			vehs.push_back(veh);
+			Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
+			if (GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false) && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
+			{
+				vehs.push_back(veh);
+			}
 		}
 
 		if (!vehs.empty())

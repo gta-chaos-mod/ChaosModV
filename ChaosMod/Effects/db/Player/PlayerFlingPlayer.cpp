@@ -6,7 +6,7 @@
 
 static float GetRandomForce(bool negativeAllowed)
 {
-	return g_random.GetRandomFloat(50, 100) * (negativeAllowed && g_random.GetRandomInt(0, 2) == 0 ? -1 : 1);
+	return g_Random.GetRandomFloat(50, 100) * (negativeAllowed && g_Random.GetRandomInt(0, 2) == 0 ? -1 : 1);
 }
 
 static void OnStart()

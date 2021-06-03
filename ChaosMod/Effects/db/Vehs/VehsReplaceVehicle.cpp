@@ -77,7 +77,7 @@ static void OnStart()
 
 		if (oldVehHandle)
 		{
-                        bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldVehHandle);
+			bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldVehHandle);
 			Entity copy = oldVehHandle;
 			SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
 			DELETE_VEHICLE(&copy);
@@ -86,6 +86,19 @@ static void OnStart()
 			  Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
 			}
 		}
+
+		// Also apply random upgrades
+		SET_VEHICLE_MOD_KIT(newVehicle, 0);
+		for (int i = 0; i < 50; i++)
+		{
+			int max = GET_NUM_VEHICLE_MODS(newVehicle, i);
+			SET_VEHICLE_MOD(newVehicle, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
+			TOGGLE_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, 1));
+		}
+		SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_Random.GetRandomInt(0, 1));
+
+		//way to know if vehicle is modified
+		SET_VEHICLE_WINDOW_TINT(newVehicle, 3);
 	}
 }
 

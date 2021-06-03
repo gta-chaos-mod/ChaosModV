@@ -105,6 +105,7 @@
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
@@ -181,6 +183,8 @@
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscQuickSprunkStop.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpawnOrangeBall.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNewsTeam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWhaleRain.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsAimbot.cpp" />
@@ -237,9 +241,9 @@
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLaunchUp.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRocket.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoor.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoMovFB.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerNoMovLR.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerNoMovRandom.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSpecial.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerNoSprintJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRagdoll.cpp" />
@@ -273,6 +277,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerBlimpStrats.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlingPlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
@@ -353,7 +358,7 @@
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
-    <ClInclude Include="Random.h" />
+    <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="EffectThreads.h" />
     <ClInclude Include="Components\TwitchVoting.h" />
@@ -372,6 +377,7 @@
     <ClInclude Include="Util\TryParse.h" />
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Vehicle.h" />
+    <ClInclude Include="Util\Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
