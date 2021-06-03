@@ -266,6 +266,6 @@ static RegisterEffect registerEffect(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",
-		.EffectGroupType = EffectGroupType::SPAWN_GENERIC
+		.EffectGroupType = EffectGroupType::SpawnGeneric
 	}
 );
