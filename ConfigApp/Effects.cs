@@ -309,6 +309,7 @@ namespace ConfigApp
             EFFECT_PEDS_HANDS_UP,
             EFFECT_PLAYER_AIMBOT,
             EFFECT_PEDS_SPAWN_BIKER,
+            EFFECT_MISC_QUICK_SPRUNK_STOP,
             EFFECT_PLAYER_BLIMP_STRATS,
             EFFECT_PEDS_SPAWN_SPACE_RANGER,
             EFFECT_ILLEGAL_INNOCENCE,
@@ -592,6 +593,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_HANDS_UP, new EffectInfo("Hands Up!", EffectCategory.PEDS, "peds_hands_up")},
             {EffectType.EFFECT_PLAYER_AIMBOT, new EffectInfo("Aimbot", EffectCategory.PLAYER, "player_aimbot", true)},
             {EffectType.EFFECT_PEDS_SPAWN_BIKER, new EffectInfo("Spawn Biker", EffectCategory.PEDS, "peds_spawn_biker")},
+            {EffectType.EFFECT_MISC_QUICK_SPRUNK_STOP, new EffectInfo("Quick Sprunk Stop", EffectCategory.MISC, "misc_quick_sprunk_stop")},
             {EffectType.EFFECT_PLAYER_BLIMP_STRATS, new EffectInfo("Blimp Strats", EffectCategory.PLAYER, "player_blimp_strats")},
             {EffectType.EFFECT_PEDS_SPAWN_SPACE_RANGER, new EffectInfo("Spawn Space Ranger", EffectCategory.PEDS, "peds_spawn_space_ranger")},
             {EffectType.EFFECT_ILLEGAL_INNOCENCE, new EffectInfo("Innocence Is Illegal", EffectCategory.PLAYER, "player_illegalinnocence", true)}
