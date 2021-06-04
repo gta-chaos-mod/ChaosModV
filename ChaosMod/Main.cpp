@@ -55,8 +55,6 @@ static void Reset()
 
 	ms_pFailsafe.reset();
 
-	ms_pSplashTexts.reset();
-
 	ClearEntityPool();
 }
 
