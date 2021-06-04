@@ -307,4 +307,4 @@ struct EffectInfo
 	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 
-inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;
+inline std::unordered_map<EEffectType, EffectInfo> g_dictEffectsMap;

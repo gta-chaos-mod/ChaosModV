@@ -354,7 +354,7 @@ namespace LuaScripts
 
 							if (!bDoesIdAlreadyExist)
 							{
-								for (const auto& pair : g_EffectsMap)
+								for (const auto& pair : g_dictEffectsMap)
 								{
 									if (pair.second.Id == szScriptId)
 									{

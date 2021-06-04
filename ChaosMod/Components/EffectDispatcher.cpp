@@ -589,7 +589,7 @@ void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, EEffectType e
 	{
 		if (effect.m_EffectIdentifier.GetEffectType() == eEffectType)
 		{
-			EffectInfo fakeEffectInfo = g_EffectsMap.find(eFakeEffectType)->second;
+			EffectInfo fakeEffectInfo = g_dictEffectsMap.find(eFakeEffectType)->second;
 			effect.m_szFakeName = fakeEffectInfo.Name;
 		}
 	}

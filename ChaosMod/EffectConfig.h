@@ -14,7 +14,7 @@ namespace EffectConfig
 		for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 		{
 			EEffectType effectType = static_cast<EEffectType>(i);
-			const EffectInfo& effectInfo = g_EffectsMap.at(effectType);
+			const EffectInfo& effectInfo = g_dictEffectsMap.at(effectType);
 
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
@@ -105,7 +105,7 @@ namespace EffectConfig
 
 			for (EEffectType effectType : effectInfo.IncompatibleWith)
 			{
-				effectData.IncompatibleIds.push_back(g_EffectsMap.at(effectType).Id);
+				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
 			effectData.EffectGroupType = effectInfo.EffectGroupType;

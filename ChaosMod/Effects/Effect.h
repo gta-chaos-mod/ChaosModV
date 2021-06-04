@@ -176,6 +176,6 @@ private:
 			g_dictAllEffectGroupMemberCount[effectGroupType]++;
 		}
 
-		g_EffectsMap[eEffectType] = std::move(effectInfo);
+		g_dictEffectsMap[eEffectType] = std::move(effectInfo);
 	}
 };

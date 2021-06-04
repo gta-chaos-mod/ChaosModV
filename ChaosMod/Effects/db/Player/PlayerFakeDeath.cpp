@@ -87,26 +87,62 @@ static void OnStart()
 				{
 					// Fake veh explosion
 					eFakeEffectType = EFFECT_EXPLODE_CUR_VEH;
+
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-					for (int i = 0; i < 6; i++)
+
+					int lastTimestamp = GET_GAME_TIMER();
+
+					int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+
+					int detonateTimer = 5000;
+					int beepTimer = 5000;
+					while (DOES_ENTITY_EXIST(veh))
 					{
-						SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+						WAIT(0);
+
+						int curTimestamp = GET_GAME_TIMER();
+
+						if ((detonateTimer -= curTimestamp - lastTimestamp) < beepTimer)
+						{
+							beepTimer *= .8f;
+
+							PLAY_SOUND_FROM_ENTITY(-1, "Beep_Red", veh, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, false);
+						}
+
+						if (!IS_PED_IN_VEHICLE(PLAYER_PED_ID(), veh, false))
+						{
+							for (int i = -1; i < seats - 1; i++)
+							{
+								Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
+
+								if (!ped)
+								{
+									continue;
+								}
+
+								TASK_LEAVE_VEHICLE(ped, veh, 4160);
+							}
+						}
+
+						if (detonateTimer <= 0)
+						{
+							for (int i = 0; i < 6; i++)
+							{
+								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+							}
+							Vector3 coords = GET_ENTITY_COORDS(veh, false);
+							ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
+
+							break;
+						}
+
+						lastTimestamp = curTimestamp;
 					}
-					Vector3 coords = GET_ENTITY_COORDS(veh, false);
-					ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 				}
 			}
+
 			// Set the fake name accordingly
-			if (eFakeEffectType == EFFECT_EXPLODE_CUR_VEH)
-			{
-				// "Explode Current Vehicle" became "Detonate Current Vehicle" which behaves differently
-				g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, "Explode Current Vehicle");
-			}
-			else
-			{
-				g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
-			}
-			
+			g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
 
 			nextModeTime = 0;
 			break;
