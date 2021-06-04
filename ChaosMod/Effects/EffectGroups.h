@@ -36,5 +36,5 @@ inline const std::unordered_map<EffectGroupType, EffectGroup> g_EffectGroups
 	{EffectGroupType::WeatherChange, {.WeightMult = 2 }},
 };
 
-inline std::unordered_map<EffectGroupType, int> g_AllEffectGroupMemberCount;
-inline std::unordered_map<EffectGroupType, int> g_CurrentEffectGroupMemberCount;
+inline std::unordered_map<EffectGroupType, int> g_dictAllEffectGroupMemberCount;
+inline std::unordered_map<EffectGroupType, int> g_dictCurrentEffectGroupMemberCount;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
+#include "Natives.h"
 
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {

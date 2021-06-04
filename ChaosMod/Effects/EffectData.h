@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-inline bool g_EnableGroupWeighting = true;
+inline bool g_bEnableGroupWeighting = true;
 
 struct EffectData
 {
@@ -30,7 +30,7 @@ inline float GetEffectWeight(const EffectData& effectData)
 	EffectGroupType effectGroupType = effectData.EffectGroupType;
 	float effectWeight = effectData.Weight;
 
-	return g_EnableGroupWeighting && effectGroupType != EffectGroupType::None
-		? effectWeight / g_CurrentEffectGroupMemberCount[effectGroupType] * g_EffectGroups.at(effectGroupType).WeightMult
+	return g_bEnableGroupWeighting && effectGroupType != EffectGroupType::None
+		? effectWeight / g_dictCurrentEffectGroupMemberCount[effectGroupType] * g_EffectGroups.at(effectGroupType).WeightMult
 		: effectWeight;
 }

@@ -63,7 +63,7 @@ namespace EffectConfig
 			{
 				if (effectInfo.EffectGroupType != EffectGroupType::None)
 				{
-					g_CurrentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
+					g_dictCurrentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
 				}
 
 				continue;
