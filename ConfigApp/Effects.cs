@@ -323,6 +323,7 @@ namespace ConfigApp
             EFFECT_MISC_NEWS_TEAM,
             EFFECT_PLAYER_FLING_PLAYER,
             EFFECT_MISC_STUFFGUNS,
+            EFFECT_PEDS_ETERNAL_SCREAMS,
             _EFFECT_ENUM_MAX
         }
 
@@ -610,6 +611,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_NEWS_TEAM, new EffectInfo("News Team", EffectCategory.MISC, "misc_news_team", true, true)},
             {EffectType.EFFECT_PLAYER_FLING_PLAYER, new EffectInfo("Fling Player", EffectCategory.PLAYER, "player_fling_player")},
             {EffectType.EFFECT_MISC_STUFFGUNS, new EffectInfo("Improvised Weaponry", EffectCategory.MISC, "misc_stuffguns", true, true)},
+            {EffectType.EFFECT_PEDS_ETERNAL_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eternal_screams", true, true)},
         };
     }
 }
