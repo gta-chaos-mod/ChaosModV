@@ -2,11 +2,11 @@
 
 #include "Memory/Hooks/AudioPitchHook.h"
 
-static int m_targetPitch;
+static int ms_fTargetPitch;
 
 static void OnStart()
 {
-	m_targetPitch = g_random.GetRandomInt(750, 2000);
+	ms_fTargetPitch = g_Random.GetRandomInt(750, 2000);
 }
 
 static void OnStop()
@@ -16,7 +16,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(m_targetPitch);
+	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
 static RegisterEffect registerEffect(EFFECT_HIGH_PITCH, OnStart, OnStop, OnTick, EffectInfo

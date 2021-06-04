@@ -24,6 +24,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart, Effec
 	{
 		.Name = "Spawn Companion Doggo",
 		.Id = "spawn_chop",
-		.EffectGroupType = EffectGroupType::SPAWN_COMPANION
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );
