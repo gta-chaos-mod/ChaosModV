@@ -12,18 +12,11 @@ static void OnTick()
 	}
 }
 
-static void OnStop()
-{
-	for (Ped ped : GetAllPeds())
-	{
-		DISABLE_PED_PAIN_AUDIO(ped, true);
-	}
-}
-
 static RegisterEffect registerEffect(EFFECT_PEDS_ETERNAL_SCREAMS, nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Eternal Screams",
 		.Id = "peds_eternal_screams",
-		.IsTimed = true
+		.IsTimed = true,
+		.IsShortDuration = true
 	}
 );
