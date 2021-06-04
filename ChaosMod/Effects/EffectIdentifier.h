@@ -4,23 +4,29 @@
 
 #include <string>
 
-struct EffectIdentifier
+class EffectIdentifier
 {
+private:
+	EEffectType m_eEffectType = EFFECT_INVALID;
+	std::string m_szScriptId;
+	bool m_bIsScript = false;
+
+public:
 	EffectIdentifier() = default;
 
-	EffectIdentifier(EffectType effectType) : m_effectType(effectType), m_isScript(false)
+	EffectIdentifier(EEffectType eEffectType) : m_eEffectType(eEffectType), m_bIsScript(false)
 	{
 		
 	}
 
-	EffectIdentifier(const std::string& scriptId) : m_scriptId(scriptId), m_isScript(true)
+	EffectIdentifier(const std::string& szScriptId) : m_szScriptId(szScriptId), m_bIsScript(true)
 	{
 
 	}
 
 	inline bool operator==(const EffectIdentifier& other) const
 	{
-		return m_isScript == other.IsScript() && m_isScript ? m_scriptId == other.GetScriptId() : m_effectType == other.GetEffectType();
+		return m_bIsScript == other.IsScript() && m_bIsScript ? m_szScriptId == other.GetScriptId() : m_eEffectType == other.GetEffectType();
 	}
 
 	inline bool operator!=(const EffectIdentifier& other) const
@@ -30,21 +36,16 @@ struct EffectIdentifier
 
 	inline bool IsScript() const
 	{
-		return m_isScript;
+		return m_bIsScript;
 	}
 
-	inline EffectType GetEffectType() const
+	inline EEffectType GetEffectType() const
 	{
-		return m_effectType;
+		return m_eEffectType;
 	}
 
 	inline const std::string& GetScriptId() const
 	{
-		return m_scriptId;
+		return m_szScriptId;
 	}
-
-private:
-	EffectType m_effectType = _EFFECT_ENUM_MAX;
-	std::string m_scriptId;
-	bool m_isScript = false;
 };

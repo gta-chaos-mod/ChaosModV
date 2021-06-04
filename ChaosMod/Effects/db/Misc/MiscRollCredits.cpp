@@ -22,7 +22,7 @@ static void OnStart()
 	SET_CREDITS_ACTIVE(true);
 	SET_MOBILE_PHONE_RADIO_STATE(true);
 
-	int song = g_random.GetRandomInt(0, 2);
+	int song = g_Random.GetRandomInt(0, 2);
 	if (song == 0)
 	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
