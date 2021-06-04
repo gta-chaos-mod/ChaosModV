@@ -187,16 +187,33 @@ static void OnStartRandom()
 
 		// Also apply random upgrades
 		SET_VEHICLE_MOD_KIT(veh, 0);
+
+		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 7));
+
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
-			SET_VEHICLE_MOD(veh, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
+			if (max > 0)
+			{
+				SET_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
+			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 		}
 
 		SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
 		SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
+
+		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		for (int i = 0; i < 4; i++)
+		{
+			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
+		}
+
+		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 	}
 }
 
