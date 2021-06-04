@@ -16,6 +16,7 @@ struct EffectData
 	float Weight = WeightMult;
 	bool ExcludedFromVoting = false;
 	std::string Name;
+	std::string FakeName;
 	bool HasCustomName = false;
 	std::string CustomName;
 	std::string Id;

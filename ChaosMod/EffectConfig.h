@@ -2,7 +2,7 @@
 
 #include "Util/OptionsFile.h"
 
-enum EffectType : int;
+enum EEffectType : int;
 struct EffectData;
 
 namespace EffectConfig
@@ -21,6 +21,7 @@ namespace EffectConfig
 			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false };
 			// HACK: Store EffectCustomName seperately
 			std::string szValueEffectName;
+			std::string szValueEffectFakeName;
 
 			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
 
@@ -29,12 +30,13 @@ namespace EffectConfig
 				size_t ullSplitIndex = szValue.find(",");
 				for (int j = 0; ; j++)
 				{
-					if (j == 6)
+					if (j > 5 && j < 8)
 					{
 						// HACK for EffectCustomName :(
 						if (szValue != "0")
 						{
-							szValueEffectName = szValue;
+							if (j == 6) szValueEffectName = szValue;
+							if (j == 7) szValueEffectFakeName = szValue;
 						}
 
 						break;
@@ -95,6 +97,9 @@ namespace EffectConfig
 			{
 				effectData.HasCustomName = true;
 				effectData.CustomName = szValueEffectName;
+			}
+			if (!szValueEffectFakeName.empty()) {
+				effectData.FakeName = szValueEffectFakeName;
 			}
 			effectData.Id = effectInfo.Id;
 

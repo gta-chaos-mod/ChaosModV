@@ -138,6 +138,7 @@
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />

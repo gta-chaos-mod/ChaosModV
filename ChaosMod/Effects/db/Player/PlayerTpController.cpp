@@ -261,16 +261,21 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 		.Id = "tp_mission"
 	}
 );
+
+static const std::vector<std::pair<EEffectType, Vector3>> tpLocations =
+{
+	{EFFECT_TP_LSAIRPORT, {-1388.6f, -3111.61f, 13.94f}}, // LSIA
+	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
+	{EFFECT_TP_FORTZANCUDO, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
+	{EFFECT_TP_MOUNTCHILLIAD, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
+	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
+};
+
 static void OnStartFakeTp()
 {
-	static const Vector3 tpLocations[] =
-	{
-		{ -1388.6f, -3111.61f, 13.94f }, // LSIA
-		{ -75.7f, -818.62f, 326.16f }, // Maze Tower
-		{ -2267.89f, 3121.04f, 32.5f }, // Fort Zancudo
-		{ 503.33f, 5531.91f, 777.45f }, // Mount Chilliad
-		{ 935.f, 3800.f, 2300.f } // Heaven
-	};
+	std::pair<EEffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	EEffectType overrideName = randLocation.first;
+	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();
@@ -290,7 +295,7 @@ static void OnStartFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	TeleportPlayer(tpLocations[g_Random.GetRandomInt(0, 4)]);
+	TeleportPlayer(randLocation.second);
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
