@@ -1,16 +1,14 @@
 #pragma once
 
-#include <string>
-
-#include "EffectsInfo.h"
+using BYTE = unsigned char;
 
 struct MetaEffectInfo
 {
-	float EffectDurationModifier = 1;
-	float TimerSpeedModifier = 1;
-	bool ShouldHideChaosUI = false;
-	int AdditionalEffectsToDispatch = 0;
-	bool DisableChaos = false;
+	float m_fEffectDurationModifier = 1;
+	float m_fTimerSpeedModifier = 1;
+	BYTE m_ucAdditionalEffectsToDispatch = 0;
+	bool m_bShouldHideChaosUI = false;
+	bool m_bDisableChaos = false;
 };
 
-inline MetaEffectInfo g_metaInfo;
+inline MetaEffectInfo g_MetaInfo;

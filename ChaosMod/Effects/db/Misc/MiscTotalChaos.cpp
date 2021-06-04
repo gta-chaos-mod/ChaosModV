@@ -78,7 +78,7 @@ static void OnTick()
 			{
 				// Give player back control
 
-				timeUntilSteer += g_random.GetRandomInt(50, 250);
+				timeUntilSteer += g_Random.GetRandomInt(50, 250);
 			}
 			else
 			{
@@ -86,7 +86,7 @@ static void OnTick()
 
 				steering = GET_RANDOM_FLOAT_IN_RANGE(-.7f, .7f);
 
-				timeUntilSteer += g_random.GetRandomInt(50, 300);
+				timeUntilSteer += g_Random.GetRandomInt(50, 300);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
