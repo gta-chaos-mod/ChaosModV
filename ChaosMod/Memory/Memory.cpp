@@ -2,10 +2,8 @@
 
 #include "Memory.h"
 
-#include <vector>
-
-DWORD64 m_baseAddr;
-DWORD64 m_endAddr;
+static DWORD64 ms_ullBaseAddr;
+static DWORD64 ms_ullEndAddr;
 
 namespace Memory
 {
@@ -14,16 +12,16 @@ namespace Memory
 		MODULEINFO moduleInfo;
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &moduleInfo, sizeof(moduleInfo));
 
-		m_baseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
-		m_endAddr = m_baseAddr + moduleInfo.SizeOfImage;
+		ms_ullBaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
+		ms_ullEndAddr = ms_ullBaseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
 
-		for (RegisteredHook* registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
+		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
-			if (!registeredHook->RunHook())
+			if (!pRegisteredHook->RunHook())
 			{
-				LOG("Error while executing " << registeredHook->GetName() << " hook");
+				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
 		}
 	
@@ -66,102 +64,88 @@ namespace Memory
 		MH_Uninitialize();
 	}
 
-	Handle FindPattern(const std::string& pattern)
+	Handle FindPattern(const std::string& szPattern)
 	{
-		std::vector<int> bytes;
+		std::vector<short> rgBytes;
 
-		std::string sub = pattern;
-		int offset = 0;
-		while ((offset = sub.find(' ')) != sub.npos)
+		std::string szSub = szPattern;
+		int iOffset = 0;
+		while ((iOffset = szSub.find(' ')) != szSub.npos)
 		{
-			std::string byteStr = sub.substr(0, offset);
+			std::string byteStr = szSub.substr(0, iOffset);
 
 			if (byteStr == "?" || byteStr == "??")
 			{
-				bytes.push_back(-1);
+				rgBytes.push_back(-1);
 			}
 			else
 			{
-				bytes.push_back(std::stoi(byteStr, nullptr, 16));
+				rgBytes.push_back(std::stoi(byteStr, nullptr, 16));
 			}
 
-			sub = sub.substr(offset + 1);
+			szSub = szSub.substr(iOffset + 1);
 		}
-		if ((offset = pattern.rfind(' ')) != sub.npos)
+		if ((iOffset = szPattern.rfind(' ')) != szSub.npos)
 		{
-			std::string byteStr = pattern.substr(offset + 1);
-			bytes.push_back(std::stoi(byteStr, nullptr, 16));
+			std::string szByteStr = szPattern.substr(iOffset + 1);
+			rgBytes.push_back(std::stoi(szByteStr, nullptr, 16));
 		}
 
-		if (bytes.empty())
+		if (rgBytes.empty())
 		{
 			return Handle();
 		}
 
-		int count = 0;
-		for (DWORD64 addr = m_baseAddr; addr < m_endAddr; addr++)
+		int niCount = 0;
+		for (DWORD64 ullAddr = ms_ullBaseAddr; ullAddr < ms_ullEndAddr; ullAddr++)
 		{
-			if (bytes[count] == -1 || *reinterpret_cast<BYTE*>(addr) == bytes[count])
+			if (rgBytes[niCount] == -1 || *reinterpret_cast<BYTE*>(ullAddr) == rgBytes[niCount])
 			{
-				if (++count == bytes.size())
+				if (++niCount == rgBytes.size())
 				{
-					return Handle(addr - count + 1);
+					return Handle(ullAddr - niCount + 1);
 				}
 			}
 			else
 			{
-				count = 0;
+				niCount = 0;
 			}
 		}
 
-		LOG("Couldn't find pattern \"" << pattern << "\"");
+		LOG("Couldn't find pattern \"" << szPattern << "\"");
 
 		return Handle();
 	}
 
-	MH_STATUS AddHook(void* target, void* detour, void** orig)
+	_NODISCARD MH_STATUS AddHook(void* pTarget, void* pDetour, void* ppOrig)
 	{
-		MH_STATUS result = MH_CreateHook(target, detour, reinterpret_cast<void**>(orig));
+		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void**>(ppOrig));
 
 		if (result == MH_OK)
 		{
-			MH_EnableHook(target);
+			MH_EnableHook(pTarget);
 		}
 
 		return result;
 	}
 
-	template <typename T>
-	void Write(T* addr, T value, int count)
+	const char* GetTypeName(__int64 ullVftAddr)
 	{
-		DWORD oldProtect;
-		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		for (int i = 0; i < count; i++)
+		if (ullVftAddr)
 		{
-			addr[i] = value;
-		}
-
-		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
-	}
-
-	const char* const GetTypeName(__int64 vptr)
-	{
-		if (vptr)
-		{
-			__int64 vftable = *reinterpret_cast<__int64*>(vptr);
-			if (vftable)
+			__int64 ullVftable = *reinterpret_cast<__int64*>(ullVftAddr);
+			if (ullVftable)
 			{
-				__int64 rtti = *reinterpret_cast<__int64*>(vftable - 8);
-				if (rtti)
+				__int64 ullRtti = *reinterpret_cast<__int64*>(ullVftable - 8);
+				if (ullRtti)
 				{
-					__int64 rva = *reinterpret_cast<DWORD*>(rtti + 12);
-					if (rva)
+					__int64 ullRva = *reinterpret_cast<DWORD*>(ullRtti + 12);
+					if (ullRva)
 					{
-						__int64 typeDesc = m_baseAddr + rva;
-						if (typeDesc)
+						__int64 ullTypeDesc = ms_ullBaseAddr + ullRva;
+						if (ullTypeDesc)
 						{
-							return reinterpret_cast<const char*>(typeDesc + 16);
+							return reinterpret_cast<const char*>(ullTypeDesc + 16);
 						}
 					}
 				}
