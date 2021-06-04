@@ -122,8 +122,8 @@ public:
 	void Reset();
 	void ResetTimer();
 
-	void OverrideEffectName(const EffectType& effectType, const std::string& overrideName);
-	void OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType);
+	void OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName);
+	void OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType);
 };
 
 inline std::unique_ptr<EffectDispatcher> g_pEffectDispatcher;

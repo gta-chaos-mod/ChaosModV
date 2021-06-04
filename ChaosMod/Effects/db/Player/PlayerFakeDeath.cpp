@@ -59,7 +59,7 @@ static void OnStart()
 		}
 
 		// Eager assumption
-		EffectType fakeEffectType = EFFECT_PLAYER_SUICIDE;
+		EEffectType eFakeEffectType = EFFECT_PLAYER_SUICIDE;
 
 		switch (currentMode)
 		{
@@ -86,7 +86,7 @@ static void OnStart()
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
 					// Fake veh explosion
-					fakeEffectType = EFFECT_EXPLODE_CUR_VEH;
+					eFakeEffectType = EFFECT_EXPLODE_CUR_VEH;
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 					for (int i = 0; i < 6; i++)
 					{
@@ -97,14 +97,14 @@ static void OnStart()
 				}
 			}
 			// Set the fake name accordingly
-			if (fakeEffectType == EFFECT_EXPLODE_CUR_VEH)
+			if (eFakeEffectType == EFFECT_EXPLODE_CUR_VEH)
 			{
 				// "Explode Current Vehicle" became "Detonate Current Vehicle" which behaves differently
-				g_effectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, "Explode Current Vehicle");
+				g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, "Explode Current Vehicle");
 			}
 			else
 			{
-				g_effectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, fakeEffectType);
+				g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
 			}
 			
 

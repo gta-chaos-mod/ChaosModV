@@ -262,7 +262,7 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 	}
 );
 
-static const std::vector<std::pair<EffectType, Vector3>> tpLocations =
+static const std::vector<std::pair<EEffectType, Vector3>> tpLocations =
 {
 	{EFFECT_TP_LSAIRPORT, {-1388.6f, -3111.61f, 13.94f}}, // LSIA
 	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
@@ -273,9 +273,9 @@ static const std::vector<std::pair<EffectType, Vector3>> tpLocations =
 
 static void OnStartFakeTp()
 {
-	std::pair<EffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	EffectType overrideName = randLocation.first;
-	g_effectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
+	std::pair<EEffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	EEffectType overrideName = randLocation.first;
+	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();

@@ -2,7 +2,7 @@
 
 #include "Util/OptionsFile.h"
 
-enum EffectType : int;
+enum EEffectType : int;
 struct EffectData;
 
 namespace EffectConfig

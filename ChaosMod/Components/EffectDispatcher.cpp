@@ -97,7 +97,7 @@ void EffectDispatcher::UpdateEffects()
 	for (ActiveEffect& effect : m_rgActiveEffects)
 	{
 		if (effect.m_bHideText
-			&& EffectThreadsHasThreadOnStartExecuted(effect.m_ullThreadId))
+			&& EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId))
 		{
 			effect.m_bHideText = false;
 		}
@@ -249,9 +249,9 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
-		const bool hasFake = !effect.FakeName.empty();
+		const bool bHasFake = !effect.m_szFakeName.empty();
 
-		if ((effect.m_bHideText && !hasFake)
+		if ((effect.m_bHideText && !bHasFake)
 			|| (g_MetaInfo.m_bShouldHideChaosUI
 				&& effect.m_EffectIdentifier.GetEffectType() != EFFECT_META_HIDE_CHAOS_UI)
 			|| (g_MetaInfo.m_bDisableChaos
@@ -262,7 +262,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 		std::string name = effect.m_szFakeName;
 
-		if (!effect.HideText || !hasFake)
+		if (!effect.m_bHideText || !bHasFake)
 		{
 			name = effect.m_szName;
 		}
@@ -426,7 +426,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 				break;
 			}
 
-			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.m_szFakeName, effectTime);
+			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
 		}
 	}
 
@@ -572,25 +572,25 @@ void EffectDispatcher::ResetTimer()
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using any given string
-void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const std::string& overrideName)
+void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName)
 {
 	for (ActiveEffect& effect : m_rgActiveEffects)
 	{
-		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		if (effect.m_EffectIdentifier.GetEffectType() == eEffectType)
 		{
-			effect.FakeName = overrideName;
+			effect.m_szFakeName = szOverrideName;
 		}
 	}
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
-void EffectDispatcher::OverrideEffectName(const EffectType& effectType, const EffectType& fakeEffectType) {
+void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType) {
 	for (ActiveEffect& effect : m_rgActiveEffects)
 	{
-		if (effect.EffectIdentifier.GetEffectType() == effectType)
+		if (effect.m_EffectIdentifier.GetEffectType() == eEffectType)
 		{
-			EffectInfo fakeEffectInfo = g_effectsMap.find(fakeEffectType)->second;
-			effect.FakeName = fakeEffectInfo.Name;
+			EffectInfo fakeEffectInfo = g_EffectsMap.find(eFakeEffectType)->second;
+			effect.m_szFakeName = fakeEffectInfo.Name;
 		}
 	}
 }
