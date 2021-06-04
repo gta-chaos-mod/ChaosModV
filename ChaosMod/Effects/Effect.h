@@ -165,8 +165,8 @@ private:
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);
 
-		EffectGroupType effectGroupType = effectInfo.EffectGroupType;
-		if (effectGroupType != EffectGroupType::None)
+		EEffectGroupType effectGroupType = effectInfo.EEffectGroupType;
+		if (effectGroupType != EEffectGroupType::None)
 		{
 			if (!g_dictAllEffectGroupMemberCount[effectGroupType])
 			{

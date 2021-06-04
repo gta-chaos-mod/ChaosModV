@@ -33,6 +33,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_RANDOM, OnStart, Eff
 	{
 		.Name = "Spawn Random Companion",
 		.Id = "spawn_comprnd",
-		.EffectGroupType = EffectGroupType::SpawnCompanion
+		.EEffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );

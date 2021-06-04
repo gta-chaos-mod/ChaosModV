@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-enum class EffectGroupType
+enum class EEffectGroupType
 {
 	None,
 	Teleport,            // Effects which teleport the player potentially far away without (explicitly) being helpful
@@ -22,19 +22,19 @@ struct EffectGroup
 	int WeightMult = 1;
 };
 
-inline const std::unordered_map<EffectGroupType, EffectGroup> g_EffectGroups
+inline const std::unordered_map<EEffectGroupType, EffectGroup> g_EffectGroups
 {
-	{EffectGroupType::Teleport, {.WeightMult = 2 }},
-	{EffectGroupType::SpawnGeneric, { .WeightMult = 5 }},
-	{EffectGroupType::SpawnEnemySpecial, {.WeightMult = 5 }},
-	{EffectGroupType::SpawnEnemy, { .WeightMult = 4 }},
-	{EffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
-	{EffectGroupType::Weapons, { .WeightMult = 4 }},
-	{EffectGroupType::PlayerKill, { .WeightMult = 2 }},
-	{EffectGroupType::TrafficColor, { .WeightMult = 3 }},
-	{EffectGroupType::TimeChange, {.WeightMult = 2 }},
-	{EffectGroupType::WeatherChange, {.WeightMult = 2 }},
+	{EEffectGroupType::Teleport, {.WeightMult = 2 }},
+	{EEffectGroupType::SpawnGeneric, { .WeightMult = 5 }},
+	{EEffectGroupType::SpawnEnemySpecial, {.WeightMult = 5 }},
+	{EEffectGroupType::SpawnEnemy, { .WeightMult = 4 }},
+	{EEffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
+	{EEffectGroupType::Weapons, { .WeightMult = 4 }},
+	{EEffectGroupType::PlayerKill, { .WeightMult = 2 }},
+	{EEffectGroupType::TrafficColor, { .WeightMult = 3 }},
+	{EEffectGroupType::TimeChange, {.WeightMult = 2 }},
+	{EEffectGroupType::WeatherChange, {.WeightMult = 2 }},
 };
 
-inline std::unordered_map<EffectGroupType, int> g_dictAllEffectGroupMemberCount;
-inline std::unordered_map<EffectGroupType, int> g_dictCurrentEffectGroupMemberCount;
+inline std::unordered_map<EEffectGroupType, int> g_dictAllEffectGroupMemberCount;
+inline std::unordered_map<EEffectGroupType, int> g_dictCurrentEffectGroupMemberCount;

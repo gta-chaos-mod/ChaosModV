@@ -22,15 +22,15 @@ struct EffectData
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
 	bool IsMeta = false;
-	EffectGroupType EffectGroupType = EffectGroupType::None;
+	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
 };
 
 inline float GetEffectWeight(const EffectData& effectData)
 {
-	EffectGroupType effectGroupType = effectData.EffectGroupType;
+	EEffectGroupType effectGroupType = effectData.EEffectGroupType;
 	float effectWeight = effectData.Weight;
 
-	return g_bEnableGroupWeighting && effectGroupType != EffectGroupType::None
+	return g_bEnableGroupWeighting && effectGroupType != EEffectGroupType::None
 		? effectWeight / g_dictCurrentEffectGroupMemberCount[effectGroupType] * g_EffectGroups.at(effectGroupType).WeightMult
 		: effectWeight;
 }

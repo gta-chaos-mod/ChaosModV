@@ -304,7 +304,7 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EEffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::None;
+	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
 	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 

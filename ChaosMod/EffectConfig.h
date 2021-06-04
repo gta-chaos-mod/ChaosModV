@@ -61,9 +61,9 @@ namespace EffectConfig
 
 			if (!rgValues[0]) // enabled == false
 			{
-				if (effectInfo.EffectGroupType != EffectGroupType::None)
+				if (effectInfo.EEffectGroupType != EEffectGroupType::None)
 				{
-					g_dictCurrentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
+					g_dictCurrentEffectGroupMemberCount[effectInfo.EEffectGroupType]--;
 				}
 
 				continue;
@@ -108,7 +108,7 @@ namespace EffectConfig
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			effectData.EffectGroupType = effectInfo.EffectGroupType;
+			effectData.EEffectGroupType = effectInfo.EEffectGroupType;
 
 			out.emplace(effectType, effectData);
 		}
