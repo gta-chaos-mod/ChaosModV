@@ -14,29 +14,29 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos;
-		spawnPos.x = playerPos.x + g_random.GetRandomInt(-100, 100);
-		spawnPos.y = playerPos.y + g_random.GetRandomInt(-100, 100);
-		spawnPos.z = playerPos.z + g_random.GetRandomInt(25, 50);
+		spawnPos.x = playerPos.x + g_Random.GetRandomInt(-100, 100);
+		spawnPos.y = playerPos.y + g_Random.GetRandomInt(-100, 100);
+		spawnPos.z = playerPos.z + g_Random.GetRandomInt(25, 50);
 
 
 		static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 
 		if (!vehModels.empty())
 		{
-			Vehicle veh = CreateTempVehicle(vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)], spawnPos.x, spawnPos.y, spawnPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+			Vehicle veh = CreateTempVehicle(vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)], spawnPos.x, spawnPos.y, spawnPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 
 			// Also apply random upgrades
 			SET_VEHICLE_MOD_KIT(veh, 0);
 			for (int i = 0; i < 50; i++)
 			{
 				int max = GET_NUM_VEHICLE_MODS(veh, i);
-				SET_VEHICLE_MOD(veh, i, max > 0 ? g_random.GetRandomInt(0, max - 1) : 0, g_random.GetRandomInt(0, 1));
+				SET_VEHICLE_MOD(veh, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
 
-				TOGGLE_VEHICLE_MOD(veh, i, g_random.GetRandomInt(0, 1));
+				TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 			}
 
-			SET_VEHICLE_TYRES_CAN_BURST(veh, g_random.GetRandomInt(0, 1));
-			SET_VEHICLE_WINDOW_TINT(veh, g_random.GetRandomInt(0, 6));
+			SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
+			SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
 		}
 	}
 }
