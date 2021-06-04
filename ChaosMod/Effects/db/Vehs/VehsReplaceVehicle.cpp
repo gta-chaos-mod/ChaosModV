@@ -5,12 +5,13 @@
 #include <stdafx.h>
 
 #include "Memory/Hooks/HandleToEntityStructHook.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	static const std::vector<Hash> vehModels = Memory::GetAllVehModels();
+	static const std::vector<Hash>& vehModels = Memory::GetAllVehModels();
 	if (!vehModels.empty())
 	{
 		float heading;
@@ -80,10 +81,16 @@ static void OnStart()
 			bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldVehHandle);
 			Entity copy = oldVehHandle;
 			SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
+
+			if (shouldUseHook)
+			{
+				Hooks::EnableScriptThreadBlock();
+			}
 			DELETE_VEHICLE(&copy);
 			if (shouldUseHook)
 			{
-			  Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+				Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+				Hooks::DisableScriptThreadBlock();
 			}
 		}
 
