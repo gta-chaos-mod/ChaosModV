@@ -1,4 +1,4 @@
---
+---
 name: Effect Suggestion
 about: Suggestion for a new effect
 title: "[Effect Suggestion] My Super Cool Effect Idea"
