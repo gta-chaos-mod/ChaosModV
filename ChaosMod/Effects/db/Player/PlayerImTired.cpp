@@ -10,12 +10,12 @@ enum TiredMode {
 	waiting,
 };
 static TiredMode currentMode = TiredMode::closingEyes;
-static float alpha;
+static int alpha;
 static int closingIterator;
 static int nextTimestamp;
 static float steeringDirection;
 
-static void BlackOut(float alpha)
+static void BlackOut(int alpha)
 {
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false);
 }
@@ -59,12 +59,12 @@ static void OnTick()
 	case closingEyes:
 		alpha += closingIterator;
 		// Chance for player who's on foot to ragdoll halfway through blinking
-		if (alpha / closingIterator == floor(255.f / closingIterator / 2.f) && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
+		if (alpha >= 127 && alpha - closingIterator < 127 && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
 		{
 			RagdollOnFoot();
 		}
 		// Fall asleep at the wheel near the end of blinking
-		if (alpha > 200.f)
+		if (alpha > 200)
 		{
 			SteerVehicle();
 		}
