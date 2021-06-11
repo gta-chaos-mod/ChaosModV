@@ -26,7 +26,15 @@ static void SteerVehicle()
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-		SET_VEHICLE_STEER_BIAS(veh, steeringDirection);
+
+		if (IS_PED_IN_FLYING_VEHICLE(playerPed))
+		{
+			APPLY_FORCE_TO_ENTITY(veh, 1, 0, 0, -0.05f, steeringDirection * 5.f, 0, 0, 0, true, true, true, false, true);
+		}
+		else
+		{
+			SET_VEHICLE_STEER_BIAS(veh, steeringDirection);
+		}
 	}
 }
 
