@@ -18,7 +18,7 @@ static RegisterEffect registerEffect1(EFFECT_SPAWN_TANK, OnStartRhino, EffectInf
 	{
 		.Name = "Spawn Rhino",
 		.Id = "spawn_rhino",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartAdder()
@@ -32,7 +32,7 @@ static RegisterEffect registerEffect2(EFFECT_SPAWN_ADDER, OnStartAdder, EffectIn
 	{
 		.Name = "Spawn Adder",
 		.Id = "spawn_adder",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartDump()
@@ -46,7 +46,7 @@ static RegisterEffect registerEffect3(EFFECT_SPAWN_DUMP, OnStartDump, EffectInfo
 	{
 		.Name = "Spawn Dump",
 		.Id = "spawn_dump",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartMonster()
@@ -60,7 +60,7 @@ static RegisterEffect registerEffect4(EFFECT_SPAWN_MONSTER, OnStartMonster, Effe
 	{
 		.Name = "Spawn Monster",
 		.Id = "spawn_monster",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartBMX()
@@ -74,7 +74,7 @@ static RegisterEffect registerEffect5(EFFECT_SPAWN_BMX, OnStartBMX, EffectInfo
 	{
 		.Name = "Spawn BMX",
 		.Id = "spawn_bmx",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartTug()
@@ -88,7 +88,7 @@ static RegisterEffect registerEffect6(EFFECT_SPAWN_TUG, OnStartTug, EffectInfo
 	{
 		.Name = "Spawn Tug",
 		.Id = "spawn_tug",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartCargoplane()
@@ -102,7 +102,7 @@ static RegisterEffect registerEffect7(EFFECT_SPAWN_CARGO, OnStartCargoplane, Eff
 	{
 		.Name = "Spawn Cargo Plane",
 		.Id = "spawn_cargo",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartBus()
@@ -116,7 +116,7 @@ static RegisterEffect registerEffect8(EFFECT_SPAWN_BUS, OnStartBus, EffectInfo
 	{
 		.Name = "Spawn Bus",
 		.Id = "spawn_bus",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartBlimp()
@@ -130,7 +130,7 @@ static RegisterEffect registerEffect9(EFFECT_SPAWN_BLIMP, OnStartBlimp, EffectIn
 	{
 		.Name = "Spawn Blimp",
 		.Id = "spawn_blimp",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartBuzzard()
@@ -144,7 +144,7 @@ static RegisterEffect registerEffect10(EFFECT_SPAWN_BUZZARD, OnStartBuzzard, Eff
 	{
 		.Name = "Spawn Buzzard",
 		.Id = "spawn_buzzard",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartFaggio()
@@ -158,7 +158,7 @@ static RegisterEffect registerEffect11(EFFECT_SPAWN_FAGGIO, OnStartFaggio, Effec
 	{
 		.Name = "Spawn Faggio",
 		.Id = "spawn_faggio",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartRuiner3()
@@ -172,7 +172,7 @@ static RegisterEffect registerEffect12(EFFECT_SPAWN_RUINER3, OnStartRuiner3, Eff
 	{
 		.Name = "Spawn Ruined Ruiner",
 		.Id = "spawn_ruiner3",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartRandom()
@@ -187,16 +187,33 @@ static void OnStartRandom()
 
 		// Also apply random upgrades
 		SET_VEHICLE_MOD_KIT(veh, 0);
+
+		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 7));
+
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
-			SET_VEHICLE_MOD(veh, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
+			if (max > 0)
+			{
+				SET_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
+			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 		}
 
 		SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
 		SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
+
+		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		for (int i = 0; i < 4; i++)
+		{
+			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
+		}
+
+		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 	}
 }
 
@@ -204,7 +221,7 @@ static RegisterEffect registerEffect13(EFFECT_SPAWN_RANDOM, OnStartRandom, Effec
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartBaletrailer()
@@ -218,7 +235,7 @@ static RegisterEffect registerEffect14(EFFECT_SPAWN_BALETRAILER, OnStartBaletrai
 	{
 		.Name = "Spawn Bale Trailer",
 		.Id = "spawn_baletrailer",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 static void OnStartRomero()
@@ -232,7 +249,7 @@ static RegisterEffect registerEffect15(EFFECT_SPAWN_ROMERO, OnStartRomero, Effec
 	{
 		.Name = "Where's The Funeral?",
 		.Id = "spawn_romero",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
 
@@ -266,6 +283,6 @@ static RegisterEffect registerEffect(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",
-		.EffectGroupType = EffectGroupType::SpawnGeneric
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );

@@ -11,7 +11,7 @@ static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectIn
 	{
 		.Name = "Teleport To LS Airport",
 		.Id = "tp_lsairport",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartMazeTower()
@@ -23,7 +23,7 @@ static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, Eff
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
 		.Id = "tp_mazebanktower",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartFortZancudo()
@@ -42,7 +42,7 @@ static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo,
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartMountChilliad()
@@ -61,7 +61,7 @@ static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChill
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartSkyFall()
@@ -73,7 +73,7 @@ static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectI
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartWaypoint()
@@ -209,7 +209,7 @@ static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInf
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
-		.EffectGroupType = EffectGroupType::Teleport
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
 
@@ -261,16 +261,21 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 		.Id = "tp_mission"
 	}
 );
+
+static const std::vector<std::pair<EEffectType, Vector3>> tpLocations =
+{
+	{EFFECT_TP_LSAIRPORT, {-1388.6f, -3111.61f, 13.94f}}, // LSIA
+	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
+	{EFFECT_TP_FORTZANCUDO, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
+	{EFFECT_TP_MOUNTCHILLIAD, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
+	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
+};
+
 static void OnStartFakeTp()
 {
-	static const Vector3 tpLocations[] =
-	{
-		{ -1388.6f, -3111.61f, 13.94f }, // LSIA
-		{ -75.7f, -818.62f, 326.16f }, // Maze Tower
-		{ -2267.89f, 3121.04f, 32.5f }, // Fort Zancudo
-		{ 503.33f, 5531.91f, 777.45f }, // Mount Chilliad
-		{ 935.f, 3800.f, 2300.f } // Heaven
-	};
+	std::pair<EEffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	EEffectType overrideName = randLocation.first;
+	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();
@@ -290,7 +295,7 @@ static void OnStartFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	TeleportPlayer(tpLocations[g_Random.GetRandomInt(0, 4)]);
+	TeleportPlayer(randLocation.second);
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 

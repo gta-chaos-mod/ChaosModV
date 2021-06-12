@@ -15,6 +15,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_SPACE_RANGER, OnStart, nu
     {
         .Name = "Spawn Space Ranger",
         .Id = "peds_spawn_space_ranger",
-        .EffectGroupType = EffectGroupType::SpawnEnemy
+        .EEffectGroupType = EEffectGroupType::SpawnEnemy
     }
 );

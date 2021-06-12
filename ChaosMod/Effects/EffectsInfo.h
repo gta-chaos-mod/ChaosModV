@@ -276,9 +276,13 @@ enum EEffectType : int
 	EFFECT_PLAYER_AIMBOT,
 	EFFECT_PEDS_SLIPPERY_PEDS,
 	EFFECT_PEDS_SPAWN_BIKER,
+	EFFECT_PEDS_SPAWN_JUGGERNAUT,
+	EFFECT_MISC_WITNESS_PROTECTION,
 	EFFECT_MISC_QUICK_SPRUNK_STOP,
 	EFFECT_PLAYER_BLIMP_STRATS,
 	EFFECT_PEDS_SPAWN_SPACE_RANGER,
+	EFFECT_REPOSSESSION,
+	EFFECT_MISC_PAUSE,
 	EFFECT_VEHS_WIZARD_BROOM,
 	EFFECT_ILLEGAL_INNOCENCE,
 	EFFECT_PLAYER_ZOOMZOOM_CAM,
@@ -289,6 +293,8 @@ enum EEffectType : int
 	EFFECT_PLAYER_FLING_PLAYER,
 	EFFECT_MISC_STUFFGUNS,
 	EFFECT_RANDOM_WAYPOINT,
+	EFFECT_PEDS_ETERNAL_SCREAMS,
+	EFFECT_PLAYER_BLADE_HUNGER,
 	_EFFECT_ENUM_MAX
 };
 
@@ -299,8 +305,8 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EEffectType> IncompatibleWith;
-	EffectGroupType EffectGroupType = EffectGroupType::None;
+	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
 	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 
-inline std::unordered_map<EEffectType, EffectInfo> g_EffectsMap;
+inline std::unordered_map<EEffectType, EffectInfo> g_dictEffectsMap;

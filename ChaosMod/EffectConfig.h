@@ -2,7 +2,7 @@
 
 #include "Util/OptionsFile.h"
 
-enum EffectType : int;
+enum EEffectType : int;
 struct EffectData;
 
 namespace EffectConfig
@@ -14,13 +14,14 @@ namespace EffectConfig
 		for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
 		{
 			EEffectType effectType = static_cast<EEffectType>(i);
-			const EffectInfo& effectInfo = g_EffectsMap.at(effectType);
+			const EffectInfo& effectInfo = g_dictEffectsMap.at(effectType);
 
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
 			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false };
 			// HACK: Store EffectCustomName seperately
 			std::string szValueEffectName;
+			std::string szValueEffectFakeName;
 
 			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
 
@@ -29,12 +30,13 @@ namespace EffectConfig
 				size_t ullSplitIndex = szValue.find(",");
 				for (int j = 0; ; j++)
 				{
-					if (j == 6)
+					if (j > 5 && j < 8)
 					{
 						// HACK for EffectCustomName :(
 						if (szValue != "0")
 						{
-							szValueEffectName = szValue;
+							if (j == 6) szValueEffectName = szValue;
+							if (j == 7) szValueEffectFakeName = szValue;
 						}
 
 						break;
@@ -59,9 +61,9 @@ namespace EffectConfig
 
 			if (!rgValues[0]) // enabled == false
 			{
-				if (effectInfo.EffectGroupType != EffectGroupType::None)
+				if (effectInfo.EEffectGroupType != EEffectGroupType::None)
 				{
-					g_CurrentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
+					g_dictCurrentEffectGroupMemberCount[effectInfo.EEffectGroupType]--;
 				}
 
 				continue;
@@ -96,14 +98,17 @@ namespace EffectConfig
 				effectData.HasCustomName = true;
 				effectData.CustomName = szValueEffectName;
 			}
+			if (!szValueEffectFakeName.empty()) {
+				effectData.FakeName = szValueEffectFakeName;
+			}
 			effectData.Id = effectInfo.Id;
 
 			for (EEffectType effectType : effectInfo.IncompatibleWith)
 			{
-				effectData.IncompatibleIds.push_back(g_EffectsMap.at(effectType).Id);
+				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			effectData.EffectGroupType = effectInfo.EffectGroupType;
+			effectData.EEffectGroupType = effectInfo.EEffectGroupType;
 
 			out.emplace(effectType, effectData);
 		}
