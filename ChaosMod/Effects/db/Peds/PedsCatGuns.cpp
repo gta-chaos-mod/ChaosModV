@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+static int MAX_CATS_COUNT = 20;
+static std::vector<Ped> currentCats;
+
 static void OnTick()
 {
 	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
@@ -49,8 +52,18 @@ static void OnTick()
 				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
 				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				currentCats.insert(currentCats.begin(), cat);
 
 				SET_PED_AS_NO_LONGER_NEEDED(&cat);
+
+				// Remove older cats if over the max amount
+				if (currentCats.size() > MAX_CATS_COUNT)
+				{
+					Ped lastCat = currentCats.back();
+					SET_ENTITY_AS_MISSION_ENTITY(lastCat, true, true);
+					DELETE_PED(&lastCat);
+					currentCats.pop_back();
+				}
 			}
 		}
 	}
@@ -58,7 +71,18 @@ static void OnTick()
 	SET_MODEL_AS_NO_LONGER_NEEDED(catHash);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_CAT_GUNS, nullptr, nullptr, OnTick, EffectInfo
+static void OnStop() 
+{
+	while (currentCats.size() > 0)
+	{
+		Ped lastCat = currentCats.back();
+		SET_ENTITY_AS_MISSION_ENTITY(lastCat, true, true);
+		DELETE_PED(&lastCat);
+		currentCats.pop_back();
+	}
+}
+
+static RegisterEffect registerEffect(EFFECT_PEDS_CAT_GUNS, nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Catto Guns",
 		.Id = "peds_catguns",
