@@ -292,10 +292,13 @@ static void OnStartFakeTp()
 	}
 
 	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
+	int wanted = currentWanted;
 
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
+
+	SET_FAKE_WANTED_LEVEL(wanted);
 
 	TeleportPlayer(randLocation.second);
 
@@ -311,6 +314,7 @@ static void OnStartFakeTp()
 		SET_ENTITY_INVINCIBLE(playerVeh, false);
 	}
 
+	SET_FAKE_WANTED_LEVEL(0);
 	SET_MAX_WANTED_LEVEL(5);
 	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
