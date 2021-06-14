@@ -291,6 +291,8 @@ static void OnStartFakeTp()
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
 	}
 
+	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
+
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
@@ -310,6 +312,8 @@ static void OnStartFakeTp()
 	}
 
 	SET_MAX_WANTED_LEVEL(5);
+	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 
 	Hooks::DisableScriptThreadBlock();
 }
