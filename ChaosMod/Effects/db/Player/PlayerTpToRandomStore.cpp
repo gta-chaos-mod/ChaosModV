@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static Vector3 Stores[] = {
-
+static std::vector<Vector3> allPossibleStores = {
+    
     // Convenience Stores
     { 372.29217529297f, 326.39370727539f, 103.56636047363f },   // 247 Clinton
     { 24.215274810791f, -1347.2624511719f, 29.497016906738f },  // 247 Strawberry
@@ -26,18 +26,18 @@ static Vector3 Stores[] = {
     { 1165.1630859375f, -323.87414550781f, 69.205047607422f },  // LTD Mirror Park
     { -1819.5125732422f, 793.64141845703f, 138.08486938477f },  // LTD Banham Canyon
     { 1697.1395263672f, 4923.4130859375f, 42.063632965088f },   // LTD Grapeseed
-
+    
     // Ammunitions
-    { 807.94f, -2159.67f, 29.63f },     // Ammunition (Cypress Flats)
-    { 24.97f, -1105.96f, 29.8f },       // Ammunition (PillBox Hill)
-    { 839.86f, -1035.8f, 28.19f },      // Ammunition (La Mesa)
-    { -659.7f, -933.34f, 21.83f },      // Ammunition (Cypress Flats)
-    { -1304.25f, -397.22f, 36.70f },    // Ammunition (MorningWood)
-    { 253.42f, -53.13f, 69.94f },       // Ammunition (Hawick)
-    { 2565.4f, 292.08f, 108.63f },      // Ammunition (Montañas Tataviam)
-    { 1693.57f, 3763.2f, 34.71f },      // Ammunition (Sandy Shores)
-    { -330.04f, 6087.03f, 31.45f },     // Ammunition (Sandy Shores)
-    { -1117.48f, 2701.36f, 18.55f },    // Ammunition (Sandy Shores)
+    { 810.94f, -2157.19f, 29.62f },     // Ammunition (Cypress Flats)
+    { 21.15f, -1106.44f, 29.8f },       // Ammunition (PillBox Hill)
+    { 842.55f, -1033.72f, 28.19f },      // Ammunition (La Mesa)
+    { -662.42f, -935.19f, 21.83f },      // Ammunition (Cypress Flats)
+    { -1305.54f, -394.7f, 36.7f },    // Ammunition (MorningWood)
+    { 251.97f, -50.19f, 69.94f },       // Ammunition (Hawick)
+    { 2567.91f, 294.05f, 108.73f },      // Ammunition (Montañas Tataviam)
+    { 1693.32f, 3760.19f, 34.70f },      // Ammunition (Sandy Shores)
+    { -330.61f, 6084.02f, 31.45f },     // Ammunition (Sandy Shores)
+    { -1118.11f, 2698.71f, 18.55f },    // Ammunition (Sandy Shores)
 
     // Clothing Stores
     { 72.3f, -1399.1f, 28.4f },
@@ -59,7 +59,7 @@ static Vector3 Stores[] = {
 
 static void OnStart()
 {
-    TeleportPlayer(Stores[g_Random.GetRandomInt(0, 42)]);
+    TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
 }
 
 static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo
