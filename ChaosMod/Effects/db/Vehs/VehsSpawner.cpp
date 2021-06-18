@@ -279,10 +279,43 @@ static void OnStartWizardBroom()
 }
 
 
-static RegisterEffect registerEffect(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroom, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect16(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+	}
+);
+
+static void OnStartBedmobile()
+{
+	static const Hash carHash = GET_HASH_KEY("dune");
+	static const Hash bedHash = GET_HASH_KEY("apa_mp_h_bed_double_09");
+	LoadModel(carHash);
+	LoadModel(bedHash);
+
+	Ped player = PLAYER_PED_ID();
+	Vector3 playerPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 1, 0);
+
+	Vehicle veh = CreatePoolVehicle(carHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(player));
+	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+	SET_VEHICLE_MOD_KIT(veh, 0);
+	for (int i = 0; i < 50; i++)
+	{
+		int max = GET_NUM_VEHICLE_MODS(veh, i);
+		SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, false);
+	}
+	SET_ENTITY_ALPHA(veh, 0, false);
+	SET_ENTITY_VISIBLE(veh, false, false);
+
+	Object bed = CREATE_OBJECT(bedHash, playerPos.x, playerPos.y + 2, playerPos.z, true, false, false);
+	ATTACH_ENTITY_TO_ENTITY(bed, veh, 0, 0, -1.25, -0.65, 0, 0, 180, true, false, false, false, 0, true);
+}
+
+static RegisterEffect registerEffect17(EFFECT_VEHS_BEDMOBILE, OnStartBedmobile, nullptr, nullptr, EffectInfo
+	{
+		.Name = "Spawn Bedmobile",
+		.Id = "vehs_spawn_bedmobile",
 		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
