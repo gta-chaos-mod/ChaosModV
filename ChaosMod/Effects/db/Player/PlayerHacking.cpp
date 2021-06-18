@@ -57,7 +57,9 @@ const char* WIN_PHRASES[] =
     "i ran out of phrases to put here. please pity me.",
     "I should get Linux.",
     "Yay, hacking!",
-    "ping rockstargames.com"
+    "ping rockstargames.com",
+    "You obviously must know something about something...",
+    "I can read machine code!"
 };
 
 enum class TimerAction
