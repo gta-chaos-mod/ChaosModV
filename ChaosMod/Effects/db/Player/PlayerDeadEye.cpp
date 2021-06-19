@@ -30,6 +30,11 @@ static void OnTick()
 	{
 		return;
 	}
+	// Exclude non working weapons (minigun, hellbringer)
+	if (weaponHash == 0x42BF8A85 || weaponHash == 0xB62D1F67)
+	{
+		return;
+	}
 	// Check if player is aiming
 	if (IS_CONTROL_PRESSED(0, 25))
 	{
