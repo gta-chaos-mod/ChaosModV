@@ -7,7 +7,7 @@
 
 static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
-	int randOffset = g_Random.GetRandomInt(0, 360);
+	float randOffset = (float)g_Random.GetRandomInt(0, 360);
 	Vector3 res;
 	res.x = pos.x + (COS(randOffset) * radius);
 	res.y = pos.y + (SIN(randOffset) * radius);
@@ -72,9 +72,10 @@ static void OnStart()
 	{
 		WAIT(0);
 	}
+	bool twitchVotingEnabled = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("Chaos Mod Player trying to survive");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("\"He won't survive\", mod contributors say");
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(twitchVotingEnabled ? "STREAMER TRYING TO SURVIVE" : "CHAOS MOD PLAYER TRYING TO SURVIVE");
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(twitchVotingEnabled ? "TWITCH CHAT: \"NO CHANCE\"" : "MOD CONTRIBUTORS: \"NO CHANCE\"");
 	END_SCALEFORM_MOVIE_METHOD();
 }
 
