@@ -180,7 +180,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsBouncy.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsBrakeBoosting.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsFlyingCar.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsLockCamera.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
