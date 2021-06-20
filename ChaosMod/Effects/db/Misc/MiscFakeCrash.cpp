@@ -1,7 +1,14 @@
 #include <stdafx.h>
 
+static bool blackScreen;
+
 static void SleepAllThreads(DWORD ms)
 {
+	if (blackScreen)
+	{
+		DRAW_RECT(0.5f, 0.5f, 1.0f, 1.0f, 0, 0, 0, 255, 1);
+	}
+
 	std::vector<HANDLE> threads;
 
 	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
@@ -52,9 +59,17 @@ static void OnStart()
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
 
-	SleepAllThreads(500);
+	if (g_random.GetRandomInt(0, 3) == 1)
+	{
+		blackScreen = true;
+	}
 
-	WAIT(500);
+	if (g_random.GetRandomInt(0, 1))
+	{
+		SleepAllThreads(500);
+
+		WAIT(500);
+	}
 
 	SleepAllThreads(g_Random.GetRandomInt(3000, 5000));
 
@@ -62,6 +77,8 @@ static void OnStart()
 	{
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
 	}
+  
+	blackScreen = false;
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
