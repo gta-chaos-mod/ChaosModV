@@ -271,6 +271,18 @@ static const std::vector<std::pair<EEffectType, Vector3>> tpLocations =
 	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
 };
 
+static int GetFakeWantedLevel(EEffectType effect) {
+	switch (effect)
+	{
+		case EFFECT_TP_LSAIRPORT:
+			return 3;
+		case EFFECT_TP_FORTZANCUDO:
+			return 4;
+		default:
+			return 0;
+	}
+}
+
 static void OnStartFakeTp()
 {
 	std::pair<EEffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
@@ -291,9 +303,18 @@ static void OnStartFakeTp()
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
 	}
 
+	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
+	int wanted = GetFakeWantedLevel(randLocation.first);
+	if (wanted == 0 || wanted < currentWanted)
+	{
+		wanted = currentWanted;
+	}
+
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
+
+	SET_FAKE_WANTED_LEVEL(wanted);
 
 	TeleportPlayer(randLocation.second);
 
@@ -309,7 +330,10 @@ static void OnStartFakeTp()
 		SET_ENTITY_INVINCIBLE(playerVeh, false);
 	}
 
+	SET_FAKE_WANTED_LEVEL(0);
 	SET_MAX_WANTED_LEVEL(5);
+	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 
 	Hooks::DisableScriptThreadBlock();
 }
