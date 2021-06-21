@@ -48,6 +48,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_GTA_2, OnStart, OnStop, OnTic
 		.Id = "player_gta_2",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM }
+		.IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_LEANED_CAMERA }
 	}
 );
