@@ -26,6 +26,6 @@ static RegisterEffect registerEffect(EFFECT_FORCED_CINEMATIC, nullptr, OnStop, O
 		.Name = "Cinematic Vehicle Cam",
 		.Id = "player_forcedcinematiccam",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_FORCED_FP }
+		.IncompatibleWith = { EFFECT_FORCED_FP, EFFECT_PLAYER_LOOK_AT_THIS }
 	}
 );
