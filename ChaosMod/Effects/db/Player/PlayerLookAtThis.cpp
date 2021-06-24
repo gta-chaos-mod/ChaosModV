@@ -7,6 +7,9 @@
 static Camera camera = 0;
 static Ped facingPed = 0;
 
+// Fallback coords to look at if there are no valid peds
+static Vector3 fallbackCoords;
+
 static void ActivateCamera()
 {
     SET_CAM_ACTIVE(camera, true);
@@ -46,7 +49,15 @@ static void UpdateCamera()
     // How far away the default camera is from the estimated root
     float cameraDistance = estimatedCameraRoot.DistanceTo(defaultCameraCoords);
 
-    POINT_CAM_AT_ENTITY(camera, facingPed, 0.f, 0.f, 0.f, true);
+    if (facingPed != 0)
+    {
+        POINT_CAM_AT_ENTITY(camera, facingPed, 0.f, 0.f, 0.f, true);
+    }
+    else
+    {
+        POINT_CAM_AT_COORD(camera, fallbackCoords.x, fallbackCoords.y, fallbackCoords.z);
+    }
+
     Vector3 cameraRotation = GET_CAM_ROT(camera, 2);
 
     Vector3 cameraPosition = Vector3::Init(estimatedCameraRoot.x, estimatedCameraRoot.y, estimatedCameraRoot.z);
@@ -60,18 +71,76 @@ static void UpdateCamera()
     CAM::SET_CAM_PARAMS(camera, cameraPosition.x, cameraPosition.y, cameraPosition.z, cameraRotation.x, cameraRotation.y, cameraRotation.z, GET_GAMEPLAY_CAM_FOV(), 0, 1, 1, 2);
 }
 
+static Vector3 GetRandomFallbackPoint()
+{
+    Ped player = PLAYER_PED_ID();
+
+    float maxDistanceMultiplier = 1.f;
+    float maxHeightMultiplier = 1.f;
+
+    Vector3 playerCoords = GET_ENTITY_COORDS(player, !IS_ENTITY_DEAD(PLAYER_PED_ID(), true));
+
+    Vector3 playerVelocity;
+    if (IS_PED_IN_ANY_VEHICLE(player, false))
+    {
+        playerVelocity = GET_ENTITY_VELOCITY(GET_VEHICLE_PED_IS_IN(player, false));
+
+        maxDistanceMultiplier = max(1.f, playerVelocity.Length());
+        maxHeightMultiplier = max(1.f, playerVelocity.z);
+    }
+    else
+    {
+        playerVelocity = GET_ENTITY_VELOCITY(player);
+
+        maxDistanceMultiplier = max(1.f, playerVelocity.Length());
+        maxHeightMultiplier = max(1.f, playerVelocity.z);
+    }
+
+    playerCoords = playerCoords + (playerVelocity * 5.f);
+
+    Vector3 fallback;
+    fallback.x = playerCoords.x + (g_Random.GetRandomFloat(-40.f, 40.f) * maxDistanceMultiplier);
+    fallback.y = playerCoords.y + (g_Random.GetRandomFloat(-40.f, 40.f) * maxDistanceMultiplier);
+    fallback.z = playerCoords.z + (g_Random.GetRandomFloat(-5.f, 5.f) * maxHeightMultiplier);
+
+    return fallback;
+}
+static bool CanFacePoint(Vector3 point)
+{
+
+    Ped player = PLAYER_PED_ID();
+
+    float maxDistanceMultiplier = 1.f;
+    float maxHeightMultiplier = 1.f;
+
+    Vector3 playerCoords = GET_ENTITY_COORDS(player, !IS_ENTITY_DEAD(PLAYER_PED_ID(), true));
+
+    Vector3 playerVelocity;
+    if (IS_PED_IN_ANY_VEHICLE(player, false))
+    {
+        playerVelocity = GET_ENTITY_VELOCITY(GET_VEHICLE_PED_IS_IN(player, false));
+
+        maxDistanceMultiplier = max(1.f, playerVelocity.Length());
+        maxHeightMultiplier = max(1.f, playerVelocity.z);
+    }
+    else
+    {
+        playerVelocity = GET_ENTITY_VELOCITY(player);
+
+        maxDistanceMultiplier = max(1.f, playerVelocity.Length());
+        maxHeightMultiplier = max(1.f, playerVelocity.z);
+    }
+
+    playerCoords = playerCoords + (playerVelocity.GetDirectionForRotation() * playerVelocity.Length() * 5.f);
+
+    if (point.DistanceTo(playerCoords) > 80.f * maxDistanceMultiplier)
+        return false;
+
+    return point.z - playerCoords.z < 7.5f * maxHeightMultiplier; // Stop the effect from focusing on points far above the player, as this will put the camera in the ground
+}
 static bool CanFacePed(Ped ped)
 {
-    if (ped == 0 || !DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, true) || IS_PED_A_PLAYER(ped))
-        return false;
-
-    Vector3 playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), !IS_ENTITY_DEAD(PLAYER_PED_ID(), true));
-    Vector3 pedCoords = GET_ENTITY_COORDS(ped, true);
-
-    if (pedCoords.DistanceTo(playerCoords) > 80.f)
-        return false;
-
-    return pedCoords.z - playerCoords.z < 7.5f; // Stop the effect from focusing on peds far above the player, as this will put the camera in the ground
+    return ped != 0 && DOES_ENTITY_EXIST(ped) && !IS_PED_DEAD_OR_DYING(ped, true) && !IS_PED_A_PLAYER(ped) && CanFacePoint(GET_ENTITY_COORDS(ped, true));
 }
 
 static void OnStart()
@@ -97,7 +166,6 @@ static void OnTick()
         if (peds.size() > 0)
         {
             int iterations = 0;
-            int count = 10;
 
             Ped selectedPed = 0;
             do
@@ -105,12 +173,6 @@ static void OnTick()
                 // If we have gone through twice the size of the list of peds, I think it's safe to assume there are no valid peds in the list
                 if (iterations >= peds.size() * 2)
                     break;
-
-                if (--count == 0)
-                {
-                    WAIT(0);
-                    count = 10;
-                }
 
                 selectedPed = peds[g_Random.GetRandomInt(0, peds.size() - 1)];
                 iterations++;
@@ -120,15 +182,16 @@ static void OnTick()
         }
     }
 
-    if (CanFacePed(facingPed))
+    if (!CanFacePed(facingPed))
     {
-        UpdateCamera();
+        // If no valid ped was found, focus on a random point instead
+        facingPed = 0;
+
+        if (!CanFacePoint(fallbackCoords))
+            fallbackCoords = GetRandomFallbackPoint();
     }
-    else // If the loop above was exited without a valid selected ped
-    {
-        // Reset to the normal camera if we can't find a ped to lock on to
-        DeactivateCamera();
-    }
+
+    UpdateCamera();
 }
 
 static void OnStop()
