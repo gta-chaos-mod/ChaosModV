@@ -22,6 +22,6 @@ static RegisterEffect registerEffect(EFFECT_FORCED_FP, nullptr, OnStop, OnTick, 
 		.Name = "First Person",
 		.Id = "player_firstperson",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_FORCED_CINEMATIC }
+		.IncompatibleWith = { EFFECT_FORCED_CINEMATIC, EFFECT_PLAYER_LOOK_AT_THIS }
 	}
 );

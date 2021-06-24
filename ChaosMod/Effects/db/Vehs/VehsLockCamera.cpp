@@ -14,6 +14,7 @@ static RegisterEffect registerEffect(EFFECT_VEH_LOCKCAMERA, nullptr, nullptr, On
 	{
 		.Name = "Lock Vehicle Camera",
 		.Id = "veh_lockcamera",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PLAYER_LOOK_AT_THIS }
 	}
 );
