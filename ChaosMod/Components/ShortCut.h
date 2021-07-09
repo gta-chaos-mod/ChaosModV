@@ -1,26 +1,19 @@
 #pragma once
 
 #include "Component.h"
+#include <map>
 #include "Effects/EffectIdentifier.h"
 
-#include <vector>
-
-#define _NODISCARD [[nodiscard]]
-
-using DWORD = unsigned long;
 
 class ShortCut : public Component
 {
 private:
 
-	bool m_bIsEnabled;
-	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
-	DWORD m_ulRepeatTime = 0;
-	bool m_bDispatchEffect = false;
-	void DispatchShortcutEffect(EEffectType type);
+	std::map<int, std::vector<EffectIdentifier>> m_mAvailableShortcuts;
+	std::vector<EffectIdentifier> m_pChosenEffectIdentifiers;
 public:
 	virtual void Run() override;
-
+	void ParseShortcuts();
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 
 };

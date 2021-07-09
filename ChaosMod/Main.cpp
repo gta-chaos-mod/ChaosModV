@@ -126,7 +126,10 @@ static void Init()
 	g_pEffectDispatcher = std::make_unique<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
 
 	ms_pDebugMenu = std::make_unique<DebugMenu>();
+
+	LOG("Initializing Shortcuts");
 	ms_pShortCut = std::make_unique<ShortCut>();
+	ms_pShortCut->ParseShortcuts();
 
 	LOG("Initializing Twitch voting");
 	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);

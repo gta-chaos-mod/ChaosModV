@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <sstream>
 
 #include "ShortCut.h"
 
@@ -6,14 +7,32 @@
 
 void ShortCut::Run()
 {
-	if (m_bDispatchEffect && m_pChosenEffectIdentifier)
+	if (!m_pChosenEffectIdentifiers.empty())
 	{
-		m_bDispatchEffect = false;
-
-		g_pEffectDispatcher->DispatchEffect(*m_pChosenEffectIdentifier);
+		EffectIdentifier identifier = m_pChosenEffectIdentifiers[m_pChosenEffectIdentifiers.size() - 1];
+		m_pChosenEffectIdentifiers.pop_back();
+		g_pEffectDispatcher->DispatchEffect(identifier);
 	}
 }
 
+void ShortCut::ParseShortcuts()
+{
+	m_mAvailableShortcuts.clear();
+	for (auto eff : g_EnabledEffects)
+	{
+		if (eff.second.Shortcut > 0)
+		{
+			if (m_mAvailableShortcuts.contains(eff.second.Shortcut))
+			{
+				m_mAvailableShortcuts[eff.second.Shortcut].push_back(eff.first);
+			}
+			else
+			{
+				m_mAvailableShortcuts[eff.second.Shortcut] = { eff.first };
+			}
+		}
+	}
+}
 
 void ShortCut::HandleInput(DWORD ulKey, bool bOnRepeat)
 {
@@ -23,23 +42,21 @@ void ShortCut::HandleInput(DWORD ulKey, bool bOnRepeat)
 		return;
 	}
 
-	switch (ulKey)
+	if (m_mAvailableShortcuts.contains(ulKey))
 	{
-	case VK_NUMPAD1:
-		this->DispatchShortcutEffect(EEffectType::EFFECT_10XENGINE_VEHS);
-		break;
-	case VK_NUMPAD2:
-		this->DispatchShortcutEffect(EEffectType::EFFECT_2XENGINE_VEHS);
-		break;
-	}
-}
+		std::vector<EffectIdentifier> shortcutEffects = m_mAvailableShortcuts[ulKey];
+		std::vector<EffectIdentifier> effectsToDispatch;
+		for (auto identifier : shortcutEffects)
+		{
+			if (g_EnabledEffects.contains(identifier))
+			{
+				effectsToDispatch.push_back(identifier);
+			}
+		}
+		if (!effectsToDispatch.empty())
+		{
+			m_pChosenEffectIdentifiers = effectsToDispatch;
+		}
 
-void ShortCut::DispatchShortcutEffect(EEffectType type)
-{
-	EffectIdentifier identifier = EffectIdentifier(type);
-	if (g_EnabledEffects.contains(identifier))
-	{
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(identifier);
-		m_bDispatchEffect = true;
 	}
 }
