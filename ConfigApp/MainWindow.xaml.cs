@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
@@ -485,6 +486,51 @@ namespace ConfigApp
                     effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
                 }
             }
+        }
+
+        private void misc_validate_installation_Click(object sender, RoutedEventArgs e)
+        {
+            string validationError = ValidateChaosModInstallation();
+            if (validationError.Length > 0)
+            {
+                MessageBox.Show(validationError, "Installation Validation", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("No errors found!\nIf you're still having problems just head on over to the discord :)\nYou can find it in the \"More\"-Tab", "Installation Validation", MessageBoxButton.OK);
+            }
+        }
+
+        private string ValidateChaosModInstallation()
+        {
+            string configExePath = System.Environment.CurrentDirectory;
+            DirectoryInfo gameDirectiory = Directory.GetParent(configExePath);
+            if (!gameDirectiory.Exists)
+            {
+                return "Failed to get parent directory";
+            }
+            if (Path.GetFileName(configExePath) != "chaosmod")
+            {
+                return "The config app is not in the correct directory.\nMake sure the config app is in the correct folder directory:\n\"...GTA5-Directory\\chaosmod\\ChaosModVConfig.exe\"";
+            }
+            List<string> gameFiles = gameDirectiory.GetFiles().Select(item => item.Name).ToList();
+            if (!gameFiles.Contains("GTA5.exe", StringComparer.OrdinalIgnoreCase))
+            {
+                return "GTA5.exe not found in parent directory.\nMake sure the \"chaosmod\"-folder is inside the game directory";
+            }
+            if (!gameFiles.Contains("ChaosMod.asi", StringComparer.OrdinalIgnoreCase))
+            {
+                return "ChaosMod.asi not found in parent directory.\nMake sure you copy the ChaosMod.asi to the game directory (next to the GTA5.exe)";
+            }
+            if (!gameFiles.Contains("ScriptHookV.dll", StringComparer.OrdinalIgnoreCase))
+            {
+                return "ScriptHookV.dll not found in parent directory.\nGet the current version of ScriptHookV and copy the dlls to the game directory (without the bin folder)";
+            }
+            if (!gameFiles.Contains("dinput8.dll", StringComparer.OrdinalIgnoreCase))
+            {
+                return "dinput8.dll not found in parent directory.\nGet the current version of ScriptHookV and copy the dlls to the game directory (without the bin folder)";
+            }
+            return "";
         }
 
         private void contribute_modpage_click(object sender, RoutedEventArgs e)
