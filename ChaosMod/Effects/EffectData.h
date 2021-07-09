@@ -22,6 +22,7 @@ struct EffectData
 	std::string Id;
 	std::vector<std::string> IncompatibleIds;
 	bool IsMeta = false;
+	int Shortcut = 0;
 	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
 };
 

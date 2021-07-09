@@ -66,5 +66,9 @@
         <Button Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
                 Click="OnSave"/>
+        <Label x:Name="effectconf_effect_shortcut_key_title" Content="Shortcut"
+            Grid.Row="6" Grid.Column="0" Margin="0,5.667,0,10.333" HorizontalAlignment="Right" Width="360" HorizontalContentAlignment="Right" />
+        <ComboBox x:Name="effectconf_effect_shortcut_combo" Width="120" Grid.Row="6" Grid.Column="2"
+            HorizontalAlignment="Left" Margin="0,5.667,0,9.333" />
     </Grid>
 </Window>

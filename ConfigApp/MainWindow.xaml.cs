@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -107,7 +108,7 @@ namespace ConfigApp
             // Create EffectData in case effect wasn't saved yet
             if (!m_effectDataMap.TryGetValue(effectType, out EffectData effectData))
             {
-                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null);
+                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null, 0);
 
                 m_effectDataMap.Add(effectType, effectData);
             }
@@ -217,7 +218,8 @@ namespace ConfigApp
             {
                 string value = m_effectsFile.ReadValue(key);
 
-                string[] values = value.Split(',');
+                // Split by comma, ignoring commas in between quotation marks
+                string[] values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
                 // Find EffectType from ID
                 EffectType effectType = EffectType._EFFECT_ENUM_MAX;
@@ -241,6 +243,7 @@ namespace ConfigApp
                 bool effectPermanent = false;
                 bool effectExcludedFromVoting = false;
                 string effectCustomName = null;
+                int effectShortcut = 0;
 
                 // Compatibility checks, previous versions had less options
                 if (values.Length >= 4)
@@ -263,7 +266,11 @@ namespace ConfigApp
 
                             if (values.Length >= 7)
                             {
-                                effectCustomName = values[6] == "0" ? null : values[6];
+                                effectCustomName = values[6] == "0" ? null : values[6].Trim('\"');
+                                if (values.Length >= 8)
+                                {
+                                    int.TryParse(values[7], out effectShortcut);
+                                }
                             }
                         }
                     }
@@ -274,7 +281,7 @@ namespace ConfigApp
                     int.TryParse(values[0], out int enabled);
                     m_treeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName));
+                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName, effectShortcut));
                 }
             }
         }
@@ -287,7 +294,8 @@ namespace ConfigApp
 
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
-                    + $",{(string.IsNullOrEmpty(effectData.CustomName) ? "0" : effectData.CustomName)}");
+                    + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
+                    + $",{(effectData.Shortcut)}");
             }
 
             m_effectsFile.WriteFile();
@@ -483,6 +491,8 @@ namespace ConfigApp
                     effectData.WeightMult = effectConfig.effectconf_effect_weight_mult.SelectedIndex + 1;
                     effectData.ExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
                     effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
+                    Key shortcut = (Key)effectConfig.effectconf_effect_shortcut_combo.SelectedItem;
+                    effectData.Shortcut = KeyInterop.VirtualKeyFromKey(shortcut);
                 }
             }
         }
