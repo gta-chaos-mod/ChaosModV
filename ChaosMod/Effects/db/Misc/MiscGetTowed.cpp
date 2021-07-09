@@ -38,8 +38,7 @@ static void OnStart()
 	SET_VEHICLE_FORWARD_SPEED(towTruck, GET_ENTITY_SPEED(player));
 	SET_VEHICLE_ON_GROUND_PROPERLY(towTruck, 5);
 
-	Ped tonyaPed = CreatePoolPed(0, tonyaHash, 0, 0, 0, 0);
-	SET_PED_INTO_VEHICLE(tonyaPed, towTruck, -1);
+	Ped tonyaPed = CreatePoolPedInsideVehicle(towTruck, 0, tonyaHash, -1);
 	SET_PED_RELATIONSHIP_GROUP_HASH(tonyaPed, relationshipGroup);
 
 	if (playerVeh)
@@ -51,8 +50,7 @@ static void OnStart()
 	{
 		SET_PED_INTO_VEHICLE(player, towTruck, 0);
 	}
-
-	TASK_VEHICLE_DRIVE_WANDER(tonyaPed, towTruck, 9999.f, 4176732);
+	TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tonyaPed, towTruck, 404, -1630, 29, 9999.f, 262668, 0.f);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_GET_TOWED, OnStart, nullptr, nullptr, EffectInfo
