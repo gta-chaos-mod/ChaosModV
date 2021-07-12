@@ -59,13 +59,13 @@ static Vector3 Stores[] = {
 
 static void OnStart()
 {
-    TeleportPlayer(Stores[g_random.GetRandomInt(0, 42)]);
+    TeleportPlayer(Stores[g_Random.GetRandomInt(0, 42)]);
 }
 
 static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",
-        .EffectGroupType = EffectGroupType::TELEPORT
+        .EEffectGroupType = EEffectGroupType::Teleport
 	}
 );

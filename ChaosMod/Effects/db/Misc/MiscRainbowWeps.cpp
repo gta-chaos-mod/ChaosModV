@@ -13,14 +13,14 @@ static void OnTick()
 		for (auto ped : GetAllPeds())
 		{
 			GET_CURRENT_PED_WEAPON(ped, &weaponHash, false);
-			SET_PED_WEAPON_TINT_INDEX(ped, weaponHash, g_random.GetRandomInt(1, 7));
+			SET_PED_WEAPON_TINT_INDEX(ped, weaponHash, g_Random.GetRandomInt(1, 7));
 		}
 
 		for (auto prop : GetAllProps())
 		{
 			if (IS_PICKUP_WEAPON_OBJECT_VALID(prop))
 			{
-				SET_WEAPON_OBJECT_TINT_INDEX(prop, g_random.GetRandomInt(1, 7));
+				SET_WEAPON_OBJECT_TINT_INDEX(prop, g_Random.GetRandomInt(1, 7));
 			}
 		}
 	}

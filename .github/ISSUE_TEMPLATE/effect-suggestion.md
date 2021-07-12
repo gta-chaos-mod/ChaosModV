@@ -7,6 +7,18 @@ assignees: ''
 
 ---
 
+<!--
+**********************
+** 🛑 !! STOP !! 🛑 **
+**********************
+
+Before continuing, ensure that:
+
+1. You have already searched the "Issues" tab to ensure that someone has not already suggested the effect you have in mind
+  - Search here: https://github.com/gta-chaos-mod/ChaosModV/issues
+2. You have titled the suggestion correctly "[Effect Suggestion] Some Effect Name" (please replace "My Super Cool Effect Idea" with the name of your effect)
+-->
+
 **Name of effect**
 Potential name(s) for the effect
 

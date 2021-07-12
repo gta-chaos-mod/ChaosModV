@@ -1,130 +1,66 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 #include "Main.h"
 
-std::array<int, 3> ParseColor(const std::string& colorText)
+static std::unique_ptr<DebugMenu> ms_pDebugMenu;
+static std::unique_ptr<TwitchVoting> ms_pTwitchVoting;
+static std::unique_ptr<Failsafe> ms_pFailsafe;
+static std::unique_ptr<SplashTexts> ms_pSplashTexts;
+
+static bool ms_bClearAllEffects = false;
+
+static bool ms_bClearEffectsShortcutEnabled = false;
+
+static bool ms_bToggleModShortcutEnabled = false;
+
+static bool ms_bDisableMod = false;
+
+static bool ms_bEnablePauseTimerShortcut = false;
+
+static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
 	// Format: #ARGB
-
-	std::array<int, 3> colors;
+	std::array<BYTE, 3> rgColors;
 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 TryParse<int>(colorText.substr(i, 2), colors[j++], 16);
+		 Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
 	}
 
-	return colors;
+	return rgColors;
 }
 
 static void ParseEffectsFile()
 {
-	g_enabledEffects.clear();
-	g_currentEffectGroupMemberCount = g_allEffectGroupMemberCount;
+	g_EnabledEffects.clear();
+	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
 
-	OptionsFile effectsFile("chaosmod/effects.ini");
-
-	for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
-	{
-		EffectType effectType = static_cast<EffectType>(i);
-		const EffectInfo& effectInfo = g_effectsMap.at(effectType);
-
-		// Default EffectData values
-		// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
-		std::vector<int> values { true, static_cast<int>(EffectTimedType::TIMED_UNK), -1, 5, false, false };
-		// HACK: Store EffectCustomName seperately
-		std::string valueEffectName;
-
-		std::string value = effectsFile.ReadValueString(effectInfo.Id);
-
-		if (!value.empty())
-		{
-			int splitIndex = value.find(",");
-			for (int j = 0; ; j++)
-			{
-				if (j == 6)
-				{
-					// HACK for EffectCustomName :(
-					if (value != "0")
-					{
-						valueEffectName = value;
-					}
-
-					break;
-				}
-				else
-				{
-					const std::string& split = value.substr(0, splitIndex);
-
-					TryParse<int>(split, values[j]);
-				}
-
-				if (splitIndex == value.npos)
-				{
-					break;
-				}
-
-				value = value.substr(splitIndex + 1);
-
-				splitIndex = value.find(",");
-			}
-		}
-
-		if (!values[0]) // enabled == false
-		{
-			if (effectInfo.EffectGroupType != EffectGroupType::NONE)
-			{
-				g_currentEffectGroupMemberCount[effectInfo.EffectGroupType]--;
-			}
-
-			continue;
-		}
-
-		EffectData effectData;
-		if (!effectInfo.IsTimed)
-		{
-			effectData.TimedType = EffectTimedType::TIMED_NOTTIMED;
-		}
-		else if (values[4])
-		{
-			effectData.TimedType = EffectTimedType::TIMED_PERMANENT;
-		}
-		else if (values[2] > -1)
-		{
-			effectData.TimedType = EffectTimedType::TIMED_CUSTOM;
-			effectData.CustomTime = values[2];
-		}
-		else
-		{
-			effectData.TimedType = static_cast<EffectTimedType>(static_cast<EffectTimedType>(values[1]) == EffectTimedType::TIMED_UNK ? effectInfo.IsShortDuration : values[1]);
-		}
-		
-		effectData.WeightMult = values[3];
-		effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
-		effectData.ExcludedFromVoting = values[5];
-		effectData.IsMeta = effectInfo.ExecutionType == EffectExecutionType::META;
-		effectData.Name = effectInfo.Name;
-		if (!valueEffectName.empty())
-		{
-			effectData.HasCustomName = true;
-			effectData.CustomName = valueEffectName;
-		}
-		effectData.Id = effectInfo.Id;
-		
-		for (EffectType effectType : effectInfo.IncompatibleWith)
-		{
-			effectData.IncompatibleIds.push_back(g_effectsMap.at(effectType).Id);
-		}
-
-		effectData.EffectGroupType = effectInfo.EffectGroupType;
-
-		g_enabledEffects.emplace(effectType, effectData);
-	}
+	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
 }
 
-void Main::Init()
+static void Reset()
 {
-	static std::streambuf* oldStreamBuf;
+	// Check if this isn't the first time this is being run
+	if (g_pEffectDispatcher)
+	{
+		LOG("Mod has been disabled using shortcut!");
+	}
+
+	g_pEffectDispatcher.reset();
+
+	ms_pDebugMenu.reset();
+
+	ms_pTwitchVoting.reset();
+
+	ms_pFailsafe.reset();
+
+	ClearEntityPool();
+}
+
+static void Init()
+{
+	static std::streambuf* c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
 		if (GetConsoleWindow())
@@ -140,116 +76,82 @@ void Main::Init()
 			SetConsoleTitle("Chaos Mod");
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
-			oldStreamBuf = std::cout.rdbuf();
+			c_pOldStreamBuf = std::cout.rdbuf();
 
-			g_consoleOut = std::ofstream("CONOUT$");
-			std::cout.rdbuf(g_consoleOut.rdbuf());
+			g_ConsoleOut = std::ofstream("CONOUT$");
+			std::cout.rdbuf(g_ConsoleOut.rdbuf());
 
 			std::cout.clear();
 
 			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-			DWORD conMode;
-			GetConsoleMode(handle, &conMode);
-			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), conMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+			DWORD ulConMode;
+			GetConsoleMode(handle, &ulConMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ulConMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 	}
 	else if (GetConsoleWindow())
 	{
 		LOG("Destroying log console");
 
-		std::cout.rdbuf(oldStreamBuf);
+		std::cout.rdbuf(c_pOldStreamBuf);
 
-		g_consoleOut.close();
+		g_ConsoleOut.close();
 
 		FreeConsole();
 	}
 
 	LOG("Parsing config files");
 	ParseEffectsFile();
-	
-	g_optionsManager.Reset();
 
-	m_clearEffectsShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
-	m_toggleModShortcutEnabled = g_optionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
-	m_enablePauseTimerShortcut = g_optionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	g_OptionsManager.Reset();
 
-	m_enableDebugMenu = g_optionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 
-	m_disableDrawTimerBar = g_optionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
-	m_disableDrawEffectTexts = g_optionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+	g_bEnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
-	g_enableGroupWeighting = g_optionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
-
-	const std::array<int, 3>& timerColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
-	const std::array<int, 3>& textColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
-	const std::array<int, 3>& effectTimerColor = ParseColor(g_optionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+	const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
 	LOG("Running custom scripts");
-	LuaManager::Load();
+	LuaScripts::Load();
 
-	g_random.SetSeed(g_optionsManager.GetConfigValue<int>("Seed", 0));
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
 	LOG("Initializing effects dispatcher");
-	g_effectDispatcher = std::make_unique<EffectDispatcher>(timerColor, textColor, effectTimerColor);
+	g_pEffectDispatcher = std::make_unique<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
 
-	if (m_enableDebugMenu)
-	{
-		m_debugMenu = std::make_unique<DebugMenu>();
-	}
+	ms_pDebugMenu = std::make_unique<DebugMenu>();
 
 	LOG("Initializing Twitch voting");
-	m_twitchVoting = std::make_unique<TwitchVoting>(textColor);
+	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
 
-	FailsafeManager::Init();
+	LOG("Initializing Failsafe");
+	ms_pFailsafe = std::make_unique<Failsafe>();
 
 	LOG("Completed Init!");
-}
 
-void Main::Reset()
-{
-	// Check if this isn't the first time this is being run
-	if (g_effectDispatcher)
+	if (ms_pTwitchVoting->IsEnabled())
 	{
-		LOG("Mod has been disabled using shortcut!");
-	}
-
-	g_effectDispatcher.reset();
-
-	if (m_enableDebugMenu)
-	{
-		m_debugMenu.reset();
-	}
-
-	m_twitchVoting.reset();
-
-	ClearEntityPool();
-}
-
-void Main::RunLoop()
-{
-	__try
-	{
-		Loop();
-	}
-	__except (CrashHandler(GetExceptionInformation()))
-	{
-
+		ms_pSplashTexts->ShowTwitchVotingSplash();
 	}
 }
 
-void Main::Loop()
+static void MainRun()
 {
-	int splashTextTime = 15000;
-	int twitchVotingWarningTextTime = 15000;
+	g_MainThread = GetCurrentFiber();
 
-	DWORD64 lastTick = GetTickCount64();
-
-	g_mainThread = GetCurrentFiber();
-
-	ThreadManager::ClearThreads();
+	EffectThreads::ClearThreads();
 
 	Reset();
+
+	ms_pSplashTexts = std::make_unique<SplashTexts>();
+	ms_pSplashTexts->ShowInitSplash();
+
+	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 
@@ -257,14 +159,14 @@ void Main::Loop()
 	{
 		WAIT(0);
 
-		if (!ThreadManager::IsAnyThreadRunningOnStart())
+		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
-			static bool justReenabled = false;
-			if (m_disableMod && !justReenabled)
+			static bool c_bJustReenabled = false;
+			if (ms_bDisableMod && !c_bJustReenabled)
 			{
-				if (!justReenabled)
+				if (!c_bJustReenabled)
 				{
-					justReenabled = true;
+					c_bJustReenabled = true;
 
 					Reset();
 				}
@@ -273,20 +175,20 @@ void Main::Loop()
 			}
 			else
 			{
-				if (justReenabled)
+				if (c_bJustReenabled)
 				{
-					if (ThreadManager::IsAnyThreadRunning())
+					if (EffectThreads::IsAnyThreadRunning())
 					{
-						ThreadManager::RunThreads();
+						EffectThreads::RunThreads();
 
 						continue;
 					}
-					else if (!m_disableMod)
+					else if (!ms_bDisableMod)
 					{
-						justReenabled = false;
+						c_bJustReenabled = false;
 
 						// Clear log
-						g_log = std::ofstream("chaosmod/chaoslog.txt");
+						g_Log = std::ofstream("chaosmod/chaoslog.txt");
 
 						// Restart the main part of the mod completely
 						Init();
@@ -298,40 +200,13 @@ void Main::Loop()
 				}
 			}
 
-			FailsafeManager::Run();
-
-			if (m_clearAllEffects)
+			if (ms_bClearAllEffects)
 			{
-				m_clearAllEffects = false;
+				ms_bClearAllEffects = false;
 
-				g_effectDispatcher->Reset();
+				g_pEffectDispatcher->Reset();
 
 				ClearEntityPool();
-			}
-
-			if (m_enableDebugMenu && m_debugMenu->IsVisible())
-			{
-				// Arrow Up
-				DISABLE_CONTROL_ACTION(1, 27, true);
-				DISABLE_CONTROL_ACTION(1, 127, true);
-				DISABLE_CONTROL_ACTION(1, 188, true);
-				DISABLE_CONTROL_ACTION(1, 300, true);
-				// Arrow Down
-				DISABLE_CONTROL_ACTION(1, 173, true);
-				DISABLE_CONTROL_ACTION(1, 187, true);
-				DISABLE_CONTROL_ACTION(1, 299, true);
-				// Enter
-				DISABLE_CONTROL_ACTION(1, 18, true);
-				DISABLE_CONTROL_ACTION(1, 176, true);
-				DISABLE_CONTROL_ACTION(1, 191, true);
-				DISABLE_CONTROL_ACTION(1, 201, true);
-				DISABLE_CONTROL_ACTION(1, 215, true);
-				// Backspace
-				DISABLE_CONTROL_ACTION(1, 177, true);
-				DISABLE_CONTROL_ACTION(1, 194, true);
-				DISABLE_CONTROL_ACTION(1, 202, true);
-
-				m_debugMenu->Tick();
 			}
 		}
 		else if (IS_SCREEN_FADED_OUT())
@@ -343,95 +218,63 @@ void Main::Loop()
 			continue;
 		}
 
-		DWORD64 curTick = GetTickCount64();
-
-		if (m_clearEffectsTextTime > 0)
+		for (Component* pComponent : g_rgComponents)
 		{
-			DrawScreenText("Effects Cleared!", { .86f, .86f }, .8f, { 255, 100, 100 }, true);
-			
-			m_clearEffectsTextTime -= curTick - lastTick;
+			pComponent->Run();
 		}
-
-		if (splashTextTime > 0)
-		{
-			DrawScreenText("Chaos Mod v1.9.1.3 by pongo1231\n\nSee credits.txt for list of contributors",
-				{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
-
-#ifdef _DEBUG
-			DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
-#endif
-
-			splashTextTime -= curTick - lastTick;
-		}
-
-		if (m_twitchVoting->IsEnabled() && twitchVotingWarningTextTime > 0)
-		{
-			DrawScreenText("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 }, true);
-
-			twitchVotingWarningTextTime -= curTick - lastTick;
-		}
-
-		g_effectDispatcher->UpdateEffects();
-
-		if (m_twitchVoting->IsEnabled())
-		{
-			m_twitchVoting->Tick();
-		}
-
-		if (!m_pauseTimer)
-		{
-			if (!g_metaInfo.DisableChaos)
-			{
-				g_effectDispatcher->UpdateTimer();
-			}
-
-			g_effectDispatcher->UpdateMetaEffects();
-		}
-
-		if (!m_disableDrawTimerBar && !g_metaInfo.ShouldHideChaosUI && !g_metaInfo.DisableChaos)
-		{
-			g_effectDispatcher->DrawTimerBar();
-		}
-		if (!m_disableDrawEffectTexts)
-		{
-			g_effectDispatcher->DrawEffectTexts();
-		}
-
-		lastTick = curTick;
 	}
 }
 
-void Main::OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+namespace Main
 {
-	static bool CTRLpressed = false;
+	void Run()
+	{
+		__try
+		{
+			MainRun();
+		}
+		__except (CrashHandler(GetExceptionInformation()))
+		{
 
-	if (key == VK_CONTROL)
-	{
-		CTRLpressed = !isUpNow;
-	}
-	else if (CTRLpressed && !wasDownBefore)
-	{
-		if (key == VK_OEM_MINUS && m_clearEffectsShortcutEnabled)
-		{
-			m_clearAllEffects = true;
-			m_clearEffectsTextTime = 5000;
-		}
-		else if (key == VK_OEM_PERIOD && m_enablePauseTimerShortcut)
-		{
-			m_pauseTimer = !m_pauseTimer;
-		}
-		else if (key == VK_OEM_COMMA && m_enableDebugMenu && m_debugMenu)
-		{
-			m_debugMenu->SetVisible(!m_debugMenu->IsVisible());
-		}
-		else if (key == 0x4C && m_toggleModShortcutEnabled) // L
-		{
-			m_disableMod = !m_disableMod;
 		}
 	}
 
-	if (m_enableDebugMenu && m_debugMenu && m_debugMenu->IsVisible())
+	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
-		m_debugMenu->HandleInput(key, wasDownBefore);
+		static bool c_bIsCtrlPressed = false;
+
+		if (ulKey == VK_CONTROL)
+		{
+			c_bIsCtrlPressed = !bIsUpNow;
+		}
+		else if (c_bIsCtrlPressed && !bWasDownBefore)
+		{
+			if (ulKey == VK_OEM_MINUS && ms_bClearEffectsShortcutEnabled)
+			{
+				ms_bClearAllEffects = true;
+
+				if (ms_pSplashTexts)
+				{
+					ms_pSplashTexts->ShowClearEffectsSplash();
+				}
+			}
+			else if (ulKey == VK_OEM_PERIOD && ms_bEnablePauseTimerShortcut && g_pEffectDispatcher)
+			{
+				g_pEffectDispatcher->m_bPauseTimer = !g_pEffectDispatcher->m_bPauseTimer;
+			}
+			else if (ulKey == VK_OEM_COMMA && ms_pDebugMenu && ms_pDebugMenu->IsEnabled())
+			{
+				ms_pDebugMenu->SetVisible(!ms_pDebugMenu->IsVisible());
+			}
+			else if (ulKey == 0x4C && ms_bToggleModShortcutEnabled) // L
+			{
+				ms_bDisableMod = !ms_bDisableMod;
+			}
+		}
+
+		if (ms_pDebugMenu)
+		{
+			ms_pDebugMenu->HandleInput(ulKey, bWasDownBefore);
+		}
 	}
 }

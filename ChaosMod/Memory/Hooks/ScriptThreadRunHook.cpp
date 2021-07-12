@@ -1,23 +1,23 @@
 #include <stdafx.h>
 
-static bool m_enabledHook = false;
+static bool ms_bEnabledHook = false;
 
-__int64(*OG_rage__scrThread__Run)(__int64 a1);
-__int64 HK_rage__scrThread__Run(__int64 a1)
+__int64(*OG_rage__scrThread__Run)(rage::scrThread*);
+__int64 HK_rage__scrThread__Run(rage::scrThread* pThread)
 {
-	if (m_enabledHook)
+	if (ms_bEnabledHook)
 	{
-		const char* scriptName = reinterpret_cast<const char*>(a1 + 0xD0);
+		const char* szScriptName = pThread->m_szName;
 
-		// ScriptHook relies on these to run our script thread
+		// Scripthook (most likely) relies on these to run our script thread
 		// We don't want to block ourselves of course :p
-		if (strcmp(scriptName, "main") && strcmp(scriptName, "main_persistent"))
+		if (strcmp(szScriptName, "main") && strcmp(szScriptName, "main_persistent") && strcmp(szScriptName, "control_thread"))
 		{
 			return 0;
 		}
 	}
 
-	return OG_rage__scrThread__Run(a1);
+	return OG_rage__scrThread__Run(pThread);
 }
 
 static bool OnHook()
@@ -41,11 +41,11 @@ namespace Hooks
 {
 	void EnableScriptThreadBlock()
 	{
-		m_enabledHook = true;
+		ms_bEnabledHook = true;
 	}
 
 	void DisableScriptThreadBlock()
 	{
-		m_enabledHook = false;
+		ms_bEnabledHook = false;
 	}
 }
