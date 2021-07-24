@@ -45,10 +45,8 @@ static void OnStart()
 }
 
 
-// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
-static RegisterEffect registerEffect(EFFECT_SPAWN_ANGRY_CHIMP, OnStart, EffectInfo
+static RegisterEffect registerEffect(EFFECT_ANGRY_CHIMP, OnStart, EffectInfo
 	{
-		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Spawn Angry Chimp",
 		.Id = "spawn_angry_chimp",
 		.EEffectGroupType = EEffectGroupType::SpawnEnemy,
