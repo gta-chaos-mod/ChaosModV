@@ -327,6 +327,7 @@ namespace ConfigApp
             EFFECT_MISC_STUFFGUNS,
             EFFECT_PEDS_ETERNAL_SCREAMS,
             EFFECT_PLAYER_BLADE_HUNGER,
+            EFFECT_VEHS_DISAPPEAR_ON_IMPACT,
             _EFFECT_ENUM_MAX
         }
 
@@ -618,6 +619,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_STUFFGUNS, new EffectInfo("Improvised Weaponry", EffectCategory.MISC, "misc_stuffguns", true, true)},
             {EffectType.EFFECT_PEDS_ETERNAL_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eternal_screams", true, true)},
             {EffectType.EFFECT_PLAYER_BLADE_HUNGER, new EffectInfo("The Blade Hungers", EffectCategory.PLAYER, "player_blade_hunger", true)},
+            {EffectType.EFFECT_VEHS_DISAPPEAR_ON_IMPACT, new EffectInfo("Vehicles Disappear On Impact", EffectCategory.VEHICLE, "vehs_disappear_on_impact", true)},
         };
     }
 }
