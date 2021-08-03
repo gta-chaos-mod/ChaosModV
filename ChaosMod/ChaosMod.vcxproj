@@ -327,7 +327,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
-    <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
+    <Library Include="..\vendor\minhook\build\VC16\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
