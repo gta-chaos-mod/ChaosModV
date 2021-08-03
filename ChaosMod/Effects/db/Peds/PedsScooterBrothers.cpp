@@ -10,6 +10,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_SCOOTERBROTHERS, OnStart, Effec
 	{
 		.Name = "Scooter Brothers",
 		.Id = "peds_scooterbrothers",
-		.EffectGroupType = EffectGroupType::TRAFFIC_SPAWNER
+		.EEffectGroupType = EEffectGroupType::TrafficSpawner
 	}
 );

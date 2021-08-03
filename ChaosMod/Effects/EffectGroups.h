@@ -32,7 +32,7 @@ inline const std::unordered_map<EEffectGroupType, EffectGroup> g_EffectGroups
 	{EEffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
 	{EEffectGroupType::Weapons, { .WeightMult = 4 }},
 	{EEffectGroupType::PlayerKill, { .WeightMult = 2 }},
-  {EEffectGroupType::TrafficSpawner, { }},
+	{EEffectGroupType::TrafficSpawner, {.WeightMult = 3 }},
 	{EEffectGroupType::TrafficColor, { .WeightMult = 3 }},
 	{EEffectGroupType::TimeChange, {.WeightMult = 2 }},
 	{EEffectGroupType::WeatherChange, {.WeightMult = 2 }},

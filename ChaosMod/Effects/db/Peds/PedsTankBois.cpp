@@ -16,6 +16,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_TANK_BOIS, OnStart, nullptr, nu
     {
         .Name = "Tanks A Lot",
         .Id = "peds_tank_bois",
-        .EffectGroupType = EffectGroupType::TRAFFIC_SPAWNER
+        .EEffectGroupType = EEffectGroupType::TrafficSpawner
     }
 );
