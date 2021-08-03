@@ -13,6 +13,8 @@ static void OnStop()
 
 static void OnTick()
 {
+	WAIT(400);
+
 	for (Vehicle veh : GetAllVehs())
 	{
 		for (int i = 0; i < 48; i++)
