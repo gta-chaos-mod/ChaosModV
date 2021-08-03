@@ -140,6 +140,7 @@
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSpinCam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
@@ -242,6 +243,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnJuggernaut.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsTankBois.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
@@ -286,6 +288,7 @@
     <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBlimpStrats.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlingPlayer.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerJumpJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
@@ -327,7 +330,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
-    <Library Include="..\vendor\minhook\build\VC15\lib\Release\libMinHook.x64.lib" />
+    <Library Include="..\vendor\minhook\build\VC16\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>

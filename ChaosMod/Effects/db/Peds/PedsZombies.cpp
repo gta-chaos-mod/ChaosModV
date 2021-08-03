@@ -19,8 +19,6 @@ static void OnStart()
 
 static void OnStop()
 {
-	SET_MAX_WANTED_LEVEL(5);
-	
 	for (Ped ped : m_zombies)
 	{
 		if (DOES_ENTITY_EXIST(ped))
@@ -39,9 +37,6 @@ static void OnTick()
 
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-
-	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
-	SET_MAX_WANTED_LEVEL(0);
 
 	if (m_zombies.size() <= MAX_ZOMBIES)
 	{
