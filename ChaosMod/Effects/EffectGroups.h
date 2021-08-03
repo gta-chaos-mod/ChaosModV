@@ -13,7 +13,7 @@ enum class EEffectGroupType
 	Weapons,             // Effects which give/remove weapons
 	PlayerKill,          // Effects which are (almost) guaranteed to immediately kill the player under any circumstance
 	TrafficColor,       // Effects which change the color of traffic
-  TrafficSpawner,	 // Effects which change or spawn a lot of vehicles
+	TrafficSpawner,	 // Effects which change or spawn a lot of vehicles
 	TimeChange,         // Effects which change time of day
 	WeatherChange,      // Effects which change the weather
 };

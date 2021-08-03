@@ -7,7 +7,7 @@ Effect by Last0xygen
 
 static void OnStart()
 {
-	static const float maxDistance = 60.f;
+	static const float maxDistance = 120.f;
 	static const Hash vehHash = GET_HASH_KEY("rhino");
     SetSurroundingPedsInVehicles(vehHash, maxDistance);
 }
