@@ -36,4 +36,12 @@ static void OnStop()
     spinningCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SPIN_CAMERA, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_SPIN_CAMERA, OnStart, OnStop, OnTick, EffectInfo
+    {
+        .Name = "Spinning Camera",
+        .Id = "player_spin_camera",
+        .IsTimed = true,
+        .IsShortDuration = true,
+        .IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2 }
+    }
+);
