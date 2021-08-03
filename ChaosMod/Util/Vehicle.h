@@ -1,13 +1,13 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
+#include "Natives.h"
 
-inline Vehicle CreateTempVehicle(Hash model, float x, float y, float z, float heading)
+inline Vehicle CreateTempVehicle(Hash ulModel, float fPosX, float fPosY, float fPosZ, float fHeading)
 {
-	LoadModel(model);
+	LoadModel(ulModel);
 
-	Vehicle veh = CREATE_VEHICLE(model, x, y, z, heading, true, false, false);
-	SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	Vehicle veh = CREATE_VEHICLE(ulModel, fPosX, fPosY, fPosZ, fHeading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModel);
 
 	Vehicle dummy = veh;
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
@@ -15,14 +15,14 @@ inline Vehicle CreateTempVehicle(Hash model, float x, float y, float z, float he
 	return veh;
 }
 
-inline Vehicle CreateTempVehicleOnPlayerPos(Hash model, float heading)
+inline Vehicle CreateTempVehicleOnPlayerPos(Hash ulModel, float fHeading)
 {
-	LoadModel(model);
+	LoadModel(ulModel);
 
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	Vehicle veh = CREATE_VEHICLE(model, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
-	SET_MODEL_AS_NO_LONGER_NEEDED(model);
+	Vehicle veh = CREATE_VEHICLE(ulModel, playerPos.x, playerPos.y, playerPos.z, fHeading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModel);
 
 	Vehicle dummy = veh;
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
