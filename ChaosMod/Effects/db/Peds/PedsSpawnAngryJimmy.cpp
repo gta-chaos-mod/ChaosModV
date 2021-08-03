@@ -50,6 +50,6 @@ static RegisterEffect registerEffect(EFFECT_ANGRY_JIMMY, OnStart, EffectInfo
 	{
 		.Name = "Spawn Jealous Jimmy",
 		.Id = "peds_angryjimmy",
-		.EffectGroupType = EffectGroupType::SPAWN_ENEMY
+		.EEffectGroupType = EEffectGroupType::SpawnEnemy
 	}
 );

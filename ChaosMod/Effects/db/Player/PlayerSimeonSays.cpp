@@ -5,27 +5,27 @@
 #include <stdafx.h>
 
 static std::vector<std::string> actions = {
-	"move forwards",
-	"move backwards",
-	"move left",
-	"move right",
-	"move",
-	"look behind (c)"
+	"hold forwards",
+	"hold backwards",
+	"hold left",
+	"hold right",
+	"hold any movement key",
+	"hold look behind (c)"
 };
 
 static std::map<std::string, std::vector<int>> actionKeys = {
-	{"move forwards", {32, 71, 77, 87, 129, 136, 150, 232}},
-	{"move backwards", {33, 72, 78, 88, 130, 139, 151, 233}},
-	{"move left", {34, 63, 89, 133, 147, 234}},
-	{"move right", {35, 64, 90, 134, 148, 235}},
-	{"move", {
+	{"hold forwards", {32, 71, 77, 87, 129, 136, 150, 232}},
+	{"hold backwards", {33, 72, 78, 88, 130, 139, 151, 233}},
+	{"hold left", {34, 63, 89, 133, 147, 234}},
+	{"hold right", {35, 64, 90, 134, 148, 235}},
+	{"hold any movement key", {
 		32, 71, 77, 87, 129, 136, 150, 232,
 		33, 72, 78, 88, 130, 139, 151, 233,
 		34, 63, 89, 133, 147, 234,
 		35, 64, 90, 134, 148, 235,
 		44, 23, 102, 55,
 	}},
-	{"look behind (c)", {26, 79}}
+	{"hold look behind (c)", {26, 79}}
 };
 
 static int scaleForm = 0;
@@ -39,11 +39,29 @@ static bool opposite;
 
 static void ShowPopup()
 {
-	std::string message = "Simeon Says: ";
+	std::string message;
 
 	if (opposite)
 	{
-		message.append("Don't ");
+		if (g_Random.GetRandomInt(0, 1) == 0)
+		{
+			message = "Simeon Says: Don't ";
+		}
+		else
+		{
+			message = "";
+		}
+	} 
+	else
+	{
+		if (g_Random.GetRandomInt(0, 1) == 0)
+		{
+			message = "Don't ";
+		}
+		else
+		{
+			message = "Simeon Says: ";
+		}
 	}
 
 	message.append(action);
@@ -70,9 +88,9 @@ static void ShowPopup()
 
 static void OnStart()
 {
-	action = actions[g_random.GetRandomInt(0, actions.size() - 1)];
+	action = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
 	
-	int rand_int = g_random.GetRandomInt(0, 1);
+	int rand_int = g_Random.GetRandomInt(0, 1);
 
 	if (rand_int == 0)
 	{

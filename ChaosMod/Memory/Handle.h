@@ -1,42 +1,47 @@
 #pragma once
 
-typedef unsigned long long DWORD64;
-typedef unsigned long DWORD;
+#define _HANDLEFUNC inline [[nodiscard]]
+
+using DWORD64 = unsigned long long;
+using DWORD = unsigned long;
 
 class Handle
 {
+private:
+	DWORD64 m_ullAddr;
+
 public:
-	Handle() : m_addr(0) {}
-	Handle(DWORD64 addr) : m_addr(addr) {}
+	Handle() : m_ullAddr(0) {}
+	Handle(DWORD64 ullAddr) : m_ullAddr(ullAddr) {}
 
-	inline bool IsValid() const
+	_HANDLEFUNC bool IsValid() const
 	{
-		return m_addr;
+		return m_ullAddr;
 	}
 
-	inline Handle At(int offset) const
+	_HANDLEFUNC Handle At(int iOffset) const
 	{
-		return IsValid() ? m_addr + offset : 0;
-	}
-
-	template<typename T>
-	inline T* Get() const
-	{
-		return reinterpret_cast<T*>(m_addr);
+		return IsValid() ? m_ullAddr + iOffset : 0;
 	}
 
 	template<typename T>
-	inline T Value() const
+	_HANDLEFUNC T* Get() const
+	{
+		return reinterpret_cast<T*>(m_ullAddr);
+	}
+
+	template<typename T>
+	_HANDLEFUNC T Value() const
 	{
 		return IsValid() ? *Get<T>() : 0;
 	}
 
-	inline DWORD64 Addr() const
+	_HANDLEFUNC DWORD64 Addr() const
 	{
-		return m_addr;
+		return m_ullAddr;
 	}
 
-	inline Handle Into() const
+	_HANDLEFUNC Handle Into() const
 	{
 		if (IsValid())
 		{
@@ -46,7 +51,4 @@ public:
 
 		return 0;
 	}
-
-private:
-	DWORD64 m_addr;
 };
