@@ -60,6 +60,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart, EffectInfo
 	{
 		.Name = "Spawn Blue Sultan",
 		.Id = "spawn_bluesultan",
-		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
+		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

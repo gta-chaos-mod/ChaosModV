@@ -17,6 +17,8 @@ static bool ms_bDisableMod = false;
 
 static bool ms_bEnablePauseTimerShortcut = false;
 
+static bool ms_bHaveLateHooksRan = false;
+
 static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
 	// Format: #ARGB
@@ -34,7 +36,7 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
-	g_CurrentEffectGroupMemberCount = g_AllEffectGroupMemberCount;
+	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
 
 	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
 }
@@ -54,8 +56,6 @@ static void Reset()
 	ms_pTwitchVoting.reset();
 
 	ms_pFailsafe.reset();
-
-	ms_pSplashTexts.reset();
 
 	ClearEntityPool();
 }
@@ -112,7 +112,7 @@ static void Init()
 	ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 	ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 
-	g_EnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	g_bEnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
 	const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
 	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
@@ -144,6 +144,13 @@ static void Init()
 
 static void MainRun()
 {
+	if (!ms_bHaveLateHooksRan)
+	{
+		ms_bHaveLateHooksRan = true;
+
+		Memory::RunLateHooks();
+	}
+
 	g_MainThread = GetCurrentFiber();
 
 	EffectThreads::ClearThreads();

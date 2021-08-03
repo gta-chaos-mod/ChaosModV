@@ -31,6 +31,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_SPAWN_ORANGE_BALL, OnStart, nul
     {
         .Name = "Spawn Orange Ball",
         .Id = "misc_spawn_orange_ball",
-        .EffectGroupType = EffectGroupType::SPAWN_GENERIC
+        .EEffectGroupType = EEffectGroupType::SpawnGeneric
     }
 );

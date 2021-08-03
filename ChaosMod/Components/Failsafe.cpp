@@ -27,7 +27,21 @@ Failsafe::Failsafe()
 
 	LOG("Failsafe enabled");
 
-	m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(98955));
+	switch (eGameVer)
+	{
+	case VER_1_0_2215_0_STEAM:
+	case VER_1_0_2215_0_NOSTEAM:
+	case VER_1_0_2245_0_STEAM:
+	case VER_1_0_2245_0_NOSTEAM:
+		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(98955));
+
+		break;
+	case VER_1_0_2374_0_STEAM:
+	case VER_1_0_2374_0_NOSTEAM:
+		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(99370));
+
+		break;
+	}
 }
 
 void Failsafe::Run()

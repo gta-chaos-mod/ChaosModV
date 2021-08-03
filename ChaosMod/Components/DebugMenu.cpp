@@ -230,7 +230,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID)
+		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID || m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.IsScript())
 		{
 			m_bDispatchEffect = true;
 		}

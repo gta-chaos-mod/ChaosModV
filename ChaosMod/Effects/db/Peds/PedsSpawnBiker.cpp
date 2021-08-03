@@ -36,6 +36,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_BIKER, OnStart, EffectInf
     {
         .Name = "Spawn Biker",
         .Id = "peds_spawn_biker",
-        .EffectGroupType = EffectGroupType::SpawnEnemy
+        .EEffectGroupType = EEffectGroupType::SpawnEnemy
     }
 );

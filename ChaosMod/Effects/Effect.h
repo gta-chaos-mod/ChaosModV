@@ -165,17 +165,17 @@ private:
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);
 
-		EffectGroupType effectGroupType = effectInfo.EffectGroupType;
-		if (effectGroupType != EffectGroupType::None)
+		EEffectGroupType effectGroupType = effectInfo.EEffectGroupType;
+		if (effectGroupType != EEffectGroupType::None)
 		{
-			if (!g_AllEffectGroupMemberCount[effectGroupType])
+			if (!g_dictAllEffectGroupMemberCount[effectGroupType])
 			{
-				g_AllEffectGroupMemberCount[effectGroupType] = 0;
+				g_dictAllEffectGroupMemberCount[effectGroupType] = 0;
 			}
 
-			g_AllEffectGroupMemberCount[effectGroupType]++;
+			g_dictAllEffectGroupMemberCount[effectGroupType]++;
 		}
 
-		g_EffectsMap[eEffectType] = std::move(effectInfo);
+		g_dictEffectsMap[eEffectType] = std::move(effectInfo);
 	}
 };

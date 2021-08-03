@@ -26,6 +26,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_FAN_CATS, OnStart, EffectInfo
 	{
 		.Name = "Spawn Fan Cats",
 		.Id = "peds_spawnfancats",
-		.EffectGroupType = EffectGroupType::SpawnCompanion
+		.EEffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );
