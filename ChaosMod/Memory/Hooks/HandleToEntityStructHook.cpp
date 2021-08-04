@@ -34,7 +34,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "_HandleToEntityStruct");
+static RegisterHook registerHook(OnHook, "_HandleToEntityStruct", true);
 
 namespace Hooks
 {

@@ -11,6 +11,7 @@ namespace Memory
 {
 	void Init();
 	void Uninit();
+	void RunLateHooks();
 
 	_NODISCARD Handle FindPattern(const std::string& szPattern);
 	MH_STATUS AddHook(void* pTarget, void* pTetour, void* ppOrig);
