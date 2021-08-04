@@ -1,5 +1,5 @@
 /*
-	Effect by Moxi, based on "Detonate Current Vehicle"
+	Effect by Moxi, based on "Detonate Current Vehicle", modified
 */
 
 #include <stdafx.h>
@@ -22,7 +22,7 @@ static void OnStart()
 	int beepTimer = LAUNCH_TIMER;
 	while (true)
 	{
-		WAIT(0);
+		SET_ENTITY_INVINCIBLE(playerPed, true);
 
 		int curTimestamp = GET_GAME_TIMER();
 
@@ -47,7 +47,11 @@ static void OnStart()
 		}
 
 		lastTimestamp = curTimestamp;
+
+		WAIT(0);
 	}
+
+	SET_ENTITY_INVINCIBLE(playerPed, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_ROCKET, OnStart, EffectInfo
