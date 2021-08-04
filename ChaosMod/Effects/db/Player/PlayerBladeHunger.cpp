@@ -1,5 +1,5 @@
 /*
-       Effect by ProfessorBiddle
+       Effect by ProfessorBiddle, modified
 */
 
 #include <stdafx.h>
@@ -20,6 +20,10 @@ static void OnStart()
 
 static void OnTick()
 {
+	Player player = PLAYER_ID();
+	SET_PLAYER_WANTED_LEVEL(player, 0, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+
 	Ped playerPed = PLAYER_PED_ID();
 	
 	GIVE_WEAPON_TO_PED(playerPed, bladeHash, 1, false, true);
@@ -63,7 +67,7 @@ static void OnTick()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	if (curTick > lastTick + 60)
+	if (curTick > lastTick + 150)
 	{
 		lastTick = curTick;
 		fade++;

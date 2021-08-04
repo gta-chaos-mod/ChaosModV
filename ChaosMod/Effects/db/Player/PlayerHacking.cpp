@@ -43,7 +43,11 @@ const char* ROULETTE_WORDS[] =
     "BIRD1338",
     "BRANDWAR",
     "YZIMRONI",
-    "T_AVENGE"
+    "T_AVENGE",
+    "HUGO_ONE",
+    "GATMUN!!",
+    "MOXI____",
+    "HUNTER2_"
 };
 
 const char* WIN_PHRASES[] =
@@ -57,7 +61,17 @@ const char* WIN_PHRASES[] =
     "i ran out of phrases to put here. please pity me.",
     "I should get Linux.",
     "Yay, hacking!",
-    "ping rockstargames.com"
+    "ping rockstargames.com",
+    "You obviously must know something about something...",
+    "I can read machine code!",
+    "Well that wasn't fun",
+    "Was that a promotion?",
+    "We'll get right back to normal gameplay, hope you weren't doing anything important",
+    "I use arch btw",
+    "Vim > Emacs",
+    "loooool cool hacker reference xdd",
+    "You wouldn't download a car...",
+    "Needs more blockchain"
 };
 
 enum class TimerAction

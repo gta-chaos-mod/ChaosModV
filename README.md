@@ -23,7 +23,7 @@ git submodule init
 git submodule update --recursive
 ```
 
-4. Open `vendor/minhook/build/VC15/MinHookVC15.sln` in Visual Studio
+4. Open `vendor/minhook/build/VC16/MinHookVC16.sln` in Visual Studio
 
 5. Compile libMinHook as x64 Release build
 
