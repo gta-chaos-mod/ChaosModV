@@ -26,6 +26,7 @@ static RegisterEffect registerEffect(EFFECT_LOW_PITCH, OnStart, OnStop, OnTick, 
 		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_HIGH_PITCH }
 	}
 );

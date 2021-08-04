@@ -334,6 +334,7 @@ namespace ConfigApp
             EFFECT_PEDS_SPAWN_QUARRELING_COUPLE,
             EFFECT_MISC_GET_TOWED,
             EFFECT_BLOODY_PEDS,
+            EFFECT_WEIRD_PITCH,
             _EFFECT_ENUM_MAX
         }
 
@@ -632,6 +633,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_SPAWN_QUARRELING_COUPLE, new EffectInfo("Spawn Quarreling Couple", EffectCategory.PEDS, "peds_spawn_quarreling_couple")},
             {EffectType.EFFECT_MISC_GET_TOWED, new EffectInfo("Get Towed", EffectCategory.MISC, "misc_get_towed")},
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
+            {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
         };
     }
 }
