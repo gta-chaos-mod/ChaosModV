@@ -331,6 +331,7 @@ namespace ConfigApp
             EFFECT_PEDS_ETERNAL_SCREAMS,
             EFFECT_PLAYER_BLADE_HUNGER,
             EFFECT_MISC_UTURN,
+            EFFECT_PEDS_SPAWN_QUARRELING_COUPLE,
             EFFECT_MISC_GET_TOWED,
             EFFECT_BLOODY_PEDS,
             _EFFECT_ENUM_MAX
@@ -628,6 +629,7 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_ETERNAL_SCREAMS, new EffectInfo("Eternal Screams", EffectCategory.PEDS, "peds_eternal_screams", true, true)},
             {EffectType.EFFECT_PLAYER_BLADE_HUNGER, new EffectInfo("The Blade Hungers", EffectCategory.PLAYER, "player_blade_hunger", true)},
             {EffectType.EFFECT_MISC_UTURN, new EffectInfo("U-Turn", EffectCategory.MISC, "misc_uturn")},
+            {EffectType.EFFECT_PEDS_SPAWN_QUARRELING_COUPLE, new EffectInfo("Spawn Quarreling Couple", EffectCategory.PEDS, "peds_spawn_quarreling_couple")},
             {EffectType.EFFECT_MISC_GET_TOWED, new EffectInfo("Get Towed", EffectCategory.MISC, "misc_get_towed")},
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
         };
