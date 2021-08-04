@@ -17,9 +17,10 @@ namespace Memory
 
 		MH_Initialize();
 
+		LOG("Running hooks");
 		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
-			if (!pRegisteredHook->RunHook())
+			if (!pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
 				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
@@ -62,6 +63,19 @@ namespace Memory
 		MH_DisableHook(MH_ALL_HOOKS);
 
 		MH_Uninitialize();
+	}
+
+	void RunLateHooks()
+	{
+		LOG("Running late hooks");
+
+		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		{
+			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
+			{
+				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
+			}
+		}
 	}
 
 	Handle FindPattern(const std::string& szPattern)
