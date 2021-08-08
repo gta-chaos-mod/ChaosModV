@@ -36,7 +36,6 @@ static void SleepAllThreads(DWORD ms)
 	for (HANDLE thread : threads)
 	{
 		ResumeThread(thread);
-
 		CloseHandle(thread);
 	}
 
@@ -52,16 +51,27 @@ static void OnStart()
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
 
-	SleepAllThreads(500);
+	// sometimes it may just freeze, other times it could jump ahead a bit
+	if (g_Random.GetRandomInt(0, 1))
+	{
+		SleepAllThreads(500);
+		WAIT(500);
+	}
+	
+	// another devilish option, sometimes the chaos mod ui may just up and vanish
+	if (g_Random.GetRandomInt(0, 1))
+	{
+		g_MetaInfo.m_bShouldHideChaosUI = true;
+	}
 
-	WAIT(500);
-
-	SleepAllThreads(g_Random.GetRandomInt(3000, 5000));
+	SleepAllThreads(g_Random.GetRandomInt(3000, 6000));
 
 	if (fakeTimer)
 	{
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
 	}
+	
+	g_MetaInfo.m_bShouldHideChaosUI = false;
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
