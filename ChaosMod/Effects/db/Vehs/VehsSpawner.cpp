@@ -21,6 +21,34 @@ static RegisterEffect registerEffect1(EFFECT_SPAWN_TANK, OnStartRhino, EffectInf
 		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
+static void OnStartKosatka()
+{
+	Vector3 playerPos = GetPlayerPos();
+
+	CreatePoolVehicle(GET_HASH_KEY("KOSATKA"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+}
+
+static RegisterEffect registerEffect16(EFFECT_SPAWN_SUB, OnStartKosatka, EffectInfo
+	{
+		.Name = "Spawn Kosatka",
+		.Id = "spawn_kosatka",
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+	}
+);
+static void OnStartHandler()
+{
+	Vector3 playerPos = GetPlayerPos();
+
+	CreatePoolVehicle(GET_HASH_KEY("HANDLER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+}
+
+static RegisterEffect registerEffect17(EFFECT_SPAWN_HANDLER, OnStartHandler, EffectInfo
+	{
+		.Name = "Spawn Dock Handler",
+		.Id = "spawn_handler",
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+	}
+);
 static void OnStartAdder()
 {
 	Vector3 playerPos = GetPlayerPos();
