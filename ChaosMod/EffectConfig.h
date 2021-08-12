@@ -54,7 +54,7 @@ namespace EffectConfig
 					{
 						std::string szSplit = szValue.substr(0, ullSplitIndex);
 						// Trim surrounding quotations
-						if (szSplit.length() > 2 && szSplit[0] == '\"' && szSplit[szSplit.length() -1] == '\"') {
+						if (szSplit.length() >= 2 && szSplit[0] == '\"' && szSplit[szSplit.length() -1] == '\"') {
 							szSplit = szSplit.substr(1, szSplit.size() - 2);
 						}
 						// Names can't be "0" to support older configs
