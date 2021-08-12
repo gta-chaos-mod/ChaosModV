@@ -1,8 +1,19 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
+
+static const char* ms_rgTextPairs[] =
+{
+	"Just kidding, keep playing",
+	"lol u suck",
+	"Did you really fall for that?",
+	"~g~(No you're fine)",
+	"Did this scare you?",
+	"~r~FISSION MAILED",
+	"ded"
+};
 
 enum FakeDeathState
 {
@@ -173,6 +184,7 @@ static void OnStart()
 			SHAKE_GAMEPLAY_CAM("DEATH_FAIL_IN_EFFECT_SHAKE", 1);
 			break;
 		case FakeDeathState::overlay: // 2 Seconds later, Show Fake Wasted Screen Message
+		{
 			scaleForm = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 			while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
 			{
@@ -184,11 +196,15 @@ static void OnStart()
 			ANIMPOSTFX_STOP(deathAnimationName);
 			ANIMPOSTFX_PLAY("DeathFailOut", 0, false);
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
+
 			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("Just kidding, keep playing");
+			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
+
 			END_SCALEFORM_MOVIE_METHOD();
 			PLAY_SOUND_FRONTEND(-1, "TextHit", "WastedSounds", true);
 			break;
+		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 			SET_VEHICLE_FIXED(veh);

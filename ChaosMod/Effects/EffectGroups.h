@@ -13,6 +13,7 @@ enum class EEffectGroupType
 	Weapons,             // Effects which give/remove weapons
 	PlayerKill,          // Effects which are (almost) guaranteed to immediately kill the player under any circumstance
 	TrafficColor,       // Effects which change the color of traffic
+	TrafficSpawner,	 // Effects which change or spawn a lot of vehicles
 	TimeChange,         // Effects which change time of day
 	WeatherChange,      // Effects which change the weather
 };
@@ -31,6 +32,7 @@ inline const std::unordered_map<EEffectGroupType, EffectGroup> g_EffectGroups
 	{EEffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
 	{EEffectGroupType::Weapons, { .WeightMult = 4 }},
 	{EEffectGroupType::PlayerKill, { .WeightMult = 2 }},
+	{EEffectGroupType::TrafficSpawner, {.WeightMult = 3 }},
 	{EEffectGroupType::TrafficColor, { .WeightMult = 3 }},
 	{EEffectGroupType::TimeChange, {.WeightMult = 2 }},
 	{EEffectGroupType::WeatherChange, {.WeightMult = 2 }},

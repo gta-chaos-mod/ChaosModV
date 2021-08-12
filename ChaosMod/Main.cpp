@@ -18,6 +18,8 @@ static bool ms_bDisableMod = false;
 
 static bool ms_bEnablePauseTimerShortcut = false;
 
+static bool ms_bHaveLateHooksRan = false;
+
 static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
 	// Format: #ARGB
@@ -147,6 +149,13 @@ static void Init()
 
 static void MainRun()
 {
+	if (!ms_bHaveLateHooksRan)
+	{
+		ms_bHaveLateHooksRan = true;
+
+		Memory::RunLateHooks();
+	}
+
 	g_MainThread = GetCurrentFiber();
 
 	EffectThreads::ClearThreads();

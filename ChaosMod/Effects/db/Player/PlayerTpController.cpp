@@ -262,19 +262,26 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 	}
 );
 
-static const std::vector<std::pair<EEffectType, Vector3>> tpLocations =
+static struct FakeTeleportInfo
+{
+	EEffectType type;
+	Vector3 playerPos;
+	Vector3 vehiclePos;
+};
+
+static const std::vector<FakeTeleportInfo> tpLocations =
 {
 	{EFFECT_TP_LSAIRPORT, {-1388.6f, -3111.61f, 13.94f}}, // LSIA
 	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
-	{EFFECT_TP_FORTZANCUDO, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
-	{EFFECT_TP_MOUNTCHILLIAD, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
+	{EFFECT_TP_FORTZANCUDO, {-2360.3f, 3244.83f, 92.9f}, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
+	{EFFECT_TP_MOUNTCHILLIAD, {501.77f, 5604.85f, 797.91f}, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
 	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
 };
 
 static void OnStartFakeTp()
 {
-	std::pair<EEffectType, Vector3> randLocation = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	EEffectType overrideName = randLocation.first;
+	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	EEffectType overrideName = selectedLocationInfo.type;
 	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
 
 	Player player = PLAYER_ID();
@@ -286,8 +293,12 @@ static void OnStartFakeTp()
 	Hooks::EnableScriptThreadBlock();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
+	Vector3 destinationPos = selectedLocationInfo.playerPos;
 	if (playerVeh)
 	{
+		if (!selectedLocationInfo.vehiclePos.IsDefault()) {
+			destinationPos = selectedLocationInfo.vehiclePos;
+		}
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
 	}
 
@@ -295,7 +306,7 @@ static void OnStartFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	TeleportPlayer(randLocation.second);
+	TeleportPlayer(destinationPos);
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
