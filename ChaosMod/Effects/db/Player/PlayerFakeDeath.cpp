@@ -1,8 +1,19 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
+
+static const char* ms_rgTextPairs[] =
+{
+	"Just kidding, keep playing",
+	"lol u suck",
+	"Did you really fall for that?",
+	"~g~(No you're fine)",
+	"Did this scare you?",
+	"~r~FISSION MAILED",
+	"ded"
+};
 
 enum FakeDeathState
 {
@@ -58,15 +69,19 @@ static void OnStart()
 			SET_PLAYER_INVINCIBLE(playerPed, true);
 		}
 
+		// Eager assumption
+		EEffectType eFakeEffectType = EFFECT_PLAYER_SUICIDE;
+
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
-			if (g_random.GetRandomInt(0, 1) % 2 == 0)
+			if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
 					if (IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 					{
+						// Fake suicide
 						REQUEST_ANIM_DICT("mp_suicide");
 						while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
 						{
@@ -81,15 +96,65 @@ static void OnStart()
 				}
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
+					// Fake veh explosion
+					eFakeEffectType = EFFECT_EXPLODE_CUR_VEH;
+
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-					for (int i = 0; i < 6; i++)
+
+					int lastTimestamp = GET_GAME_TIMER();
+
+					int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+
+					int detonateTimer = 5000;
+					int beepTimer = 5000;
+					while (DOES_ENTITY_EXIST(veh))
 					{
-						SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+						WAIT(0);
+
+						int curTimestamp = GET_GAME_TIMER();
+
+						if ((detonateTimer -= curTimestamp - lastTimestamp) < beepTimer)
+						{
+							beepTimer *= .8f;
+
+							PLAY_SOUND_FROM_ENTITY(-1, "Beep_Red", veh, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, false);
+						}
+
+						if (!IS_PED_IN_VEHICLE(PLAYER_PED_ID(), veh, false))
+						{
+							for (int i = -1; i < seats - 1; i++)
+							{
+								Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
+
+								if (!ped)
+								{
+									continue;
+								}
+
+								TASK_LEAVE_VEHICLE(ped, veh, 4160);
+							}
+						}
+
+						if (detonateTimer <= 0)
+						{
+							for (int i = 0; i < 6; i++)
+							{
+								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
+							}
+							Vector3 coords = GET_ENTITY_COORDS(veh, false);
+							ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
+
+							break;
+						}
+
+						lastTimestamp = curTimestamp;
 					}
-					Vector3 coords = GET_ENTITY_COORDS(veh, false);
-					ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
 				}
 			}
+
+			// Set the fake name accordingly
+			g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
+
 			nextModeTime = 0;
 			break;
 		case FakeDeathState::soundStart: // Apply Screen Effect
@@ -119,6 +184,7 @@ static void OnStart()
 			SHAKE_GAMEPLAY_CAM("DEATH_FAIL_IN_EFFECT_SHAKE", 1);
 			break;
 		case FakeDeathState::overlay: // 2 Seconds later, Show Fake Wasted Screen Message
+		{
 			scaleForm = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 			while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
 			{
@@ -130,11 +196,15 @@ static void OnStart()
 			ANIMPOSTFX_STOP(deathAnimationName);
 			ANIMPOSTFX_PLAY("DeathFailOut", 0, false);
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
+
 			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("Just kidding, keep playing");
+			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
+
 			END_SCALEFORM_MOVIE_METHOD();
 			PLAY_SOUND_FRONTEND(-1, "TextHit", "WastedSounds", true);
 			break;
+		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 			SET_VEHICLE_FIXED(veh);
@@ -151,4 +221,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart, EffectInfo
+	{
+		.Name = "Fake Death",
+		.Id = "player_fakedeath"
+	}
+);

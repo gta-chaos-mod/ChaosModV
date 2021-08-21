@@ -27,7 +27,7 @@ static void OnStart()
 			}
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
 			{
-				int randomIndex = g_random.GetRandomInt(0, pedPool.size() - 1);
+				int randomIndex = g_Random.GetRandomInt(0, pedPool.size() - 1);
 				SET_PED_INTO_VEHICLE(pedPool[randomIndex], playerVeh, i);
 
 				pedPool.erase(pedPool.begin() + randomIndex);
@@ -36,4 +36,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_TPRANDOMPEDS, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_TPRANDOMPEDS, OnStart, EffectInfo
+	{
+		.Name = "Teleport Random Peds Into Current Vehicle",
+		.Id = "playerveh_tprandompeds"
+	}
+);

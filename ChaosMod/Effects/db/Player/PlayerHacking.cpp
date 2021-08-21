@@ -21,10 +21,33 @@ const char* ROULETTE_WORDS[] =
     "HACKING!",
     "ALXBLADE",
     "DVIPERAU",
+    "HCKERMAN",
+    "JIZZLEDS",
     "BURHAC!!",
     "SAURUS88",
     "TORIKSLV",
     "TOASTYYY",
+    "ELIAS_GR",
+    "KOLYA_VE",
+    "LU7YOSHI",
+    "P.BIDDLE",
+    "SLOTHBEE",
+    "ELI_RICK",
+    "JUHANA!!",
+    "LOSCHIKA",
+    "BYHEMECH",
+    "$$WASTED",
+    "JOSHUAX8",
+    "SSOBOSS1",
+    "DZWDZWDZ",
+    "BIRD1338",
+    "BRANDWAR",
+    "YZIMRONI",
+    "T_AVENGE",
+    "HUGO_ONE",
+    "GATMUN!!",
+    "MOXI____",
+    "HUNTER2_"
 };
 
 const char* WIN_PHRASES[] =
@@ -35,7 +58,20 @@ const char* WIN_PHRASES[] =
     "I'll make it harder next time, I promise!",
     "https://youtube.com/watch?v=dQw4w9WgXcQ",
     "I'm not sure what you hacked, but it's now hacked.",
-    "i ran out of phrases to put here. please pity me."
+    "i ran out of phrases to put here. please pity me.",
+    "I should get Linux.",
+    "Yay, hacking!",
+    "ping rockstargames.com",
+    "You obviously must know something about something...",
+    "I can read machine code!",
+    "Well that wasn't fun",
+    "Was that a promotion?",
+    "We'll get right back to normal gameplay, hope you weren't doing anything important",
+    "I use arch btw",
+    "Vim > Emacs",
+    "loooool cool hacker reference xdd",
+    "You wouldn't download a car...",
+    "Needs more blockchain"
 };
 
 enum class TimerAction
@@ -120,7 +156,7 @@ static void OnStart()
 
     ScaleformUpdateLives();
 
-    auto word = g_random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
+    auto word = g_Random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_WORD");
     ScaleformPushString(ROULETTE_WORDS[word]);
     GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
@@ -129,7 +165,7 @@ static void OnStart()
     {
         GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
         GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
+        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(10, 100) * 1.0f);
         GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
     }
 
@@ -164,7 +200,7 @@ static void OnStart()
                 {
                     timer = MISC::GET_GAME_TIMER() + 2000;
                     act = TimerAction::REMOVE;
-                    auto phrase = g_random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
+                    auto phrase = g_Random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
                     AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
                     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
                     GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(true);
@@ -198,6 +234,11 @@ static void OnStart()
 
                 selectInputReturn = 0;
             }
+        }
+
+        if (!IS_SCREEN_FADED_IN())
+        {
+            act = TimerAction::REMOVE;
         }
 
         if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
@@ -241,4 +282,9 @@ static void OnStart()
     }
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart);
+static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart, EffectInfo
+	{
+		.Name = "Realistic Hacking",
+		.Id = "player_hacking"
+	}
+);

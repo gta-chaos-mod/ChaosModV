@@ -38,4 +38,10 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_RANDOM_HOSTILE, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_RANDOM_HOSTILE, OnStart, EffectInfo
+	{
+		.Name = "Spawn Random Enemy",
+		.Id = "peds_spawnrandomhostile",
+		.EEffectGroupType = EEffectGroupType::SpawnEnemy
+	}
+);

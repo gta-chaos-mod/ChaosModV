@@ -1,56 +1,72 @@
 #pragma once
 
-#include "../nativesNoNamespaces.h"
+#include "../Util/Natives.h"
+
+using BYTE = unsigned char;
 
 struct ScreenTextVector
 {
-public:
-	ScreenTextVector(float x, float y) : X(x), Y(y)
+	const float m_fX;
+	const float m_fY;
+
+	ScreenTextVector(float fX, float fY) : m_fX(fX), m_fY(fY)
 	{
 
 	}
-
-	const float X;
-	const float Y;
 };
 
 struct ScreenTextColor
 {
-public:
+	const BYTE m_ucR;
+	const BYTE m_ucG;
+	const BYTE m_ucB;
+
 	ScreenTextColor(int r, int g, int b)
-		: R(static_cast<unsigned char>(r)), G(static_cast<unsigned char>(g)), B(static_cast<unsigned char>(b))
+		: m_ucR(static_cast<unsigned char>(r)), m_ucG(static_cast<unsigned char>(g)), m_ucB(static_cast<unsigned char>(b))
 	{
 
 	}
-
-	const unsigned char R;
-	const unsigned char G;
-	const unsigned char B;
 };
 
-enum class ScreenTextAdjust
+enum class EScreenTextAdjust
 {
-	CENTER,
-	LEFT,
-	RIGHT
+	Center,
+	Left,
+	Right
 };
 
-inline void DrawScreenText(const std::string& text, const ScreenTextVector& textPos, float scale, ScreenTextColor textColor,
-	bool outline = false, ScreenTextAdjust textAdjust = ScreenTextAdjust::CENTER, const ScreenTextVector& textWrap = { 0.f, 1.f })
+inline float GetScreenTextWidth(const std::string& szText, float fScale)
+{
+	_BEGIN_TEXT_COMMAND_GET_WIDTH("STRING");
+	ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(szText.c_str());
+	SET_TEXT_SCALE(fScale, fScale);
+
+	return _END_TEXT_COMMAND_GET_WIDTH(true);
+}
+
+inline void DrawScreenText(const std::string& szText, const ScreenTextVector& textPos, float fScale, ScreenTextColor textColor,
+	bool bOutline = false, EScreenTextAdjust eTextAdjust = EScreenTextAdjust::Center, const ScreenTextVector& textWrap = { 0.f, 1.f }, bool bAddBackground = false)
 {
 	BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-	ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text.c_str());
+	ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(szText.c_str());
 
-	SET_TEXT_SCALE(scale, scale);
-	SET_TEXT_COLOUR(textColor.R, textColor.G, textColor.B, 255);
+	SET_TEXT_SCALE(fScale, fScale);
+	SET_TEXT_COLOUR(textColor.m_ucR, textColor.m_ucG, textColor.m_ucB, 255);
 
-	if (outline)
+	if (bOutline)
 	{
 		SET_TEXT_OUTLINE();
 	}
 
-	SET_TEXT_JUSTIFICATION(static_cast<int>(textAdjust));
-	SET_TEXT_WRAP(textWrap.X, textWrap.Y);
+	SET_TEXT_JUSTIFICATION(static_cast<int>(eTextAdjust));
+	SET_TEXT_WRAP(textWrap.m_fX, textWrap.m_fY);
 
-	END_TEXT_COMMAND_DISPLAY_TEXT(textPos.X, textPos.Y, 0);
+	END_TEXT_COMMAND_DISPLAY_TEXT(textPos.m_fX, textPos.m_fY, 0);
+	if (bAddBackground)
+	{
+		float fWidth = GetScreenTextWidth(szText, fScale);
+		float fHeight = fScale / 10;
+		float fAdditionalWidth = 0.02;
+		DRAW_RECT(textPos.m_fX - (fWidth * 0.5f), textPos.m_fY + 0.015, fWidth + fAdditionalWidth, fHeight, 0, 0, 0, 127, true);
+	}
 }

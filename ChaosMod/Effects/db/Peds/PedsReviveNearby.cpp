@@ -84,7 +84,7 @@ static void OnStart()
 			SET_PED_SUFFERS_CRITICAL_HITS(clone, false);
 
 			static const std::vector<Hash>& weps = Memory::GetAllWeapons();
-			GIVE_WEAPON_TO_PED(clone, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+			GIVE_WEAPON_TO_PED(clone, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
 
 			SET_PED_ACCURACY(clone, 100);
 			SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
@@ -97,4 +97,9 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_REVIVE, OnStart);
+static RegisterEffect registerEffect(EFFECT_PEDS_REVIVE, OnStart, EffectInfo
+	{
+		.Name = "Revive Dead Peds",
+		.Id = "peds_revive"
+	}
+);

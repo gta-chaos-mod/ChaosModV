@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Security;
-using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -72,9 +70,9 @@ namespace ConfigApp
                     File.Delete(".writetest");
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e) when (e is UnauthorizedAccessException || e is FileNotFoundException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try either running the program as admin or allowing write access to the current directory.",
+                MessageBox.Show("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.",
                     "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Application.Current.Shutdown();
@@ -144,6 +142,9 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+            misc_user_effects_disable_startup.IsChecked = m_configFile.ReadValueBool("DisableStartup", false);
+            misc_user_effects_enable_group_weighting.IsChecked = m_configFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
+            misc_user_effects_enable_failsafe.IsChecked = m_configFile.ReadValueBool("EnableFailsafe", true);
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -166,6 +167,9 @@ namespace ConfigApp
             m_configFile.WriteValue("EffectTimerColor", misc_user_effects_timer_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
+            m_configFile.WriteValue("DisableStartup", misc_user_effects_disable_startup.IsChecked.Value);
+            m_configFile.WriteValue("EnableGroupWeightingAdjustments", misc_user_effects_enable_group_weighting.IsChecked.Value);
+            m_configFile.WriteValue("EnableFailsafe", misc_user_effects_enable_failsafe.IsChecked.Value);
 
             // Meta Effects
             m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
@@ -405,7 +409,11 @@ namespace ConfigApp
             WriteTwitchFile();
             WriteEffectsFile();
 
-            MessageBox.Show("Saved Config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Reload saved config to show the "new" (saved) settings
+            ParseConfigFile();
+            ParseTwitchFile();
+
+            MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void user_reset_Click(object sender, RoutedEventArgs e)

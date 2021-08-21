@@ -33,4 +33,11 @@ static void OnStop()
     fovCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_QUAKE_FOV, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_QUAKE_FOV, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Quake FOV",
+		.Id = "player_quake_fov",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM }
+	}
+);

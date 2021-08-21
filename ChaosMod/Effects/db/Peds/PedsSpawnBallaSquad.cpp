@@ -26,7 +26,7 @@ static void OnStart()
 	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
 	for (int i = 0; i < 2; i++)
 	{
-		Hash choosenPropHash = ballaNames.at(g_random.GetRandomInt(0, ballaNames.size() - 1));
+		Hash choosenPropHash = ballaNames.at(g_Random.GetRandomInt(0, ballaNames.size() - 1));
 		Ped ped = CreatePoolPed(4, choosenPropHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 		if (i == 0)
 		{
@@ -46,4 +46,10 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_BALLA_SQUAD, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_BALLA_SQUAD, OnStart, EffectInfo
+	{
+		.Name = "Spawn Balla Squad",
+		.Id = "peds_spawnballasquad",
+		.EEffectGroupType = EEffectGroupType::SpawnEnemy
+	}
+);

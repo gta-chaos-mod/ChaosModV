@@ -5,14 +5,13 @@
 #include <stdafx.h>
 
 #include "Memory/Hooks/HandleToEntityStructHook.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	static Vehicle lastVeh = 0;
-
-	static const std::vector<Hash> vehModels = Memory::GetAllVehModels();
+	static const std::vector<Hash>& vehModels = Memory::GetAllVehModels();
 	if (!vehModels.empty())
 	{
 		float heading;
@@ -24,32 +23,24 @@ static void OnStart()
 		Entity oldVehHandle = 0;
 		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 		{
-			Vehicle currentVehicle = GET_VEHICLE_PED_IS_IN(playerPed, false);
-			int numberOfSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(currentVehicle));
+			oldVehHandle = GET_VEHICLE_PED_IS_IN(playerPed, false);
+			int numberOfSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(oldVehHandle));
 
-			isEngineRunning = GET_IS_VEHICLE_ENGINE_RUNNING(currentVehicle);
-			newVehCoords = GET_ENTITY_COORDS(currentVehicle, false);
-			heading = GET_ENTITY_HEADING(currentVehicle);
-			vehVelocity = GET_ENTITY_VELOCITY(currentVehicle);
-			forwardSpeed = GET_ENTITY_SPEED(currentVehicle);
+			isEngineRunning = GET_IS_VEHICLE_ENGINE_RUNNING(oldVehHandle);
+			newVehCoords = GET_ENTITY_COORDS(oldVehHandle, false);
+			heading = GET_ENTITY_HEADING(oldVehHandle);
+			vehVelocity = GET_ENTITY_VELOCITY(oldVehHandle);
+			forwardSpeed = GET_ENTITY_SPEED(oldVehHandle);
 
 			for (int i = -1; i < numberOfSeats - 1; i++)
 			{
-				if (IS_VEHICLE_SEAT_FREE(currentVehicle, i, false))
+				if (IS_VEHICLE_SEAT_FREE(oldVehHandle, i, false))
 				{
 					continue;
 				}
-				Ped ped = GET_PED_IN_VEHICLE_SEAT(currentVehicle, i, false);
+				Ped ped = GET_PED_IN_VEHICLE_SEAT(oldVehHandle, i, false);
 				vehPeds.push_back(ped);
 			}
-
-			if (IS_ENTITY_A_MISSION_ENTITY(currentVehicle))
-			{
-				oldVehHandle = currentVehicle;
-			}
-
-			SET_ENTITY_AS_MISSION_ENTITY(currentVehicle, true, true);
-			DELETE_VEHICLE(&currentVehicle);
 		}
 		else
 		{
@@ -60,15 +51,15 @@ static void OnStart()
 			forwardSpeed = GET_ENTITY_SPEED(playerPed);
 		}
 
-		Hash randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
-		while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(randomVeh) < vehPeds.size())
+		Hash randomVeh = vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)];
+		
+		// Filter out Truck Trailers and other vehicles with insufficient seats
+		while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(randomVeh) < vehPeds.size() || IS_THIS_MODEL_A_TRAIN(randomVeh) || GET_VEHICLE_MODEL_ACCELERATION(randomVeh) <= 0)
 		{
-			randomVeh = vehModels[g_random.GetRandomInt(0, vehModels.size() - 1)];
+			randomVeh = vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)];
 		}
-
 		LoadModel(randomVeh);
 		Vehicle newVehicle = CREATE_VEHICLE(randomVeh, newVehCoords.x, newVehCoords.y, newVehCoords.z, heading, true, true, true);
-
 		for (int index = 0; index < vehPeds.size(); index++)
 		{
 			int seatIdx = index == 0 ? -1 : -2;
@@ -82,21 +73,45 @@ static void OnStart()
 		SET_ENTITY_VELOCITY(newVehicle, vehVelocity.x, vehVelocity.y, vehVelocity.z);
 		SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
 
-		if (lastVeh)
-		{
-			DELETE_VEHICLE(&lastVeh);
-		}
-
-		lastVeh = newVehicle;
-
 		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
 		SET_MODEL_AS_NO_LONGER_NEEDED(randomVeh);
 
 		if (oldVehHandle)
 		{
-			Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+			bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldVehHandle);
+			Entity copy = oldVehHandle;
+			SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
+
+			if (shouldUseHook)
+			{
+				Hooks::EnableScriptThreadBlock();
+			}
+			DELETE_VEHICLE(&copy);
+			if (shouldUseHook)
+			{
+				Hooks::ProxyEntityHandle(oldVehHandle, newVehicle);
+				Hooks::DisableScriptThreadBlock();
+			}
 		}
+
+		// Also apply random upgrades
+		SET_VEHICLE_MOD_KIT(newVehicle, 0);
+		for (int i = 0; i < 50; i++)
+		{
+			int max = GET_NUM_VEHICLE_MODS(newVehicle, i);
+			SET_VEHICLE_MOD(newVehicle, i, max > 0 ? g_Random.GetRandomInt(0, max - 1) : 0, g_Random.GetRandomInt(0, 1));
+			TOGGLE_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, 1));
+		}
+		SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_Random.GetRandomInt(0, 1));
+
+		//way to know if vehicle is modified
+		SET_VEHICLE_WINDOW_TINT(newVehicle, 3);
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_REPLACEVEHICLE, OnStart);
+static RegisterEffect registerEffect(EFFECT_VEH_REPLACEVEHICLE, OnStart, EffectInfo
+	{
+		.Name = "Replace Current Vehicle",
+		.Id = "misc_replacevehicle"
+	}
+);

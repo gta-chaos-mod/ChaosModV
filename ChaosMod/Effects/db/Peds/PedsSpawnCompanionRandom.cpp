@@ -29,4 +29,10 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_RANDOM, OnStart);
+static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_RANDOM, OnStart, EffectInfo
+	{
+		.Name = "Spawn Random Companion",
+		.Id = "spawn_comprnd",
+		.EEffectGroupType = EEffectGroupType::SpawnCompanion
+	}
+);

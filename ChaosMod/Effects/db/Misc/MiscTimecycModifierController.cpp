@@ -18,8 +18,14 @@ static void OnTickMexico()
 	StartTransitionTimecycle("trevorspliff");
 }
 
-static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico);
-
+static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico, EffectInfo
+	{
+		.Name = "Is This What Mexico Looks Like?",
+		.Id = "screen_mexico",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnStopBright()
 {
 	OnStop();
@@ -48,29 +54,56 @@ static void OnTickBright()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright);
-
+static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright, EffectInfo
+	{
+		.Name = "Deep Fried",
+		.Id = "screen_bright",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnTickFog()
 {
 	StartTransitionTimecycle("prologue_ending_fog");
 }
 
-static RegisterEffect registerEffect3(EFFECT_SCREEN_FOG, nullptr, OnStop, OnTickFog);
-
+static RegisterEffect registerEffect3(EFFECT_SCREEN_FOG, nullptr, OnStop, OnTickFog, EffectInfo
+	{
+		.Name = "Extreme Fog",
+		.Id = "screen_fog",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnTickRenderdist()
 {
 	StartTransitionTimecycle("Mp_apart_mid");
 }
 
-static RegisterEffect registerEffect4(EFFECT_SCREEN_RENDERDIST, nullptr, OnStop, OnTickRenderdist);
-
+static RegisterEffect registerEffect4(EFFECT_SCREEN_RENDERDIST, nullptr, OnStop, OnTickRenderdist, EffectInfo
+	{
+		.Name = "Where Did Everything Go?",
+		.Id = "screen_lowrenderdist",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnTickBloom()
 {
 	StartTransitionTimecycle("Bloom");
 }
 
-static RegisterEffect registerEffect5(EFFECT_SCREEN_BLOOM, nullptr, OnStop, OnTickBloom);
-
+static RegisterEffect registerEffect5(EFFECT_SCREEN_BLOOM, nullptr, OnStop, OnTickBloom, EffectInfo
+	{
+		.Name = "Bloom",
+		.Id = "screen_bloom",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnStopLSD()
 {
 	OnStop();
@@ -131,7 +164,7 @@ static void OnTickLSD()
 			{
 				// Give player back control
 
-				timeUntilSteer += g_random.GetRandomInt(500, 2000);
+				timeUntilSteer += g_Random.GetRandomInt(500, 2000);
 			}
 			else
 			{
@@ -139,7 +172,7 @@ static void OnTickLSD()
 
 				steering = GET_RANDOM_FLOAT_IN_RANGE(-1.f, 1.f);
 
-				timeUntilSteer += g_random.GetRandomInt(50, 300);
+				timeUntilSteer += g_Random.GetRandomInt(50, 300);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
@@ -147,8 +180,14 @@ static void OnTickLSD()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD);
-
+static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD, EffectInfo
+	{
+		.Name = "LSD",
+		.Id = "screen_lsd",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnStartFullbright()
 {
 	SET_CLOCK_TIME(0, 0, 0);
@@ -159,8 +198,14 @@ static void OnTickFullbright()
 	StartTransitionTimecycle("int_lesters");
 }
 
-static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright);
-
+static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+	{
+		.Name = "Fullbright",
+		.Id = "screen_fullbright",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnTickBubbleVision()
 {
 	StartTransitionTimecycle("ufo_deathray");
@@ -168,8 +213,15 @@ static void OnTickBubbleVision()
 	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
 
-static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision);
-
+static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision, EffectInfo
+	{
+		.Name = "Bubble Vision",
+		.Id = "screen_bubblevision",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+	}
+);
 static void OnStartLSNoire()
 {
 	Ped player = PLAYER_PED_ID();
@@ -227,11 +279,25 @@ static void OnTickLSNoire()
 	StartTransitionTimecycle("NG_filmnoir_BW01");
 }
 
-static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire);
-
+static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+	{
+		.Name = "LS Noire",
+		.Id = "screen_lsnoire",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+	}
+);
 static void OnTickNeedGlasses()
 {
 	StartTransitionTimecycle("hud_def_blur");
 }
 
-static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses);
+static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+	{
+		.Name = "I Need Glasses",
+		.Id = "screen_needglasses",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_BLOOM, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+	}
+);

@@ -42,4 +42,12 @@ static void OnStop() {
 	DESTROY_CAM(camera, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_GTA_2, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_GTA_2, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "GTA 2",
+		.Id = "player_gta_2",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM }
+	}
+);

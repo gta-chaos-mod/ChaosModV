@@ -14,4 +14,11 @@ static void OnTick()
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect(EFFECT_SNOW, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_SNOW, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Snow",
+		.Id = "world_snow",
+		.IsTimed = true,
+		.EEffectGroupType = EEffectGroupType::WeatherChange
+	}
+);

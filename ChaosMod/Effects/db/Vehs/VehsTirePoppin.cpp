@@ -13,6 +13,8 @@ static void OnStop()
 
 static void OnTick()
 {
+	WAIT(400);
+
 	for (Vehicle veh : GetAllVehs())
 	{
 		for (int i = 0; i < 48; i++)
@@ -23,4 +25,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ALL_VEH_POP_TIRES, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_ALL_VEH_POP_TIRES, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Now This Is Some Tire Poppin'",
+		.Id = "vehs_poptiresconstant",
+		.IsTimed = true,
+		.IsShortDuration = true
+	}
+);

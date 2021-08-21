@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TwitchChatVotingProxy</RootNamespace>
     <AssemblyName>TwitchChatVotingProxy</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -269,9 +269,6 @@
     <Compile Include="TwitchVotingReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

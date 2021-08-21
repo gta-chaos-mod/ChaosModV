@@ -90,4 +90,10 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLAMETHROWER, nullptr, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_MISC_FLAMETHROWER, nullptr, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Flamethrowers",
+		.Id = "misc_flamethrower",
+		.IsTimed = true
+	}
+);

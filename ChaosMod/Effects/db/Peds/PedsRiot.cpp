@@ -39,7 +39,7 @@ static void OnTick()
 			if (std::find(goneThroughPeds.begin(), goneThroughPeds.end(), ped) == goneThroughPeds.end())
 			{
 				static const std::vector<Hash>& weps = Memory::GetAllWeapons();
-				GIVE_WEAPON_TO_PED(ped, weps[g_random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+				GIVE_WEAPON_TO_PED(ped, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
 
 				goneThroughPeds.push_back(ped);
 			}
@@ -59,4 +59,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Peds Riot",
+		.Id = "peds_riot",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PEDS_COPS }
+	}
+);

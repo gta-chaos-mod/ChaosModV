@@ -3,7 +3,7 @@
 // Effect by kolyaventuri
 
 static int CHANCE = 100; // Higher is less chance
-int match = g_random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
+int match = g_Random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
 int particleId;
 
 static void OnStart() {
@@ -30,7 +30,7 @@ static void ApplyVig() {
 static void OnTick() {
     static DWORD64 timeUntilClear = GET_GAME_TIMER();
     Ped player = PLAYER_PED_ID();
-    int rand_int = g_random.GetRandomInt(0, CHANCE);
+    int rand_int = g_Random.GetRandomInt(0, CHANCE);
     
     PLAY_STREAM_FROM_PED(player);
     if (rand_int == match) {
@@ -55,4 +55,11 @@ static void OnStop() {
     CLEAR_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_BEES, OnStart, OnStop, OnTick);
+static RegisterEffect registerEffect(EFFECT_PLAYER_BEES, OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "Bees",
+		.Id = "player_bees",
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PEDS_OHKO }
+	}
+);
