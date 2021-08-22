@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+	Effect by Last0xygen, modified by Reguas
 */
 
 #include <stdafx.h>
@@ -7,18 +7,51 @@
 
 static void OnStart()
 {
+	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
+
 	Hash blimpHash = GET_HASH_KEY("blimp");
 	LoadModel(blimpHash);
+	
+	if (!cutscenePlaying)
+	{
+		REQUEST_CUTSCENE("fbi_1_int", 8);
+	}
+	
 	Hooks::EnableScriptThreadBlock();
-	Vehicle veh = CREATE_VEHICLE(blimpHash, -377.276, 1055.06, 340.962, 80, true, false, false);
+	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490, 1029.085, 345.090, 53.824, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	Ped player = PLAYER_PED_ID();
 	SET_ENTITY_INVINCIBLE(player, true);
 	SET_PED_INTO_VEHICLE(player, veh, -1);
-	SET_VEHICLE_FORWARD_SPEED(veh, 36);
+	SET_VEHICLE_FORWARD_SPEED(veh, 45);
 	TASK_LEAVE_VEHICLE(player, veh, 4160);
-	WAIT(3000);
+	WAIT(4000);
+
+	int waited = 0;
+
+	while (!IS_PED_GETTING_UP(player) && waited < 100)
+	{
+		WAIT(100);
+		waited++;
+	}
+
 	SET_ENTITY_INVINCIBLE(player, false);
+
+	waited = 0;
+
+	if (!cutscenePlaying)
+	{
+
+		while (!HAS_CUTSCENE_LOADED() && waited < 100) // for proper cutscene play
+		{
+			WAIT(100);
+		}
+
+		START_CUTSCENE(0);
+		WAIT(8500);
+		STOP_CUTSCENE_IMMEDIATELY();
+
+	}
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
