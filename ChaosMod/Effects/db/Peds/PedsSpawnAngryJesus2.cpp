@@ -22,7 +22,8 @@ static void OnStart()
 		SET_VEHICLE_MOD(veh, i, max > 0 ? max - 1 : 0, false);
 	}
 
-	SET_ENTITY_PROOFS(veh, false, true, true, false, false, false, false, false);
+	SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, false);
+	SET_ENTITY_INVINCIBLE(veh, true);
 	SET_MODEL_AS_NO_LONGER_NEEDED(oppressorHash);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
@@ -44,8 +45,10 @@ static void OnStart()
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
 
-	SET_ENTITY_PROOFS(ped, false, true, true, false, false, false, false, false);
+	SET_ENTITY_PROOFS(ped, true, true, true, true, true, true, true, false);
 
+	SET_PED_CAN_BE_DRAGGED_OUT(ped, false);
+	SET_ENTITY_INVINCIBLE(ped, true);
 	SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(ped, 1);
 	SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
@@ -59,7 +62,7 @@ static void OnStart()
 
 static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS2, OnStart, EffectInfo
 	{
-		.Name = "Spawn Extreme Griefer Jesus",
+		.Name = "Spawn Godly Griefer Jesus",
 		.Id = "spawn_grieferjesus2",
 		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}

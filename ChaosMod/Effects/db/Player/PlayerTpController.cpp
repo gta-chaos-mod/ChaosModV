@@ -26,6 +26,20 @@ static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, Eff
 		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );
+
+static void OnStartAltruistCamp()
+{
+	TeleportPlayer(-1170.841f, 4926.646f, 224.295f);
+}
+
+static RegisterEffect registerEffect3(EFFECT_TP_ALTRUISTCAMP, OnStartAltruistCamp, EffectInfo
+	{
+		.Name = "Teleport To Altruist Camp",
+		.Id = "tp_altruistcamp",
+		.EEffectGroupType = EEffectGroupType::Teleport
+	}
+);
+
 static void OnStartFortZancudo()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
@@ -38,7 +52,7 @@ static void OnStartFortZancudo()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo, EffectInfo
+static RegisterEffect registerEffect4(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo, EffectInfo
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
@@ -57,7 +71,7 @@ static void OnStartMountChilliad()
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad, EffectInfo
+static RegisterEffect registerEffect5(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad, EffectInfo
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
@@ -69,7 +83,7 @@ static void OnStartSkyFall()
 	TeleportPlayer(935.f, 3800.f, 2300.f);
 }
 
-static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectInfo
+static RegisterEffect registerEffect6(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectInfo
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
@@ -147,7 +161,7 @@ static void OnStartWaypoint()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint, EffectInfo
+static RegisterEffect registerEffect7(EFFECT_TP_WAYPOINT, OnStartWaypoint, EffectInfo
 	{
 		.Name = "Teleport To Waypoint",
 		.Id = "player_tptowaypoint"
@@ -163,7 +177,7 @@ static void OnStartFront()
 	TeleportPlayer(newPos.x, newPos.y, useGroundZ ? groundZ : newPos.z);
 }
 
-static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront, EffectInfo
+static RegisterEffect registerEffect8(EFFECT_TP_FRONT, OnStartFront, EffectInfo
 	{
 		.Name = "Teleport Player A Few Meters",
 		.Id = "player_tpfront"
@@ -205,7 +219,7 @@ static void OnStartRandom()
 	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
 }
 
-static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
+static RegisterEffect registerEffect9(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
@@ -275,7 +289,9 @@ static const std::vector<FakeTeleportInfo> tpLocations =
 	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
 	{EFFECT_TP_FORTZANCUDO, {-2360.3f, 3244.83f, 92.9f}, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
 	{EFFECT_TP_MOUNTCHILLIAD, {501.77f, 5604.85f, 797.91f}, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
-	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
+	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}}, // Heaven
+	{EFFECT_TP_PLAYBOYMANSION, {-1475.234f, 167.088f, 55.841f}}, // Playboy Mansion
+	{EFFECT_TP_ALTRUISTCAMP, {-1170.841f, 4926.646f, 224.295f}} // Altruist Camp
 };
 
 static void OnStartFakeTp()
@@ -329,5 +345,19 @@ static RegisterEffect registerEffectFake(EFFECT_TP_FAKE, OnStartFakeTp, EffectIn
 	{
 		.Name = "Fake Teleport",
 		.Id = "tp_fake"
+	}
+);
+
+
+static void OnStartPlayboyMansion()
+{
+	TeleportPlayer(-1475.234f, 167.088f, 55.841f);
+}
+
+static RegisterEffect registerEffect10(EFFECT_TP_PLAYBOYMANSION, OnStartPlayboyMansion, EffectInfo
+	{
+		.Name = "Teleport To Playboy Mansion",
+		.Id = "tp_playboymansion",
+		.EEffectGroupType = EEffectGroupType::Teleport
 	}
 );

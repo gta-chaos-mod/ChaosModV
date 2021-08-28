@@ -5,8 +5,8 @@ static void SleepAllThreads(DWORD ms)
 	std::vector<HANDLE> threads;
 
 	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-	
-	THREADENTRY32 threadEntry {};
+
+	THREADENTRY32 threadEntry{};
 	threadEntry.dwSize = sizeof(threadEntry);
 
 	Thread32First(handle, &threadEntry);
@@ -23,8 +23,7 @@ static void SleepAllThreads(DWORD ms)
 		}
 
 		threadEntry.dwSize = sizeof(threadEntry);
-	}
-	while (Thread32Next(handle, &threadEntry));
+	} while (Thread32Next(handle, &threadEntry));
 
 	for (HANDLE thread : threads)
 	{
@@ -43,30 +42,17 @@ static void SleepAllThreads(DWORD ms)
 	CloseHandle(handle);
 }
 
-static void OnStart()
+static void OnTickSpike()
 {
-	bool fakeTimer = g_Random.GetRandomInt(0, 1);
-
-	if (fakeTimer)
-	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
-	}
-
-	SleepAllThreads(500);
-
-	WAIT(500);
-
-	SleepAllThreads(g_Random.GetRandomInt(10000, 20000));
-
-	if (fakeTimer)
-	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
-	}
+	SleepAllThreads(g_Random.GetRandomInt(40, 400));
+	WAIT(g_Random.GetRandomInt(600, 1300));
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+static RegisterEffect registerEffect3(EFFECT_MISC_LAGSPIKES, nullptr, nullptr, OnTickSpike, EffectInfo
 	{
-		.Name = "Almost Fake Crash",
-		.Id = "misc_fakecrash"
+		.Name = "Lagspikes",
+		.Id = "misc_lagspikes",
+		.IsTimed = true,
+		.IsShortDuration = false
 	}
 );

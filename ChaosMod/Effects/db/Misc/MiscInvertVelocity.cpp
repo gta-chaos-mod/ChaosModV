@@ -22,6 +22,7 @@ static void OnStart()
 	for (auto entity : entities)
 	{
 		auto vel = GET_ENTITY_VELOCITY(entity);
+		vel = vel * 4;
 
 		SET_ENTITY_VELOCITY(entity, -vel.x, -vel.y, -vel.z);
 	}
@@ -29,7 +30,7 @@ static void OnStart()
 
 static RegisterEffect registerEffect(EFFECT_INVERTVELOCITY, OnStart, EffectInfo
 	{
-		.Name = "Invert Current Velocity",
+		.Name = "Invert Current Velocity x 4",
 		.Id = "invertvelocity"
 	}
 );

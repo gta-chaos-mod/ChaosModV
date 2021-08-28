@@ -69,7 +69,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_CREDITS, OnStart, OnStop, OnTic
 	{
 		.Name = "Roll Credits",
 		.Id = "misc_credits",
-		.IsTimed = true,
-		.IsShortDuration = true
+		.IsTimed = true
 	}
 );

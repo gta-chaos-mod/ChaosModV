@@ -1,0 +1,87 @@
+#include <stdafx.h>
+
+static void OnStart()
+{
+	int isHostile = g_Random.GetRandomInt(1, 10);
+	if (isHostile > 3)
+	{
+		static constexpr Hash modelHash = -835930287;
+
+		Ped playerPed = PLAYER_PED_ID();
+		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+		static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+		static const Hash civGroup = GET_HASH_KEY("CIVMALE");
+		static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+
+		Hash relationshipGroup;
+		ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
+
+		Ped ped = CreatePoolPed(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
+		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+		{
+			SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+		}
+
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+		SET_PED_HEARING_RANGE(ped, 9999.f);
+		SET_PED_CONFIG_FLAG(ped, 281, true);
+
+		SET_ENTITY_PROOFS(ped, true, true, true, true, true, true, true, false);
+		SET_ENTITY_INVINCIBLE(ped, true);
+
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+
+		SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
+		SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
+		SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+
+		GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_KNIFE"), 9999, true, true);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+
+		SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+	}
+	else
+	{
+		    static constexpr Hash modelHash = -835930287;
+
+			Hash relationshipGroup;
+			ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
+			SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+			SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+
+			Ped playerPed = PLAYER_PED_ID();
+			Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+			Ped ped = CreatePoolPed(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
+			if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+			{
+				SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+			}
+
+			SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+			SET_PED_HEARING_RANGE(ped, 9999.f);
+
+			SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+
+			GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_MICROSMG"), 9999, true, true);
+			GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
+
+			SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+			SET_PED_ACCURACY(ped, 100);
+			SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+	}
+}
+
+
+static RegisterEffect registerEffect(EFFECT_PEDS_CHANCEJESUS, OnStart, EffectInfo
+	{
+		.Name = "Spawn 70/30 Jesus",
+		.Id = "spawn_chancejesus",
+		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+	}
+);

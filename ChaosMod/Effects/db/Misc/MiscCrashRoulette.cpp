@@ -1,12 +1,14 @@
 #include <stdafx.h>
 
+#define LAUNCH_TIMER 6000
+
 static void SleepAllThreads(DWORD ms)
 {
 	std::vector<HANDLE> threads;
 
 	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-	
-	THREADENTRY32 threadEntry {};
+
+	THREADENTRY32 threadEntry{};
 	threadEntry.dwSize = sizeof(threadEntry);
 
 	Thread32First(handle, &threadEntry);
@@ -23,8 +25,7 @@ static void SleepAllThreads(DWORD ms)
 		}
 
 		threadEntry.dwSize = sizeof(threadEntry);
-	}
-	while (Thread32Next(handle, &threadEntry));
+	} while (Thread32Next(handle, &threadEntry));
 
 	for (HANDLE thread : threads)
 	{
@@ -45,28 +46,40 @@ static void SleepAllThreads(DWORD ms)
 
 static void OnStart()
 {
-	bool fakeTimer = g_Random.GetRandomInt(0, 1);
-
-	if (fakeTimer)
+	int lastTimestamp = GET_GAME_TIMER();
+	int rouletteTimer = LAUNCH_TIMER;
+	int crashTimer = LAUNCH_TIMER;
+	while (true)
 	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
-	}
 
-	SleepAllThreads(500);
+		int curTimestamp = GET_GAME_TIMER();
 
-	WAIT(500);
+		if ((rouletteTimer -= curTimestamp - lastTimestamp) < crashTimer)
+		{
+			crashTimer *= .8f;
+			SleepAllThreads(100);
 
-	SleepAllThreads(g_Random.GetRandomInt(10000, 20000));
+		}
 
-	if (fakeTimer)
-	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
+		if (rouletteTimer <= 0)
+		{
+			int crashPercentage = (g_Random.GetRandomInt(1, 10));
+			if (crashPercentage <= 2)
+			{
+				*(volatile int*)0 = 0;
+			}
+			break;
+		}
+
+		lastTimestamp = curTimestamp;
+
+		WAIT(0);
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+static RegisterEffect registerEffect(EFFECT_MISC_CRASHROULETTE, OnStart, EffectInfo
 	{
-		.Name = "Almost Fake Crash",
-		.Id = "misc_fakecrash"
+		.Name = "Crash Roulette",
+		.Id = "misc_crashroulette"
 	}
 );

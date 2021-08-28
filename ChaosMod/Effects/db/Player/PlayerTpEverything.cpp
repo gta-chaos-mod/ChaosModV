@@ -3,11 +3,11 @@
 static void OnStart()
 {
 	std::vector<Entity> entities;
-	int maxEntities = 20;
+	int maxEntities = 30;
 
 	for (auto ped : GetAllPeds())
 	{
-		if (maxEntities == 10)
+		if (maxEntities == 15)
 		{
 			break;
 		}

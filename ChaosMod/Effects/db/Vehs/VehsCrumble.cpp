@@ -13,13 +13,13 @@ static void OnTick()
 	{
 		// apply random damage to a random part of a random vehicle
 		Vehicle veh = vehs[g_Random.GetRandomInt(0, vehicleAmount - 1)];
-		SET_VEHICLE_DAMAGE(veh, g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(1000.f, 10000.f), g_Random.GetRandomFloat(100.f, 1000.f), true);
+		SET_VEHICLE_DAMAGE(veh, g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(10000.f, 100000.f), g_Random.GetRandomFloat(1000.f, 10000.f), true);
 	}
 }
 
 static RegisterEffect registerEffect(EFFECT_VEHS_CRUMBLE, nullptr, nullptr, OnTick, EffectInfo
 	{
-		.Name = "Crumbling Vehicles",
+		.Name = "Dying Vehicles",
 		.Id = "vehs_crumble",
 		.IsTimed = true,
 		.IsShortDuration = true

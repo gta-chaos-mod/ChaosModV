@@ -63,20 +63,20 @@ void Failsafe::Run()
 
 		switch (++m_cFailCounts)
 		{
-		case 3:
-			LOG("[3 Fails] Clear most recent effect");
+		case 6:
+			LOG("[6 Fails] Clear most recent effect");
 
 			g_pEffectDispatcher->ClearMostRecentEffect();
 
 			break;
-		case 4:
-			LOG("[4 Fails] Clear all spawned entities within 500 meters");
+		case 8:
+			LOG("[8 Fails] Clear all spawned entities within 500 meters");
 
 			ClearEntityPool(500);
 
 			break;
-		case 5:
-			LOG("[5 Fails] Clear all effects and spawned entities");
+		case 10:
+			LOG("[10 Fails] Clear all effects and spawned entities");
 
 			g_pEffectDispatcher->ClearEffects(false);
 			ClearEntityPool();
