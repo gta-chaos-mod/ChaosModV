@@ -3,7 +3,7 @@
 static void OnStart()
 {
 	std::vector<Entity> entities;
-	int maxEntities = 20;
+	int maxEntities = 20 * g_MetaInfo.m_fChaosMultiplier;
 
 	for (auto ped : GetAllPeds())
 	{

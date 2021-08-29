@@ -21,77 +21,101 @@ static void OnStart()
 
 			bool isMissionEntityCorpse = IS_ENTITY_A_MISSION_ENTITY(ped);
 
-			Ped clone;
-			if (isMissionEntityCorpse)
+			Ped pedToClone = ped;
+			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 			{
-				clone = CreatePoolPed(pedType, pedModel, .0f, .0f, .0f, .0f);
-			}
-			else
-			{
-				clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
-			}
-
-			CLONE_PED_TO_TARGET(ped, clone);
-
-			// See if corpse is in any vehicle
-			// If yes, set clone into seat corpse is occupying later
-			Vehicle targetVeh = 0;
-			int targetSeat = 0;
-			if (IS_PED_IN_ANY_VEHICLE(ped, false))
-			{
-				Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
-				Hash vehModel = GET_ENTITY_MODEL(veh);
-				int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
-
-				for (int i = -1; i < maxSeats; i++)
+				Ped clone;
+				if (isMissionEntityCorpse)
 				{
-					if (!IS_VEHICLE_SEAT_FREE(veh, i, false))
-					{
-						Ped seatPed = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
+					clone = CreatePoolPed(pedType, pedModel, .0f, .0f, .0f, .0f);
+				}
+				else
+				{
+					clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
+				}
 
-						if (seatPed == ped)
+				CLONE_PED_TO_TARGET(ped, clone);
+
+				// See if corpse is in any vehicle
+				// If yes, set clone into seat corpse is occupying later
+				Vehicle targetVeh = 0;
+				int targetSeat = 0;
+				if (IS_PED_IN_ANY_VEHICLE(pedToClone, false))
+				{
+					Vehicle veh = GET_VEHICLE_PED_IS_IN(pedToClone, false);
+					Hash vehModel = GET_ENTITY_MODEL(veh);
+					int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
+
+					if (i == 0)
+					{
+						for (int i = -1; i < maxSeats; i++)
 						{
-							targetVeh = veh;
-							targetSeat = i;
-							break;
+							if (!IS_VEHICLE_SEAT_FREE(veh, i, false))
+							{
+								Ped seatPed = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
+
+								if (seatPed == pedToClone)
+								{
+									targetVeh = veh;
+									targetSeat = i;
+									break;
+								}
+							}
+						}
+					}
+					else if (ARE_ANY_VEHICLE_SEATS_FREE(veh))
+					{
+						for (int i = -1; i < maxSeats; i++)
+						{
+							if (IS_VEHICLE_SEAT_FREE(veh, i, false))
+							{
+								targetVeh = veh;
+								targetSeat = i;
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
+				Vector3 pedPos = GET_ENTITY_COORDS(pedToClone, false);
 
-			// Deleting the corpse requires the corpse to be a mission entity
-			SET_ENTITY_AS_MISSION_ENTITY(ped, false, false);
-			DELETE_PED(&ped);
+				if (i == 0)
+				{
+					// Deleting the corpse requires the corpse to be a mission entity
+					SET_ENTITY_AS_MISSION_ENTITY(pedToClone, false, false);
+					DELETE_PED(&pedToClone);
+				}
 
-			if (targetVeh)
-			{
-				SET_PED_INTO_VEHICLE(clone, targetVeh, targetSeat);
-			}
-			else
-			{
-				SET_ENTITY_COORDS(clone, pedPos.x, pedPos.y, pedPos.z, false, false, false, false);
-			}
+				if (targetVeh)
+				{
+					SET_PED_INTO_VEHICLE(clone, targetVeh, targetSeat);
+				}
+				else
+				{
+					SET_ENTITY_COORDS(clone, pedPos.x, pedPos.y, pedPos.z, false, false, false, false);
+				}
 
-			SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
-			SET_PED_HEARING_RANGE(clone, 9999.f);
-			SET_PED_CONFIG_FLAG(clone, 281, true);
-			SET_PED_COMBAT_ATTRIBUTES(clone, 5, true);
-			SET_PED_COMBAT_ATTRIBUTES(clone, 46, true);
-			SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(clone, false);
-			SET_RAGDOLL_BLOCKING_FLAGS(clone, 5);
-			SET_PED_SUFFERS_CRITICAL_HITS(clone, false);
+				SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
+				SET_PED_HEARING_RANGE(clone, 9999.f);
+				SET_PED_CONFIG_FLAG(clone, 281, true);
+				SET_PED_COMBAT_ATTRIBUTES(clone, 5, true);
+				SET_PED_COMBAT_ATTRIBUTES(clone, 46, true);
+				SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(clone, false);
+				SET_RAGDOLL_BLOCKING_FLAGS(clone, 5);
+				SET_PED_SUFFERS_CRITICAL_HITS(clone, false);
 
-			static const std::vector<Hash>& weps = Memory::GetAllWeapons();
-			GIVE_WEAPON_TO_PED(clone, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+				static const std::vector<Hash>& weps = Memory::GetAllWeapons();
+				GIVE_WEAPON_TO_PED(clone, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
 
-			SET_PED_ACCURACY(clone, 100);
-			SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
+				SET_PED_ACCURACY(clone, 100);
+				SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
 
-			if (!isMissionEntityCorpse)
-			{
-				SET_PED_AS_NO_LONGER_NEEDED(&clone);
+				if (!isMissionEntityCorpse)
+				{
+					SET_PED_AS_NO_LONGER_NEEDED(&clone);
+				}
+
+				pedToClone = clone;
 			}
 		}
 	}

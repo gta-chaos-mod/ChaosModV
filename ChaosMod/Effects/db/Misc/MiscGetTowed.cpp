@@ -31,26 +31,36 @@ static void OnStart()
 		spawnOffset = (towLength / 2) + (playerVehLength / 2) + 1;
 	}
 
-
-	Vector3 spawnPoint = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, spawnOffset, 0);
-	Vehicle towTruck = CreatePoolVehicle(towTruckHash, spawnPoint.x, spawnPoint.y, spawnPoint.z, GET_ENTITY_HEADING(player));
-	SET_VEHICLE_ENGINE_ON(towTruck, true, true, false);
-	SET_VEHICLE_FORWARD_SPEED(towTruck, GET_ENTITY_SPEED(player));
-	SET_VEHICLE_ON_GROUND_PROPERLY(towTruck, 5);
-
-	Ped tonyaPed = CreatePoolPedInsideVehicle(towTruck, 0, tonyaHash, -1);
-	SET_PED_RELATIONSHIP_GROUP_HASH(tonyaPed, relationshipGroup);
-
-	if (playerVeh)
+	Vehicle vehicleToTow = playerVeh;
+	Vehicle frontTowTruck = 0;
+	Ped frontTowTruckTonya = 0;
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		ATTACH_VEHICLE_TO_TOW_TRUCK(towTruck, playerVeh, true, 0, 0, 0);
-		SET_VEHICLE_TOW_TRUCK_ARM_POSITION(towTruck, 1.f);
+		Vector3 spawnPoint = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, spawnOffset * (i + 1), 0);
+		frontTowTruck = CreatePoolVehicle(towTruckHash, spawnPoint.x, spawnPoint.y, spawnPoint.z, GET_ENTITY_HEADING(player));
+		SET_VEHICLE_ENGINE_ON(frontTowTruck, true, true, false);
+		SET_VEHICLE_FORWARD_SPEED(frontTowTruck, GET_ENTITY_SPEED(player));
+		SET_VEHICLE_ON_GROUND_PROPERLY(frontTowTruck, 5);
+
+		frontTowTruckTonya = CreatePoolPedInsideVehicle(frontTowTruck, 0, tonyaHash, -1);
+		SET_PED_RELATIONSHIP_GROUP_HASH(frontTowTruckTonya, relationshipGroup);
+
+		if (vehicleToTow)
+		{
+			ATTACH_VEHICLE_TO_TOW_TRUCK(frontTowTruck, vehicleToTow, false, 0, 0, 0);
+			SET_VEHICLE_TOW_TRUCK_ARM_POSITION(frontTowTruck, 1.f);
+		}
+
+		vehicleToTow = frontTowTruck;
 	}
-	else
+
+	// Always place the player in the front tow truck if they don't have a vehicle
+	if (!playerVeh)
 	{
-		SET_PED_INTO_VEHICLE(player, towTruck, 0);
+		SET_PED_INTO_VEHICLE(player, frontTowTruck, 0);
 	}
-	TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tonyaPed, towTruck, 404, -1630, 29, 9999.f, 262668, 0.f);
+
+	TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(frontTowTruckTonya, frontTowTruck, 404, -1630, 29, 9999.f, 262668, 0.f);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_GET_TOWED, OnStart, nullptr, nullptr, EffectInfo

@@ -9,6 +9,11 @@ static void OnTick()
 	for (Ped ped : GetAllPeds())
 	{
 		PLAY_PAIN(ped, 8, 0, 0);
+
+		if (g_MetaInfo.m_fChaosMultiplier > 1)
+		{
+			PLAY_PAIN(ped, 7, 0, 0);
+		}
 	}
 }
 

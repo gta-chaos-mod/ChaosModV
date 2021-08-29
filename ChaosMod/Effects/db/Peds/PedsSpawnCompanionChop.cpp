@@ -12,12 +12,15 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
-	SET_PED_COMBAT_ATTRIBUTES(ped, 0, false);
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
-	SET_PED_HEARING_RANGE(ped, 9999.f);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+		SET_PED_COMBAT_ATTRIBUTES(ped, 0, false);
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+		SET_PED_HEARING_RANGE(ped, 9999.f);
 
-	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHOP, OnStart, EffectInfo

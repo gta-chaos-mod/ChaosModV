@@ -17,7 +17,7 @@ static void OnTick()
 		{
 			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 			USE_PARTICLE_FX_ASSET("scr_sr_tr");
-			START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_sr_tr_car_change", pedPos.x, pedPos.y, pedPos.z, 0, 0, 0, 1, false, true, false);
+			START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_sr_tr_car_change", pedPos.x, pedPos.y, pedPos.z, 0, 0, 0, 1 * g_MetaInfo.m_fChaosMultiplier, false, true, false);
 		}
 	}
 	REMOVE_NAMED_PTFX_ASSET("scr_sr_tr");

@@ -11,10 +11,6 @@ static void OnStart()
 
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Vehicle veh = CreatePoolVehicle(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading);
-	SET_VEHICLE_COLOURS(veh, 64, 64);
-	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
-
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 
 	Hash relationshipGroup;
@@ -27,33 +23,40 @@ static void OnStart()
 
 	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
 
-	Ped ped = CreatePoolPedInsideVehicle(veh, 4, model, -1);
-	SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
-	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		Vehicle veh = CreatePoolVehicle(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading);
+		SET_VEHICLE_COLOURS(veh, 64, 64);
+		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
-	SET_PED_HEARING_RANGE(ped, 9999.f);
+		Ped ped = CreatePoolPedInsideVehicle(veh, 4, model, -1);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
+		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
-	GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
-	SET_PED_ACCURACY(ped, 50);
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+		SET_PED_HEARING_RANGE(ped, 9999.f);
 
-	TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
+		SET_PED_ACCURACY(ped, 50);
 
-	WAIT(0);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
-	ped = CreatePoolPedInsideVehicle(veh, 4, model, 0);
-	SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
-	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
+		WAIT(0);
 
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
-	SET_PED_HEARING_RANGE(ped, 9999.f);
+		ped = CreatePoolPedInsideVehicle(veh, 4, model, 0);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
+		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
-	GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
-	SET_PED_ACCURACY(ped, 50);
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+		SET_PED_HEARING_RANGE(ped, 9999.f);
 
-	TASK_COMBAT_PED(ped, playerPed, 0, 16);
+		GIVE_WEAPON_TO_PED(ped, microSmgHash, 9999, true, true);
+		SET_PED_ACCURACY(ped, 50);
 
-	WAIT(0);
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+
+		WAIT(0);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart, EffectInfo

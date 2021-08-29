@@ -29,7 +29,11 @@ static void OnTick()
 				{
 					Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
 					Vector3 targetOffset = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(weapon, 0, 1, 0);
-					SET_PED_SHOOTS_AT_COORD(ped, targetOffset.x, targetOffset.y, targetOffset.z, true);
+
+					for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+					{
+						SET_PED_SHOOTS_AT_COORD(ped, targetOffset.x, targetOffset.y, targetOffset.z, true);
+					}
 
 					if (--count == 0)
 					{

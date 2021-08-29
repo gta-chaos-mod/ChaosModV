@@ -9,7 +9,7 @@ static void OnTick()
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	DWORD64 currentTick = GET_GAME_TIMER();
 
-	if (lastTick < currentTick - 1750) // 1750MS = every 1.75 seconds.
+	if (lastTick < currentTick - (1750 / g_MetaInfo.m_fChaosMultiplier)) // 1750MS = every 1.75 seconds.
 	{
 		lastTick = currentTick;
 

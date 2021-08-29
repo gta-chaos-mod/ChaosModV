@@ -86,7 +86,7 @@ static void OnTick()
 			{
 				alpha = 0;
 				currentMode = TiredMode::waiting;
-				nextTimestamp = GET_GAME_TIMER() + g_Random.GetRandomInt(250, 3000);
+				nextTimestamp = GET_GAME_TIMER() + (g_Random.GetRandomInt(250, 3000) / g_MetaInfo.m_fChaosMultiplier);
 			}
 		}
 		break;

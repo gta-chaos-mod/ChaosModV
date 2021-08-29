@@ -29,6 +29,7 @@ static void OnStart()
 		}
 
 		Vector3 vehVel = GET_ENTITY_VELOCITY(playerVeh);
+		vehVel = vehVel * g_MetaInfo.m_fChaosMultiplier;
 
 		SET_ENTITY_AS_MISSION_ENTITY(playerVeh, true, true);
 		DELETE_VEHICLE(&playerVeh);

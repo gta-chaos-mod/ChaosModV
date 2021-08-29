@@ -13,8 +13,8 @@ struct EnemyGroup
 static Hash model;
 static Hash microSmgHash;
 static Hash relationshipGroup;
-static EnemyGroup helicopterGroup;
-static EnemyGroup mesaGroup;
+static std::vector<EnemyGroup> helicopterGroups;
+static std::vector<EnemyGroup> mesaGroups;
 
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float maxOffset)
@@ -69,7 +69,7 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 }
 
 
-static void spawnBuzzard() 
+static EnemyGroup spawnBuzzard()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -78,7 +78,7 @@ static void spawnBuzzard()
 	float xDiff = playerPos.x - spawnPoint.x;
 	float yDiff = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
-	helicopterGroup = EnemyGroup();
+	EnemyGroup helicopterGroup = EnemyGroup();
 	LoadModel(buzzardHash);
 	helicopterGroup.vehicle = CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
@@ -86,10 +86,12 @@ static void spawnBuzzard()
 	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0); // Needed, so the heli doesn't fall down instantly
 	SET_VEHICLE_CHEAT_POWER_INCREASE(helicopterGroup.vehicle, 2); // Make it easier to catch up
 	fillVehicleWithPeds(helicopterGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, helicopterGroup.peds, false);
+
+	return helicopterGroup;
 }
 
 
-static void spawnMesa()
+static EnemyGroup spawnMesa()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -109,7 +111,7 @@ static void spawnMesa()
 	float yDiff = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
 	Hash mesaHash = GET_HASH_KEY("Mesa3");
-	mesaGroup = EnemyGroup();
+	EnemyGroup mesaGroup = EnemyGroup();
 	LoadModel(mesaHash);
 	mesaGroup.vehicle = CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
 	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
@@ -117,6 +119,8 @@ static void spawnMesa()
 	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
 	SET_VEHICLE_CHEAT_POWER_INCREASE(mesaGroup.vehicle, 2); // Make it easier to catch up
 	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds, true);
+
+	return mesaGroup;
 }
 
 static void OnStart()
@@ -132,22 +136,26 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, relationshipGroup);
-
-	spawnBuzzard();
-	spawnMesa();
 }
 
 static void OnStop()
 {
-	SET_VEHICLE_AS_NO_LONGER_NEEDED(&helicopterGroup.vehicle);
-	for (Ped ped : helicopterGroup.peds) 
+	for (EnemyGroup helicopterGroup : helicopterGroups)
 	{
-		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		SET_VEHICLE_AS_NO_LONGER_NEEDED(&helicopterGroup.vehicle);
+		for (Ped ped : helicopterGroup.peds) 
+		{
+			SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		}
 	}
-	SET_VEHICLE_AS_NO_LONGER_NEEDED(&mesaGroup.vehicle);
-	for (Ped ped : mesaGroup.peds) 
+
+	for (EnemyGroup mesaGroup : mesaGroups)
 	{
-		SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		SET_VEHICLE_AS_NO_LONGER_NEEDED(&mesaGroup.vehicle);
+		for (Ped ped : mesaGroup.peds)
+		{
+			SET_PED_AS_NO_LONGER_NEEDED(&ped);
+		}
 	}
 }
 
@@ -183,20 +191,38 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 
 static void OnTick()
 {
-	bool allHelicopterDead = checkPedsAlive(helicopterGroup.peds);
-	if (allHelicopterDead) 
+	while (helicopterGroups.size() < g_MetaInfo.m_fChaosMultiplier)
 	{
-		helicopterGroup.peds.clear();
-		SET_VEHICLE_AS_NO_LONGER_NEEDED(&helicopterGroup.vehicle);
-		spawnBuzzard();
+		helicopterGroups.push_back(spawnBuzzard());
 	}
 
-	bool allVanDead = checkPedsAlive(mesaGroup.peds);
-	if (allVanDead) 
+	for (int i = 0; i < helicopterGroups.size(); i++)
 	{
-		mesaGroup.peds.clear();
-		SET_VEHICLE_AS_NO_LONGER_NEEDED(&mesaGroup.vehicle);
-		spawnMesa();
+		bool allHelicopterDead = checkPedsAlive(helicopterGroups[i].peds);
+		if (allHelicopterDead) 
+		{
+			helicopterGroups[i].peds.clear();
+			SET_VEHICLE_AS_NO_LONGER_NEEDED(&helicopterGroups[i].vehicle);
+
+			helicopterGroups.erase(helicopterGroups.begin() + i);
+		}
+	}
+
+	while (mesaGroups.size() < g_MetaInfo.m_fChaosMultiplier)
+	{
+		mesaGroups.push_back(spawnMesa());
+	}
+
+	for (int i = 0; i < mesaGroups.size(); i++)
+	{
+		bool allVanDead = checkPedsAlive(mesaGroups[i].peds);
+		if (allVanDead)
+		{
+			mesaGroups[i].peds.clear();
+			SET_VEHICLE_AS_NO_LONGER_NEEDED(&mesaGroups[i].vehicle);
+
+			mesaGroups.erase(mesaGroups.begin() + i);
+		}
 	}
 }
 

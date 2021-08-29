@@ -17,9 +17,9 @@ static void OnTickX02()
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", true);
 
-	Hooks::SetAudioPitch(-900);
+	Hooks::SetAudioPitch(-900 * g_MetaInfo.m_fChaosMultiplier);
 
-	SET_TIME_SCALE(.2f);
+	SET_TIME_SCALE(.2f / g_MetaInfo.m_fChaosMultiplier);
 }
 
 static RegisterEffect registerEffect1(EFFECT_GAMESPEED_X02, nullptr, OnStop, OnTickX02, EffectInfo
@@ -36,9 +36,9 @@ static void OnTickX05()
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", true);
 
-	Hooks::SetAudioPitch(-500);
+	Hooks::SetAudioPitch(-500 * g_MetaInfo.m_fChaosMultiplier);
 
-	SET_TIME_SCALE(.5f);
+	SET_TIME_SCALE(.5f / g_MetaInfo.m_fChaosMultiplier);
 }
 
 static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnTickX05, EffectInfo

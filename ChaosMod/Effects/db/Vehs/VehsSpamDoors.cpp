@@ -9,7 +9,7 @@ static void OnTick()
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	DWORD64 currentTick = GET_GAME_TIMER();
 
-	if (lastTick < currentTick - 500) //every second, half of second
+	if (lastTick < currentTick - (500 / g_MetaInfo.m_fChaosMultiplier)) //every second, half of second
 	{
 		for (auto veh : GetAllVehs())
 		{
@@ -21,7 +21,7 @@ static void OnTick()
 		}
 	}
 
-	if (lastTick < currentTick - 1000) //every second, end of
+	if (lastTick < currentTick - (1000 / g_MetaInfo.m_fChaosMultiplier)) //every second, end of
 	{
 		lastTick = currentTick;
 		for (auto veh : GetAllVehs())

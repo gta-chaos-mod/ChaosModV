@@ -17,14 +17,21 @@ static void OnStart()
     float playerSpeed = min(max(0, GET_ENTITY_SPEED(player)), maxSpeedCheck);
     float fixedDistance = ((playerSpeed / maxSpeedCheck) * (maxDistance - minDistance)) + minDistance;
     Vector3 spawnPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, fixedDistance, 0);
-    Object ball = CreatePoolProp(ballHash, spawnPos.x, spawnPos.y, spawnPos.z - 0.2, true);
-    // Randomize weight
-    float weight = g_Random.GetRandomFloat(1, 100);
-    SET_OBJECT_PHYSICS_PARAMS(ball, weight, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
-    // Ball needs to be shot at to be dynamic, otherwise it will be frozen
-    Vector3 min, max;
-    GET_MODEL_DIMENSIONS(ballHash, &min, &max);
-    SHOOT_SINGLE_BULLET_BETWEEN_COORDS(spawnPos.x, spawnPos.y, spawnPos.z + max.z - min.z, spawnPos.x, spawnPos.y, spawnPos.z, 0, true, weaponHash, 0, false, true, 0.01);
+
+    for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+    {
+        Object ball = CreatePoolProp(ballHash, spawnPos.x, spawnPos.y, spawnPos.z - 0.2, true);
+        // Randomize weight
+        float weight = g_Random.GetRandomFloat(1, 100);
+        SET_OBJECT_PHYSICS_PARAMS(ball, weight, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
+        // Ball needs to be shot at to be dynamic, otherwise it will be frozen
+        Vector3 min, max;
+        GET_MODEL_DIMENSIONS(ballHash, &min, &max);
+        SHOOT_SINGLE_BULLET_BETWEEN_COORDS(spawnPos.x, spawnPos.y, spawnPos.z + max.z - min.z, spawnPos.x, spawnPos.y, spawnPos.z, 0, true, weaponHash, 0, false, true, 0.01);
+
+        // Offset the next ball to spawn on top of the one that was just spawned
+        spawnPos.z += (max - min).z;
+    }
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_SPAWN_ORANGE_BALL, OnStart, nullptr, nullptr, EffectInfo

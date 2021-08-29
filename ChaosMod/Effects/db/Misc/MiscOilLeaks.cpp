@@ -36,7 +36,7 @@ static void OnTick()
 		float groundZ = 0;
 		if (GET_GROUND_Z_FOR_3D_COORD(entityPos.x, entityPos.y, entityPos.z, &groundZ, false, false))
 		{
-			ADD_PETROL_DECAL(entityPos.x, entityPos.y, groundZ, 2, 2, 1);
+			ADD_PETROL_DECAL(entityPos.x, entityPos.y, groundZ, 2, 2 * g_MetaInfo.m_fChaosMultiplier, 1);
 		}
 
 		if (--count == 0)

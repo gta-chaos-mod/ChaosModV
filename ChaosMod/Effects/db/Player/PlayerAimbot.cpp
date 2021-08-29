@@ -28,7 +28,11 @@ static void OnTick()
 				if (distance <= maxRange)
 				{
 					Vector3 headVector = GET_PED_BONE_COORDS(ped, 0x796E, 0, 0, 0); // Head
-					SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
+					for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+					{
+						SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
+					}
+
 					// Only 5 shots per Tick
 					if (--count <= 0)
 					{

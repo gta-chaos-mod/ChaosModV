@@ -14,7 +14,7 @@ static void OnStart()
 		{
 			Vehicle pedVeh = GET_VEHICLE_PED_IS_IN(ped, true);
 			TASK_LEAVE_VEHICLE(ped, pedVeh, 256);
-			BRING_VEHICLE_TO_HALT(pedVeh, 0.1f, 10, 0);	
+			BRING_VEHICLE_TO_HALT(pedVeh, 0.1f, 10 * g_MetaInfo.m_fChaosMultiplier, 0);	
 		}
 		if(ped != playerPed)
 		{

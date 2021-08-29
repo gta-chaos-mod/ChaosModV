@@ -12,7 +12,10 @@ static void OnTick()
 			{
 				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
-				ADD_EXPLOSION(pedPos.x, pedPos.y, pedPos.z, 4, 9999.f, true, false, 1.f, false);
+				for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+				{
+					ADD_EXPLOSION(pedPos.x, pedPos.y, pedPos.z, 4, 9999.f, true, false, 1.f, false);
+				}
 
 				SET_ENTITY_HEALTH(ped, 0, false);
 				SET_ENTITY_MAX_HEALTH(ped, 0);

@@ -37,6 +37,11 @@ static void HandleEntity(Entity entity)
 	}
 }
 
+void AddEntityToPool(Entity entity)
+{
+	HandleEntity(entity);
+}
+
 void ClearEntityPool(int iDistance)
 {
 	Vector3 playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);

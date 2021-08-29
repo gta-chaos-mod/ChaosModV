@@ -28,6 +28,7 @@ static void OnStart()
 	{
 		Vector3 rot = GET_ENTITY_ROTATION(veh, 2);
 		Vector3 vel = GET_ENTITY_VELOCITY(veh);
+		vel = vel * g_MetaInfo.m_fChaosMultiplier; // Break the laws of physics, just for fun
 
 		SET_ENTITY_ROTATION(veh, -rot.x, -rot.y, rot.z + 180.f, 2, true);
 		SET_ENTITY_VELOCITY(veh, -vel.x, -vel.y, -vel.z);

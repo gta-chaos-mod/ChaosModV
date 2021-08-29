@@ -11,8 +11,11 @@ static void OnStart()
 	static const Hash pistolModelHash = GET_HASH_KEY("weapon_pistol");
 	static const Hash knifeModelHash = GET_HASH_KEY("weapon_knife");
 
-	CreateHostilePed(debraModelHash, pistolModelHash);
-	CreateHostilePed(floydModelHash, knifeModelHash);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		CreateHostilePed(debraModelHash, pistolModelHash);
+		CreateHostilePed(floydModelHash, knifeModelHash);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_QUARRELING_COUPLE, OnStart, nullptr, nullptr, EffectInfo

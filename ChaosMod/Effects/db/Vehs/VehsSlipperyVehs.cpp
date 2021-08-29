@@ -16,7 +16,10 @@ static void OnTick()
 
 		SET_VEHICLE_REDUCE_GRIP(veh, toggle);
 
-		toggle = !toggle;
+		if (g_MetaInfo.m_fChaosMultiplier <= 1)
+		{
+			toggle = !toggle;
+		}
 	}
 }
 

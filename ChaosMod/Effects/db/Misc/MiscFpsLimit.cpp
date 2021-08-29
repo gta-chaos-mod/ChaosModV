@@ -8,7 +8,7 @@ static void OnTick()
 {
 	static const int lagTimeDelay = 1000 / 25;
 	int lastUpdateTick = GetTickCount64();
-	while (lastUpdateTick > GetTickCount64() - lagTimeDelay)
+	while (lastUpdateTick > GetTickCount64() - (lagTimeDelay * g_MetaInfo.m_fChaosMultiplier))
 	{
 		// Create Lag
 	}

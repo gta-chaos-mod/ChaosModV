@@ -9,6 +9,9 @@ static void OnStart()
 static void OnStop()
 {
 	SET_MAX_WANTED_LEVEL(5);
+
+	SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(1);
+	SET_AI_WEAPON_DAMAGE_MODIFIER(1);
 }
 
 static void OnTick()
@@ -57,6 +60,9 @@ static void OnTick()
 			it++;
 		}
 	}
+	
+	SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(g_MetaInfo.m_fChaosMultiplier);
+	SET_AI_WEAPON_DAMAGE_MODIFIER(g_MetaInfo.m_fChaosMultiplier);
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_RIOT, OnStart, OnStop, OnTick, EffectInfo

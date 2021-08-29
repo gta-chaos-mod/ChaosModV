@@ -12,7 +12,7 @@ static void OnStart()
 
 		if (pedType != 6 && pedType != 27 && !IS_PED_DEAD_OR_DYING(ped, true))	// 6: cop, 27: NOOSE
 		{
-			TASK_HANDS_UP(ped, 5000, 0, -1, true);
+			TASK_HANDS_UP(ped, 5000 * g_MetaInfo.m_fChaosMultiplier, 0, -1, true);
 			SET_PED_DROPS_WEAPON(ped);
 		}
 	}

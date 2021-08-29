@@ -50,6 +50,13 @@ static void OnStart()
 		if (detonateTimer <= 0)
 		{
 			EXPLODE_VEHICLE(veh, true, false);
+			
+			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier - 1; i++)
+			{
+				WAIT(50); // Wait a tiny bit to make the effect clearer
+				Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
+				ADD_EXPLOSION(vehCoords.x, vehCoords.y, vehCoords.z, 4, 100.f, true, false, 1.f, false);
+			}
 
 			break;
 		}

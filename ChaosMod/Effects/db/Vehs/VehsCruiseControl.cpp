@@ -28,7 +28,7 @@ static void OnTick()
 			else if (speed < currentVel)
 			{
 				bool isReversing = GET_ENTITY_SPEED_VECTOR(veh, true).y < 0;
-				SET_VEHICLE_FORWARD_SPEED(veh, isReversing ? -currentVel : currentVel);
+				SET_VEHICLE_FORWARD_SPEED(veh, (isReversing ? -currentVel : currentVel) * g_MetaInfo.m_fChaosMultiplier);
 			}
 		}
 	}

@@ -4,6 +4,8 @@ using Ped = int;
 using Vehicle = int;
 using Hash = unsigned long;
 
+void AddEntityToPool(Entity entity);
+
 void ClearEntityPool(int iDistance = 0);
 
 Ped CreatePoolPed(int iPedType, Hash ulHodelHash, float fPosX, float fPosY, float fPosZ, float fHeading);

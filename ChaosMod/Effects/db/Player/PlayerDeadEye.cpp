@@ -139,8 +139,15 @@ static void OnTick()
 				{
 					Vector3 weaponCoord = GET_ENTITY_COORDS(weapon, false);
 					Vector3 targPos = GET_PED_BONE_COORDS(info.pedHandle, info.boneIdx, 0, 0, 0);
-					SHOOT_SINGLE_BULLET_BETWEEN_COORDS(weaponCoord.x, weaponCoord.y, weaponCoord.z, targPos.x, targPos.y, targPos.z, 5, true, weaponHash, player, true, false, 24000);
-					WAIT(100);
+					for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+					{
+						SHOOT_SINGLE_BULLET_BETWEEN_COORDS(weaponCoord.x, weaponCoord.y, weaponCoord.z, targPos.x, targPos.y, targPos.z, 5, true, weaponHash, player, true, false, 24000);
+						
+						if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+						{
+							WAIT(100);
+						}
+					}
 				}
 			}
 		}

@@ -5,7 +5,7 @@ static void OnTick()
 	static auto lastTick = GET_GAME_TIMER();
 	auto curTick = GET_GAME_TIMER();
 
-	if (lastTick < curTick - 100)
+	if (lastTick < curTick - (100 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastTick = curTick;
 		Hash weaponHash;

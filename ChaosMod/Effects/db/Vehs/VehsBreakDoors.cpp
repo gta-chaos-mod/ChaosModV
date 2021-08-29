@@ -6,15 +6,24 @@ static void OnStart()
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 		{
-			SET_VEHICLE_DOOR_BROKEN(veh, i, false);
-
-			if (--count == 0)
+			for (int j = 0; j < 6; j++)
 			{
-				count = 10;
+				SET_VEHICLE_DOOR_BROKEN(veh, j, false);
 
-				WAIT(0);
+				if (--count == 0)
+				{
+					count = 10;
+
+					WAIT(0);
+				}
+			}
+
+			if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+			{
+				// Repair doors so they can detach again
+				SET_VEHICLE_FIXED(veh);
 			}
 		}
 	}

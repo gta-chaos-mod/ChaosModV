@@ -30,11 +30,11 @@ static void OnTick()
     {
         lastTick = curTick;
 
-        if (camZoom < 11 || camZoom > 119)
+        if (camZoom < (11 / g_MetaInfo.m_fChaosMultiplier) || camZoom > (179 - (60 / g_MetaInfo.m_fChaosMultiplier)))
         {
             camZoomRate = camZoomRate*-1;
         }
-        camZoom += camZoomRate;
+        camZoom += camZoomRate * g_MetaInfo.m_fChaosMultiplier;
     }
 
     SET_CAM_ACTIVE(zoomCamera, true);

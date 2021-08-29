@@ -13,7 +13,7 @@ static void UpdateLocation() {
 	Ped player = PLAYER_PED_ID();
 	Vector3 pos = GET_ENTITY_COORDS(player, IS_PED_DEAD_OR_DYING(player, 1));
 
-	SET_CAM_COORD(camera, pos.x, pos.y, pos.z + height);
+	SET_CAM_COORD(camera, pos.x, pos.y, pos.z + (height * g_MetaInfo.m_fChaosMultiplier));
 }
 
 static void OnStart() {
