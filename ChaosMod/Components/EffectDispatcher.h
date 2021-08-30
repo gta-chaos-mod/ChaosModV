@@ -69,6 +69,8 @@ private:
 	WORD m_usMetaEffectTimedDur = 0;
 	WORD m_usMetaEffectShortDur = 0;
 
+	int m_iMaxRunningEffects = 0;
+
 	float m_fPercentage = 0.f;
 	float m_fEffectsInnerSpacingMax = .075f;
 	float m_fEffectsInnerSpacingMin = .030f;

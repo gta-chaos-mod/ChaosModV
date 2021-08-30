@@ -17,6 +17,8 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 	m_usMetaEffectTimedDur = g_OptionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
 	m_usMetaEffectShortDur = g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
+	m_iMaxRunningEffects = g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
+
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 
 	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
@@ -111,6 +113,7 @@ void EffectDispatcher::UpdateEffects()
 
 		int activeEffectsSize = m_rgActiveEffects.size();
 		int maxEffects = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
+		maxEffects = min(maxEffects, m_iMaxRunningEffects);
 		int effectCountToCheckCleaning = 3;
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
@@ -125,10 +128,19 @@ void EffectDispatcher::UpdateEffects()
 			{
 				effect.m_fTimer -= 1 / g_MetaInfo.m_fEffectDurationModifier;
 			}
-
-			if ((effect.m_fMaxTime > 0 && effect.m_fTimer <= 0)
-				|| (!effectData.IsMeta && (activeEffectsSize > maxEffects  || (effect.m_fMaxTime > 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning))))
-				)
+			bool shouldStopEffect = false;
+			if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0) 
+			{
+				shouldStopEffect = true;
+			} 
+			else if (!effectData.IsMeta)
+			{
+				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime > 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
+				{
+					shouldStopEffect = true;
+				}
+			}
+			if (shouldStopEffect)
 			{
 				EffectThreads::StopThread(effect.m_ullThreadId);
 				activeEffectsSize--;
