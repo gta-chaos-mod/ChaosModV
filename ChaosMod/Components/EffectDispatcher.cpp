@@ -110,6 +110,8 @@ void EffectDispatcher::UpdateEffects()
 		m_ullEffectsTimer = currentUpdateTime;
 
 		int activeEffectsSize = m_rgActiveEffects.size();
+		int maxEffects = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
+		int effectCountToCheckCleaning = 3;
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
 		{
@@ -125,15 +127,11 @@ void EffectDispatcher::UpdateEffects()
 			}
 
 			if ((effect.m_fMaxTime > 0 && effect.m_fTimer <= 0)
-				|| ((!effectData.IsMeta)
-					&& (effect.m_fTimer < -m_usEffectTimedDur + (activeEffectsSize > 3
-						? ((activeEffectsSize - 3) * 20 < 160
-							? (activeEffectsSize - 3) * 20
-							: 160)
-						: 0))))
+				|| (!effectData.IsMeta && (activeEffectsSize > maxEffects  || (effect.m_fMaxTime > 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning))))
+				)
 			{
 				EffectThreads::StopThread(effect.m_ullThreadId);
-
+				activeEffectsSize--;
 				it = m_rgActiveEffects.erase(it);
 			}
 			else
@@ -239,13 +237,13 @@ void EffectDispatcher::DrawEffectTexts()
 		return;
 	}
 
-	float fPosY = .2f;
-	if (m_bEnableTwitchVoting
-		&& (m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame
-			|| m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayOBS))
+	float fPosY = GetEffectTopSpace();
+	float effectSpacing = m_fEffectsInnerSpacingMax;
+	while (round(effectSpacing * 1000) > round(m_fEffectsInnerSpacingMin * 1000) && 1.0 - fPosY < m_rgActiveEffects.size() * effectSpacing)
 	{
-		fPosY = .35f;
+		effectSpacing -= 0.005f;
 	}
+
 
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
@@ -277,7 +275,7 @@ void EffectDispatcher::DrawEffectTexts()
 				m_rgEffectTimerColor[2], 255, false);
 		}
 
-		fPosY += .075f;
+		fPosY += effectSpacing;
 	}
 }
 
@@ -569,6 +567,27 @@ void EffectDispatcher::ResetTimer()
 	m_ullTimerTimer = GetTickCount64();
 	m_usTimerTimerRuns = 0;
 	m_ullEffectsTimer = GetTickCount64();
+}
+
+float EffectDispatcher::GetEffectTopSpace()
+{
+	if (m_bEnableTwitchVoting
+		&& (m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame
+			|| m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayOBS))
+	{
+		return m_fEffectsTopSpacingWithVoting;
+	}
+	return m_fEffectsTopSpacingDefault;
+}
+
+bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning)
+{
+	float additionalTime = 0;
+	if (effectCount > minAmountAdvancedCleaning)
+	{
+		additionalTime = min((effectCount - 3) * 20, 160);
+	}
+	return timer < -m_usEffectTimedDur + additionalTime;
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using any given string
