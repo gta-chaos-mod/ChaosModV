@@ -335,6 +335,7 @@ namespace ConfigApp
             EFFECT_MISC_GET_TOWED,
             EFFECT_BLOODY_PEDS,
             EFFECT_WEIRD_PITCH,
+            EFFECT_PLAYER_SICK_CAM,
             _EFFECT_ENUM_MAX
         }
 
@@ -634,6 +635,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_GET_TOWED, new EffectInfo("Get Towed", EffectCategory.MISC, "misc_get_towed")},
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
             {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
+            {EffectType.EFFECT_PLAYER_SICK_CAM, new EffectInfo("I Feel Sick", EffectCategory.PLAYER, "player_sick_cam", true, true)},
         };
     }
 }
