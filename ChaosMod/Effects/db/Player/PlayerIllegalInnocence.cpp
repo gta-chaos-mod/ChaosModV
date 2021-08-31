@@ -69,7 +69,6 @@ static void OnTick()
 		m_timeReserve = WAIT_TIME;
 	}
 	lastPlayerKills = allPlayerKills;
-	LOG(lastPlayerKills);
 	#pragma endregion
 
 	#pragma region invert normal wanted level gains

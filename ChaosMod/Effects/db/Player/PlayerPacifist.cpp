@@ -29,7 +29,6 @@ static void OnTick()
 		SET_ENTITY_HEALTH(playerPed, 0, 0);
 	}
 	lastPlayerKills = allPlayerKills;
-	LOG(lastPlayerKills, allPlayerKills);
 }
 static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick, EffectInfo
 	{

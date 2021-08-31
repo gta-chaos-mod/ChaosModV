@@ -43,7 +43,6 @@ static void OnTick()
 		alpha = 0;
 	}
 	lastPlayerKills = allPlayerKills;
-	LOG(lastPlayerKills, allPlayerKills);
 
 	orange += GET_RANDOM_INT_IN_RANGE(-4, 10);
 	alpha += GET_RANDOM_INT_IN_RANGE(-4, 10);
