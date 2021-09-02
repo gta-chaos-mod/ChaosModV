@@ -56,6 +56,11 @@ static void OnStart()
 
 			WAIT(0);
 		}
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(1000);
+		}
 	}
 }
 

@@ -26,7 +26,7 @@ static void OnTick()
 
 				if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
 				{
-					WAIT(50);
+					WAIT(500);
 				}
 			}
 		}

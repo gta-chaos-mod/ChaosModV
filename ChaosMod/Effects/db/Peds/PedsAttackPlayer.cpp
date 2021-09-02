@@ -52,7 +52,7 @@ static void OnStop()
 	SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(1.f);
 }
 
-// (Gorakh): OnStart and OnStop (was previously nullptr) were flipped here previously, which I'm pretty sure was causing peds to flee instead of attacking the player, since the relationship group didn't exist
+// Note (Gorakh): OnStart and OnStop were flipped here previously, which I'm pretty sure was causing peds to flee instead of attacking the player, since the relationship group didn't exist
 static RegisterEffect registerEffect(EFFECT_PEDS_ATTACK_PLAYER, OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "All Peds Attack Player",

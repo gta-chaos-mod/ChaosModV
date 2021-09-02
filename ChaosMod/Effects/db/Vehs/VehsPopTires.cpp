@@ -15,7 +15,9 @@ static void OnStart()
 
 		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
 		{
+			// Wait, fix tyres, and pop them again
 			WAIT(300);
+
 			for (Vehicle veh : GetAllVehs())
 			{
 				for (int j = 0; j < 48; j++)

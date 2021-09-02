@@ -40,6 +40,11 @@ static void OnTick()
 				for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 				{
 					SHOOT_SINGLE_BULLET_BETWEEN_COORDS(leftWeaponStart.x, leftWeaponStart.y, leftWeaponStart.z, leftWeaponEnd.x, leftWeaponEnd.y, leftWeaponEnd.z, 0, true, weaponHash, player, true, false, 200);
+					
+					if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+					{
+						WAIT(20);
+					}
 				}
 
 				Vector3 rightWeaponStart = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, 1.5, 0.5, zOffset);
@@ -47,6 +52,11 @@ static void OnTick()
 				for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 				{
 					SHOOT_SINGLE_BULLET_BETWEEN_COORDS(rightWeaponStart.x, rightWeaponStart.y, rightWeaponStart.z, rightWeaponEnd.x, rightWeaponEnd.y, rightWeaponEnd.z, 0, true, weaponHash, player, true, false, 200);
+
+					if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+					{
+						WAIT(20);
+					}
 				}
 
 				REMOVE_WEAPON_ASSET(weaponHash);

@@ -73,7 +73,9 @@ inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
 					if (!ARE_ANY_VEHICLE_SEATS_FREE(veh))
 						break;
 
-					Ped clone = CreatePoolPedInsideVehicle(veh, pedType, pedModel, -2);
+					Ped clone = CreatePoolPed(pedType, pedModel, 0.f, 0.f, 0.f, 0.f);
+					SET_PED_INTO_VEHICLE(clone, veh, -2);
+					CLONE_PED_TO_TARGET(ped, clone);
 					SET_PED_COMBAT_ATTRIBUTES(clone, 3, false); // Don't allow them to leave vehicle by themselves
 
 					SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(clone, true);

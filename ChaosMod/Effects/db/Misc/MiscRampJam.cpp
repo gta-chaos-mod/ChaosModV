@@ -28,7 +28,7 @@ static void OnTick()
 				// Offset ramp to connect to the previous one
 				if (prevRamp)
 				{
-					rampPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(prevRamp, rampSize.x, rampSize.y, rampSize.z);
+					rampPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(prevRamp, 0.f, rampSize.y, rampSize.z);
 				}
 
 				Object ramp = CREATE_OBJECT(rampHash, rampPos.x, rampPos.y, rampPos.z, true, false, true);
@@ -46,12 +46,16 @@ static void OnTick()
 				}
 
 				SET_ENTITY_ROTATION(ramp, GET_ENTITY_PITCH(player), -GET_ENTITY_ROLL(player), GET_ENTITY_HEADING(player), 0, true);
-				SET_ENTITY_AS_NO_LONGER_NEEDED(&ramp);
+				
+				if (prevRamp)
+				{
+					SET_ENTITY_AS_NO_LONGER_NEEDED(&prevRamp);
+				}
 
 				prevRamp = ramp;
-
-				WAIT(0);
 			}
+
+			SET_ENTITY_AS_NO_LONGER_NEEDED(&prevRamp);
 		}
 	}
 }

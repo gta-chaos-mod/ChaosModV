@@ -22,11 +22,11 @@ static void OnTick()
 
 	if (currentBoxWidth < maxWidth)
 	{
-		currentBoxWidth += 0.01;
+		currentBoxWidth = min(currentBoxWidth + 0.01, maxWidth);
 	}
 	else if (currentBoxWidth > maxWidth)
 	{
-		currentBoxWidth -= 0.01;
+		currentBoxWidth = max(currentBoxWidth - 0.01, maxWidth);
 	}
 }
 

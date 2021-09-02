@@ -33,7 +33,7 @@ static void OnStart()
 
 		SET_PED_RELATIONSHIP_GROUP_HASH(lamarPed, relationshipGroup);
 		SET_PED_AS_GROUP_MEMBER(lamarPed, GET_PLAYER_GROUP(PLAYER_ID()));
-		ENTITY::SET_ENTITY_INVINCIBLE(lamarPed, true);
+		SET_ENTITY_INVINCIBLE(lamarPed, true);
 
 		lamarPeds.push_back(lamarPed);
 	}
@@ -54,22 +54,30 @@ static void OnStop()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
+	REQUEST_ANIM_DICT("mp_player_int_upperfinger");
+
 	for (Ped lamar : lamarPeds)
 	{
 		if (DOES_ENTITY_EXIST(lamar))
 		{
 			if (!IS_PED_DEAD_OR_DYING(lamar, true))
 			{
-				REQUEST_ANIM_DICT("mp_player_int_upperfinger");
-
 				TASK_TURN_PED_TO_FACE_ENTITY(lamar, playerPed, 1000);
 				TASK_LOOK_AT_ENTITY(lamar, playerPed, 1000, 2048, 3);
-				WAIT(1000);
+			}
+		}
+	}
 
-				TASK_PLAY_ANIM(lamar, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000.f, 1, 0.f, false, false, false);
-				WAIT(2000);
-				_PLAY_AMBIENT_SPEECH1(playerPed, "GENERIC_SHOCKED_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
-			
+	WAIT(1000);
+
+	_PLAY_AMBIENT_SPEECH1(playerPed, "GENERIC_SHOCKED_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
+
+	for (Ped lamar : lamarPeds)
+	{
+		if (DOES_ENTITY_EXIST(lamar))
+		{
+			if (!IS_PED_DEAD_OR_DYING(lamar, true))
+			{
 				if (IS_PED_IN_ANY_VEHICLE(lamar, false))
 				{
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(lamar, false);
@@ -79,6 +87,19 @@ static void OnStop()
 
 			SET_PED_AS_NO_LONGER_NEEDED(&lamar);
 			SET_ENTITY_INVINCIBLE(lamar, false);
+		}
+	}
+
+	WAIT(2000);
+
+	for (Ped lamar : lamarPeds)
+	{
+		if (DOES_ENTITY_EXIST(lamar))
+		{
+			if (!IS_PED_DEAD_OR_DYING(lamar, true))
+			{
+				TASK_PLAY_ANIM(lamar, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000.f, 1, 0.f, false, false, false);
+			}
 		}
 	}
 

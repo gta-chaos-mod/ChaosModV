@@ -71,7 +71,7 @@ static void OnTick()
 		if (alpha >= 255)
 		{
 			currentMode = TiredMode::openingEyes;
-			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
+			nextTimestamp = GET_GAME_TIMER() + (((20 - closingIterator) * 20) / g_MetaInfo.m_fChaosMultiplier);
 			if (closingIterator > 1)
 			{
 				closingIterator = max(1, closingIterator - 2);

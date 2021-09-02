@@ -12,7 +12,7 @@ static void OnTick()
 
 			if (g_MetaInfo.m_fChaosMultiplier > 1)
 			{
-				SET_PED_AI_BLIP_NOTICE_RANGE(ped, 10 * g_MetaInfo.m_fChaosMultiplier);
+				SET_PED_SEEING_RANGE(ped, 4.f * g_MetaInfo.m_fChaosMultiplier);
 			}
 		}
 	}

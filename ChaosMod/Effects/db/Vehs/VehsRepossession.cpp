@@ -50,19 +50,19 @@ static void OnStart()
 	// Spawn additional franklins
 	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier - 1; i++)
 	{
-		Vehicle veh = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z, heading);
+		Vehicle veh = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z + ((i + 1) * 2), heading);
 		SET_VEHICLE_COLOURS(veh, 88, 0);
 		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
 		LoadModel(franklinModelHash);
-		Ped newPed = CREATE_PED_INSIDE_VEHICLE(veh, 4, franklinModelHash, -2, true, false);
+		Ped newPed = CREATE_PED_INSIDE_VEHICLE(veh, 4, franklinModelHash, -1, true, false);
 
 		SET_PED_RELATIONSHIP_GROUP_HASH(newPed, relationshipGroup);
 
 		SET_ENTITY_PROOFS(newPed, true, false, false, false, false, false, false, false);
 
-		// Probably a really bad way of doing this, but im lazy as fuck.
-		TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(newPed, veh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);
+		// Make additional franklins follow the first one (the one in the players vehicle)
+		TASK_VEHICLE_MISSION_PED_TARGET(newPed, veh, FranklinDrive, 7, 9999.f, 4176732, .0f, .0f, false);
 
 		SET_PED_KEEP_TASK(newPed, true);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(newPed, true);

@@ -16,6 +16,11 @@ static void OnTick()
 			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 			{
 				ADD_EXPLOSION(impactCoords.x, impactCoords.y, impactCoords.z, 4, 9999.f, true, false, 1.f, false);
+
+				if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+				{
+					WAIT(100);
+				}
 			}
 		}
 	}

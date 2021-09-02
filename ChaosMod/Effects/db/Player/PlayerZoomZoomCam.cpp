@@ -32,6 +32,10 @@ static void OnTick()
 
         if (camZoom < (11 / g_MetaInfo.m_fChaosMultiplier) || camZoom > (179 - (60 / g_MetaInfo.m_fChaosMultiplier)))
         {
+            // Clamp zoom between min and max value
+            camZoom = max(camZoom, 11 / g_MetaInfo.m_fChaosMultiplier);
+            camZoom = min(camZoom, 179 - (60 / g_MetaInfo.m_fChaosMultiplier));
+
             camZoomRate = camZoomRate*-1;
         }
         camZoom += camZoomRate * g_MetaInfo.m_fChaosMultiplier;

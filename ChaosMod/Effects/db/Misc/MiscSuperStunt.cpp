@@ -34,14 +34,22 @@ static void OnStart()
 			rampPos = GET_ENTITY_COORDS(ramp, false);
 			SET_ENTITY_COORDS(ramp, rampPos.x, rampPos.y, rampPos.z - 0.3, true, true, true, false);
 		}
+		else
+		{
+			SET_ENTITY_COORDS(ramp, rampPos.x, rampPos.y, rampPos.z, true, true, true, false);
+		}
 
 		SET_ENTITY_ROTATION(ramp, GET_ENTITY_PITCH(player), -GET_ENTITY_ROLL(player), GET_ENTITY_HEADING(player), 0, true);
-		SET_ENTITY_AS_NO_LONGER_NEEDED(&ramp);
+		
+		if (prevRamp)
+		{
+			SET_ENTITY_AS_NO_LONGER_NEEDED(&prevRamp);
+		}
 
 		prevRamp = ramp;
-
-		WAIT(0);
 	}
+
+	SET_ENTITY_AS_NO_LONGER_NEEDED(&prevRamp);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_SUPER_STUNT, OnStart, nullptr, nullptr, EffectInfo

@@ -25,6 +25,11 @@ static void OnStart()
 		WAIT(2000);
 		SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 		WAIT(1000);
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(4000);
+		}
 	}
 
 	SET_ENTITY_INVINCIBLE(player, false);

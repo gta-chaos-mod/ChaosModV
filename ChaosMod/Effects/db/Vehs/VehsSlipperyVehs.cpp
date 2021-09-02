@@ -20,6 +20,10 @@ static void OnTick()
 		{
 			toggle = !toggle;
 		}
+		else
+		{
+			toggle = true;
+		}
 	}
 }
 

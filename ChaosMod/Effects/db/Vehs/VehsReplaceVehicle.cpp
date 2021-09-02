@@ -77,6 +77,7 @@ static void OnStart()
 
 			SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
 			SET_MODEL_AS_NO_LONGER_NEEDED(randomVeh);
+			randomVeh = 0;
 
 			if (oldVehHandle)
 			{

@@ -239,13 +239,13 @@ static void OnStartRandom()
 				TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 			}
 
-			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
-			VEHICLE::SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
+			SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
+			SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
 
-			VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
-			VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+			SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+			SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
 
-			VEHICLE::_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+			_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
 			for (int i = 0; i < 4; i++)
 			{
 				_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);

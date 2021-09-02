@@ -22,13 +22,17 @@ static void OnTick()
 
 	for (Ped ped : GetAllPeds())
 	{
-		if (IS_PED_IN_ANY_VEHICLE(ped, false))
+		// Stop peds from flickering if "Invisible peds" effect is active
+		if (GET_ENTITY_ALPHA(ped) > 0)
 		{
-			SET_ENTITY_ALPHA(ped, 255 / g_MetaInfo.m_fChaosMultiplier, false);
-		}
-		else
-		{
-			RESET_ENTITY_ALPHA(ped);
+			if (IS_PED_IN_ANY_VEHICLE(ped, false))
+			{
+				SET_ENTITY_ALPHA(ped, 255 / g_MetaInfo.m_fChaosMultiplier, false);
+			}
+			else
+			{
+				RESET_ENTITY_ALPHA(ped);
+			}
 		}
 	}
 }

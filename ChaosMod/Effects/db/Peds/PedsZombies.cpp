@@ -83,7 +83,15 @@ static void OnTick()
 					{
 						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
-						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+						for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+						{
+							ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+
+							if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+							{
+								WAIT(500);
+							}
+						}
 
 						SET_ENTITY_HEALTH(zombie, 0, false);
 						SET_ENTITY_MAX_HEALTH(zombie, 0);

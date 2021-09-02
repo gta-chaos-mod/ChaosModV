@@ -4,7 +4,7 @@ static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
-		SET_VEHICLE_ENGINE_HEALTH(veh, -100.f * (g_MetaInfo.m_fChaosMultiplier - 1));
+		SET_VEHICLE_ENGINE_HEALTH(veh, -10.f * (g_MetaInfo.m_fChaosMultiplier - 1));
 	}
 }
 

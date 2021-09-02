@@ -78,14 +78,8 @@ static void OnStart()
 		SET_PED_RELATIONSHIP_GROUP_HASH(additionalJesus, relationshipGroup);
 		SET_ENTITY_PROOFS(additionalJesus, true, false, false, false, false, false, false, false);
 
-		if (found)
-		{
-			TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(additionalJesus, additionalVeh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);
-		}
-		else
-		{
-			TASK_VEHICLE_DRIVE_WANDER(additionalJesus, additionalVeh, 9999.f, 4176732);
-		}
+		// Make additional jesuses follow the first one (the one in the players vehicle)
+		TASK_VEHICLE_MISSION_PED_TARGET(additionalJesus, additionalVeh, jesus, 12, 9999.f, 4176732, .0f, .0f, false);
 
 		SET_PED_KEEP_TASK(additionalJesus, true);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(additionalJesus, true);
