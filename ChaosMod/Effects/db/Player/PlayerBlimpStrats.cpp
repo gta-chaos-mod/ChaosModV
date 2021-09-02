@@ -10,6 +10,11 @@ static void OnStart()
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
 	Hash blimpHash = GET_HASH_KEY("blimp");
+
+	static const Hash michaelHash = 0x0D7114C9;
+	static const Hash franclinHash = 0x9B22DBAF;
+	static const Hash trevorHash = 0x9B810FA2;
+
 	LoadModel(blimpHash);
 	
 	if (!cutscenePlaying)
@@ -25,7 +30,6 @@ static void OnStart()
 	SET_PED_INTO_VEHICLE(player, veh, -1);
 	SET_VEHICLE_FORWARD_SPEED(veh, 45);
 	TASK_LEAVE_VEHICLE(player, veh, 4160);
-	WAIT(4000);
 
 	int waited = 0;
 
@@ -46,6 +50,8 @@ static void OnStart()
 		{
 			WAIT(100);
 		}
+
+		REGISTER_ENTITY_FOR_CUTSCENE(player, "MICHAEL", 0, 0, 64);
 
 		START_CUTSCENE(0);
 		WAIT(8500);
