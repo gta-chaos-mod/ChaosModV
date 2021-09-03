@@ -41,12 +41,10 @@ static void OnStart()
 
 	SET_ENTITY_INVINCIBLE(player, false);
 
-	waited = 0;
-
 	if (!cutscenePlaying)
 	{
 
-		while (!HAS_CUTSCENE_LOADED() && waited < 100) // for proper cutscene play
+		while (!HAS_CUTSCENE_LOADED()) // for proper cutscene play
 		{
 			WAIT(100);
 		}
@@ -57,6 +55,7 @@ static void OnStart()
 		WAIT(8500);
 		STOP_CUTSCENE_IMMEDIATELY();
 
+		REMOVE_CUTSCENE();
 	}
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
