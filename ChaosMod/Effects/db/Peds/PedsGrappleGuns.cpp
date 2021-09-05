@@ -83,13 +83,13 @@ static void OnTick()
 					SET_PED_TO_RAGDOLL(entity, 500, 500, 0, false, false, false);
 				}
 
-				Vector3 entitiyVelocity = GET_ENTITY_VELOCITY(entity);
+				Vector3 entityVelocity = GET_ENTITY_VELOCITY(entity);
 
 				Vector3 addVelocity = (GET_ENTITY_COORDS(ped, true) - impactCoords);
 				addVelocity = addVelocity / addVelocity.Length(); // Normalize vector
 				addVelocity = addVelocity * 25.f;
 
-				Vector3 newVelocity = entitiyVelocity + addVelocity;
+				Vector3 newVelocity = entityVelocity + addVelocity;
 				SET_ENTITY_VELOCITY(entity, newVelocity.x, newVelocity.y, newVelocity.z);
 			}
 		}
