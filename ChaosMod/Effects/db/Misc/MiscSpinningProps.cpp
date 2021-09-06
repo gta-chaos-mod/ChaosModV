@@ -15,7 +15,7 @@ static void OnTick()
 
 static RegisterEffect registerEffect(EFFECT_SPINNING_PROPS, nullptr, nullptr, OnTick, EffectInfo
 	{
-		.Name = "Spin World",
+		.Name = "Spinning Props",
 		.Id = "misc_spinning_props",
 		.IsTimed = true
 	}
