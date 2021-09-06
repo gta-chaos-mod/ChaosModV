@@ -11,10 +11,6 @@ static void OnStart()
 
 	Hash blimpHash = GET_HASH_KEY("blimp");
 
-	static const Hash michaelHash = 0x0D7114C9;
-	static const Hash franclinHash = 0x9B22DBAF;
-	static const Hash trevorHash = 0x9B810FA2;
-
 	LoadModel(blimpHash);
 	
 	if (!cutscenePlaying)
