@@ -5,11 +5,11 @@
 #include <stdafx.h>
 static Camera sickCamera = 0;
 static float camZoom = 80.f;
-static float camZoomRate = g_Random.GetRandomFloat(0.3f, 0.35f);
+static float camZoomRate = g_Random.GetRandomFloat(0.4f, 0.45f);
 static float camRotX = 0.f;
-static float camRotXRate = g_Random.GetRandomFloat(0.2f, 0.3f);
+static float camRotXRate = g_Random.GetRandomFloat(0.4f, 0.5f);
 static float camRotY = 0.f;
-static float camRotYRate = g_Random.GetRandomFloat(0.3f, 0.4f);
+static float camRotYRate = g_Random.GetRandomFloat(0.6f, 0.7f);
 
 static void UpdateCamera()
 {
