@@ -5,11 +5,11 @@
 #include <stdafx.h>
 static Camera sickCamera = 0;
 static float camZoom = 80.f;
-static float camZoomRate = g_Random.GetRandomFloat(0.4f, 0.45f);
+static float camZoomRate = 0.4f;
 static float camRotX = 0.f;
-static float camRotXRate = g_Random.GetRandomFloat(0.4f, 0.5f);
+static float camRotXRate = 0.4f;
 static float camRotY = 0.f;
-static float camRotYRate = g_Random.GetRandomFloat(0.6f, 0.7f);
+static float camRotYRate = 0.6f;
 
 static void UpdateCamera()
 {
@@ -23,6 +23,11 @@ static void OnStart()
     sickCamera = CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
     RENDER_SCRIPT_CAMS(true, true, 10, 1, 1, 1);
     camZoom = 80.f;
+    camZoomRate = g_Random.GetRandomFloat(0.4f, 0.45f) * (g_Random.GetRandomInt(0, 1) ? -1 : 1);
+    camRotX = 0.f;
+    camRotXRate = g_Random.GetRandomFloat(0.4f, 0.5f) * (g_Random.GetRandomInt(0, 1) ? -1 : 1);
+    camRotY = 0.f;
+    camRotYRate = g_Random.GetRandomFloat(0.6f, 0.7f) * (g_Random.GetRandomInt(0, 1) ? -1 : 1);
 }
 
 static void OnTick()
