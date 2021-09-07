@@ -5,7 +5,7 @@
 #include <stdafx.h>
 static Camera spinningCamera = 0;
 float camRot = 0.f;
-const float camRotRate = 1.2f;
+const float camRotRate = 0.8f;
 
 static void UpdateCamera()
 {
@@ -23,7 +23,14 @@ static void OnStart()
 
 static void OnTick()
 {
-    camRot += camRotRate;
+    static DWORD64 lastTick = 0;
+    DWORD64 curTick = GET_GAME_TIMER();
+
+    if (curTick > lastTick + 6)
+    {
+        lastTick = curTick;
+        camRot += camRotRate;
+    }
     CAM::SET_CAM_ACTIVE(spinningCamera, true);
     UpdateCamera();
 }
