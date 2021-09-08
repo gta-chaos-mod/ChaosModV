@@ -14,7 +14,7 @@ static void OnTick()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	if (whaleAmount <= MAX_WHALES && curTick > lastTick + 200)
+	if (whaleAmount <= MAX_WHALES && curTick > lastTick + (200 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastTick = curTick;
 

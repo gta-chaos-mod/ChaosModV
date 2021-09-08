@@ -13,7 +13,7 @@ static void OnTick()
 		{
 			Vector3 rot = GET_ENTITY_ROTATION(ped, 2);
 
-			SET_ENTITY_ROTATION(ped, rot.x + 40.f, rot.y + 40.f, rot.z, 2, true);
+			SET_ENTITY_ROTATION(ped, rot.x + (40.f * g_MetaInfo.m_fChaosMultiplier), rot.y + (40.f * g_MetaInfo.m_fChaosMultiplier), rot.z, 2, true);
 
 		}
 		

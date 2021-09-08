@@ -16,7 +16,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(ms_fTargetPitch);
+	Hooks::SetAudioPitch(ms_fTargetPitch * g_MetaInfo.m_fChaosMultiplier);
 }
 
 static RegisterEffect registerEffect(EFFECT_HIGH_PITCH, OnStart, OnStop, OnTick, EffectInfo

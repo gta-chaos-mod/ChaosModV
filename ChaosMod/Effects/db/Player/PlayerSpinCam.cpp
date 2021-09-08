@@ -23,7 +23,7 @@ static void OnStart()
 
 static void OnTick()
 {
-    camRot += camRotRate;
+    camRot += camRotRate * g_MetaInfo.m_fChaosMultiplier;
     CAM::SET_CAM_ACTIVE(spinningCamera, true);
     UpdateCamera();
 }

@@ -22,26 +22,55 @@ static void OnTick()
 {
     Ped player = PLAYER_PED_ID();
     int count = 5;
-    // Create new bodyguards if non available
-    if (orbitingPeds.empty())
+    // Update bodyguards if amount is wrong
+    if (orbitingPeds.size() != pedCount * g_MetaInfo.m_fChaosMultiplier)
     {
-        static Hash pedHash = GET_HASH_KEY("MP_M_FIBSec_01");
-        LoadModel(pedHash);
-        for (int i = 0; i < pedCount; i++)
+        int pedsDiff = (pedCount * g_MetaInfo.m_fChaosMultiplier) - orbitingPeds.size();
+        if (pedsDiff > 0) // Add peds
         {
-            Ped ped = CREATE_PED(-1, pedHash, 0, 0, 0, 0, true, false);
-            SET_ENTITY_HAS_GRAVITY(ped, false);
-            SET_PED_CAN_RAGDOLL(ped, false);
-            SET_ENTITY_COLLISION(ped, false, true);
-            SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
-            float offset = (360 / pedCount) * i;
-            OrbitPed orbPed = { ped, offset };
-            orbitingPeds.push_back(orbPed);
-            if (-count == 0)
+            static Hash pedHash = GET_HASH_KEY("MP_M_FIBSec_01");
+            LoadModel(pedHash);
+            while (pedsDiff-- > 0)
             {
-                WAIT(0);
-                count = 5;
+                Ped ped = CREATE_PED(-1, pedHash, 0, 0, 0, 0, true, false);
+                SET_ENTITY_HAS_GRAVITY(ped, false);
+                SET_PED_CAN_RAGDOLL(ped, false);
+                SET_ENTITY_COLLISION(ped, false, true);
+                SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
+                OrbitPed orbPed = { ped, 0 /*angle will be set after, since all ped angles need to be updated anyway*/};
+                orbitingPeds.push_back(orbPed);
+                if (--count == 0)
+                {
+                    WAIT(0);
+                    count = 5;
+                }
             }
+        }
+        else if (pedsDiff < 0) // Remove peds
+        {
+            while (pedsDiff++ < 0)
+            {
+                OrbitPed orbitPed = orbitingPeds.back();
+
+                SET_ENTITY_ALPHA(orbitPed.ped, 0, true);
+                SET_PED_AS_NO_LONGER_NEEDED(&orbitPed.ped);
+                DELETE_PED(&orbitPed.ped);
+
+                orbitingPeds.pop_back();
+
+                if (--count == 0)
+                {
+                    WAIT(0);
+                    count = 5;
+                }
+            }
+        }
+
+        // Update ped angles, since number of peds has changed
+        for (int i = 0; i < orbitingPeds.size(); i++)
+        {
+            float offset = (360 / (pedCount * g_MetaInfo.m_fChaosMultiplier)) * i;
+            orbitingPeds[i].angle = offset;
         }
     }
     Entity entityToCircle = player;
@@ -66,7 +95,7 @@ static void OnTick()
             SET_PED_AS_NO_LONGER_NEEDED(&pedInfo.ped);
             DELETE_PED(&pedInfo.ped);
             it = orbitingPeds.erase(it);
-            if (-count == 0)
+            if (--count == 0)
             {
                 WAIT(0);
                 count = 5;
@@ -95,7 +124,7 @@ static void OnStop()
         SET_PED_AS_NO_LONGER_NEEDED(&pedInfo.ped);
         DELETE_PED(&pedInfo.ped);
         it = orbitingPeds.erase(it);
-        if (-count == 0)
+        if (--count == 0)
         {
             WAIT(0);
             count = 5;

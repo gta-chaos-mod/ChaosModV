@@ -6,8 +6,18 @@ static void SpawnProp(const char* propName)
 
 	Hash model = GET_HASH_KEY(propName);
 	LoadModel(model);
+	
+	Vector3 min, max;
+	GET_MODEL_DIMENSIONS(model, &min, &max);
+	float height = (max - min).z;
 
-	Object prop = CreatePoolProp(model, playerPos.x, playerPos.y, playerPos.z, true);
+	Vector3 spawnPos = playerPos;
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		Object prop = CreatePoolProp(model, spawnPos.x, spawnPos.y, spawnPos.z, true);
+		spawnPos.z += height;
+	}
+
 	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 }
 

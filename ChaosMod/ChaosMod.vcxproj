@@ -89,6 +89,7 @@
     <ClCompile Include="Components\DebugMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Components\EffectDispatcher.cpp" />
+    <ClCompile Include="Effects\db\Meta\Meta2xChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />

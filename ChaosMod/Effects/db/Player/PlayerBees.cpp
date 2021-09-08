@@ -26,11 +26,21 @@ static void ApplyVig() {
     }
 }
 
+static void UpdateRand()
+{
+    if (match > CHANCE / g_MetaInfo.m_fChaosMultiplier)
+    {
+        match = g_Random.GetRandomInt(0, CHANCE / g_MetaInfo.m_fChaosMultiplier);
+    }
+}
+
 // (kolyaventuri) There's gotta be a better way of doing this...
 static void OnTick() {
     static DWORD64 timeUntilClear = GET_GAME_TIMER();
     Ped player = PLAYER_PED_ID();
-    int rand_int = g_Random.GetRandomInt(0, CHANCE);
+
+    UpdateRand();
+    int rand_int = g_Random.GetRandomInt(0, CHANCE / g_MetaInfo.m_fChaosMultiplier);
     
     PLAY_STREAM_FROM_PED(player);
     if (rand_int == match) {

@@ -13,7 +13,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	g_MetaInfo.m_ucAdditionalEffectsToDispatch = 2;
+	g_MetaInfo.m_ucAdditionalEffectsToDispatch = 2 * g_MetaInfo.m_fChaosMultiplier;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_ADDITIONAL_EFFECTS, nullptr, OnStop, OnTick, EffectInfo

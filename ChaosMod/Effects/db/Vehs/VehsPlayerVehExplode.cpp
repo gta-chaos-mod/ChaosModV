@@ -17,8 +17,8 @@ static void OnStart()
 
 	int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
-	int detonateTimer = DETONATE_TIMER;
-	int beepTimer = DETONATE_TIMER;
+	int detonateTimer = DETONATE_TIMER / g_MetaInfo.m_fChaosMultiplier;
+	int beepTimer = DETONATE_TIMER / g_MetaInfo.m_fChaosMultiplier;
 	while (DOES_ENTITY_EXIST(veh))
 	{
 		WAIT(0);
@@ -50,6 +50,14 @@ static void OnStart()
 		if (detonateTimer <= 0)
 		{
 			EXPLODE_VEHICLE(veh, true, false);
+
+			// Cause extra explosions
+			Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
+			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier - 1; i++)
+			{
+				WAIT(50); // Wait a tiny bit to make the effect clearer
+				ADD_EXPLOSION(vehCoords.x, vehCoords.y, vehCoords.z, 4, 100.f, true, false, 1.f, false);
+			}
 
 			break;
 		}

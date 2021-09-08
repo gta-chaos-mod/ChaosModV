@@ -13,7 +13,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	WAIT(400);
+	WAIT(400 / g_MetaInfo.m_fChaosMultiplier);
 
 	for (Vehicle veh : GetAllVehs())
 	{

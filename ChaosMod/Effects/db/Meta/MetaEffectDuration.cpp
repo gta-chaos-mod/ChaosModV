@@ -12,7 +12,7 @@ static void OnStop()
 
 static void OnTick_0_5x()
 {
-	g_MetaInfo.m_fEffectDurationModifier = 0.5;
+	g_MetaInfo.m_fEffectDurationModifier = 0.5 / g_MetaInfo.m_fChaosMultiplier;
 }
 
 static RegisterEffect registerEffect_0_5x(EFFECT_META_EFFECT_DURATION_X0_5, nullptr, OnStop, OnTick_0_5x, EffectInfo
@@ -27,7 +27,7 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_EFFECT_DURATION_X0_5, null
 
 static void OnTick_2x()
 {
-	g_MetaInfo.m_fEffectDurationModifier = 2;
+	g_MetaInfo.m_fEffectDurationModifier = 2 * g_MetaInfo.m_fChaosMultiplier;
 }
 
 static RegisterEffect registerEffect_2x(EFFECT_META_EFFECT_DURATION_X2, nullptr, OnStop, OnTick_2x, EffectInfo

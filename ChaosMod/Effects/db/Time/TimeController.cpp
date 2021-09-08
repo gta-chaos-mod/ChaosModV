@@ -50,7 +50,7 @@ static RegisterEffect registerEffect4(EFFECT_TIME_NIGHT, OnStartNight, EffectInf
 );
 static void OnTickTimelapse()
 {
-	ADD_TO_CLOCK_TIME(0, 1, 0);
+	ADD_TO_CLOCK_TIME(0, 1 * g_MetaInfo.m_fChaosMultiplier, 0);
 }
 
 static RegisterEffect registerEffect6(EFFECT_QUICK_TIME, nullptr, nullptr, OnTickTimelapse, EffectInfo

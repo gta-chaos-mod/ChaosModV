@@ -7,7 +7,9 @@ static void OnStop()
 
 static void OnTickLow()
 {
-	SET_GRAVITY_LEVEL(1);
+	// Multiplier = 1: GravityLevel = 1
+	// Multiplier = 2: GravityLevel = 2
+	SET_GRAVITY_LEVEL(min(g_MetaInfo.m_fChaosMultiplier, 3));
 }
 
 static RegisterEffect registerEffect1(EFFECT_LOW_GRAV, nullptr, OnStop, OnTickLow, EffectInfo
@@ -21,7 +23,9 @@ static RegisterEffect registerEffect1(EFFECT_LOW_GRAV, nullptr, OnStop, OnTickLo
 );
 static void OnTickVeryLow()
 {
-	SET_GRAVITY_LEVEL(2);
+	// Multiplier = 1: GravityLevel = 2
+	// Multiplier = 2: GravityLevel = 3
+	SET_GRAVITY_LEVEL(min(1 + g_MetaInfo.m_fChaosMultiplier, 3));
 }
 
 static RegisterEffect registerEffect2(EFFECT_VERY_LOW_GRAV, nullptr, OnStop, OnTickVeryLow, EffectInfo
@@ -35,7 +39,7 @@ static RegisterEffect registerEffect2(EFFECT_VERY_LOW_GRAV, nullptr, OnStop, OnT
 );
 static void OnTickInsane()
 {
-	Memory::SetGravityLevel(200.f);
+	Memory::SetGravityLevel(200.f * g_MetaInfo.m_fChaosMultiplier);
 
 	for (auto ped : GetAllPeds())
 	{
@@ -43,13 +47,13 @@ static void OnTickInsane()
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, -75.f, false, false, true, false);
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, -75.f * g_MetaInfo.m_fChaosMultiplier, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, -200.f, false, false, true, false);
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, -200.f * g_MetaInfo.m_fChaosMultiplier, false, false, true, false);
 	}
 }
 
@@ -69,7 +73,7 @@ static void OnStartInvert()
 
 static void OnTickInvert()
 {
-	Memory::SetGravityLevel(-1.f);
+	Memory::SetGravityLevel(-1.f * g_MetaInfo.m_fChaosMultiplier);
 
 	for (auto ped : GetAllPeds())
 	{
@@ -77,13 +81,13 @@ static void OnTickInvert()
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, 25.f, false, false, true, false);
+			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, 25.f * g_MetaInfo.m_fChaosMultiplier, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, 100.f, false, false, true, false);
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, 100.f * g_MetaInfo.m_fChaosMultiplier, false, false, true, false);
 	}
 }
 

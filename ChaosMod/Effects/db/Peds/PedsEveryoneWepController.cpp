@@ -78,10 +78,13 @@ static void OnStartRandom()
 
 	for (Ped ped : GetAllPeds())
 	{
-		Hash wep = weps[g_Random.GetRandomInt(0, weps.size() - 1)];
+		for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+		{
+			Hash wep = weps[g_Random.GetRandomInt(0, weps.size() - 1)];
 
-		GIVE_WEAPON_TO_PED(ped, wep, 9999, true, true);
-		SET_CURRENT_PED_WEAPON(ped, wep, true);
+			GIVE_WEAPON_TO_PED(ped, wep, 9999, true, true);
+			SET_CURRENT_PED_WEAPON(ped, wep, true);
+		}
 	}
 }
 

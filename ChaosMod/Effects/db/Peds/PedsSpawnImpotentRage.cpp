@@ -17,26 +17,29 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
-	SET_ENTITY_HEALTH(ped, 1000, 0);
-	SET_PED_ARMOUR(ped, 1000);
-
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relGroup);
-	SET_PED_HEARING_RANGE(ped, 9999.f);
-	SET_PED_CONFIG_FLAG(ped, 281, true);
-	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
-	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
-	SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
-	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
-	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-
-	TASK_COMBAT_PED(ped, playerPed, 0, 16);
-
-	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
-
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+		Ped ped = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+		SET_ENTITY_HEALTH(ped, 1000, 0);
+		SET_PED_ARMOUR(ped, 1000);
+
+		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relGroup);
+		SET_PED_HEARING_RANGE(ped, 9999.f);
+		SET_PED_CONFIG_FLAG(ped, 281, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
+		SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
+		SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
+		SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
+		SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
+
+		TASK_COMBAT_PED(ped, playerPed, 0, 16);
+
+		SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
+
+		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+		{
+			SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+		}
 	}
 
 	DWORD64 lastTick = GET_GAME_TIMER();

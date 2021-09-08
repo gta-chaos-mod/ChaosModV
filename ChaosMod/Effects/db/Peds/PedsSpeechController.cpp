@@ -5,7 +5,7 @@ static void OnTickFriendly()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	if (lastTick < curTick - 1000)
+	if (lastTick < curTick - (1000 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastTick = curTick;
 
@@ -35,7 +35,7 @@ static void OnTickUnfriendly()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	if (lastTick < curTick - 1000)
+	if (lastTick < curTick - (1000 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastTick = curTick;
 
@@ -65,7 +65,7 @@ static void OnTickKifflom()
 	static DWORD64 lastTick = 0;
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	if (lastTick < curTick - 1000)
+	if (lastTick < curTick - (1000 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastTick = curTick;
 

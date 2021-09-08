@@ -66,7 +66,7 @@ static void OnTick()
 {
 	GRAPHICS::SET_SCRIPT_GFX_DRAW_ORDER(4);
 	GRAPHICS::SET_SCRIPT_GFX_DRAW_BEHIND_PAUSEMENU(1);
-	GRAPHICS::DRAW_TV_CHANNEL(ms_fPosX, ms_fPosY, 0.3f, 0.3f, 0.0f, 255, 255, 255, 255);
+	GRAPHICS::DRAW_TV_CHANNEL(ms_fPosX, ms_fPosY, 0.3f * g_MetaInfo.m_fChaosMultiplier, 0.3f * g_MetaInfo.m_fChaosMultiplier, 0.0f, 255, 255, 255, 255);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_ON_DEMAND_CARTOON, OnStart, OnStop, OnTick, EffectInfo

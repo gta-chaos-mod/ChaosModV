@@ -37,7 +37,7 @@ static void OnTick()
 		static float maxForce = 100;
 		Vector3 entityCoord = GET_ENTITY_COORDS(entity, false);
 		float distance = GET_DISTANCE_BETWEEN_COORDS(playerCoord.x, playerCoord.y, playerCoord.z, entityCoord.x, entityCoord.y, entityCoord.z, true);
-		if (distance < startDistance) 
+		if (distance < startDistance * g_MetaInfo.m_fChaosMultiplier)
 		{
 			if (IS_ENTITY_A_PED(entity) && !IS_PED_RAGDOLL(entity))
 			{
@@ -45,7 +45,12 @@ static void OnTick()
 			}
 			float forceDistance = min(max(0.f, (startDistance - distance)), maxForceDistance);
 			float force = (forceDistance / maxForceDistance) * maxForce;
-			APPLY_FORCE_TO_ENTITY(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y, entityCoord.z - playerCoord.z, 0, 0, 0, false, false, true, true, false, true);
+
+			// Instead of subtracting each component of the vector individually, do it on the whole vectors instead
+			Vector3 forceVector = entityCoord - playerCoord;
+			forceVector = forceVector * g_MetaInfo.m_fChaosMultiplier;
+
+			APPLY_FORCE_TO_ENTITY(entity, 3, forceVector.x, forceVector.y, forceVector.z, 0, 0, 0, false, false, true, true, false, true);
 		}
 	}
 }

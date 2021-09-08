@@ -4,7 +4,15 @@
 
 static void OnStartLSIA()
 {
-	TeleportPlayer(-1388.6f, -3111.61f, 13.94f);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		TeleportPlayer(-1388.6f, -3111.61f, 13.94f);
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
+	}
 }
 
 static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectInfo
@@ -16,7 +24,15 @@ static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectIn
 );
 static void OnStartMazeTower()
 {
-	TeleportPlayer(-75.7f, -818.62f, 326.16f);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		TeleportPlayer(-75.7f, -818.62f, 326.16f);
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
+	}
 }
 
 static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, EffectInfo
@@ -28,13 +44,21 @@ static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, Eff
 );
 static void OnStartFortZancudo()
 {
-	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		TeleportPlayer(-2360.3f, 3244.83f, 92.9f);
-	}
-	else
-	{
-		TeleportPlayer(-2267.89f, 3121.04f, 32.5f);
+		if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
+		{
+			TeleportPlayer(-2360.3f, 3244.83f, 92.9f);
+		}
+		else
+		{
+			TeleportPlayer(-2267.89f, 3121.04f, 32.5f);
+		}
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
 	}
 }
 
@@ -47,13 +71,21 @@ static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo,
 );
 static void OnStartMountChilliad()
 {
-	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		TeleportPlayer(501.77f, 5604.85f, 797.91f);
-	}
-	else
-	{
-		TeleportPlayer(503.33f, 5531.91f, 777.45f);
+		if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
+		{
+			TeleportPlayer(501.77f, 5604.85f, 797.91f);
+		}
+		else
+		{
+			TeleportPlayer(503.33f, 5531.91f, 777.45f);
+		}
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
 	}
 }
 
@@ -66,7 +98,15 @@ static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChill
 );
 static void OnStartSkyFall()
 {
-	TeleportPlayer(935.f, 3800.f, 2300.f);
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+	{
+		TeleportPlayer(935.f, 3800.f, 2300.f);
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
+	}
 }
 
 static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectInfo
@@ -78,72 +118,80 @@ static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectI
 );
 static void OnStartWaypoint()
 {
-	Vector3 coords;
-	bool found = false, playerBlip = false;
-	if (IS_WAYPOINT_ACTIVE())
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
-		found = true;
-		playerBlip = true;
-	}
-	else
-	{
-		for (int i = 0; i < 3; i++)
+		Vector3 coords;
+		bool found = false, playerBlip = false;
+		if (IS_WAYPOINT_ACTIVE())
 		{
-			Blip blip = GET_FIRST_BLIP_INFO_ID(i);
-			if (DOES_BLIP_EXIST(blip))
-			{
-				coords = GET_BLIP_COORDS(blip);
-				found = true;
-
-				break;
-			}
-		}
-	}
-
-	Ped playerPed = PLAYER_PED_ID();
-
-	if (found)
-	{
-		float z;
-		if (!playerBlip)
-		{
-			z = coords.z;
+			coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+			found = true;
+			playerBlip = true;
 		}
 		else
 		{
-			float groundZ;
-			bool useGroundZ;
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				float testZ = (i * 10.f) - 100.f;
-
-				TeleportPlayer(coords.x, coords.y, testZ);
-				if (i % 5 == 0)
+				Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+				if (DOES_BLIP_EXIST(blip))
 				{
-					WAIT(0);
-				}
+					coords = GET_BLIP_COORDS(blip);
+					found = true;
 
-				useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
-				if (useGroundZ)
-				{
 					break;
 				}
 			}
+		}
 
-			if (useGroundZ)
+		Ped playerPed = PLAYER_PED_ID();
+
+		if (found)
+		{
+			float z;
+			if (!playerBlip)
 			{
-				z = groundZ;
+				z = coords.z;
 			}
 			else
 			{
-				Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+				float groundZ;
+				bool useGroundZ;
+				for (int i = 0; i < 100; i++)
+				{
+					float testZ = (i * 10.f) - 100.f;
 
-				z = playerPos.z;
+					TeleportPlayer(coords.x, coords.y, testZ);
+					if (i % 5 == 0)
+					{
+						WAIT(0);
+					}
+
+					useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
+					if (useGroundZ)
+					{
+						break;
+					}
+				}
+
+				if (useGroundZ)
+				{
+					z = groundZ;
+				}
+				else
+				{
+					Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+					z = playerPos.z;
+				}
 			}
+
+			TeleportPlayer(coords.x, coords.y, z);
 		}
 
-		TeleportPlayer(coords.x, coords.y, z);
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			WAIT(5000);
+		}
 	}
 }
 
@@ -156,7 +204,7 @@ static RegisterEffect registerEffect6(EFFECT_TP_WAYPOINT, OnStartWaypoint, Effec
 static void OnStartFront()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 50.f, 0.f);
+	Vector3 newPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0.f, 50.f * g_MetaInfo.m_fChaosMultiplier, 0.f);
 	float groundZ;
 	bool useGroundZ = GET_GROUND_Z_FOR_3D_COORD(newPos.x, newPos.y, 1000.f, &groundZ, false, false);
 
@@ -171,38 +219,45 @@ static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront, EffectInfo
 );
 static void OnStartRandom()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-
-	float x, y, z = playerPos.z, _;
-	do
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		x = g_Random.GetRandomInt(-3747.f, 4500.f);
-		y = g_Random.GetRandomInt(-4400.f, 8022.f);
-		
-	}
-	while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, z, 0, &_));
+		Ped playerPed = PLAYER_PED_ID();
+		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	float groundZ;
-	bool useGroundZ;
-	for (int i = 0; i < 100; i++)
-	{
-		float testZ = (i * 10.f) - 100.f;
-
-		TeleportPlayer(x, y, testZ);
-		if (i % 5 == 0)
+		float x, y, z = playerPos.z, _;
+		do
 		{
-			WAIT(0);
+			x = g_Random.GetRandomInt(-3747.f, 4500.f);
+			y = g_Random.GetRandomInt(-4400.f, 8022.f);
+
+		} while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, z, 0, &_));
+
+		float groundZ;
+		bool useGroundZ;
+		for (int i = 0; i < 100; i++)
+		{
+			float testZ = (i * 10.f) - 100.f;
+
+			TeleportPlayer(x, y, testZ);
+			if (i % 5 == 0)
+			{
+				WAIT(0);
+			}
+
+			useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
+			if (useGroundZ)
+			{
+				break;
+			}
 		}
 
-		useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
-		if (useGroundZ)
+		TeleportPlayer(x, y, useGroundZ ? groundZ : z);
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
 		{
-			break;
+			WAIT(5000);
 		}
 	}
-
-	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
 }
 
 static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
@@ -308,7 +363,7 @@ static void OnStartFakeTp()
 
 	TeleportPlayer(destinationPos);
 
-	WAIT(g_Random.GetRandomInt(3500, 6000));
+	WAIT(g_Random.GetRandomInt(3500, 6000) * g_MetaInfo.m_fChaosMultiplier);
 
 	TeleportPlayer(playerPos);
 

@@ -10,7 +10,10 @@ static void UpdateCamera()
 {
     auto coord = CAM::GET_GAMEPLAY_CAM_COORD();
     auto rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-    CAM::SET_CAM_PARAMS(fovCamera, coord.x, coord.y, coord.z, rot.x, rot.y, rot.z, 120, 0, 1, 1, 2);
+
+    // Multiplier of 1: FOV 120 (default for effect)
+    // Multiplier of 2: FOV 150
+    CAM::SET_CAM_PARAMS(fovCamera, coord.x, coord.y, coord.z, rot.x, rot.y, rot.z, 90 + (30 * g_MetaInfo.m_fChaosMultiplier), 0, 1, 1, 2);
 }
 
 static void OnStart()

@@ -17,7 +17,7 @@ static void OnTick()
 	int current_time = GET_GAME_TIMER();
 
 	// Launch a firework every 500 miliseconds
-	if (current_time - last_firework > 500)
+	if (current_time - last_firework > (500 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		last_firework = current_time;
 

@@ -34,7 +34,7 @@ static void OnTick()
 		WAIT(0);
 	}
 	int current_time = GET_GAME_TIMER();
-	if (current_time - lastAirStrike > 1000)
+	if (current_time - lastAirStrike > (1000 / g_MetaInfo.m_fChaosMultiplier))
 	{
 		lastAirStrike = current_time;
 		Ped player = PLAYER_PED_ID();

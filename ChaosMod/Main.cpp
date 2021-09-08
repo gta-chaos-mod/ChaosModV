@@ -168,6 +168,13 @@ static void MainRun()
 	{
 		WAIT(0);
 
+#ifdef _DEBUG
+		std::ostringstream ss;
+		ss << "m_fChaosMultiplier: ";
+		ss << g_MetaInfo.m_fChaosMultiplier;
+		DrawScreenText(ss.str(), { .8f, .5f }, .5f, { 0, 100, 100 });
+#endif
+
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
 			static bool c_bJustReenabled = false;
@@ -251,6 +258,30 @@ namespace Main
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
 		static bool c_bIsCtrlPressed = false;
+
+#ifdef _DEBUG
+		static bool hasChanged = false;
+		if (ulKey == VK_OEM_PLUS)
+		{
+			if (!hasChanged)
+			{
+				if (g_MetaInfo.m_fChaosMultiplier == 1)
+				{
+					g_MetaInfo.m_fChaosMultiplier = 2;
+				}
+				else
+				{
+					g_MetaInfo.m_fChaosMultiplier = 1;
+				}
+
+				hasChanged = true;
+			}
+		}
+		else
+		{
+			hasChanged = false;
+		}
+#endif
 
 		if (ulKey == VK_CONTROL)
 		{

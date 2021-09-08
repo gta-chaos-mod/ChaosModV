@@ -4,18 +4,44 @@ static void OnStart()
 {
 	int count = 10;
 
-	for (Vehicle veh : GetAllVehs())
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
 	{
-		for (int i = 0; i < 6; i++)
+		for (Vehicle veh : GetAllVehs())
 		{
-			SET_VEHICLE_DOOR_BROKEN(veh, i, false);
-
-			if (--count == 0)
+			if (GET_ENTITY_HEALTH(veh) > 0)
 			{
-				count = 10;
+				for (int j = 0; j < 6; j++)
+				{
+					SET_VEHICLE_DOOR_BROKEN(veh, j, false);
 
-				WAIT(0);
+					if (--count == 0)
+					{
+						count = 10;
+						WAIT(0);
+					}
+				}
 			}
+		}
+
+		if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+		{
+			for (Vehicle veh : GetAllVehs())
+			{
+				// Don't do this for vehicles that are completely destroyed
+				if (GET_ENTITY_HEALTH(veh) > 0)
+				{
+					// Couldn't find a native to repair the doors specifically, so any other damage done to the vehicle will unfortunately also be repaired here
+					SET_VEHICLE_FIXED(veh);
+
+					if (--count == 0)
+					{
+						count = 10;
+						WAIT(0);
+					}
+				}
+			}
+
+			WAIT(10);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 
 static void OnTick()
 {
-	SIMULATE_PLAYER_INPUT_GAIT(PLAYER_ID(), 5.f, 100, 1.f, true, false);
+	SIMULATE_PLAYER_INPUT_GAIT(PLAYER_ID(), 5.f, 100, 1.f * g_MetaInfo.m_fChaosMultiplier, true, false);
 
 	_SET_CONTROL_NORMAL(0, 32, 1);
 	_SET_CONTROL_NORMAL(0, 71, 1);

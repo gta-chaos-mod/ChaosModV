@@ -6,7 +6,7 @@ static void OnStart()
 	{
 		Vector3 vel = GET_ENTITY_VELOCITY(veh);
 
-		SET_ENTITY_VELOCITY(veh, vel.x, vel.y, 100.f);
+		SET_ENTITY_VELOCITY(veh, vel.x, vel.y, 100.f * g_MetaInfo.m_fChaosMultiplier);
 	}
 }
 

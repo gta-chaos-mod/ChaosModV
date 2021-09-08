@@ -6,7 +6,7 @@ static void OnStart()
 
 	CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
 
-	SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);
+	SET_PED_TO_RAGDOLL(playerPed, 10000 * g_MetaInfo.m_fChaosMultiplier, 10000 * g_MetaInfo.m_fChaosMultiplier, 0, true, true, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_RAGDOLL, OnStart, EffectInfo

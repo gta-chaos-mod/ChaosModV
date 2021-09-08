@@ -105,8 +105,8 @@ static void OnStart()
 
 					int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
-					int detonateTimer = 5000;
-					int beepTimer = 5000;
+					int detonateTimer = 5000 / g_MetaInfo.m_fChaosMultiplier;
+					int beepTimer = 5000 / g_MetaInfo.m_fChaosMultiplier;
 					while (DOES_ENTITY_EXIST(veh))
 					{
 						WAIT(0);

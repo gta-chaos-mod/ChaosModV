@@ -15,9 +15,10 @@ static void OnTick()
 		{
 			float horizontalRecoil = g_Random.GetRandomInt(-100, 100);
 			horizontalRecoil = horizontalRecoil / 10;
+			horizontalRecoil *= g_MetaInfo.m_fChaosMultiplier;
 			for (int i = 0; i < 10; i++)
 			{
-				SET_GAMEPLAY_CAM_RELATIVE_PITCH(GET_GAMEPLAY_CAM_RELATIVE_PITCH() + (verticalRecoil / 10), 1.f);
+				SET_GAMEPLAY_CAM_RELATIVE_PITCH(GET_GAMEPLAY_CAM_RELATIVE_PITCH() + ((verticalRecoil * g_MetaInfo.m_fChaosMultiplier) / 10), 1.f);
 				SET_GAMEPLAY_CAM_RELATIVE_HEADING(GET_GAMEPLAY_CAM_RELATIVE_HEADING() + (horizontalRecoil / 10));
 				WAIT(0);
 			}

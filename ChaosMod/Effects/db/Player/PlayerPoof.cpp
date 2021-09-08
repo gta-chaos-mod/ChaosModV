@@ -19,7 +19,16 @@ static void OnTick()
 			Vector3 pos = GET_ENTITY_COORDS(target, false);
 			SET_ENTITY_HEALTH(target, 0, 0);
 			SET_ENTITY_INVINCIBLE(target, false);
-			ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f, false);
+
+			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+			{
+				ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f * g_MetaInfo.m_fChaosMultiplier, false);
+
+				if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+				{
+					WAIT(500);
+				}
+			}
 		}
 	}
 

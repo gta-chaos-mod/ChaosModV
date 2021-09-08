@@ -59,7 +59,15 @@ static std::vector<Vector3> allPossibleStores = {
 
 static void OnStart()
 {
-    TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
+    for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+    {
+        TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
+
+        if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+        {
+            WAIT(5000);
+        }
+    }
 }
 
 static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo

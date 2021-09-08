@@ -38,7 +38,7 @@ static void OnStart()
 	{
 		const Vector3& vel = spacePed.Vel;
 
-		SET_ENTITY_VELOCITY(spacePed.Ped, vel.x, vel.y, 100.f);
+		SET_ENTITY_VELOCITY(spacePed.Ped, vel.x, vel.y, 100.f * g_MetaInfo.m_fChaosMultiplier);
 	}
 }
 

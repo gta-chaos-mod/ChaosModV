@@ -10,6 +10,15 @@ static void OnTick()
 	{
 		PLAY_PAIN(ped, 8, 0, 0);
 	}
+
+	if (g_MetaInfo.m_fChaosMultiplier > 1)
+	{
+		WAIT(10);
+		for (Ped ped : GetAllPeds())
+		{
+			PLAY_PAIN(ped, 7, 0, 0);
+		}
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_ETERNAL_SCREAMS, nullptr, nullptr, OnTick, EffectInfo

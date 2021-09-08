@@ -27,6 +27,8 @@ static void OnTick()
 
 			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
 			int thingCount = isShotgun ? 3 : 1;
+			thingCount *= g_MetaInfo.m_fChaosMultiplier;
+
 			for (int i = 0; i < thingCount; i++)
 			{
 				if (i > 0)

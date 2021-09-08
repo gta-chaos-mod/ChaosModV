@@ -15,6 +15,12 @@ static void OnStart()
 	{
 		START_ENTITY_FIRE(playerPed);
 	}
+
+	if (g_MetaInfo.m_fChaosMultiplier > 1)
+	{
+		Vector3 playerCoords = GET_ENTITY_COORDS(playerPed, true);
+		ADD_EXPLOSION(playerCoords.x, playerCoords.y, playerCoords.z, 3, 40.f, true, false, 0.f, false); // Create molotov explosion at player
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_IGNITE, OnStart, EffectInfo

@@ -11,19 +11,25 @@ static bool goingDown = true, goingRight = true;
 
 static void OnStart()
 {
-	// Get Screenresolution to calculate the square ratio
-	int screenresx, screenresy;
-	_GET_ACTIVE_SCREEN_RESOLUTION(&screenresx, &screenresy);
-	boxHeight = BOX_HEIGHT_RATIO;
-	boxWidth = boxHeight * (double(screenresy) / double(screenresx));
 	offsetX = 0;
 	offsetY = 0;
 	goingDown = true;
 	goingRight = true;
 }
 
+static void UpdateBoxSize()
+{
+	// Get Screenresolution to calculate the square ratio
+	int screenresx, screenresy;
+	_GET_ACTIVE_SCREEN_RESOLUTION(&screenresx, &screenresy);
+	boxHeight = BOX_HEIGHT_RATIO / g_MetaInfo.m_fChaosMultiplier; // Make box smaller with higher multipliers
+	boxWidth = boxHeight * (double(screenresy) / double(screenresx));
+}
+
 static void OnTick()
 {
+	UpdateBoxSize();
+
 	if (goingRight)
 	{
 		offsetX += SPEED;

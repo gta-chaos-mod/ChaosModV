@@ -112,7 +112,7 @@ static void OnTickPink()
 		{
 			USE_PARTICLE_FX_ASSET("des_trailerpark");
 			int boneId = GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis");
-			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0, boneId, 1, false, false, false);
+			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0, boneId, 1 * g_MetaInfo.m_fChaosMultiplier, false, false, false);
 			flameByCar[veh] = handle;
 		}
 
@@ -152,9 +152,9 @@ static void OnTickRainbow()
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		int r = std::sin(veh + freq * cnt) * 127 + 128;
-		int g = std::sin(veh + freq * cnt + 2) * 127 + 128;
-		int b = std::sin(veh + freq * cnt + 4) * 127 + 128;
+		int r = std::sin(veh + freq * cnt * g_MetaInfo.m_fChaosMultiplier) * 127 + 128;
+		int g = std::sin(veh + freq * cnt * g_MetaInfo.m_fChaosMultiplier + 2) * 127 + 128;
+		int b = std::sin(veh + freq * cnt * g_MetaInfo.m_fChaosMultiplier + 4) * 127 + 128;
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g, b, r);
@@ -175,9 +175,9 @@ static void OnTickRainbow()
 
 	// Headlight color switcher
 
-	int r = std::sin(freq * cnt) * 127 + 128;
-	int g = std::sin(freq * cnt + 2) * 127 + 128;
-	int b = std::sin(freq * cnt + 4) * 127 + 128;
+	int r = std::sin(freq * cnt * g_MetaInfo.m_fChaosMultiplier) * 127 + 128;
+	int g = std::sin(freq * cnt * g_MetaInfo.m_fChaosMultiplier + 2) * 127 + 128;
+	int b = std::sin(freq * cnt * g_MetaInfo.m_fChaosMultiplier + 4) * 127 + 128;
 
 	for (int i = 0; i < 13; i++)
 	{

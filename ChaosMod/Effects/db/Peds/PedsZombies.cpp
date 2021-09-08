@@ -38,7 +38,7 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	if (m_zombies.size() <= MAX_ZOMBIES)
+	if (m_zombies.size() <= MAX_ZOMBIES * g_MetaInfo.m_fChaosMultiplier)
 	{
 		Vector3 spawnPos;
 		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + m_zombies.size(), &spawnPos, 0, 0, 0)
@@ -46,18 +46,21 @@ static void OnTick()
 		{
 			LoadModel(MODEL_HASH);
 
-			Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
+			for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+			{
+				Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 
-			m_zombies.push_back(zombie);
+				m_zombies.push_back(zombie);
 
-			SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
-			SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
-			SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
+				SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
+				SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
+				SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
 
-			//SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
-			DISABLE_PED_PAIN_AUDIO(zombie, true);
+				//SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
+				DISABLE_PED_PAIN_AUDIO(zombie, true);
 
-			TASK_COMBAT_PED(zombie, playerPed, 0, 16);
+				TASK_COMBAT_PED(zombie, playerPed, 0, 16);
+			}
 
 			SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 		}
@@ -80,7 +83,15 @@ static void OnTick()
 					{
 						Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
 
-						ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+						for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+						{
+							ADD_EXPLOSION(zombiePos.x, zombiePos.y, zombiePos.z, 4, 9999.f, true, false, 1.f, false);
+
+							if (i + 1 < g_MetaInfo.m_fChaosMultiplier)
+							{
+								WAIT(500);
+							}
+						}
 
 						SET_ENTITY_HEALTH(zombie, 0, false);
 						SET_ENTITY_MAX_HEALTH(zombie, 0);

@@ -13,8 +13,8 @@ static void OnTickX2()
 {
 	for (auto veh : GetAllVehs())
 	{
-		MODIFY_VEHICLE_TOP_SPEED(veh, 2.f);
-		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 2.f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, 2.f * g_MetaInfo.m_fChaosMultiplier);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 2.f * g_MetaInfo.m_fChaosMultiplier);
 	}
 }
 
@@ -30,8 +30,8 @@ static void OnTickX10()
 {
 	for (auto veh : GetAllVehs())
 	{
-		MODIFY_VEHICLE_TOP_SPEED(veh, 10.f);
-		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 10.f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, 10.f * g_MetaInfo.m_fChaosMultiplier);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, 10.f * g_MetaInfo.m_fChaosMultiplier);
 	}
 }
 
@@ -47,8 +47,8 @@ static void OnTickX05()
 {
 	for (auto veh : GetAllVehs())
 	{
-		MODIFY_VEHICLE_TOP_SPEED(veh, .5f);
-		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, .5f);
+		MODIFY_VEHICLE_TOP_SPEED(veh, .5f / g_MetaInfo.m_fChaosMultiplier);
+		SET_VEHICLE_CHEAT_POWER_INCREASE(veh, .5f / g_MetaInfo.m_fChaosMultiplier);
 	}
 }
 

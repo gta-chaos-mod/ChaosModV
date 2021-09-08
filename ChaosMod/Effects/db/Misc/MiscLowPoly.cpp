@@ -7,7 +7,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	_0xA76359FC80B2438E(.04f);
+	_0xA76359FC80B2438E(.04f / g_MetaInfo.m_fChaosMultiplier);
 
 	// By Juhana
 	for (Ped ped : GetAllPeds())

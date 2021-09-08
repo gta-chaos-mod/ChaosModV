@@ -12,8 +12,11 @@ static void OnTick()
 	if (vehicleAmount > 0)
 	{
 		// apply random damage to a random part of a random vehicle
-		Vehicle veh = vehs[g_Random.GetRandomInt(0, vehicleAmount - 1)];
-		SET_VEHICLE_DAMAGE(veh, g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(1000.f, 10000.f), g_Random.GetRandomFloat(100.f, 1000.f), true);
+		for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier; i++)
+		{
+			Vehicle veh = vehs[g_Random.GetRandomInt(0, vehicleAmount - 1)];
+			SET_VEHICLE_DAMAGE(veh, g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(-1.f, 1.f), g_Random.GetRandomFloat(1000.f, 10000.f), g_Random.GetRandomFloat(100.f, 1000.f), true);
+		}
 	}
 }
 

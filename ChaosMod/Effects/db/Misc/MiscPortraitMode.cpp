@@ -17,9 +17,16 @@ static void OnTick()
 {
 	DRAW_RECT((currentBoxWidth / 2), 0.5, currentBoxWidth, 1, 0, 0, 0, 255, false); // Left bar
 	DRAW_RECT(1 - (currentBoxWidth / 2), 0.5, currentBoxWidth, 1, 0, 0, 0, 255, false); // Right bar
-	if (currentBoxWidth < maxBoxWidth)
+	
+	double maxWidth = 0.5 - ((0.5 - maxBoxWidth) / g_MetaInfo.m_fChaosMultiplier);
+
+	if (currentBoxWidth < maxWidth)
 	{
-		currentBoxWidth += 0.01;
+		currentBoxWidth = min(currentBoxWidth + 0.01, maxWidth);
+	}
+	else if (currentBoxWidth > maxWidth)
+	{
+		currentBoxWidth = max(currentBoxWidth - 0.01, maxWidth);
 	}
 }
 

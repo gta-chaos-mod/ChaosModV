@@ -63,7 +63,24 @@ inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
 				SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
 				Vehicle veh = CreateTempVehicle(vehicleHash, pedPos.x, pedPos.y, pedPos.z, pedHeading);
+
 				SET_PED_INTO_VEHICLE(ped, veh, -1);
+
+				int pedType = GET_PED_TYPE(ped);
+				Hash pedModel = GET_ENTITY_MODEL(ped);
+				for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier - 1; i++)
+				{
+					if (!ARE_ANY_VEHICLE_SEATS_FREE(veh))
+						break;
+
+					Ped clone = CreatePoolPed(pedType, pedModel, 0.f, 0.f, 0.f, 0.f);
+					SET_PED_INTO_VEHICLE(clone, veh, -2);
+					CLONE_PED_TO_TARGET(ped, clone);
+					SET_PED_COMBAT_ATTRIBUTES(clone, 3, false); // Don't allow them to leave vehicle by themselves
+
+					SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(clone, true);
+				}
+
 				SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 				SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 

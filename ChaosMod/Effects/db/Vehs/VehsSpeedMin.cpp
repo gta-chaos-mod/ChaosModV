@@ -7,7 +7,11 @@
 #include <string>
 
 #define WAIT_TIME 10000 // ms
-#define SPEED_THRESHOLD 0.5f // % of max speed must be reached
+
+// Multiplier 1: 0.5 (default of effect)
+// Multiplier 2: 2/3
+// Speed threshold will close in on 100% of top speed as the multiplier is increased (but it will never reach or exceed it)
+#define SPEED_THRESHOLD (1.f - (1.f / (g_MetaInfo.m_fChaosMultiplier + 1.f))) // % of max speed must be reached
 
 static int m_overlay = 0;
 static Vehicle m_lastVeh;

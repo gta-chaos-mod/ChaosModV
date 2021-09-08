@@ -6,6 +6,11 @@ static void OnStop()
 	{
 		RESET_ENTITY_ALPHA(veh);
 	}
+
+	for (Ped ped : GetAllPeds())
+	{
+		RESET_ENTITY_ALPHA(ped);
+	}
 }
 
 static void OnTick()
@@ -13,6 +18,22 @@ static void OnTick()
 	for (auto veh : GetAllVehs())
 	{
 		SET_ENTITY_ALPHA(veh, 0, 0);
+	}
+
+	for (Ped ped : GetAllPeds())
+	{
+		// Stop peds from flickering if "Invisible peds" effect is active
+		if (GET_ENTITY_ALPHA(ped) > 0)
+		{
+			if (IS_PED_IN_ANY_VEHICLE(ped, false))
+			{
+				SET_ENTITY_ALPHA(ped, 255 / g_MetaInfo.m_fChaosMultiplier, false);
+			}
+			else
+			{
+				RESET_ENTITY_ALPHA(ped);
+			}
+		}
 	}
 }
 

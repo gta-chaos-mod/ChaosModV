@@ -12,7 +12,7 @@ static void OnTick()
 			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
 			GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
-			TASK_DRIVE_BY(ped, playerPed, 0, 0, 0, 0, (float)-1, 5, false, 0xC6EE6B4C);
+			TASK_DRIVE_BY(ped, playerPed, 0, 0, 0, 0, (float)-1, 5 * g_MetaInfo.m_fChaosMultiplier, false, 0xC6EE6B4C);
 		}
 	}
 }

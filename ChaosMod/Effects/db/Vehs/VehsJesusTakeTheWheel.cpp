@@ -7,18 +7,15 @@
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
 
 	//If the player isn't in a vehicle, put him in a pink panto
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
-		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
-
 		Vehicle veh = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 		SET_VEHICLE_COLOURS(veh, 135, 135);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}
-
-
 	
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
@@ -70,6 +67,23 @@ static void OnStart()
 	SET_PED_KEEP_TASK(jesus, true);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true);
 
+	// Spawn additional jesuses
+	for (int i = 0; i < g_MetaInfo.m_fChaosMultiplier - 1; i++)
+	{
+		Vehicle additionalVeh = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		SET_VEHICLE_COLOURS(additionalVeh, 135, 135);
+
+		LoadModel(modelHash);
+		Ped additionalJesus = CREATE_PED_INSIDE_VEHICLE(additionalVeh, 4, modelHash, -1, true, false);
+		SET_PED_RELATIONSHIP_GROUP_HASH(additionalJesus, relationshipGroup);
+		SET_ENTITY_PROOFS(additionalJesus, true, false, false, false, false, false, false, false);
+
+		// Make additional jesuses follow the first one (the one in the players vehicle)
+		TASK_VEHICLE_MISSION_PED_TARGET(additionalJesus, additionalVeh, jesus, 12, 9999.f, 4176732, .0f, .0f, false);
+
+		SET_PED_KEEP_TASK(additionalJesus, true);
+		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(additionalJesus, true);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_JESUS_TAKE_THE_WHEEL, OnStart, EffectInfo
