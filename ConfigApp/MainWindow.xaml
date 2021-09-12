@@ -31,7 +31,7 @@
                         </TreeView>
                     </Grid>
                 </TabItem>
-            
+
                 <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -39,7 +39,7 @@
                             <ColumnDefinition Width="300" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                    
+
                         <Grid Grid.Column="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="330" />
@@ -96,7 +96,7 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-            
+
                 <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -200,7 +200,7 @@
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                     </Grid>
                 </TabItem>
-            
+
                 <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -223,7 +223,7 @@
                                       HorizontalAlignment="Center" VerticalAlignment="Center"
                                       Click="twitch_user_agreed_Clicked" />
                         </Grid>
-                    
+
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="340" />
@@ -244,14 +244,6 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="twitch_user_channel_name" Width="120" Height="20" Grid.Row="0" Grid.Column="2"
                                      HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_user_name_label" Content="Username" Grid.Row="1" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <TextBox x:Name="twitch_user_user_name" Width="120" Height="20" Grid.Row="1" Grid.Column="2"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_channel_oauth_label" Content="OAuth Token" Grid.Row="2" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <PasswordBox x:Name="twitch_user_channel_oauth" Width="120" Height="20" Grid.Row="2" Grid.Column="2"
-                                         HorizontalAlignment="Left" VerticalAlignment="Center" />
                             <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers&#xA;(Keep at 0 to allow chat to immediately vote, value can't be 1)"
                                    Grid.Row="3" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -268,6 +260,8 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label x:Name="twitch_login_button" Content="Log In With Twitch" Grid.Row="2" Grid.Column="0"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,4,0,10" Cursor="Hand" MouseDown="twitch_login_button_MouseDown" />
                         </Grid>
 
                         <Grid Grid.Row="2">
@@ -309,7 +303,7 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                
+
                 <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>
