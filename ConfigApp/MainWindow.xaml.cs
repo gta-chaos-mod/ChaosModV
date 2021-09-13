@@ -196,6 +196,8 @@ namespace ConfigApp
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
             twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+
+            SetupTwitchLogin();
         }
 
         private void WriteTwitchFile()
@@ -402,11 +404,14 @@ namespace ConfigApp
             {
                 twitch_login_button.Content = "Logged in as " + m_twitchUsername + " (Log Out)";
                 return;
+            } else
+            {
+                twitch_login_button.Content = "Log in with Twitch";
             }
 
             if (m_httpServer == null)
             {
-                m_httpServer = new HTTPServer();
+                m_httpServer = new HTTPServer(this);
             }
         }
 
@@ -423,6 +428,16 @@ namespace ConfigApp
             }
 
             // TODO: Handle spawning login flow
+        }
+
+        public void SetOauthToken(string token)
+        {
+            m_twitchOauth = "oauth:" + token;
+
+            // TODO: Fetch username baed on oAuth token
+
+            WriteTwitchFile();
+            ParseTwitchFile();
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

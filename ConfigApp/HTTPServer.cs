@@ -11,12 +11,16 @@ namespace ConfigApp
         private static string url = "http://localhost:8876/";
         private bool running = false;
 
-        public HTTPServer()
+        private MainWindow m_Main;
+
+        public HTTPServer(MainWindow main)
         {
             listener = new HttpListener();
             listener.Prefixes.Add(url);
             listener.Start();
             running = true;
+
+            m_Main = main;
 
             HandleIncomingConnections();
         }
@@ -36,6 +40,7 @@ namespace ConfigApp
 
                 if (req.Url.AbsolutePath == "/oauth/callback") {
                     string token = req.QueryString.Get("code");
+                    m_Main.SetOauthToken(token);
                     data = Encoding.UTF8.GetBytes("All done! Return to the Config App");
                 }
 
