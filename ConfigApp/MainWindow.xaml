@@ -260,8 +260,9 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                            <Label x:Name="twitch_login_button" Content="Log In With Twitch" Grid.Row="2" Grid.Column="0"
-                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,4,0,10" Cursor="Hand" MouseDown="twitch_login_button_MouseDown" />
+                            <Label x:Name="twitch_logout_text" Content="Log In With Twitch"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,280.4,6" Cursor="Hand" MouseDown="twitch_login_button_MouseDown" Grid.Row="1" Grid.ColumnSpan="3" Width="196" />
+                            <Image x:Name="twitch_login_button" HorizontalAlignment="Left" Height="30" Margin="274,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="196" Grid.ColumnSpan="3" Source="twitch_badge.png" Cursor="Hand" MouseDown="twitch_login_button_MouseDown"/>
                         </Grid>
 
                         <Grid Grid.Row="2">

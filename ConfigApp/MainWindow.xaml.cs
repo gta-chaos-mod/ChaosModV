@@ -391,6 +391,7 @@ namespace ConfigApp
             twitch_user_random_voteable_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable_label.IsEnabled = agreed;
             twitch_login_button.IsEnabled = agreed;
+            twitch_logout_text.IsEnabled = agreed;
 
             SetupTwitchLogin();
         }
@@ -399,11 +400,18 @@ namespace ConfigApp
         {
             if (m_twitchAuth.LoggedIn)
             {
-                twitch_login_button.Content = "Logged in as " + m_twitchAuth.Username + " (Log Out)";
+                twitch_logout_text.Content = "Logged in as " + m_twitchAuth.Username + " (Log Out)";
+
+                twitch_logout_text.Visibility = Visibility.Visible;
+                twitch_login_button.Visibility = Visibility.Hidden;
                 return;
-            } else
+            }
+            else
             {
-                twitch_login_button.Content = "Log in with Twitch";
+                twitch_logout_text.Content = "Log in with Twitch";
+
+                twitch_login_button.Visibility = Visibility.Visible;
+                twitch_logout_text.Visibility = Visibility.Hidden;
             }
         }
 
