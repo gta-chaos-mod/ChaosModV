@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Text.RegularExpressions;
 using Shared; 
 
 using static ConfigApp.Effects;
@@ -24,15 +23,7 @@ namespace ConfigApp
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
 
-        private string m_twitchOauth = "";
-        private string m_twitchUsername = "";
-        private HTTPServer m_httpServer = null;
-
-        private static string m_twitchLoginUrl = "https://id.twitch.tv/oauth2/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=chat:read";
-        private static string m_twitchRedirectUri = "http://localhost:8876/oauth/callback";
-        private string m_twitchClientId = "";
-        private string m_twitchClientSecret = "";
-        private string m_formattedTwitchLoginUrl = "";
+        private TwitchAuth m_twitchAuth = null;
 
         public MainWindow()
         {
@@ -41,18 +32,6 @@ namespace ConfigApp
 
         private void Init()
         {
-            string root = Directory.GetCurrentDirectory();
-            string dotenv = Path.Combine(root, ".env");
-            Console.WriteLine("Loading " + dotenv);
-            if (File.Exists(dotenv))
-            {
-                DotEnv.Load(dotenv);
-
-                m_twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
-                m_twitchClientSecret = Environment.GetEnvironmentVariable("TWITCH_CLIENT_SECRET");
-                m_formattedTwitchLoginUrl = string.Format(m_twitchLoginUrl, m_twitchClientId, m_twitchRedirectUri);
-            }
-
             InitializeComponent();
 
             twitch_user_overlay_mode.ItemsSource = new string[]
@@ -69,6 +48,10 @@ namespace ConfigApp
                 Title += " (v" + Info.VERSION + ")";
             }
 
+            if (m_twitchAuth == null) {
+                m_twitchAuth = new TwitchAuth(this);
+            }
+            
             CheckForUpdates();
 
             ParseConfigFile();
@@ -77,7 +60,7 @@ namespace ConfigApp
             InitEffectsTreeView();
 
             ParseEffectsFile();
-
+            
             InitTwitchTab();
 
             // Check write permissions
@@ -202,14 +185,14 @@ namespace ConfigApp
             m_configFile.WriteFile();
         }
 
-        private void ParseTwitchFile()
+        public void ParseTwitchFile()
         {
             m_twitchFile.ReadFile();
 
             twitch_user_agreed.IsChecked = m_twitchFile.ReadValueBool("EnableTwitchVoting", false);
             twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
-            m_twitchUsername = m_twitchFile.ReadValue("TwitchUserName");
-            m_twitchOauth = m_twitchFile.ReadValue("TwitchChannelOAuth");
+            m_twitchAuth.Username = m_twitchFile.ReadValue("TwitchUserName");
+            m_twitchAuth.OAuthToken = m_twitchFile.ReadValue("TwitchChannelOAuth");
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
@@ -219,12 +202,12 @@ namespace ConfigApp
             SetupTwitchLogin();
         }
 
-        private void WriteTwitchFile()
+        public void WriteTwitchFile()
         {
             m_twitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
-            m_twitchFile.WriteValue("TwitchUserName", m_twitchUsername);
-            m_twitchFile.WriteValue("TwitchChannelOAuth", m_twitchOauth);
+            m_twitchFile.WriteValue("TwitchUserName", m_twitchAuth.Username);
+            m_twitchFile.WriteValue("TwitchChannelOAuth", m_twitchAuth.OAuthToken);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
             m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
@@ -412,92 +395,31 @@ namespace ConfigApp
             SetupTwitchLogin();
         }
 
-        bool IsLoggedIn()
-        {
-            return m_twitchOauth == null ? false : m_twitchOauth.Length > 0;
-        }
-
         void SetupTwitchLogin()
         {
-            if (IsLoggedIn())
+            if (m_twitchAuth.LoggedIn)
             {
-                twitch_login_button.Content = "Logged in as " + m_twitchUsername + " (Log Out)";
+                twitch_login_button.Content = "Logged in as " + m_twitchAuth.Username + " (Log Out)";
                 return;
             } else
             {
                 twitch_login_button.Content = "Log in with Twitch";
             }
-
-            if (m_httpServer == null)
-            {
-                m_httpServer = new HTTPServer(this);
-            }
         }
 
         private void twitch_login_button_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (IsLoggedIn())
+            if (m_twitchAuth.LoggedIn)
             {
-                m_twitchOauth = "";
-                m_twitchUsername = "";
+                m_twitchAuth.Username = "";
+                m_twitchAuth.OAuthToken = "";
                 WriteTwitchFile();
                 ParseTwitchFile();
 
                 return;
             }
 
-#if DEBUG
-            if (m_twitchClientId.Length == 0)
-            {
-                MessageBox.Show("No TWITCH_CLIENT_ID present. You may be missing your .env file. Skipping login.", "Cannot log in with Twitch", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            else if (m_twitchClientSecret.Length == 0)
-            {
-                MessageBox.Show("No TWITCH_CLIENT_SECRET present. You may be missing your .env file. Skipping login.", "Cannot log in with Twitch", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-#endif
-
-            System.Diagnostics.Process.Start(m_formattedTwitchLoginUrl);
-        }
-
-        public async void SetOauthToken(string token)
-        {
-            m_twitchOauth = "oauth:" + token;
-
-            HttpClient client = new HttpClient();
-
-            Dictionary<string, string> values = new Dictionary<string, string>
-            {
-                {"client_id", m_twitchClientId},
-                {"client_secret", m_twitchClientSecret},
-                {"code", token},
-                {"grant_type", "authorization_code"},
-                {"redirect_uri", m_twitchRedirectUri}
-            };
-            List<string> paramList = new List<string>();
-            foreach (KeyValuePair<string, string> parameter in values)
-            {
-                paramList.Add(string.Format("{0}={1}", parameter.Key, parameter.Value));
-            }
-
-            string url = string.Format("https://id.twitch.tv/oauth2/token?{0}", string.Join("&", paramList));
-            HttpResponseMessage response = await client.PostAsync(url, null);
-            string data = await response.Content.ReadAsStringAsync();
-
-            Regex regex = new Regex("{\"access_token\":\"([^\"]*)\"", RegexOptions.IgnoreCase);
-            Match match = regex.Match(data);
-            if (!match.Success)
-            {
-                MessageBox.Show("Something went wrong logging you into Twitch.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            string code = match.Groups[1].Value;
-
-            //WriteTwitchFile();
-            ParseTwitchFile();
+            m_twitchAuth.SpawnLogin();
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -621,9 +543,9 @@ namespace ConfigApp
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (m_httpServer == null)
+            if (m_twitchAuth != null)
             {
-                m_httpServer.Stop();
+                m_twitchAuth.StopServer();
             }
         }
     }

@@ -11,16 +11,16 @@ namespace ConfigApp
         private static string url = "http://localhost:8876/";
         private bool running = false;
 
-        private MainWindow m_Main;
+        private TwitchAuth m_twitchAuth;
 
-        public HTTPServer(MainWindow main)
+        public HTTPServer(TwitchAuth auth)
         {
             listener = new HttpListener();
             listener.Prefixes.Add(url);
             listener.Start();
             running = true;
 
-            m_Main = main;
+            m_twitchAuth = auth;
 
             HandleIncomingConnections();
         }
@@ -40,7 +40,7 @@ namespace ConfigApp
 
                 if (req.Url.AbsolutePath == "/oauth/callback") {
                     string token = req.QueryString.Get("code");
-                    m_Main.SetOauthToken(token);
+                    m_twitchAuth.SetOauthToken(token);
                     data = Encoding.UTF8.GetBytes("All done! Return to the Config App");
                 }
 

@@ -237,6 +237,7 @@
     <Compile Include="EffectsTreeMenuItem.cs" />
     <Compile Include="HTTPServer.cs" />
     <Compile Include="Info.cs" />
+    <Compile Include="TwitchAuth.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
