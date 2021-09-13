@@ -27,6 +27,11 @@ namespace ConfigApp
         private string m_twitchUsername = "";
         private HTTPServer m_httpServer = null;
 
+        private static string m_twitchLoginUrl = "https://id.twitch.tv/oauth2/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor";
+        private static string m_twitchClientId = "<<YOUR CLIENT ID>>";
+        private static string m_twitchRedirectUri = "http://localhost:8076/oauth/callback";
+        private static string m_formattedTwitchLoginUrl = String.Format(m_twitchLoginUrl, m_twitchClientId, m_twitchRedirectUri);
+
         public MainWindow()
         {
             Init();
@@ -427,7 +432,7 @@ namespace ConfigApp
                 return;
             }
 
-            // TODO: Handle spawning login flow
+            System.Diagnostics.Process.Start(m_formattedTwitchLoginUrl);
         }
 
         public void SetOauthToken(string token)
