@@ -28,9 +28,10 @@ namespace ConfigApp
         private HTTPServer m_httpServer = null;
 
         private static string m_twitchLoginUrl = "https://id.twitch.tv/oauth2/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor";
-        private static string m_twitchClientId = "<<YOUR CLIENT ID>>";
-        private static string m_twitchRedirectUri = "http://localhost:8076/oauth/callback";
-        private static string m_formattedTwitchLoginUrl = String.Format(m_twitchLoginUrl, m_twitchClientId, m_twitchRedirectUri);
+        private static string m_twitchRedirectUri = "http://localhost:8876/oauth/callback";
+        private string m_twitchClientId = "";
+        private string m_formattedTwitchLoginUrl = "";
+        private bool m_dotEnvExists = false;
 
         public MainWindow()
         {
@@ -39,6 +40,18 @@ namespace ConfigApp
 
         private void Init()
         {
+            string root = Directory.GetCurrentDirectory();
+            string dotenv = Path.Combine(root, ".env");
+            Console.WriteLine("Loading " + dotenv);
+            if (File.Exists(dotenv))
+            {
+                m_dotEnvExists = true;
+                DotEnv.Load(dotenv);
+
+                m_twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
+                m_formattedTwitchLoginUrl = string.Format(m_twitchLoginUrl, m_twitchClientId, m_twitchRedirectUri);
+            }
+
             InitializeComponent();
 
             twitch_user_overlay_mode.ItemsSource = new string[]
@@ -431,6 +444,14 @@ namespace ConfigApp
 
                 return;
             }
+
+#if DEBUG
+            if (!m_dotEnvExists)
+            {
+                MessageBox.Show("No TWITCH_CLIENT_ID present. You may be missing your .env file. Skipping login.", "Cannot log in with Twitch", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+#endif
 
             System.Diagnostics.Process.Start(m_formattedTwitchLoginUrl);
         }

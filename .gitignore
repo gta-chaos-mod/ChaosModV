@@ -334,3 +334,5 @@ ASALocalRun/
 # Custom
 TwitchExtension/
 twitchVotingOverlay/dist/bundle.js
+**/.env*
+!**/.env.example
