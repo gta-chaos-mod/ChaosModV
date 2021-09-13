@@ -97,6 +97,10 @@ namespace ConfigApp
             {
                 string code = await GetClientToken(token);
                 string username = await GetUsername();
+                m_twitchUsername = username;
+
+                m_Main.WriteTwitchFile();
+                m_Main.ParseTwitchFile();
             }
             catch { }
         }
@@ -140,10 +144,17 @@ namespace ConfigApp
         {
             HttpResponseMessage response = await m_httpClient.GetAsync("https://api.twitch.tv/helix/users");
             string data = await response.Content.ReadAsStringAsync();
-            MessageBox.Show(data);
-            return data;
-            //m_Main.WriteTwitchFile();
-            //m_Main.ParseTwitchFile();
+
+            Regex regex = new Regex("\"login\":\"([^\"]*)\"", RegexOptions.IgnoreCase);
+            Match match = regex.Match(data);
+            if (!match.Success)
+            {
+                MessageBox.Show("Something went wrong logging you into Twitch.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("Could not find Twitch login name");
+            }
+
+            string username = match.Groups[1].Value;
+            return username;
         }
 
         public void StopServer()
