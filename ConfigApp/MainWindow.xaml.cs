@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 using Shared; 
 
 using static ConfigApp.Effects;
@@ -27,11 +28,11 @@ namespace ConfigApp
         private string m_twitchUsername = "";
         private HTTPServer m_httpServer = null;
 
-        private static string m_twitchLoginUrl = "https://id.twitch.tv/oauth2/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor";
+        private static string m_twitchLoginUrl = "https://id.twitch.tv/oauth2/authorize?client_id={0}&redirect_uri={1}&response_type=code&scope=chat:read";
         private static string m_twitchRedirectUri = "http://localhost:8876/oauth/callback";
         private string m_twitchClientId = "";
+        private string m_twitchClientSecret = "";
         private string m_formattedTwitchLoginUrl = "";
-        private bool m_dotEnvExists = false;
 
         public MainWindow()
         {
@@ -45,10 +46,10 @@ namespace ConfigApp
             Console.WriteLine("Loading " + dotenv);
             if (File.Exists(dotenv))
             {
-                m_dotEnvExists = true;
                 DotEnv.Load(dotenv);
 
                 m_twitchClientId = Environment.GetEnvironmentVariable("TWITCH_CLIENT_ID");
+                m_twitchClientSecret = Environment.GetEnvironmentVariable("TWITCH_CLIENT_SECRET");
                 m_formattedTwitchLoginUrl = string.Format(m_twitchLoginUrl, m_twitchClientId, m_twitchRedirectUri);
             }
 
@@ -446,9 +447,14 @@ namespace ConfigApp
             }
 
 #if DEBUG
-            if (!m_dotEnvExists)
+            if (m_twitchClientId.Length == 0)
             {
                 MessageBox.Show("No TWITCH_CLIENT_ID present. You may be missing your .env file. Skipping login.", "Cannot log in with Twitch", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else if (m_twitchClientSecret.Length == 0)
+            {
+                MessageBox.Show("No TWITCH_CLIENT_SECRET present. You may be missing your .env file. Skipping login.", "Cannot log in with Twitch", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 #endif
@@ -456,13 +462,41 @@ namespace ConfigApp
             System.Diagnostics.Process.Start(m_formattedTwitchLoginUrl);
         }
 
-        public void SetOauthToken(string token)
+        public async void SetOauthToken(string token)
         {
             m_twitchOauth = "oauth:" + token;
 
-            // TODO: Fetch username baed on oAuth token
+            HttpClient client = new HttpClient();
 
-            WriteTwitchFile();
+            Dictionary<string, string> values = new Dictionary<string, string>
+            {
+                {"client_id", m_twitchClientId},
+                {"client_secret", m_twitchClientSecret},
+                {"code", token},
+                {"grant_type", "authorization_code"},
+                {"redirect_uri", m_twitchRedirectUri}
+            };
+            List<string> paramList = new List<string>();
+            foreach (KeyValuePair<string, string> parameter in values)
+            {
+                paramList.Add(string.Format("{0}={1}", parameter.Key, parameter.Value));
+            }
+
+            string url = string.Format("https://id.twitch.tv/oauth2/token?{0}", string.Join("&", paramList));
+            HttpResponseMessage response = await client.PostAsync(url, null);
+            string data = await response.Content.ReadAsStringAsync();
+
+            Regex regex = new Regex("{\"access_token\":\"([^\"]*)\"", RegexOptions.IgnoreCase);
+            Match match = regex.Match(data);
+            if (!match.Success)
+            {
+                MessageBox.Show("Something went wrong logging you into Twitch.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string code = match.Groups[1].Value;
+
+            //WriteTwitchFile();
             ParseTwitchFile();
         }
 
