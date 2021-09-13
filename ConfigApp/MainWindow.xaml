@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
+        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="400" />

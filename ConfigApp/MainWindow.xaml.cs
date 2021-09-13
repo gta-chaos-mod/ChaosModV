@@ -25,6 +25,7 @@ namespace ConfigApp
 
         private string m_twitchOauth = "";
         private string m_twitchUsername = "";
+        private HTTPServer m_httpServer = null;
 
         public MainWindow()
         {
@@ -403,7 +404,10 @@ namespace ConfigApp
                 return;
             }
 
-            // TODO: Spawn local server
+            if (m_httpServer == null)
+            {
+                m_httpServer = new HTTPServer();
+            }
         }
 
         private void twitch_login_button_MouseDown(object sender, MouseButtonEventArgs e)
@@ -538,6 +542,14 @@ namespace ConfigApp
         private void contribute_discord_click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (m_httpServer == null)
+            {
+                m_httpServer.Stop();
+            }
         }
     }
 }

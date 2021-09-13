@@ -191,6 +191,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -234,6 +235,7 @@
     </Compile>
     <Compile Include="EffectData.cs" />
     <Compile Include="EffectsTreeMenuItem.cs" />
+    <Compile Include="HTTPServer.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="MainWindow.xaml">
