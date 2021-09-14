@@ -404,7 +404,6 @@ namespace ConfigApp
 
                 twitch_logout_text.Visibility = Visibility.Visible;
                 twitch_login_button.Visibility = Visibility.Hidden;
-                return;
             }
             else
             {
@@ -423,11 +422,11 @@ namespace ConfigApp
                 m_twitchAuth.OAuthToken = "";
                 WriteTwitchFile();
                 ParseTwitchFile();
-
-                return;
             }
-
-            m_twitchAuth.SpawnLogin();
+            else
+            {
+                m_twitchAuth.SpawnLogin();
+            }
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
