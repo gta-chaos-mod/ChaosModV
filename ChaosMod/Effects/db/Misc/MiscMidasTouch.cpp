@@ -14,6 +14,8 @@ static void OnTick()
 		cE = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		SET_VEHICLE_COLOURS(cE, 158, 158); // 158 = Pure Gold
 		SET_VEHICLE_EXTRA_COLOURS(cE, 160, 158);
+		SET_VEHICLE_ENVEFF_SCALE(cE, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(cE, 0.f);
 	}
 
 	for (Vehicle veh : GetAllVehs())
@@ -22,6 +24,8 @@ static void OnTick()
 		{
 			SET_VEHICLE_COLOURS(veh, 158, 158); // 158 = Pure Gold
 			SET_VEHICLE_EXTRA_COLOURS(veh, 160, 158);
+			SET_VEHICLE_ENVEFF_SCALE(cE, 0.f);
+			SET_VEHICLE_DIRT_LEVEL(cE, 0.f);
 		}
 	}
 

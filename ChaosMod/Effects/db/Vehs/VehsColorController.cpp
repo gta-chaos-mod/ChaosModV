@@ -6,6 +6,8 @@ static void OnTickRed()
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -24,6 +26,8 @@ static void OnTickBlue()
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -42,6 +46,8 @@ static void OnTickGreen()
 	{
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -59,6 +65,8 @@ static void OnTickChrome()
 	for (Vehicle veh : GetAllVehs())
 	{
 		SET_VEHICLE_COLOURS(veh, 120, 120);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -118,6 +126,8 @@ static void OnTickPink()
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -171,6 +181,9 @@ static void OnTickRainbow()
 
 		TOGGLE_VEHICLE_MOD(veh, 22, true);
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, headlightColor);
+
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 
 	// Headlight color switcher
