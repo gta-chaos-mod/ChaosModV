@@ -12,6 +12,14 @@ static void OnTick()
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		cE = GET_VEHICLE_PED_IS_IN(playerPed, false);
+
+		TOGGLE_VEHICLE_MOD(cE, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(cE, 255, 215, 0);
+
+		// If the vehicle has a custom color, the effect won't work
+		CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(cE);
+		CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(cE);
+
 		SET_VEHICLE_COLOURS(cE, 158, 158); // 158 = Pure Gold
 		SET_VEHICLE_EXTRA_COLOURS(cE, 160, 158);
 		SET_VEHICLE_ENVEFF_SCALE(cE, 0.f);
@@ -22,6 +30,13 @@ static void OnTick()
 	{
 		if (IS_ENTITY_TOUCHING_ENTITY(cE, veh))
 		{
+			TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+			SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 215, 0);
+
+			// If the vehicle has a custom color, the effect won't work
+			CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+			CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
+
 			SET_VEHICLE_COLOURS(veh, 158, 158); // 158 = Pure Gold
 			SET_VEHICLE_EXTRA_COLOURS(veh, 160, 158);
 			SET_VEHICLE_ENVEFF_SCALE(cE, 0.f);
