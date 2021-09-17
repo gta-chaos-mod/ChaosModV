@@ -151,7 +151,9 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerHyperAcceleration.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerKeepVelocity.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSuffering.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSpinCam.cpp" />

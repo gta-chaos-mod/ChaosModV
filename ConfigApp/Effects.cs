@@ -350,6 +350,8 @@ namespace ConfigApp
             EFFECT_PEDS_VEHTHIEVES,
             EFFECT_PLAYER_BUSTED,
             EFFECT_MISC_SHRINKCAM,
+            EFFECT_PLAYER_KEEPVEL,
+            EFFECT_PLAYER_HYPERACCEL,
             _EFFECT_ENUM_MAX
         }
 
@@ -664,6 +666,8 @@ namespace ConfigApp
             {EffectType.EFFECT_PEDS_VEHTHIEVES, new EffectInfo("Vehicle Thieves", EffectCategory.PEDS, "peds_vehthieves")},
             {EffectType.EFFECT_PLAYER_BUSTED, new EffectInfo("Jailtime", EffectCategory.PLAYER, "player_busted", true)},
             {EffectType.EFFECT_MISC_SHRINKCAM, new EffectInfo("Shrinking Camera", EffectCategory.MISC, "misc_shrinkcam", true, true)},
+            {EffectType.EFFECT_PLAYER_HYPERACCEL, new EffectInfo("Hyper Acceleration", EffectCategory.PLAYER, "player_hyperaccel", true, true)},
+            {EffectType.EFFECT_PLAYER_KEEPVEL, new EffectInfo("Keep Velocity", EffectCategory.PLAYER, "player_keepvel", true, true)},
         };
     }
 }

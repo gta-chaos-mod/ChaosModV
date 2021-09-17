@@ -17,6 +17,7 @@ static void onTickBalled()
 
     if (curTick > lastTick + 200)
     {
+        lastTick = curTick;
         Vector3 entityVel = GET_ENTITY_VELOCITY(player);
         Vector3 playerCoords = GET_ENTITY_COORDS(player, false);
         float predictionDistanceZ = 3;
@@ -31,7 +32,6 @@ static void onTickBalled()
             entityVel = GET_ENTITY_VELOCITY(playerVeh);
             playerCoords = GET_ENTITY_COORDS(playerVeh, false);
         }
-        lastTick = curTick;
         static Hash weaponHash = GET_HASH_KEY("weapon_specialcarbine");
         float predictionLimit = 6;
         float predictionSpeed = 0;
