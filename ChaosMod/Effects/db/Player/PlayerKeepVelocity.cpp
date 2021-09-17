@@ -11,7 +11,15 @@ static void OnStart()
 static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
-	SET_ENTITY_VELOCITY(player, savedVel.x, savedVel.y, savedVel.z);
+	if (IS_PED_IN_ANY_VEHICLE(player, false))
+	{
+		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(player, false);
+		SET_ENTITY_VELOCITY(playerVeh, savedVel.x, savedVel.y, savedVel.z);
+	}
+	else
+	{
+		SET_ENTITY_VELOCITY(player, savedVel.x, savedVel.y, savedVel.z);
+	}
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_KEEPVEL, OnStart, nullptr, OnTick, EffectInfo

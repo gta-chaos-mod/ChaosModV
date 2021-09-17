@@ -11,7 +11,8 @@ static void OnTick()
 
 	for (Ped ped : GetAllPeds())
 	{
-		if (ped != player) {
+		if (ped != player)
+		{
 			entities.push_back(ped);
 		}
 	}

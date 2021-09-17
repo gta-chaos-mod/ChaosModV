@@ -104,6 +104,7 @@
     <ClCompile Include="Effects\db\Misc\MiscFullAssault.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGlobalArson.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscHyperAcceleration.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLagSpikes.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
@@ -151,7 +152,6 @@
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerHyperAcceleration.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepVelocity.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSuffering.cpp" />
