@@ -135,7 +135,7 @@ void EffectDispatcher::UpdateEffects()
 			} 
 			else if (!effectData.IsMeta)
 			{
-				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime > 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
+				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime < 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
 				{
 					shouldStopEffect = true;
 				}
@@ -597,7 +597,7 @@ bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, 
 	float additionalTime = 0;
 	if (effectCount > minAmountAdvancedCleaning)
 	{
-		additionalTime = min((effectCount - 3) * 20, 160);
+		additionalTime = min((min(effectCount, 10) - 3) * 20, 160);
 	}
 	return timer < -m_usEffectTimedDur + additionalTime;
 }
