@@ -358,15 +358,15 @@ static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStartStore, EffectInf
 
 static const std::vector<EEffectType> fakeTpTypes =
 {
-	{EFFECT_TP_LSAIRPORT},
-	{EFFECT_TP_MAZETOWER},
-	{EFFECT_TP_FORTZANCUDO},
-	{EFFECT_TP_MOUNTCHILLIAD},
-	{EFFECT_TP_SKYFALL},
-	{EFFECT_TP_MISSION},
-	{EFFECT_TP_RANDOM},
-	{EFFECT_TP_TO_STORE},
-	{EFFECT_TP_WAYPOINT}
+	EFFECT_TP_LSAIRPORT,
+	EFFECT_TP_MAZETOWER,
+	EFFECT_TP_FORTZANCUDO,
+	EFFECT_TP_MOUNTCHILLIAD,
+	EFFECT_TP_SKYFALL,
+	EFFECT_TP_MISSION,
+	EFFECT_TP_RANDOM,
+	EFFECT_TP_TO_STORE,
+	EFFECT_TP_WAYPOINT
 };
 
 static void OnStartFakeTp()
@@ -381,8 +381,7 @@ static void OnStartFakeTp()
 		{
 			continue;
 		}
-
-		if (type == EFFECT_TP_WAYPOINT && !HasValidWaypointForTp())
+		else if (type == EFFECT_TP_WAYPOINT && !HasValidWaypointForTp())
 		{
 			continue;
 		}
