@@ -369,25 +369,30 @@ static const std::vector<EEffectType> fakeTpTypes =
 	EFFECT_TP_WAYPOINT
 };
 
+static bool IsValidFakeTpType(EEffectType type)
+{
+	if (type == EFFECT_TP_MISSION)
+	{
+		return GetAllMissionBlips().size() > 0;
+	}
+	else if (type == EFFECT_TP_WAYPOINT)
+	{
+		return HasValidWaypointForTp();
+	}
+	else
+	{
+		return true;
+	}
+}
+
 static void OnStartFakeTp()
 {
-	EEffectType fakeTpType = EFFECT_INVALID;
+	EEffectType fakeTpType;
 
 	do
 	{
-		EEffectType type = fakeTpTypes.at(g_Random.GetRandomInt(0, fakeTpTypes.size() - 1));
-
-		if (type == EFFECT_TP_MISSION && GetAllMissionBlips().size() == 0)
-		{
-			continue;
-		}
-		else if (type == EFFECT_TP_WAYPOINT && !HasValidWaypointForTp())
-		{
-			continue;
-		}
-
-		fakeTpType = type;
-	} while (fakeTpType == EFFECT_INVALID);
+		fakeTpType = fakeTpTypes.at(g_Random.GetRandomInt(0, fakeTpTypes.size() - 1));
+	} while (!IsValidFakeTpType(fakeTpType));
 
 	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, fakeTpType);
 
@@ -400,6 +405,10 @@ static void OnStartFakeTp()
 	Hooks::EnableScriptThreadBlock();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
+	if (playerVeh)
+	{
+		SET_ENTITY_INVINCIBLE(playerVeh, true);
+	}
 
 	int oldWantedLevel = GET_PLAYER_WANTED_LEVEL(player);
 
