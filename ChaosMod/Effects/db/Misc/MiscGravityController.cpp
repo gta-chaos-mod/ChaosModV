@@ -69,21 +69,25 @@ static void OnStartInvert()
 
 static void OnTickInvert()
 {
-	Memory::SetGravityLevel(-1.f);
+	Memory::SetGravityLevel(-9.8f);
 
 	for (auto ped : GetAllPeds())
 	{
 		if (!IS_PED_IN_ANY_VEHICLE(ped, false))
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
-
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, 25.f, false, false, true, false);
 		}
 	}
 
+	// If this isn't done, the gravity for props and vehicles won't update
 	for (auto object : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, 100.f, false, false, true, false);
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, 0.f, false, false, true, false);
+	}
+
+	for (auto veh : GetAllVehs())
+	{
+		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, 0, 0, 0.f, false, false, true, false);
 	}
 }
 
