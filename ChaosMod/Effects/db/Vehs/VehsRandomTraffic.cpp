@@ -21,8 +21,6 @@ static void OnTick()
 				TASK_VEHICLE_DRIVE_WANDER(driver, newVeh, 40, 786603);
 			}
 
-			SET_VEHICLE_WINDOW_TINT(newVeh, 3);
-
 			WAIT(0);
 		}
 	}
