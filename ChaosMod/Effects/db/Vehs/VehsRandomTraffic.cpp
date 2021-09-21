@@ -10,8 +10,20 @@ static void OnTick()
 
 		if (carModified != 3)
 		{
-			ReplaceVehicle(veh, true);
-			SET_VEHICLE_WINDOW_TINT(veh, 3);
+			Vehicle newVeh = ReplaceVehicle(veh, true);
+
+			// Way to know if vehicle is modified
+			SET_VEHICLE_WINDOW_TINT(newVeh, 3);
+
+			Ped driver = GET_PED_IN_VEHICLE_SEAT(newVeh, -1, 0);
+			if (driver && DOES_ENTITY_EXIST(driver) && !IS_PED_A_PLAYER(driver))
+			{
+				TASK_VEHICLE_DRIVE_WANDER(driver, newVeh, 40, 786603);
+			}
+
+			SET_VEHICLE_WINDOW_TINT(newVeh, 3);
+
+			WAIT(0);
 		}
 	}
 }

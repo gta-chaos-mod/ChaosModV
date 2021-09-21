@@ -87,11 +87,16 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 	if (vehicleModels.empty())
 		return oldHandle;
 
-	Hash newVehModel;
+	Hash newVehModel = 0;
 	do
 	{
 		newVehModel = vehicleModels[g_Random.GetRandomInt(0, vehicleModels.size() - 1)];
 	} while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel) < seatPeds.size() || IS_THIS_MODEL_A_TRAIN(newVehModel) || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
+
+	if (!newVehModel)
+		return oldHandle;
+
+	int numberOfSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel);
 
 	Vehicle newVehicle;
 	if (addToPool)
@@ -99,7 +104,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 		for (int i = 0; i < seatPeds.size(); i++)
 		{
 			Ped seatPed = seatPeds[i].ped;
-			SET_ENTITY_COORDS(seatPed, coords.x, coords.y, coords.z + 5.0, 0, 0, 0, 0);
+			SET_ENTITY_COORDS(seatPed, coords.x, coords.y, coords.z + 5.f, 0, 0, 0, 0);
 		}
 
 		WAIT(100);
@@ -117,8 +122,14 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 
 	for (int i = 0; i < seatPeds.size(); i++)
 	{
-		SeatPed seatPed = seatPeds[i];
-		SET_PED_INTO_VEHICLE(seatPed.ped, newVehicle, seatPed.seatIndex);
+		SeatPed seatPed = seatPeds.at(i);
+		int seatIndex = seatPed.seatIndex;
+		if (seatIndex >= numberOfSeats || !IS_VEHICLE_SEAT_FREE(newVehicle, seatIndex, 0))
+		{
+			seatIndex = -2;
+		}
+
+		SET_PED_INTO_VEHICLE(seatPed.ped, newVehicle, seatIndex);
 	}
 
 	if (engineRunning)
