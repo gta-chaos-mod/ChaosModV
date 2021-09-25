@@ -142,8 +142,6 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 
 	if (oldHandle)
 	{
-		COPY_VEHICLE_DAMAGES(oldHandle, newVehicle);
-
 		bool shouldUseHook = IS_ENTITY_A_MISSION_ENTITY(oldHandle);
 		Entity copy = oldHandle;
 		SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
