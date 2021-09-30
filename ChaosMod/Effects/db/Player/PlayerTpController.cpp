@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Effects/db/Player/PlayerBlimpStrats.h"
 
 static void OnStartLSIA()
 {
@@ -366,7 +367,8 @@ static const std::vector<EEffectType> fakeTpTypes =
 	EFFECT_TP_MISSION,
 	EFFECT_TP_RANDOM,
 	EFFECT_TP_TO_STORE,
-	EFFECT_TP_WAYPOINT
+	EFFECT_TP_WAYPOINT,
+	EFFECT_PLAYER_BLIMP_STRATS
 };
 
 static bool IsValidFakeTpType(EEffectType type)
@@ -444,6 +446,9 @@ static void OnStartFakeTp()
 		break;
 	case EFFECT_TP_WAYPOINT:
 		OnStartWaypoint();
+		break;
+	case EFFECT_PLAYER_BLIMP_STRATS:
+		BlimpStrats_Start(true);
 		break;
 	}
 

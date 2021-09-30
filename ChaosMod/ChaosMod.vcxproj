@@ -342,6 +342,7 @@
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="EffectConfig.h" />
+    <ClInclude Include="Effects\db\Player\PlayerBlimpStrats.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EEffectExecutionType.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
