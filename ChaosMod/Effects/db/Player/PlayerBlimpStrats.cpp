@@ -10,6 +10,7 @@ static void OnStart()
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
 	Hash blimpHash = GET_HASH_KEY("blimp");
+	Hash daveHash = GET_HASH_KEY("ig_davenorton");
 
 	LoadModel(blimpHash);
 	
@@ -27,6 +28,8 @@ static void OnStart()
 	SET_VEHICLE_FORWARD_SPEED(veh, 45);
 	TASK_LEAVE_VEHICLE(player, veh, 4160);
 
+	
+
 	int waited = 0;
 
 	while (!IS_PED_GETTING_UP(player) && waited < 100)
@@ -39,19 +42,26 @@ static void OnStart()
 
 	if (!cutscenePlaying)
 	{
+		REQUEST_ANIM_DICT("missfbi1leadinout");
+		REQUEST_MODEL(daveHash);
 
 		while (!HAS_CUTSCENE_LOADED()) // for proper cutscene play
 		{
-			WAIT(100);
+			WAIT(0);
 		}
 
 		REGISTER_ENTITY_FOR_CUTSCENE(player, "MICHAEL", 0, 0, 64);
-
+		
 		START_CUTSCENE(0);
 		WAIT(8500);
 		STOP_CUTSCENE_IMMEDIATELY();
 
 		REMOVE_CUTSCENE();
+
+		Ped pedDave = CreatePoolPed(4, daveHash, -442.2f, 1059.25f, 326.66f, 180.6f);
+
+		TASK_PLAY_ANIM(pedDave, "missfbi1leadinout", "fbi_1_int_leadin_loop_daven", 8.0f, 1.0f, -1, 1, 0.0f, false, false, false);
+		SET_PED_KEEP_TASK(pedDave, true);
 	}
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
