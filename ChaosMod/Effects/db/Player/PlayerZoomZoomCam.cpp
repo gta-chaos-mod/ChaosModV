@@ -5,11 +5,11 @@
 #include <stdafx.h>
 static Camera zoomCamera = 0;
 static float camZoom = 80.f;
-static float camZoomRate = 0.15f;
-static float minZoom = 10.f;
-static float maxZoom = 120.f;
-static float zoomMidpoint = (maxZoom - minZoom) / 2 + minZoom;
-static float zoomMultiplier = maxZoom - zoomMidpoint;
+const static float camZoomRate = 0.15f;
+const static float minZoom = 10.f;
+const static float maxZoom = 120.f;
+const static float zoomMidpoint = (maxZoom - minZoom) / 2 + minZoom;
+const static float zoomMultiplier = maxZoom - zoomMidpoint;
 
 static void UpdateCamera()
 {
