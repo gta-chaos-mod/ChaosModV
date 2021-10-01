@@ -5,7 +5,11 @@
 #include <stdafx.h>
 static Camera zoomCamera = 0;
 static float camZoom = 80.f;
-static float camZoomRate = 0.6f;
+static float camZoomRate = 0.15f;
+static float minZoom = 10.f;
+static float maxZoom = 120.f;
+static float zoomMidpoint = (maxZoom - minZoom) / 2 + minZoom;
+static float zoomMultiplier = maxZoom - zoomMidpoint;
 
 static void UpdateCamera()
 {
@@ -18,24 +22,13 @@ static void OnStart()
 {
     zoomCamera = CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
     RENDER_SCRIPT_CAMS(true, true, 10, 1, 1, 1);
-    camZoom = 80.f;
 }
 
 static void OnTick()
 {
-    static DWORD64 lastTick = 0;
     DWORD64 curTick = GET_GAME_TIMER();
 
-    if (curTick > lastTick + 5)
-    {
-        lastTick = curTick;
-
-        if (camZoom < 11 || camZoom > 119)
-        {
-            camZoomRate = camZoomRate*-1;
-        }
-        camZoom += camZoomRate;
-    }
+    camZoom = SIN((float)curTick * camZoomRate) * zoomMultiplier + zoomMidpoint;
 
     SET_CAM_ACTIVE(zoomCamera, true);
     UpdateCamera();
