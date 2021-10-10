@@ -433,6 +433,37 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	m_fPercentage = .0f;
 }
 
+bool EffectDispatcher::CanActivateEffect(EffectData effectData, float timeUntilDispatch)
+{
+	const auto& rgIncompatibleIds = effectData.IncompatibleIds;
+
+	// If there are any incompatible effects active, the given effect shouldnt activate
+	for (auto& activeEffect : m_rgActiveEffects)
+	{
+		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_EnabledEffects.at(activeEffect.m_EffectIdentifier).Id) != rgIncompatibleIds.end())
+		{
+			// Only return false if the active effect won't have ended after timeUntilDispatch seconds
+			if (activeEffect.m_fTimer - timeUntilDispatch > 0.f)
+			{
+				return false;
+			}
+		}
+
+		// Check if current effect is marked as incompatible in active effect
+		const auto& rgActiveIncompatibleIds = g_EnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
+		if (std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
+		{
+			// Only return false if the active effect won't have ended after timeUntilDispatch seconds
+			if (activeEffect.m_fTimer - timeUntilDispatch > 0.f)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 {
 	if (!m_bEnableNormalEffectDispatch)
@@ -459,24 +490,51 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 		fTotalWeight += GetEffectWeight(effectData);
 	}
 
-	float fChosen = g_Random.GetRandomFloat(0.f, fTotalWeight);
-
-	fTotalWeight = 0.f;
-
 	const EffectIdentifier* pTargetEffectIdentifier = nullptr;
-	for (const auto& pair : choosableEffects)
+
+	int numAttempts = 0;
+	int numAttemptsBeforeDisablingCheck = choosableEffects.size() / 10;
+
+	bool doEffectActivationCheck = true;
+
+	bool foundValidEffect = false;
+	do
 	{
-		const auto& [effectIdentifier, effectData] = pair;
+		float fChosen = g_Random.GetRandomFloat(0.f, fTotalWeight);
 
-		fTotalWeight += GetEffectWeight(effectData);
+		fTotalWeight = 0.f;
 
-		if (fChosen <= fTotalWeight)
+		for (const auto& pair : choosableEffects)
 		{
-			pTargetEffectIdentifier = &effectIdentifier;
+			const auto& [effectIdentifier, effectData] = pair;
 
-			break;
+			fTotalWeight += GetEffectWeight(effectData);
+
+			if (fChosen <= fTotalWeight)
+			{
+				if (!doEffectActivationCheck || CanActivateEffect(effectData))
+				{
+					pTargetEffectIdentifier = &effectIdentifier;
+					foundValidEffect = true;
+				}
+				else if (numAttempts > numAttemptsBeforeDisablingCheck)
+				{
+					// After a number of attempts, stop using the check, to hopefully find a valid effect
+					doEffectActivationCheck = false;
+				}
+
+				if (!foundValidEffect)
+				{
+					// If this effect isn't valid, don't bother checking this effect in the future in case we need to loop through the options again
+					choosableEffects.erase(effectIdentifier);
+				}
+
+				break;
+			}
 		}
-	}
+
+		numAttempts++;
+	} while (!foundValidEffect && !choosableEffects.empty());
 
 	if (pTargetEffectIdentifier)
 	{
