@@ -43,6 +43,7 @@ namespace ConfigApp
         {
             EFFECT_PLAYER_SUICIDE,
             EFFECT_PLUS_2_STARS,
+            EFFECT_TELEPORT_NORTHYANKTON,
             EFFECT_5_STARS,
             EFFECT_NEVER_WANTED,
             EFFECT_STRIP_WEAPONS,
@@ -341,6 +342,7 @@ namespace ConfigApp
         public static readonly Dictionary<EffectType, EffectInfo> EffectsMap = new Dictionary<EffectType, EffectInfo>()
         {
             {EffectType.EFFECT_PLAYER_SUICIDE, new EffectInfo("Suicide", EffectCategory.PLAYER, "player_suicide")},
+            {EffectType.EFFECT_TELEPORT_NORTHYANKTON, new EffectInfo("Beat the train", EffectCategory.PLAYER, "player_teleport_yankton") },
             {EffectType.EFFECT_PLUS_2_STARS, new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER, "player_plus2stars")},
             {EffectType.EFFECT_5_STARS, new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER, "player_5stars")},
             {EffectType.EFFECT_NEVER_WANTED, new EffectInfo("Never Wanted", EffectCategory.PLAYER, "player_neverwanted", true)},
