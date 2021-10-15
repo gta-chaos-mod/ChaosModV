@@ -8,7 +8,7 @@
 
 static Vehicle veh;
 static int busMaxSeats;
-
+static int leaveTimer = -1;
 static void OnStart()
 {
 	Hash bus = GET_HASH_KEY("bus");
@@ -59,9 +59,11 @@ static void OnTick()
 		Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
 		vehPeds.push_back(ped);
 	}
+	int current_time = GET_GAME_TIMER();
 
 	if (vehPeds.size() > 0) {
-		if (g_Random.GetRandomInt(0, 130) == 1) {
+		if (current_time > leaveTimer + 3500) {
+			leaveTimer = current_time;
 			Ped randomped = vehPeds[g_Random.GetRandomInt(0, vehPeds.size() - 1)];
 			if(!IS_PED_A_PLAYER(randomped)) {
 				TASK_LEAVE_VEHICLE(randomped, veh, 4160);
