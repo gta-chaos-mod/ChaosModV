@@ -76,7 +76,7 @@ static void OnTick()
 static RegisterEffect registerEffect(EFFECT_BATTLE_BUS, OnStart, OnStop, OnTick, EffectInfo
 	{
 		// These are always required, you may have to add more designators depending on your effect
-		.Name = "Where we droppin?",
+		.Name = "Where We Droppin?",
 		.Id = "player_battle_bus",
 		.IsTimed = true
 	}
