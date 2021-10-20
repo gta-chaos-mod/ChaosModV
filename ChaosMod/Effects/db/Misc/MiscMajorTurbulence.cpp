@@ -60,11 +60,10 @@ static void OnTick()
 
 
 
-// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
 static RegisterEffect registerEffect(EFFECT_MISC_MAJOR_TURBULENCE, onStart, nullptr, OnTick, EffectInfo
 	{
-		// These are always required, you may have to add more designators depending on your effect
-		.Name = "Major turbulence",
+
+		.Name = "Major Turbulence",
 		.Id = "misc_major_turbulence",
 		.IsTimed = true
 	}
