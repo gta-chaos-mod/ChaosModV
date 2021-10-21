@@ -1,5 +1,5 @@
 #include <stdafx.h>
-static std::string options[15] =
+static std::string options[20] =
 { "Nothing",
 "All Peds Are Peds",
 "Teleport To Current Location",
@@ -8,13 +8,18 @@ static std::string options[15] =
 "Destroy All Destroyed Vehicles",
 "Kill All Dead Peds",
 "+0 Wanted Stars",
-"Jesus Take No Wheel",
+"Jesus Watches Over You",
 "Set Time To Current Time",
 "Set Player Into Current Vehicle",
-"1x Vehicle Engine Speed",
-"You Aren't Famous",
-"GTA 5",
-"Crimes Are Illegal" };
+"All Cops Are Cops",
+"Aim to Point Gun",
+"Give Everyone A Nose",
+"Teleport Player A Few Millimeters",
+"Flying Birds",
+"Teleport All Elephants To Player",
+"PC Experience",
+"All Enemies Attack Player",
+" "};
 
 
 static void OnStart()
@@ -26,9 +31,6 @@ static void OnStart()
 	{
 		WAIT(0);
 		g_pEffectDispatcher->OverrideEffectName(EFFECT_NOTHING, override);
-
-
-
 
 	}
 }
