@@ -24,13 +24,13 @@ static std::string options[20] =
 
 static void OnStart()
 {
-
+	
 	int start = GET_GAME_TIMER();
-	std::string override = options[g_Random.GetRandomInt(0, options->size() - 1)];
+	std::string effectOverride = options[g_Random.GetRandomInt(0, options->size() - 1)];
 	while (start + 25000 > GET_GAME_TIMER())
 	{
 		WAIT(0);
-		g_pEffectDispatcher->OverrideEffectName(EFFECT_NOTHING, override);
+		g_pEffectDispatcher->OverrideEffectName(EFFECT_NOTHING, effectOverride);
 
 	}
 }
