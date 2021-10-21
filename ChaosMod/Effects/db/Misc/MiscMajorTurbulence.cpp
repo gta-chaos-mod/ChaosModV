@@ -11,12 +11,10 @@ static int currenttick = 1;
 static int offsetx;
 static int offsety;
 
-static void onStart() {
+
+static void OnStart() {
 	miljethash = GET_HASH_KEY("luxor");
 	pilothash = GET_HASH_KEY("s_m_m_pilot_01");
-	
-	offsetx = g_Random.GetRandomInt(-100, 100);
-	offsety = g_Random.GetRandomInt(-100, 100);
 }
 
 
@@ -33,23 +31,20 @@ static void OnTick()
 		Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), true);
 		offsetx = g_Random.GetRandomInt(-85, 85);
 		offsety = g_Random.GetRandomInt(-85, 85);
-		switch (g_Random.GetRandomInt(0, 4)) {
-			case 0:
-				veh = CreatePoolVehicle(miljethash, playerPos.x + offsetx, playerPos.y - 400 + offsety, playerPos.z + 400, 0.0f);
-				break;
-			case 1:
-				veh = CreatePoolVehicle(miljethash, playerPos.x + offsetx, playerPos.y + 400 + offsety, playerPos.z + 400, 180.0f);
-				break;
-			case 2:
-				veh = CreatePoolVehicle(miljethash, playerPos.x - 400 + offsetx, playerPos.y + offsety, playerPos.z + 400, 270.0f);
-				break;
-			case 3:
-				veh = CreatePoolVehicle(miljethash, playerPos.x - 400 + offsetx, playerPos.y + offsety, playerPos.z + 400, 90.0f);
-				break;
-			default:
-				veh = CreatePoolVehicle(miljethash, playerPos.x + offsetx, playerPos.y - 400 + offsety, playerPos.z + 400, 0.0f);
-				break;
+		int variant = g_Random.GetRandomInt(0, 4);
+		int spawnOffsetX = 0;
+		int spawnOffsetY = 0;
+		float rotation = 90.0f * variant;
+		if (variant % 2 == 0) {
+			spawnOffsetY = variant == 0 ? -400 : 400;
 		}
+		else {
+			spawnOffsetX = variant == 3 ? -400 : 400;
+		}
+
+		veh = CreatePoolVehicle(miljethash, playerPos.x + offsetx + spawnOffsetX, playerPos.y + offsety + spawnOffsetY, playerPos.z + 400, rotation);
+
+
 		Ped driver = CreatePoolPedInsideVehicle(veh, -1, pilothash, -1);
 		SET_VEHICLE_FORWARD_SPEED(veh, 55);
 		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
@@ -69,7 +64,7 @@ static void OnTick()
 
 
 
-static RegisterEffect registerEffect(EFFECT_MISC_MAJOR_TURBULENCE, onStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(EFFECT_MISC_MAJOR_TURBULENCE, OnStart, nullptr, OnTick, EffectInfo
 	{
 
 		.Name = "Major Turbulence",
