@@ -2,7 +2,7 @@
 using Shared;
 using System.IO;
 
-namespace TwitchChatVotingProxy.Config
+namespace VotingProxy.Config
 {
     class Config : IConfig
     {

@@ -1,13 +1,13 @@
 ﻿using Serilog;
 using System;
 using System.Threading;
-using TwitchChatVotingProxy.ChaosPipe;
-using TwitchChatVotingProxy.OverlayServer;
-using TwitchChatVotingProxy.VotingReceiver;
+using VotingProxy.ChaosPipe;
+using VotingProxy.OverlayServer;
+using VotingProxy.VotingReceiver;
 
-namespace TwitchChatVotingProxy
+namespace VotingProxy
 {
-    class TwitchChatVotingProxy
+    class VotingProxy
     {
         private static ILogger logger;
 
@@ -27,7 +27,7 @@ namespace TwitchChatVotingProxy
                .MinimumLevel.Debug()
                .WriteTo.File("./chaosmod/chaosProxy.log", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}")
                .CreateLogger();
-            logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
+            logger = Log.Logger.ForContext<VotingProxy>();
 
             logger.Information("===============================");
             logger.Information("Starting chaos mod twitch proxy");
@@ -51,10 +51,10 @@ namespace TwitchChatVotingProxy
             try
             {
                 // Create twitch config
-                TwitchVotingReceiverConfig twitchVotingReceiverConfig;
+                VotingReceiverConfig twitchVotingReceiverConfig;
                 try
                 {
-                    twitchVotingReceiverConfig = new TwitchVotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
+                    twitchVotingReceiverConfig = new VotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
                 }
                 catch (Exception e)
                 {
@@ -74,7 +74,7 @@ namespace TwitchChatVotingProxy
                 }
 
                 // Create components
-                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
+                var votingReceiver = new ChatVotingReceiver(twitchVotingReceiverConfig);
                 var chaosPipe = new ChaosPipeClient();
 
                 // Start the chaos mod controller

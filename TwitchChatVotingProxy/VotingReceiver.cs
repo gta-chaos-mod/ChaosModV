@@ -7,22 +7,22 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Events;
 
-namespace TwitchChatVotingProxy.VotingReceiver
+namespace VotingProxy.VotingReceiver
 {
     /// <summary>
     /// Twitch voting receiver implementation
     /// </summary>
-    class TwitchVotingReceiver : IVotingReceiver
+    class ChatVotingReceiver : IVotingReceiver
     {
         public static readonly int RECONNECT_INTERVAL = 1000;
 
         public event EventHandler<OnMessageArgs> OnMessage;
 
         private TwitchClient client;
-        private TwitchVotingReceiverConfig config;
-        private ILogger logger = Log.Logger.ForContext<TwitchVotingReceiver>();
+        private VotingReceiverConfig config;
+        private ILogger logger = Log.Logger.ForContext<ChatVotingReceiver>();
 
-        public TwitchVotingReceiver(TwitchVotingReceiverConfig config)
+        public ChatVotingReceiver(VotingReceiverConfig config)
         {
             this.config = config;
 

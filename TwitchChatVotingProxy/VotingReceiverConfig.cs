@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitchChatVotingProxy
+namespace VotingProxy
 {
     /// <summary>
     /// Config object for the twitch implementation of the voting receiver
     /// </summary>
-    class TwitchVotingReceiverConfig
+    class VotingReceiverConfig
     {
-        public TwitchVotingReceiverConfig(string channelName, string oAuth, string userName)
+        public VotingReceiverConfig(string channelName, string oAuth, string userName)
         {
             // Validate config
             if (channelName == null) throw new Exception("twitch cannel name cannot be null");
