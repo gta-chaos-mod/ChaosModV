@@ -1,11 +1,8 @@
 ﻿using Serilog;
 using System;
 using System.Threading.Tasks;
-using TwitchLib.Client;
-using TwitchLib.Client.Events;
-using TwitchLib.Client.Models;
+using VotingProxy.VotingChatClient;
 using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Events;
 
 namespace VotingProxy.VotingReceiver
 {
@@ -18,7 +15,7 @@ namespace VotingProxy.VotingReceiver
 
         public event EventHandler<OnMessageArgs> OnMessage;
 
-        private TwitchClient client;
+        private ChatClient client;
         private VotingReceiverConfig config;
         private ILogger logger = Log.Logger.ForContext<ChatVotingReceiver>();
 
@@ -26,14 +23,14 @@ namespace VotingProxy.VotingReceiver
         {
             this.config = config;
 
-            // Connect to twitch
+            // Connect to channel
             logger.Information(
                 $"trying to connect to channel \"{config.ChannelId}\" with user \"{config.UserName}\""
             );
 
-            client = new TwitchClient(new WebSocketClient());
+            client = new TwitchChatClient();
             client.Initialize(
-                new ConnectionCredentials(config.UserName, config.OAuth),
+                new Credentials(config.UserName, config.OAuth),
                 config.ChannelId
             );
 
@@ -59,14 +56,14 @@ namespace VotingProxy.VotingReceiver
         /// <summary>
         /// Called when the twitch client connects (callback)
         /// </summary>
-        private void OnConnected(object sender, OnConnectedArgs e)
+        private void OnConnected(object sender, EventArgs e)
         {
             logger.Information("successfully connected to twitch");
         }
         /// <summary>
         /// Called when the twitch client disconnects (callback)
         /// </summary>
-        private async void OnDisconnect(object sender, OnDisconnectedArgs e)
+        private async void OnDisconnect(object sender, EventArgs e)
         {
             logger.Error("disconnected from the channel, trying to reconnect");
             await Task.Delay(RECONNECT_INTERVAL);
@@ -83,7 +80,7 @@ namespace VotingProxy.VotingReceiver
         /// <summary>
         /// Called when the twitch client has an failed login attempt (callback)
         /// </summary>
-        private void OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
+        private void OnIncorrectLogin(object sender, EventArgs e)
         {
             logger.Error("incorrect login, check user name and oauth");
             client.Disconnect();
@@ -91,7 +88,7 @@ namespace VotingProxy.VotingReceiver
         /// <summary>
         /// Called when the twitch client joins a channel (callback)
         /// </summary>
-        private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
+        private void OnJoinedChannel(object sender, EventArgs e)
         {
             logger.Information($"successfully joined channel \"{config.ChannelId}\"");
         }

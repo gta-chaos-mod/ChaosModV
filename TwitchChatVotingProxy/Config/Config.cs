@@ -7,6 +7,7 @@ namespace VotingProxy.Config
     class Config : IConfig
     {
         public static readonly string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
+        public static readonly string KEY_CHANNEL_TYPE = "ChannelType";
         public static readonly string KEY_CHANNEL_ID = "ChannelID"; 
         public static readonly string KEY_CHANNEL_OAUTH = "ChannelOAuth";
         public static readonly string KEY_CHANNEL_USER_NAME = "UserName";
@@ -21,6 +22,7 @@ namespace VotingProxy.Config
         public string ChannelId { get; set; }
         public string OAuth { get; set; }
         public string UserName { get; set; }
+        public EChannelType ChannelType { get; set; }
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
@@ -44,6 +46,7 @@ namespace VotingProxy.Config
                 UserName = optionsFile.ReadValue(KEY_CHANNEL_USER_NAME);
                 VotingMode = optionsFile.ReadValueInt(KEY_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
                 OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_OVERLAY_MODE, 0);
+                ChannelType = (EChannelType)optionsFile.ReadValueInt(KEY_CHANNEL_TYPE, 0);
             }
         }
     }
