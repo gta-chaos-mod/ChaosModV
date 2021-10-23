@@ -11,7 +11,7 @@ namespace VotingProxy
     /// </summary>
     class VotingReceiverConfig
     {
-        public VotingReceiverConfig(string channelId, string oAuth, string userName)
+        public VotingReceiverConfig(string channelId, string oAuth, string userName, EChannelType channelType)
         {
             // Validate config
             if (channelId == null) throw new Exception("channel name cannot be null");
@@ -21,10 +21,12 @@ namespace VotingProxy
             ChannelId = channelId;
             OAuth = oAuth;
             UserName = userName;
+            ChannelType = channelType;
         }
 
         public string ChannelId { get; set; }
         public string OAuth { get; set; }
         public string UserName { get; set; }
+        public EChannelType ChannelType { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace VotingProxy
                 VotingReceiverConfig votingReceiverConfig;
                 try
                 {
-                    votingReceiverConfig = new VotingReceiverConfig(config.ChannelId, config.OAuth, config.UserName);
+                    votingReceiverConfig = new VotingReceiverConfig(config.ChannelId, config.OAuth, config.UserName, config.ChannelType);
                 }
                 catch (Exception e)
                 {

@@ -28,7 +28,11 @@ namespace VotingProxy.VotingReceiver
                 $"trying to connect to channel \"{config.ChannelId}\" with user \"{config.UserName}\""
             );
 
-            client = new TwitchChatClient();
+            if (config.ChannelType == EChannelType.TWITCH)
+            {
+                client = new TwitchChatClient();
+            }
+
             client.Initialize(
                 new Credentials(config.UserName, config.OAuth),
                 config.ChannelId
