@@ -11,19 +11,19 @@ namespace VotingProxy
     /// </summary>
     class VotingReceiverConfig
     {
-        public VotingReceiverConfig(string channelName, string oAuth, string userName)
+        public VotingReceiverConfig(string channelId, string oAuth, string userName)
         {
             // Validate config
-            if (channelName == null) throw new Exception("twitch cannel name cannot be null");
-            if (oAuth == null) throw new Exception("twitch oAuth cannot be null");
-            if (userName == null) throw new Exception("twitch user name cannot be null");
+            if (channelId == null) throw new Exception("channel name cannot be null");
+            if (oAuth == null) throw new Exception("oAuth cannot be null");
+            if (userName == null) throw new Exception("user name cannot be null");
 
-            ChannelName = channelName;
+            ChannelId = channelId;
             OAuth = oAuth;
             UserName = userName;
         }
 
-        public string ChannelName { get; set; }
+        public string ChannelId { get; set; }
         public string OAuth { get; set; }
         public string UserName { get; set; }
     }

@@ -30,11 +30,11 @@ namespace VotingProxy
             logger = Log.Logger.ForContext<VotingProxy>();
 
             logger.Information("===============================");
-            logger.Information("Starting chaos mod twitch proxy");
+            logger.Information("Starting chaos mod voting proxy");
             logger.Information("===============================");
             
             // Read big config file WIP
-            var config = new Config.Config("./chaosmod/twitch.ini");
+            var config = new Config.Config("./chaosmod/voting.ini");
 
             // Validate voting mode
             EVotingMode votingMode;
@@ -51,14 +51,14 @@ namespace VotingProxy
             try
             {
                 // Create twitch config
-                VotingReceiverConfig twitchVotingReceiverConfig;
+                VotingReceiverConfig votingReceiverConfig;
                 try
                 {
-                    twitchVotingReceiverConfig = new VotingReceiverConfig(config.TwitchChannelName, config.TwitchOAuth, config.TwitchUserName);
+                    votingReceiverConfig = new VotingReceiverConfig(config.ChannelId, config.OAuth, config.UserName);
                 }
                 catch (Exception e)
                 {
-                    logger.Fatal(e, "failed to create twitch voting receiver config");
+                    logger.Fatal(e, "failed to create voting receiver config");
                     return;
                 }
 
@@ -74,7 +74,7 @@ namespace VotingProxy
                 }
 
                 // Create components
-                var votingReceiver = new ChatVotingReceiver(twitchVotingReceiverConfig);
+                var votingReceiver = new ChatVotingReceiver(votingReceiverConfig);
                 var chaosPipe = new ChaosPipeClient();
 
                 // Start the chaos mod controller
