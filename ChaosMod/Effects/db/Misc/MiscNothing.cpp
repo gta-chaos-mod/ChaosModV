@@ -1,5 +1,5 @@
 #include <stdafx.h>
-static std::string options[20] =
+static std::array options =
 { "Nothing",
 "All Peds Are Peds",
 "Teleport To Current Location",
@@ -25,7 +25,7 @@ static std::string options[20] =
 static void OnStart()
 {
 	
-	std::string effectOverride = options[g_Random.GetRandomInt(0, options->size() - 1)];
+	std::string effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
 	WAIT(0);
 	g_pEffectDispatcher->OverrideEffectName(EFFECT_NOTHING, effectOverride);
 	WAIT(25000);
