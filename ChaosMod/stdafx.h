@@ -60,6 +60,7 @@
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
 #include "../vendor/minhook/include/MinHook.h"
+#include "../vendor/Patterns/Patterns.h"
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"
