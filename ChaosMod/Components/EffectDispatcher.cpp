@@ -17,6 +17,8 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 	m_usMetaEffectTimedDur = g_OptionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
 	m_usMetaEffectShortDur = g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
+	m_iMaxRunningEffects = g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
+
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 
 	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
@@ -110,6 +112,9 @@ void EffectDispatcher::UpdateEffects()
 		m_ullEffectsTimer = currentUpdateTime;
 
 		int activeEffectsSize = m_rgActiveEffects.size();
+		int maxEffects = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
+		maxEffects = min(maxEffects, m_iMaxRunningEffects);
+		int effectCountToCheckCleaning = 3;
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
 		{
@@ -123,17 +128,22 @@ void EffectDispatcher::UpdateEffects()
 			{
 				effect.m_fTimer -= 1 / g_MetaInfo.m_fEffectDurationModifier;
 			}
-
-			if ((effect.m_fMaxTime > 0 && effect.m_fTimer <= 0)
-				|| ((!effectData.IsMeta)
-					&& (effect.m_fTimer < -m_usEffectTimedDur + (activeEffectsSize > 3
-						? ((activeEffectsSize - 3) * 20 < 160
-							? (activeEffectsSize - 3) * 20
-							: 160)
-						: 0))))
+			bool shouldStopEffect = false;
+			if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0) 
+			{
+				shouldStopEffect = true;
+			} 
+			else if (!effectData.IsMeta)
+			{
+				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime < 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
+				{
+					shouldStopEffect = true;
+				}
+			}
+			if (shouldStopEffect)
 			{
 				EffectThreads::StopThread(effect.m_ullThreadId);
-
+				activeEffectsSize--;
 				it = m_rgActiveEffects.erase(it);
 			}
 			else
@@ -239,13 +249,13 @@ void EffectDispatcher::DrawEffectTexts()
 		return;
 	}
 
-	float fPosY = .2f;
-	if (m_bEnableTwitchVoting
-		&& (m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame
-			|| m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayOBS))
+	float fPosY = GetEffectTopSpace();
+	float effectSpacing = m_fEffectsInnerSpacingMax;
+	while (round(effectSpacing * 1000) > round(m_fEffectsInnerSpacingMin * 1000) && 1.0 - fPosY < m_rgActiveEffects.size() * effectSpacing)
 	{
-		fPosY = .35f;
+		effectSpacing -= 0.005f;
 	}
+
 
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
@@ -277,7 +287,7 @@ void EffectDispatcher::DrawEffectTexts()
 				m_rgEffectTimerColor[2], 255, false);
 		}
 
-		fPosY += .075f;
+		fPosY += effectSpacing;
 	}
 }
 
@@ -569,6 +579,27 @@ void EffectDispatcher::ResetTimer()
 	m_ullTimerTimer = GetTickCount64();
 	m_usTimerTimerRuns = 0;
 	m_ullEffectsTimer = GetTickCount64();
+}
+
+float EffectDispatcher::GetEffectTopSpace()
+{
+	if (m_bEnableTwitchVoting
+		&& (m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame
+			|| m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayOBS))
+	{
+		return m_fEffectsTopSpacingWithVoting;
+	}
+	return m_fEffectsTopSpacingDefault;
+}
+
+bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning)
+{
+	float additionalTime = 0;
+	if (effectCount > minAmountAdvancedCleaning)
+	{
+		additionalTime = min((min(effectCount, 10) - 3) * 20, 160);
+	}
+	return timer < -m_usEffectTimedDur + additionalTime;
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using any given string
