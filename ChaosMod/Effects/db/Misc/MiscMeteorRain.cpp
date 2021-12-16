@@ -42,7 +42,7 @@ static void OnTick()
 		}
 
 		SET_OBJECT_PHYSICS_PARAMS(meteor, 100000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 50.f, 0, -10000.f, true, false, true, true);
+		Memory::ApplyForceToEntityCenterOfMass(meteor, 0, 50.f, 0, -10000.f, true, false, true, true);
 
 		SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 	}
