@@ -61,11 +61,11 @@ static void OnTick()
 			{
 				SET_ENTITY_VELOCITY(entity, playerSpeed.x, playerSpeed.y, playerSpeed.z); // stop the entity relatively to player
 
-				APPLY_FORCE_TO_ENTITY(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y, entityCoord.z - playerCoord.z, 0, 0, 0, false, false, true, true, false, true);
+				Memory::ApplyForceToEntity(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y, entityCoord.z - playerCoord.z, 0, 0, 0, false, false, true, true, false, true);
 			}
 			else if (distance > sphereRadius * 1.1) // entity is outside the sphere
 			{
-				APPLY_FORCE_TO_ENTITY(entity, 3, (entityCoord.x - playerCoord.x) * -1.f, (entityCoord.y - playerCoord.y) * -1.f, (entityCoord.z - playerCoord.z) * -1.f, 0, 0, 0, false, false, true, true, false, true);
+				Memory::ApplyForceToEntity(entity, 3, (entityCoord.x - playerCoord.x) * -1.f, (entityCoord.y - playerCoord.y) * -1.f, (entityCoord.z - playerCoord.z) * -1.f, 0, 0, 0, false, false, true, true, false, true);
 			}
 			else // entity is on the surface
 			{
