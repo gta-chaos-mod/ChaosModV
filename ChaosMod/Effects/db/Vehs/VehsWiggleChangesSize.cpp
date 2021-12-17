@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static Vector3 getVector3(auto offset)
+static Vector3 GetVector3(auto offset)
 {
 	return Vector3(
 		*reinterpret_cast<float*>(offset),
@@ -13,27 +13,27 @@ static Vector3 getVector3(auto offset)
 	);
 }
 
-static void setVector3(auto offset, Vector3 vec)
+static void SetVector3(auto offset, Vector3 vec)
 {
 	*reinterpret_cast<float*>(offset) = vec.x;
 	*reinterpret_cast<float*>(offset + 0x4) = vec.y;
 	*reinterpret_cast<float*>(offset + 0x8) = vec.z;
 }
 
-static void multiplyMatrix(auto offset, float multiplier)
+static void MultiplyMatrix(auto offset, float multiplier)
 {
 	auto address = offset + 0x60;											// a matrix for passengers
 	auto address2 = *reinterpret_cast<uintptr_t*>(offset + 0x30) + 0x20;	// a matrix for vehicle
-	Vector3 fv = getVector3(address + 0x00);
-	Vector3 rv = getVector3(address + 0x10);
-	Vector3 uv = getVector3(address + 0x20);
+	Vector3 fv = GetVector3(address + 0x00);
+	Vector3 rv = GetVector3(address + 0x10);
+	Vector3 uv = GetVector3(address + 0x20);
 
-	setVector3(address + 0x00, fv * multiplier);
-	setVector3(address + 0x10, rv * multiplier);
-	setVector3(address + 0x20, uv * multiplier);
-	setVector3(address2 + 0x00, fv * multiplier);
-	setVector3(address2 + 0x10, rv * multiplier);
-	setVector3(address2 + 0x20, uv * multiplier);
+	SetVector3(address + 0x00, fv * multiplier);
+	SetVector3(address + 0x10, rv * multiplier);
+	SetVector3(address + 0x20, uv * multiplier);
+	SetVector3(address2 + 0x00, fv * multiplier);
+	SetVector3(address2 + 0x10, rv * multiplier);
+	SetVector3(address2 + 0x20, uv * multiplier);
 }
 
 static void OnTick()
@@ -100,7 +100,7 @@ static void OnTick()
 			}
 			if (length - savedLength < 0.1f)
 			{
-				multiplyMatrix(getScriptHandleBaseAddress(vehicle), multiplier);
+				MultiplyMatrix(getScriptHandleBaseAddress(vehicle), multiplier);
 			}
 		}
 	}
