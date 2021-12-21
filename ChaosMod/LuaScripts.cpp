@@ -329,14 +329,14 @@ namespace LuaScripts
 					{ return LuaInvoke(szFileName, lua, ullHash, eReturnType, args); };
 				lua["WAIT"] = WAIT;
 
-				lua["GetAllPeds"] = GetAllPeds;
+				lua["GetAllPeds"] = GetAllPedsArray;
 				lua["CreatePoolPed"] = CreatePoolPed;
 
-				lua["GetAllVehicles"] = GetAllVehs;
+				lua["GetAllVehicles"] = GetAllVehsArray;
 				lua["CreatePoolVehicle"] = CreatePoolVehicle;
 				lua["CreateTempVehicle"] = CreateTempVehicle;
 
-				lua["GetAllProps"] = GetAllProps;
+				lua["GetAllProps"] = GetAllPropsArray;
 				lua["CreatePoolProp"] = CreatePoolProp;
 
 				lua["GetAllWeapons"] = Memory::GetAllWeapons;
