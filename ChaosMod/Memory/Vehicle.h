@@ -165,4 +165,38 @@ namespace Memory
 
 		return result ? *reinterpret_cast<float*>(result + 2496) : false;
 	}
+
+	inline Vector3 GetVector3(auto offset)
+	{
+		return Vector3(
+			*reinterpret_cast<float*>(offset),
+			*reinterpret_cast<float*>(offset + 0x4),
+			*reinterpret_cast<float*>(offset + 0x8)
+		);
+	}
+
+	inline void SetVector3(auto offset, Vector3 vec)
+	{
+		*reinterpret_cast<float*>(offset) = vec.x;
+		*reinterpret_cast<float*>(offset + 0x4) = vec.y;
+		*reinterpret_cast<float*>(offset + 0x8) = vec.z;
+	}
+
+	inline void SetVehicleScale(Vehicle veh, float scaleMultiplier)
+	{
+		auto offset = getScriptHandleBaseAddress(veh);
+
+		auto address = offset + 0x60;											// a matrix for passengers
+		auto address2 = *reinterpret_cast<uintptr_t*>(offset + 0x30) + 0x20;	// a matrix for vehicle
+		Vector3 fv = Memory::GetVector3(address + 0x00);
+		Vector3 rv = Memory::GetVector3(address + 0x10);
+		Vector3 uv = Memory::GetVector3(address + 0x20);
+
+		Memory::SetVector3(address + 0x00, fv * scaleMultiplier);
+		Memory::SetVector3(address + 0x10, rv * scaleMultiplier);
+		Memory::SetVector3(address + 0x20, uv * scaleMultiplier);
+		Memory::SetVector3(address2 + 0x00, fv * scaleMultiplier);
+		Memory::SetVector3(address2 + 0x10, rv * scaleMultiplier);
+		Memory::SetVector3(address2 + 0x20, uv * scaleMultiplier);
+	}
 }
