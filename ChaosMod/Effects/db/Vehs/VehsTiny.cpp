@@ -37,7 +37,7 @@ static std::map<Vehicle, VehicleMatrix> vehicleMatrices;
 
 static void OnTick()
 {
-	for (Vehicle veh : GetAllVehsArray())
+	for (Vehicle veh : GetAllVehs())
 	{
 		Hash vehModel = GET_ENTITY_MODEL(veh);
 		if (!IS_THIS_MODEL_A_BIKE(vehModel) && !IS_THIS_MODEL_A_BICYCLE(vehModel)) // Changing the scale of bikes makes them fly up into the air the moment they touch the ground, making them impossible to drive
