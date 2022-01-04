@@ -58,7 +58,8 @@ const char* ROULETTE_WORDS[] =
     "FRANKLIN",
     "MICHAEL_",
     "TREVOR__",
-    "LESTER__"
+    "LESTER__",
+    "SYNFETIC"
 };
 
 const char* WIN_PHRASES[] =
