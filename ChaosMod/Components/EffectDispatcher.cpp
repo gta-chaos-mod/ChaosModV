@@ -238,7 +238,15 @@ void EffectDispatcher::DrawTimerBar()
 
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-	DRAW_RECT(fPercentage * .5f, .01f, fPercentage, .018f, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false);
+
+	if (g_MetaInfo.m_bFlipChaosUI)
+	{
+		DRAW_RECT(1.f - fPercentage * .5f, .01f, fPercentage, .018f, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false);
+	}
+	else
+	{
+		DRAW_RECT(fPercentage * .5f, .01f, fPercentage, .018f, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false);
+	}
 }
 
 void EffectDispatcher::DrawEffectTexts()
@@ -277,14 +285,30 @@ void EffectDispatcher::DrawEffectTexts()
 			name = effect.m_szName;
 		}
 
-		DrawScreenText(name, { .915f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
-			EScreenTextAdjust::Right, { .0f, .915f });
-
+		if (g_MetaInfo.m_bFlipChaosUI)
+		{
+			DrawScreenText(name, { .085f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
+				EScreenTextAdjust::Left, { .0f, .915f });
+		}
+		else
+		{
+			DrawScreenText(name, { .915f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
+				EScreenTextAdjust::Right, { .0f, .915f });
+		}
 		if (effect.m_fTimer > 0)
 		{
-			DRAW_RECT(.96f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-			DRAW_RECT(.96f, fPosY + .0185f, .048f * effect.m_fTimer / effect.m_fMaxTime, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
-				m_rgEffectTimerColor[2], 255, false);
+			if (g_MetaInfo.m_bFlipChaosUI)
+			{
+				DRAW_RECT(.04f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
+				DRAW_RECT(.04f, fPosY + .0185f, .048f * effect.m_fTimer / effect.m_fMaxTime, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
+					m_rgEffectTimerColor[2], 255, false);
+			}
+			else
+			{
+				DRAW_RECT(.96f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
+				DRAW_RECT(.96f, fPosY + .0185f, .048f * effect.m_fTimer / effect.m_fMaxTime, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
+					m_rgEffectTimerColor[2], 255, false);
+			}
 		}
 
 		fPosY += effectSpacing;
