@@ -300,7 +300,7 @@ void EffectDispatcher::DrawEffectTexts()
 			if (g_MetaInfo.m_bFlipChaosUI)
 			{
 				DRAW_RECT(.04f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-				DRAW_RECT(.04f, fPosY + .0185f, .048f * effect.m_fTimer / effect.m_fMaxTime, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
+				DRAW_RECT(.04f, fPosY + .0185f, .048f * (1.f - (effect.m_fTimer / effect.m_fMaxTime)), .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
 					m_rgEffectTimerColor[2], 255, false);
 			}
 			else
