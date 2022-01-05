@@ -16,7 +16,7 @@ static void OnStop()
 
 static RegisterEffect registerEffect(EFFECT_META_FLIP_CHAOS_UI, nullptr, OnStop, OnTick, EffectInfo
 	{
-		.Name = "Flip UI",
+		.Name = "Flip HUD",
 		.Id = "meta_flip_chaos_ui",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_HIDE_CHAOS_UI },
