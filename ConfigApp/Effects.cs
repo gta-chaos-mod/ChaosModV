@@ -336,6 +336,7 @@ namespace ConfigApp
             EFFECT_BLOODY_PEDS,
             EFFECT_WEIRD_PITCH,
             EFFECT_PEDS_2X_ANIMATION_SPEED,
+            EFFECT_PLAYER_TP_TO_EVERYTHING,
             _EFFECT_ENUM_MAX
         }
 
@@ -636,6 +637,7 @@ namespace ConfigApp
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
             {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
             {EffectType.EFFECT_PEDS_2X_ANIMATION_SPEED, new EffectInfo("2x Animation Speed", EffectCategory.PEDS, "peds_2x_animation_speed", true)},
+            {EffectType.EFFECT_PLAYER_TP_TO_EVERYTHING, new EffectInfo("Teleporter Malfunction", EffectCategory.PLAYER, "player_tp_to_everything", true, true)},
         };
     }
 }
