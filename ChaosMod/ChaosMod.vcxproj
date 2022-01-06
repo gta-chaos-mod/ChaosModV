@@ -113,6 +113,7 @@
     <ClCompile Include="Effects\db\Peds\Peds2xAnimationSpeed.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBloody.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscCloneOnDeath.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
