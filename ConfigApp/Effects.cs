@@ -637,7 +637,7 @@ namespace ConfigApp
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
             {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
             {EffectType.EFFECT_PEDS_2X_ANIMATION_SPEED, new EffectInfo("2x Animation Speed", EffectCategory.PEDS, "peds_2x_animation_speed", true)},
-            {EffectType.EFFECT_MISC_CLONE_ON_DEATH, new EffectInfo("Resurrection Day", EffectCategory.MISC, "misc_clone_on_death", true)},
+            {EffectType.EFFECT_MISC_CLONE_ON_DEATH, new EffectInfo("Resurrection Day", EffectCategory.MISC, "misc_clone_on_death", true, true)},
         };
     }
 }
