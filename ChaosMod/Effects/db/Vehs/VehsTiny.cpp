@@ -5,35 +5,12 @@
 #include <stdafx.h>
 #include "Memory/Vehicle.h"
 
-struct VehicleMatrix
+static std::map<Vehicle, Vector3> vehicleDefaultSizes;
+
+static bool VectorEquals(Vector3 vec1, Vector3 vec2)
 {
-	Vector3 rightVec, forwardVec, upVec, pos;
-	
-	VehicleMatrix() = default;
-
-	VehicleMatrix(Vehicle veh)
-	{
-		GET_ENTITY_MATRIX(veh, &rightVec, &forwardVec, &upVec, &pos);
-	}
-
-	bool Equals(VehicleMatrix other)
-	{
-		return rightVec.x == other.rightVec.x &&
-			   rightVec.y == other.rightVec.y &&
-			   rightVec.z == other.rightVec.z &&
-			   forwardVec.x == other.forwardVec.x &&
-			   forwardVec.y == other.forwardVec.y &&
-			   forwardVec.z == other.forwardVec.z &&
-			   upVec.x == other.upVec.x &&
-			   upVec.y == other.upVec.y &&
-			   upVec.z == other.upVec.z &&
-			   pos.x == other.pos.x &&
-			   pos.y == other.pos.y &&
-			   pos.z == other.pos.z;
-	}
-};
-
-static std::map<Vehicle, VehicleMatrix> vehicleMatrices;
+	return abs(vec1.x - vec2.x) < 0.01f && abs(vec1.y - vec2.y) < 0.01f && abs(vec1.z - vec2.z) < 0.01f;
+}
 
 static void OnTick()
 {
@@ -42,12 +19,19 @@ static void OnTick()
 		Hash vehModel = GET_ENTITY_MODEL(veh);
 		if (!IS_THIS_MODEL_A_BIKE(vehModel) && !IS_THIS_MODEL_A_BICYCLE(vehModel)) // Changing the scale of bikes makes them fly up into the air the moment they touch the ground, making them impossible to drive
 		{
-			VehicleMatrix matrix = VehicleMatrix(veh);
+			Vector3 rightVector, forwardVector, upVector, position;
+			GET_ENTITY_MATRIX(veh, &rightVector, &forwardVector, &upVector, &position);
 
-			if (vehicleMatrices.count(veh) == 0 || !vehicleMatrices[veh].Equals(matrix)) // If matrix has changed
+			Vector3 vehicleSize = Vector3(rightVector.Length(), forwardVector.Length(), upVector.Length());
+
+			if (!vehicleDefaultSizes.contains(veh))
+			{
+				vehicleDefaultSizes[veh] = vehicleSize;
+			}
+
+			if (VectorEquals(vehicleDefaultSizes[veh], vehicleSize))
 			{
 				Memory::SetVehicleScale(veh, 0.5f);
-				vehicleMatrices[veh] = VehicleMatrix(veh); // Deliberately not using the already declared matrix to include the changes made by Memory::SetVehicleScale
 			}
 		}
 	}
@@ -55,7 +39,7 @@ static void OnTick()
 
 static void OnStop()
 {
-	vehicleMatrices.clear();
+	vehicleDefaultSizes.clear();
 }
 
 static RegisterEffect registerEffect(EFFECT_VEHS_TINY, nullptr, OnStop, OnTick, EffectInfo
