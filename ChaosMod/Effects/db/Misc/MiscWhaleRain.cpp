@@ -43,7 +43,7 @@ static void OnTick()
 		SET_PED_TO_RAGDOLL(whale, 10000, 10000, 0, true, true, false);
 		SET_ENTITY_HEALTH(whale, 0, 0);
 
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(whale, 0, 35.f, 0, -5000.f, true, false, true, true);
+		Memory::ApplyForceToEntityCenterOfMass(whale, 0, 35.f, 0, -5000.f, true, false, true, true);
 
 		SET_MODEL_AS_NO_LONGER_NEEDED(WHALE_MODEL);
 	}

@@ -48,7 +48,7 @@ static void OnTick()
 
 				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				Memory::ApplyForceToEntityCenterOfMass(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
 
 				SET_PED_AS_NO_LONGER_NEEDED(&cat);
 			}

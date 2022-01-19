@@ -11,7 +11,7 @@ static void OnTick()
 		Vehicle veh = GET_VEHICLE_PED_IS_IN(player, false);
 		if (IS_CONTROL_JUST_PRESSED(0, 22) && IS_VEHICLE_ON_ALL_WHEELS(veh))
 		{
-			APPLY_FORCE_TO_ENTITY(veh, 0, .0f, 850.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
+			Memory::ApplyForceToEntity(veh, 0, .0f, 850.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
 
 			Hash rampHash = GET_HASH_KEY("prop_mp_ramp_02");
 			Vector3 playerPos = GET_ENTITY_COORDS(player, false);
