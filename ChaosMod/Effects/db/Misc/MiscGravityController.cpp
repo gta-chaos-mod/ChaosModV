@@ -43,13 +43,13 @@ static void OnTickInsane()
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, -75.f, false, false, true, false);
+			Memory::ApplyForceToEntityCenterOfMass(ped, 0, 0, 0, -75.f, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, -200.f, false, false, true, false);
+		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, -200.f, false, false, true, false);
 	}
 }
 
@@ -77,13 +77,13 @@ static void OnTickInvert()
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(ped, 0, 0, 0, 25.f, false, false, true, false);
+			Memory::ApplyForceToEntityCenterOfMass(ped, 0, 0, 0, 25.f, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(object, 0, 0, 0, 100.f, false, false, true, false);
+		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, 100.f, false, false, true, false);
 	}
 }
 
