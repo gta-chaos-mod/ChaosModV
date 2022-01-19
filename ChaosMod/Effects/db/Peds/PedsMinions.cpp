@@ -36,6 +36,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_MINIONS, nullptr, OnStop, OnTic
 	{
 		.Name = "Minions",
 		.Id = "peds_minions",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PEDS_HEADLESS }
 	}
 );
