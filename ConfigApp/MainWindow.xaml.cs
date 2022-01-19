@@ -15,7 +15,7 @@ namespace ConfigApp
     public partial class MainWindow : Window
     {
         private bool m_initializedTitle = false;
-
+        
         private OptionsFile m_configFile = new OptionsFile("config.ini");
         private OptionsFile m_twitchFile = new OptionsFile("twitch.ini");
         private OptionsFile m_effectsFile = new OptionsFile("effects.ini");
@@ -129,7 +129,7 @@ namespace ConfigApp
             misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
             misc_user_effects_menu_enable.IsChecked = m_configFile.ReadValueBool("EnableDebugMenu", false);
             misc_user_effects_timer_pause_shortcut_enable.IsChecked = m_configFile.ReadValueBool("EnablePauseTimerShortcut", false);
-            misc_user_toggle_mod_shortcut.IsChecked = m_configFile.ReadValueBool("EnableToggleModShortcut", true);
+            misc_user_effects_max_running_effects.Text = m_configFile.ReadValue("MaxParallelRunningEffects", "99");
             if (m_configFile.HasKey("EffectTimerColor"))
             {
                 misc_user_effects_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimerColor"));
@@ -170,6 +170,11 @@ namespace ConfigApp
             m_configFile.WriteValue("DisableStartup", misc_user_effects_disable_startup.IsChecked.Value);
             m_configFile.WriteValue("EnableGroupWeightingAdjustments", misc_user_effects_enable_group_weighting.IsChecked.Value);
             m_configFile.WriteValue("EnableFailsafe", misc_user_effects_enable_failsafe.IsChecked.Value);
+            int runningEffects;
+            if (int.TryParse(misc_user_effects_max_running_effects.Text, out runningEffects) && runningEffects > 0)
+            {
+                m_configFile.WriteValue("MaxParallelRunningEffects", misc_user_effects_max_running_effects.Text);
+            }
 
             // Meta Effects
             m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);

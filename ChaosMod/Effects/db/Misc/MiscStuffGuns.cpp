@@ -101,7 +101,7 @@ static void OnTick()
 						//prevent non-moveable objects cluttering up important areas
 						SET_OBJECT_AS_NO_LONGER_NEEDED(&thing);
 					}
-					APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
+					Memory::ApplyForceToEntityCenterOfMass(thing, 1, .0f, 1000.f, 0.f, false, true, true, false);
 				}
 			}
 		}
