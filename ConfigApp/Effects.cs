@@ -338,6 +338,7 @@ namespace ConfigApp
             EFFECT_WEIRD_PITCH,
             EFFECT_PEDS_HEADLESS,
             EFFECT_PEDS_2X_ANIMATION_SPEED,
+            EFFECT_SIDEWAYS_GRAVITY,
             _EFFECT_ENUM_MAX
         }
 
@@ -640,6 +641,7 @@ namespace ConfigApp
             {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
             {EffectType.EFFECT_PEDS_HEADLESS, new EffectInfo("Mannequins", EffectCategory.PEDS, "peds_headless", true)},
             {EffectType.EFFECT_PEDS_2X_ANIMATION_SPEED, new EffectInfo("2x Animation Speed", EffectCategory.PEDS, "peds_2x_animation_speed", true)},
+            {EffectType.EFFECT_SIDEWAYS_GRAVITY, new EffectInfo("Sideways Gravity", EffectCategory.MISC, "misc_sideways_gravity", true, true)},
         };
     }
 }
