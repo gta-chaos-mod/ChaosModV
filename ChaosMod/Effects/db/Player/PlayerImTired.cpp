@@ -18,6 +18,12 @@ static float steeringDirection;
 static void BlackOut(float alpha)
 {
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false);
+	float progress = alpha / 255;
+	if (progress > 0)
+	{
+		DRAW_RECT(.5f, progress / 4, 1, progress / 2, 0, 0, 0, 255, false); // top bar
+		DRAW_RECT(.5f, 1.f - (progress / 4), 1, progress / 2, 0, 0, 0, 255, false); // bottom bar
+	}
 }
 
 static void SteerVehicle()
@@ -38,11 +44,6 @@ static void RagdollOnFoot()
 		int sleepDuration = 3000;
 		SET_PED_TO_RAGDOLL(playerPed, sleepDuration, sleepDuration, 0, true, true, false);
 	}
-}
-
-static void OnStop()
-{
-	BlackOut(0);
 }
 
 static void OnStart()
@@ -101,7 +102,7 @@ static void OnTick()
 	BlackOut(alpha);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "I'm So Tired",
 		.Id = "player_tired",
