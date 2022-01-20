@@ -11,6 +11,7 @@
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/TwitchVoting.h"
+#include "Components/ShortCut.h"
 #include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
