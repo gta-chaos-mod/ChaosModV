@@ -22,7 +22,7 @@ static void OnStart()
 		entityToFlip = player;
 		SET_PED_TO_RAGDOLL(player, 5000, 0, 0, true, true, false);
 	}
-	APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true), GetRandomForce(false), false, false, true, false);
+	Memory::ApplyForceToEntityCenterOfMass(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true), GetRandomForce(false), false, false, true, false);
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_FLING_PLAYER, OnStart, nullptr, nullptr, EffectInfo

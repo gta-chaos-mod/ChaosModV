@@ -1,4 +1,4 @@
-/*
+﻿/*
         Effect by DrUnderscore (James), modified
 */
 
@@ -47,7 +47,19 @@ const char* ROULETTE_WORDS[] =
     "HUGO_ONE",
     "GATMUN!!",
     "MOXI____",
-    "HUNTER2_"
+    "HUNTER2_",
+    "PASSWORD",
+    "1+4=-2+7",
+    "_MATRIX_",
+    "{RANDOM}",
+    "ROULETTE",
+    "PASS1234",
+    "/HACK_R*",
+    "FRANKLIN",
+    "MICHAEL_",
+    "TREVOR__",
+    "LESTER__",
+    "SYNFETIC"
 };
 
 const char* WIN_PHRASES[] =
@@ -71,7 +83,23 @@ const char* WIN_PHRASES[] =
     "Vim > Emacs",
     "loooool cool hacker reference xdd",
     "You wouldn't download a car...",
-    "Needs more blockchain"
+    "Needs more blockchain",
+    "HTML is my favorite programming language.",
+    "Don't worry, it's not like you were mining cryptocurrencies for us...",
+    "What? You wanted a witty win phrase? Too bad!",
+    "sudo rm -rf /",
+    "can you hack my friends instagram account plz?????",
+    "Good thing I have 2FA",
+    "/hack GTA5.exe",
+    "Well that certainly was... something.",
+    "Good job! You didn't lose a single time!",
+    "Dude, that's illegal, I'm calling the cops.",
+    "It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
+    "GTA Online just went down... I'm sure it's unrelated.",
+    "int* hacked = true;",
+    "Matrix reference",
+    "\"I'm in the mainframe\"",
+    "I frequent r/ProgrammerHumor."
 };
 
 enum class TimerAction
