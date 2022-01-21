@@ -4,8 +4,13 @@ static void OnTickRed()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -14,7 +19,7 @@ static RegisterEffect registerEffect1(EFFECT_RED_VEHS, nullptr, nullptr, OnTickR
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
+		.IncompatibleWith = { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
@@ -22,8 +27,13 @@ static void OnTickBlue()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -32,7 +42,7 @@ static RegisterEffect registerEffect2(EFFECT_BLUE_VEHS, nullptr, nullptr, OnTick
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
@@ -40,8 +50,13 @@ static void OnTickGreen()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 255, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -50,7 +65,7 @@ static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTic
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
@@ -58,7 +73,16 @@ static void OnTickChrome()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 219, 226, 233);
+
+		// If the vehicle has a custom color, the effect won't work
+		CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+		CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
+
 		SET_VEHICLE_COLOURS(veh, 120, 120);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -67,7 +91,7 @@ static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTi
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
@@ -116,8 +140,13 @@ static void OnTickPink()
 			flameByCar[veh] = handle;
 		}
 
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -126,7 +155,7 @@ static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, OnStopPink, OnT
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEHS_INVISIBLE, EFFECT_CHROME_VEHS },
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
@@ -171,6 +200,12 @@ static void OnTickRainbow()
 
 		TOGGLE_VEHICLE_MOD(veh, 22, true);
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, headlightColor);
+
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, r, g, b);
+
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 
 	// Headlight color switcher
@@ -190,7 +225,7 @@ static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, OnStopRainbo
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_VEHS_INVISIBLE },
 		.EEffectGroupType = EEffectGroupType::TrafficColor
 	}
 );

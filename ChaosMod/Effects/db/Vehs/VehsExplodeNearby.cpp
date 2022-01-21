@@ -25,6 +25,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_EXPLODE_VEHS, OnStart, EffectInfo
 	{
 		.Name = "Explode All Nearby Vehicles",
-		.Id = "vehs_explode"
+		.Id = "vehs_explode",
+		.IncompatibleWith = { EFFECT_VEHS_INVINCIBLE }
 	}
 );

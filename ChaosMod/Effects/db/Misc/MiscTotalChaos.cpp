@@ -25,13 +25,13 @@ static void OnTick()
 	{
 		if (veh != playerVeh)
 		{
-			APPLY_FORCE_TO_ENTITY(veh, 3, 10.f, .1f, .1f, 0, 0, 0, 0, true, true, true, false, true);
+			Memory::ApplyForceToEntity(veh, 3, 10.f, .1f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 		}
 	}
 
 	for (Object prop : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
+		Memory::ApplyForceToEntity(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
 	DWORD64 curTick = GET_GAME_TIMER();

@@ -13,8 +13,8 @@ Failsafe::Failsafe()
 	}
 
 	eGameVersion eGameVer = getGameVersion();
-	m_bEnabled = eGameVer >= VER_1_0_2215_0_STEAM
-		&& eGameVer < VER_SIZE
+	m_bEnabled = (eGameVer >= VER_1_0_2215_0_STEAM
+		&& eGameVer < VER_SIZE)
 		|| DoesFileExist("chaosmod\\.forcefailsafe");
 
 	if (!m_bEnabled)
@@ -39,6 +39,11 @@ Failsafe::Failsafe()
 	case VER_1_0_2374_0_STEAM:
 	case VER_1_0_2374_0_NOSTEAM:
 		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(99370));
+
+		break;
+	case VER_1_0_2545_0_STEAM:
+	case VER_1_0_2545_0_NOSTEAM:
+		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(99974));
 
 		break;
 	}

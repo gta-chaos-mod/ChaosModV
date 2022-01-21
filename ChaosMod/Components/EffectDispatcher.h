@@ -69,7 +69,13 @@ private:
 	WORD m_usMetaEffectTimedDur = 0;
 	WORD m_usMetaEffectShortDur = 0;
 
+	int m_iMaxRunningEffects = 0;
+
 	float m_fPercentage = 0.f;
+	float m_fEffectsInnerSpacingMax = .075f;
+	float m_fEffectsInnerSpacingMin = .030f;
+	float m_fEffectsTopSpacingDefault = .2f;
+	float m_fEffectsTopSpacingWithVoting = .35f;
 
 	std::vector<ActiveEffect> m_rgActiveEffects;
 	std::vector<RegisteredEffect*> m_rgPermanentEffects;
@@ -103,6 +109,8 @@ private:
 	void UpdateTimer();
 	void UpdateEffects();
 	void UpdateMetaEffects();
+	float GetEffectTopSpace();
+	bool ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning);
 
 public:
 	void DrawTimerBar();

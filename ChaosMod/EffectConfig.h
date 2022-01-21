@@ -7,6 +7,26 @@ struct EffectData;
 
 namespace EffectConfig
 {
+	inline size_t GetNextDelimiterOffset(std::string input)
+	{
+		bool isInQuotes = false;
+		if (input.length() > 0)
+		{
+			for (size_t curIdx = 0; curIdx < input.length(); curIdx++)
+			{
+				if (input[curIdx] == '\"')
+				{
+					isInQuotes = !isInQuotes;
+				}
+				else if (!isInQuotes && input[curIdx] == ',')
+				{
+					return curIdx;
+				}
+			}
+		}
+		return -1;
+	}
+
 	inline void ReadConfig(const char* szConfigPath, auto& out)
 	{
 		OptionsFile effectsFile(szConfigPath);
@@ -17,29 +37,31 @@ namespace EffectConfig
 			const EffectInfo& effectInfo = g_dictEffectsMap.at(effectType);
 
 			// Default EffectData values
-			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting
-			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false };
+			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for name-override", Shortcut
+			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0};
 			// HACK: Store EffectCustomName seperately
 			std::string szValueEffectName;
-			std::string szValueEffectFakeName;
 
 			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
 
 			if (!szValue.empty())
 			{
-				size_t ullSplitIndex = szValue.find(",");
+				size_t ullSplitIndex = GetNextDelimiterOffset(szValue);
 				for (int j = 0; ; j++)
 				{
-					if (j > 5 && j < 8)
+					// Effect-Name override
+					if (j == 6)
 					{
-						// HACK for EffectCustomName :(
-						if (szValue != "0")
-						{
-							if (j == 6) szValueEffectName = szValue;
-							if (j == 7) szValueEffectFakeName = szValue;
+						std::string szSplit = szValue.substr(0, ullSplitIndex);
+						// Trim surrounding quotations
+						if (szSplit.length() >= 2 && szSplit[0] == '\"' && szSplit[szSplit.length() -1] == '\"') {
+							szSplit = szSplit.substr(1, szSplit.size() - 2);
 						}
-
-						break;
+						// Names can't be "0" to support older configs
+						if (!szSplit.empty() && szSplit != "0")
+						{
+							szValueEffectName = szSplit;
+						}
 					}
 					else
 					{
@@ -54,8 +76,7 @@ namespace EffectConfig
 					}
 
 					szValue = szValue.substr(ullSplitIndex + 1);
-
-					ullSplitIndex = szValue.find(",");
+					ullSplitIndex = GetNextDelimiterOffset(szValue);
 				}
 			}
 
@@ -93,13 +114,11 @@ namespace EffectConfig
 			effectData.ExcludedFromVoting = rgValues[5];
 			effectData.IsMeta = effectInfo.ExecutionType == EEffectExecutionType::Meta;
 			effectData.Name = effectInfo.Name;
+			effectData.Shortcut = rgValues[7];
 			if (!szValueEffectName.empty())
 			{
 				effectData.HasCustomName = true;
 				effectData.CustomName = szValueEffectName;
-			}
-			if (!szValueEffectFakeName.empty()) {
-				effectData.FakeName = szValueEffectFakeName;
 			}
 			effectData.Id = effectInfo.Id;
 

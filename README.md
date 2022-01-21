@@ -33,6 +33,10 @@ git submodule update --recursive
 
 ## Adding new effects
 
+You can easily add and share your own effects using the integrated Lua scripting engine. See [here](https://github.com/gta-chaos-mod/ChaosModV/wiki/Lua-Scripting) for more information.
+
+Otherwise, if you want to integrate your effect directly into the mod:
+
 1. Add a new effect enum entry to `ChaosMod/Effects/EffectsInfo.h`
 
 2. Create a new .cpp file in the appropriate folder under `ChaosMod/Effects/db/` with a fitting name

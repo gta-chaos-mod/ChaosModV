@@ -15,7 +15,7 @@ static void OnTick()
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(player, false);
 			if (!IS_ENTITY_IN_AIR(veh))
 			{
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 200.f, true, false, true, true);
+				Memory::ApplyForceToEntityCenterOfMass(veh, 0, .0f, .0f, 200.f, true, false, true, true);
 				lastCheck = GET_GAME_TIMER();
 			}
 		} 
