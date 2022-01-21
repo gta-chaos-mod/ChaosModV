@@ -29,7 +29,7 @@ struct CameraSnapshot
 	}
 };
 
-std::vector<CameraSnapshot> cameraSnapshots;
+static std::vector<CameraSnapshot> cameraSnapshots;
 
 static int currentCamDelay;
 static int targetCamDelay;
