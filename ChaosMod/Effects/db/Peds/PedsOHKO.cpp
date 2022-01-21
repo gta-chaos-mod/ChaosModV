@@ -38,6 +38,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, 
 	{
 		.Name = "One Hit KO",
 		.Id = "player_ohko",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_PLAYER_BEES }
 	}
 );

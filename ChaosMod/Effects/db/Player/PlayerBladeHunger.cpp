@@ -81,7 +81,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_BLADE_HUNGER, OnStart, nullpt
 	{
 		.Name = "The Blade Hungers",
 		.Id = "player_blade_hunger",
-		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEH_SPEED_MINIMUM }
+		.IsTimed = true
 	}
 );

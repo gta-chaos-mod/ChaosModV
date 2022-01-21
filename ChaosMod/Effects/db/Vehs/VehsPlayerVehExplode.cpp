@@ -61,6 +61,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_EXPLODE_CUR_VEH, OnStart, EffectInfo
 	{
 		.Name = "Detonate Current Vehicle",
-		.Id = "playerveh_explode"
+		.Id = "playerveh_explode",
+		.IncompatibleWith = { EFFECT_VEHS_INVINCIBLE }
 	}
 );

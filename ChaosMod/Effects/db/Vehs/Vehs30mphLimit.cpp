@@ -25,6 +25,7 @@ static RegisterEffect registerEffect(EFFECT_VEH_SET_TOPSPEED_30MPH, nullptr, OnS
 		.Name = "30MPH Speed Limit",
 		.Id = "veh_30mphlimit",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_VEH_SPEED_MINIMUM }
 	}
 );
