@@ -4,8 +4,13 @@ static void OnTickRed()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -22,8 +27,13 @@ static void OnTickBlue()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -40,8 +50,13 @@ static void OnTickGreen()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 255, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -58,7 +73,16 @@ static void OnTickChrome()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 219, 226, 233);
+
+		// If the vehicle has a custom color, the effect won't work
+		CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+		CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
+
 		SET_VEHICLE_COLOURS(veh, 120, 120);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -116,8 +140,13 @@ static void OnTickPink()
 			flameByCar[veh] = handle;
 		}
 
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
@@ -171,6 +200,12 @@ static void OnTickRainbow()
 
 		TOGGLE_VEHICLE_MOD(veh, 22, true);
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, headlightColor);
+
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, r, g, b);
+
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 
 	// Headlight color switcher
