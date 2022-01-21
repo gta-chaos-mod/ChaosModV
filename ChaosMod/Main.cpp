@@ -59,6 +59,8 @@ static void Reset()
 	ms_pFailsafe.reset();
 
 	ClearEntityPool();
+
+	Mp3Manager::ResetCache();
 }
 
 static void Init()
