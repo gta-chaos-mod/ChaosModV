@@ -20,6 +20,7 @@ static RegisterEffect registerEffect(EFFECT_PEDS_INVISIBLE, nullptr, OnStop, OnT
 	{
 		.Name = "Everyone Is A Ghost",
 		.Id = "peds_ghost",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_MISC_GHOST_WORLD }
 	}
 );

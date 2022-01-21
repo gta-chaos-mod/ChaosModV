@@ -298,6 +298,7 @@ namespace ConfigApp
             EFFECT_META_EFFECT_DURATION_X0_5,
             EFFECT_META_HIDE_CHAOS_UI,
             EFFECT_META_ADDITIONAL_EFFECTS,
+            EFFECT_MISC_FLIP_UI,
             EFFECT_VEHS_CRUMBLE,
             EFFECT_MISC_FPS_LIMIT,
             EFFECT_META_NO_CHAOS,
@@ -335,8 +336,13 @@ namespace ConfigApp
             EFFECT_MISC_GET_TOWED,
             EFFECT_BLOODY_PEDS,
             EFFECT_WEIRD_PITCH,
+            EFFECT_PLAYER_SICK_CAM,
+            EFFECT_MISC_GHOST_WORLD,
+            EFFECT_PEDS_HEADLESS,
             EFFECT_PEDS_2X_ANIMATION_SPEED,
             EFFECT_PLAYER_LAGGY_CAMERA,
+            EFFECT_MISC_CLONE_ON_DEATH,
+            EFFECT_SIDEWAYS_GRAVITY,
             _EFFECT_ENUM_MAX
         }
 
@@ -599,6 +605,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
             {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
+            {EffectType.EFFECT_MISC_FLIP_UI, new EffectInfo("Flipped HUD", EffectCategory.MISC, "misc_flip_ui", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
             {EffectType.EFFECT_META_NO_CHAOS, new EffectInfo("No Chaos", EffectCategory.META, "meta_nochaos", true)},
@@ -636,8 +643,13 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_GET_TOWED, new EffectInfo("Get Towed", EffectCategory.MISC, "misc_get_towed")},
             {EffectType.EFFECT_BLOODY_PEDS, new EffectInfo("Everyone Is Bloody", EffectCategory.PEDS, "peds_bloody")},
             {EffectType.EFFECT_WEIRD_PITCH, new EffectInfo("Weird Pitch", EffectCategory.MISC, "misc_weirdpitch", true)},
+            {EffectType.EFFECT_PLAYER_SICK_CAM, new EffectInfo("I Feel Sick", EffectCategory.PLAYER, "player_sick_cam", true, true)},
+            {EffectType.EFFECT_MISC_GHOST_WORLD, new EffectInfo("Ghost Town", EffectCategory.MISC, "misc_ghost_world", true)},
+            {EffectType.EFFECT_PEDS_HEADLESS, new EffectInfo("Mannequins", EffectCategory.PEDS, "peds_headless", true)},
             {EffectType.EFFECT_PEDS_2X_ANIMATION_SPEED, new EffectInfo("2x Animation Speed", EffectCategory.PEDS, "peds_2x_animation_speed", true)},
             {EffectType.EFFECT_PLAYER_LAGGY_CAMERA, new EffectInfo("Delayed Camera", EffectCategory.PLAYER, "player_laggy_camera", true)},
+            {EffectType.EFFECT_MISC_CLONE_ON_DEATH, new EffectInfo("Resurrection Day", EffectCategory.MISC, "misc_clone_on_death", true, true)},
+            {EffectType.EFFECT_SIDEWAYS_GRAVITY, new EffectInfo("Sideways Gravity", EffectCategory.MISC, "misc_sideways_gravity", true, true)},
         };
     }
 }
