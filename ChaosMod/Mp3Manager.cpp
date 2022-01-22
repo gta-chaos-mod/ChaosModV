@@ -30,7 +30,7 @@ namespace Mp3Manager
 				// Cache all of the mp3 files
 				std::vector<std::string> rgSoundFiles;
 
-				for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(ossTmp.str()))
+				for (const auto& entry : std::filesystem::directory_iterator(ossTmp.str()))
 				{
 					if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".mp3" && entry.file_size() > 0)
 					{
