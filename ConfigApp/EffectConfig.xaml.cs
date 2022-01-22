@@ -60,7 +60,10 @@ namespace ConfigApp
             effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
             effectconf_effect_custom_name.KeyDown += Effectconf_effect_custom_name_KeyDown;
 
-            effectconf_mp3_label.Text += $"{effectInfo.Id}.mp3";
+            effectconf_mp3_label.Text = $@"
+                Sound to play when this effect gets activated: chaosmod/sounds/{effectInfo.Id}.mp3
+                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectInfo.Id}
+                ";
 
             // Meta Effect Handling
 
