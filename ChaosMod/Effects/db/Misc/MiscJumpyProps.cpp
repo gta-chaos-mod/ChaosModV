@@ -20,9 +20,6 @@ static void OnTick()
 
 		if (!propDataMap.contains(prop))
 		{
-			Vector3 min, max;
-			GET_MODEL_DIMENSIONS(GET_ENTITY_MODEL(prop), &min, &max);
-
 			propDataMap[prop] = PropData { coords.z, GET_GAME_TIMER() + prop };
 		}
 
