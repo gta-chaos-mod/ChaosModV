@@ -8,11 +8,8 @@ __int64 HK_rage__scrThread__Run(rage::scrThread* pThread)
 	if (ms_bEnabledHook)
 	{
 		const char* szScriptName = pThread->m_szName;
-
-		// Scripthook (most likely) relies on these to run our script thread
-		// We don't want to block ourselves of course :p
-		if (strcmp(szScriptName, "main") && strcmp(szScriptName, "main_persistent") && strcmp(szScriptName, "control_thread"))
-		{
+		// Just block the mission watcher, which is enough to not fail the current mission
+		if (strcmp(szScriptName, "mission_stat_watcher")) {
 			return 0;
 		}
 	}
