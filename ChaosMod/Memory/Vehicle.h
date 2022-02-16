@@ -93,8 +93,7 @@ namespace Memory
 		__int64 v6 = sub_7FF69C749B98(vehicle);
 		if (v6)
 		{
-			v6 = (*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
-
+			(*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
 			if (v6)
 			{
 				*reinterpret_cast<BYTE*>(v6 + 2373) &= 0xFEu;
