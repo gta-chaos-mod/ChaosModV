@@ -366,6 +366,7 @@
     <ClInclude Include="Effects\EEffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
     <ClInclude Include="Components\Failsafe.h" />
+    <ClInclude Include="Lib\json.hpp" />
     <ClInclude Include="Lib\scrThread.h" />
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
