@@ -14,6 +14,7 @@ static void OnStart()
 static RegisterEffect registerEffect(EFFECT_IGNITE_PEDS, OnStart, EffectInfo
 	{
 		.Name = "Ignite All Nearby Peds",
-		.Id = "peds_ignite"
+		.Id = "peds_ignite",
+		.IncompatibleWith = { EFFECT_EVERYONE_INVINCIBLE }
 	}
 );

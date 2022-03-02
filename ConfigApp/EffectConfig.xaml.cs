@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static ConfigApp.Effects;
@@ -55,8 +57,13 @@ namespace ConfigApp
             effectconf_exclude_voting_enable.IsChecked = effectData.ExcludedFromVoting;
 
             effectconf_effect_custom_name.Text = effectData.CustomName;
+            effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
+            effectconf_effect_custom_name.KeyDown += Effectconf_effect_custom_name_KeyDown;
 
-            effectconf_mp3_label.Text += $"{effectInfo.Id}.mp3";
+            effectconf_mp3_label.Text = $@"
+                Sound to play when this effect gets activated: chaosmod/sounds/{effectInfo.Id}.mp3
+                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectInfo.Id}
+                ";
 
             // Meta Effect Handling
 
@@ -67,7 +74,38 @@ namespace ConfigApp
                 effectconf_exclude_voting_enable.IsChecked = false;
             }
 
+            // Shortcut
+            List<Key> availableKeys = new List<Key> { Key.None,
+                Key.F1, Key.F2, Key.F3, Key.F4, Key.F5, Key.F6, Key.F7, Key.F8, Key.F9, Key.F10, Key.F11, Key.F12, Key.F13, Key.F14, Key.F15, Key.F16, Key.F17, Key.F18, Key.F19, Key.F20, Key.F21, Key.F22, Key.F23, Key.F24, 
+                Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9,
+                Key.Multiply, Key.Divide, Key.Subtract, Key.Add, Key.Separator
+            };
+            Key selectedKey = Key.None;
+            if (int.TryParse(effectData.Shortcut.ToString(), out int savedWin32Key) && savedWin32Key >= 0)
+            {
+                selectedKey = KeyInterop.KeyFromVirtualKey(savedWin32Key);
+            }
+
+            effectconf_effect_shortcut_combo.ItemsSource = availableKeys;
+            effectconf_effect_shortcut_combo.SelectedItem = selectedKey;
+
             CheckEnableConfigurables();
+        }
+
+        private void Effectconf_effect_custom_name_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.LeftShift)
+            {
+                if (e.Key == Key.D2)
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void CustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
+        {
+            effectconf_effect_custom_name.Text = effectconf_effect_custom_name.Text.Replace("\"", "");
         }
 
         private void CheckEnableConfigurables()
