@@ -26,8 +26,7 @@ static void OnTick()
 
 		availablePropModels.clear();
 
-		std::vector<Entity> props = GetAllProps();
-		for (Entity prop : props)
+		for (Entity prop : GetAllProps())
 		{
 			Hash model = GET_ENTITY_MODEL(prop);
 			Vector3 min, max;
