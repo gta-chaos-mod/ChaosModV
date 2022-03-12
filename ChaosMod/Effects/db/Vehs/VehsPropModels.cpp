@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-std::map<Vehicle, Object> vehPropsMap;
-std::vector<Hash> availablePropModels;
+static std::map<Vehicle, Object> vehPropsMap;
+static std::vector<Hash> availablePropModels;
 
 static Vector3 GetPropOffset(Hash propModel)
 {
