@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-std::map<Ped, Object> pedPropsMap;
-std::vector<Hash> availablePropModels;
+static std::map<Ped, Object> pedPropsMap;
+static std::vector<Hash> availablePropModels;
 
 static Vector3 GetPropOffset(Hash propModel)
 {
