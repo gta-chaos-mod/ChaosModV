@@ -18,14 +18,16 @@ static void OnTick()
 	{
 		Memory::ViewMatrix vm = Memory::ViewMatrix(ped);
 
+		Vector3 uvInv = vm.getUpVector() * -1.f;
+
 		if (!savedVectors.contains(ped))
 		{
-			savedVectors[ped] = vm.getUpVector() * -1.f;
+			savedVectors[ped] = uvInv;
 		}
-		if (angleCos(savedVectors[ped], vm.getUpVector()) < 0.99f) // angle between vectors > ~10 deg
+		if (angleCos(savedVectors[ped], vm.getUpVector()) < 0.99f) // angle between saved and actual vector > ~10 deg
 		{
-			savedVectors[ped] = vm.getUpVector() * -1.f;
-			vm.setUpVector(vm.getUpVector() * -1.f);
+			savedVectors[ped] = uvInv;
+			vm.setUpVector(uvInv);
 			vm.setRightVector(vm.getRightVector() * -1.f);
 		}
 	}
@@ -33,6 +35,17 @@ static void OnTick()
 
 static void OnStop()
 {
+	for (Entity ped : GetAllPeds())
+	{
+		Memory::ViewMatrix vm = Memory::ViewMatrix(ped);
+
+		if (savedVectors.contains(ped) && angleCos(savedVectors[ped], vm.getUpVector()) > 0.99f)
+		{
+			vm.setUpVector(vm.getUpVector() * -1.f);
+			vm.setRightVector(vm.getRightVector() * -1.f);
+		}
+	}
+
 	savedVectors.clear();
 }
 
