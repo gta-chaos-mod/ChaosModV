@@ -7,42 +7,15 @@
 
 namespace Memory
 {
-	inline Vector3 GetVector3(auto offset)
-	{
-		return Vector3(
-			*reinterpret_cast<float*>(offset),
-			*reinterpret_cast<float*>(offset + 0x4),
-			*reinterpret_cast<float*>(offset + 0x8)
-		);
-	}
-
-	inline void SetVector3(auto offset, Vector3 vec)
-	{
-		*reinterpret_cast<float*>(offset) = vec.x;
-		*reinterpret_cast<float*>(offset + 0x4) = vec.y;
-		*reinterpret_cast<float*>(offset + 0x8) = vec.z;
-	}
-
-
 	class ViewMatrix
 	{
-		uintptr_t address;
-
-		Vector3 right;
-		Vector3 forward;
-		Vector3 up;
-		Vector3 pos;
+		float* matrix;
 
 	public:
 
 		ViewMatrix(uintptr_t address)
 		{
-			this->address = address;
-
-			right = GetVector3(address + 0x00);
-			forward = GetVector3(address + 0x10);
-			up = GetVector3(address + 0x20);
-			pos = GetVector3(address + 0x30);
+			matrix = reinterpret_cast<float*>(address);
 		}
 
 		ViewMatrix(Entity entity) : ViewMatrix((uintptr_t)(getScriptHandleBaseAddress(entity) + 0x60)) {}
@@ -50,64 +23,55 @@ namespace Memory
 		static ViewMatrix ViewMatrix2(Vehicle vehicle)
 		{
 			BYTE* offset = getScriptHandleBaseAddress(vehicle);
-			return ViewMatrix(*reinterpret_cast<uintptr_t*>(vehicle + 0x30) + 0x20);
+			return ViewMatrix(*reinterpret_cast<uintptr_t*>((uintptr_t)vehicle + 0x30) + 0x20);
 		}
 
 		void setRightVector(Vector3 vec)
 		{
-			right = vec;
-			SetVector3(address + 0x00, vec);
+			matrix[0] = vec.x;
+			matrix[1] = vec.y;
+			matrix[2] = vec.z;
 		}
 
 		void setForwardVector(Vector3 vec)
 		{
-			forward = vec;
-			SetVector3(address + 0x10, vec);
+			matrix[4] = vec.x;
+			matrix[5] = vec.y;
+			matrix[6] = vec.z;
 		}
 
 		void setUpVector(Vector3 vec)
 		{
-			up = vec;
-			SetVector3(address + 0x20, vec);
+			matrix[8] = vec.x;
+			matrix[9] = vec.y;
+			matrix[10] = vec.z;
 		}
 
 		void setPosVector(Vector3 vec)
 		{
-			pos = vec;
-			SetVector3(address + 0x30, vec);
+			matrix[12] = vec.x;
+			matrix[13] = vec.y;
+			matrix[14] = vec.z;
 		}
 
 		Vector3 getRightVector()
 		{
-			right = GetVector3(address + 0x00);
-			return right;
+			return Vector3(matrix[0], matrix[1], matrix[2]);
 		}
 
 		Vector3 getForwardVector()
 		{
-			forward = GetVector3(address + 0x10);
-			return forward; 
+			return Vector3(matrix[4], matrix[5], matrix[6]);
 		}
 
 		Vector3 getUpVector()
 		{
-			up = GetVector3(address + 0x20);
-			return up;
+			return Vector3(matrix[8], matrix[9], matrix[10]);
 		}
 
 		Vector3 getPosVector()
 		{
-			pos = GetVector3(address + 0x30);
-			return pos;
-		}
-
-		ViewMatrix& operator*=(float mult)
-		{
-			setForwardVector(forward * mult);
-			setRightVector(right * mult);
-			setUpVector(up * mult);
-
-			return *this;
+			return Vector3(matrix[12], matrix[13], matrix[14]);
 		}
 	};
 }

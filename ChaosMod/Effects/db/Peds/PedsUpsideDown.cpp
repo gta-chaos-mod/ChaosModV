@@ -7,9 +7,9 @@
 
 static std::map<Ped, Vector3> savedVectors;
 
-static float ScalarProduct(Vector3 a, Vector3 b)
+static float angleCos(Vector3 a, Vector3 b)
 {
-	return a.x * b.x + a.y * b.y + a.z * b.z;
+	return (a.x * b.x + a.y * b.y + a.z * b.z) / (a.Length() * b.Length());
 }
 
 static void OnTick()
@@ -20,11 +20,11 @@ static void OnTick()
 
 		if (!savedVectors.contains(ped))
 		{
-			savedVectors[ped] = vm.getUpVector();
+			savedVectors[ped] = vm.getUpVector() * -1.f;
 		}
-		if (ScalarProduct(savedVectors[ped], vm.getUpVector()) > 0) // angle between vectors < 90 deg
+		if (angleCos(savedVectors[ped], vm.getUpVector()) < 0.99f) // angle between vectors > ~10 deg
 		{
-			savedVectors[ped] = vm.getUpVector();
+			savedVectors[ped] = vm.getUpVector() * -1.f;
 			vm.setUpVector(vm.getUpVector() * -1.f);
 			vm.setRightVector(vm.getRightVector() * -1.f);
 		}
