@@ -28,6 +28,7 @@ static void OnStop()
 		uint64_t Water = WaterPointer + (i * 0x1C);
 		*(float*)(Water + 0x14) = WaterHeights.at(i); // Restore Water
 	}
+	WaterHeights.clear();
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_WATER, OnStart, OnStop, nullptr, EffectInfo
