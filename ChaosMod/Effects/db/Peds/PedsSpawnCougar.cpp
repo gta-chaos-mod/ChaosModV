@@ -7,8 +7,6 @@
 Entity cougar;
 Player plr;
 
-Vector3 spwn_offset = { 0,1,-6 };
-
 static void OnStart()
 {
 	static constexpr Hash modelHash = 307287994;
@@ -17,8 +15,6 @@ static void OnStart()
 	Ped plrped = PLAYER_PED_ID();
 	//Get spawn location for the cougar
 	Vector3 plr_pos = GET_ENTITY_COORDS(plrped, 1);
-	Vector3 spwn_pos = GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(plrped, spwn_offset.x, spwn_offset.y, spwn_offset.z);
-	float spwn_head = GET_ENTITY_HEADING(plrped);
 	//spawn the cougar
 	cougar = CreatePoolPed(4, modelHash, plr_pos.x, plr_pos.y-0.5, plr_pos.z-6, 0.f);
 	//Set the relationship between the cougar and the player (aww, they hate each other)
