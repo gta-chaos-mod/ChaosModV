@@ -61,10 +61,10 @@ static void OnTick()
 		OffsetControl(eControl::ControlWeaponWheelUpDown, verticalOffset);
 	
 		OffsetControl(eControl::ControlScriptLeftAxisX, horizontalOffset);
-		OffsetControl(eControl::ControlScriptLeftAxisX, verticalOffset);
+		OffsetControl(eControl::ControlScriptLeftAxisY, verticalOffset);
 	
 		OffsetControl(eControl::ControlScriptRightAxisX, horizontalOffset);
-		OffsetControl(eControl::ControlScriptRightAxisX, verticalOffset);
+		OffsetControl(eControl::ControlScriptRightAxisY, verticalOffset);
 	}
 
 	// Hopefully this isn't going too far :]
