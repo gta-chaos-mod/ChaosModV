@@ -53,7 +53,6 @@ static void OnTick()
 	else if (GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), true) != veh)
 	{
 		SET_VEHICLE_SIREN(veh, 0);
-		TASK_LEAVE_ANY_VEHICLE(policePed, 0, 0);
 		SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
 		SET_ENTITY_AS_NO_LONGER_NEEDED(&policePed);
 	}
