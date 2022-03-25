@@ -344,6 +344,7 @@
     <ClCompile Include="Components\TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
+    <ClCompile Include="VehicleFleetwood.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
