@@ -263,6 +263,79 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 	}
 );
 
+static Vector3 GetFakeWaypointTpInfo()
+{
+	Vector3 coords;
+	bool found = false, playerBlip = false;
+	if (IS_WAYPOINT_ACTIVE())
+	{
+		coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+		found = true;
+		playerBlip = true;
+	}
+	else
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+			if (DOES_BLIP_EXIST(blip))
+			{
+				coords = GET_BLIP_COORDS(blip);
+				found = true;
+
+				break;
+			}
+		}
+	}
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	if (found)
+	{
+		float z;
+		if (!playerBlip)
+		{
+			z = coords.z;
+		}
+		else
+		{
+			float groundZ;
+			bool useGroundZ;
+			for (int i = 0; i < 100; i++)
+			{
+				float testZ = (i * 10.f) - 100.f;
+
+				TeleportPlayer(coords.x, coords.y, testZ);
+				if (i % 5 == 0)
+				{
+					WAIT(0);
+				}
+
+				useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
+				if (useGroundZ)
+				{
+					break;
+				}
+			}
+
+			if (useGroundZ)
+			{
+				z = groundZ;
+			}
+			else
+			{
+				Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+				z = playerPos.z;
+			}
+		}
+		
+		return { coords.x, coords.y, z };
+	}
+
+	Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, 0);
+}
+
 static struct FakeTeleportInfo
 {
 	EEffectType type;
@@ -276,7 +349,8 @@ static const std::vector<FakeTeleportInfo> tpLocations =
 	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
 	{EFFECT_TP_FORTZANCUDO, {-2360.3f, 3244.83f, 92.9f}, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
 	{EFFECT_TP_MOUNTCHILLIAD, {501.77f, 5604.85f, 797.91f}, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
-	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
+	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}}, // Heaven
+	{EFFECT_TP_WAYPOINT, GetFakeWaypointTpInfo()} // Waypoint
 };
 
 static void OnStartFakeTp()
