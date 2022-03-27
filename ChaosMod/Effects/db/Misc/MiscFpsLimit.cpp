@@ -57,7 +57,8 @@ static RegisterEffect registerEffect(EFFECT_MISC_FPS_LIMIT, nullptr, nullptr, On
 		.Name = "Console Experience",
 		.Id = "misc_fps_limit",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.IncompatibleWith = {EFFECT_MISC_EnE}
 	}
 );
 
@@ -66,6 +67,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_EnE, OnStartEnE, OnStopEnE, OnT
 		.Name = "\"Expanded & Enhanced\"",
 		.Id = "misc_e_and_e",
 		.IsTimed = true,
-		.IsShortDuration = false
+		.IsShortDuration = false,
+		.IncompatibleWith = {EFFECT_MISC_FPS_LIMIT}
 	}
 );
