@@ -16,7 +16,7 @@ static void OnTickFpsLimit()
 
 Cam camera; // for E&E effect
 
-static void OnTickEnE() // just copied the on tick created by Last0xygen, thanks
+static void OnTickEnE() // just copied the on tick created by Last0xygen and added some code for the motion blur cam
 {
 	#pragma region Lag Stuff
 	static const int lagTimeDelay = 1000 / 60; //cap at 60
