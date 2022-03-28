@@ -47,10 +47,9 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS, OnStart, EffectInfo
+static RegisterEffect registerEffect(EFFECT_SPAWN_DAVE, OnStart, EffectInfo
 	{
 		.Name = "Spawn Disingenuous Dave",
 		.Id = "peds_spawn_dave",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemy,
 	}
 );
