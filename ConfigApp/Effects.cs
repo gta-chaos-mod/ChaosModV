@@ -657,7 +657,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_CLONE_ON_DEATH, new EffectInfo("Resurrection Day", EffectCategory.MISC, "misc_clone_on_death", true, true)},
             {EffectType.EFFECT_SIDEWAYS_GRAVITY, new EffectInfo("Sideways Gravity", EffectCategory.MISC, "misc_sideways_gravity", true, true)},
             {EffectType.EFFECT_MISC_JUMPY_PROPS, new EffectInfo("Jumpy Props", EffectCategory.MISC, "misc_jumpy_props", true)},
-            {EffectType.EFFECT_PLAYER_DANCE, new EffectInfo("Dance Break", EffectCategory.PLAYER, "player_dance")},
+            {EffectType.EFFECT_PLAYER_DANCE, new EffectInfo("Dance Break", EffectCategory.PLAYER, "player_dance", true, true)},
         };
     }
 }
