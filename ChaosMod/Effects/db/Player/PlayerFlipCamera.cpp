@@ -1,5 +1,5 @@
 /*
-	Effect by DrUnderscore (James), modified by Last0xygen
+	Effect by DrUnderscore (James), modified by Last0xygen, fixed by OnlyRealNubs
 */
 
 #include <stdafx.h>
