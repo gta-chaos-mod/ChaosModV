@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 #include "../vendor/scripthookv/inc/enums.h"
+#include "Util/Window.h"
 
 static float horizontalOffset;
 static float verticalOffset;
@@ -12,15 +13,11 @@ static int tickCounter;
 
 static void OnStart()
 {
-	// Multiply offset by -1, 0, or 1 to either reverse the direction, or disable the offset of that axis entirely
-	verticalOffset = g_Random.GetRandomFloat(0.35f, 0.6f) * g_Random.GetRandomInt(-1, 1);
+	verticalOffset = g_Random.GetRandomFloat(0.2f, 0.8f) * (g_Random.GetRandomInt(0, 1) ? 1 : -1);
 
-	// A not-very-good fix for no axis getting an offset
-	int horizontalMult = g_Random.GetRandomInt(-1, 1);
-	if (verticalOffset == 0.f && horizontalMult == 0)
-		horizontalMult = 1;
-
-	horizontalOffset = g_Random.GetRandomFloat(0.35f, 0.6f) * horizontalMult;
+	// If both verticalOffset and horizontalOffset are <0.25, the controls won't get offset at all. horizonalOffset gets a higher lower bound in order to prevent the case where both are <0.25, making the effect do almost nothing
+	float horizontalMin = abs(verticalOffset) <= 0.25f ? 0.3f : 0.2f;
+	horizontalOffset = g_Random.GetRandomFloat(horizontalMin, 0.8f) * (g_Random.GetRandomInt(0, 1) ? 1 : -1);
 
 	tickCounter = 0;
 }
@@ -38,41 +35,49 @@ static void OnTick()
 	{
 		OffsetControl(eControl::ControlLookLeftRight, horizontalOffset);
 		OffsetControl(eControl::ControlLookUpDown, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlCursorX, horizontalOffset);
 		OffsetControl(eControl::ControlCursorY, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlFrontendAxisX, horizontalOffset);
 		OffsetControl(eControl::ControlFrontendAxisY, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlFrontendRightAxisX, horizontalOffset);
 		OffsetControl(eControl::ControlFrontendRightAxisY, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlFrontendX, horizontalOffset);
 		OffsetControl(eControl::ControlFrontendY, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlRadioWheelLeftRight, horizontalOffset);
 		OffsetControl(eControl::ControlRadioWheelUpDown, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlVehicleGunLeftRight, horizontalOffset);
 		OffsetControl(eControl::ControlVehicleGunUpDown, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlWeaponWheelLeftRight, horizontalOffset);
 		OffsetControl(eControl::ControlWeaponWheelUpDown, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlScriptLeftAxisX, horizontalOffset);
 		OffsetControl(eControl::ControlScriptLeftAxisY, verticalOffset);
-	
+
 		OffsetControl(eControl::ControlScriptRightAxisX, horizontalOffset);
 		OffsetControl(eControl::ControlScriptRightAxisY, verticalOffset);
 	}
 
-	// Hopefully this isn't going too far :]
-	CURSORINFO info{};
-	info.cbSize = sizeof(CURSORINFO);
-	if (GetCursorInfo(&info))
+	HWND gameWindow = Util::GetGameWindowHandle();
+	if (IsWindowEnabled(gameWindow) && IsWindowVisible(gameWindow))
 	{
-		SetCursorPos(info.ptScreenPos.x + horizontalOffset * 5, info.ptScreenPos.y + verticalOffset * 5);
+		CURSORINFO info{};
+		info.cbSize = sizeof(CURSORINFO);
+		if (GetCursorInfo(&info))
+		{
+			// If mouse cursor is hovering over the game window, not the best solution, but this is the best I could get working
+			if (WindowFromPoint(info.ptScreenPos) == gameWindow)
+			{
+				// Hopefully this isn't going too far :]
+				SetCursorPos(info.ptScreenPos.x + horizontalOffset * 5, info.ptScreenPos.y + verticalOffset * 5);
+			}
+		}
 	}
 }
 
