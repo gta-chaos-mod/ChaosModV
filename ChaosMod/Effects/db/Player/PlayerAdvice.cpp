@@ -42,7 +42,7 @@ static void OnStart()
 	{
 		CLEAR_HELP(1);
 	}
-	std::string messageToDisplay = messages.at(g_Random.GetRandomInt(0, messages.size()));
+	std::string messageToDisplay = messages.at(g_Random.GetRandomInt(0, messages.size() - 1));
 	HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");
 	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(messageToDisplay.c_str());
 	HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 1, -1); // When shape is set to a negative number, the help message will disapear by it's self after 7.5 seconds.
