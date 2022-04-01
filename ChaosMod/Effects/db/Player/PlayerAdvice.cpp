@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-std::vector<std::string> facts = {
+std::vector<std::string> messages = {
 	//For a list of things you can put here: https://pastebin.com/nqNYWMSB
 	"~INPUT_ATTACK~ Click To Shoot",
 	"If You Don't Take Damage You Won't Die",
@@ -35,23 +35,20 @@ std::vector<std::string> facts = {
 	".",
 };
 
-
-
-static void _GetMessage(int rng) //Without underscore, it's defined somewhere idek. I think it might be Microsoft
-{
-	msg = facts.at(rng);
-}
-
 static void OnStart()
 {
-	std::string msg = facst.at(g_Random.GetRandomInt(0, facts.size()));
+	if (IS_HELP_MESSAGE_BEING_DISPLAYED())
+	{
+		CLEAR_HELP(1);
+	}
+	std::string messageToDisplay = messages.at(g_Random.GetRandomInt(0, messages.size()));
 	DWORD lastTick = GetTickCount64();
-	DWORD time = 12000;
-	while (GetTickCount64() - lastTick < time)
+	DWORD timeMS = 8000; //How long in ms should the help text be displayed
+	while (GetTickCount64() - lastTick < timeMS)
 	{
 		WAIT(0);
 		HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");
-		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(msg.c_str());
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(messageToDisplay.c_str());
 		HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 1, -1);
 	}
 }
