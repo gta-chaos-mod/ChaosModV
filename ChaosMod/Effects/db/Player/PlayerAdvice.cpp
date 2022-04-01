@@ -35,10 +35,7 @@ std::vector<std::string> facts = {
 	".",
 };
 
-std::string msg;
-int scaleform = 0;
 
-int debugIndex = 0;
 
 static void _GetMessage(int rng) //Without underscore, it's defined somewhere idek. I think it might be Microsoft
 {
@@ -47,7 +44,7 @@ static void _GetMessage(int rng) //Without underscore, it's defined somewhere id
 
 static void OnStart()
 {
-	_GetMessage(g_Random.GetRandomInt(0, facts.size()));
+	std::string msg = facst.at(g_Random.GetRandomInt(0, facts.size()));
 	DWORD lastTick = GetTickCount64();
 	DWORD time = 12000;
 	while (GetTickCount64() - lastTick < time)
