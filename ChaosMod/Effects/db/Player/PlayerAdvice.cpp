@@ -33,6 +33,7 @@ std::vector<std::string> messages = {
 	"Welcome To The New Story Mode DLC!~n~~n~Oh Wait.. Never Mind.",
 	"GTA 6 Confirmed!?!?!?!111??!11",
 	".",
+	"Your fingers have finger tips. But your toes don't have toe tips. So how come you tip toe, but not tip finger?"
 };
 
 static void OnStart()
@@ -42,15 +43,9 @@ static void OnStart()
 		CLEAR_HELP(1);
 	}
 	std::string messageToDisplay = messages.at(g_Random.GetRandomInt(0, messages.size()));
-	DWORD lastTick = GetTickCount64();
-	DWORD timeMS = 8000; //How long in ms should the help text be displayed
-	while (GetTickCount64() - lastTick < timeMS)
-	{
-		WAIT(0);
-		HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");
-		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(messageToDisplay.c_str());
-		HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 1, -1);
-	}
+	HUD::BEGIN_TEXT_COMMAND_DISPLAY_HELP("STRING");
+	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(messageToDisplay.c_str());
+	HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 1, -1); // When shape is set to a negative number, the help message will disapear by it's self after 7.5 seconds.
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_FACTS, OnStart, nullptr, nullptr, EffectInfo
