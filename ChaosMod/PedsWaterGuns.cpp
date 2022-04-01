@@ -5,35 +5,22 @@
 #include <stdafx.h>
 
 const char* particleDict = "core";
-const char* particleName = "exp_hydrant";
+
 
 
 static void OnTick()
 {
-
+	static const char* particleName = "water_cannon_jet";
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_PED_SHOOTING(ped))
 		{
-			Vector3 spawnPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0, 1, 1);
-			Vector3 spawnRot = GET_ENTITY_ROTATION(ped, 2);
-
 			USE_PARTICLE_FX_ASSET(particleDict);
-
-			int fx = START_PARTICLE_FX_LOOPED_AT_COORD(particleName, spawnPos.x, spawnPos.y, spawnPos.z, -90.f, spawnRot.y, spawnRot.z, 0.9f, 0, 0, 0, 0);
-			
-			Vector3 damageOrigin = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, 0, 6, 0);
-
-			Ped damagePeds[3];
-			GET_PED_NEARBY_PEDS(ped, damagePeds, 0);
-
-			for (Ped _ped : damagePeds)
-			{
-				SET_PED_TO_RAGDOLL(_ped, 900, 900, 1, 1, 1, 0);
-			}
-
-			WAIT(200);
-			STOP_PARTICLE_FX_LOOPED(fx, 0);
+			int wep = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+			SET_PARTICLE_FX_SHOOTOUT_BOAT(1);
+			int ptfx = START_PARTICLE_FX_LOOPED_ON_ENTITY(particleName, wep, 0.f, 0, -0.15f, 0, 0, -90.f, 1, 0, 0, 0);
+			WAIT(300);
+			STOP_PARTICLE_FX_LOOPED(ptfx, 0);
 		}
 	}
 }
@@ -47,7 +34,12 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_WATER_GUNS, OnStart, nullptr, OnTick, EffectInfo
+static void OnStop()
+{
+	REMOVE_NAMED_PTFX_ASSET(particleDict);
+}
+
+static RegisterEffect registerEffect(EFFECT_PEDS_WATER_GUNS, OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Water Guns",
 		.Id = "peds_waterguns",
