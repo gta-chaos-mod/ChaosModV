@@ -14,8 +14,9 @@ static void OnStart()
 	}
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 pos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerPed, 0, 3, 0);
-	Vector3 rot = { 0, 0, -GET_ENTITY_HEADING(playerPed) };
+	float head = -GET_ENTITY_HEADING(playerPed);
 	int obj = CREATE_OBJECT(slotModel, pos.x, pos.y, pos.z, 1, 1, 1);
+	SET_ENTITY_HEADING(obj, head);
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_SPAWN_SLOT, OnStart, nullptr, nullptr, EffectInfo
