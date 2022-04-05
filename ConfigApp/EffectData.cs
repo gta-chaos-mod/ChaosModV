@@ -1,4 +1,6 @@
 ﻿using static ConfigApp.Effects;
+using System;
+using System.Collections.Generic;
 
 namespace ConfigApp
 {
@@ -11,8 +13,20 @@ namespace ConfigApp
         public bool ExcludedFromVoting;
         public string CustomName;
         public int Shortcut;
+        public EffectType[] IncompatibleWith = new EffectType[] {};
 
-        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName, int shortcut)
+        public string GetIncompatibilityString()
+        {
+            List<string> list = new List<string>();
+            foreach (EffectType item in IncompatibleWith)
+            {
+                list.Add(Enum.GetName(typeof(EffectType), item));
+            }
+            string[] arr = list.ToArray();
+            return String.Join(",", arr);
+        }
+
+        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName, int shortcut, EffectType[] incompatibleWith)
         {
             TimedType = timedType;
             CustomTime = customTime;
@@ -21,6 +35,7 @@ namespace ConfigApp
             ExcludedFromVoting = excludedFromVoting;
             CustomName = customName;
             Shortcut = shortcut;
+            IncompatibleWith = incompatibleWith;
         }
     }
 }

@@ -108,7 +108,7 @@ namespace ConfigApp
             // Create EffectData in case effect wasn't saved yet
             if (!m_effectDataMap.TryGetValue(effectType, out EffectData effectData))
             {
-                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null, 0);
+                effectData = new EffectData(EffectsMap[effectType].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null, 0, null );
 
                 m_effectDataMap.Add(effectType, effectData);
             }
@@ -249,6 +249,7 @@ namespace ConfigApp
                 bool effectExcludedFromVoting = false;
                 string effectCustomName = null;
                 int effectShortcut = 0;
+                List<EffectType> effectIncompatibleWith = new List<EffectType>();       
 
                 // Compatibility checks, previous versions had less options
                 if (values.Length >= 4)
@@ -275,6 +276,25 @@ namespace ConfigApp
                                 if (values.Length >= 8)
                                 {
                                     int.TryParse(values[7], out effectShortcut);
+
+                                    if (values.Length >= 9)
+                                    {
+                                        string[] tmp_s;
+                                        values[8] = values[8].Replace("\"", "");
+                                        tmp_s = values[8].Split(',');
+                                        for (int i = 0; i < tmp_s.Length; i++)
+                                        {
+                                            EffectType tmp_e;
+                                                
+                                            if (Enum.TryParse(tmp_s[i], out tmp_e))
+                                            {
+                                                if (Enum.IsDefined(typeof(EffectType), tmp_e))
+                                                {
+                                                    effectIncompatibleWith.Add(tmp_e);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -286,7 +306,7 @@ namespace ConfigApp
                     int.TryParse(values[0], out int enabled);
                     m_treeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
 
-                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName, effectShortcut));
+                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName, effectShortcut, effectIncompatibleWith.ToArray()));
                 }
             }
         }
@@ -300,8 +320,10 @@ namespace ConfigApp
                 m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
-                    + $",{(effectData.Shortcut)}");
+                    + $",{(effectData.Shortcut)}"
+                    + $",\"{effectData.GetIncompatibilityString()}\"");
             }
+            
 
             m_effectsFile.WriteFile();
         }
@@ -497,6 +519,7 @@ namespace ConfigApp
                     effectData.ExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
                     effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
                     Key shortcut = (Key)effectConfig.effectconf_effect_shortcut_combo.SelectedItem;
+                    effectData.IncompatibleWith = effectConfig.effectCompatibility;
                     effectData.Shortcut = KeyInterop.VirtualKeyFromKey(shortcut);
                 }
             }
