@@ -147,14 +147,12 @@ namespace ConfigApp
             {
                 foreach (KeyValuePair<EffectType, ListData> item in effects)
                 {
-                    Console.WriteLine("comp 0:" + item.Key + " : " + item.Value.inList);
                     if (item.Value.inList == true)
                     {
                         effectsCompatibilityList.Add(item.Key);
                     }
                 }
                 effectsCompatibility = effectsCompatibilityList.ToArray();
-                Console.WriteLine("comp 1:"+effectsCompatibility + " : " + effectsCompatibility.Length);
                 m_IsSaved = true;
                 Close();
             };
