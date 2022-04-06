@@ -284,15 +284,23 @@ namespace ConfigApp
                                         tmp_s = values[8].Split(',');
                                         for (int i = 0; i < tmp_s.Length; i++)
                                         {
-                                            EffectType tmp_e;
-                                                
-                                            if (Enum.TryParse(tmp_s[i], out tmp_e))
+                                            EffectType tmp_e = EffectType._EFFECT_ENUM_MAX;
+                                            foreach (EffectType item in (EffectType[])Enum.GetValues(typeof(EffectType)))
                                             {
-                                                if (Enum.IsDefined(typeof(EffectType), tmp_e))
+                                                if (item == EffectType._EFFECT_ENUM_MAX)
                                                 {
-                                                    effectIncompatibleWith.Add(tmp_e);
+                                                    continue;
+                                                }
+                                                EffectInfo effectInf = EffectsMap[item];
+                                                if (effectInf.Id == tmp_s[i])
+                                                {
+                                                    tmp_e = item;
                                                 }
                                             }
+                                            if (Enum.IsDefined(typeof(EffectType), tmp_e))
+                                            {
+                                                effectIncompatibleWith.Add(tmp_e);
+                                            }                             
                                         }
                                     }
                                 }

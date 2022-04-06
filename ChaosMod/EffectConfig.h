@@ -2,6 +2,8 @@
 
 #include "Util/OptionsFile.h"
 
+#define stringifyVarName(x) #x
+
 enum EEffectType : int;
 struct EffectData;
 
@@ -39,8 +41,9 @@ namespace EffectConfig
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for name-override", Shortcut
 			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0};
-			// HACK: Store EffectCustomName seperately
-			std::string szValueEffectName;
+			// HACK: Store EffectCustomName & EffectCustomIncompatibility seperately
+			std::vector<std::string> strValues{ NULL, NULL }
+			
 
 			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
 
@@ -62,6 +65,31 @@ namespace EffectConfig
 						{
 							szValueEffectName = szSplit;
 						}
+					}
+					else if (j == 8)
+					{
+						std::string szSplit = szValue.substr(0, ullSplitIndex);
+						if (szSplit.length() >= 2 && szSplit[0] == '\"' && szSplit[szSplit.length() - 1] == '\"') {
+							szSplit = szSplit.substr(1, szSplit.size() - 2);
+						}
+						std::vector<std::string> strings;
+						std::istringstream f(szSplit);
+						std::string s;
+						while (getline(f, s, ',')) {
+							cout << s << endl;
+							strings.push_back(s);
+						}
+						
+						std::vector<EEffectType> m;
+						for (EEffectType e = EEffectType::Begin; e != EEffectType::End; ++e)
+						{
+							if (stringifyVarName(e))
+							{
+
+							}
+						}
+
+
 					}
 					else
 					{

@@ -20,7 +20,7 @@ namespace ConfigApp
             List<string> list = new List<string>();
             foreach (EffectType item in IncompatibleWith)
             {
-                list.Add(Enum.GetName(typeof(EffectType), item));
+                list.Add(EffectsMap[item].Id);
             }
             string[] arr = list.ToArray();
             return String.Join(",", arr);
