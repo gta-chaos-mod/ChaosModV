@@ -297,6 +297,10 @@ namespace ConfigApp
                                                     tmp_e = item;
                                                 }
                                             }
+                                            if (tmp_e == EffectType._EFFECT_ENUM_MAX)
+                                            {
+                                                continue;
+                                            }
                                             if (Enum.IsDefined(typeof(EffectType), tmp_e))
                                             {
                                                 effectIncompatibleWith.Add(tmp_e);

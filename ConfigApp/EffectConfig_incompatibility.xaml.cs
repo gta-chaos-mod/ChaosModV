@@ -41,7 +41,7 @@ namespace ConfigApp
             effects.Clear();
             foreach (EffectType item in (EffectType[])Enum.GetValues(typeof(EffectType)))
             {
-                if (item == EffectType._EFFECT_ENUM_MAX)
+                if (item == EffectType._EFFECT_ENUM_MAX || EffectsMap[item].Id == effectInfo.Id)
                 {
                     continue;
                 }

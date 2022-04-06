@@ -1,6 +1,8 @@
 ﻿using static ConfigApp.Effects;
 using System;
 using System.Collections.Generic;
+using System.Windows;
+
 
 namespace ConfigApp
 {
@@ -20,6 +22,11 @@ namespace ConfigApp
             List<string> list = new List<string>();
             foreach (EffectType item in IncompatibleWith)
             {
+                if (!EffectsMap.ContainsKey(item))
+                {
+                    MessageBox.Show($"One of the specified effects name: {item}. Was not found in the dictionary. It was not added to the incompatibility list.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    continue;
+                }
                 list.Add(EffectsMap[item].Id);
             }
             string[] arr = list.ToArray();
