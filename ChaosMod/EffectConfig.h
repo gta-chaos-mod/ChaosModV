@@ -41,8 +41,9 @@ namespace EffectConfig
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for name-override", Shortcut
 			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0};
-			// HACK: Store EffectCustomName & EffectCustomIncompatibility seperately
-			std::vector<std::string> strValues{ NULL, NULL }
+			// HACK: Store EffectCustomName 
+			std::string szValueEffectName;
+			std::vector<std::string> szValuesIncompatibility;
 			
 
 			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
@@ -72,24 +73,12 @@ namespace EffectConfig
 						if (szSplit.length() >= 2 && szSplit[0] == '\"' && szSplit[szSplit.length() - 1] == '\"') {
 							szSplit = szSplit.substr(1, szSplit.size() - 2);
 						}
-						std::vector<std::string> strings;
+
 						std::istringstream f(szSplit);
 						std::string s;
 						while (getline(f, s, ',')) {
-							cout << s << endl;
-							strings.push_back(s);
+							szValuesIncompatibility.push_back(s);
 						}
-						
-						std::vector<EEffectType> m;
-						for (EEffectType e = EEffectType::Begin; e != EEffectType::End; ++e)
-						{
-							if (stringifyVarName(e))
-							{
-
-							}
-						}
-
-
 					}
 					else
 					{
@@ -153,6 +142,11 @@ namespace EffectConfig
 			for (EEffectType effectType : effectInfo.IncompatibleWith)
 			{
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
+			}
+
+			for (auto &id : szValuesIncompatibility)
+			{
+				effectData.IncompatibleIds.push_back(id);
 			}
 
 			effectData.EEffectGroupType = effectInfo.EEffectGroupType;
