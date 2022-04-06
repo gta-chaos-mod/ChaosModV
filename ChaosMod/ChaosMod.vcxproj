@@ -112,6 +112,7 @@
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscTranslate.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWeirdPitch.cpp" />
     <ClCompile Include="Effects\db\Peds\Peds2xAnimationSpeed.cpp" />
@@ -329,6 +330,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\LabelHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
@@ -371,6 +373,7 @@
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\LabelHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />

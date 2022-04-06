@@ -3,3 +3,7 @@
 	url = https://github.com/TsudaKageyu/minhook.git
 	branch = master
         ignore = dirty
+[submodule "vendor/klib"]
+	path = vendor/klib
+	url = https://github.com/attractivechaos/klib
+	ignore = dirty
