@@ -36,6 +36,12 @@ namespace ConfigApp
             public bool inList;
         }
 
+        private void SortLists()
+        {
+            effectconf_custom_incompatibility_add_list.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+            effectconf_custom_incompatibility_remove_list.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+        }
+
         private void InitList(EffectData effectData, EffectInfo effectInfo)
         {
             effects.Clear();
@@ -56,6 +62,7 @@ namespace ConfigApp
                 }
                 effects.Add(item, listData);
             }
+            
             foreach (KeyValuePair<EffectType, ListData> item in effects)
             {
                 string name = item.Value.name;
@@ -69,6 +76,7 @@ namespace ConfigApp
                     effectconf_custom_incompatibility_add_list.Items.Add(name);
                 }
             }
+            SortLists();
         }
 
         public EffectConfig_incompatibility(EffectData effectData, EffectInfo effectInfo)
@@ -106,6 +114,7 @@ namespace ConfigApp
                 effects[selectedType] = selectedData;
                 effectconf_custom_incompatibility_remove_list.Items.Remove(selectedName);
                 effectconf_custom_incompatibility_add_list.Items.Add(selectedName);
+                SortLists();
             };
 
             effectconf_custom_incompatibility_add_button.Click += (object sender, RoutedEventArgs e) =>
@@ -127,6 +136,7 @@ namespace ConfigApp
                 effects[selectedType] = selectedData;
                 effectconf_custom_incompatibility_add_list.Items.Remove(selectedName);
                 effectconf_custom_incompatibility_remove_list.Items.Add(selectedName);
+                SortLists();
             };
 
             reset_button.Click += (object sender, RoutedEventArgs e) =>
@@ -140,7 +150,7 @@ namespace ConfigApp
                 catch (Exception)
                 {
                 }
-                InitList(effectData, effectInfo);
+                InitList(effectData, effectInfo);          
             };
 
             save_button.Click += (object sender, RoutedEventArgs e) =>
