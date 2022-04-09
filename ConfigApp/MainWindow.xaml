@@ -275,6 +275,10 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label x:Name="twitch_user_predictive_options_enable_label" Content="Enable Predictive Voting Options" Grid.Row="2" Grid.Column="2"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" ToolTip="Predictive voting options will select voting options based on the currently active effects. An effect will not appear as an option if any incompatible effects are expected to be active when the current voting period ends." />
+                            <CheckBox x:Name="twitch_user_predictive_options_enable" Width="60" Height="20" Grid.Row="2" Grid.Column="4"
+                                HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,10" />
                         </Grid>
 
                         <Grid Grid.Row="2">

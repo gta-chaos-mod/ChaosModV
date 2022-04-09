@@ -30,6 +30,8 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 
 	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
+	m_bEnableVotingOptionsPrediction = g_OptionsManager.GetTwitchValue<bool>("TwitchEnablePredictiveVotingOptions", OPTION_DEFAULT_TWITCH_VOTING_OPTIONS_PREDICTION);
+
 	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = false;
 
 	STARTUPINFO startupInfo = {};
@@ -263,35 +265,63 @@ void TwitchVoting::Run()
 				fTotalWeight += GetEffectWeight(effectData);
 			}
 
-			float fChosen = g_Random.GetRandomFloat(0.f, fTotalWeight);
-
-			fTotalWeight = 0.f;
-
 			std::unique_ptr<ChoosableEffect> pTargetChoice;
 
-			for (auto& pair : dictChoosableEffects)
+			int numAttempts = 0;
+			int numAttemptsBeforeDisablingCheck = dictChoosableEffects.size() / 10;
+
+			bool doEffectActivationCheck = m_bEnableVotingOptionsPrediction;
+
+			bool foundValidEffect = false;
+			do
 			{
-				auto& [effectIdentifier, effectData] = pair;
+				float fChosen = g_Random.GetRandomFloat(0.f, fTotalWeight);
 
-				fTotalWeight += GetEffectWeight(effectData);
+				fTotalWeight = 0.f;
 
-				if (fChosen <= fTotalWeight)
+				for (auto& pair : dictChoosableEffects)
 				{
-					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
-					effectData.Weight = 0;
+					auto& [effectIdentifier, effectData] = pair;
 
-					pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName
-							? effectData.CustomName
-							: effectData.Name,
-						!m_bAlternatedVotingRound
-							? idx + 1
-							: m_bEnableTwitchRandomEffectVoteable
+					fTotalWeight += GetEffectWeight(effectData);
+
+					if (fChosen <= fTotalWeight)
+					{
+						if (!doEffectActivationCheck || g_pEffectDispatcher->CanActivateEffect(effectData, g_pEffectDispatcher->GetRemainingTimerTime()))
+						{
+							pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName
+								? effectData.CustomName
+								: effectData.Name,
+								!m_bAlternatedVotingRound
+								? idx + 1
+								: m_bEnableTwitchRandomEffectVoteable
 								? idx + 5
 								: idx + 4
-					);
-					break;
+								);
+
+							foundValidEffect = true;
+						}
+						else if (numAttempts > numAttemptsBeforeDisablingCheck)
+						{
+							// After a number of attempts, stop using the check, to hopefully find a valid effect
+							doEffectActivationCheck = false;
+						}
+
+						// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
+						effectData.Weight = 0;
+
+						if (!foundValidEffect)
+						{
+							// If this effect isn't valid, don't bother checking this effect in the future in case we need to loop through the options again
+							dictChoosableEffects.erase(effectIdentifier);
+						}
+
+						break;
+					}
 				}
-			}
+
+				numAttempts++;
+			} while (!foundValidEffect && !dictChoosableEffects.empty());
 
 			EffectIdentifier effectIdentifier = pTargetChoice->m_EffectIdentifier;
 

@@ -63,6 +63,7 @@ private:
 	bool m_bEnableTwitchChanceSystem;
 	bool m_bEnableVotingChanceSystemRetainChance;
 	bool m_bEnableTwitchRandomEffectVoteable;
+	bool m_bEnableVotingOptionsPrediction;
 	
 	std::array<BYTE, 3> m_rgTextColor;
 

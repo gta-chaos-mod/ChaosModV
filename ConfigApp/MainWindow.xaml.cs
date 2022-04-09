@@ -198,6 +198,7 @@ namespace ConfigApp
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
             twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+            twitch_user_predictive_options_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchEnablePredictiveVotingOptions", true);
         }
 
         private void WriteTwitchFile()
@@ -211,6 +212,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchEnablePredictiveVotingOptions", twitch_user_predictive_options_enable.IsChecked.Value);
 
             m_twitchFile.WriteFile();
         }
@@ -399,6 +401,8 @@ namespace ConfigApp
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable_label.IsEnabled = agreed;
+            twitch_user_predictive_options_enable.IsEnabled = agreed;
+            twitch_user_predictive_options_enable_label.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

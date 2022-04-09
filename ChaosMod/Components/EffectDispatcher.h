@@ -132,6 +132,8 @@ public:
 
 	void OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName);
 	void OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType);
+
+	bool CanActivateEffect(EffectData effectData, float timeUntilDispatch = 0.f);
 };
 
 inline std::unique_ptr<EffectDispatcher> g_pEffectDispatcher;
