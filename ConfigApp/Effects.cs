@@ -346,7 +346,6 @@ namespace ConfigApp
             EFFECT_MISC_CLONE_ON_DEATH,
             EFFECT_SIDEWAYS_GRAVITY,
             EFFECT_MISC_JUMPY_PROPS,
-            EFFECT_MISC_TRANSLATE,
             _EFFECT_ENUM_MAX
         }
 
@@ -657,7 +656,6 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_CLONE_ON_DEATH, new EffectInfo("Resurrection Day", EffectCategory.MISC, "misc_clone_on_death", true, true)},
             {EffectType.EFFECT_SIDEWAYS_GRAVITY, new EffectInfo("Sideways Gravity", EffectCategory.MISC, "misc_sideways_gravity", true, true)},
             {EffectType.EFFECT_MISC_JUMPY_PROPS, new EffectInfo("Jumpy Props", EffectCategory.MISC, "misc_jumpy_props", true)},
-            {EffectType.EFFECT_MISC_TRANSLATE, new EffectInfo("Google Translated", EffectCategory.MISC, "misc_translated", true)},
         };
     }
 }
