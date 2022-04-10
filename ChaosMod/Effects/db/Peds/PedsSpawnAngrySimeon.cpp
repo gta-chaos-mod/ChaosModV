@@ -54,19 +54,6 @@ static void OnStart()
 
 
 	REMOVE_ALL_PED_WEAPONS(playerPed, false);
-
-	switch (GET_ENTITY_MODEL(playerPed))
-	{
-	case 0xD7114C9:
-		STAT_SET_INT(GET_HASH_KEY("SP0_TOTAL_CASH"), 0, true);
-		break;
-	case 0x9B22DBAF:
-		STAT_SET_INT(GET_HASH_KEY("SP1_TOTAL_CASH"), 0, true);
-		break;
-	case 0x9B810FA2:
-		STAT_SET_INT(GET_HASH_KEY("SP2_TOTAL_CASH"), 0, true);
-		break;
-	}
 }
 
 static RegisterEffect registerEffect(EFFECT_ANGRY_SIMEON, OnStart, EffectInfo
