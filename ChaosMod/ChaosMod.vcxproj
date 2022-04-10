@@ -154,6 +154,7 @@
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSpinCam.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerWarpedControlStick.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSickCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
@@ -409,6 +410,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Util\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
