@@ -369,6 +369,7 @@
     <ClInclude Include="Lib\scrThread.h" />
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
@@ -409,6 +410,9 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ChaosMod.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
