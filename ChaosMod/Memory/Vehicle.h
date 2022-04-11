@@ -2,6 +2,7 @@
 
 #include "Memory.h"
 #include "Handle.h"
+#include "Entity.h"
 
 #include "../Util/Natives.h"
 
@@ -183,7 +184,7 @@ namespace Memory
 
 	inline void SetVehicleScale(Vehicle veh, float scaleMultiplier)
 	{
-		auto offset = getScriptHandleBaseAddress(veh);
+		auto offset = GetScriptHandleBaseAddress(veh);
 
 		auto passengerMatrixAddress = offset + 0x60;
 		Vector3 passengerForwardVec = Memory::GetVector3(passengerMatrixAddress + 0x00);
