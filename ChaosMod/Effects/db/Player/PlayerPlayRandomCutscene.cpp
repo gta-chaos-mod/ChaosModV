@@ -439,8 +439,10 @@ static std::vector<std::string> allPossibleCutscenes = {
 
 static void OnStart()
 {
-	REQUEST_CUTSCENE(allPossibleCutscenes.at(g_Random.GetRandomInt(0, allPossibleCutscenes.size() - 1)).c_str(), 8);
-	START_CUTSCENE(0);
+	if (!IS_CUTSCENE_PLAYING()) {
+		REQUEST_CUTSCENE(allPossibleCutscenes.at(g_Random.GetRandomInt(0, allPossibleCutscenes.size() - 1)).c_str(), 8);
+		START_CUTSCENE(0);
+	}
 }
 
 // Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
