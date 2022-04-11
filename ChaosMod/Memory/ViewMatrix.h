@@ -2,6 +2,7 @@
 
 #include "Memory.h"
 #include "Handle.h"
+#include "Entity.h"
 
 #include "../Util/Natives.h"
 
@@ -18,11 +19,11 @@ namespace Memory
 			matrix = reinterpret_cast<float*>(address);
 		}
 
-		ViewMatrix(Entity entity) : ViewMatrix(reinterpret_cast<uintptr_t>(getScriptHandleBaseAddress(entity) + 0x60)) {}
+		ViewMatrix(Entity entity) : ViewMatrix(reinterpret_cast<uintptr_t>(GetScriptHandleBaseAddress(entity) + 0x60)) {}
 
 		static ViewMatrix ViewMatrix2(Vehicle vehicle)
 		{
-			BYTE* offset = getScriptHandleBaseAddress(vehicle);
+			BYTE* offset = GetScriptHandleBaseAddress(vehicle);
 			return ViewMatrix(*reinterpret_cast<uintptr_t*>(reinterpret_cast<uintptr_t>(offset) + 0x30) + 0x20);
 		}
 
