@@ -1,5 +1,5 @@
 /*
-	Effect by <Your Name>
+	Effect by ReeseRCollins
 */
 
 #include <stdafx.h>
