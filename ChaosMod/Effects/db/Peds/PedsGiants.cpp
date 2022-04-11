@@ -27,7 +27,7 @@ static void OnStart()
 {
 	cam = CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 1);
 	CAM::RENDER_SCRIPT_CAMS(true, true, 700, 1, 1, 1);
-	Hooks::SetAudioPitch(800);
+	Hooks::SetAudioPitch(g_Random.GetRandomInt(-900, -300));
 }
 
 static void OnTick()
