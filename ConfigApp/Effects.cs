@@ -348,6 +348,7 @@ namespace ConfigApp
             EFFECT_MISC_JUMPY_PROPS,
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
+            EFFECT_PEDS_HAMMERTIME,
             _EFFECT_ENUM_MAX
         }
 
@@ -660,6 +661,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_JUMPY_PROPS, new EffectInfo("Jumpy Props", EffectCategory.MISC, "misc_jumpy_props", true)},
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
+            {EffectType.EFFECT_PEDS_HAMMERTIME, new EffectInfo("Stop! Hammer Time", EffectCategory.PEDS, "peds_hammertime", true, false)},
         };
     }
 }
