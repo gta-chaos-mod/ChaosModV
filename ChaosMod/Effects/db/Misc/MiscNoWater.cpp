@@ -22,7 +22,7 @@ static_assert(sizeof(CWaterQuad) == 0x1C);
 static CWaterQuad* WaterQuads;
 static std::vector<float> WaterHeights;
 
-CWaterQuad* GetWaterQuads()
+static CWaterQuad* GetWaterQuads()
 {
 	Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
 	if (handle.IsValid())
@@ -53,7 +53,7 @@ static void OnStop()
 static RegisterEffect registerEffect(EFFECT_MISC_WATER, OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Drought",
-		.Id = "remove_water",
+		.Id = "misc_remove_water",
 		.IsTimed = true
 	}
 );
