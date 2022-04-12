@@ -1,15 +1,11 @@
 #include "stdafx.h"
-#include <list>
 
 Hash ped = GET_HASH_KEY("S_M_Y_Construct_02");
 Hash hammer = 1317494643;
 Hash relationshipGroupPeds;
 
-static float waitTime = 2;
+static float waitTime = 1.f;
 bool playerHasHammer = false;
-
-std::list<Ped> _peds;
-
 
 static void OnTick()
 {
@@ -57,8 +53,6 @@ static void OnTick()
 			it++;
 		}
 	}
-
-	DISABLE_CONTROL_ACTION(1, 37, 1);
 }
 
 static void OnStop()
