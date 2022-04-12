@@ -89,7 +89,7 @@ static void OnStop()
 
 static void OnStart()
 {
-
+	DISABLE_CONTROL_ACTION(1, 37, 1);
 	Hash groupHash;
 	ADD_RELATIONSHIP_GROUP("_HAMMERTIME", &groupHash);
 
@@ -97,6 +97,7 @@ static void OnStart()
 
 	if (HAS_PED_GOT_WEAPON(playerPed, hammer, 0))
 	{
+		SET_CURRENT_PED_WEAPON(playerPed, hammer, true);
 		playerHasHammer = true;
 	} 
 	else
