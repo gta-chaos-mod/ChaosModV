@@ -34,6 +34,7 @@
 #include "Memory/PedModels.h"
 #include "Memory/Misc.h"
 #include "Memory/Physics.h"
+#include "Memory/Entity.h"
 
 #include "Memory/Hooks/Hook.h"
 
@@ -66,7 +67,6 @@
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"
-#include "../vendor/klib/khash.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

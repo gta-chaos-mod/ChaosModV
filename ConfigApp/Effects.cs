@@ -348,6 +348,8 @@ namespace ConfigApp
             EFFECT_MISC_JUMPY_PROPS,
             EFFECT_MISC_TRANSLATE,
             EFFECT_PEDS_WATER_GUNS,
+            EFFECT_VEHS_PROP_MODELS,
+            EFFECT_VEHS_TINY,
             _EFFECT_ENUM_MAX
         }
 
@@ -660,6 +662,8 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_JUMPY_PROPS, new EffectInfo("Jumpy Props", EffectCategory.MISC, "misc_jumpy_props", true)},
             {EffectType.EFFECT_MISC_TRANSLATE, new EffectInfo("Google Translated", EffectCategory.MISC, "misc_translated", true)},
             {EffectType.EFFECT_PEDS_WATER_GUNS, new EffectInfo("Water Guns", EffectCategory.PEDS, "peds_waterguns", true)},
+            {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
+            {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
         };
     }
 }
