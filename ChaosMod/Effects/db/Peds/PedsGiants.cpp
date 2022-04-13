@@ -49,6 +49,12 @@ static void OnTick()
 		{
 			Memory::SetPedScale(ped, ms_fScale);
 		}
+
+		if (IS_PED_IN_ANY_VEHICLE(ped, 1))
+		{
+			Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, 0);
+			Memory::SetPedVehiclePedsScale(veh, ms_fScale / 2);
+		}
 		SET_PED_LEG_IK_MODE(ped, 0);
 	}
 }
