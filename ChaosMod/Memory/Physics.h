@@ -23,7 +23,8 @@ namespace Memory
 			return nullptr;
 		}();
 
-		return CEntity_GetColliderNonConst(GetScriptHandleBaseAddress(entity));
+		auto handleAddr = GetScriptHandleBaseAddress(entity);
+		return handleAddr && CEntity_GetColliderNonConst(handleAddr);
 	}
 
 	inline int GetNumFreeColliderSlots()
