@@ -77,7 +77,7 @@ static void OnStop()
 
 static RegisterEffect reg(EFFECT_MISC_GRAVITY_GUNS, nullptr, OnStop, OnTick, EffectInfo
 	{
-		.Name = "Gravity Guns",
+		.Name = "Physic Guns",
 		.Id = "misc_gravity_guns",
 		.IsTimed = true,
 		.IncompatibleWith = {EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_MISC_NEWS_TEAM}
