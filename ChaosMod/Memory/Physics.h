@@ -2,24 +2,29 @@
 
 #include "Memory.h"
 #include "Handle.h"
+#include "Entity.h"
+#include "../Util/Logging.h"
+
+using DWORD64 = unsigned long long;
 
 namespace Memory
 {
 	inline bool DoesEntityHaveCollider(Entity entity)
 	{
-
-		static auto CEntity_GetColliderNonConst = []() -> void* (*)(BYTE*)
+		static auto CEntity_GetColliderNonConst = []() -> void*(*)(DWORD64)
 		{
 			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D");
 			if (handle.IsValid())
 			{
-				return handle.At(17).Into().Get<void*(BYTE*)>();
+				return handle.At(17).Into().Get<void*(DWORD64)>();
 			}
 
+			LOG("CEntity::GetColliderNonConst not found");
 			return nullptr;
 		}();
 
-		return CEntity_GetColliderNonConst(getScriptHandleBaseAddress (entity));
+		auto handleAddr = GetScriptHandleBaseAddress(entity);
+		return handleAddr && CEntity_GetColliderNonConst(handleAddr);
 	}
 
 	inline int GetNumFreeColliderSlots()
@@ -32,6 +37,7 @@ namespace Memory
 				return handle.At(2).Into().Addr();
 			}
 
+			LOG("phSimulator::sm_Instance not found");
 			return 0ull;
 		}();
 
@@ -40,7 +46,8 @@ namespace Memory
 			Handle handle = FindPattern("? 63 ? ? ? ? ? 3B ? ? ? ? ? 0F 8D ? ? ? ? ? 8B C8");
 			if (handle.IsValid())
 				return std::make_tuple(handle.At(3).Value<int>(), handle.At(9).Value<int>());
-			
+
+			LOG("usedCollidersOffset / maxCollidersOffset not found, using fallback values");
 			return std::make_tuple(0x864, 0x860); // values in the latest version of the game.
 		}();
 
