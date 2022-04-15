@@ -7,8 +7,8 @@
 #include "Util/Camera.h"
 using namespace Memory;
 
-float ms_fForceX = 50;
-float ms_fGrabDist = 400;
+float ms_fForceX = 80;
+float ms_fGrabDist = 600;
 
 static enum EentityType : int
 {
@@ -23,6 +23,7 @@ static EentityType entityType = EentityType::ENTITY_NONE;
 
 static void CleanUp()
 {
+	SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
 	DETACH_ENTITY(selectedObject, 0, 1);
 	selectedObject = 0;
 	entityType = ENTITY_NONE;
@@ -44,10 +45,14 @@ static void OnTick()
 	static const Ped playerPed = PLAYER_PED_ID();
 
 	if (DOES_ENTITY_EXIST(selectedObject))
-	{
-		if (IS_CONTROL_JUST_PRESSED(0, 24))
+	{	if (IS_CONTROL_JUST_RELEASED(0, 25))
+		{
+			CleanUp();
+		}
+		else if (IS_CONTROL_JUST_PRESSED(0, 24))
 		{
 			DETACH_ENTITY(selectedObject, 0, 1);
+			SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
 			ApplyForceToEntityCenterOfMass(selectedObject, 1, ms_fForceX, 0, 0, 1, 1, 1, 0);
 			WAIT(100);
 			CleanUp();
@@ -63,15 +68,29 @@ static void OnTick()
 				Entity wep = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
 				selectedObject = tmp;
 				entityType = (EentityType)GET_ENTITY_TYPE(tmp);
-				ATTACH_ENTITY_TO_ENTITY(tmp, wep, GET_ENTITY_BONE_INDEX_BY_NAME(wep, "Gun_Nuzzle"), 2.5, 0, 0.5, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
-				return;
+				ATTACH_ENTITY_TO_ENTITY(tmp, wep, GET_ENTITY_BONE_INDEX_BY_NAME(wep, "Gun_Nuzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
 			}
 		} 
 	}
-	else if (IS_CONTROL_JUST_RELEASED(0, 25))
+
+	//From Native Trainer, was too lazy to write it myself.
+	Hash cur;
+	if (WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &cur, 1))
 	{
-		CleanUp();
+		if (WEAPON::IS_WEAPON_VALID(cur))
+		{
+			int maxAmmo;
+			if (WEAPON::GET_MAX_AMMO(playerPed, cur, &maxAmmo))
+			{
+				WEAPON::SET_PED_AMMO(playerPed, cur, maxAmmo, 1);
+
+				maxAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, cur, 1);
+				if (maxAmmo > 0)
+					WEAPON::SET_AMMO_IN_CLIP(playerPed, cur, maxAmmo);
+			}
+		}
 	}
+
 }
 
 static void OnStop()
