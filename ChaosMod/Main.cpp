@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static std::unique_ptr<DebugMenu> ms_pDebugMenu;
 static std::unique_ptr<TwitchVoting> ms_pTwitchVoting;
@@ -171,13 +172,14 @@ static void MainRun()
 
 	Init();
 
+	bool c_bJustReenabled = false;
+
 	while (true)
 	{
 		WAIT(0);
 
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
-			static bool c_bJustReenabled = false;
 			if (ms_bDisableMod && !c_bJustReenabled)
 			{
 				if (!c_bJustReenabled)
@@ -228,7 +230,7 @@ static void MainRun()
 		else if (IS_SCREEN_FADED_OUT())
 		{
 			SET_TIME_SCALE(1.f); // Prevent potential softlock for certain effects
-
+			Hooks::DisableScriptThreadBlock();
 			WAIT(100);
 
 			continue;
