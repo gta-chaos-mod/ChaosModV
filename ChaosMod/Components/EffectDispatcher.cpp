@@ -173,15 +173,13 @@ void EffectDispatcher::UpdateMetaEffects()
 			std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
 
 			float totalWeight = 0.f;
-			for (auto& pair : g_EnabledEffects)
+			for (auto& [ effectId, effectData ] : g_EnabledEffects)
 			{
-				if (pair.second.IsMeta && pair.second.TimedType != EEffectTimedType::Permanent)
+				if (effectData.IsMeta && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility)
 				{
-					auto& [effectIdentifier, effectData] = pair;
-
 					totalWeight += GetEffectWeight(effectData);
 
-					availableMetaEffects.push_back(std::make_tuple(effectIdentifier, &pair.second));
+					availableMetaEffects.push_back(std::make_tuple(effectId, &effectData));
 				}
 			}
 
@@ -479,7 +477,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
-		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta)
+		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta && !effectData.IsUtility)
 		{
 			choosableEffects.emplace(effectIdentifier, effectData);
 		}
