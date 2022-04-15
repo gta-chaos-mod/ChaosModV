@@ -34,6 +34,8 @@
 #include "Memory/PedModels.h"
 #include "Memory/Misc.h"
 #include "Memory/Physics.h"
+#include "Memory/Entity.h"
+#include "Memory/Script.h"
 
 #include "Memory/Hooks/Hook.h"
 
