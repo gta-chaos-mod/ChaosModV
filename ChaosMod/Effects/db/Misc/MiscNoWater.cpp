@@ -24,30 +24,37 @@ static std::vector<float> WaterHeights;
 
 static CWaterQuad* GetWaterQuads()
 {
-	Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
+	static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
 	if (handle.IsValid())
 	{
 		return *handle.At(6).Into().Get<CWaterQuad*>();
 	}
+	return nullptr;
 }
 
 static void OnStart()
 {
 	WaterQuads = GetWaterQuads();
-	for (int i = 0; i < 821; i++) // 821 = Max Water Items
+	if (WaterQuads)
 	{
-		WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
-		WaterQuads[i].Z = -1000.0f; // Remove Water
+		for (int i = 0; i < 821; i++) // 821 = Max Water Items
+		{
+			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
+			WaterQuads[i].Z = -1000.0f; // Remove Water
+		}
 	}
 }
 
 static void OnStop()
 {
-	for (int i = 0; i < 821; i++) // 821 = Max Water Items
+	if (WaterQuads)
 	{
-		WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
+		for (int i = 0; i < 821; i++) // 821 = Max Water Items
+		{
+			WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
+		}
+		WaterHeights.clear(); // Clear Storage Vector
 	}
-	WaterHeights.clear(); // Clear Storage Vector
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_WATER, OnStart, OnStop, nullptr, EffectInfo
