@@ -1,10 +1,41 @@
 #include <stdafx.h>
 
 static bool ms_bEnabledHook = false;
+static int ms_dwOnlineVehicleMeasureEnableGlobal = 0;
 
 __int64(*OG_rage__scrThread__Run)(rage::scrThread*);
 __int64 HK_rage__scrThread__Run(rage::scrThread* pThread)
 {
+	if (!strcmp(pThread->m_szName, "shop_controller"))
+	{
+		if (!ms_dwOnlineVehicleMeasureEnableGlobal)
+		{
+			auto pProgram = Memory::ScriptThreadToProgram(pThread);
+
+			if (pProgram->m_pCodeBlocks)
+			{
+				auto codeBlocksSize = pProgram->m_nCodeSize + 0x3FFF >> 14;
+				for (int i = 0; i < codeBlocksSize; i++)
+				{
+					// Thanks to drp4lyf
+					Handle handle = Memory::FindPattern("2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
+						{ pProgram->m_pCodeBlocks[i], pProgram->m_pCodeBlocks[i]
+						+ (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
+					if (handle.IsValid())
+					{
+						LOG("SP online vehicle despawn mechanism successfully blocked! Hopefully?");
+						ms_dwOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
+					}
+				}
+			}
+		}
+
+		if (ms_dwOnlineVehicleMeasureEnableGlobal)
+		{
+			*getGlobalPtr(ms_dwOnlineVehicleMeasureEnableGlobal) = 1;
+		}
+	}
+
 	if (ms_bEnabledHook)
 	{
 		const char* szScriptName = pThread->m_szName;

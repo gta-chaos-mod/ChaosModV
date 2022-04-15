@@ -78,19 +78,24 @@ namespace Memory
 		}
 	}
 
-	Handle FindPattern(const std::string& szPattern)
+	Handle FindPattern(const std::string& szPattern, const PatternScanRange&& scanRange)
 	{
+		if ((scanRange.m_startAddr != 0 || scanRange.m_endAddr != 0) && scanRange.m_startAddr >= scanRange.m_endAddr)
+		{
+			LOG("startAddr is equal / bigger than endAddr???");
+			return Handle();
+		}
+
 		std::string szCopy = szPattern;
 		for (size_t pos = szCopy.find("??"); pos != std::string::npos; pos = szCopy.find("??", pos+1))
 		{
 			szCopy.replace(pos, 2, "?");
 		}
 		
-		hook::pattern pattern(szCopy);
+		hook::pattern pattern = scanRange.m_startAddr == 0 && scanRange.m_endAddr == 0
+			? hook::pattern(szCopy) : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
 		if (!pattern.size())
 		{
-			LOG("Couldn't find pattern \"" << szPattern << "\"");
-			
 			return Handle();
 		}
 

@@ -382,6 +382,7 @@
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\Misc.h" />
     <ClInclude Include="Memory\PedModels.h" />
+    <ClInclude Include="Memory\Script.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />
