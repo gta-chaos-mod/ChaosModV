@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified by Reguas
+	Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -20,7 +20,7 @@ static void OnStart()
 	}
 	
 	Hooks::EnableScriptThreadBlock();
-	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490, 1029.085, 345.090, 53.824, true, false, false);
+	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490f, 1029.085f, 345.090f, 53.824f, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	Ped player = PLAYER_PED_ID();
 	SET_ENTITY_INVINCIBLE(player, true);
@@ -53,15 +53,17 @@ static void OnStart()
 		REGISTER_ENTITY_FOR_CUTSCENE(player, "MICHAEL", 0, 0, 64);
 		
 		START_CUTSCENE(0);
-		WAIT(8500);
+		WAIT(6500);
 		STOP_CUTSCENE_IMMEDIATELY();
 
 		REMOVE_CUTSCENE();
 
-		Ped pedDave = CreatePoolPed(4, daveHash, -442.2f, 1059.25f, 326.66f, 180.6f);
+		Ped pedDave = CREATE_PED(4, daveHash, -442.2f, 1059.25f, 326.66f, 180.6f, true, false);
 
 		TASK_PLAY_ANIM(pedDave, "missfbi1leadinout", "fbi_1_int_leadin_loop_daven", 8.0f, 1.0f, -1, 1, 0.0f, false, false, false);
 		SET_PED_KEEP_TASK(pedDave, true);
+
+		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
