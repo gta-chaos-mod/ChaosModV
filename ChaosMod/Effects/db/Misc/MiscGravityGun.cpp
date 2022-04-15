@@ -10,23 +10,13 @@ using namespace Memory;
 float ms_fForceX = 80;
 float ms_fGrabDist = 600;
 
-static enum EentityType : int
-{
-	ENTITY_NONE = 0,
-	ENTITY_PED,
-	ENTITY_VEHICLE, 
-	ENTITY_OBJECT
-};
-
 static Entity selectedObject = 0;
-static EentityType entityType = EentityType::ENTITY_NONE;
 
 static void CleanUp()
 {
 	SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
 	DETACH_ENTITY(selectedObject, 0, 1);
 	selectedObject = 0;
-	entityType = ENTITY_NONE;
 }
 
 bool GetAimedAtEntity(Entity* e)
@@ -63,11 +53,10 @@ static void OnTick()
 		Entity tmp;
 		if (GetAimedAtEntity(&tmp))
 		{
-			if (GET_ENTITY_TYPE(tmp) != EentityType::ENTITY_NONE)
+			if (GET_ENTITY_TYPE(tmp) != 0)
 			{
 				Entity wep = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
 				selectedObject = tmp;
-				entityType = (EentityType)GET_ENTITY_TYPE(tmp);
 				ATTACH_ENTITY_TO_ENTITY(tmp, wep, GET_ENTITY_BONE_INDEX_BY_NAME(wep, "Gun_Nuzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
 			}
 		} 
