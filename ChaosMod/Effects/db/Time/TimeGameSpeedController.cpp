@@ -28,7 +28,7 @@ static RegisterEffect registerEffect1(EFFECT_GAMESPEED_X02, nullptr, OnStop, OnT
 		.Id = "time_x02",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }
+		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X05, EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_SUPERHOT }
 	}
 );
 static void OnTickX05()
@@ -47,6 +47,6 @@ static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnT
 		.Id = "time_x05",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG, EFFECT_PLAYER_DEAD_EYE }
+		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X02, EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_SUPERHOT }
 	}
 );

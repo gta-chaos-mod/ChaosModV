@@ -26,8 +26,7 @@ static RegisterEffect registerEffect1(EFFECT_PEDS_SAY_HI, nullptr, nullptr, OnTi
 	{
 		.Name = "Friendly Neighborhood",
 		.Id = "peds_sayhi",
-		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_INSULT }
+		.IsTimed = true
 	}
 );
 static void OnTickUnfriendly()
@@ -56,8 +55,7 @@ static RegisterEffect registerEffect2(EFFECT_PEDS_INSULT, nullptr, nullptr, OnTi
 	{
 		.Name = "Unfriendly Neighborhood",
 		.Id = "peds_insult",
-		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_SAY_HI }
+		.IsTimed = true
 	}
 );
 static void OnTickKifflom()

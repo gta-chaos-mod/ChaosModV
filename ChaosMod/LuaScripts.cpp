@@ -329,14 +329,14 @@ namespace LuaScripts
 					{ return LuaInvoke(szFileName, lua, ullHash, eReturnType, args); };
 				lua["WAIT"] = WAIT;
 
-				lua["GetAllPeds"] = GetAllPeds;
+				lua["GetAllPeds"] = GetAllPedsArray;
 				lua["CreatePoolPed"] = CreatePoolPed;
 
-				lua["GetAllVehicles"] = GetAllVehs;
+				lua["GetAllVehicles"] = GetAllVehsArray;
 				lua["CreatePoolVehicle"] = CreatePoolVehicle;
 				lua["CreateTempVehicle"] = CreateTempVehicle;
 
-				lua["GetAllProps"] = GetAllProps;
+				lua["GetAllProps"] = GetAllPropsArray;
 				lua["CreatePoolProp"] = CreatePoolProp;
 
 				lua["GetAllWeapons"] = Memory::GetAllWeapons;
@@ -438,6 +438,20 @@ namespace LuaScripts
 								if (isMetaOpt)
 								{
 									effectData.IsMeta = *isMetaOpt;
+								}
+
+								const sol::optional<bool>& excludeFromVotingOpt = scriptInfo["ExcludeFromVoting"];
+
+								if (excludeFromVotingOpt)
+								{
+									effectData.ExcludedFromVoting = *excludeFromVotingOpt;
+								}
+
+								const sol::optional<bool>& isUtilityOpt = scriptInfo["IsUtility"];
+
+								if (isUtilityOpt)
+								{
+									effectData.IsUtility = *isUtilityOpt;
 								}
 
 								const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];

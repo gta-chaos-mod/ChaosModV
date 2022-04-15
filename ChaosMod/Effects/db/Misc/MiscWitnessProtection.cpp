@@ -37,7 +37,7 @@ static void OnTick()
             float offset = (360 / pedCount) * i;
             OrbitPed orbPed = { ped, offset };
             orbitingPeds.push_back(orbPed);
-            if (-count == 0)
+            if (--count == 0)
             {
                 WAIT(0);
                 count = 5;
@@ -66,7 +66,7 @@ static void OnTick()
             SET_PED_AS_NO_LONGER_NEEDED(&pedInfo.ped);
             DELETE_PED(&pedInfo.ped);
             it = orbitingPeds.erase(it);
-            if (-count == 0)
+            if (--count == 0)
             {
                 WAIT(0);
                 count = 5;
@@ -95,7 +95,7 @@ static void OnStop()
         SET_PED_AS_NO_LONGER_NEEDED(&pedInfo.ped);
         DELETE_PED(&pedInfo.ped);
         it = orbitingPeds.erase(it);
-        if (-count == 0)
+        if (--count == 0)
         {
             WAIT(0);
             count = 5;

@@ -234,7 +234,8 @@ void TwitchVoting::Run()
 
 			if (effectData.TimedType != EEffectTimedType::Permanent
 				&& !effectData.IsMeta
-				&& !effectData.ExcludedFromVoting)
+				&& !effectData.ExcludedFromVoting
+				&& !effectData.IsUtility)
 			{
 				dictChoosableEffects.emplace(effectIdentifier, effectData);
 			}

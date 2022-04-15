@@ -228,6 +228,7 @@ static void OnStartMission()
 		excludedColors = { 42, 43 };
 		break;
 	default: // default
+		excludedColors = { };
 		break;
 	}
 	const int possibleBlipIds[] = { 66, 76, 77, 78, 79, 80, 86, 88 , 89, 96, 104, 105, 106, 107, 112, 113, 118, 120, 123, 124, 208, 209, 210, 211, 214, 267, 293, 355, 363, 381, 382, 383, 384, 385, 386, 387, 388, 389, 428, 445, 447, 448, 449, 450, 451, 452, 453, 454 };
