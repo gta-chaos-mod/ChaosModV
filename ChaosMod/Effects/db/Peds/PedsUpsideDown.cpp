@@ -3,6 +3,7 @@
 */
 
 #include <stdafx.h>
+#include <Memory/Entity.h>
 #include <map>
 
 static std::map<Ped, Vector3> savedVectors;
@@ -14,35 +15,45 @@ static float angleCos(Vector3 a, Vector3 b)
 
 static void OnTick()
 {
-	for (Entity ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		Memory::ViewMatrix vm = Memory::ViewMatrix(ped);
 
-		Vector3 uvInv = vm.getUpVector() * -1.f;
+		if (!vm.IsValid())
+		{
+			continue;
+		}
+
+		Vector3 uvInv = vm.UpVector() * -1.f;
 
 		if (!savedVectors.contains(ped))
 		{
 			savedVectors[ped] = uvInv;
 		}
-		if (angleCos(savedVectors[ped], vm.getUpVector()) < 0.99f) // angle between saved and actual vector > ~10 deg
+		if (angleCos(savedVectors[ped], vm.UpVector()) < 0.99f) // angle between saved and actual vector > ~10 deg
 		{
 			savedVectors[ped] = uvInv;
-			vm.setUpVector(uvInv);
-			vm.setRightVector(vm.getRightVector() * -1.f);
+			vm.SetUpVector(uvInv);
+			vm.SetRightVector(vm.RightVector() * -1.f);
 		}
 	}
 }
 
 static void OnStop()
 {
-	for (Entity ped : GetAllPeds())
+	for (Ped ped : GetAllPeds())
 	{
 		Memory::ViewMatrix vm = Memory::ViewMatrix(ped);
 
-		if (savedVectors.contains(ped) && angleCos(savedVectors[ped], vm.getUpVector()) > 0.99f)
+		if (!vm.IsValid())
 		{
-			vm.setUpVector(vm.getUpVector() * -1.f);
-			vm.setRightVector(vm.getRightVector() * -1.f);
+			continue;
+		}
+
+		if (savedVectors.contains(ped) && angleCos(savedVectors[ped], vm.UpVector()) > 0.99f)
+		{
+			vm.SetUpVector(vm.UpVector() * -1.f);
+			vm.SetRightVector(vm.RightVector() * -1.f);
 		}
 	}
 

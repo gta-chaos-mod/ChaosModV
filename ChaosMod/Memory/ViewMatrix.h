@@ -10,69 +10,83 @@ namespace Memory
 {
 	class ViewMatrix
 	{
-		float* matrix;
+		float* const matrix;
 
-	public:
+		// address must be valid or null
+		ViewMatrix(uintptr_t address) : matrix(address ? reinterpret_cast<float*>(address) : nullptr) {}
 
-		ViewMatrix(uintptr_t address)
+		void SetVectorAt(int index, Vector3 vec)
 		{
-			matrix = reinterpret_cast<float*>(address);
+			matrix[index] = vec.x;
+			matrix[index + 1] = vec.y;
+			matrix[index + 2] = vec.z;
 		}
 
-		ViewMatrix(Entity entity) : ViewMatrix(reinterpret_cast<uintptr_t>(GetScriptHandleBaseAddress(entity) + 0x60)) {}
+		Vector3 VectorAt(int index) const
+		{
+			return Vector3(matrix[index], matrix[index + 1], matrix[index + 2]);
+		}
+
+		uintptr_t VMPtr(uintptr_t addr)
+		{
+			return addr ? addr + 0x60 : 0;
+		}
+
+	public:
+		ViewMatrix() : ViewMatrix(0) {}
+
+		ViewMatrix(Entity entity) : ViewMatrix(VMPtr(reinterpret_cast<uintptr_t>(getScriptHandleBaseAddress(entity)))) {}
 
 		static ViewMatrix ViewMatrix2(Vehicle vehicle)
 		{
-			BYTE* offset = GetScriptHandleBaseAddress(vehicle);
-			return ViewMatrix(*reinterpret_cast<uintptr_t*>(reinterpret_cast<uintptr_t>(offset) + 0x30) + 0x20);
+			auto addr = GetScriptHandleBaseAddress(vehicle);
+			return addr ? ViewMatrix(*reinterpret_cast<uintptr_t*>(addr + 0x30) + 0x20) : ViewMatrix();
 		}
 
-		void setRightVector(Vector3 vec)
+		void SetRightVector(Vector3 vec)
 		{
-			matrix[0] = vec.x;
-			matrix[1] = vec.y;
-			matrix[2] = vec.z;
+			SetVectorAt(0, vec);
 		}
 
-		void setForwardVector(Vector3 vec)
+		void SetForwardVector(Vector3 vec)
 		{
-			matrix[4] = vec.x;
-			matrix[5] = vec.y;
-			matrix[6] = vec.z;
+			SetVectorAt(4, vec);
 		}
 
-		void setUpVector(Vector3 vec)
+		void SetUpVector(Vector3 vec)
 		{
-			matrix[8] = vec.x;
-			matrix[9] = vec.y;
-			matrix[10] = vec.z;
+			SetVectorAt(8, vec);
 		}
 
-		void setPosVector(Vector3 vec)
+		void SetPosVector(Vector3 vec)
 		{
-			matrix[12] = vec.x;
-			matrix[13] = vec.y;
-			matrix[14] = vec.z;
+			SetVectorAt(12, vec);
 		}
 
-		Vector3 getRightVector()
+
+		Vector3 RightVector() const
 		{
-			return Vector3(matrix[0], matrix[1], matrix[2]);
+			return VectorAt(0);
 		}
 
-		Vector3 getForwardVector()
+		Vector3 ForwardVector() const
 		{
-			return Vector3(matrix[4], matrix[5], matrix[6]);
+			return VectorAt(4);
 		}
 
-		Vector3 getUpVector()
+		Vector3 UpVector() const
 		{
-			return Vector3(matrix[8], matrix[9], matrix[10]);
+			return VectorAt(8);
 		}
 
-		Vector3 getPosVector()
+		Vector3 PosVector() const
 		{
-			return Vector3(matrix[12], matrix[13], matrix[14]);
+			return VectorAt(12);
+		}
+
+		bool IsValid() const
+		{
+			return matrix != nullptr;
 		}
 	};
 }
