@@ -35,7 +35,7 @@ namespace Memory
 	public:
 		ViewMatrix() : ViewMatrix(0) {}
 
-		ViewMatrix(Entity entity) : ViewMatrix(VMPtr(reinterpret_cast<uintptr_t>(getScriptHandleBaseAddress(entity)))) {}
+		ViewMatrix(Entity entity) : ViewMatrix(VMPtr(GetScriptHandleBaseAddress(entity))) {}
 
 		static ViewMatrix ViewMatrix2(Vehicle vehicle)
 		{
