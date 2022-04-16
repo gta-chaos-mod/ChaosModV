@@ -7,6 +7,8 @@
 
 static void OnStart()
 {
+	
+	Hooks::EnableScriptThreadBlock();
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
 	Hash blimpHash = GET_HASH_KEY("blimp");
@@ -19,7 +21,6 @@ static void OnStart()
 		REQUEST_CUTSCENE("fbi_1_int", 8);
 	}
 	
-	Hooks::EnableScriptThreadBlock();
 	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490f, 1029.085f, 345.090f, 53.824f, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	Ped player = PLAYER_PED_ID();
@@ -37,8 +38,6 @@ static void OnStart()
 		WAIT(100);
 		waited++;
 	}
-
-	SET_ENTITY_INVINCIBLE(player, false);
 
 	if (!cutscenePlaying)
 	{
@@ -65,6 +64,8 @@ static void OnStart()
 
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
+	
+	SET_ENTITY_INVINCIBLE(player, false);
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
