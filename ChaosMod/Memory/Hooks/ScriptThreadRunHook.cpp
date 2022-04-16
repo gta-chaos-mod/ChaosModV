@@ -1,17 +1,19 @@
 #include <stdafx.h>
 
 static bool ms_bEnabledHook = false;
-static int ms_dwOnlineVehicleMeasureEnableGlobal = 0;
+static int ms_iOnlineVehicleMeasureEnableGlobal = 0;
+static bool ms_bSearchedForMissionStateGlobal = false;
 
 __int64(*OG_rage__scrThread__Run)(rage::scrThread*);
 __int64 HK_rage__scrThread__Run(rage::scrThread* pThread)
 {
+	// TODO: Make this a bit less of a mess
+
 	if (!strcmp(pThread->m_szName, "shop_controller"))
 	{
-		if (!ms_dwOnlineVehicleMeasureEnableGlobal)
+		if (!ms_iOnlineVehicleMeasureEnableGlobal)
 		{
 			auto pProgram = Memory::ScriptThreadToProgram(pThread);
-
 			if (pProgram->m_pCodeBlocks)
 			{
 				auto codeBlocksSize = pProgram->m_nCodeSize + 0x3FFF >> 14;
@@ -23,16 +25,49 @@ __int64 HK_rage__scrThread__Run(rage::scrThread* pThread)
 						+ (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
 					if (handle.IsValid())
 					{
-						LOG("SP online vehicle despawn mechanism successfully blocked! Hopefully?");
-						ms_dwOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
+						ms_iOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
+						LOG("SP online vehicle despawn mechanism successfully blocked! Hopefully? ("
+							<< ms_iOnlineVehicleMeasureEnableGlobal << ")");
+
+						break;
 					}
 				}
 			}
+
+			// Don't try again if it failed the first time
+			if (!ms_iOnlineVehicleMeasureEnableGlobal)
+			{
+				ms_iOnlineVehicleMeasureEnableGlobal = -1;
+			}
 		}
 
-		if (ms_dwOnlineVehicleMeasureEnableGlobal)
+		if (ms_iOnlineVehicleMeasureEnableGlobal > 0)
 		{
-			*getGlobalPtr(ms_dwOnlineVehicleMeasureEnableGlobal) = 1;
+			*getGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
+		}
+	}
+
+	if (!ms_bSearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(pThread->m_szName, "main"))
+	{
+		auto pProgram = Memory::ScriptThreadToProgram(pThread);
+		if (pProgram->m_pCodeBlocks)
+		{
+			ms_bSearchedForMissionStateGlobal = true;
+
+			auto codeBlocksSize = pProgram->m_nCodeSize + 0x3FFF >> 14;
+			for (int i = 0; i < codeBlocksSize; i++)
+			{
+				Handle handle = Memory::FindPattern("2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E",
+					{ pProgram->m_pCodeBlocks[i], pProgram->m_pCodeBlocks[i]
+					+ (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
+				if (handle.IsValid())
+				{
+					Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
+					LOG("Found mission state global for Failsafe! (" << Failsafe::GetGlobalIndex() << ")");
+
+					break;
+				}
+			}
 		}
 	}
 
