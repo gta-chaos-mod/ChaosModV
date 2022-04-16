@@ -19,7 +19,7 @@ namespace ConfigApp
         
         private OptionsFile m_configFile = new OptionsFile("config.ini");
         private OptionsFile m_twitchFile = new OptionsFile("twitch.ini");
-        private OptionsFile m_effectsFile = new OptionsFile("effects.ini");
+        private EffectOptionsFile m_effectsFile = new EffectOptionsFile("effects.json");
 
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
@@ -219,9 +219,77 @@ namespace ConfigApp
         {
             m_effectsFile.ReadFile();
 
-            foreach (string key in m_effectsFile.GetKeys())
+            if (!m_effectsFile.HasParsedFile())
             {
-                string value = m_effectsFile.ReadValue(key);
+                UpdateConfigFromIniFile();
+                m_effectsFile.ReadFile();
+            }
+
+            foreach (EffectOption option in m_effectsFile.GetOptions())
+            {
+                // Find EffectType from ID
+                EffectType effectType = EffectType._EFFECT_ENUM_MAX;
+                foreach (KeyValuePair<EffectType, EffectInfo> pair in EffectsMap)
+                {
+                    if (pair.Value.Id == option.Name)
+                    {
+                        effectType = pair.Key;
+                        break;
+                    }
+                }
+
+                if (!EffectsMap.TryGetValue(effectType, out EffectInfo effectInfo))
+                {
+                    continue;
+                }
+
+                EffectTimedType effectTimedType = option.timeMode == 0 ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                int effectTimedTime = option.customTime;
+                int effectWeight = option.weightMultiplier;
+                bool effectPermanent = option.permanent;
+                bool effectExcludedFromVoting = option.excludeFromVoting;
+                string effectCustomName = option.customName;
+                int effectShortcut = option.shortcutKey;
+
+                if (effectType != EffectType._EFFECT_ENUM_MAX)
+                {
+                    m_treeMenuItemsMap[effectType].IsChecked = option.Enabled;
+
+                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName, effectShortcut));
+                }
+            }
+        }
+
+        private void WriteEffectsFile()
+        {
+            for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
+            {
+                EffectData effectData = GetEffectData(effectType);
+                EffectOption option = new EffectOption();
+                option.Name = EffectsMap[effectType].Id;
+                option.Enabled = m_treeMenuItemsMap[effectType].IsChecked;
+                option.timeMode = effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1;
+                option.customTime = effectData.CustomTime;
+                option.weightMultiplier = effectData.WeightMult;
+                option.permanent = effectData.Permanent;
+                option.excludeFromVoting = effectData.ExcludedFromVoting;
+                option.customName = string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName;
+                option.shortcutKey = effectData.Shortcut;
+                m_effectsFile.SetValue(option.Name, option);
+            }
+
+            m_effectsFile.WriteFile();
+        }
+
+        private void UpdateConfigFromIniFile()
+        {
+            OptionsFile oldEffectsFile = new OptionsFile("effects.ini");
+
+            oldEffectsFile.ReadFile();
+
+            foreach (string key in oldEffectsFile.GetKeys())
+            {
+                string value = oldEffectsFile.ReadValue(key);
 
                 // Split by comma, ignoring commas in between quotation marks
                 string[] values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
@@ -242,18 +310,18 @@ namespace ConfigApp
                     continue;
                 }
 
-                EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                int effectTimedType = effectInfo.IsShort ? 1 : 0;
                 int effectTimedTime = -1;
                 int effectWeight = 5;
                 bool effectPermanent = false;
                 bool effectExcludedFromVoting = false;
-                string effectCustomName = null;
+                string effectCustomName = "";
                 int effectShortcut = 0;
 
                 // Compatibility checks, previous versions had less options
                 if (values.Length >= 4)
                 {
-                    Enum.TryParse(values[1], out effectTimedType);
+                    int.TryParse(values[1], out effectTimedType);
                     int.TryParse(values[2], out effectTimedTime);
                     int.TryParse(values[3], out effectWeight);
 
@@ -271,7 +339,8 @@ namespace ConfigApp
 
                             if (values.Length >= 7)
                             {
-                                effectCustomName = values[6] == "0" ? null : values[6].Trim('\"');
+                                string trimmedName = values[6].Trim('\"');
+                                effectCustomName = trimmedName == "0" ? "" : trimmedName;
                                 if (values.Length >= 8)
                                 {
                                     int.TryParse(values[7], out effectShortcut);
@@ -284,26 +353,21 @@ namespace ConfigApp
                 if (effectType != EffectType._EFFECT_ENUM_MAX)
                 {
                     int.TryParse(values[0], out int enabled);
-                    m_treeMenuItemsMap[effectType].IsChecked = enabled == 0 ? false : true;
-
-                    m_effectDataMap.Add(effectType, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent, effectExcludedFromVoting, effectCustomName, effectShortcut));
+                    EffectOption option = new EffectOption();
+                    option.Name = key;
+                    option.Enabled = enabled == 1;
+                    option.timeMode = effectTimedType;
+                    option.customTime = effectTimedTime;
+                    option.weightMultiplier = effectWeight;
+                    option.permanent = effectPermanent;
+                    option.excludeFromVoting = effectExcludedFromVoting;
+                    option.customName = effectCustomName;
+                    option.shortcutKey = effectShortcut;
+                    m_effectsFile.SetValue(key, option);
                 }
             }
-        }
-
-        private void WriteEffectsFile()
-        {
-            for (EffectType effectType = 0; effectType < EffectType._EFFECT_ENUM_MAX; effectType++)
-            {
-                EffectData effectData = GetEffectData(effectType);
-
-                m_effectsFile.WriteValue(EffectsMap[effectType].Id, $"{(m_treeMenuItemsMap[effectType].IsChecked ? 1 : 0)},{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
-                    + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
-                    + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
-                    + $",{(effectData.Shortcut)}");
-            }
-
             m_effectsFile.WriteFile();
+            File.Delete("effects.ini");
         }
 
         private void InitEffectsTreeView()

@@ -40,7 +40,14 @@ static void ParseEffectsFile()
 	g_EnabledEffects.clear();
 	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
 
-	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
+	struct stat buffer;
+	if (stat("chaosmod/effects.json", &buffer) == 0)
+	{
+		EffectConfig::ReadConfig("chaosmod/effects.json", g_EnabledEffects);
+	}
+	else {
+		EffectConfig::OldReadConfig("chaosmod/effects.ini", g_EnabledEffects);
+	}
 }
 
 static void Reset()
