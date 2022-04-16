@@ -3,7 +3,6 @@
 */
 
 #include <stdafx.h>
-#include <Memory/Entity.h>
 #include <map>
 
 static std::map<Ped, Vector3> savedVectors;
