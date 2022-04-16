@@ -51,7 +51,7 @@ static void OnStart()
 	{
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
-
+	WAIT(10);
 	SleepAllThreads(500);
 
 	WAIT(500);
@@ -61,6 +61,15 @@ static void OnStart()
 	if (fakeTimer)
 	{
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
+	}
+	if (g_Random.GetRandomInt(0, 1) == 0)
+	{
+		HWND hWnd = FindWindowA(0, "Grand Theft Auto V");
+		if (hWnd)
+		{
+			_SET_CONTROL_NORMAL(0, 199, 1.f);
+			PostMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		}
 	}
 }
 
