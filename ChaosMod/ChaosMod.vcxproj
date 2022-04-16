@@ -81,7 +81,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);dbghelp.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -92,6 +92,7 @@
     <ClCompile Include="Components\EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeDisconnect.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
