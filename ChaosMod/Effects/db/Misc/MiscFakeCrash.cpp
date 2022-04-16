@@ -51,7 +51,6 @@ static void OnStart()
 	{
 		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
-	WAIT(10);
 	SleepAllThreads(500);
 
 	WAIT(500);
