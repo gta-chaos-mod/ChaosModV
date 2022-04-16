@@ -105,11 +105,13 @@
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
@@ -127,6 +129,7 @@
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsPropHunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsQuarrelingCouple.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
@@ -158,6 +161,7 @@
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSickCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsCatGuns.cpp" />
@@ -199,6 +203,7 @@
     <ClCompile Include="Effects\db\Player\PlayerLockCamera.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRandomTraffic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscUTurn.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsTiny.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
@@ -370,6 +375,7 @@
     <ClInclude Include="Lib\scrThread.h" />
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
@@ -380,6 +386,7 @@
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\Misc.h" />
     <ClInclude Include="Memory\PedModels.h" />
+    <ClInclude Include="Memory\Script.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />
@@ -410,6 +417,9 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ChaosMod.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
