@@ -345,7 +345,7 @@ namespace ConfigApp
             EFFECT_PLAYER_LAGGY_CAMERA,
             EFFECT_MISC_CLONE_ON_DEATH,
             EFFECT_SIDEWAYS_GRAVITY,
-            EFFECT_MISC_JUMPY_PROPS,           
+            EFFECT_MISC_JUMPY_PROPS,
             EFFECT_PEDS_PROP_HUNT,
             EFFECT_MISC_WATER,
             EFFECT_VEHS_PROP_MODELS,
