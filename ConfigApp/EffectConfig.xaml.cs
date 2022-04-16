@@ -11,6 +11,7 @@ namespace ConfigApp
     {
         private bool m_isTimedEffect;
         private bool m_IsSaved = false;
+        public EffectType[] effectCompatibility = new EffectType[] {};
         public bool IsSaved
         {
             get
@@ -88,6 +89,17 @@ namespace ConfigApp
 
             effectconf_effect_shortcut_combo.ItemsSource = availableKeys;
             effectconf_effect_shortcut_combo.SelectedItem = selectedKey;
+
+            Effectconf_effect_incompatibility_button.Click += (object sender, RoutedEventArgs e) =>
+            {
+                EffectConfig_incompatibility efci = new EffectConfig_incompatibility(effectData, effectInfo);
+                efci.ShowDialog();
+
+                if (efci.IsSaved)
+                {
+                    effectCompatibility = efci.effectsCompatibility;
+                }
+            };
 
             CheckEnableConfigurables();
         }

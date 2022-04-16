@@ -1,4 +1,8 @@
 ﻿using static ConfigApp.Effects;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+
 
 namespace ConfigApp
 {
@@ -11,8 +15,25 @@ namespace ConfigApp
         public bool ExcludedFromVoting;
         public string CustomName;
         public int Shortcut;
+        public EffectType[] IncompatibleWith = new EffectType[] {};
 
-        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName, int shortcut)
+        public string GetIncompatibilityString()
+        {
+            List<string> list = new List<string>();
+            foreach (EffectType item in IncompatibleWith)
+            {
+                if (!EffectsMap.ContainsKey(item))
+                {
+                    MessageBox.Show($"One of the specified effects name: {item}. Was not found in the dictionary. It was not added to the incompatibility list.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    continue;
+                }
+                list.Add(EffectsMap[item].Id);
+            }
+            string[] arr = list.ToArray();
+            return String.Join(",", arr);
+        }
+
+        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName, int shortcut, EffectType[] incompatibleWith)
         {
             TimedType = timedType;
             CustomTime = customTime;
@@ -21,6 +42,7 @@ namespace ConfigApp
             ExcludedFromVoting = excludedFromVoting;
             CustomName = customName;
             Shortcut = shortcut;
+            IncompatibleWith = incompatibleWith;
         }
     }
 }

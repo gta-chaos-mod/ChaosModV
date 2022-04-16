@@ -232,10 +232,17 @@
     <Compile Include="EffectConfig.xaml.cs">
       <DependentUpon>EffectConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EffectConfig_incompatibility.xaml.cs">
+      <DependentUpon>EffectConfig_incompatibility.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EffectData.cs" />
     <Compile Include="EffectsTreeMenuItem.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Utils.cs" />
+    <Page Include="EffectConfig_incompatibility.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
