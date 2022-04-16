@@ -10,7 +10,7 @@ static std::vector<int> availableComponents = { 1, 2, 3, 6, 7, 8, 9, 10, 14, 15,
 
 static void OnStart()
 {
-	selectedComponent = comps[g_Random.GetRandomInt(0, availableComponents.size() - 1)];
+	selectedComponent = availableComponents[g_Random.GetRandomInt(0, availableComponents.size() - 1)];
 }
 
 static void OnTick()
