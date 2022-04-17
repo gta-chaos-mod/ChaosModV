@@ -38,7 +38,7 @@ static void OnTick()
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_FACECAM, OnStart, OnStop, OnTick, EffectInfo
     {
-        .Name = "Facecam",
+        .Name = "FaceTime",
         .Id = "player_facecam",
 		.IsTimed = true,
 		.IsShortDuration = true
