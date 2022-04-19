@@ -144,7 +144,7 @@ static void Init()
 
 	LOG("Completed Init!");
 
-	if (ms_pTwitchVoting->IsEnabled())
+	if (ms_pTwitchVoting->IsTwitchEnabled())
 	{
 		ms_pSplashTexts->ShowTwitchVotingSplash();
 	}

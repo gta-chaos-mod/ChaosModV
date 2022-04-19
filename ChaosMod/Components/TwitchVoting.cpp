@@ -5,6 +5,8 @@
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS LPSTR("chaosmod\\VotingProxy.exe --startProxy")
 
+bool m_bPingErrorMsgShown = false;
+
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
 {
 	LOG("STARTING voting codee.....");
@@ -130,8 +132,11 @@ void TwitchVoting::Run()
 	{
 		if (m_iNoPingRuns == 5)
 		{
-			ErrorOutWithMsg("Connection to VotingProxy aborted. Returning to normal mode.");
-
+			if (!m_bPingErrorMsgShown) //Prevents spam of alerts
+			{
+				m_bPingErrorMsgShown = true;
+				ErrorOutWithMsg("Connection to VotingProxy aborted. Returning to normal mode.");
+			}
 			return;
 		}
 

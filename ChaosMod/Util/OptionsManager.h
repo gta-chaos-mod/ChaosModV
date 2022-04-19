@@ -6,7 +6,7 @@ class OptionsManager
 {
 private:
 	OptionsFile m_ConfigFile{ "chaosmod/config.ini" };
-	OptionsFile m_TwitchFile{ "chaosmod/twitch.ini" };
+	OptionsFile m_TwitchFile{ "chaosmod/voting.ini" };
 
 public:
 	void Reset()

@@ -12,10 +12,8 @@ namespace VotingProxy.VotingReceiver
         /// Events which get invoked when the voting receiver receives a message
         /// </summary>
         event EventHandler<OnDiscordMessageArgs> OnDiscordMessage;
-        /// <summary>
-        /// Sends a message to the connected service
-        /// </summary>
-        /// <param name="message">Message that should be sent</param>
+
         void SendMessage(List<IVoteOption> options, EVotingMode votingMode);
+        void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode);
     }
 }

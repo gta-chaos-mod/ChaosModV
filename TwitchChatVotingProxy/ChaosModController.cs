@@ -33,21 +33,21 @@ namespace VotingProxy
         public ChaosModController(
             IChaosPipeClient chaosPipe,
             IOverlayServer overlayServer,
-            IVotingReceiver votingReceiver,
-            IVotingReceiverDiscord discordVotingReciever,
+            IVotingReceiver _votingReceiver,
+            IVotingReceiverDiscord _discordVotingReceiver,
             IConfig config
         ) {
             this.chaosPipe = chaosPipe;
             this.overlayServer = overlayServer;
             bool vote = false;
-            if (votingReceiver != null)
+            if (_votingReceiver != null)
             {
-                this.votingReceiver = votingReceiver;
+                this.votingReceiver = _votingReceiver;
                 vote = true;
             }
-            if (discordVotingReceiver != null)
+            if (_discordVotingReceiver != null)
             {
-                this.discordVotingReceiver = discordVotingReceiver;
+                this.discordVotingReceiver = _discordVotingReceiver;
                 vote = true;
             }
 
@@ -90,8 +90,9 @@ namespace VotingProxy
         /// Does the display update tick and is called by a timer
         /// </summary>
         private void DisplayUpdateTick(object sender, ElapsedEventArgs e)
-        {
-            overlayServer.UpdateVoting(activeVoteOptions);
+        { 
+            discordVotingReceiver.UpdateMessage(activeVoteOptions, (EVotingMode)votingMode);
+            overlayServer.UpdateVoting(activeVoteOptions);  
         }
         /// <summary>
         /// Calculate the voting result by counting them, and returning the one
@@ -154,13 +155,16 @@ namespace VotingProxy
         private void OnGetVoteResult(object sender, OnGetVoteResultArgs e)
         {
             // Tell the overlay server that the vote has ended
-            try
+            if (votingReceiver != null)
             {
-                overlayServer.EndVoting();
+                try
+                {
+                    overlayServer.EndVoting();
 
-            } catch (Exception err)
-            {
-                Log.Error(err, "error occured");
+                } catch (Exception err)
+                {
+                    Log.Error(err, "error occured");
+                }
             }
 
             // Evaluate what result calculation to use

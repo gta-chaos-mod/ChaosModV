@@ -12,6 +12,7 @@ namespace VotingProxy.VotingDiscordClient
         public virtual event EventHandler<OnDiscordMessageReceivedArgs> OnDiscordMessageReceived;
 
         public abstract void SendMessage(List<IVoteOption> options, EVotingMode votingMode);
+        public abstract void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode);
         public abstract void Connect();
         public abstract void Disconnect();
     }

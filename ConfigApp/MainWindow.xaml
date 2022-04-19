@@ -317,6 +317,61 @@
                     </Grid>
                 </TabItem>
 
+                <TabItem x:Name="discord_tab" Header="Discord" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="120" />
+                            <RowDefinition Height="180" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="This feature allows Discord users to vote for an effect from a collection of random ones each time the timer runs out by making use of Discord's button feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the discord__readme.txt file included with the mod (inside the README folder) for more information."
+                                   Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <CheckBox x:Name="discord_user_agreed" Content="Enable Discord Voting" Grid.Row="1"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Click="discord_user_agreed_Clicked" />
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="340" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="400" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label x:Name="discord_user_channel_id_label" Content="Channel Id" Grid.Row="0" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="discord_user_channel_id" Width="280" Height="20" Grid.Row="0" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="discord_user_guild_id_label" Content="Guild Id" Grid.Row="1" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="discord_user_guild_id" Width="280" Height="20" Grid.Row="1" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="discord_user_bot_oauth_label" Content="OAuth Token" Grid.Row="2" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <PasswordBox x:Name="discord_user_bot_oauth" Width="280" Height="20" Grid.Row="2" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
                 <TabItem x:Name="more_tab" Header="More" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>

@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4765F6E3-B78C-4B76-BA30-AA5362862818}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>TwitchChatVotingProxy</RootNamespace>
-    <AssemblyName>TwitchChatVotingProxy</AssemblyName>
+    <RootNamespace>VotingProxy</RootNamespace>
+    <AssemblyName>VotingProxy</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>

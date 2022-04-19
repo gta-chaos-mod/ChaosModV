@@ -147,11 +147,24 @@ namespace VotingProxy.VotingReceiver
         {
             try
             {
+                
                 client.SendMessage(options, votingMode);
             }
             catch (Exception e)
             {
                 logger.Error(e, $"failed to send message to channel \"{config.ChannelId}\"");
+            }
+        }
+
+        public void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode)
+        {
+            try
+            {
+                client.UpdateMessage(options, votingMode);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, $"failed to edit message in channel \"{config.ChannelId}\"");
             }
         }
         /// <summary>
