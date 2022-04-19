@@ -180,10 +180,11 @@ namespace VotingProxy.VotingDiscordClient
         public void StopBot()
         {
             logger.Information("Stopping bot!");
+
+            _client.LogoutAsync();
+            _client.StopAsync();            
             _client.LatencyUpdated -= Hearbeat;
             _client.ButtonExecuted -= ButtonHandler;
-            _client.LogoutAsync();
-            _client.StopAsync();
         }
     }
 

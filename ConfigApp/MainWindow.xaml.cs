@@ -236,6 +236,7 @@ namespace ConfigApp
             {
                 string value = m_effectsFile.ReadValue(key);
 
+                // Split by comma, ignoring commas in between quotation marks
                 string[] values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
                 // Find EffectType from ID

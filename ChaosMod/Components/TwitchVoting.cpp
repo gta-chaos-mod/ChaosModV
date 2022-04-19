@@ -9,8 +9,8 @@ bool m_bPingErrorMsgShown = false;
 
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
 {
-	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("TwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
-	m_bEnableDiscordVoting = g_OptionsManager.GetTwitchValue<bool>("DiscordVoting", OPTION_DEFAULT_DISCORD_VOTING_ENABLED);
+	m_bEnableTwitchVoting = g_OptionsManager.GetVotingValue<bool>("TwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_bEnableDiscordVoting = g_OptionsManager.GetVotingValue<bool>("DiscordVoting", OPTION_DEFAULT_DISCORD_VOTING_ENABLED);
 
 	if (m_bEnableTwitchVoting == false && m_bEnableDiscordVoting == false)
 	{
@@ -24,14 +24,14 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 		return;
 	}
 
-	m_iTwitchSecsBeforeVoting = g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	m_iTwitchSecsBeforeVoting = g_OptionsManager.GetVotingValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_eTwitchOverlayMode = g_OptionsManager.GetVotingValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_bEnableTwitchChanceSystem = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING);
-	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+	m_bEnableTwitchChanceSystem = g_OptionsManager.GetVotingValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING);
+	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetVotingValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
-	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_VOTING_RANDOM_EFFECT);
+	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetVotingValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_VOTING_RANDOM_EFFECT);
 
 	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = false;
 
@@ -239,7 +239,8 @@ void TwitchVoting::Run()
 
 			if (effectData.TimedType != EEffectTimedType::Permanent
 				&& !effectData.IsMeta
-				&& !effectData.ExcludedFromVoting)
+				&& !effectData.ExcludedFromVoting
+				&& !effectData.IsUtility)
 			{
 				dictChoosableEffects.emplace(effectIdentifier, effectData);
 			}
@@ -386,6 +387,7 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	if (szMsg == "hello")
 	{
 		m_bReceivedHello = true;
+		LOG("Received Hello from voting proxy");
 	}
 	else if (szMsg == "ping")
 	{

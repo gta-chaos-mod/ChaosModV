@@ -6,13 +6,13 @@ class OptionsManager
 {
 private:
 	OptionsFile m_ConfigFile{ "chaosmod/config.ini" };
-	OptionsFile m_TwitchFile{ "chaosmod/voting.ini" };
+	OptionsFile m_VotingFile{ "chaosmod/voting.ini" };
 
 public:
 	void Reset()
 	{
 		m_ConfigFile.Reset();
-		m_TwitchFile.Reset();
+		m_VotingFile.Reset();
 	}
 
 	template <typename T>
@@ -22,7 +22,7 @@ public:
 	}
 
 	template <typename T>
-	inline T GetTwitchValue(const std::string& szKey, T defaultValue)
+	inline T GetVotingValue(const std::string& szKey, T defaultValue)
 	{
 		return GetOptionValue(m_TwitchFile, szKey, defaultValue);
 	}
