@@ -148,6 +148,10 @@ static void Init()
 	{
 		ms_pSplashTexts->ShowTwitchVotingSplash();
 	}
+	if (ms_pTwitchVoting->IsDiscordEnabled())
+	{
+		ms_pSplashTexts->ShowDiscordVotingSplash();
+	}
 }
 
 static void MainRun()

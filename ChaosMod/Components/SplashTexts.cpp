@@ -19,14 +19,21 @@ void SplashTexts::Run()
 
 	if (m_fTwitchVotingSplashTime > 0)
 	{
-		DrawScreenText("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 }, true);
+		DrawScreenText("Twitch Voting Enabled!", { .84f, .7f }, .8f, { 255, 100, 100 }, true);
 
 		m_fTwitchVotingSplashTime -= fFrameTime;
 	}
 
+	if (m_fDiscordVotingSplashTime > 0)
+	{
+		DrawScreenText("Discord Voting Enabled!", { .84f, .6f }, .8f, { 0, 153, 255 }, true);
+
+		m_fDiscordVotingSplashTime -= fFrameTime;
+	}
+
 	if (m_fClearEffectsSplashTime > 0)
 	{
-		DrawScreenText("Effects Cleared!", { .86f, .86f }, .8f, { 255, 100, 100 }, true);
+		DrawScreenText("Effects Cleared!", { .84f, .86f }, .8f, { 255, 100, 100 }, true);
 
 		m_fClearEffectsSplashTime -= fFrameTime;
 	}
@@ -45,4 +52,9 @@ void SplashTexts::ShowTwitchVotingSplash()
 void SplashTexts::ShowClearEffectsSplash()
 {
 	m_fClearEffectsSplashTime = SPLASH_TEXT_DUR_SECS;
+}
+
+void SplashTexts::ShowDiscordVotingSplash()
+{
+	m_fDiscordVotingSplashTime = SPLASH_TEXT_DUR_SECS;
 }

@@ -9,6 +9,7 @@ class SplashTexts : public Component
 private:
 	float m_fStartupSplashTime = 0.f;
 	float m_fTwitchVotingSplashTime = 0.f;
+	float m_fDiscordVotingSplashTime = 0.f;
 	float m_fClearEffectsSplashTime = 0.f;
 
 public:
@@ -16,5 +17,6 @@ public:
 
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
+	void ShowDiscordVotingSplash();
 	void ShowClearEffectsSplash();
 };
