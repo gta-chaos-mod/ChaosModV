@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TwitchChatVotingProxy.ChaosPipe
+namespace VotingProxy.ChaosPipe
 {
     interface IChaosPipeClient
     {

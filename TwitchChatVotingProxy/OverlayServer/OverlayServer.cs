@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 // TODO: fix voting mode
-namespace TwitchChatVotingProxy.OverlayServer
+namespace VotingProxy.OverlayServer
 {
     class OverlayServer : IOverlayServer
     {
