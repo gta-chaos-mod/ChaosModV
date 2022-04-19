@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitchChatVotingProxy
+namespace VotingProxy
 {
-    interface IVoteOption
+    public interface IVoteOption
     {
         /// <summary>
         /// Label (name) of the voting option

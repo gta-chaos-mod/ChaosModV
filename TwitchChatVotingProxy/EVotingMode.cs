@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Api.Core.Enums;
 
-namespace TwitchChatVotingProxy
+namespace VotingProxy
 {
-    enum EVotingMode
+    public enum EVotingMode
     {
         MAJORITY,
         PERCENTAGE,

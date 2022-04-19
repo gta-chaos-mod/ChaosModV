@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
-using TwitchChatVotingProxy.ChaosPipe;
-using TwitchChatVotingProxy.Config;
-using TwitchChatVotingProxy.OverlayServer;
-using TwitchChatVotingProxy.VotingReceiver;
+using VotingProxy.ChaosPipe;
+using VotingProxy.Config;
+using VotingProxy.OverlayServer;
+using VotingProxy.VotingReceiver;
 
-namespace TwitchChatVotingProxy
+namespace VotingProxy
 {
     class ChaosModController
     {
@@ -19,24 +19,44 @@ namespace TwitchChatVotingProxy
         private Timer displayUpdateTick = new Timer(DISPLAY_UPDATE_TICKRATE);
         private ILogger logger = Log.Logger.ForContext<ChaosModController>();
         private IOverlayServer? overlayServer;
-        private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
+        private Dictionary<string, int> userVotedForTwitch = new Dictionary<string, int>();
+        private Dictionary<string, int> userVotedForDiscord = new Dictionary<string, int>();
         private Random random = new Random();
         private Boolean retainInitialVotes;
         private int voteCounter = 0;
         private bool voteRunning = false;
         private EVotingMode? votingMode;
-        private EOverlayMode? overlayMode;
+        private EOverlayMode? twitchOverlayMode;
         private IVotingReceiver votingReceiver;
+        private IVotingReceiverDiscord discordVotingReceiver;
 
         public ChaosModController(
             IChaosPipeClient chaosPipe,
             IOverlayServer overlayServer,
             IVotingReceiver votingReceiver,
+            IVotingReceiverDiscord discordVotingReciever,
             IConfig config
         ) {
             this.chaosPipe = chaosPipe;
             this.overlayServer = overlayServer;
-            this.votingReceiver = votingReceiver;
+            bool vote = false;
+            if (votingReceiver != null)
+            {
+                this.votingReceiver = votingReceiver;
+                vote = true;
+            }
+            if (discordVotingReceiver != null)
+            {
+                this.discordVotingReceiver = discordVotingReceiver;
+                vote = true;
+            }
+
+            if (!vote)
+            {
+                logger.Error("Voting is disabled!");
+                return;
+            }
+            
 
             // Setup pipe listeners
             this.chaosPipe.OnGetCurrentVotes += OnGetCurrentVotes;
@@ -45,11 +65,20 @@ namespace TwitchChatVotingProxy
             this.chaosPipe.OnNoVotingRound += OnNoVotingRound;
 
             // Setup receiver listeners
-            this.votingReceiver.OnMessage += OnVoteReceiverMessage;
+            if (config.TwitchVoting)
+            {
+                this.votingReceiver.OnMessage += OnVoteReceiverMessage;
+            }
+
+            if (config.DiscordVoting)
+            {
+                this.discordVotingReceiver.OnDiscordMessage += OnVoteReceiverMessageDiscord;
+            }
+            
 
             // Setup config options
             votingMode = config.VotingMode;
-            overlayMode = config.OverlayMode;
+            twitchOverlayMode = config.TwitchOverlayMode;
             retainInitialVotes = config.RetainInitalVotes;
 
             // Setup display update tick
@@ -168,39 +197,49 @@ namespace TwitchChatVotingProxy
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
             // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message
-            switch (overlayMode)
+            if (votingReceiver != null)
             {
-                case EOverlayMode.CHAT_MESSAGES:
-                    votingReceiver.SendMessage("Time for a new effect! Vote between:");
-                    foreach (IVoteOption voteOption in activeVoteOptions)
-                    {
-                        string msg = string.Empty;
-
-                        bool firstIndex = true;
-                        foreach (string match in voteOption.Matches)
+                switch (twitchOverlayMode)
+                {
+                    case EOverlayMode.CHAT_MESSAGES:
+                        votingReceiver.SendMessage("Time for a new effect! Vote between:");
+                        foreach (IVoteOption voteOption in activeVoteOptions)
                         {
-                            msg += firstIndex ? $"{match} " : $" / {match}";
+                            string msg = string.Empty;
 
-                            firstIndex = true;
+                            bool firstIndex = true;
+                            foreach (string match in voteOption.Matches)
+                            {
+                                msg += firstIndex ? $"{match} " : $" / {match}";
+
+                                firstIndex = true;
+                            }
+
+                            msg += $": {voteOption.Label}\n";
+
+                            votingReceiver.SendMessage(msg);
                         }
 
-                        msg += $": {voteOption.Label}\n";
+                        if (votingMode == EVotingMode.PERCENTAGE)
+                        {
+                            votingReceiver.SendMessage("Votes will affect the chance for one of the effects to occur.");
+                        }
 
-                        votingReceiver.SendMessage(msg);
-                    }
-
-                    if (votingMode == EVotingMode.PERCENTAGE)
-                    {
-                        votingReceiver.SendMessage("Votes will affect the chance for one of the effects to occur.");
-                    }
-
-                    break;
-                case EOverlayMode.OVERLAY_OBS:
-                    overlayServer.NewVoting(activeVoteOptions);
-                    break;
+                        break;
+                    case EOverlayMode.OVERLAY_OBS:
+                        overlayServer.NewVoting(activeVoteOptions);
+                        break;
+                }
             }
+
+            if (discordVotingReceiver != null)
+            {
+                discordVotingReceiver.SendMessage(activeVoteOptions, (EVotingMode)votingMode);
+            }
+
             // Clear the old voted for information
-            userVotedFor.Clear();
+            userVotedForTwitch.Clear();
+            userVotedForDiscord.Clear();
             // Increase the vote counter
             voteCounter++;
 
@@ -215,7 +254,7 @@ namespace TwitchChatVotingProxy
             overlayServer.NoVotingRound();
         }
         /// <summary>
-        /// Is called when the voting receiver receives a message
+        /// Is called when the twitch voting receiver receives a message
         /// </summary>
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
@@ -230,20 +269,58 @@ namespace TwitchChatVotingProxy
                     int previousVote;
 
                     // Check if the player has already voted
-                    if (!userVotedFor.TryGetValue(e.ClientId, out previousVote))
+                    if (!userVotedForTwitch.TryGetValue(e.ClientId, out previousVote))
                     {
                         // If they haven't voted, count his vote
-                        userVotedFor.Add(e.ClientId, i);
+                        userVotedForTwitch.Add(e.ClientId, i);
                         voteOption.Votes++;
        
                     } else if (previousVote != i)
                     {
                         // If the player has already voted, and it's not the same as before,
                         // remove the old vote, and add the new one.
-                        userVotedFor.Remove(e.ClientId);
+                        userVotedForTwitch.Remove(e.ClientId);
                         activeVoteOptions[previousVote].Votes--;
-                        
-                        userVotedFor.Add(e.ClientId, i);
+
+                        userVotedForTwitch.Add(e.ClientId, i);
+                        voteOption.Votes++;
+                    }
+
+                    break;
+                }
+            }
+        }
+        /// <summary>
+        /// Is called when the discord voting receiver receives a message
+        /// </summary>
+        private void OnVoteReceiverMessageDiscord(object sender, OnDiscordMessageArgs e)
+        {
+            if (!voteRunning) return;
+
+            for (int i = 0; i < activeVoteOptions.Count; i++)
+            {
+                var voteOption = activeVoteOptions[i];
+
+                if (voteOption.Matches.Contains(e.Message))
+                {
+                    int previousVote;
+
+                    // Check if the player has already voted
+                    if (!userVotedForDiscord.TryGetValue(e.ClientId, out previousVote))
+                    {
+                        // If they haven't voted, count his vote
+                        userVotedForDiscord.Add(e.ClientId, i);
+                        voteOption.Votes++;
+
+                    }
+                    else if (previousVote != i)
+                    {
+                        // If the player has already voted, and it's not the same as before,
+                        // remove the old vote, and add the new one.
+                        userVotedForDiscord.Remove(e.ClientId);
+                        activeVoteOptions[previousVote].Votes--;
+
+                        userVotedForDiscord.Add(e.ClientId, i);
                         voteOption.Votes++;
                     }
 
