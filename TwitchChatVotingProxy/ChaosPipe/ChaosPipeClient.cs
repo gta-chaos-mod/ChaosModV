@@ -176,12 +176,7 @@ namespace VotingProxy.ChaosPipe
                 optionNames.RemoveAt(0);
             }
             // Dispatch information to listeners
-            OnNewVote?.Invoke(
-                this, 
-                new OnNewVoteArgs(
-                    optionNames.ToArray()
-                )
-            );
+            OnNewVote?.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
         }
         /// <summary>
         /// Start a no-voting round. The chaos mod will decide over the options

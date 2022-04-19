@@ -51,7 +51,7 @@ namespace VotingProxy
                 vote = true;
             }
 
-            if (!vote)
+            if (vote == false)
             {
                 logger.Error("Voting is disabled!");
                 return;

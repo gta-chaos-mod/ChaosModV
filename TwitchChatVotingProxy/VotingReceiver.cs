@@ -123,7 +123,7 @@ namespace VotingProxy.VotingReceiver
 
         private DiscordClient client;
         private DiscordVotingRecieverConfig config;
-        private ILogger logger = Log.Logger.ForContext<ChatVotingReceiver>();
+        private ILogger logger = Log.Logger.ForContext<DiscordVotingReceiver>();
 
         public DiscordVotingReceiver(DiscordVotingRecieverConfig config)
         {
@@ -159,14 +159,14 @@ namespace VotingProxy.VotingReceiver
         /// </summary>
         private void OnDiscordConnected(object sender, EventArgs e)
         {
-            logger.Information("successfully connected to twitch");
+            logger.Information("successfully connected to discord");
         }
         /// <summary>
         /// Called when the discord client disconnects (callback)
         /// </summary>
         private async void OnDiscordDisconnect(object sender, EventArgs e)
         {
-            logger.Error("disconnected from the channel, trying to reconnect");
+            logger.Error("disconnected from the discord, trying to reconnect");
             await Task.Delay(RECONNECT_INTERVAL);
             client.Connect();
         }
@@ -176,7 +176,7 @@ namespace VotingProxy.VotingReceiver
         /// </summary>
         private void OnDiscordIncorrectLogin(object sender, EventArgs e)
         {
-            logger.Error("incorrect login, check user name and oauth");
+            logger.Error("incorrect login, check oauth");
             client.Disconnect();
         }
         /// <summary>
@@ -185,7 +185,7 @@ namespace VotingProxy.VotingReceiver
         private void OnDiscordMessageReceived(object sender, OnDiscordMessageReceivedArgs e)
         {
             var chatMessage = e.ChatMessage;
-
+            logger.Information("Discord message recieved");
             var evnt = new OnDiscordMessageArgs();
             evnt.Message = chatMessage.Message.Trim();
             evnt.ClientId = chatMessage.UserId;

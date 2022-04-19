@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace VotingProxy.VotingDiscordClient
     {
         private DiscordCredentials credentials;
         private DiscordSocketClient _client;
+        private ILogger logger = Log.Logger.ForContext<DiscordBot>();
 
         private Dictionary<int, string> buttonIds = new Dictionary<int, string>();
 
@@ -47,11 +49,13 @@ namespace VotingProxy.VotingDiscordClient
 
         public DiscordBot(DiscordCredentials credentials)
         {
+            logger.Information("Creating new bot class");
             this.credentials = credentials;
         }
 
         public void SendVoteMessage(List<IVoteOption> options, EVotingMode votingMode)
         {
+            logger.Information("Sending vote message");
             string title = "Time for a new effect! Vote between:";
             string optMsg = string.Empty;
             string footer = string.Empty;
@@ -84,6 +88,7 @@ namespace VotingProxy.VotingDiscordClient
                 buttonIds.Add(Int32.Parse(opt.Matches[0]), $"effect-{opt.Matches[0]}");
             }
             _client.GetGuild(ToSnowflake(credentials.GuildID)).GetTextChannel(ToSnowflake(credentials.ChannelId)).SendMessageAsync(embed: embed.Build(), components: comps.Build());
+            logger.Information("Vote message sent!");
         }
 
         private Task ButtonPressed(SocketMessageComponent component)
@@ -127,6 +132,7 @@ namespace VotingProxy.VotingDiscordClient
 
         public void StartBot()
         {
+            logger.Information("Starting bot!");
             _client = new DiscordSocketClient();
 
             _client.LoginAsync(TokenType.Bot, credentials.OAuth);
@@ -139,6 +145,7 @@ namespace VotingProxy.VotingDiscordClient
 
         public void StopBot()
         {
+            logger.Information("Stopping bot!");
             _client.LogoutAsync();
             _client.StopAsync();
         }

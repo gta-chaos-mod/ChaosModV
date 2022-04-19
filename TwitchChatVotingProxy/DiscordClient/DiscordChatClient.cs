@@ -1,6 +1,7 @@
 ﻿using System;
+using Serilog;
 using System.Collections.Generic;
-using Discord;
+
 
 namespace VotingProxy.VotingDiscordClient
 {
@@ -9,6 +10,7 @@ namespace VotingProxy.VotingDiscordClient
     {
         public DiscordBot client;
         private DiscordCredentials creds;
+        private ILogger logger = Log.Logger.ForContext<DiscordChatClient>();
 
         public DiscordChatClient(DiscordCredentials credentials)
         {
@@ -18,16 +20,19 @@ namespace VotingProxy.VotingDiscordClient
 
         public override void Connect()
         {
+            logger.Information("Connect method called");
             client.StartBot();
         }
 
         public override void Disconnect()
         {
+            logger.Information("Disconnect method called");
             client.StopBot();
         }
 
         public override void SendMessage(List<IVoteOption> options, EVotingMode votingMode)
         {
+            logger.Information("SendMessage method called");
             client.SendVoteMessage(options, votingMode);
         }
 
@@ -35,10 +40,12 @@ namespace VotingProxy.VotingDiscordClient
         {
             add
             {
+                logger.Information("Connect handler added");
                 client.OnBotConnected += value;
             }
             remove 
             {
+                logger.Information("Connect handler removed");
                 client.OnBotConnected -= value;
             }
         }
@@ -47,6 +54,7 @@ namespace VotingProxy.VotingDiscordClient
         {
             add
             {
+                logger.Information("Message handler added");
                 client.OnVoteReceived += (object sender, BotVoteEventArgs e) =>
                 {
                     ChatMessage e_ChatMessage = new ChatMessage()
@@ -63,6 +71,7 @@ namespace VotingProxy.VotingDiscordClient
             }
             remove
             {
+                logger.Information("Message handler removed");
                 client.OnVoteReceived -= (object sender, BotVoteEventArgs e) =>
                 {
                     ChatMessage e_ChatMessage = new ChatMessage()
