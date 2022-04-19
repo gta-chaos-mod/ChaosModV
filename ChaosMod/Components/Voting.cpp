@@ -1,13 +1,13 @@
 #include <stdafx.h>
 
-#include "TwitchVoting.h"
+#include "Voting.h"
 
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS LPSTR("chaosmod\\VotingProxy.exe --startProxy")
 
 bool m_bPingErrorMsgShown = false;
 
-TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
+Voting::Voting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
 {
 	m_bEnableTwitchVoting = g_OptionsManager.GetVotingValue<bool>("TwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_bEnableDiscordVoting = g_OptionsManager.GetVotingValue<bool>("DiscordVoting", OPTION_DEFAULT_DISCORD_VOTING_ENABLED);
@@ -77,7 +77,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 	ConnectNamedPipe(m_hPipeHandle, NULL);
 }
 
-TwitchVoting::~TwitchVoting()
+Voting::~Voting()
 {
 	if (m_hPipeHandle != INVALID_HANDLE_VALUE)
 	{
@@ -87,7 +87,7 @@ TwitchVoting::~TwitchVoting()
 	}
 }
 
-void TwitchVoting::Run()
+void Voting::Run()
 {
 	if (m_bEnableTwitchVoting == false && m_bEnableDiscordVoting == false)
 	{
@@ -372,17 +372,17 @@ void TwitchVoting::Run()
 	}
 }
 
-_NODISCARD bool TwitchVoting::IsTwitchEnabled() const
+_NODISCARD bool Voting::IsTwitchEnabled() const
 {
 	return m_bEnableTwitchVoting;
 }
 
-_NODISCARD bool TwitchVoting::IsDiscordEnabled() const
+_NODISCARD bool Voting::IsDiscordEnabled() const
 {
 	return m_bEnableDiscordVoting;
 }
 
-bool TwitchVoting::HandleMsg(const std::string& szMsg)
+bool Voting::HandleMsg(const std::string& szMsg)
 {
 	if (szMsg == "hello")
 	{
@@ -447,13 +447,13 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	return true;
 }
 
-void TwitchVoting::SendToPipe(std::string&& szMsg)
+void Voting::SendToPipe(std::string&& szMsg)
 {
 	szMsg += "\n";
 	WriteFile(m_hPipeHandle, szMsg.c_str(), szMsg.length(), NULL, NULL);
 }
 
-void TwitchVoting::ErrorOutWithMsg(const std::string&& szMsg)
+void Voting::ErrorOutWithMsg(const std::string&& szMsg)
 {
 	MessageBox(NULL, szMsg.c_str(), "ChaosModV Error", MB_OK | MB_ICONERROR);
 

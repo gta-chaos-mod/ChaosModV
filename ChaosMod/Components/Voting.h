@@ -20,7 +20,7 @@ enum class ETwitchOverlayMode : int
 	OverlayOBS
 };
 
-class TwitchVoting : public Component
+class Voting : public Component
 {
 private:
 	struct ChoosableEffect
@@ -74,8 +74,8 @@ private:
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
 
 public:
-	TwitchVoting(const std::array<BYTE, 3>& rgTextColor);
-	~TwitchVoting();
+	Voting(const std::array<BYTE, 3>& rgTextColor);
+	~Voting();
 
 	virtual void Run() override;
 
