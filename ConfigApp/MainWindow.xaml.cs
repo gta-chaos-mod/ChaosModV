@@ -56,6 +56,7 @@ namespace ConfigApp
 
             ParseEffectsFile();
 
+            InitVotingTab();
             InitTwitchTab();
             InitDiscordTab();
 
@@ -198,9 +199,9 @@ namespace ConfigApp
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
 
-            twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
-            twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
-            twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+            voting_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("VotingChanceSystem", false);
+            voting_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("VotingChanceSystemRetainChance", true);
+            voting_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("RandomEffectVoteableEnable", true);
 
             discord_user_agreed.IsChecked = m_twitchFile.ReadValueBool("DiscordVoting", false);
             discord_user_guild_id.Text = m_twitchFile.ReadValue("DiscordGuildID");
@@ -216,9 +217,10 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
             m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
-            m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
+
+            m_twitchFile.WriteValue("VotingChanceSystem", voting_user_chance_system_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("VotingChanceSystemRetainChance", voting_user_chance_system_retain_chance_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("RandomEffectVoteableEnable", voting_user_random_voteable_enable.IsChecked.Value);
 
             m_twitchFile.WriteValue("DiscordVoting", discord_user_agreed.IsChecked.Value);
             m_twitchFile.WriteValue("DiscordGuildID", discord_user_guild_id.Text);
@@ -387,6 +389,11 @@ namespace ConfigApp
             
         }
 
+        void InitVotingTab()
+        {
+            AnyVotingAgreed();
+        }
+
         void InitTwitchTab()
         {
             TwitchTabHandleAgreed();
@@ -397,9 +404,25 @@ namespace ConfigApp
             DiscordTabHandleAgreed();
         }
 
+        void AnyVotingAgreed()
+        {
+            bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault() | discord_user_agreed.IsChecked.GetValueOrDefault();
+
+            voting_user_chance_system_enable_label.IsEnabled = agreed;
+            voting_user_chance_system_enable.IsEnabled = agreed;
+            voting_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
+            voting_user_chance_system_retain_chance_enable.IsEnabled = agreed;
+            voting_user_random_voteable_enable.IsEnabled = agreed;
+            voting_user_random_voteable_enable_label.IsEnabled = agreed;
+        }
+
         void TwitchTabHandleAgreed()
         {
-            bool agreed = twitch_user_agreed.IsChecked.GetValueOrDefault();
+            bool agreed = false;
+            if (twitch_user_agreed.IsChecked.GetValueOrDefault() || discord_user_agreed.IsChecked.GetValueOrDefault())
+            {
+                agreed = true;
+            }
 
             twitch_user_channel_name_label.IsEnabled = agreed;
             twitch_user_channel_name.IsEnabled = agreed;
@@ -411,12 +434,6 @@ namespace ConfigApp
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_overlay_mode_label.IsEnabled = agreed;
             twitch_user_overlay_mode.IsEnabled = agreed;
-            twitch_user_chance_system_enable_label.IsEnabled = agreed;
-            twitch_user_chance_system_enable.IsEnabled = agreed;
-            twitch_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
-            twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
-            twitch_user_random_voteable_enable.IsEnabled = agreed;
-            twitch_user_random_voteable_enable_label.IsEnabled = agreed;
         }
 
         void DiscordTabHandleAgreed()
@@ -479,6 +496,7 @@ namespace ConfigApp
                     ParseVotingFile();
 
                     // Ensure all options are disabled in twitch tab again
+                    AnyVotingAgreed();
                     TwitchTabHandleAgreed();
                     DiscordTabHandleAgreed();
                 }
@@ -491,11 +509,13 @@ namespace ConfigApp
 
         private void twitch_user_agreed_Clicked(object sender, RoutedEventArgs e)
         {
+            AnyVotingAgreed();
             TwitchTabHandleAgreed();
         }
 
         private void discord_user_agreed_Clicked(object sender, RoutedEventArgs e)
         {
+            AnyVotingAgreed();
             DiscordTabHandleAgreed();
         }
 

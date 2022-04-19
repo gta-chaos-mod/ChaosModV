@@ -8,7 +8,7 @@ namespace VotingProxy.Config
     {
 
         public static readonly string KEY_OBS_OVERLAY_SERVER_PORT = "OBSOverlayServerPort";
-        public static readonly string KEY_RETAIN_INITIAL_VOTES = "ChanceSystemRetainChance";
+        public static readonly string KEY_RETAIN_INITIAL_VOTES = "VotingChanceSystemRetainChance";
         public static readonly string KEY_VOTING_CHANCE_SYSTEM = "VotingChanceSystem";
 
         public static readonly string KEY_TWITCH_VOTING = "TwitchVoting";

@@ -28,10 +28,10 @@ Voting::Voting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextCol
 
 	m_eTwitchOverlayMode = g_OptionsManager.GetVotingValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_bEnableTwitchChanceSystem = g_OptionsManager.GetVotingValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING);
-	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetVotingValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+	m_bEnableTwitchChanceSystem = g_OptionsManager.GetVotingValue<bool>("VotingChanceSystem", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING);
+	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetVotingValue<bool>("VotingChanceSystemRetainChance", OPTION_DEFAULT_VOTING_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
-	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetVotingValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_VOTING_RANDOM_EFFECT);
+	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetVotingValue<bool>("RandomEffectVoteableEnable", OPTION_DEFAULT_VOTING_RANDOM_EFFECT);
 
 	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = false;
 
