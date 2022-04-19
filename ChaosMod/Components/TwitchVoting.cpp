@@ -9,23 +9,12 @@ bool m_bPingErrorMsgShown = false;
 
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
 {
-	LOG("STARTING voting codee.....");
 	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("TwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_bEnableDiscordVoting = g_OptionsManager.GetTwitchValue<bool>("DiscordVoting", OPTION_DEFAULT_DISCORD_VOTING_ENABLED);
-	LOG("Got voting enabled vars");
 
 	if (m_bEnableTwitchVoting == false && m_bEnableDiscordVoting == false)
 	{
-		LOG("Neither are fucking on");
 		return;
-	}
-	if (m_bEnableDiscordVoting == true && m_bEnableTwitchVoting == false)
-	{
-		LOG("Discord is fucking on");
-	}
-	if (m_bEnableDiscordVoting == false && m_bEnableTwitchVoting == true)
-	{
-		LOG("Twitch is fucking on");
 	}
 
 	if (g_EnabledEffects.size() < 3)
@@ -34,8 +23,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 
 		return;
 	}
-
-	LOG("Getting voting vars");
 
 	m_iTwitchSecsBeforeVoting = g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
@@ -46,14 +33,10 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 
 	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_VOTING_RANDOM_EFFECT);
 
-	LOG("Got voting vars");
-	LOG("Doing more shit");
 	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = false;
 
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
-	LOG("Finished doing shit");
-	LOG("Opening proxy");
 #ifdef _DEBUG
 	DWORD ulAttributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -66,7 +49,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
-	LOG("Releasing mutex?");
 	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
 	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
 	if (hMutex)
@@ -76,14 +58,12 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 		CloseHandle(hMutex);
 	}
 
-	LOG("Checking for errors");
 	if (!bResult)
 	{
 		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/VotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Reverting to normal mode.").str());
 
 		return;
 	}
-	LOG("Creating pipe");
 	m_hPipeHandle = CreateNamedPipe("\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
 		1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
 	
@@ -94,7 +74,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 		return;
 	}
 
-	LOG("Connecting pipe");
 	ConnectNamedPipe(m_hPipeHandle, NULL);
 }
 
@@ -112,19 +91,9 @@ void TwitchVoting::Run()
 {
 	if (m_bEnableTwitchVoting == false && m_bEnableDiscordVoting == false)
 	{
-		LOG("Neither are fucking on 2");
 		return;
 	}
-	if (m_bEnableDiscordVoting == true && m_bEnableTwitchVoting == false)
-	{
-		LOG("Discord is fucking on 2");
-	}
-	if (m_bEnableDiscordVoting == false && m_bEnableTwitchVoting == true)
-	{
-		LOG("Twitch is fucking on 2");
-	}
 
-	LOG("Ping shit ig");
 	// Check if there's been no ping for too long and error out
 	// Also if the chance system is enabled, get current vote status every second (if shown on screen)
 	DWORD64 ullCurTick = GetTickCount64();
@@ -154,7 +123,6 @@ void TwitchVoting::Run()
 			&& m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
-			LOG("Requesting cur votes");
 			SendToPipe("getcurrentvotes");
 		}
 	}
@@ -194,7 +162,6 @@ void TwitchVoting::Run()
 
 			if (!m_bNoVoteRound)
 			{
-				LOG("Requesting vote results");
 				SendToPipe("getvoteresult");
 			}
 		}
@@ -259,7 +226,6 @@ void TwitchVoting::Run()
 
 		if (m_bNoVoteRound)
 		{
-			LOG("Requesting no vote round");
 			SendToPipe("novoteround");
 
 			return;
@@ -344,7 +310,6 @@ void TwitchVoting::Run()
 		{
 			oss << ":" << pChoosableEffect->m_szEffectName;
 		}
-		LOG("Sending vote info to pipe");
 		SendToPipe(oss.str());
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
@@ -421,12 +386,9 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	if (szMsg == "hello")
 	{
 		m_bReceivedHello = true;
-
-		LOG("Received Hello from voting proxy");
 	}
 	else if (szMsg == "ping")
 	{
-		LOG("Recieved ping from voting proxy");
 		m_ullLastPing = GetTickCount64();
 		m_iNoPingRuns = 0;
 		m_bReceivedFirstPing = true;
@@ -451,7 +413,6 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	}
 	else if (szMsg._Starts_with("voteresult"))
 	{
-		LOG("Recieved vote result from voting proxy");
 		int iResult = std::stoi(szMsg.substr(szMsg.find(":") + 1));
 
 		m_bHasReceivedResult = true;
@@ -461,7 +422,6 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	}
 	else if (szMsg._Starts_with("currentvotes"))
 	{
-		LOG("Recieved votes from voting proxy");
 		std::string szValuesStr = szMsg.substr(szMsg.find(":") + 1);
 
 		int iSplitIndex = szValuesStr.find(":");
@@ -493,7 +453,6 @@ void TwitchVoting::SendToPipe(std::string&& szMsg)
 
 void TwitchVoting::ErrorOutWithMsg(const std::string&& szMsg)
 {
-	LOG("Erroring out!");
 	MessageBox(NULL, szMsg.c_str(), "ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_hPipeHandle);
