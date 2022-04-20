@@ -277,7 +277,7 @@ static const std::vector<FakeTeleportInfo> tpLocations =
 	{EFFECT_TP_FORTZANCUDO, {-2360.3f, 3244.83f, 92.9f}, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
 	{EFFECT_TP_MOUNTCHILLIAD, {501.77f, 5604.85f, 797.91f}, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
 	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}}, // Heaven
-	{EFFECT_TP_WAYPOINT, {0, 0, 0}}
+	{EFFECT_TP_WAYPOINT, {0, 0, 0}} //Waypoint
 };
 
 static void OnStartFakeTp()
