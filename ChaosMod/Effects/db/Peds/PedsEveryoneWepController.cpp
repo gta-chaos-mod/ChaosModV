@@ -128,3 +128,22 @@ static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAx
 		.EEffectGroupType = EEffectGroupType::Weapons
 	}
 );
+
+static void OnStartFlareGun()
+{
+	static const Hash flareGunHash = GET_HASH_KEY("WEAPON_FLAREGUN");
+
+	for (Ped ped : GetAllPeds())
+	{
+		GIVE_WEAPON_TO_PED(ped, flareGunHash, 9999, true, true);
+		SET_CURRENT_PED_WEAPON(ped, flareGunHash, true);
+	}
+}
+
+static RegisterEffect registerEffect8(EFFECT_EVERYONE_FLAREGUN, OnStartFlareGun, EffectInfo
+	{
+		.Name = "Give Everyone A Falre Gun",
+		.Id = "peds_flaregun",
+		.EEffectGroupType = EEffectGroupType::Weapons
+	}
+);
