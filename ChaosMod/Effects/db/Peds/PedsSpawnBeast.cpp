@@ -6,7 +6,7 @@ static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS", &relationshipGroup);
+	ADD_RELATIONSHIP_GROUP("_HOSTILE_BEAST", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 
 	Vector3 pos = GET_ENTITY_COORDS(PLAYER_PED_ID(), 1);
