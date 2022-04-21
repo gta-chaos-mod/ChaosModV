@@ -16,7 +16,7 @@ static void OnStart()
 
 static void OnTick()
 {
-	float fps = 1 / GET_FRAME_TIME();
+	float fps = (1000 / GET_FRAME_TIME()) / 1000;
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(std::to_string((int)fps).append(" FPS").c_str());
 	END_SCALEFORM_MOVIE_METHOD();
