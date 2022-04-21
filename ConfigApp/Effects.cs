@@ -350,6 +350,7 @@ namespace ConfigApp
             EFFECT_MISC_WATER,
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
+            EFFECT_PLAYER_FPS,
             _EFFECT_ENUM_MAX
         }
 
@@ -664,6 +665,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_WATER, new EffectInfo("Drought", EffectCategory.MISC, "misc_remove_water", true)},
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
+            {EffectType.EFFECT_PLAYER_FPS,, new EffectInfo("FPS Counter", EffectCategory.PLAYER, "player_fps", true, false)}
         };
     }
 }
