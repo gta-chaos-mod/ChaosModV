@@ -43,4 +43,46 @@ namespace Util
 
 		return vCoords;
 	}
+
+	inline Vector3 GetGameplayCamRotationToDirection(Vector3 rotation)
+	{
+		const float pi = 2 * acos(0.0);
+
+		Vector3 adjustedRotation =
+		{
+			(pi / 180) * rotation.x,
+			(pi / 180) * rotation.y,
+			(pi / 180) * rotation.z
+		};
+		Vector3 direction =
+		{
+			-sin(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
+			cos(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
+			sin(adjustedRotation.x)
+		};
+		return direction;
+	}
+
+	inline int RayCastGameplayCam(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
+	{
+		Vector3 cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
+		Vector3 cameraCoord = GET_GAMEPLAY_CAM_COORD();
+		Vector3 direction = GetGameplayCamRotationToDirection(cameraRotation);
+		Vector3 destination
+		{
+			cameraCoord.x + direction.x * distance,
+			cameraCoord.y + direction.y * distance,
+			cameraCoord.z + direction.z * distance
+		};
+		BOOL a;
+		Vector3 b;
+		Vector3 c;
+		Entity d;
+		int e = GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), &a, &b, &c, &d);
+		*hit = a;
+		*endCoords = b;
+		*surfaceNormal = c;
+		*entity = d;
+		return e;
+	}
 }
