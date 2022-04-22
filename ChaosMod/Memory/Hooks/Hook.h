@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "../../../vendor/minhook/include/MinHook.h"
-
 #define _NODISCARD [[nodiscard]]
+
+enum MH_STATUS : int;
 
 namespace Memory
 {

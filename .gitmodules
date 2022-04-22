@@ -2,8 +2,4 @@
 	path = vendor/minhook
 	url = https://github.com/TsudaKageyu/minhook.git
 	branch = master
-	ignore = dirty
-[submodule "vendor/shv"]
-	path = vendor/shv
-	url = https://github.com/pongo1231/shv_no_msvc
-	ignore = dirty
+        ignore = dirty

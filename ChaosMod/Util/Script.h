@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Effects/EffectThreads.h"
+#include "../EffectThreads.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 

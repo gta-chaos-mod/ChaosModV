@@ -1,9 +1,8 @@
-#include <errhandlingapi.h>
 #include <stdafx.h>
 
 #include "LuaScripts.h"
 
-#define _LUAFUNC static inline
+#define _LUAFUNC static __forceinline
 
 #define LUA_SCRIPTS_DIR "chaosmod\\custom_scripts"
 #define LUA_NATIVESDEF_DIR "chaosmod\\natives_def.lua"
@@ -18,45 +17,52 @@ _LUAFUNC void LuaPrint(const std::string& szName, const std::string& szText)
 	COLOR_PREFIX_LOG("[" << szName << "]", szText);
 }
 
-_LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS* pException)
-{
-    return pException->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION
-		? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
-}
-
 _LUAFUNC char* _TryParseString(void* pStr)
 {
-	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
-
-	char* pcString = reinterpret_cast<char*>(pStr);
-
-	// Access string to try to trigger a segfault
-	for (char* c = pcString; *c; c++)
+	__try
 	{
+		char* pcString = reinterpret_cast<char*>(pStr);
 
+		// Access string to try to trigger a segfault
+		for (char* c = pcString; *c; c++)
+		{
+
+		}
+
+		return pcString;
 	}
-
-	RemoveVectoredContinueHandler(exHandler);
-
-	return pcString;
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
+	{
+		return nullptr;
+	}
 }
 
 _LUAFUNC bool _TryParseVector3(void** pVector, float& fX, float& fY, float& fZ)
 {
-	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
-
-	fX = *reinterpret_cast<float*>(pVector);
-	fY = *reinterpret_cast<float*>(pVector + 1);
-	fZ = *reinterpret_cast<float*>(pVector + 2);
-
-	RemoveVectoredContinueHandler(exHandler);
+	__try
+	{
+		fX = *reinterpret_cast<float*>(pVector);
+		fY = *reinterpret_cast<float*>(pVector + 1);
+		fZ = *reinterpret_cast<float*>(pVector + 2);
+	}
+	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
+	{
+		return false;
+	}
 
 	return true;
 }
 
 _LUAFUNC bool _CallNative(void*** ppResult)
 {
-	*ppResult = reinterpret_cast<void**>(nativeCall());
+	__try
+	{
+		*ppResult = reinterpret_cast<void**>(nativeCall());
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		return false;
+	}
 
 	return true;
 }

@@ -332,6 +332,5 @@ ASALocalRun/
 .mfractor/
 
 # Custom
-ChaosMod/.cache/
-ChaosMod/build/
-ChaosMod/out/
+TwitchExtension/
+twitchVotingOverlay/dist/bundle.js

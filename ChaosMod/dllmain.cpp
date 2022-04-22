@@ -1,5 +1,3 @@
-#include "Util/CrashHandler.h"
-#include <errhandlingapi.h>
 #include <stdafx.h>
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
@@ -7,9 +5,14 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		SetUnhandledExceptionFilter(CrashHandler);
+		__try
+		{
+			Memory::Init();
+		}
+		__except (CrashHandler(GetExceptionInformation()))
+		{
 
-		Memory::Init();
+		}
 
 		scriptRegister(hInstance, Main::Run);
 

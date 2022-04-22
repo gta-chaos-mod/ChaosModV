@@ -22,7 +22,7 @@ static void OnTick()
 		if (!IS_PED_GETTING_INTO_A_VEHICLE(playerPed) && !IS_PED_CLIMBING(playerPed) && !IS_PED_DIVING(playerPed) && !IS_PED_JUMPING_OUT_OF_VEHICLE(playerPed) && !IS_PED_RAGDOLL(playerPed) && !IS_PED_GETTING_UP(playerPed))
 		{
 			float speed = GET_ENTITY_SPEED(playerPed);
-			gameSpeed = std::max(std::min(speed, 4.f) / 4.f, 0.2f);
+			gameSpeed = max(min(speed, 4.f) / 4, 0.2);
 		}
 		SET_TIME_SCALE(gameSpeed);
 	}

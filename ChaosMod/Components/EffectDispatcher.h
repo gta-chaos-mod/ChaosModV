@@ -2,10 +2,11 @@
 
 #include "Component.h"
 
-#include "../Effects/EffectThreads.h"
-#include "../Effects/EffectData.h"
-#include "../Effects/EffectIdentifier.h"
-#include "../Effects/EnabledEffectsMap.h"
+#include "../EffectThreads.h"
+
+#include "Effects/EffectData.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EnabledEffectsMap.h"
 
 #include <vector>
 #include <array>

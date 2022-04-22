@@ -8,7 +8,7 @@
 
 #include <windows.h>
 
-#define IMPORT
+#define IMPORT __declspec(dllimport)
 
 /* textures */
 

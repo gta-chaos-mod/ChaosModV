@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-struct SpacePed
+static struct SpacePed
 {
 	SpacePed(Ped ped, Vector3 vel) : Ped(ped), Vel(vel)
 	{
