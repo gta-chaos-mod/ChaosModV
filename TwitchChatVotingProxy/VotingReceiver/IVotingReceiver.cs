@@ -18,5 +18,6 @@ namespace VotingProxy.VotingReceiver
         /// <param name="message">Message that should be sent</param>
         void SendMessage(List<IVoteOption> options, EVotingMode votingMode);
         void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode);
+        void Disconnect();
     }
 }

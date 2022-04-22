@@ -80,6 +80,18 @@ namespace VotingProxy.VotingReceiver
                 logger.Error(e, $"failed to update message to channel \"{config.ChannelId}\"");
             }
         }
+
+        public void Disconnect()
+        {
+            try
+            {
+                client.Disconnect();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, $"failed to disconnect client: {GetName()}");
+            }
+        }
         /// <summary>
         /// Called when the twitch client connects (callback)
         /// </summary>

@@ -115,6 +115,15 @@ namespace VotingProxy
                     new ChaosModController(chaosPipe, overlayServer, twitchVotingReceiver, discordVotingReciever, config);
 
                     while (chaosPipe.IsConnected()) { }
+
+                    if (twitchVotingReceiver != null)
+                    {
+                        twitchVotingReceiver.Disconnect();
+                    }
+                    if (discordVotingReciever != null)
+                    {
+                        discordVotingReciever.Disconnect();
+                    }
                 }
                 else return;
             }
