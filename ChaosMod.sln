@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChaosMod", "ChaosMod\ChaosMod.vcxproj", "{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigApp", "ConfigApp\ConfigApp.csproj", "{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchChatVotingProxy", "TwitchChatVotingProxy\TwitchChatVotingProxy.csproj", "{4765F6E3-B78C-4B76-BA30-AA5362862818}"

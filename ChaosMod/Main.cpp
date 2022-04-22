@@ -79,7 +79,7 @@ static void Init()
 
 			AllocConsole();
 
-			SetConsoleTitle("Chaos Mod");
+			SetConsoleTitle(L"ChaosModV");
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
 			c_pOldStreamBuf = std::cout.rdbuf();
@@ -247,14 +247,9 @@ namespace Main
 {
 	void Run()
 	{
-		__try
-		{
-			MainRun();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		MainRun();
 	}
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)

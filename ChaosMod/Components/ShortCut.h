@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Component.h"
-#include <map>
-#include "Effects/EffectIdentifier.h"
+#include "../Effects/EffectIdentifier.h"
 
+#include <map>
 
 class ShortCut : public Component
 {

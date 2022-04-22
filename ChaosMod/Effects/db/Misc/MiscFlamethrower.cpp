@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static struct ShooterInfo
+struct ShooterInfo
 {
 	float fullDuration = 0;
 	float durationSinceLastShot = 0;

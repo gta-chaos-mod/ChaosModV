@@ -113,7 +113,7 @@ void EffectDispatcher::UpdateEffects()
 
 		int activeEffectsSize = m_rgActiveEffects.size();
 		int maxEffects = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
-		maxEffects = min(maxEffects, m_iMaxRunningEffects);
+		maxEffects = std::min(maxEffects, m_iMaxRunningEffects);
 		int effectCountToCheckCleaning = 3;
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
@@ -619,7 +619,7 @@ bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, 
 	float additionalTime = 0;
 	if (effectCount > minAmountAdvancedCleaning)
 	{
-		additionalTime = min((min(effectCount, 10) - 3) * 20, 160);
+		additionalTime = std::min((std::min(effectCount, 10) - 3) * 20, 160);
 	}
 	return timer < -m_usEffectTimedDur + additionalTime;
 }
