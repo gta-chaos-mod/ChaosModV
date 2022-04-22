@@ -3,16 +3,18 @@ using Serilog;
 using System.Collections.Generic;
 
 
-namespace VotingProxy.VotingDiscordClient
+namespace VotingProxy.VotingChatClient
 {
 
-    public class DiscordChatClient : DiscordClient
+    public class DiscordChatClient : ChatClient
     {
         public DiscordBot client;
-        private DiscordCredentials creds;
+        private Credentials creds;
         private ILogger logger = Log.Logger.ForContext<DiscordChatClient>();
 
-        public DiscordChatClient(DiscordCredentials credentials)
+        public DiscordChatClient(){}
+
+        public override void Initialize(Credentials credentials)
         {
             client = new DiscordBot(credentials);
             creds = credentials;
@@ -28,17 +30,17 @@ namespace VotingProxy.VotingDiscordClient
             client.StopBot();
         }
 
-        public override void SendMessage(List<IVoteOption> options, EVotingMode votingMode)
+        public override void SendMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId)
         {
             client.SendVoteMessage(options, votingMode);
         }
 
-        public override void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode)
+        public override void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId)
         {
             client.UpdateVoteMessage(options, votingMode);
         }
 
-        public sealed override event EventHandler OnDiscordConnected
+        public sealed override event EventHandler OnConnected
         {
             add
             {
@@ -50,7 +52,7 @@ namespace VotingProxy.VotingDiscordClient
             }
         }
 
-        public sealed override event EventHandler<OnDiscordMessageReceivedArgs> OnDiscordMessageReceived
+        public sealed override event EventHandler<OnMessageReceivedArgs> OnMessageReceived
         {
             add
             {
@@ -61,7 +63,7 @@ namespace VotingProxy.VotingDiscordClient
                         Message = e.Vote.ToString(),
                         UserId = e.UserId.ToString()
                     };
-                    OnDiscordMessageReceivedArgs evt = new OnDiscordMessageReceivedArgs()
+                    OnMessageReceivedArgs evt = new OnMessageReceivedArgs()
                     { 
                         ChatMessage = e_ChatMessage
                     };
@@ -77,7 +79,7 @@ namespace VotingProxy.VotingDiscordClient
                         Message = e.Vote.ToString(),
                         UserId = e.UserId.ToString()
                     };
-                    OnDiscordMessageReceivedArgs evt = new OnDiscordMessageReceivedArgs()
+                    OnMessageReceivedArgs evt = new OnMessageReceivedArgs()
                     {
                         ChatMessage = e_ChatMessage
                     };
@@ -85,5 +87,11 @@ namespace VotingProxy.VotingDiscordClient
                 };
             }
         }
+
+        public sealed override event EventHandler OnIncorrectLogin{add{}remove{}}
+
+        public sealed override event EventHandler OnJoinedChannel{add{}remove{}}
+
+        public sealed override event EventHandler<OnErrorEventArgs> OnError{add{}remove{}}
     }
 }

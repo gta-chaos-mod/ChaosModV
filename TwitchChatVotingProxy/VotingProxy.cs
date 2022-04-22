@@ -53,15 +53,17 @@ namespace VotingProxy
                 bool voting = false;
 
                 ChatVotingReceiver twitchVotingReceiver = null;
-                DiscordVotingReceiver discordVotingReciever = null;
+                ChatVotingReceiver discordVotingReciever = null;
                 OverlayServer.OverlayServer overlayServer = null;
 
                 if (config.TwitchVoting)
                 {
-                    TwitchVotingReceiverConfig votingReceiverConfig;
+                    logger.Information("twitch on");
+
+                    VotingReceiverConfig votingReceiverConfig;
                     try
                     {
-                        votingReceiverConfig = new TwitchVotingReceiverConfig(config.TwitchChannelId, config.TwitchOAuth, config.TwitchUserName);
+                        votingReceiverConfig = new VotingReceiverConfig(config.TwitchChannelId, config.TwitchOAuth, config.TwitchUserName, EChannelType.TWITCH);
                     }
                     catch (Exception e)
                     {
@@ -88,10 +90,11 @@ namespace VotingProxy
 
                 if (config.DiscordVoting)
                 {
-                    DiscordVotingRecieverConfig votingRecieverConfig;
+                    logger.Information("discord on");
+                    VotingReceiverConfig votingReceiverConfig;
                     try
                     {
-                        votingRecieverConfig = new DiscordVotingRecieverConfig(config.DiscordChannelId, config.DiscordGuildId, config.DiscordOAuth);
+                        votingReceiverConfig = new VotingReceiverConfig(config.DiscordChannelId, config.DiscordOAuth, config.DiscordGuildId, EChannelType.DISCORD);
                     }
                     catch (Exception e)
                     {
@@ -99,7 +102,7 @@ namespace VotingProxy
                         return;
                     }
 
-                    discordVotingReciever = new DiscordVotingReceiver(votingRecieverConfig);
+                    discordVotingReciever = new ChatVotingReceiver(votingReceiverConfig);
 
                     voting = true;
                 }

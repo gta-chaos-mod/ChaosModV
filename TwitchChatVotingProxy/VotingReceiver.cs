@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VotingProxy.VotingChatClient;
-using VotingProxy.VotingDiscordClient;
 using TwitchLib.Communication.Clients;
 
 namespace VotingProxy.VotingReceiver
@@ -18,27 +17,37 @@ namespace VotingProxy.VotingReceiver
         public event EventHandler<OnMessageArgs> OnMessage;
 
         private ChatClient client;
-        private TwitchVotingReceiverConfig config;
+        private VotingReceiverConfig config;
         private ILogger logger = Log.Logger.ForContext<ChatVotingReceiver>();
 
-        public ChatVotingReceiver(TwitchVotingReceiverConfig config)
+        private string GetName()
+        {
+            return config.ChannelType == EChannelType.TWITCH ? "twitch" : "discord";
+        }
+
+        public ChatVotingReceiver(VotingReceiverConfig config)
         {
             this.config = config;
 
             // Connect to channel
             logger.Information(
-                $"trying to connect to channel \"{config.ChannelId}\" with user \"{config.UserName}\""
+                $"trying to connect to channel \"{config.ChannelId}\" with user \"{config.UserId}\""
             );
 
             if (config.ChannelType == EChannelType.TWITCH)
             {
+                logger.Information("init twit");
                 client = new TwitchChatClient();
+                client.Initialize(new Credentials(config.ChannelId, config.UserId, config.OAuth));
+            }
+            else if (config.ChannelType == EChannelType.DISCORD)
+            {
+                logger.Information("init disc");
+                client = new DiscordChatClient();
+                client.Initialize(new Credentials(config.ChannelId, config.UserId, config.OAuth));
             }
 
-            client.Initialize(
-                new Credentials(config.UserName, config.OAuth),
-                config.ChannelId
-            );
+            
 
             client.OnConnected += OnConnected;
             client.OnError += OnError;
@@ -49,14 +58,26 @@ namespace VotingProxy.VotingReceiver
             client.Connect();
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(List<IVoteOption> options, EVotingMode votingMode)
         {
             try
             {
-                client.SendMessage(config.ChannelId, message);
+                client.SendMessage(options, votingMode, config.ChannelId);
             } catch (Exception e)
             {
                 logger.Error(e, $"failed to send message to channel \"{config.ChannelId}\"");
+            }
+        }
+
+        public void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode)
+        {
+            try
+            {
+                client.UpdateMessage(options, votingMode, config.ChannelId);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, $"failed to update message to channel \"{config.ChannelId}\"");
             }
         }
         /// <summary>
@@ -64,7 +85,7 @@ namespace VotingProxy.VotingReceiver
         /// </summary>
         private void OnConnected(object sender, EventArgs e)
         {
-            logger.Information("successfully connected to twitch");
+            logger.Information($"successfully connected to {GetName()}");
         }
         /// <summary>
         /// Called when the twitch client disconnects (callback)
@@ -88,7 +109,7 @@ namespace VotingProxy.VotingReceiver
         /// </summary>
         private void OnIncorrectLogin(object sender, EventArgs e)
         {
-            logger.Error("incorrect login, check user name and oauth");
+            logger.Error($"incorrect login, check user name and oauth. ({GetName()})");
             client.Disconnect();
         }
         /// <summary>
@@ -109,100 +130,6 @@ namespace VotingProxy.VotingReceiver
             evnt.Message = chatMessage.Message.Trim();
             evnt.ClientId = chatMessage.UserId;
             OnMessage.Invoke(this, evnt);
-        }
-    }
-
-    /// <summary>
-    /// Discord Voting receiver implementation
-    /// </summary>
-    class DiscordVotingReceiver : IVotingReceiverDiscord
-    {
-        public static readonly int RECONNECT_INTERVAL = 1000;
-
-        public event EventHandler<OnDiscordMessageArgs> OnDiscordMessage;
-
-        private DiscordClient client;
-        private DiscordVotingRecieverConfig config;
-        private ILogger logger = Log.Logger.ForContext<DiscordVotingReceiver>();
-
-        public DiscordVotingReceiver(DiscordVotingRecieverConfig config)
-        {
-            this.config = config;
-
-            // Connect to channel
-            logger.Information(
-                $"trying to connect to guild \"{config.GuildID}\" with token \"{config.Token}\""
-            );
-
-            client = new DiscordChatClient(new DiscordCredentials(config.ChannelId, config.GuildID, config.Token));
-
-            client.OnDiscordConnected += OnDiscordConnected;
-            client.OnDiscordIncorrectLogin += OnDiscordIncorrectLogin;
-            client.OnDiscordMessageReceived += OnDiscordMessageReceived;
-
-            client.Connect();
-        }
-
-        public void SendMessage(List<IVoteOption> options, EVotingMode votingMode)
-        {
-            try
-            {
-                
-                client.SendMessage(options, votingMode);
-            }
-            catch (Exception e)
-            {
-                logger.Error(e, $"failed to send message to channel \"{config.ChannelId}\"");
-            }
-        }
-
-        public void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode)
-        {
-            try
-            {
-                client.UpdateMessage(options, votingMode);
-            }
-            catch (Exception e)
-            {
-                logger.Error(e, $"failed to edit message in channel \"{config.ChannelId}\"");
-            }
-        }
-        /// <summary>
-        /// Called when the discord client connects (callback)
-        /// </summary>
-        private void OnDiscordConnected(object sender, EventArgs e)
-        {
-            logger.Information("successfully connected to discord");
-        }
-        /// <summary>
-        /// Called when the discord client disconnects (callback)
-        /// </summary>
-        private async void OnDiscordDisconnect(object sender, EventArgs e)
-        {
-            logger.Error("disconnected from the discord, trying to reconnect");
-            await Task.Delay(RECONNECT_INTERVAL);
-            client.Connect();
-        }
-
-        /// <summary>
-        /// Called when the discord client has an failed login attempt (callback)
-        /// </summary>
-        private void OnDiscordIncorrectLogin(object sender, EventArgs e)
-        {
-            logger.Error("incorrect login, check oauth");
-            client.Disconnect();
-        }
-        /// <summary>
-        /// Called when the discord client receives a message
-        /// </summary>
-        private void OnDiscordMessageReceived(object sender, OnDiscordMessageReceivedArgs e)
-        {
-            var chatMessage = e.ChatMessage;
-            logger.Information("Discord message recieved");
-            var evnt = new OnDiscordMessageArgs();
-            evnt.Message = chatMessage.Message.Trim();
-            evnt.ClientId = chatMessage.UserId;
-            OnDiscordMessage.Invoke(this, evnt);
         }
     }
 }

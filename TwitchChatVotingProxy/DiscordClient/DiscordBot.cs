@@ -14,11 +14,11 @@ using Discord.API;
 using Discord.Rest;
 using VotingProxy;
 
-namespace VotingProxy.VotingDiscordClient
+namespace VotingProxy.VotingChatClient
 {
     public class DiscordBot
     {
-        private DiscordCredentials credentials;
+        private Credentials credentials;
         private DiscordSocketClient _client;
         private ILogger logger = Log.Logger.ForContext<DiscordBot>();
         private SocketTextChannel _channel = null;
@@ -50,7 +50,7 @@ namespace VotingProxy.VotingDiscordClient
             return result;
         }
 
-        public DiscordBot(DiscordCredentials credentials)
+        public DiscordBot(Credentials credentials)
         {
             this.credentials = credentials;
         }
@@ -89,9 +89,9 @@ namespace VotingProxy.VotingDiscordClient
                 buttonIds.Add(Int32.Parse(opt.Matches[0]), $"effect-{opt.Matches[0]}");
             }
 
-            var msgs = _client.GetGuild(ToSnowflake(credentials.GuildID)).GetTextChannel(ToSnowflake(credentials.ChannelId)).GetMessagesAsync().FlattenAsync().Result;
-            _client.GetGuild(ToSnowflake(credentials.GuildID)).GetTextChannel(ToSnowflake(credentials.ChannelId)).DeleteMessagesAsync(msgs);
-            curMsg = _client.GetGuild(ToSnowflake(credentials.GuildID)).GetTextChannel(ToSnowflake(credentials.ChannelId)).SendMessageAsync(embed: embed.Build(), components: comps.Build()).Result;
+            var msgs = _client.GetGuild(ToSnowflake(credentials.UserId)).GetTextChannel(ToSnowflake(credentials.ChannelId)).GetMessagesAsync().FlattenAsync().Result;
+            _client.GetGuild(ToSnowflake(credentials.UserId)).GetTextChannel(ToSnowflake(credentials.ChannelId)).DeleteMessagesAsync(msgs);
+            curMsg = _client.GetGuild(ToSnowflake(credentials.UserId)).GetTextChannel(ToSnowflake(credentials.ChannelId)).SendMessageAsync(embed: embed.Build(), components: comps.Build()).Result;
         }
 
         public void UpdateVoteMessage(List<IVoteOption> options, EVotingMode votingMode)

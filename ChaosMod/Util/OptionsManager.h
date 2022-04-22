@@ -24,7 +24,7 @@ public:
 	template <typename T>
 	inline T GetVotingValue(const std::string& szKey, T defaultValue)
 	{
-		return GetOptionValue(m_TwitchFile, szKey, defaultValue);
+		return GetOptionValue(m_VotingFile, szKey, defaultValue);
 	}
 
 private:

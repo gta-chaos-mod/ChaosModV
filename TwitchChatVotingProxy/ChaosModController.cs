@@ -20,7 +20,6 @@ namespace VotingProxy
         private ILogger logger = Log.Logger.ForContext<ChaosModController>();
         private IOverlayServer? overlayServer;
         private Dictionary<string, int> userVotedForTwitch = new Dictionary<string, int>();
-        private Dictionary<string, int> userVotedForDiscord = new Dictionary<string, int>();
         private Random random = new Random();
         private Boolean retainInitialVotes;
         private int voteCounter = 0;
@@ -28,13 +27,13 @@ namespace VotingProxy
         private EVotingMode? votingMode;
         private EOverlayMode? twitchOverlayMode;
         private IVotingReceiver votingReceiver;
-        private IVotingReceiverDiscord discordVotingReceiver;
+        private IVotingReceiver discordVotingReceiver;
 
         public ChaosModController(
             IChaosPipeClient chaosPipe,
             IOverlayServer overlayServer,
             IVotingReceiver _votingReceiver,
-            IVotingReceiverDiscord _discordVotingReceiver,
+            IVotingReceiver _discordVotingReceiver,
             IConfig config
         ) {
             this.chaosPipe = chaosPipe;
@@ -72,7 +71,7 @@ namespace VotingProxy
 
             if (config.DiscordVoting)
             {
-                this.discordVotingReceiver.OnDiscordMessage += OnVoteReceiverMessageDiscord;
+                this.discordVotingReceiver.OnMessage += OnVoteReceiverMessage;
             }
             
 
@@ -206,29 +205,7 @@ namespace VotingProxy
                 switch (twitchOverlayMode)
                 {
                     case EOverlayMode.CHAT_MESSAGES:
-                        votingReceiver.SendMessage("Time for a new effect! Vote between:");
-                        foreach (IVoteOption voteOption in activeVoteOptions)
-                        {
-                            string msg = string.Empty;
-
-                            bool firstIndex = true;
-                            foreach (string match in voteOption.Matches)
-                            {
-                                msg += firstIndex ? $"{match} " : $" / {match}";
-
-                                firstIndex = true;
-                            }
-
-                            msg += $": {voteOption.Label}\n";
-
-                            votingReceiver.SendMessage(msg);
-                        }
-
-                        if (votingMode == EVotingMode.PERCENTAGE)
-                        {
-                            votingReceiver.SendMessage("Votes will affect the chance for one of the effects to occur.");
-                        }
-
+                        votingReceiver.SendMessage(activeVoteOptions, (EVotingMode)votingMode);
                         break;
                     case EOverlayMode.OVERLAY_OBS:
                         overlayServer.NewVoting(activeVoteOptions);
@@ -243,7 +220,6 @@ namespace VotingProxy
 
             // Clear the old voted for information
             userVotedForTwitch.Clear();
-            userVotedForDiscord.Clear();
             // Increase the vote counter
             voteCounter++;
 
@@ -287,44 +263,6 @@ namespace VotingProxy
                         activeVoteOptions[previousVote].Votes--;
 
                         userVotedForTwitch.Add(e.ClientId, i);
-                        voteOption.Votes++;
-                    }
-
-                    break;
-                }
-            }
-        }
-        /// <summary>
-        /// Is called when the discord voting receiver receives a message
-        /// </summary>
-        private void OnVoteReceiverMessageDiscord(object sender, OnDiscordMessageArgs e)
-        {
-            if (!voteRunning) return;
-
-            for (int i = 0; i < activeVoteOptions.Count; i++)
-            {
-                var voteOption = activeVoteOptions[i];
-
-                if (voteOption.Matches.Contains(e.Message))
-                {
-                    int previousVote;
-
-                    // Check if the player has already voted
-                    if (!userVotedForDiscord.TryGetValue(e.ClientId, out previousVote))
-                    {
-                        // If they haven't voted, count his vote
-                        userVotedForDiscord.Add(e.ClientId, i);
-                        voteOption.Votes++;
-
-                    }
-                    else if (previousVote != i)
-                    {
-                        // If the player has already voted, and it's not the same as before,
-                        // remove the old vote, and add the new one.
-                        userVotedForDiscord.Remove(e.ClientId);
-                        activeVoteOptions[previousVote].Votes--;
-
-                        userVotedForDiscord.Add(e.ClientId, i);
                         voteOption.Votes++;
                     }
 

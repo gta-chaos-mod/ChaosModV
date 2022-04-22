@@ -4,7 +4,7 @@
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static std::unique_ptr<DebugMenu> ms_pDebugMenu;
-static std::unique_ptr<TwitchVoting> ms_pTwitchVoting;
+static std::unique_ptr<Voting> ms_pVoting;
 static std::unique_ptr<Failsafe> ms_pFailsafe;
 static std::unique_ptr<SplashTexts> ms_pSplashTexts;
 static std::unique_ptr<ShortCut> ms_pShortCut;
@@ -55,7 +55,7 @@ static void Reset()
 
 	ms_pDebugMenu.reset();
 
-	ms_pTwitchVoting.reset();
+	ms_pVoting.reset();
 
 	ms_pFailsafe.reset();
 
@@ -137,18 +137,18 @@ static void Init()
 	ms_pShortCut->ParseShortcuts();
 
 	LOG("Initializing Twitch voting");
-	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
+	ms_pVoting = std::make_unique<Voting>(rgTextColor);
 
 	LOG("Initializing Failsafe");
 	ms_pFailsafe = std::make_unique<Failsafe>();
 
 	LOG("Completed Init!");
 
-	if (ms_pTwitchVoting->IsTwitchEnabled())
+	if (ms_pVoting->IsTwitchEnabled())
 	{
 		ms_pSplashTexts->ShowTwitchVotingSplash();
 	}
-	if (ms_pTwitchVoting->IsDiscordEnabled())
+	if (ms_pVoting->IsDiscordEnabled())
 	{
 		ms_pSplashTexts->ShowDiscordVotingSplash();
 	}

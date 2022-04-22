@@ -7,44 +7,26 @@ using System.Threading.Tasks;
 namespace VotingProxy
 {
     /// <summary>
-    /// Config object for the twitch implementation of the voting receiver
+    /// Config object for general implementation of the voting receiver
     /// </summary>
-    class TwitchVotingReceiverConfig
+    class VotingReceiverConfig
     {
-        public TwitchVotingReceiverConfig(string channelId, string oAuth, string userName, EChannelType channelType = EChannelType.TWITCH)
+        public VotingReceiverConfig(string channelId, string oAuth, string userId, EChannelType channelType)
         {
             // Validate config
             if (channelId == null) throw new Exception("channel name cannot be null");
             if (oAuth == null) throw new Exception("oAuth cannot be null");
-            if (userName == null) throw new Exception("user name cannot be null");
+            if (userId == null) throw new Exception("user name cannot be null");
 
             ChannelId = channelId;
             OAuth = oAuth;
-            UserName = userName;
+            UserId = userId;
             ChannelType = channelType;
         }
 
         public string ChannelId { get; set; }
         public string OAuth { get; set; }
-        public string UserName { get; set; }
+        public string UserId { get; set; }
         public EChannelType ChannelType { get; set; }
     }
-
-    class DiscordVotingRecieverConfig
-    {
-        public DiscordVotingRecieverConfig(string channelId, string guildID, string token)
-        {
-            if (channelId == null) throw new Exception("discord channel id cannot be null");
-            if (token == null) throw new Exception("discord bot token cannot be null");
-
-            ChannelId = channelId;
-            GuildID = guildID;
-            Token = token;
-        }
-    
-        public string Token { get; set; }
-        public string ChannelId { get; set; }
-        public string GuildID { get; set; }
-    }
-
 }

@@ -21,9 +21,9 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 
-	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_bEnableTwitchVoting = g_OptionsManager.GetVotingValue<bool>("TwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
-	m_eTwitchOverlayMode = static_cast<ETwitchOverlayMode>(g_OptionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_eTwitchOverlayMode = static_cast<ETwitchOverlayMode>(g_OptionsManager.GetVotingValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	Reset();
 }

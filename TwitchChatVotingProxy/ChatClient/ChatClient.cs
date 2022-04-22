@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace VotingProxy.VotingChatClient
 {
@@ -11,20 +12,23 @@ namespace VotingProxy.VotingChatClient
         public virtual event EventHandler OnJoinedChannel;
         public virtual event EventHandler<OnMessageReceivedArgs> OnMessageReceived;
 
-        public abstract void SendMessage(string channelId, string message);
+        public abstract void SendMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId);
+        public abstract void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId);
         public abstract void Connect();
         public abstract void Disconnect();
-        public abstract void Initialize(Credentials credentials, string ChannelId);
+        public abstract void Initialize(Credentials credentials);
     }
 
     public class Credentials
     {
-        public string UserName;
+        public string UserId;
         public string OAuth;
-        public Credentials(string userName, string oAuth)
+        public string ChannelId;
+        public Credentials(string channelId, string userName, string oAuth)
         {
             OAuth = oAuth;
-            UserName = userName;
+            UserId = userName;
+            ChannelId = channelId;
         }
     }
 

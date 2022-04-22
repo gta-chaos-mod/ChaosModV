@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -16,11 +17,11 @@ namespace VotingProxy.VotingChatClient
             client = new TwitchClient(new WebSocketClient());
         }
 
-        public override void Initialize(Credentials credentials, string ChannelId)
+        public override void Initialize(Credentials credentials)
         {
             client.Initialize(
-                new ConnectionCredentials(credentials.UserName, credentials.OAuth),
-                ChannelId
+                new ConnectionCredentials(credentials.UserId, credentials.OAuth),
+                credentials.ChannelId
             );
         }
 
@@ -34,9 +35,35 @@ namespace VotingProxy.VotingChatClient
             client.Disconnect();
         }
 
-        public override void SendMessage(string channelId, string message)
+        public override void SendMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId)
         {
-            client.SendMessage(channelId, message);
+            client.SendMessage("Time for a new effect! Vote between:", channelId);
+            foreach (IVoteOption voteOption in options)
+            {
+                string msg = string.Empty;
+
+                bool firstIndex = true;
+                foreach (string match in voteOption.Matches)
+                {
+                    msg += firstIndex ? $"{match} " : $" / {match}";
+
+                    firstIndex = true;
+                }
+
+                msg += $": {voteOption.Label}\n";
+
+                client.SendMessage(msg, channelId);
+            }
+
+            if (votingMode == EVotingMode.PERCENTAGE)
+            {
+                client.SendMessage("Votes will affect the chance for one of the effects to occur.", channelId);
+            }
+        }
+
+        public override void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode, string channelId)
+        {
+
         }
 
         public sealed override event EventHandler OnConnected

@@ -63,7 +63,6 @@
     <Compile Include="Config\IConfig.cs" />
     <Compile Include="DiscordClient\DiscordBot.cs" />
     <Compile Include="DiscordClient\DiscordChatClient.cs" />
-    <Compile Include="DiscordClient\DiscordClient.cs" />
     <Compile Include="EOverlayMode.cs" />
     <Compile Include="EVotingMode.cs" />
     <Compile Include="OverlayServer\OverlayServerConfig.cs" />

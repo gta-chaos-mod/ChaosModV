@@ -2,6 +2,7 @@
 {
     enum EChannelType
     {
-        TWITCH
+        TWITCH,
+        DISCORD
     }
 }

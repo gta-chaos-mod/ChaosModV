@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace VotingProxy.VotingReceiver
 {
@@ -15,6 +16,7 @@ namespace VotingProxy.VotingReceiver
         /// Sends a message to the connected service
         /// </summary>
         /// <param name="message">Message that should be sent</param>
-        void SendMessage(string message);
+        void SendMessage(List<IVoteOption> options, EVotingMode votingMode);
+        void UpdateMessage(List<IVoteOption> options, EVotingMode votingMode);
     }
 }
