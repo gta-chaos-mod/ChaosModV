@@ -20,7 +20,7 @@ enum class ETwitchOverlayMode : int
 	OverlayOBS
 };
 
-class TwitchVoting : public Component
+class Voting : public Component
 {
 private:
 	struct ChoosableEffect
@@ -38,6 +38,7 @@ private:
 	};
 
 	bool m_bEnableTwitchVoting;
+	bool m_bEnableDiscordVoting;
 
 	bool m_bReceivedHello = false;
 	bool m_bReceivedFirstPing = false;
@@ -73,12 +74,13 @@ private:
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
 
 public:
-	TwitchVoting(const std::array<BYTE, 3>& rgTextColor);
-	~TwitchVoting();
+	Voting(const std::array<BYTE, 3>& rgTextColor);
+	~Voting();
 
 	virtual void Run() override;
 
-	_NODISCARD bool IsEnabled() const;
+	_NODISCARD bool IsTwitchEnabled() const;
+	_NODISCARD bool IsDiscordEnabled() const;
 
 	bool HandleMsg(const std::string& szMsg);
 

@@ -10,7 +10,7 @@
 #include "Components/DebugMenu.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
-#include "Components/TwitchVoting.h"
+#include "Components/Voting.h"
 #include "Components/ShortCut.h"
 #include "Components/SplashTexts.h"
 

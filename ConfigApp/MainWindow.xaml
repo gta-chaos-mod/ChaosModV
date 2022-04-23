@@ -208,6 +208,66 @@
                     </Grid>
                 </TabItem>
 
+                <TabItem x:Name="voting_tab" Header="Voting" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="120" />
+                            <RowDefinition Height="180" />
+                            <RowDefinition Height="70" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Label Content="---------- Proportional Voting Mode ----------"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="voting_user_chance_system_enable_label" Content="Enable proportional voting mode" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <CheckBox x:Name="voting_user_chance_system_enable" Width="60" Height="20" Grid.Column="2"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label x:Name="voting_user_chance_system_retain_chance_enable_label" Content="Effects without votes should never lose their initial chance" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <CheckBox x:Name="voting_user_chance_system_retain_chance_enable" Width="60" Height="20" Grid.Column="2"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            </Grid>
+
+                        </Grid>                            
+                        <Grid Grid.Column="0" Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="0" />
+                                <ColumnDefinition Width="5*" />
+                            </Grid.ColumnDefinitions>
+                            <Label x:Name="voting_user_random_voteable_enable_label" Content="Enable &quot;Random Effect&quot; voteable option" Grid.Row="1" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <CheckBox x:Name="voting_user_random_voteable_enable" Width="60" Height="20" Grid.Row="0" Grid.Column="2"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
                 <TabItem x:Name="twitch_tab" Header="Twitch" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -271,48 +331,61 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <ComboBox x:Name="twitch_user_overlay_mode" Width="120" Height="25" Grid.Row="0" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_random_voteable_enable_label" Content="Enable &quot;Random Effect&quot; voteable option" Grid.Row="1" Grid.Column="2"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
-                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                         </Grid>
+                    </Grid>
+                </TabItem>
 
-                        <Grid Grid.Row="2">
-                            <Label Content="---------- Proportional Voting Mode ----------"
+                <TabItem x:Name="discord_tab" Header="Discord" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="120" />
+                            <RowDefinition Height="180" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="This feature allows Discord users to vote for an effect from a collection of random ones each time the timer runs out by making use of Discord's button feature.&#xA;There are specific options you can / must configure below.&#xA;Consult the discord__readme.txt file included with the mod (inside the README folder) for more information."
+                                   Grid.Row="0"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <CheckBox x:Name="discord_user_agreed" Content="Enable Discord Voting" Grid.Row="1"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Click="discord_user_agreed_Clicked" />
                         </Grid>
 
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="340" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="400" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
 
-                            <Grid Grid.Column="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Label x:Name="twitch_user_chance_system_enable_label" Content="Enable proportional voting mode" Grid.Column="0"
+                            <Label x:Name="discord_user_channel_id_label" Content="Channel Id" Grid.Row="0" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
-                                <CheckBox x:Name="twitch_user_chance_system_enable" Width="60" Height="20" Grid.Column="2"
-                                      HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                            </Grid>
-
-                            <Grid Grid.Column="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Label x:Name="twitch_user_chance_system_retain_chance_enable_label" Content="Effects without votes should never lose their initial chance" Grid.Column="0"
-                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
-                                <CheckBox x:Name="twitch_user_chance_system_retain_chance_enable" Width="60" Height="20" Grid.Column="2"
-                                          HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                            </Grid>
+                            <TextBox x:Name="discord_user_channel_id" Width="280" Height="20" Grid.Row="0" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="discord_user_guild_id_label" Content="Guild Id" Grid.Row="1" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="discord_user_guild_id" Width="280" Height="20" Grid.Row="1" Grid.Column="2"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Label x:Name="discord_user_bot_oauth_label" Content="OAuth Token" Grid.Row="2" Grid.Column="0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <PasswordBox x:Name="discord_user_bot_oauth" Width="280" Height="20" Grid.Row="2" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                     </Grid>
                 </TabItem>

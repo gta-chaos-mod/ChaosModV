@@ -5,8 +5,9 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Collections.Generic;
 
-namespace TwitchChatVotingProxy.ChaosPipe
+namespace VotingProxy.ChaosPipe
 {
     class ChaosPipeClient : IChaosPipeClient
     {
@@ -79,7 +80,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void GetCurrentVotes()
         {
             var args = new OnGetCurrentVotesArgs();
-            OnGetCurrentVotes.Invoke(this, args);
+            OnGetCurrentVotes?.Invoke(this, args);
             if (args.CurrentVotes == null)
             {
                 logger.Error("listeners failed to supply on get current vote args");
@@ -97,7 +98,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
             logger.Debug("asking listeners for vote result");
             var e = new OnGetVoteResultArgs();
             // Dispatch information to listeners
-            OnGetVoteResult.Invoke(this, e);
+            OnGetVoteResult?.Invoke(this, e);
             // Send the chosen option to the pipe
             if (e.ChosenOption == null)
             {
@@ -167,19 +168,22 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void StartNewVote(string message)
         {
             // Get vote option names (they are separated by ':')
-            var optionNames = message.Split(':').ToList();
+            List<string> optionNames = message.Split(':').ToList();
             // Remove the first option (which is basically the indicator
             // that this is a new vote)
-            optionNames.RemoveAt(0);
+            if (optionNames.Count > 0)
+            {
+                optionNames.RemoveAt(0);
+            }
             // Dispatch information to listeners
-            OnNewVote.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
+            OnNewVote?.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
         }
         /// <summary>
         /// Start a no-voting round. The chaos mod will decide over the options
         /// </summary>
         private void StartNoVotingRound()
         {
-            OnNoVotingRound.Invoke(this, null);
+            OnNoVotingRound?.Invoke(this, null);
         }
         /// <summary>
         /// Sends a heartbeat to the chaos mod

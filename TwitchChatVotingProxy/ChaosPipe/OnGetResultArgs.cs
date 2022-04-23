@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitchChatVotingProxy.ChaosPipe
+namespace VotingProxy.ChaosPipe
 {
     class OnGetVoteResultArgs
     {
