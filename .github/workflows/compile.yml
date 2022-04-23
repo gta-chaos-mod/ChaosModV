@@ -18,7 +18,7 @@ jobs:
       run: git submodule update --init --recursive
 
     - name: Compile Config App & Voting Proxy
-      run: msbuild ChaosMod.sln -t:restore,build -p:RestorePackagesConfig=true /property:Configuration=Release
+      run: msbuild ChaosMod.sln /t:restore /t:build /p:RestorePackagesConfig=true /p:Configuration=Release
 
     - name: Compile ASI
       run: |
@@ -34,7 +34,7 @@ jobs:
         npm install
         npm run compile:prod
 
-    - name: Generate Native Definitions for Lua
+    - name: Generate Native Definitions for Lua Runtime
       run: |
         cd scripts
         python generate_natives.py
