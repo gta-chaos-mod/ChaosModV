@@ -43,29 +43,25 @@ namespace Util
 
 		return vCoords;
 	}
-	
-	inline Vector3 GetGameplayCamRotationToDirection(Vector3 rotation)
-	{
-		const float pi = 2 * acos(0.0);
 
-		Vector3 adjustedRotation = Vector3::Init(
-			(pi / 180) * rotation.x,
-			(pi / 180) * rotation.y,
-			(pi / 180) * rotation.z
-		);
-		Vector3 direction = Vector3::Init(
-			-sin(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
-			cos(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
-			sin(adjustedRotation.x)
-		);
-		return direction;
-	}
-
-	inline int RayCastGameplayCam(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
+	inline int RayCastGameplayCam(Cam cam = 0, float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
 	{
-		Vector3 cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 cameraCoord = GET_GAMEPLAY_CAM_COORD();
-		Vector3 direction = GetGameplayCamRotationToDirection(cameraRotation);
+		
+		Vector3 cameraRotation;
+		Vector3 cameraCoord;
+		if (cam != 0)
+		{
+			cameraRotation = GET_CAM_ROT(cam, 2);
+			cameraCoord = GET_CAM_COORD(cam);
+		}
+		else 
+		{
+			cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
+			cameraCoord = GET_GAMEPLAY_CAM_COORD();
+		}
+		
+		
+		Vector3 direction = cameraRotation.GetDirectionForRotation();
 		Vector3 destination
 		{
 			cameraCoord.x + direction.x * distance,
