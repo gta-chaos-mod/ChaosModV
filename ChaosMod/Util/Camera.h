@@ -48,18 +48,16 @@ namespace Util
 	{
 		const float pi = 2 * acos(0.0);
 
-		Vector3 adjustedRotation =
-		{
+		Vector3 adjustedRotation = Vector3::Init(
 			(pi / 180) * rotation.x,
 			(pi / 180) * rotation.y,
 			(pi / 180) * rotation.z
-		};
-		Vector3 direction =
-		{
+		);
+		Vector3 direction = Vector3::Init(
 			-sin(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
 			cos(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
 			sin(adjustedRotation.x)
-		};
+		);
 		return direction;
 	}
 
