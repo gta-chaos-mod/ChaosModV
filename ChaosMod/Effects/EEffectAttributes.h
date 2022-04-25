@@ -10,7 +10,7 @@ enum class EEffectAttributes
 	IsUtility = (1 << 3)
 };
 
-inline EEffectAttributes operator|=(EEffectAttributes& lhs, EEffectAttributes rhs)
+inline EEffectAttributes operator|(EEffectAttributes lhs, EEffectAttributes rhs)
 {
 	return static_cast<EEffectAttributes>(
 		static_cast<std::underlying_type<EEffectAttributes>::type>(lhs)
@@ -18,12 +18,12 @@ inline EEffectAttributes operator|=(EEffectAttributes& lhs, EEffectAttributes rh
 	);
 }
 
-inline EEffectAttributes operator|(EEffectAttributes lhs, EEffectAttributes rhs)
+inline void operator|=(EEffectAttributes& lhs, EEffectAttributes rhs)
 {
-	return lhs |= rhs;
+	lhs = lhs | rhs;
 }
 
-inline EEffectAttributes operator&=(EEffectAttributes& lhs, EEffectAttributes rhs)
+inline EEffectAttributes operator&(EEffectAttributes lhs, EEffectAttributes rhs)
 {
 	return static_cast<EEffectAttributes>(
 		static_cast<std::underlying_type<EEffectAttributes>::type>(lhs)
@@ -31,9 +31,9 @@ inline EEffectAttributes operator&=(EEffectAttributes& lhs, EEffectAttributes rh
 	);
 }
 
-inline EEffectAttributes operator&(EEffectAttributes lhs, EEffectAttributes rhs)
+inline void operator&=(EEffectAttributes& lhs, EEffectAttributes rhs)
 {
-	return lhs &= rhs;
+	lhs = lhs & rhs;
 }
 
 inline EEffectAttributes operator~(EEffectAttributes lhs)
