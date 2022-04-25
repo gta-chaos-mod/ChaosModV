@@ -145,6 +145,8 @@ static void OnStart()
 	draw = true;
 	blinkchangeinterval = 0;
 	Hooks::EnableScriptThreadBlock();
+	Player plr = PLAYER_ID();
+	SET_PLAYER_CONTROL(plr, false, 1 << 7);
 	if (efState == EffectState::NONE)
 	{
 		efState = EffectState::DRAWING;
@@ -187,7 +189,7 @@ static void OnStart()
 			switch (efState)
 			{
 			case EffectState::DRAWING:
-				if (i >= 1500)
+				if (i >= 3500) //Auto time out
 				{
 					efState = EffectState::FINISHED;
 				}
@@ -200,12 +202,14 @@ static void OnStart()
 				}
 				break;
 			case EffectState::FINISHED:
+				SET_PLAYER_CONTROL(plr, true, 1 << 7);
 				draw = false;
 				break;
 			}
 			i++;
 		}
 	}
+	SET_PLAYER_CONTROL(plr, true, 1 << 7);
 	Hooks::DisableScriptThreadBlock();
 }
 
