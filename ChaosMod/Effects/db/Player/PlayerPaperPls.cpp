@@ -5,7 +5,7 @@
 #include "stdafx.h"
 
 std::string txtRoot = "chaosmod/data/player_paper_pls/";
-std::string curRoot = "C:/Windows/Cursors/";
+std::string curRoot = "/Cursors/";
 
 std::string ptxt01 = "player_paper_pls_01.png";
 std::string ptxt02 = "player_paper_pls_02.png";
@@ -67,7 +67,7 @@ static void GetTxts()
 	std::string path = GetCurrentModulePath();
 	itxt01 = createTexture((path + txtRoot + ptxt01).c_str());
 	itxt02 = createTexture((path + txtRoot + ptxt02).c_str());
-	itxtcur = createTexture((curRoot + ptxtcur).c_str());
+	itxtcur = createTexture((WIN_ROOT + curRoot + ptxtcur).c_str());
 }
 
 static void Abs(float x, float y, float* ax, float* ay)
