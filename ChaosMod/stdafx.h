@@ -70,7 +70,6 @@
 #include "../vendor/sol3/sol.hpp"
 
 #define WIN32_LEAN_AND_MEAN
-#define WIN_ROOT "%WINDIR%"
 #include <Windows.h>
 #include <WinUser.h>
 #include <Psapi.h>
