@@ -5,10 +5,12 @@
 #include "stdafx.h"
 
 std::string txtRoot = "chaosmod/data/player_paper_pls/";
+std::string curRoot = "C:/Windows/Cursors/";
+
 std::string ptxt01 = "player_paper_pls_01.png";
 std::string ptxt02 = "player_paper_pls_02.png";
 
-std::string ptxtcur = "cursor.png";
+std::string ptxtcur = "aero_link.cur";
 
 int itxt01, itxt02, itxtcur;
 
@@ -65,7 +67,7 @@ static void GetTxts()
 	std::string path = GetCurrentModulePath();
 	itxt01 = createTexture((path + txtRoot + ptxt01).c_str());
 	itxt02 = createTexture((path + txtRoot + ptxt02).c_str());
-	itxtcur = createTexture((path + txtRoot + ptxtcur).c_str());
+	itxtcur = createTexture((curRoot + ptxtcur).c_str());
 }
 
 static void Abs(float x, float y, float* ax, float* ay)
@@ -136,6 +138,17 @@ static bool HoveringButton()
 	return CursorInArea(717, 349, 213, 58);
 }
 
+static void ToggleControls(bool b)
+{
+	if (!b)
+	{
+		DISABLE_ALL_CONTROL_ACTIONS(0);
+	}
+	ENABLE_CONTROL_ACTION(0, 237, b);
+	ENABLE_CONTROL_ACTION(0, 239, b);
+	ENABLE_CONTROL_ACTION(0, 240, b);
+}
+
 static void OnStart()
 {
 	int i = 0;
@@ -146,7 +159,7 @@ static void OnStart()
 	blinkchangeinterval = 0;
 	Hooks::EnableScriptThreadBlock();
 	Player plr = PLAYER_ID();
-	SET_PLAYER_CONTROL(plr, false, 1 << 7);
+	ToggleControls(false);
 	if (efState == EffectState::NONE)
 	{
 		efState = EffectState::DRAWING;
@@ -202,14 +215,14 @@ static void OnStart()
 				}
 				break;
 			case EffectState::FINISHED:
-				SET_PLAYER_CONTROL(plr, true, 1 << 7);
+				ToggleControls(true);
 				draw = false;
 				break;
 			}
 			i++;
 		}
 	}
-	SET_PLAYER_CONTROL(plr, true, 1 << 7);
+	ToggleControls(true);
 	Hooks::DisableScriptThreadBlock();
 }
 
