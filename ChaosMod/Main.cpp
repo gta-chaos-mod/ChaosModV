@@ -259,11 +259,7 @@ namespace Main
 
 	void ToggleDebugMenu(bool bToggle)
 	{
-		if (!ms_pDebugMenu->IsVisible() && bToggle)
-		{
-			ms_pDebugMenu->SetVisible(bToggle);
-		}
-		else if (ms_pDebugMenu->IsVisible() && !bToggle)
+		if (ms_pDebugMenu->IsVisible() != bToggle)
 		{
 			ms_pDebugMenu->SetVisible(bToggle);
 		}
