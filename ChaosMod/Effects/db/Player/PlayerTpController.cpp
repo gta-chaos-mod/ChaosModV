@@ -266,7 +266,7 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 static struct FakeTeleportInfo
 {
 	EEffectType type;
-	void (*func)(void);
+	void (*Start)(void);
 };
 
 static const std::vector<FakeTeleportInfo> tpLocations =
@@ -298,8 +298,7 @@ static void OnStartFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	selectedLocationInfo.func();
-	//TeleportPlayer(destinationPos);
+	selectedLocationInfo.Start();
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
