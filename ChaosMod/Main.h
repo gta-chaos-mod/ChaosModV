@@ -9,5 +9,7 @@ namespace Main
 {
 	void Run();
 
+	void ToggleDebugMenu(bool bToggle);
+
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow);
 }

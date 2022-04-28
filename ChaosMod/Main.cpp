@@ -257,6 +257,18 @@ namespace Main
 		}
 	}
 
+	void ToggleDebugMenu(bool bToggle)
+	{
+		if (!ms_pDebugMenu->IsVisible() && bToggle)
+		{
+			ms_pDebugMenu->SetVisible(bToggle);
+		}
+		else if (ms_pDebugMenu->IsVisible() && !bToggle)
+		{
+			ms_pDebugMenu->SetVisible(bToggle);
+		}
+	}
+
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
 		static bool c_bIsCtrlPressed = false;
