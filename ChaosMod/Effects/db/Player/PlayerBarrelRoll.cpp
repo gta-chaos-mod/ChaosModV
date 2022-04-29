@@ -56,7 +56,7 @@ static void OnStart()
 
 static RegisterEffect reg(EFFECT_PLAYER_BARREL_ROLL, OnStart, EffectInfo
 	{
-		.Name = "Do A Bareel Roll",
+		.Name = "Do A Barrel Roll",
 		.Id = "player_barrel_roll"
 	}
 );
