@@ -5,13 +5,16 @@
 #include "stdafx.h"
 
 std::string txtRoot = "chaosmod\\data\\player_paper_pls\\";
+
 char* winRoot;
 size_t len;
 errno_t err = _dupenv_s(&winRoot, &len, "SystemRoot");
 std::string curRoot("\\Cursors\\");
 
-std::string ptxt01 = "player_paper_pls_01.png";
-std::string ptxt02 = "player_paper_pls_02.png";
+std::string ptxtForm = ".png"; //Apparently jpg is bigger file size than png?
+
+std::string ptxt01 = "player_paper_pls_01";
+std::string ptxt02 = "player_paper_pls_02";
 
 std::string ptxtcur = "aero_link.cur";
 
@@ -68,8 +71,8 @@ std::string GetCurrentModulePath()
 static void GetTxts()
 {
 	std::string path = GetCurrentModulePath();
-	itxt01 = createTexture((path + txtRoot + ptxt01).c_str());
-	itxt02 = createTexture((path + txtRoot + ptxt02).c_str());
+	itxt01 = createTexture((path + txtRoot + ptxt01 + ptxtForm).c_str());
+	itxt02 = createTexture((path + txtRoot + ptxt02 + ptxtForm).c_str());
 	itxtcur = createTexture((winRoot + curRoot + ptxtcur).c_str());
 }
 
