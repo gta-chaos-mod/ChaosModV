@@ -16,6 +16,17 @@ static void LoadAnimDict()
 	}
 }
 
+static void OnStop()
+{
+	for (Ped p : GetAllPeds())
+	{
+		if (IS_ENTITY_PLAYING_ANIM(p, dict.c_str(), anim.c_str(), 3))
+		{
+			CLEAR_PED_TASKS_IMMEDIATELY(p);
+		}
+	}
+}
+
 static void OnTick()
 {
 	LoadAnimDict();
@@ -28,7 +39,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect reg(EFFECT_PEDS_TPOSE, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect reg(EFFECT_PEDS_TPOSE, nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "T-Pose",
 		.Id = "peds_tpose",
