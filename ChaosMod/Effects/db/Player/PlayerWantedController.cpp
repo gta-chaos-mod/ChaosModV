@@ -4,13 +4,16 @@ static void OnStartSix()
 {
 	Player player = PLAYER_ID();
 
+	int duration = 180; // in seconds;
+
 	SET_FAKE_WANTED_LEVEL(6);	
 	
 	SET_PLAYER_WANTED_LEVEL(player, 5, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+	SET_WANTED_LEVEL_MULTIPLIER(5.f);
 
 	g_pEffectDispatcher->OverrideEffectName(EFFECT_6_STARS, EFFECT_6_STARS);
-	WAIT(60000);
+	WAIT(duration * 1000);
 	// Because fake wanted levels don't go away on their own 
 	SET_FAKE_WANTED_LEVEL(0);
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
