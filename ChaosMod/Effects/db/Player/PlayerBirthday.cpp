@@ -97,7 +97,7 @@ static void OnStart()
 
 	//Start the ptfx at the player ped (head)
 	USE_PARTICLE_FX_ASSET(ptfxDict.c_str());
-	START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE(ptfxName.c_str(), playerPed, 0.f, 0.f, 0.2f, 0.f, 0.f, 0.f, 0x796e, 1.5f, false, false, false);
+	START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE(ptfxName.c_str(), playerPed, 0.f, 0.f, 0.2f, 0.f, 0.f, 0.f, GET_PED_BONE_INDEX(playerPed, 0x796e), 1.5f, false, false, false);
 
 	UnloadShit();
 }
