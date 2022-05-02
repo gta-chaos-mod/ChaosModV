@@ -72,12 +72,10 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, playerGroup, relationshipGroup);
 
 	//Check if the player is in a vehicle
-	Vehicle plrVeh = 0;
-	plrVeh = GET_VEHICLE_PED_IS_USING(playerPed);
+	Vehicle plrVeh = GET_VEHICLE_PED_IS_USING(playerPed);
 
 	//Get the players position
-	Vector3 plrPos = { 0,0,0 };
-	plrPos = GET_ENTITY_COORDS(playerPed, !IS_ENTITY_DEAD(playerPed, true));
+	Vector3 plrPos = GET_ENTITY_COORDS(playerPed, !IS_ENTITY_DEAD(playerPed, true));
 
 	//Create the clown
 	Ped newPed = CreatePoolPed(4, GET_HASH_KEY(pedModel.c_str()), plrPos.x, plrPos.y, plrPos.z, 0.f);
