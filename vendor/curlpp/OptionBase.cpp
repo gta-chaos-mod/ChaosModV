@@ -1,5 +1,5 @@
 /*
- *    Copyright (c) <2002-2009> <Jean-Philippe Barrette-LaPierre>
+ *    Copyright (c) <2002-2006> <Jean-Philippe Barrette-LaPierre>
  *    
  *    Permission is hereby granted, free of charge, to any person obtaining
  *    a copy of this software and associated documentation files 
@@ -21,32 +21,24 @@
  *    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SINGLE_THREADED_HPP
-#define SINGLE_THREADED_HPP
 
-#include "utilspp/NullType.hpp"
+#include "curlpp/OptionBase.hpp"
 
-namespace utilspp
+curlpp::OptionBase::OptionBase(CURLoption option)
+  : mOption(option)
+{};
+
+curlpp::OptionBase::~OptionBase()
+{};
+
+bool curlpp::OptionBase::operator<(const curlpp::OptionBase & rhs) const 
 {
-   template <typename T = utilspp::NullType>
-      struct ThreadingSingle
-      {
-         struct mutex
-         {
-            void lock();
-            void unlock();
-         };
-         
-         struct lock
-         {
-            lock();
-            lock(mutex & m);
-         };
-
-         typedef T VolatileType;
-      };
+   return mOption < rhs.mOption;
 }
 
-#include "utilspp/ThreadingSingle.inl"
+CURLoption curlpp::OptionBase::getOption() const 
+{
+   return mOption;
+}
 
-#endif
+
