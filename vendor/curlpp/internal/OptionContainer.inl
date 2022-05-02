@@ -21,16 +21,53 @@
  *    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#ifndef OPTION_CONTAINER_INL
+#define OPTION_CONTAINER_INL
 
-#include "curlpp/Options.hpp"
-#include "curlpp/Easy.hpp"
 
-std::ostream & operator<<(std::ostream & stream, const curlpp::options::Url & url)
+namespace curlpp
 {
-  curlpp::Easy request;
-  request.setOpt(url);
 
-  stream << request;
 
-  return stream;
+namespace internal
+{
+
+
+template<class OptionType>
+OptionContainer<OptionType>::OptionContainer(typename OptionContainer<OptionType>::ParamType value)
+: mValue(value)
+{}
+
+
+template<class OptionType>
+OptionContainer<OptionType>::OptionContainer(OptionContainer<OptionType> & other) 
+: mValue(other.mValue)
+{}
+
+
+template<class OptionType>
+void
+OptionContainer<OptionType>::setValue(typename OptionContainer<OptionType>::ParamType value)
+{
+  mValue = value;
 }
+
+template<class OptionType>
+typename OptionContainer<OptionType>::ReturnType
+OptionContainer<OptionType>::getValue()
+{
+  return mValue;
+}
+
+template<class OptionType>
+typename OptionContainer<OptionType>::HandleOptionType
+OptionContainer<OptionType>::getHandleOptionValue()
+{
+  return mValue;
+}
+
+#endif
+
+} // namespace internal
+
+} // namespace curlpp
