@@ -14,7 +14,7 @@ std::string audName = "Cheers";
 
 int soundId = 0;
 
-static void LoadShit()
+static void LoadStuff()
 {
 	//load models
 	std::vector<std::string> modelsToLoad = {pedModel, cakeModel};
@@ -35,7 +35,7 @@ static void LoadShit()
 	}
 }
 
-static void UnloadShit()
+static void UnloadStuff()
 {
 	//unload models
 	std::vector<std::string> modelsToLoad = {pedModel, cakeModel};
@@ -59,7 +59,7 @@ static void UnloadShit()
 
 static void OnStart()
 {
-	LoadShit();
+	LoadStuff();
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();
@@ -99,7 +99,7 @@ static void OnStart()
 	USE_PARTICLE_FX_ASSET(ptfxDict.c_str());
 	START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE(ptfxName.c_str(), playerPed, 0.f, 0.f, 0.2f, 0.f, 0.f, 0.f, GET_PED_BONE_INDEX(playerPed, 0x796e), 1.5f, false, false, false);
 
-	UnloadShit();
+	UnloadStuff();
 }
 
 static RegisterEffect registerEffect(EFFECT_PLAYER_BIRTHDAY, OnStart, EffectInfo
