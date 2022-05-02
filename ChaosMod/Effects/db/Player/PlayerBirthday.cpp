@@ -24,6 +24,7 @@ static void LoadAssets()
 	std::vector<std::string> modelsToLoad = {pedModel, cakeModel};
 	for (int i = 0; i < modelsToLoad.size(); i++)
 	{
+		if (!IS_MODEL_VALID(GET_HASH_KEY(modelsToLoad[i].c_str()))) continue;
 		REQUEST_MODEL(GET_HASH_KEY(modelsToLoad[i].c_str()));
 		while (!HAS_MODEL_LOADED(GET_HASH_KEY(modelsToLoad[i].c_str())))
 		{
