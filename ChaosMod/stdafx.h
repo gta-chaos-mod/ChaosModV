@@ -1,5 +1,7 @@
 #pragma once
 
+#define MOD_VERSION "1.10.2"
+
 #include "Main.h"
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
@@ -69,6 +71,9 @@
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"
+//#define CPPHTTPLIB_OPENSSL_SUPPORT
+#include "../vendor/httplib/httplib.h"
+
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

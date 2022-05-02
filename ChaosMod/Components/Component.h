@@ -25,3 +25,11 @@ public:
 
 	virtual void Run() = 0;
 };
+
+inline void RunAllComponents()
+{
+	for (Component* pComponent : g_rgComponents)
+	{
+		pComponent->Run();
+	}
+}
