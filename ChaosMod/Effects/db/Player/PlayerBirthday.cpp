@@ -5,36 +5,36 @@
 #include "stdafx.h"
 
 //props, peds, dicts and other vars
-std::string ptfxDict = "core";
-std::string ptfxName = "ent_dst_gen_gobstop";
-std::string pedModel = "s_m_y_clown_01";
-std::string cakeModel = "v_res_cakedome";
-std::string audBank = "DLC_BATTLE/BTL_CLUB_DJ_CALLOUT_CROWD_CHEER";
-std::string audDict = "dlc_btl_club_dj_callout_crowd_cheers_sounds";
-std::string audName = "dj_crowd_cheer";
+const char* ptfxDict = "core";
+const char* ptfxName = "ent_dst_gen_gobstop";
+const char* pedModel = "s_m_y_clown_01";
+const char* cakeModel = "v_res_cakedome";
+const char* audBank = "DLC_BATTLE/BTL_CLUB_DJ_CALLOUT_CROWD_CHEER";
+const char* audDict = "dlc_btl_club_dj_callout_crowd_cheers_sounds";
+const char* audName = "dj_crowd_cheer";
 
 int soundId = -1;
 
 static void LoadAssets()
 {	
 	//load audio
-	REQUEST_SCRIPT_AUDIO_BANK(audBank.c_str(), 0, -1);
+	REQUEST_SCRIPT_AUDIO_BANK(audBank, 0, -1);
 
 	//load models
-	std::vector<std::string> modelsToLoad = {pedModel, cakeModel};
+	std::vector<const char*> modelsToLoad = {pedModel, cakeModel};
 	for (int i = 0; i < modelsToLoad.size(); i++)
 	{
-		if (!IS_MODEL_VALID(GET_HASH_KEY(modelsToLoad[i].c_str()))) continue;
-		REQUEST_MODEL(GET_HASH_KEY(modelsToLoad[i].c_str()));
-		while (!HAS_MODEL_LOADED(GET_HASH_KEY(modelsToLoad[i].c_str())))
+		if (!IS_MODEL_VALID(GET_HASH_KEY(modelsToLoad[i]))) continue;
+		REQUEST_MODEL(GET_HASH_KEY(modelsToLoad[i]));
+		while (!HAS_MODEL_LOADED(GET_HASH_KEY(modelsToLoad[i])))
 		{
 			WAIT(0);
 		}
 	}
 
 	//load ptfx
-	REQUEST_NAMED_PTFX_ASSET(ptfxDict.c_str());
-	while (!HAS_NAMED_PTFX_ASSET_LOADED(ptfxDict.c_str()))
+	REQUEST_NAMED_PTFX_ASSET(ptfxDict);
+	while (!HAS_NAMED_PTFX_ASSET_LOADED(ptfxDict))
 	{
 		WAIT(0);
 	}
@@ -43,18 +43,18 @@ static void LoadAssets()
 static void UnloadAssets()
 {
 	//unload audio
-	RELEASE_NAMED_SCRIPT_AUDIO_BANK(audBank.c_str());
+	RELEASE_NAMED_SCRIPT_AUDIO_BANK(audBank);
 
 	//unload models
-	std::vector<std::string> modelsToLoad = {pedModel, cakeModel};
+	std::vector<const char*> modelsToLoad = {pedModel, cakeModel};
 	for (int i = 0; i < modelsToLoad.size(); i++)
 	{
-		if (!IS_MODEL_VALID(GET_HASH_KEY(modelsToLoad[i].c_str()))) continue;
-		SET_MODEL_AS_NO_LONGER_NEEDED(GET_HASH_KEY(modelsToLoad[i].c_str()));
+		if (!IS_MODEL_VALID(GET_HASH_KEY(modelsToLoad[i]))) continue;
+		SET_MODEL_AS_NO_LONGER_NEEDED(GET_HASH_KEY(modelsToLoad[i]));
 	}
 
 	//unload ptfx
-	REMOVE_NAMED_PTFX_ASSET(ptfxDict.c_str());
+	REMOVE_NAMED_PTFX_ASSET(ptfxDict);
 }
 
 static void OnStart()
@@ -79,7 +79,7 @@ static void OnStart()
 	Vector3 plrPos = GET_ENTITY_COORDS(playerPed, !IS_ENTITY_DEAD(playerPed, true));
 
 	//Create the clown
-	Ped newPed = CreatePoolPed(4, GET_HASH_KEY(pedModel.c_str()), plrPos.x, plrPos.y, plrPos.z, 0.f);
+	Ped newPed = CreatePoolPed(4, GET_HASH_KEY(pedModel), plrPos.x, plrPos.y, plrPos.z, 0.f);
 	SET_PED_RELATIONSHIP_GROUP_HASH(newPed, relationshipGroup);
 	SET_PED_AS_GROUP_MEMBER(newPed, GET_PLAYER_GROUP(PLAYER_ID()));
 	if (DOES_ENTITY_EXIST(plrVeh))
@@ -88,15 +88,15 @@ static void OnStart()
 	}
 
 	//Give cake to player
-	Object cake = CreatePoolProp(GET_HASH_KEY(cakeModel.c_str()), 0.f, 0.f, 0.f, false);
+	Object cake = CreatePoolProp(GET_HASH_KEY(cakeModel), 0.f, 0.f, 0.f, false);
 	ATTACH_ENTITY_TO_ENTITY(cake, playerPed, GET_PED_BONE_INDEX(playerPed, 57005), 0.f, 0.f, 0.f, -90.f, 50.f, 0.f, true, true, false, true, 1, true);
 
 	//Start the ptfx at the player ped (head)
-	USE_PARTICLE_FX_ASSET(ptfxDict.c_str());
-	START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE(ptfxName.c_str(), playerPed, 0.f, 0.f, 0.2f, 0.f, 0.f, 0.f, GET_PED_BONE_INDEX(playerPed, 0x796e), 1.5f, false, false, false);
+	USE_PARTICLE_FX_ASSET(ptfxDict);
+	START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE(ptfxName, playerPed, 0.f, 0.f, 0.2f, 0.f, 0.f, 0.f, GET_PED_BONE_INDEX(playerPed, 0x796e), 1.5f, false, false, false);
 
 	//Play sound
-	PLAY_SOUND_FROM_ENTITY(soundId, audName.c_str(), playerPed, audDict.c_str(), false, 0);
+	PLAY_SOUND_FROM_ENTITY(soundId, audName, playerPed, audDict, false, 0);
 
 	//Unload assets
 	UnloadAssets();
