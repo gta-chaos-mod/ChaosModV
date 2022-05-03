@@ -22,4 +22,15 @@ namespace Util
 
 		return false;
 	}
+
+	inline void SetPedWeaponRange(Ped ulPed, float ulRange)
+	{
+		uintptr_t CPed = *(uintptr_t*)getScriptHandleBaseAddress(ulPed);
+
+		// Thanks to MoneyWasted for these
+		uintptr_t CWeaponManager = *(uintptr_t*)(CPed + 0x10D8);
+		uintptr_t CWeaponInfo = *(uintptr_t*)(CWeaponManager + 0x20);
+
+		*(float*)(CWeaponInfo + 0x28C) = ulRange;
+	}
 }
