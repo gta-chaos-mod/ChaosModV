@@ -2,6 +2,7 @@
 
 #include "EffectGroups.h"
 #include "EEffectTimedType.h"
+#include "EEffectAttributes.h"
 
 #include <string>
 #include <vector>
@@ -20,16 +21,48 @@ struct EffectData
 	int WeightMult = 5;
 	int Shortcut = 0;
 	EEffectTimedType TimedType = EEffectTimedType::Unk;
-	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
-	bool ExcludedFromVoting = false;
-	bool HasCustomName = false;
-	bool IsMeta = false;
-	bool IsUtility = false;
+	EEffectGroupType GroupType = EEffectGroupType::None;
+
+private:
+	EEffectAttributes Attributes {};
+
+public:
+	inline void SetAttribute(EEffectAttributes attribute, bool state)
+	{
+		if (state)
+		{
+			Attributes |= attribute;
+		}
+		else
+		{
+			Attributes &= ~attribute;
+		}
+	}
+
+	inline bool ExcludedFromVoting() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting);
+	}
+
+	inline bool HasCustomName() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::HasCustomName);
+	}
+
+	inline bool IsMeta() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsMeta);
+	}
+
+	inline bool IsUtility() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsUtility);
+	}
 };
 
 inline float GetEffectWeight(const EffectData& effectData)
 {
-	EEffectGroupType effectGroupType = effectData.EEffectGroupType;
+	EEffectGroupType effectGroupType = effectData.GroupType;
 	float effectWeight = effectData.Weight;
 
 	return g_bEnableGroupWeighting && effectGroupType != EEffectGroupType::None
