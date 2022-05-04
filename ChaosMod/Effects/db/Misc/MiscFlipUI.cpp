@@ -81,7 +81,7 @@ static void OnStop()
 	GET_MOBILE_PHONE_POSITION(&mobilePos);
 	SET_MOBILE_PHONE_POSITION(originalMobilePhoneX, mobilePos.y, mobilePos.z);
 
-	Memory::SetRadarOffsetX(0.f);
+	Memory::ResetRadar();
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_FLIP_UI, OnStart, OnStop, OnTick, EffectInfo
@@ -89,6 +89,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_FLIP_UI, OnStart, OnStop, OnTic
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_HUD }
+		.IncompatibleWith = { EFFECT_NO_HUD, EFFECT_MISC_MAXIMAP }
 	}
 );

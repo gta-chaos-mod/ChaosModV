@@ -14,6 +14,6 @@ static RegisterEffect registerEffect(EFFECT_NO_HUD, nullptr, nullptr, OnTick, Ef
 		.Name = "No HUD",
 		.Id = "no_hud",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_RADAR } 
+		.IncompatibleWith = { EFFECT_NO_RADAR, EFFECT_MISC_FLIP_UI, EFFECT_MISC_MAXIMAP }
 	}
 );
