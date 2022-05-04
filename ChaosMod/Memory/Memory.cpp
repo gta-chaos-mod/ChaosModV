@@ -2,9 +2,6 @@
 
 #include "Memory.h"
 
-static DWORD64 ms_ullBaseAddr;
-static DWORD64 ms_ullEndAddr;
-
 namespace Memory
 {
 	void Init()
@@ -14,6 +11,9 @@ namespace Memory
 
 		ms_ullBaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
 		ms_ullEndAddr = ms_ullBaseAddr + moduleInfo.SizeOfImage;
+
+		LOG("ms_ullBaseAddr = " << ms_ullBaseAddr);
+		LOG("ms_ullEndAddr = " << ms_ullEndAddr);
 
 		MH_Initialize();
 
