@@ -7,13 +7,13 @@
 
 static void OnStop()
 {
-	g_MetaInfo.m_ucAdditionalEffectsToDispatch = 0;
+	MetaModifiers::m_ucAdditionalEffectsToDispatch = 0;
 }
 
 
 static void OnTick()
 {
-	g_MetaInfo.m_ucAdditionalEffectsToDispatch = 2;
+	MetaModifiers::m_ucAdditionalEffectsToDispatch = 2;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_ADDITIONAL_EFFECTS, nullptr, OnStop, OnTick, EffectInfo

@@ -172,13 +172,14 @@ static void MainRun()
 
 	Init();
 
+	bool c_bJustReenabled = false;
+
 	while (true)
 	{
 		WAIT(0);
 
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
-			static bool c_bJustReenabled = false;
 			if (ms_bDisableMod && !c_bJustReenabled)
 			{
 				if (!c_bJustReenabled)
