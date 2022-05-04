@@ -440,6 +440,20 @@ namespace LuaScripts
 									effectData.IsMeta = *isMetaOpt;
 								}
 
+								const sol::optional<bool>& excludeFromVotingOpt = scriptInfo["ExcludeFromVoting"];
+
+								if (excludeFromVotingOpt)
+								{
+									effectData.ExcludedFromVoting = *excludeFromVotingOpt;
+								}
+
+								const sol::optional<bool>& isUtilityOpt = scriptInfo["IsUtility"];
+
+								if (isUtilityOpt)
+								{
+									effectData.IsUtility = *isUtilityOpt;
+								}
+
 								const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
 								if (incompatibleIdsOpt)
 								{

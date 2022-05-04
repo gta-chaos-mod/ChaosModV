@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ConfigApp
@@ -6,6 +7,7 @@ namespace ConfigApp
     public class TreeMenuItem : INotifyPropertyChanged
     {
         public string Text { get; private set; }
+        public string BaseText { get; private set; }
         public TreeMenuItem Parent;
         public List<TreeMenuItem> Children { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,6 +50,7 @@ namespace ConfigApp
         public TreeMenuItem(string text, TreeMenuItem parent = null)
         {
             Text = text;
+            BaseText = text;
             Parent = parent;
             Children = new List<TreeMenuItem>();
             m_isChecked = true;
@@ -65,15 +68,16 @@ namespace ConfigApp
         public void UpdateCheckedAccordingToChildrenStatus()
         {
             bool shouldBeChecked = false;
+            int childsEnabled = 0;
             foreach (TreeMenuItem menuItem in Children)
             {
                 if (menuItem.IsChecked)
                 {
+                    childsEnabled += 1;
                     shouldBeChecked = true;
-                    break;
                 }
             }
-
+            this.Text = String.Format("{0} ({1}/{2})", this.BaseText, childsEnabled, this.Children.Count);
             m_isChecked = shouldBeChecked;
 
             NotifyFieldsUpdated();
@@ -81,6 +85,7 @@ namespace ConfigApp
 
         private void NotifyFieldsUpdated()
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Text"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigVisible"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigEnabled"));
