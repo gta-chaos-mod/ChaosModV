@@ -38,7 +38,6 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
-	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
 
 	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
 }
@@ -62,6 +61,8 @@ static void Reset()
 	ClearEntityPool();
 
 	Mp3Manager::ResetCache();
+
+	LuaScripts::Unload();
 }
 
 static void Init()

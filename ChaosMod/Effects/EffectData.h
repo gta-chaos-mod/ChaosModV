@@ -21,7 +21,7 @@ struct EffectData
 	int WeightMult = 5;
 	int Shortcut = 0;
 	EEffectTimedType TimedType = EEffectTimedType::Unk;
-	EEffectGroupType GroupType = EEffectGroupType::None;
+	std::string GroupType;
 
 private:
 	EEffectAttributes Attributes {};
@@ -62,10 +62,10 @@ public:
 
 inline float GetEffectWeight(const EffectData& effectData)
 {
-	EEffectGroupType effectGroupType = effectData.GroupType;
-	float effectWeight = effectData.Weight;
+	const auto& effectGroup = effectData.GroupType;
+	auto effectWeight = effectData.Weight;
 
-	return g_bEnableGroupWeighting && effectGroupType != EEffectGroupType::None
-		? effectWeight / g_dictCurrentEffectGroupMemberCount[effectGroupType] * g_EffectGroups.at(effectGroupType).WeightMult
+	return g_bEnableGroupWeighting && !effectGroup.empty()
+		? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup) * g_dictEffectGroups.at(effectGroup).WeightMult
 		: effectWeight;
 }

@@ -378,39 +378,66 @@ namespace LuaScripts
 				lua["GetAllPedModels"] = Memory::GetAllPedModels;
 				lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
 
-				const sol::protected_function_result& result = lua.safe_script_file(path.string(), sol::load_mode::text);
-
+				const auto& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 				if (!result.valid())
 				{
 					const sol::error& error = result;
-
 					LuaPrint(szFileName, error.what());
 
 					continue;
 				}
 
-				const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
+				const sol::optional<sol::table>& effectGroupInfoOpt = lua["EffectGroupInfo"];
+				if (effectGroupInfoOpt)
+				{
+					const auto& effectGroupInfo = *effectGroupInfoOpt;
+					
+					const sol::optional<std::string>& groupNameOpt = effectGroupInfo["Name"];
+					if (groupNameOpt)
+					{
+						const auto& groupName = *groupNameOpt;
+						if (g_dictEffectGroups.find(groupName) != g_dictEffectGroups.end())
+						{
+							LOG(szFileName << ": WARNING: Could not register effect group \"" << groupName << "\": Already registered!");
+						}
+						else
+						{
+							// Initialize these (latter only if it doesn't exist yet)
+							g_dictEffectGroups[groupName] = { .WasRegisteredByScript = true };
+							g_dictEffectGroupMemberCount[groupName];
 
+							const sol::optional<int>& groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
+							if (groupWeightMultOpt)
+							{
+								g_dictEffectGroups[groupName].WeightMult = std::clamp(*groupWeightMultOpt, 1,
+									(int)(std::numeric_limits<unsigned short>::max)());
+							}
+
+							LOG(szFileName << ": Registered effect group \"" << groupName << "\" with weight multiplier: "
+								<< g_dictEffectGroups[groupName].WeightMult);
+						}
+					}
+				}
+
+				const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
 				if (!scriptInfoOpt)
 				{
 					continue;
 				}
 
-				const sol::table& scriptInfo = *scriptInfoOpt;
+				const auto& scriptInfo = *scriptInfoOpt;
 
 				const sol::optional<std::string>& scriptNameOpt = scriptInfo["Name"];
 				const sol::optional<std::string>& scriptIdOpt = scriptInfo["ScriptId"];
-
 				if (!scriptNameOpt || !scriptIdOpt)
 				{
 					continue;
 				}
 
-				const std::string& szScriptId = *scriptIdOpt;
-				const std::string& szScriptName = *scriptNameOpt;
+				const auto& szScriptId = *scriptIdOpt;
+				const auto& szScriptName = *scriptNameOpt;
 
 				bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
-
 				if (!bDoesIdAlreadyExist)
 				{
 					for (const auto& pair : g_dictEffectsMap)
@@ -425,7 +452,8 @@ namespace LuaScripts
 				}
 				if (bDoesIdAlreadyExist)
 				{
-					LOG("Could not register script \"" << szFileName << "\" (with effect name \"" << szScriptName << "\"): effect with id \"" << szScriptId << "\" (already exists!)");
+					LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName
+						<< "\": Id \"" << szScriptId << "\" already registered!");
 
 					continue;
 				}
@@ -434,11 +462,10 @@ namespace LuaScripts
 				effectData.Name = szScriptName;
 				effectData.Id = *scriptIdOpt;
 
-				sol::optional<std::string> timedTypeTextOpt = scriptInfo["TimedType"];
-
+				const sol::optional<std::string>& timedTypeTextOpt = scriptInfo["TimedType"];
 				if (timedTypeTextOpt)
 				{
-					const std::string& szTimedTypeText = *timedTypeTextOpt;
+					const auto& szTimedTypeText = *timedTypeTextOpt;
 
 					if (szTimedTypeText == "None")
 					{
@@ -459,38 +486,33 @@ namespace LuaScripts
 					else if (szTimedTypeText == "Custom")
 					{
 						const sol::optional<int>& durationOpt = scriptInfo["CustomTime"];
-
-						if (durationOpt && *durationOpt > 0)
+						if (durationOpt)
 						{
 							effectData.TimedType = EEffectTimedType::Custom;
-							effectData.CustomTime = *durationOpt;
+							effectData.CustomTime = (std::max)(1, *durationOpt);
 						}
 					}
 				}
 
 				const sol::optional<int>& weightMultOpt = scriptInfo["WeightMultiplier"];
-
-				if (weightMultOpt && *weightMultOpt > 0)
+				if (weightMultOpt)
 				{
-					effectData.WeightMult = *weightMultOpt;
+					effectData.WeightMult = (std::max)(1, *weightMultOpt);
 				}
 
 				const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
-
 				if (isMetaOpt)
 				{
 					effectData.SetAttribute(EEffectAttributes::IsMeta, *isMetaOpt);
 				}
 
 				const sol::optional<bool>& excludeFromVotingOpt = scriptInfo["ExcludeFromVoting"];
-
 				if (excludeFromVotingOpt)
 				{
 					effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
 				}
 
 				const sol::optional<bool>& isUtilityOpt = scriptInfo["IsUtility"];
-
 				if (isUtilityOpt)
 				{
 					effectData.SetAttribute(EEffectAttributes::IsUtility, *isUtilityOpt);
@@ -499,8 +521,7 @@ namespace LuaScripts
 				const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
 				if (incompatibleIdsOpt)
 				{
-					const sol::table& rgIncompatibleIds = *incompatibleIdsOpt;
-
+					const auto& rgIncompatibleIds = *incompatibleIdsOpt;
 					for (const auto& entry : rgIncompatibleIds)
 					{
 						if (entry.second.valid() && entry.second.is<std::string>())
@@ -510,13 +531,43 @@ namespace LuaScripts
 					}
 				}
 
+				const sol::optional<std::string>& effectGroupOpt = scriptInfo["EffectGroup"];
+				if (effectGroupOpt)
+				{
+					const auto& effectGroup = *effectGroupOpt;
+					effectData.GroupType = effectGroup;
+
+					if (g_dictEffectGroups.find(effectGroup) == g_dictEffectGroups.end())
+					{
+						g_dictEffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
+					}
+
+					g_dictEffectGroupMemberCount[effectGroup]++;
+				}
+
 				ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));
-
 				g_EnabledEffects.emplace(szScriptId, effectData);
-
 				g_RegisteredEffects.emplace_back(szScriptId);
 
-				LOG("Registered script \"" << szFileName << "\" as effect with id \"" << szScriptId << "\" and name \"" << szScriptName << "\"");
+				LOG(szFileName << ": Registered effect \"" << szScriptName << "\" with id \"" << szScriptId << "\"");
+			}
+		}
+	}
+
+	void Unload()
+	{
+		// Clean up all effect groups registered by scripts
+		for (auto it = g_dictEffectGroups.begin(); it != g_dictEffectGroups.end(); )
+		{
+			const auto& [groupName, groupData] = *it;
+			if (groupData.WasRegisteredByScript)
+			{
+				it = g_dictEffectGroups.erase(it);
+				g_dictEffectGroupMemberCount.erase(groupName);
+			}
+			else
+			{
+				it++;
 			}
 		}
 	}

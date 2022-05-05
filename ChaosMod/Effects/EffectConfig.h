@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Util/OptionsFile.h"
+#include "EffectGroups.h"
+#include "../Util/OptionsFile.h"
 
 enum EEffectType : int;
 struct EffectData;
@@ -82,11 +83,6 @@ namespace EffectConfig
 
 			if (!rgValues[0]) // enabled == false
 			{
-				if (effectInfo.EEffectGroupType != EEffectGroupType::None)
-				{
-					g_dictCurrentEffectGroupMemberCount[effectInfo.EEffectGroupType]--;
-				}
-
 				continue;
 			}
 
@@ -127,7 +123,11 @@ namespace EffectConfig
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			effectData.GroupType = effectInfo.EEffectGroupType;
+			if (effectInfo.EEffectGroupType != EEffectGroupType::None)
+			{
+				effectData.GroupType = g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EEffectGroupType))->first;
+				g_dictEffectGroupMemberCount[effectData.GroupType]++;
+			}
 
 			out.emplace(effectType, effectData);
 		}

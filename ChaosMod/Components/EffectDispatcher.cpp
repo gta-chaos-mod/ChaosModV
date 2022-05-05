@@ -345,7 +345,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple times in a row
-	if (effectData.GroupType == EEffectGroupType::None)
+	if (effectData.GroupType.empty())
 	{
 		effectData.Weight = effectData.WeightMult;
 	}
