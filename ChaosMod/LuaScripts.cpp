@@ -301,6 +301,39 @@ namespace LuaScripts
 					"Vector3", ELuaNativeReturnType::Vector3
 				);
 
+				auto getMetaModFactory = []<typename T>(T& modifier)
+				{
+					return [&]()
+					{
+						return modifier;
+					};
+				};
+
+				auto setMetaModFactory = []<typename T>(T& modifier)
+				{
+					return [&](T value)
+					{
+						modifier = value;
+					};
+				};
+
+				#define P(x) sol::property(getMetaModFactory(x), setMetaModFactory(x))
+
+				auto metaModifiersTable = lua.create_named_table("MetaModifiers");
+				auto metaModifiersMetaTable = lua.create_table_with(
+					"EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier),
+					"TimerSpeedModifier", P(MetaModifiers::m_fTimerSpeedModifier),
+					"AdditionalEffectsToDispatch", P(MetaModifiers::m_ucAdditionalEffectsToDispatch),
+					"HideChaosUI", P(MetaModifiers::m_bHideChaosUI),
+					"DisableChaos", P(MetaModifiers::m_bDisableChaos),
+					"FlipChaosUI", P(MetaModifiers::m_bFlipChaosUI)
+				);
+				metaModifiersMetaTable[sol::meta_function::new_index] = []{};
+				metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
+				metaModifiersTable[sol::metatable_key] = metaModifiersMetaTable;
+
+				#undef P
+
 				if (DoesFileExist(LUA_NATIVESDEF_DIR))
 				{
 					lua.unsafe_script_file(LUA_NATIVESDEF_DIR);
@@ -316,13 +349,15 @@ namespace LuaScripts
 					"AsInteger", &LuaHolder::As<int>,
 					"AsFloat", &LuaHolder::As<float>,
 					"AsString", &LuaHolder::As<char*>,
-					"AsVector3", &LuaHolder::As<LuaVector3>);
+					"AsVector3", &LuaHolder::As<LuaVector3>
+				);
 				lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 				lua.new_usertype<LuaVector3>("_Vector3",
 					"x", &LuaVector3::m_fX,
 					"y", &LuaVector3::m_fY,
-					"z", &LuaVector3::m_fZ);
+					"z", &LuaVector3::m_fZ
+				);
 				lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 				lua["_invoke"] = [szFileName](const sol::this_state& lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType, const sol::variadic_args& args)
@@ -350,121 +385,138 @@ namespace LuaScripts
 					const sol::error& error = result;
 
 					LuaPrint(szFileName, error.what());
+
+					continue;
 				}
-				else
+
+				const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
+
+				if (!scriptInfoOpt)
 				{
-					const sol::optional<sol::table>& scriptInfoOpt = lua["ScriptInfo"];
+					continue;
+				}
 
-					if (scriptInfoOpt)
+				const sol::table& scriptInfo = *scriptInfoOpt;
+
+				const sol::optional<std::string>& scriptNameOpt = scriptInfo["Name"];
+				const sol::optional<std::string>& scriptIdOpt = scriptInfo["ScriptId"];
+
+				if (!scriptNameOpt || !scriptIdOpt)
+				{
+					continue;
+				}
+
+				const std::string& szScriptId = *scriptIdOpt;
+				const std::string& szScriptName = *scriptNameOpt;
+
+				bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
+
+				if (!bDoesIdAlreadyExist)
+				{
+					for (const auto& pair : g_dictEffectsMap)
 					{
-						const sol::table& scriptInfo = *scriptInfoOpt;
-
-						const sol::optional<std::string>& scriptNameOpt = scriptInfo["Name"];
-						const sol::optional<std::string>& scriptIdOpt = scriptInfo["ScriptId"];
-
-						if (scriptNameOpt && scriptIdOpt)
+						if (pair.second.Id == szScriptId)
 						{
-							const std::string& szScriptId = *scriptIdOpt;
-							const std::string& szScriptName = *scriptNameOpt;
+							bDoesIdAlreadyExist = true;
 
-							bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
-
-							if (!bDoesIdAlreadyExist)
-							{
-								for (const auto& pair : g_dictEffectsMap)
-								{
-									if (pair.second.Id == szScriptId)
-									{
-										bDoesIdAlreadyExist = true;
-
-										break;
-									}
-								}
-							}
-
-							if (bDoesIdAlreadyExist)
-							{
-								LOG("Could not register script \"" << szFileName << "\" (with effect name \"" << szScriptName << "\") as effect with id \"" << szScriptId << "\" (already exists!)");
-							}
-							else
-							{
-								EffectData effectData;
-								effectData.Name = szScriptName;
-								effectData.Id = *scriptIdOpt;
-
-								sol::optional<std::string> timedTypeTextOpt = scriptInfo["TimedType"];
-
-								if (timedTypeTextOpt)
-								{
-									const std::string& szTimedTypeText = *timedTypeTextOpt;
-
-									if (szTimedTypeText == "None")
-									{
-										effectData.TimedType = EEffectTimedType::NotTimed;
-									}
-									else if (szTimedTypeText == "Normal")
-									{
-										effectData.TimedType = EEffectTimedType::Normal;
-									}
-									else if (szTimedTypeText == "Short")
-									{
-										effectData.TimedType = EEffectTimedType::Short;
-									}
-									else if (szTimedTypeText == "Permanent")
-									{
-										effectData.TimedType = EEffectTimedType::Permanent;
-									}
-									else if (szTimedTypeText == "Custom")
-									{
-										const sol::optional<int>& durationOpt = scriptInfo["CustomTime"];
-
-										if (durationOpt && *durationOpt > 0)
-										{
-											effectData.TimedType = EEffectTimedType::Custom;
-											effectData.CustomTime = *durationOpt;
-										}
-									}
-								}
-
-								const sol::optional<int>& weightMultOpt = scriptInfo["WeightMultiplier"];
-
-								if (weightMultOpt && *weightMultOpt > 0)
-								{
-									effectData.WeightMult = *weightMultOpt;
-								}
-
-								const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
-
-								if (isMetaOpt)
-								{
-									effectData.IsMeta = *isMetaOpt;
-								}
-
-								const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
-								if (incompatibleIdsOpt)
-								{
-									const sol::table& rgIncompatibleIds = *incompatibleIdsOpt;
-
-									for (const auto& entry : rgIncompatibleIds)
-									{
-										if (entry.second.valid() && entry.second.is<std::string>())
-										{
-											effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
-										}
-									}
-								}
-
-								ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));
-
-								g_EnabledEffects.emplace(szScriptId, effectData);
-
-								g_RegisteredEffects.emplace_back(szScriptId);
-
-								LOG("Registered script \"" << szFileName << "\" as effect with id \"" << szScriptId << "\" and name \"" << szScriptName << "\"");
-							}
+							break;
 						}
 					}
 				}
+				if (bDoesIdAlreadyExist)
+				{
+					LOG("Could not register script \"" << szFileName << "\" (with effect name \"" << szScriptName << "\"): effect with id \"" << szScriptId << "\" (already exists!)");
+
+					continue;
+				}
+
+				EffectData effectData;
+				effectData.Name = szScriptName;
+				effectData.Id = *scriptIdOpt;
+
+				sol::optional<std::string> timedTypeTextOpt = scriptInfo["TimedType"];
+
+				if (timedTypeTextOpt)
+				{
+					const std::string& szTimedTypeText = *timedTypeTextOpt;
+
+					if (szTimedTypeText == "None")
+					{
+						effectData.TimedType = EEffectTimedType::NotTimed;
+					}
+					else if (szTimedTypeText == "Normal")
+					{
+						effectData.TimedType = EEffectTimedType::Normal;
+					}
+					else if (szTimedTypeText == "Short")
+					{
+						effectData.TimedType = EEffectTimedType::Short;
+					}
+					else if (szTimedTypeText == "Permanent")
+					{
+						effectData.TimedType = EEffectTimedType::Permanent;
+					}
+					else if (szTimedTypeText == "Custom")
+					{
+						const sol::optional<int>& durationOpt = scriptInfo["CustomTime"];
+
+						if (durationOpt && *durationOpt > 0)
+						{
+							effectData.TimedType = EEffectTimedType::Custom;
+							effectData.CustomTime = *durationOpt;
+						}
+					}
+				}
+
+				const sol::optional<int>& weightMultOpt = scriptInfo["WeightMultiplier"];
+
+				if (weightMultOpt && *weightMultOpt > 0)
+				{
+					effectData.WeightMult = *weightMultOpt;
+				}
+
+				const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
+
+				if (isMetaOpt)
+				{
+					effectData.SetAttribute(EEffectAttributes::IsMeta, *isMetaOpt);
+				}
+
+				const sol::optional<bool>& excludeFromVotingOpt = scriptInfo["ExcludeFromVoting"];
+
+				if (excludeFromVotingOpt)
+				{
+					effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
+				}
+
+				const sol::optional<bool>& isUtilityOpt = scriptInfo["IsUtility"];
+
+				if (isUtilityOpt)
+				{
+					effectData.SetAttribute(EEffectAttributes::IsUtility, *isUtilityOpt);
+				}
+
+				const sol::optional<sol::table>& incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
+				if (incompatibleIdsOpt)
+				{
+					const sol::table& rgIncompatibleIds = *incompatibleIdsOpt;
+
+					for (const auto& entry : rgIncompatibleIds)
+					{
+						if (entry.second.valid() && entry.second.is<std::string>())
+						{
+							effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
+						}
+					}
+				}
+
+				ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));
+
+				g_EnabledEffects.emplace(szScriptId, effectData);
+
+				g_RegisteredEffects.emplace_back(szScriptId);
+
+				LOG("Registered script \"" << szFileName << "\" as effect with id \"" << szScriptId << "\" and name \"" << szScriptName << "\"");
 			}
 		}
 	}

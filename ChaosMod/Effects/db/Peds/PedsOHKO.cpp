@@ -19,7 +19,7 @@ static void OnTick()
 	//trevor
 	if (playerHash == 2608926626)
 	{
-		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0);
+		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0, 0);
 	}
 
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);

@@ -3,8 +3,6 @@
 #include "Main.h"
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
-#include "EffectThreads.h"
-#include "EffectConfig.h"
 
 #include "Components/Component.h"
 #include "Components/DebugMenu.h"
@@ -19,9 +17,12 @@
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
-#include "Effects/MetaEffectInfo.h"
+#include "Effects/MetaModifiers.h"
 #include "Effects/EffectGroups.h"
 #include "Effects/EEffectExecutionType.h"
+#include "Effects/EEffectAttributes.h"
+#include "Effects/EffectThreads.h"
+#include "Effects/EffectConfig.h"
 
 #include "Lib/scrThread.h"
 
@@ -34,6 +35,8 @@
 #include "Memory/PedModels.h"
 #include "Memory/Misc.h"
 #include "Memory/Physics.h"
+#include "Memory/Entity.h"
+#include "Memory/Script.h"
 
 #include "Memory/Hooks/Hook.h"
 
