@@ -262,17 +262,14 @@ void EffectDispatcher::DrawEffectTexts()
 		effectSpacing -= 0.005f;
 	}
 
-
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
 		const bool bHasFake = !effect.m_szFakeName.empty();
 		auto &effectData = g_EnabledEffects.at(effect.m_EffectIdentifier);
 
 		if ((effect.m_bHideText && !bHasFake)
-			|| (MetaModifiers::m_bHideChaosUI
-				&& (effectData.IsMeta() || effectData.IsUtility()))
-			|| (MetaModifiers::m_bDisableChaos
-				&& (effectData.IsMeta() || effectData.IsUtility())))
+			|| (MetaModifiers::m_bHideChaosUI && !effectData.IsMeta() && !effectData.IsUtility())
+			|| (MetaModifiers::m_bDisableChaos && !effectData.IsMeta() && !effectData.IsUtility()))
 		{
 			continue;
 		}
