@@ -14,19 +14,18 @@ namespace Mp3Manager
 
 		if (ms_dictEffectSoundFilesCache.find(szSoundFile) == ms_dictEffectSoundFilesCache.end())
 		{
-			// Caching, but lazy
 			struct stat temp;
 
 			// Check if file exists first
 			ossTmp << CHAOS_SOUNDFILES_DIR << szSoundFile;
-			if (stat((ossTmp.str() + ".mp3").c_str(), &temp) != -1)
+			if (DoesFileExist((ossTmp.str() + ".mp3").c_str()))
 			{
-				// No alternations, just cache this one mp3
 				ms_dictEffectSoundFilesCache.emplace(szSoundFile, std::vector<std::string> { szSoundFile + ".mp3" });
 			}
-			else if (stat(ossTmp.str().c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
+			
+			// Check if dir also exists
+			if (stat(ossTmp.str().c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
 			{
-				// Wow, a dir
 				// Cache all of the mp3 files
 				std::vector<std::string> rgSoundFiles;
 
@@ -55,8 +54,6 @@ namespace Mp3Manager
 
 		ossTmp.str("");
 		ossTmp.clear();
-
-		LOG(CHAOS_SOUNDFILES_DIR << szChosenSound);
 
 		ossTmp << "open \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" type mpegvideo";
 		int error = mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);

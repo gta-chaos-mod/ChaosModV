@@ -7,13 +7,29 @@
 class Handle;
 enum MH_STATUS : int;
 
+using DWORD64 = unsigned long long;
+
 namespace Memory
 {
 	void Init();
 	void Uninit();
 	void RunLateHooks();
 
-	_NODISCARD Handle FindPattern(const std::string& szPattern);
+	struct PatternScanRange
+	{
+		DWORD64 m_startAddr = 0;
+		DWORD64 m_endAddr = 0;
+
+		PatternScanRange() = default;
+
+		PatternScanRange(DWORD64 startAddr, DWORD64 endAddr)
+			: m_startAddr(startAddr), m_endAddr(endAddr)
+		{
+
+		}
+	};
+
+	_NODISCARD Handle FindPattern(const std::string& szPattern, const PatternScanRange&& scanRange = { });
 	MH_STATUS AddHook(void* pTarget, void* pTetour, void* ppOrig);
 
 	template <typename T>
@@ -30,5 +46,5 @@ namespace Memory
 		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
 	}
 
-	const char* GetTypeName(__int64 ullVftAddr);
+	_NODISCARD const char* GetTypeName(__int64 ullVftAddr);
 }

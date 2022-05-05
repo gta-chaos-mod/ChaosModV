@@ -2,6 +2,7 @@
 
 #include "Memory.h"
 #include "Handle.h"
+#include "Entity.h"
 
 #include "../Util/Natives.h"
 
@@ -41,6 +42,25 @@ namespace Memory
 			handle = handle.At(2).Into();
 			WORD usMaxModels = handle.Value<WORD>();
 
+			static auto ugBlacklistedModels = []
+			{
+				std::vector<Hash> ugBlacklistedModels;
+
+				if (getGameVersion() == VER_1_0_2612_0_STEAM || getGameVersion() == VER_1_0_2612_0_NOSTEAM)
+				{
+					// Stub vehicles, thanks R* lol
+					ugBlacklistedModels.insert(ugBlacklistedModels.end(), {
+						0x5C54030C, // arbitergt
+						0xA71D0D4F, // astron2
+						0x170341C2, // cyclone2
+						0x39085F47, // ignus2
+						0x438F6593  // s95
+					});
+				}
+
+				return ugBlacklistedModels;
+			}();
+
 			for (WORD usIdx = 0; usIdx < usMaxModels; usIdx++)
 			{
 				DWORD64 ullEntry = *reinterpret_cast<DWORD64*>(ullModelList + 8 * usIdx);
@@ -51,7 +71,9 @@ namespace Memory
 
 				Hash ulModel = *reinterpret_cast<Hash*>(ullEntry);
 
-				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel))
+				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel)
+					&& std::find(ugBlacklistedModels.begin(), ugBlacklistedModels.end(), ulModel)
+						== ugBlacklistedModels.end())
 				{
 					c_rgVehModels.push_back(ulModel);
 				}
@@ -163,5 +185,48 @@ namespace Memory
 		__int64 result = sub_7FF788D32A60(vehicle);
 
 		return result ? *reinterpret_cast<float*>(result + 2496) : false;
+	}
+
+	inline Vector3 GetVector3(auto offset)
+	{
+		return Vector3(
+			*reinterpret_cast<float*>(offset),
+			*reinterpret_cast<float*>(offset + 0x4),
+			*reinterpret_cast<float*>(offset + 0x8)
+		);
+	}
+
+	inline void SetVector3(auto offset, Vector3 vec)
+	{
+		*reinterpret_cast<float*>(offset) = vec.x;
+		*reinterpret_cast<float*>(offset + 0x4) = vec.y;
+		*reinterpret_cast<float*>(offset + 0x8) = vec.z;
+	}
+
+	inline void SetVehicleScale(Vehicle veh, float scaleMultiplier)
+	{
+		auto baseAddr = GetScriptHandleBaseAddress(veh);
+		if (!baseAddr)
+		{
+			return;
+		}
+
+		auto passengerMatrixAddress = baseAddr + 0x60;
+		Vector3 passengerForwardVec = Memory::GetVector3(passengerMatrixAddress + 0x00);
+		Vector3 passengerRightVec = Memory::GetVector3(passengerMatrixAddress + 0x10);
+		Vector3 passengerUpVec = Memory::GetVector3(passengerMatrixAddress + 0x20);
+
+		auto vehicleMatrixAddress = *reinterpret_cast<uintptr_t*>(baseAddr + 0x30) + 0x20;
+		Vector3 vehicleForwardVec = Memory::GetVector3(vehicleMatrixAddress + 0x00);
+		Vector3 vehicleRightVec = Memory::GetVector3(vehicleMatrixAddress + 0x10);
+		Vector3 vehicleUpVec = Memory::GetVector3(vehicleMatrixAddress + 0x20);
+
+		Memory::SetVector3(passengerMatrixAddress + 0x00, passengerForwardVec * scaleMultiplier);
+		Memory::SetVector3(passengerMatrixAddress + 0x10, passengerRightVec * scaleMultiplier);
+		Memory::SetVector3(passengerMatrixAddress + 0x20, passengerUpVec * scaleMultiplier);
+
+		Memory::SetVector3(vehicleMatrixAddress + 0x00, vehicleForwardVec * scaleMultiplier);
+		Memory::SetVector3(vehicleMatrixAddress + 0x10, vehicleRightVec * scaleMultiplier);
+		Memory::SetVector3(vehicleMatrixAddress + 0x20, vehicleUpVec * scaleMultiplier);
 	}
 }
