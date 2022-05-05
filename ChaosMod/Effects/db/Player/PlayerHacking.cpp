@@ -243,7 +243,7 @@ static void OnStart()
                         timer = MISC::GET_GAME_TIMER() + 2000;
                         act = TimerAction::KILL;
                         ScaleformRemove();
-                        AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
+                        AUDIO::PLAY_PED_AMBIENT_SPEECH_NATIVE(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
                     }
                     else
                     {
