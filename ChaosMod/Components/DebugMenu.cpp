@@ -18,7 +18,7 @@ DebugMenu::DebugMenu()
 
 		if (effectData.TimedType != EEffectTimedType::Permanent)
 		{
-			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName
+			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName()
 				? effectData.CustomName
 				: effectData.Name);
 		}

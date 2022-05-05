@@ -8,52 +8,31 @@ Failsafe::Failsafe()
 	if (!m_bEnabled)
 	{
 		LOG("Failsafe has been disabled in the config!");
-
-		return;
 	}
 
-	eGameVersion eGameVer = getGameVersion();
-	m_bEnabled = (eGameVer >= VER_1_0_2215_0_STEAM
-		&& eGameVer < VER_SIZE)
-		|| DoesFileExist("chaosmod\\.forcefailsafe");
+	m_piStateGlobal = nullptr;
+}
 
-	if (!m_bEnabled)
-	{
-		LOG("Failsafe is incompatible with this version.");
-		LOG("Use the .forcefailsafe feature flag to enable it anyways.");
+void Failsafe::SetGlobalIndex(int idx)
+{
+	ms_iStateGlobalIdx = idx;
+}
 
-		return;
-	}
-
-	LOG("Failsafe enabled");
-
-	switch (eGameVer)
-	{
-	case VER_1_0_2215_0_STEAM:
-	case VER_1_0_2215_0_NOSTEAM:
-	case VER_1_0_2245_0_STEAM:
-	case VER_1_0_2245_0_NOSTEAM:
-		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(98955));
-
-		break;
-	case VER_1_0_2374_0_STEAM:
-	case VER_1_0_2374_0_NOSTEAM:
-		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(99370));
-
-		break;
-	case VER_1_0_2545_0_STEAM:
-	case VER_1_0_2545_0_NOSTEAM:
-		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(99974));
-
-		break;
-	}
+int Failsafe::GetGlobalIndex()
+{
+	return ms_iStateGlobalIdx;
 }
 
 void Failsafe::Run()
 {
-	if (!m_bEnabled)
+	if (!m_bEnabled || !ms_iStateGlobalIdx)
 	{
 		return;
+	}
+
+	if (!m_piStateGlobal)
+	{
+		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(ms_iStateGlobalIdx));
 	}
 
 	if (!*m_piStateGlobal && m_iLastState)

@@ -2,6 +2,7 @@
 
 #include "EffectGroups.h"
 #include "EEffectTimedType.h"
+#include "EEffectAttributes.h"
 
 #include <string>
 #include <vector>
@@ -10,25 +11,58 @@ inline bool g_bEnableGroupWeighting = true;
 
 struct EffectData
 {
-	EEffectTimedType TimedType = EEffectTimedType::Unk;
-	int CustomTime = -1;
-	int WeightMult = 5;
-	float Weight = WeightMult;
-	bool ExcludedFromVoting = false;
+	std::vector<std::string> IncompatibleIds;
 	std::string Name;
 	std::string FakeName;
-	bool HasCustomName = false;
 	std::string CustomName;
 	std::string Id;
-	std::vector<std::string> IncompatibleIds;
-	bool IsMeta = false;
+	float Weight = WeightMult;
+	int CustomTime = -1;
+	int WeightMult = 5;
 	int Shortcut = 0;
-	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
+	EEffectTimedType TimedType = EEffectTimedType::Unk;
+	EEffectGroupType GroupType = EEffectGroupType::None;
+
+private:
+	EEffectAttributes Attributes {};
+
+public:
+	inline void SetAttribute(EEffectAttributes attribute, bool state)
+	{
+		if (state)
+		{
+			Attributes |= attribute;
+		}
+		else
+		{
+			Attributes &= ~attribute;
+		}
+	}
+
+	inline bool ExcludedFromVoting() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting);
+	}
+
+	inline bool HasCustomName() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::HasCustomName);
+	}
+
+	inline bool IsMeta() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsMeta);
+	}
+
+	inline bool IsUtility() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsUtility);
+	}
 };
 
 inline float GetEffectWeight(const EffectData& effectData)
 {
-	EEffectGroupType effectGroupType = effectData.EEffectGroupType;
+	EEffectGroupType effectGroupType = effectData.GroupType;
 	float effectWeight = effectData.Weight;
 
 	return g_bEnableGroupWeighting && effectGroupType != EEffectGroupType::None

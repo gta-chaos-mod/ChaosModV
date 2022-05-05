@@ -111,13 +111,13 @@ namespace EffectConfig
 
 			effectData.WeightMult = rgValues[3];
 			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
-			effectData.ExcludedFromVoting = rgValues[5];
-			effectData.IsMeta = effectInfo.ExecutionType == EEffectExecutionType::Meta;
+			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
+			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
 			effectData.Name = effectInfo.Name;
 			effectData.Shortcut = rgValues[7];
 			if (!szValueEffectName.empty())
 			{
-				effectData.HasCustomName = true;
+				effectData.SetAttribute(EEffectAttributes::HasCustomName, true);
 				effectData.CustomName = szValueEffectName;
 			}
 			effectData.Id = effectInfo.Id;
@@ -127,7 +127,7 @@ namespace EffectConfig
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			effectData.EEffectGroupType = effectInfo.EEffectGroupType;
+			effectData.GroupType = effectInfo.EEffectGroupType;
 
 			out.emplace(effectType, effectData);
 		}
