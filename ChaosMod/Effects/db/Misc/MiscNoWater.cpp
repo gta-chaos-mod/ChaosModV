@@ -7,15 +7,17 @@
 
 struct CWaterQuad
 {
-	short MinX;   // 0x0
-	short MinY;   // 0x2
-	short MaxX;   // 0x4
-	short MaxY;   // 0x6
-	uint Color;   // 0x8
-	char unk1[4]; // 0xC
-	char unk2[4]; // 0x10
-	float Z;      // 0x14
-	uint Flags;   // 0x18
+	short MinX;    // 0x0
+	short MinY;    // 0x2
+	short MaxX;    // 0x4
+	short MaxY;    // 0x6
+	uint Alpha;    // 0x8
+	float Target;  // 0xC
+	float Angle;   // 0x10
+	float Height;  // 0x14
+	uint8_t Flags; // 0x18
+	uint8_t Type;  // 0x19
+	uint16_t Unk;  // 0x1A
 };
 static_assert(sizeof(CWaterQuad) == 0x1C);
 
@@ -39,8 +41,8 @@ static void OnStart()
 	{
 		for (int i = 0; i < 821; i++) // 821 = Max Water Items
 		{
-			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
-			WaterQuads[i].Z = -1000.0f;              // Remove Water
+			WaterHeights.push_back(WaterQuads[i].Height); // Save Water Heights
+			WaterQuads[i].Height = -1000.0f; // Remove Water
 		}
 	}
 }
@@ -51,7 +53,7 @@ static void OnStop()
 	{
 		for (int i = 0; i < 821; i++) // 821 = Max Water Items
 		{
-			WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
+			WaterQuads[i].Height = WaterHeights.at(i); // Restore Water
 		}
 		WaterHeights.clear(); // Clear Storage Vector
 	}
