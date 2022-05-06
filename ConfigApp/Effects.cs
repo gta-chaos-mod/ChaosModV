@@ -665,7 +665,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_WATER, new EffectInfo("Drought", EffectCategory.MISC, "misc_remove_water", true)},
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
-            {EffectType.EFFECT_MISC_SPOTLIGHT, new EffectInfo("In The Spotlight", EffectCategory.MISC, "misc_spotlight", true)},
+            {EffectType.EFFECT_MISC_SPOTLIGHT, new EffectInfo("Stage Lighting", EffectCategory.MISC, "misc_spotlight", true)},
         };
     }
 }

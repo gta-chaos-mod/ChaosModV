@@ -58,7 +58,7 @@ static void OnStop()
 
 static RegisterEffect registerEffect(EFFECT_MISC_SPOTLIGHT, nullptr, OnStop, OnTick, EffectInfo
 	{
-		.Name = "In The Spotlight",
+		.Name = "Stage Lighting",
 		.Id = "misc_spotlight",
 		.IsTimed = true
 	}
