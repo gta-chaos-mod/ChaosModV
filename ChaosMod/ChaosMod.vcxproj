@@ -111,6 +111,7 @@
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSolidProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
