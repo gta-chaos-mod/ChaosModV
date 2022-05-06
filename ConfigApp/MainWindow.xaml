@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
+        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="400" />
@@ -251,14 +251,6 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <TextBox x:Name="twitch_user_channel_name" Width="120" Height="20" Grid.Row="0" Grid.Column="2"
                                      HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_user_name_label" Content="Username" Grid.Row="1" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <TextBox x:Name="twitch_user_user_name" Width="120" Height="20" Grid.Row="1" Grid.Column="2"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <Label x:Name="twitch_user_channel_oauth_label" Content="OAuth Token" Grid.Row="2" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <PasswordBox x:Name="twitch_user_channel_oauth" Width="120" Height="20" Grid.Row="2" Grid.Column="2"
-                                         HorizontalAlignment="Left" VerticalAlignment="Center" />
                             <Label x:Name="twitch_user_effects_secs_before_chat_voting_label" Content="Only enable chat voting X seconds before new effect triggers&#xA;(Keep at 0 to allow chat to immediately vote, value can't be 1)"
                                    Grid.Row="3" Grid.Column="0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -275,6 +267,9 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label x:Name="twitch_logout_text" Content="Log In With Twitch"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,280.4,6" Cursor="Hand" MouseDown="twitch_login_button_MouseDown" Grid.Row="1" Grid.ColumnSpan="3" Width="196" />
+                            <Image x:Name="twitch_login_button" HorizontalAlignment="Left" Height="30" Margin="274,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="196" Grid.ColumnSpan="3" Source="twitch_badge.png" Cursor="Hand" MouseDown="twitch_login_button_MouseDown"/>
                         </Grid>
 
                         <Grid Grid.Row="2">

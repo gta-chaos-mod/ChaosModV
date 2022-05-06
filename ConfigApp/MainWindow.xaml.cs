@@ -24,6 +24,8 @@ namespace ConfigApp
         private Dictionary<EffectType, TreeMenuItem> m_treeMenuItemsMap;
         private Dictionary<EffectType, EffectData> m_effectDataMap;
 
+        private TwitchAuth m_twitchAuth = null;
+
         public MainWindow()
         {
             Init();
@@ -47,6 +49,10 @@ namespace ConfigApp
                 Title += " (v" + Info.VERSION + ")";
             }
 
+            if (m_twitchAuth == null) {
+                m_twitchAuth = new TwitchAuth(this);
+            }
+            
             CheckForUpdates();
 
             ParseConfigFile();
@@ -55,7 +61,7 @@ namespace ConfigApp
             InitEffectsTreeView();
 
             ParseEffectsFile();
-
+            
             InitTwitchTab();
 
             // Check write permissions
@@ -185,27 +191,29 @@ namespace ConfigApp
             m_configFile.WriteFile();
         }
 
-        private void ParseTwitchFile()
+        public void ParseTwitchFile()
         {
             m_twitchFile.ReadFile();
 
             twitch_user_agreed.IsChecked = m_twitchFile.ReadValueBool("EnableTwitchVoting", false);
             twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
-            twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
-            twitch_user_channel_oauth.Password = m_twitchFile.ReadValue("TwitchChannelOAuth");
+            m_twitchAuth.Username = m_twitchFile.ReadValue("TwitchUserName");
+            m_twitchAuth.OAuthToken = m_twitchFile.ReadValue("TwitchChannelOAuth");
             twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
             twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+
+            SetupTwitchLogin();
         }
 
-        private void WriteTwitchFile()
+        public void WriteTwitchFile()
         {
             m_twitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
-            m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
-            m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
+            m_twitchFile.WriteValue("TwitchUserName", m_twitchAuth.Username);
+            m_twitchFile.WriteValue("TwitchChannelOAuth", m_twitchAuth.OAuthToken);
             m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
             m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
@@ -385,10 +393,6 @@ namespace ConfigApp
 
             twitch_user_channel_name_label.IsEnabled = agreed;
             twitch_user_channel_name.IsEnabled = agreed;
-            twitch_user_channel_oauth_label.IsEnabled = agreed;
-            twitch_user_channel_oauth.IsEnabled = agreed;
-            twitch_user_user_name_label.IsEnabled = agreed;
-            twitch_user_user_name.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting_label.IsEnabled = agreed;
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_overlay_mode_label.IsEnabled = agreed;
@@ -399,6 +403,43 @@ namespace ConfigApp
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable_label.IsEnabled = agreed;
+            twitch_login_button.IsEnabled = agreed;
+            twitch_logout_text.IsEnabled = agreed;
+
+            SetupTwitchLogin();
+        }
+
+        void SetupTwitchLogin()
+        {
+            if (m_twitchAuth.LoggedIn)
+            {
+                twitch_logout_text.Content = "Logged in as " + m_twitchAuth.Username + " (Log Out)";
+
+                twitch_logout_text.Visibility = Visibility.Visible;
+                twitch_login_button.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                twitch_logout_text.Content = "Log in with Twitch";
+
+                twitch_login_button.Visibility = Visibility.Visible;
+                twitch_logout_text.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void twitch_login_button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (m_twitchAuth.LoggedIn)
+            {
+                m_twitchAuth.Username = "";
+                m_twitchAuth.OAuthToken = "";
+                WriteTwitchFile();
+                ParseTwitchFile();
+            }
+            else
+            {
+                m_twitchAuth.SpawnLogin();
+            }
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -520,6 +561,14 @@ namespace ConfigApp
         private void contribute_discord_click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (m_twitchAuth != null)
+            {
+                m_twitchAuth.StopServer();
+            }
         }
     }
 }
