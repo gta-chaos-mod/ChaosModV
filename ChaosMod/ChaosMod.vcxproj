@@ -101,6 +101,7 @@
     <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFrozen.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGhostWorld.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
