@@ -4,6 +4,7 @@
 
 static void OnStart()
 {
+	static const Hash mowerHash = GET_HASH_KEY("MOWER");
 	SetSurroundingPedsInVehicles(mowerHash, 120);
 }
 
