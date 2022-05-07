@@ -41,7 +41,8 @@ public:
 
 	inline bool ExcludedFromVoting() const
 	{
-		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting);
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting)
+			|| IsMeta() || IsUtility();
 	}
 
 	inline bool HasCustomName() const

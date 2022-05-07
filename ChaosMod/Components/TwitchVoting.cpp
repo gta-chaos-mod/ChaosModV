@@ -14,9 +14,10 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		return;
 	}
 
-	if (g_dictEnabledEffects.size() < 3)
+	if (std::count_if(g_dictEnabledEffects.begin(), g_dictEnabledEffects.end(),
+		[](const auto& pair) { return !pair.second.ExcludedFromVoting(); }) < 3)
 	{
-		ErrorOutWithMsg("You need at least 3 enabled effects to enable Twitch voting. Reverting to normal mode.");
+		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable Twitch voting. Reverting to normal mode.");
 
 		return;
 	}
