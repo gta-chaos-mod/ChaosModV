@@ -164,18 +164,6 @@ private:
 		m_RegisteredEffect = RegisteredEffect(eEffectType, pOnStart, pOnStop, pOnTick);
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);
-
-		EEffectGroupType effectGroupType = effectInfo.EEffectGroupType;
-		if (effectGroupType != EEffectGroupType::None)
-		{
-			if (!g_dictAllEffectGroupMemberCount[effectGroupType])
-			{
-				g_dictAllEffectGroupMemberCount[effectGroupType] = 0;
-			}
-
-			g_dictAllEffectGroupMemberCount[effectGroupType]++;
-		}
-
 		g_dictEffectsMap[eEffectType] = std::move(effectInfo);
 	}
 };

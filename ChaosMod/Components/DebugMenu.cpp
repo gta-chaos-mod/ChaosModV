@@ -18,7 +18,7 @@ DebugMenu::DebugMenu()
 
 		if (effectData.TimedType != EEffectTimedType::Permanent)
 		{
-			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName
+			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName()
 				? effectData.CustomName
 				: effectData.Name);
 		}
@@ -230,7 +230,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID)
+		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID || m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.IsScript())
 		{
 			m_bDispatchEffect = true;
 		}

@@ -12,7 +12,11 @@ static void OnTick()
 	{
 		return;
 	}
-
+	// Exclude non working weapons (minigun, hellbringer)
+	if (weaponHash == 0x42BF8A85 || weaponHash == 0xB62D1F67)
+	{
+		return;
+	}
 	DISABLE_CONTROL_ACTION(0, 24, true);
 	DISABLE_CONTROL_ACTION(2, 257, true);
 

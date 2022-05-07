@@ -1,11 +1,13 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static std::unique_ptr<DebugMenu> ms_pDebugMenu;
 static std::unique_ptr<TwitchVoting> ms_pTwitchVoting;
 static std::unique_ptr<Failsafe> ms_pFailsafe;
 static std::unique_ptr<SplashTexts> ms_pSplashTexts;
+static std::unique_ptr<ShortCut> ms_pShortCut;
 
 static bool ms_bClearAllEffects = false;
 
@@ -16,6 +18,8 @@ static bool ms_bToggleModShortcutEnabled = false;
 static bool ms_bDisableMod = false;
 
 static bool ms_bEnablePauseTimerShortcut = false;
+
+static bool ms_bHaveLateHooksRan = false;
 
 static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
@@ -34,7 +38,6 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
-	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
 
 	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
 }
@@ -56,6 +59,10 @@ static void Reset()
 	ms_pFailsafe.reset();
 
 	ClearEntityPool();
+
+	Mp3Manager::ResetCache();
+
+	LuaScripts::Unload();
 }
 
 static void Init()
@@ -126,6 +133,10 @@ static void Init()
 
 	ms_pDebugMenu = std::make_unique<DebugMenu>();
 
+	LOG("Initializing Shortcuts");
+	ms_pShortCut = std::make_unique<ShortCut>();
+	ms_pShortCut->ParseShortcuts();
+
 	LOG("Initializing Twitch voting");
 	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
 
@@ -142,6 +153,13 @@ static void Init()
 
 static void MainRun()
 {
+	if (!ms_bHaveLateHooksRan)
+	{
+		ms_bHaveLateHooksRan = true;
+
+		Memory::RunLateHooks();
+	}
+
 	g_MainThread = GetCurrentFiber();
 
 	EffectThreads::ClearThreads();
@@ -155,13 +173,14 @@ static void MainRun()
 
 	Init();
 
+	bool c_bJustReenabled = false;
+
 	while (true)
 	{
 		WAIT(0);
 
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
-			static bool c_bJustReenabled = false;
 			if (ms_bDisableMod && !c_bJustReenabled)
 			{
 				if (!c_bJustReenabled)
@@ -212,7 +231,7 @@ static void MainRun()
 		else if (IS_SCREEN_FADED_OUT())
 		{
 			SET_TIME_SCALE(1.f); // Prevent potential softlock for certain effects
-
+			Hooks::DisableScriptThreadBlock();
 			WAIT(100);
 
 			continue;
@@ -275,6 +294,10 @@ namespace Main
 		if (ms_pDebugMenu)
 		{
 			ms_pDebugMenu->HandleInput(ulKey, bWasDownBefore);
+		}
+		if (ms_pShortCut)
+		{
+			ms_pShortCut->HandleInput(ulKey, bWasDownBefore);
 		}
 	}
 }

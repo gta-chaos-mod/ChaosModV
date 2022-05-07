@@ -14,7 +14,7 @@ static void OnTick()
 		{
 			if (veh != playerVeh && !IS_ENTITY_IN_AIR(veh))
 			{
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(veh, 0, .0f, .0f, 500.f, true, false, true, true);
+				Memory::ApplyForceToEntityCenterOfMass(veh, 0, .0f, .0f, 500.f, true, false, true, true);
 			}
 		}
 	}

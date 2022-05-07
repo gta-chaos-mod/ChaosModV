@@ -3,14 +3,13 @@
 #include "Main.h"
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
-#include "EffectThreads.h"
-#include "EffectConfig.h"
 
 #include "Components/Component.h"
 #include "Components/DebugMenu.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/TwitchVoting.h"
+#include "Components/ShortCut.h"
 #include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
@@ -18,9 +17,12 @@
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
-#include "Effects/MetaEffectInfo.h"
+#include "Effects/MetaModifiers.h"
 #include "Effects/EffectGroups.h"
 #include "Effects/EEffectExecutionType.h"
+#include "Effects/EEffectAttributes.h"
+#include "Effects/EffectThreads.h"
+#include "Effects/EffectConfig.h"
 
 #include "Lib/scrThread.h"
 
@@ -32,6 +34,9 @@
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
 #include "Memory/Misc.h"
+#include "Memory/Physics.h"
+#include "Memory/Entity.h"
+#include "Memory/Script.h"
 
 #include "Memory/Hooks/Hook.h"
 
@@ -60,6 +65,7 @@
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
 #include "../vendor/minhook/include/MinHook.h"
+#include "../vendor/Patterns/Patterns.h"
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"

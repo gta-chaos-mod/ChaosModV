@@ -39,6 +39,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_BINOCULARS, OnStart, OnStop, 
         .Id = "player_binoculars",
         .IsTimed = true,
         .IsShortDuration = true,
-        .IncompatibleWith = { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_ZOOMZOOM_CAM }
+        .IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SICK_CAM }
     }
 );
