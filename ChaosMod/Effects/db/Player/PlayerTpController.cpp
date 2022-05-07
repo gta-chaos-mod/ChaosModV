@@ -283,7 +283,7 @@ static void OnStartFakeTp()
 {
 	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
 	EEffectType overrideName = selectedLocationInfo.type;
-	g_pEffectDispatcher->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
+	GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_TP_FAKE, overrideName);
 
 	Player player = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();

@@ -546,7 +546,7 @@ namespace LuaScripts
 				}
 
 				ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));
-				g_EnabledEffects.emplace(szScriptId, effectData);
+				g_dictEnabledEffects.emplace(szScriptId, effectData);
 				g_RegisteredEffects.emplace_back(szScriptId);
 
 				LOG(szFileName << ": Registered effect \"" << szScriptName << "\" with id \"" << szScriptId << "\"");

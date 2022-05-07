@@ -33,9 +33,10 @@ private:
 	DWORD m_ulRepeatTime = 0;
 	bool m_bDispatchEffect = false;
 
-public:
+protected:
 	DebugMenu();
 
+public:
 	virtual void Run() override;
 
 	_NODISCARD bool IsEnabled() const;
@@ -44,4 +45,7 @@ public:
 
 	void SetVisible(bool bState);
 	_NODISCARD bool IsVisible() const;
+
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };

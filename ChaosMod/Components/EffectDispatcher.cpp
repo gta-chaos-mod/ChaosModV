@@ -1,6 +1,9 @@
-#include "stdafx.h"
+#include <stdafx.h>
+
+#include "EffectDispatcher.h"
 
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, const std::array<BYTE, 3>& rgTextColor, const std::array<BYTE, 3>& rgEffectTimerColor)
+	: Component()
 {
 	m_rgTimerColor = rgTimerColor;
 	m_rgTextColor = rgTextColor;
@@ -78,7 +81,7 @@ void EffectDispatcher::UpdateTimer()
 		{
 			for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
 			{
-				g_pEffectDispatcher->DispatchRandomEffect();
+				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
 		}
 
@@ -91,7 +94,7 @@ void EffectDispatcher::UpdateEffects()
 	EffectThreads::RunThreads();
 
 	// Don't continue if there are no enabled effects
-	if (g_EnabledEffects.empty())
+	if (g_dictEnabledEffects.empty())
 	{
 		return;
 	}
@@ -119,7 +122,7 @@ void EffectDispatcher::UpdateEffects()
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
 		{
 			ActiveEffect& effect = *it;
-			EffectData& effectData = g_EnabledEffects.at(effect.m_EffectIdentifier);
+			EffectData& effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
 			if (effectData.IsMeta())
 			{
 				effect.m_fTimer--;
@@ -156,65 +159,65 @@ void EffectDispatcher::UpdateEffects()
 
 void EffectDispatcher::UpdateMetaEffects()
 {
-	if (m_bMetaEffectsEnabled)
+	if (!m_bMetaEffectsEnabled)
 	{
-		DWORD64 currentUpdateTime = GetTickCount64();
-		if (currentUpdateTime - m_ullMetaTimer < 1000)
+		return;
+	}
+
+	DWORD64 currentUpdateTime = GetTickCount64();
+	if (currentUpdateTime - m_ullMetaTimer < 1000)
+	{
+		return;
+	}
+
+	m_ullMetaTimer = currentUpdateTime;
+
+	if (--m_iMetaEffectTimer <= 0)
+	{
+		m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
+
+		std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
+
+		float totalWeight = 0.f;
+		for (auto& [ effectId, effectData ] : g_dictEnabledEffects)
 		{
-			return;
+			if (effectData.IsMeta() && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility())
+			{
+				totalWeight += GetEffectWeight(effectData);
+
+				availableMetaEffects.push_back(std::make_tuple(effectId, &effectData));
+			}
 		}
 
-		m_ullMetaTimer = currentUpdateTime;
-
-		if (--m_iMetaEffectTimer <= 0)
+		if (!availableMetaEffects.empty())
 		{
-			m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
+			// TODO: Stop duplicating effect weight logic everywhere
+			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
 
-			std::vector<std::tuple<EffectIdentifier, EffectData*>> availableMetaEffects;
+			totalWeight = 0.f;
 
-			float totalWeight = 0.f;
-			for (auto& [ effectId, effectData ] : g_EnabledEffects)
+			const EffectIdentifier* targetEffectIdentifier = nullptr;
+			for (const auto& [effectIdentifier, effectData] : availableMetaEffects)
 			{
-				if (effectData.IsMeta() && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility())
-				{
-					totalWeight += GetEffectWeight(effectData);
+				totalWeight += GetEffectWeight(*effectData);
 
-					availableMetaEffects.push_back(std::make_tuple(effectId, &effectData));
+				effectData->Weight += effectData->WeightMult;
+
+				if (!targetEffectIdentifier && chosen <= totalWeight)
+				{
+					targetEffectIdentifier = &effectIdentifier;
 				}
 			}
 
-			if (!availableMetaEffects.empty())
+			if (targetEffectIdentifier)
 			{
-				// TODO: Stop duplicating effect weight logic everywhere
-				float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
-
-				totalWeight = 0.f;
-
-				const EffectIdentifier* targetEffectIdentifier = nullptr;
-				for (auto& pair : availableMetaEffects)
-				{
-					auto& [effectIdentifier, effectData] = pair;
-
-					totalWeight += GetEffectWeight(*effectData);
-
-					effectData->Weight += effectData->WeightMult;
-
-					if (!targetEffectIdentifier && chosen <= totalWeight)
-					{
-						targetEffectIdentifier = &effectIdentifier;
-					}
-				}
-
-				if (targetEffectIdentifier)
-				{
-					DispatchEffect(*targetEffectIdentifier, "(Meta)");
-				}
+				DispatchEffect(*targetEffectIdentifier, "(Meta)");
 			}
-			else
-			{
-				m_bMetaEffectsEnabled = false;
-				m_iMetaEffectTimer = INT_MAX;
-			}
+		}
+		else
+		{
+			m_bMetaEffectsEnabled = false;
+			m_iMetaEffectTimer = INT_MAX;
 		}
 	}
 }
@@ -265,7 +268,7 @@ void EffectDispatcher::DrawEffectTexts()
 	for (const ActiveEffect& effect : m_rgActiveEffects)
 	{
 		const bool bHasFake = !effect.m_szFakeName.empty();
-		auto &effectData = g_EnabledEffects.at(effect.m_EffectIdentifier);
+		auto &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
 
 		if ((effect.m_bHideText && !bHasFake)
 			|| (MetaModifiers::m_bHideChaosUI && !effectData.IsMeta() && !effectData.IsUtility())
@@ -324,14 +327,14 @@ int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 
 void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix)
 {
-	EffectData& effectData = g_EnabledEffects.at(effectIdentifier);
+	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
 	{
 		return;
 	}
 
 	// Increase weight for all effects first
-	for (auto& pair : g_EnabledEffects)
+	for (auto& pair : g_dictEnabledEffects)
 	{
 		EffectData& effectData = pair.second;
 
@@ -348,7 +351,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 	else
 	{
-		for (auto& pair : g_EnabledEffects)
+		for (auto& pair : g_dictEnabledEffects)
 		{
 			if (pair.second.GroupType == effectData.GroupType)
 			{
@@ -380,7 +383,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 		}
 
 		bool bFound = false;
-		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_EnabledEffects.at(activeEffect.m_EffectIdentifier).Id)
+		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).Id)
 			!= rgIncompatibleIds.end())
 		{
 			bFound = true;
@@ -389,7 +392,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 		// Check if current effect is marked as incompatible in active effect
 		if (!bFound)
 		{
-			const auto& rgActiveIncompatibleIds = g_EnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
+			const auto& rgActiveIncompatibleIds = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
 
 			if (std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
 			{
@@ -472,7 +475,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 	}
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-	for (const auto& pair : g_EnabledEffects)
+	for (const auto& pair : g_dictEnabledEffects)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
@@ -571,7 +574,7 @@ void EffectDispatcher::Reset()
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 	m_ullMetaTimer = GetTickCount64();
 
-	for (const auto& pair : g_EnabledEffects)
+	for (const auto& pair : g_dictEnabledEffects)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 

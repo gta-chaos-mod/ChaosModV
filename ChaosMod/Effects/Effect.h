@@ -78,7 +78,7 @@ public:
 		}
 	}
 
-	inline void Tick()
+	void Tick()
 	{
 		if (m_bIsRunning)
 		{
