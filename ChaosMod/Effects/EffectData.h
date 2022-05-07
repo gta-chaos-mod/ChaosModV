@@ -16,7 +16,7 @@ struct EffectData
 	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
-	float Weight = WeightMult;
+	float Weight = 5.f;
 	int CustomTime = -1;
 	int WeightMult = 5;
 	int ShortcutKeycode = 0;
