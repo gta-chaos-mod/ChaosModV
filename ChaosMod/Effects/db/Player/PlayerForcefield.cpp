@@ -45,7 +45,7 @@ static void OnTick()
 			}
 			float forceDistance = min(max(0.f, (startDistance - distance)), maxForceDistance);
 			float force = (forceDistance / maxForceDistance) * maxForce;
-			APPLY_FORCE_TO_ENTITY(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y, entityCoord.z - playerCoord.z, 0, 0, 0, false, false, true, true, false, true);
+			Memory::ApplyForceToEntity(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y, entityCoord.z - playerCoord.z, 0, 0, 0, false, false, true, true, false, true);
 		}
 	}
 }

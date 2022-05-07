@@ -5,12 +5,10 @@
 #include <stdafx.h>
 
 static int lastPlayerKills, fade, alpha, orange;
-static Hash currentPedHash;
 static Hash bladeHash;
 
 static void OnStart()
 {
-	currentPedHash = -1;
 	lastPlayerKills = -1;
 	bladeHash = GET_HASH_KEY("WEAPON_MACHETE");
 	fade = 0;
@@ -29,37 +27,22 @@ static void OnTick()
 	GIVE_WEAPON_TO_PED(playerPed, bladeHash, 1, false, true);
 
 	Hash playerHash = GET_ENTITY_MODEL(playerPed);
-	if (playerHash != currentPedHash)
+
+	int allPlayerKills = 0;
+	int curKills = 0;
+	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS")})
 	{
-		currentPedHash = playerHash;
-		lastPlayerKills = -1;
+		STAT_GET_INT(hash, &curKills, -1);
+		allPlayerKills += curKills;
 	}
 
-	Hash killHash;
-	//get correct character hash
-	switch (playerHash)
-	{
-	case 225514697: // Michael 
-		killHash = GET_HASH_KEY("SP0_KILLS");
-		break;
-	case 2602752943: // Franklin
-		killHash = GET_HASH_KEY("SP1_KILLS");
-		break;
-	case 2608926626: // Trevor
-		killHash = GET_HASH_KEY("SP2_KILLS");
-		break;
-	}
-
-	//get stat for current character
-	int playerKills;
-	STAT_GET_INT(killHash, &playerKills, -1);
 	//check if stat this tick is larger than stat last tick
-	if (lastPlayerKills >= 0 && playerKills > lastPlayerKills)
+	if (lastPlayerKills >= 0 && allPlayerKills > lastPlayerKills)
 	{
 		fade = 0;
 		alpha = 0;
 	}
-	lastPlayerKills = playerKills;
+	lastPlayerKills = allPlayerKills;
 
 	orange += GET_RANDOM_INT_IN_RANGE(-4, 10);
 	alpha += GET_RANDOM_INT_IN_RANGE(-4, 10);
@@ -98,7 +81,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_BLADE_HUNGER, OnStart, nullpt
 	{
 		.Name = "The Blade Hungers",
 		.Id = "player_blade_hunger",
-		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEH_SPEED_MINIMUM }
+		.IsTimed = true
 	}
 );

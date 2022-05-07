@@ -2,11 +2,10 @@
 
 #include "Component.h"
 
-#include "../EffectThreads.h"
-
-#include "Effects/EffectData.h"
-#include "Effects/EffectIdentifier.h"
-#include "Effects/EnabledEffectsMap.h"
+#include "../Effects/EffectThreads.h"
+#include "../Effects/EffectData.h"
+#include "../Effects/EffectIdentifier.h"
+#include "../Effects/EnabledEffectsMap.h"
 
 #include <vector>
 #include <array>
@@ -47,7 +46,7 @@ private:
 			m_fTimer = fTimer;
 			m_fMaxTime = fTimer;
 
-			EEffectTimedType eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
+			EEffectTimedType eTimedType = g_dictEnabledEffects.at(effectIdentifier).TimedType;
 
 			m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk
 				&& eTimedType != EEffectTimedType::NotTimed);
@@ -69,7 +68,13 @@ private:
 	WORD m_usMetaEffectTimedDur = 0;
 	WORD m_usMetaEffectShortDur = 0;
 
+	int m_iMaxRunningEffects = 0;
+
 	float m_fPercentage = 0.f;
+	float m_fEffectsInnerSpacingMax = .075f;
+	float m_fEffectsInnerSpacingMin = .030f;
+	float m_fEffectsTopSpacingDefault = .2f;
+	float m_fEffectsTopSpacingWithVoting = .35f;
 
 	std::vector<ActiveEffect> m_rgActiveEffects;
 	std::vector<RegisteredEffect*> m_rgPermanentEffects;
@@ -94,17 +99,21 @@ public:
 
 	float m_fFakeTimerBarPercentage = 0.f;
 
+protected:
 	EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, const std::array<BYTE, 3>& rgTextColor, const std::array<BYTE, 3>& rgEffectTimerColor);
-	~EffectDispatcher();
-
-	virtual void Run() override;
-
+	virtual ~EffectDispatcher() override;
+	
 private:
 	void UpdateTimer();
 	void UpdateEffects();
 	void UpdateMetaEffects();
+	float GetEffectTopSpace();
+	bool ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning);
 
 public:
+	virtual void OnModPauseCleanup() override;
+	virtual void OnRun() override;
+
 	void DrawTimerBar();
 	void DrawEffectTexts();
 
@@ -124,6 +133,7 @@ public:
 
 	void OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName);
 	void OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType);
-};
 
-inline std::unique_ptr<EffectDispatcher> g_pEffectDispatcher;
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
+};

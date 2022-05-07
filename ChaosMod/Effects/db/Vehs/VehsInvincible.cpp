@@ -20,6 +20,7 @@ static RegisterEffect registerEffect(EFFECT_VEHS_INVINCIBLE, nullptr, OnStop, On
 	{
 		.Name = "All Vehicles Are Invulnerable",
 		.Id = "vehs_invincible",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_OHKO_VEHICLES, EFFECT_VEH_SPEED_MINIMUM }
 	}
 );

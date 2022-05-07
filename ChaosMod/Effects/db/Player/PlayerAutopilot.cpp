@@ -80,7 +80,7 @@ static void OnTick()
 	if (m_state == STATE_COMBAT)
 	{
 		// Required to make player ped actually shoot
-		_0x2208438012482A1A(playerPed, false, false);
+		FORCE_PED_AI_AND_ANIMATION_UPDATE(playerPed, false, false);
 
 		SET_GAMEPLAY_CAM_RELATIVE_HEADING(.0f);
 

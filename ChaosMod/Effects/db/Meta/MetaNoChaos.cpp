@@ -4,17 +4,17 @@ static void OnStart()
 {
 	ClearEntityPool();
 
-	g_pEffectDispatcher->ClearActiveEffects(EFFECT_META_NO_CHAOS);
+	GetComponent<EffectDispatcher>()->ClearActiveEffects(EFFECT_META_NO_CHAOS);
 }
 
 static void OnStop()
 {
-	g_MetaInfo.m_bDisableChaos = false;
+	MetaModifiers::m_bDisableChaos = false;
 }
 
 static void OnTick()
 {
-	g_MetaInfo.m_bDisableChaos = true;
+	MetaModifiers::m_bDisableChaos = true;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTick, EffectInfo

@@ -116,7 +116,7 @@ public:
 		return pThisThread->m_pThread == pThread;
 	}
 
-	inline void Run() const
+	inline void OnRun() const
 	{
 		SwitchToFiber(m_pThread);
 	}
@@ -127,7 +127,7 @@ public:
 		{
 			m_bIsRunning = false;
 
-			Run();
+			OnRun();
 		}
 	}
 
