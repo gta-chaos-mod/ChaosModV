@@ -16,11 +16,6 @@
 
  static std::map<Ped, ShooterInfo> animationHandleByPed;
 
- static void OnStop()
- {
- 	REMOVE_NAMED_PTFX_ASSET("core");
- }
-
  static void OnTick()
  {
  	REQUEST_NAMED_PTFX_ASSET("core");
