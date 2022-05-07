@@ -14,7 +14,7 @@ static void OnTick()
 	{
 		for (Vehicle veh : GetAllVehs())
 		{
-			if (!IS_VEHICLE_SEAT_FREE(veh, -1, false))
+			if (!IS_VEHICLE_SEAT_FREE(veh, -1, false) && GET_ENTITY_SPEED(veh) > 0.1f)
 			{
 				TASK_VEHICLE_TEMP_ACTION(GET_PED_IN_VEHICLE_SEAT(veh, -1, false), veh, flag ? 7 : 8, 250); // 7 = left; 8 = right
 			}
