@@ -6,7 +6,7 @@
 
 static void OnTick()
 {
-	std::vector<Vehicle> vehs = GetAllVehs();
+	std::vector<Vehicle> vehs = GetAllVehsArray ();
 	int vehicleAmount = static_cast<int>(vehs.size());
 
 	if (vehicleAmount > 0)

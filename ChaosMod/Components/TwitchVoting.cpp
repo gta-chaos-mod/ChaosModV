@@ -5,7 +5,7 @@
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS LPSTR("chaosmod\\TwitchChatVotingProxy.exe --startProxy")
 
-TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextColor(rgTextColor)
+TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component(), m_rgTextColor(rgTextColor)
 {
 	m_bEnableTwitchVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
@@ -14,7 +14,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 		return;
 	}
 
-	if (g_EnabledEffects.size() < 3)
+	if (g_dictEnabledEffects.size() < 3)
 	{
 		ErrorOutWithMsg("You need at least 3 enabled effects to enable Twitch voting. Reverting to normal mode.");
 
@@ -29,8 +29,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : m_rgTextCol
 	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
 	m_bEnableTwitchRandomEffectVoteable = g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
-
-	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = false;
 
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
@@ -93,6 +91,11 @@ void TwitchVoting::Run()
 		return;
 	}
 
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = false;
+	}
+
 	// Check if there's been no ping for too long and error out
 	// Also if the chance system is enabled, get current vote status every second (if shown on screen)
 	DWORD64 ullCurTick = GetTickCount64();
@@ -146,7 +149,7 @@ void TwitchVoting::Run()
 		return;
 	}
 
-	if (g_pEffectDispatcher->GetRemainingTimerTime() <= 1
+	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1
 		&& !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
@@ -161,14 +164,14 @@ void TwitchVoting::Run()
 			}
 		}
 	}
-	else if (g_pEffectDispatcher->ShouldDispatchEffectNow())
+	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
 		if (m_bNoVoteRound)
 		{
-			g_pEffectDispatcher->DispatchRandomEffect();
-			g_pEffectDispatcher->ResetTimer();
+			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
+			GetComponent<EffectDispatcher>()->ResetTimer();
 
 			if (!m_bEnableTwitchPollVoting)
 			{
@@ -181,20 +184,20 @@ void TwitchVoting::Run()
 			if (m_pChosenEffectIdentifier->GetEffectType() == EFFECT_INVALID
 				&& m_pChosenEffectIdentifier->GetScriptId().empty())
 			{
-				g_pEffectDispatcher->DispatchRandomEffect();
+				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
 			else
 			{
-				g_pEffectDispatcher->DispatchEffect(*m_pChosenEffectIdentifier);
+				GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
 			}
-			g_pEffectDispatcher->ResetTimer();
+			GetComponent<EffectDispatcher>()->ResetTimer();
 		}
 
-		if (g_MetaInfo.m_ucAdditionalEffectsToDispatch > 0) 
+		if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
 		{
-			for (int i = 0; i < g_MetaInfo.m_ucAdditionalEffectsToDispatch; i++)
+			for (int i = 0; i < MetaModifiers::m_ucAdditionalEffectsToDispatch; i++)
 			{
-				g_pEffectDispatcher->DispatchRandomEffect();
+				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
 		}
 
@@ -203,7 +206,7 @@ void TwitchVoting::Run()
 	else if (!m_bIsVotingRunning
 		&& m_bReceivedFirstPing
 		&& (m_iTwitchSecsBeforeVoting == 0
-			|| g_pEffectDispatcher->GetRemainingTimerTime() <= m_iTwitchSecsBeforeVoting)
+			|| GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_iTwitchSecsBeforeVoting)
 		&& m_bIsVotingRoundDone)
 	{
 		// New voting round
@@ -228,13 +231,14 @@ void TwitchVoting::Run()
 
 		m_rgEffectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> dictChoosableEffects;
-		for (auto& pair : g_EnabledEffects)
+		for (auto& pair : g_dictEnabledEffects)
 		{
 			auto& [effectIdentifier, effectData] = pair;
 
 			if (effectData.TimedType != EEffectTimedType::Permanent
-				&& !effectData.IsMeta
-				&& !effectData.ExcludedFromVoting)
+				&& !effectData.IsMeta()
+				&& !effectData.ExcludedFromVoting()
+				&& !effectData.IsUtility())
 			{
 				dictChoosableEffects.emplace(effectIdentifier, effectData);
 			}
@@ -280,7 +284,7 @@ void TwitchVoting::Run()
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by EffectWeightMult
 					effectData.Weight = 0;
 
-					pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName
+					pTargetChoice = std::make_unique<ChoosableEffect>(effectIdentifier, effectData.HasCustomName()
 							? effectData.CustomName
 							: effectData.Name,
 						!m_bAlternatedVotingRound
@@ -451,6 +455,6 @@ void TwitchVoting::ErrorOutWithMsg(const std::string&& szMsg)
 	CloseHandle(m_hPipeHandle);
 	m_hPipeHandle = INVALID_HANDLE_VALUE;
 
-	g_pEffectDispatcher->m_bDispatchEffectsOnTimer = true;
+	GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = true;
 	m_bEnableTwitchVoting = false;
 }

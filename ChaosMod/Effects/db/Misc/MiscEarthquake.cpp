@@ -37,7 +37,7 @@ static void OnTick()
 
 	for (Entity entity : entities)
 	{
-		APPLY_FORCE_TO_ENTITY(entity, 1, 0, 0, shook, .0f, .0f, .0f, 0, true, true, true, false, true);
+		Memory::ApplyForceToEntity(entity, 1, 0, 0, shook, .0f, .0f, .0f, 0, true, true, true, false, true);
 	}
 }
 

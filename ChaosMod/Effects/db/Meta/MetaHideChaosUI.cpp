@@ -7,13 +7,13 @@
 
 static void OnStop()
 {
-	g_MetaInfo.m_bShouldHideChaosUI = false;
+	MetaModifiers::m_bHideChaosUI = false;
 }
 
 
 static void OnTick()
 {
-	g_MetaInfo.m_bShouldHideChaosUI = true;
+	MetaModifiers::m_bHideChaosUI = true;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_HIDE_CHAOS_UI, nullptr, OnStop, OnTick, EffectInfo

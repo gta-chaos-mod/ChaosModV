@@ -32,6 +32,7 @@ static RegisterEffect registerEffect(EFFECT_OHKO_VEHICLES, nullptr, OnStop, OnTi
 	{
 		.Name = "Vehicles Explode On Impact",
 		.Id = "vehs_ohko",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { EFFECT_VEHS_INVINCIBLE }
 	}
 );

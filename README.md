@@ -23,7 +23,7 @@ git submodule init
 git submodule update --recursive
 ```
 
-4. Open `vendor/minhook/build/VC15/MinHookVC15.sln` in Visual Studio
+4. Open `vendor/minhook/build/VC16/MinHookVC16.sln` in Visual Studio
 
 5. Compile libMinHook as x64 Release build
 
@@ -32,6 +32,10 @@ git submodule update --recursive
 7. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
 
 ## Adding new effects
+
+You can easily add and share your own effects using the integrated Lua scripting engine. See [here](https://github.com/gta-chaos-mod/ChaosModV/wiki/Lua-Scripting) for more information.
+
+Otherwise, if you want to integrate your effect directly into the mod:
 
 1. Add a new effect enum entry to `ChaosMod/Effects/EffectsInfo.h`
 
