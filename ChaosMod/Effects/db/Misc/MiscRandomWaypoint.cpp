@@ -4,9 +4,13 @@
 
 static void OnStart()
 {
-	// Taken from PlayerTpController - I assume its in the entire map.
-	float x = g_random.GetRandomInt(-3747.f, 4500.f);
-	float y = g_random.GetRandomInt(-4400.f, 8022.f);
+	float x, y, _;
+	do
+	{
+		x = g_Random.GetRandomFloat(-3747.f, 4500.f);
+		y = g_Random.GetRandomFloat(-4400.f, 8022.f);
+
+	} while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, 0, 0, &_));
 
 	SET_NEW_WAYPOINT(x, y);
 	REFRESH_WAYPOINT();
