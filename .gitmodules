@@ -3,3 +3,7 @@
 	url = https://github.com/TsudaKageyu/minhook.git
 	branch = master
         ignore = dirty
+[submodule "vendor/HTTPRequest"]
+	path = vendor/HTTPRequest
+	url = https://github.com/elnormous/HTTPRequest.git
+

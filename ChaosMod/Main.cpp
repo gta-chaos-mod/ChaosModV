@@ -123,6 +123,14 @@ static void Init()
 	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
 	const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
+	LOG("Checking mod version");
+	httplib::Client v_cli("gopong.dev");
+	auto v_res = v_cli.Get("/chaos/version.txt");
+	if (v_res->body != MOD_VERSION)
+	{
+		ms_pSplashTexts->ShowOutdatedSplash();
+	}
+
 	LOG("Running custom scripts");
 	LuaScripts::Load();
 
@@ -237,10 +245,7 @@ static void MainRun()
 			continue;
 		}
 
-		for (Component* pComponent : g_rgComponents)
-		{
-			pComponent->Run();
-		}
+		RunAllComponents();
 	}
 }
 

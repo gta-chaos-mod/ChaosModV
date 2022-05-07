@@ -17,6 +17,13 @@ void SplashTexts::Run()
 		m_fStartupSplashTime -= fFrameTime;
 	}
 
+	if (m_fOutdatedSplashTime > 0)
+	{
+		DrawScreenText("Chaos Mod is outdated", { .2f, .86f }, .7f, { 255, 0, 0 }, true);
+
+		m_fOutdatedSplashTime -= fFrameTime;
+	}
+
 	if (m_fTwitchVotingSplashTime > 0)
 	{
 		DrawScreenText("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 }, true);
@@ -35,6 +42,11 @@ void SplashTexts::Run()
 void SplashTexts::ShowInitSplash()
 {
 	m_fStartupSplashTime = SPLASH_TEXT_DUR_SECS;
+}
+
+void SplashTexts::ShowOutdatedSplash()
+{
+	m_fOutdatedSplashTime = SPLASH_TEXT_DUR_SECS;
 }
 
 void SplashTexts::ShowTwitchVotingSplash()
