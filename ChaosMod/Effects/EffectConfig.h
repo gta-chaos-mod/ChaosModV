@@ -110,7 +110,7 @@ namespace EffectConfig
 			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
 			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
 			effectData.Name = effectInfo.Name;
-			effectData.Shortcut = rgValues[7];
+			effectData.ShortcutKeycode = rgValues[7];
 			if (!szValueEffectName.empty())
 			{
 				effectData.SetAttribute(EEffectAttributes::HasCustomName, true);

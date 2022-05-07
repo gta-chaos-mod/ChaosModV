@@ -388,7 +388,7 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 	{
 		m_bReceivedHello = true;
 
-		LOG("Received Hello from voting proxy");
+		LOG("Received hello from voting proxy");
 	}
 	else if (szMsg == "ping")
 	{

@@ -5,7 +5,7 @@
 #define _LUAFUNC static __forceinline
 
 #define LUA_SCRIPTS_DIR "chaosmod\\custom_scripts"
-#define LUA_NATIVESDEF_DIR "chaosmod\\natives_def.lua"
+#define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
 _LUAFUNC void LuaPrint(const std::string& szText)
 {
@@ -334,9 +334,9 @@ namespace LuaScripts
 
 				#undef P
 
-				if (DoesFileExist(LUA_NATIVESDEF_DIR))
+				if (DoesFileExist(LUA_NATIVESDEF))
 				{
-					lua.unsafe_script_file(LUA_NATIVESDEF_DIR);
+					lua.unsafe_script_file(LUA_NATIVESDEF);
 				}
 
 				lua["print"] = [szFileName](const std::string& szText) { LuaPrint(szFileName, szText); };
@@ -543,6 +543,16 @@ namespace LuaScripts
 					}
 
 					g_dictEffectGroupMemberCount[effectGroup]++;
+				}
+
+				const sol::optional<int>& shortcutKeycodeOpt = scriptInfo["ShortcutKeycode"];
+				if (shortcutKeycodeOpt)
+				{
+					int shortcutKeycode = *shortcutKeycodeOpt;
+					if (shortcutKeycode > 0 && shortcutKeycode < 255)
+					{
+						effectData.ShortcutKeycode = shortcutKeycode;
+					}
 				}
 
 				ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));

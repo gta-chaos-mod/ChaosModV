@@ -45,7 +45,7 @@ static void Reset()
 
 	LuaScripts::Unload();
 
-	for (auto& pComponent : g_rgComponents)
+	for (auto pComponent : g_rgComponents)
 	{
 		pComponent->OnModPauseCleanup();
 	}

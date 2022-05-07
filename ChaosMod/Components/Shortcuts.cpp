@@ -8,9 +8,9 @@ Shortcuts::Shortcuts() : Component()
 {
 	for (const auto& [effectId, effectData] : g_dictEnabledEffects)
 	{
-		if (effectData.Shortcut > 0)
+		if (effectData.ShortcutKeycode > 0)
 		{
-			m_ugAvailableShortcuts[effectData.Shortcut].push_back(effectId);
+			m_ugAvailableShortcuts[effectData.ShortcutKeycode].push_back(effectId);
 		}
 	}
 }
@@ -21,9 +21,9 @@ void Shortcuts::OnRun()
 	while (!m_effectQueue.empty())
 	{
 		auto& identifier = m_effectQueue.front();
-		m_effectQueue.pop();
-
 		GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
+
+		m_effectQueue.pop();
 	}
 }
 

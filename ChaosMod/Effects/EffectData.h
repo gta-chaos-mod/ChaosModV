@@ -19,7 +19,7 @@ struct EffectData
 	float Weight = WeightMult;
 	int CustomTime = -1;
 	int WeightMult = 5;
-	int Shortcut = 0;
+	int ShortcutKeycode = 0;
 	EEffectTimedType TimedType = EEffectTimedType::Unk;
 	std::string GroupType;
 
