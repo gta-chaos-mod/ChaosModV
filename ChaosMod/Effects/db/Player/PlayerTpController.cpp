@@ -172,9 +172,7 @@ static RegisterEffect registerEffect7(EFFECT_TP_FRONT, OnStartFront, EffectInfo
 static void OnStartRandom()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-	int vehicleType = GET_VEHICLE_CLASS(playerVeh);
 
 	float x, y, z = playerPos.z, _;
 	do
