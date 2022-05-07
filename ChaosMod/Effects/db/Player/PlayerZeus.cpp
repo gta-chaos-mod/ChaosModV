@@ -75,8 +75,12 @@ static void OnTick()
 				FREEZE_ENTITY_POSITION(tmp, false);
 			}
 		}
-		else busy = false;
+		else 
+		{ 
+			busy = false;
+		}
 	}
+
 	else
 	{
 		SET_TIME_SCALE(1.f);
