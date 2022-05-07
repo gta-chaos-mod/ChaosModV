@@ -316,7 +316,7 @@ static void OnStartFakeTp()
 	}
 
 	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
-	int wanted = GetFakeWantedLevel(randLocation.first);
+	int wanted = GetFakeWantedLevel(selectedLocationInfo.type);
 	if (wanted == 0 || wanted < currentWanted)
 	{
 		wanted = currentWanted;
