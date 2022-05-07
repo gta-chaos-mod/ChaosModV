@@ -339,10 +339,8 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 
 	// Increase weight for all effects first
-	for (auto& pair : g_dictEnabledEffects)
+	for (auto& [ effectId, effectData ] : g_dictEnabledEffects)
 	{
-		EffectData& effectData = pair.second;
-
 		if (!effectData.IsMeta())
 		{
 			effectData.Weight += effectData.WeightMult;
@@ -356,11 +354,11 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	}
 	else
 	{
-		for (auto& pair : g_dictEnabledEffects)
+		for (auto& [ effectId, effectData ] : g_dictEnabledEffects)
 		{
-			if (pair.second.GroupType == effectData.GroupType)
+			if (effectData.GroupType == effectData.GroupType)
 			{
-				pair.second.Weight = pair.second.WeightMult;
+				effectData.Weight = effectData.WeightMult;
 			}
 		}
 	}

@@ -17,13 +17,16 @@ Shortcuts::Shortcuts() : Component()
 
 void Shortcuts::OnRun()
 {
-	std::lock_guard lock(m_effectQueueMtx);
-	while (!m_effectQueue.empty())
+	if (!m_effectQueue.empty())
 	{
-		auto& identifier = m_effectQueue.front();
-		GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
+		std::lock_guard lock(m_effectQueueMtx);
+		while (!m_effectQueue.empty())
+		{
+			auto& identifier = m_effectQueue.front();
+			GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
 
-		m_effectQueue.pop();
+			m_effectQueue.pop();
+		}
 	}
 }
 

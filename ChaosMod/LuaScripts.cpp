@@ -498,6 +498,7 @@ namespace LuaScripts
 				if (weightMultOpt)
 				{
 					effectData.WeightMult = (std::max)(1, *weightMultOpt);
+					effectData.Weight = effectData.WeightMult;
 				}
 
 				const sol::optional<bool>& isMetaOpt = scriptInfo["IsMeta"];
