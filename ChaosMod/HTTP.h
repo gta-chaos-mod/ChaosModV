@@ -1,8 +1,8 @@
 #pragma once
 
-struct HttpResponse
+struct Response
 {
-	HttpResponse() : statusCode(0) {}
+	Response() : statusCode(0) {}
 	void Reset()
 	{
 		text = "";
@@ -33,19 +33,19 @@ public:
 
 	bool Get(const std::wstring& path,
 		const std::wstring& requestHeader,
-		HttpResponse& response);
+		Response& response);
 	bool Post(const std::wstring& path,
 		const std::wstring& requestHeader,
 		const std::string& body,
-		HttpResponse& response);
+		Response& response);
 	bool Put(const std::wstring& path,
 		const std::wstring& requestHeader,
 		const std::string& body,
-		HttpResponse& response);
+		Response& response);
 	bool Delete(const std::wstring& path,
 		const std::wstring& requestHeader,
 		const std::string& body,
-		HttpResponse& response);
+		Response& response);
 
 private:
 	// Request is wrapper around http()
@@ -54,7 +54,7 @@ private:
 		const std::wstring& path,
 		const std::wstring& requestHeader,
 		const std::string& body,
-		HttpResponse& response);
+		Response& response);
 	static bool http(
 		const std::wstring& verb, const std::wstring& user_agent, const std::wstring& domain,
 		const std::wstring& path, int port, bool secure,

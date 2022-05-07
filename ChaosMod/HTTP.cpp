@@ -5,7 +5,7 @@
 bool HTTP::Get(
 	const std::wstring& path,
 	const std::wstring& requestHeader,
-	HttpResponse& response)
+	Response& response)
 {
 	static const std::wstring verb = L"GET";
 	static std::string body;
@@ -16,7 +16,7 @@ bool HTTP::Post(
 	const std::wstring& path,
 	const std::wstring& requestHeader,
 	const std::string& body,
-	HttpResponse& response)
+	Response& response)
 {
 	static const std::wstring verb = L"POST";
 	return Request(verb, path, requestHeader, body, response);
@@ -26,7 +26,7 @@ bool HTTP::Put(
 	const std::wstring& path,
 	const std::wstring& requestHeader,
 	const std::string& body,
-	HttpResponse& response)
+	Response& response)
 {
 	static const std::wstring verb = L"PUT";
 	return Request(verb, path, requestHeader, body, response);
@@ -36,7 +36,7 @@ bool HTTP::Delete(
 	const std::wstring& path,
 	const std::wstring& requestHeader,
 	const std::string& body,
-	HttpResponse& response)
+	Response& response)
 {
 	static const std::wstring verb = L"DELETE";
 	return Request(verb, path, requestHeader, body, response);
@@ -47,7 +47,7 @@ bool HTTP::Request(
 	const std::wstring& path,
 	const std::wstring& requestHeader,
 	const std::string& body,
-	HttpResponse& response)
+	Response& response)
 {
 	return http(
 		verb, m_UserAgent, m_Domain,
