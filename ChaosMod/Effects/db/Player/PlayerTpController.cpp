@@ -204,15 +204,7 @@ static void OnStartRandom()
 		}
 	}
 
-	// 15 is Helicopters and 16 is Planes
-	if (vehicleType == 15 || vehicleType == 16)
-	{
-		TeleportPlayer(x, y, useGroundZ ? groundZ : z + 100);
-	}
-	else
-	{
-		TeleportPlayer(x, y, useGroundZ ? groundZ : z);
-	}
+	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
 }
 
 static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInfo
