@@ -17,4 +17,7 @@ public:
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
 	void ShowClearEffectsSplash();
+
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };

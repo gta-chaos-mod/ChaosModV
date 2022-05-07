@@ -21,6 +21,6 @@ static RegisterEffect registerEffect(EFFECT_VEHS_INVISIBLE, nullptr, OnStop, OnT
 		.Name = "Invisible Vehicles",
 		.Id = "vehs_ghost",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_RAINBOW_VEHS }
+		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_MISC_GHOST_WORLD }
 	}
 );

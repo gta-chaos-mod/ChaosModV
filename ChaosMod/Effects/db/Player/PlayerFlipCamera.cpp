@@ -1,5 +1,5 @@
 /*
-	Effect by DrUnderscore (James), modified by Last0xygen
+	Effect by DrUnderscore (James), modified by Last0xygen, fixed by OnlyRealNubs
 */
 
 #include <stdafx.h>
@@ -13,7 +13,7 @@ static void UpdateCamera()
     auto coord = CAM::GET_GAMEPLAY_CAM_COORD();
     auto rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
     auto fov = CAM::GET_GAMEPLAY_CAM_FOV();
-    CAM::SET_CAM_PARAMS(flippedCamera, coord.x, coord.y, coord.z, rot.x, 180.0f, rot.z, fov, 0, 1, 1, 2);
+    CAM::SET_CAM_PARAMS(flippedCamera, coord.x, coord.y, coord.z, rot.x, 180.0f, rot.z, fov, 700, 0, 0, 2);
 }
 
 static void OnStart()
@@ -42,6 +42,6 @@ static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnStop, OnTick
 		.Id = "player_flip_camera",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM }
+		.IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SICK_CAM }
 	}
 );

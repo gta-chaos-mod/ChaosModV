@@ -18,9 +18,12 @@ namespace Memory
 		RegisteredHook* m_pNext = nullptr;
 		const std::string m_szName;
 		bool(*m_pHookFunc)();
+		const bool m_bIsLateHook = false;
 
 	public:
-		RegisteredHook(bool(*pHookFunc)(), const std::string& szName) : m_pHookFunc(pHookFunc), m_szName(szName)
+		RegisteredHook(bool(*pHookFunc)(), const std::string& szName,
+			bool bIsLateHook) : m_pHookFunc(pHookFunc), m_szName(szName),
+				m_bIsLateHook(bIsLateHook)
 		{
 			if (g_pRegisteredHooks)
 			{
@@ -48,6 +51,11 @@ namespace Memory
 		{
 			return m_pNext;
 		}
+
+		inline _NODISCARD bool IsLateHook() const
+		{
+			return m_bIsLateHook;
+		}
 	};
 }
 
@@ -57,7 +65,8 @@ private:
 	const Memory::RegisteredHook m_RegisteredHook;
 
 public:
-	RegisterHook(bool(*pHookFunc)(), const std::string&& szName) : m_RegisteredHook(pHookFunc, szName)
+	RegisterHook(bool(*pHookFunc)(), const std::string&& szName, 
+		bool bIsLateHook = false) : m_RegisteredHook(pHookFunc, szName, bIsLateHook)
 	{
 
 	}
