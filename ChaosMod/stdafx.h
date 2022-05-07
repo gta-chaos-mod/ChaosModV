@@ -30,7 +30,7 @@
 #include <tlhelp32.h>
 #include <windows.h>
 #include <winuser.h>
-
+#include <winhttp.h>
 #include <array>
 #include <filesystem>
 #include <fstream>
