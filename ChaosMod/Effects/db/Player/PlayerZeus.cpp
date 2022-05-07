@@ -15,10 +15,9 @@ bool GetAimedAtEntity(Entity* e)
 {
 	Vector3 coords, normal;
 	BOOL hit;
-	Entity out;
-	int handle = Util::RayCastGameplayCam(ms_fMaxDist, &hit, &coords, &normal, &out);
-	*e = out;
+	Util::RayCastGameplayCam(ms_fMaxDist, &hit, &coords, &normal, e);
 	return (bool)hit;
+
 }
 
 bool ControlJustPressed(int p0, int p1)
