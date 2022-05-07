@@ -77,7 +77,11 @@ public:
 
 	Component& operator=(const Component&) = delete;
 
-	virtual void Run() = 0;
+	virtual void OnModPauseCleanup()
+	{
+
+	}
+	virtual void OnRun() = 0;
 
 	template <class T> requires std::is_base_of_v<Component, T>
 	friend struct ComponentHolder;

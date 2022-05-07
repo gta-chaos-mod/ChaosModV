@@ -49,7 +49,7 @@ DebugMenu::DebugMenu() : Component()
 	});
 }
 
-void DebugMenu::Run()
+void DebugMenu::OnRun()
 {
 	if (!m_bIsEnabled
 		|| !m_bVisible)

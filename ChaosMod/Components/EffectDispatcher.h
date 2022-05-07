@@ -111,7 +111,8 @@ private:
 	bool ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning);
 
 public:
-	virtual void Run() override;
+	virtual void OnModPauseCleanup() override;
+	virtual void OnRun() override;
 
 	void DrawTimerBar();
 	void DrawEffectTexts();

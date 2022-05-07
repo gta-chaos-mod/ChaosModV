@@ -33,10 +33,15 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 
 EffectDispatcher::~EffectDispatcher()
 {
+	OnModPauseCleanup();
+}
+
+void EffectDispatcher::OnModPauseCleanup()
+{
 	ClearEffects();
 }
 
-void EffectDispatcher::Run()
+void EffectDispatcher::OnRun()
 {
 	UpdateEffects();
 

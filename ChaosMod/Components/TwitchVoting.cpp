@@ -21,6 +21,15 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		return;
 	}
 
+	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
+	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
+	if (hMutex)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		ReleaseMutex(hMutex);
+		CloseHandle(hMutex);
+	}
+
 	m_iTwitchSecsBeforeVoting = g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
 	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
@@ -45,15 +54,6 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
 
-	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
-	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
-	if (hMutex)
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		ReleaseMutex(hMutex);
-		CloseHandle(hMutex);
-	}
-
 	if (!bResult)
 	{
 		ErrorOutWithMsg((std::ostringstream() << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError() << "). Please verify the file exists. Reverting to normal mode.").str());
@@ -76,15 +76,22 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 
 TwitchVoting::~TwitchVoting()
 {
+	OnModPauseCleanup();
+}
+
+void TwitchVoting::OnModPauseCleanup()
+{
 	if (m_hPipeHandle != INVALID_HANDLE_VALUE)
 	{
 		FlushFileBuffers(m_hPipeHandle);
 		DisconnectNamedPipe(m_hPipeHandle);
 		CloseHandle(m_hPipeHandle);
+
+		m_hPipeHandle = INVALID_HANDLE_VALUE;
 	}
 }
 
-void TwitchVoting::Run()
+void TwitchVoting::OnRun()
 {
 	if (!m_bEnableTwitchVoting)
 	{

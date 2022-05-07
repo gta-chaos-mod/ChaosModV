@@ -44,6 +44,11 @@ static void Reset()
 	Mp3Manager::ResetCache();
 
 	LuaScripts::Unload();
+
+	for (auto& pComponent : g_rgComponents)
+	{
+		pComponent->OnModPauseCleanup();
+	}
 }
 
 static void Init()
@@ -203,14 +208,14 @@ static void MainRun()
 
 		for (auto pComponent : g_rgComponents)
 		{
-			pComponent->Run();
+			pComponent->OnRun();
 		}
 	}
 }
 
 namespace Main
 {
-	void Run()
+	void OnRun()
 	{
 		__try
 		{

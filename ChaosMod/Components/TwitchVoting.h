@@ -77,7 +77,8 @@ protected:
 	virtual ~TwitchVoting() override;
 
 public:
-	virtual void Run() override;
+	virtual void OnModPauseCleanup() override;
+	virtual void OnRun() override;
 
 	_NODISCARD bool IsEnabled() const;
 

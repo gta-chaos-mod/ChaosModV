@@ -15,7 +15,7 @@ Shortcuts::Shortcuts() : Component()
 	}
 }
 
-void Shortcuts::Run()
+void Shortcuts::OnRun()
 {
 	std::lock_guard lock(m_effectQueueMtx);
 	while (!m_effectQueue.empty())

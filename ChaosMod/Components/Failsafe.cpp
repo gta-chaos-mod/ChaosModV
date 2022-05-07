@@ -23,7 +23,7 @@ int Failsafe::GetGlobalIndex()
 	return ms_iStateGlobalIdx;
 }
 
-void Failsafe::Run()
+void Failsafe::OnRun()
 {
 	if (!m_bEnabled || !ms_iStateGlobalIdx)
 	{

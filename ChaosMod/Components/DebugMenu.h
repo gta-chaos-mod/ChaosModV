@@ -37,7 +37,7 @@ protected:
 	DebugMenu();
 
 public:
-	virtual void Run() override;
+	virtual void OnRun() override;
 
 	_NODISCARD bool IsEnabled() const;
 

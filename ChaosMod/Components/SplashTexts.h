@@ -12,7 +12,7 @@ private:
 	float m_fClearEffectsSplashTime = 0.f;
 
 public:
-	virtual void Run() override;
+	virtual void OnRun() override;
 
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();

@@ -21,7 +21,7 @@ protected:
 	Shortcuts();
 
 public:
-	virtual void Run() override;
+	virtual void OnRun() override;
 
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 

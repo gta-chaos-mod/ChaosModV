@@ -2,7 +2,7 @@
 
 #include "SplashTexts.h"
 
-void SplashTexts::Run()
+void SplashTexts::OnRun()
 {
 	float fFrameTime = GET_FRAME_TIME();
 

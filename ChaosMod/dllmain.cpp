@@ -14,7 +14,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		}
 
-		scriptRegister(hInstance, Main::Run);
+		scriptRegister(hInstance, Main::OnRun);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
