@@ -90,4 +90,32 @@ namespace Memory
 
 		return c_rgPedModels;
 	}
+
+	inline void SetPedVehiclePedsScale(Vehicle veh, float scaleMultiplier)
+	{
+		auto offset = getScriptHandleBaseAddress(veh);
+
+		auto MatrixAddress = offset + 0x60;
+		Vector3 passengerForwardVec = Memory::GetVector3(MatrixAddress + 0x00);
+		Vector3 passengerRightVec = Memory::GetVector3(MatrixAddress + 0x10);
+		Vector3 passengerUpVec = Memory::GetVector3(MatrixAddress + 0x20);
+
+		Memory::SetVector3(MatrixAddress + 0x00, passengerForwardVec * scaleMultiplier);
+		Memory::SetVector3(MatrixAddress + 0x10, passengerRightVec * scaleMultiplier);
+		Memory::SetVector3(MatrixAddress + 0x20, passengerUpVec * scaleMultiplier);
+	}
+
+	inline void SetPedScale(Ped ped, float scaleMultiplier)
+	{
+		auto offset = getScriptHandleBaseAddress(ped);
+
+		auto pedMatrixAddress = offset + 0x60;
+		Vector3 pedForwardVec = Memory::GetVector3(pedMatrixAddress + 0x00);
+		Vector3 pedRightVec = Memory::GetVector3(pedMatrixAddress + 0x10);
+		Vector3 pedUpVec = Memory::GetVector3(pedMatrixAddress + 0x20);
+
+		Memory::SetVector3(pedMatrixAddress + 0x00, pedForwardVec * scaleMultiplier);
+		Memory::SetVector3(pedMatrixAddress + 0x10, pedRightVec * scaleMultiplier);
+		Memory::SetVector3(pedMatrixAddress + 0x20, pedUpVec * scaleMultiplier);
+	}
 }
