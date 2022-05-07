@@ -7,13 +7,13 @@
 
 static void OnStop()
 {
-	g_metaInfo.TimerSpeedModifier = 1;
+	MetaModifiers::m_fTimerSpeedModifier = 1;
 }
 
 
 static void OnTick_0_5x()
 {
-	g_metaInfo.TimerSpeedModifier = 0.5;
+	MetaModifiers::m_fTimerSpeedModifier = 0.5;
 }
 
 static RegisterEffect registerEffect_0_5x(EFFECT_META_TIMER_SPEED_X0_5, nullptr, OnStop, OnTick_0_5x, EffectInfo
@@ -22,13 +22,13 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_TIMER_SPEED_X0_5, nullptr,
 		.Id = "meta_timerspeed_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
 static void OnTick_2x()
 {
-	g_metaInfo.TimerSpeedModifier = 2;
+	MetaModifiers::m_fTimerSpeedModifier = 2;
 }
 
 static RegisterEffect registerEffect_2x(EFFECT_META_TIMER_SPEED_X2, nullptr, OnStop, OnTick_2x, EffectInfo
@@ -37,13 +37,13 @@ static RegisterEffect registerEffect_2x(EFFECT_META_TIMER_SPEED_X2, nullptr, OnS
 		.Id = "meta_timerspeed_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
 
 static void OnTick_5x()
 {
-	g_metaInfo.TimerSpeedModifier = 5;
+	MetaModifiers::m_fTimerSpeedModifier = 5;
 }
 
 static RegisterEffect registerEffect_5x(EFFECT_META_TIMER_SPEED_X5, nullptr, OnStop, OnTick_5x, EffectInfo
@@ -53,6 +53,6 @@ static RegisterEffect registerEffect_5x(EFFECT_META_TIMER_SPEED_X5, nullptr, OnS
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { EFFECT_META_TIMER_SPEED_X2, EFFECT_META_TIMER_SPEED_X5 },
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

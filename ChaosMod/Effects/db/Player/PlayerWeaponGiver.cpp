@@ -14,6 +14,6 @@ static RegisterEffect registerEffect(EFFECT_GIVE_ALL_WEPS, OnStartAll, EffectInf
 	{
 		.Name = "Give All Weapons",
 		.Id = "player_allweps",
-		.EffectGroupType = EffectGroupType::WEAPONS
+		.EEffectGroupType = EEffectGroupType::Weapons
 	}
 );

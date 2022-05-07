@@ -25,13 +25,13 @@ static void OnTick()
 	{
 		if (veh != playerVeh)
 		{
-			APPLY_FORCE_TO_ENTITY(veh, 3, 10.f, .1f, .1f, 0, 0, 0, 0, true, true, true, false, true);
+			Memory::ApplyForceToEntity(veh, 3, 10.f, .1f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 		}
 	}
 
 	for (Object prop : GetAllProps())
 	{
-		APPLY_FORCE_TO_ENTITY(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
+		Memory::ApplyForceToEntity(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
 	DWORD64 curTick = GET_GAME_TIMER();
@@ -78,7 +78,7 @@ static void OnTick()
 			{
 				// Give player back control
 
-				timeUntilSteer += g_random.GetRandomInt(50, 250);
+				timeUntilSteer += g_Random.GetRandomInt(50, 250);
 			}
 			else
 			{
@@ -86,7 +86,7 @@ static void OnTick()
 
 				steering = GET_RANDOM_FLOAT_IN_RANGE(-.7f, .7f);
 
-				timeUntilSteer += g_random.GetRandomInt(50, 300);
+				timeUntilSteer += g_Random.GetRandomInt(50, 300);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;

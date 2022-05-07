@@ -13,7 +13,7 @@ static void OnTick()
 		// Also manually exclude blimps since those don't seem to be categorized as either of those
 		if (vehClass != 15 && vehModel != blimpHash && Memory::IsVehicleBraking(veh))
 		{
-			APPLY_FORCE_TO_ENTITY(veh, 0, .0f, 50.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
+			Memory::ApplyForceToEntity(veh, 0, .0f, 50.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
 		}
 	}
 }

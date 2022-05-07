@@ -1,4 +1,4 @@
-/*
+﻿/*
         Effect by DrUnderscore (James), modified
 */
 
@@ -21,6 +21,8 @@ const char* ROULETTE_WORDS[] =
     "HACKING!",
     "ALXBLADE",
     "DVIPERAU",
+    "HCKERMAN",
+    "JIZZLEDS",
     "BURHAC!!",
     "SAURUS88",
     "TORIKSLV",
@@ -41,7 +43,23 @@ const char* ROULETTE_WORDS[] =
     "BIRD1338",
     "BRANDWAR",
     "YZIMRONI",
-    "T_AVENGE"
+    "T_AVENGE",
+    "HUGO_ONE",
+    "GATMUN!!",
+    "MOXI____",
+    "HUNTER2_",
+    "PASSWORD",
+    "1+4=-2+7",
+    "_MATRIX_",
+    "{RANDOM}",
+    "ROULETTE",
+    "PASS1234",
+    "/HACK_R*",
+    "FRANKLIN",
+    "MICHAEL_",
+    "TREVOR__",
+    "LESTER__",
+    "SYNFETIC"
 };
 
 const char* WIN_PHRASES[] =
@@ -52,7 +70,36 @@ const char* WIN_PHRASES[] =
     "I'll make it harder next time, I promise!",
     "https://youtube.com/watch?v=dQw4w9WgXcQ",
     "I'm not sure what you hacked, but it's now hacked.",
-    "i ran out of phrases to put here. please pity me."
+    "i ran out of phrases to put here. please pity me.",
+    "I should get Linux.",
+    "Yay, hacking!",
+    "ping rockstargames.com",
+    "You obviously must know something about something...",
+    "I can read machine code!",
+    "Well that wasn't fun",
+    "Was that a promotion?",
+    "We'll get right back to normal gameplay, hope you weren't doing anything important",
+    "I use arch btw",
+    "Vim > Emacs",
+    "loooool cool hacker reference xdd",
+    "You wouldn't download a car...",
+    "Needs more blockchain",
+    "HTML is my favorite programming language.",
+    "Don't worry, it's not like you were mining cryptocurrencies for us...",
+    "What? You wanted a witty win phrase? Too bad!",
+    "sudo rm -rf /",
+    "can you hack my friends instagram account plz?????",
+    "Good thing I have 2FA",
+    "/hack GTA5.exe",
+    "Well that certainly was... something.",
+    "Good job! You didn't lose a single time!",
+    "Dude, that's illegal, I'm calling the cops.",
+    "It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
+    "GTA Online just went down... I'm sure it's unrelated.",
+    "int* hacked = true;",
+    "Matrix reference",
+    "\"I'm in the mainframe\"",
+    "I frequent r/ProgrammerHumor."
 };
 
 enum class TimerAction
@@ -137,7 +184,7 @@ static void OnStart()
 
     ScaleformUpdateLives();
 
-    auto word = g_random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
+    auto word = g_Random.GetRandomInt(0, sizeof(ROULETTE_WORDS) / sizeof(ROULETTE_WORDS[0]) - 1);
     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_WORD");
     ScaleformPushString(ROULETTE_WORDS[word]);
     GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
@@ -146,7 +193,7 @@ static void OnStart()
     {
         GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
         GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_random.GetRandomInt(10, 100) * 1.0f);
+        GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(10, 100) * 1.0f);
         GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
     }
 
@@ -181,7 +228,7 @@ static void OnStart()
                 {
                     timer = MISC::GET_GAME_TIMER() + 2000;
                     act = TimerAction::REMOVE;
-                    auto phrase = g_random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
+                    auto phrase = g_Random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
                     AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
                     GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
                     GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL(true);
@@ -196,7 +243,7 @@ static void OnStart()
                         timer = MISC::GET_GAME_TIMER() + 2000;
                         act = TimerAction::KILL;
                         ScaleformRemove();
-                        AUDIO::_PLAY_AMBIENT_SPEECH1(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
+                        AUDIO::PLAY_PED_AMBIENT_SPEECH_NATIVE(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH", "SPEECH_PARAMS_FORCE_FRONTEND", 1);
                     }
                     else
                     {

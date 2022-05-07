@@ -27,7 +27,7 @@ static void OnTick()
 			{
 				if (IS_PED_WEAPON_READY_TO_SHOOT(ped))
 				{
-					Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+					Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped, 0);
 					Vector3 targetOffset = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(weapon, 0, 1, 0);
 					SET_PED_SHOOTS_AT_COORD(ped, targetOffset.x, targetOffset.y, targetOffset.z, true);
 

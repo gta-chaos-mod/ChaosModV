@@ -26,7 +26,12 @@ static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
 	Hash weaponHash;
-	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4)
+	if (isBlocked || !GET_CURRENT_PED_WEAPON(player, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4 || GET_WEAPONTYPE_GROUP(weaponHash) == 0xB7BBD827)
+	{
+		return;
+	}
+	// Exclude non working weapons (minigun, hellbringer)
+	if (weaponHash == 0x42BF8A85 || weaponHash == 0xB62D1F67)
 	{
 		return;
 	}
@@ -42,10 +47,10 @@ static void OnTick()
 		{
 			if (!didSelect)
 			{
-				Vector3 launchPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
-				Vector3 targPos = GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
+				Vector3 launchPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
+				Vector3 targPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
 
-				int rayHandle = _START_SHAPE_TEST_RAY(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
+				int rayHandle = START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
 				if (rayHandle != 0)
 				{
 					BOOL didHit;
@@ -127,7 +132,7 @@ static void OnTick()
 		if (selectedOffsets.size() > 0)
 		{
 			Ped player = PLAYER_PED_ID();
-			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(player);
+			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(player, 0);
 			for (PedHitInfo info : selectedOffsets)
 			{
 				if (DOES_ENTITY_EXIST(info.pedHandle))
@@ -150,6 +155,6 @@ static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, On
 		.Name = "Dead Eye",
 		.Id = "player_dead_eye",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_LAG }
+		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_SUPERHOT }
 	}
 );

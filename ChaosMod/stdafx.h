@@ -1,24 +1,30 @@
 #pragma once
 
-#include "nativesNoNamespaces.h"
-#include "Random.h"
-#include "DebugMenu.h"
-#include "EffectDispatcher.h"
 #include "Main.h"
-#include "TwitchVoting.h"
 #include "Mp3Manager.h"
-#include "ThreadManager.h"
-#include "LuaManager.h"
-#include "FailsafeManager.h"
+#include "LuaScripts.h"
+
+#include "Components/Component.h"
+#include "Components/DebugMenu.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/TwitchVoting.h"
+#include "Components/ShortCut.h"
+#include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
-#include "Effects/EffectTimedType.h"
+#include "Effects/EEffectTimedType.h"
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
-#include "Effects/MetaEffectInfo.h"
+#include "Effects/MetaModifiers.h"
 #include "Effects/EffectGroups.h"
-#include "Effects/EffectExecutionType.h"
+#include "Effects/EEffectExecutionType.h"
+#include "Effects/EEffectAttributes.h"
+#include "Effects/EffectThreads.h"
+#include "Effects/EffectConfig.h"
+
+#include "Lib/scrThread.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle.h"
@@ -27,8 +33,10 @@
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 #include "Memory/PedModels.h"
-#include "Memory/Entity.h"
 #include "Memory/Misc.h"
+#include "Memory/Physics.h"
+#include "Memory/Entity.h"
+#include "Memory/Script.h"
 
 #include "Memory/Hooks/Hook.h"
 
@@ -38,6 +46,7 @@
 #include "Util/Player.h"
 #include "Util/Peds.h"
 #include "Util/Vehicle.h"
+#include "Util/Types.h"
 #include "Util/TryParse.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
@@ -48,19 +57,24 @@
 #include "Util/OptionsFile.h"
 #include "Util/OptionsManager.h"
 #include "Util/OptionDefaults.h"
+#include "Util/Macros.h"
+#include "Util/Natives.h"
+#include "Util/Random.h"
+#include "Util/Weapon.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
 #include "../vendor/minhook/include/MinHook.h"
+#include "../vendor/Patterns/Patterns.h"
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include "../vendor/sol3/sol.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 #include <WinUser.h>
 #include <Psapi.h>
+#include <mciapi.h>
 #include <minidumpapiset.h>
 #include <TlHelp32.h>
 
@@ -69,6 +83,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
-#include <numeric>
 #include <list>
 #include <filesystem>
+#include <map>
+#include <unordered_map>

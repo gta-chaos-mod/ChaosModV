@@ -19,14 +19,14 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos = Vector3::Init(
-			playerPos.x + g_random.GetRandomInt(-100, 100),
-			playerPos.y + g_random.GetRandomInt(-100, 100),
-			playerPos.z + g_random.GetRandomInt(25, 50)
+			playerPos.x + g_Random.GetRandomInt(-100, 100),
+			playerPos.y + g_Random.GetRandomInt(-100, 100),
+			playerPos.z + g_Random.GetRandomInt(25, 50)
 		);
 
 		LoadModel(WHALE_MODEL);
 
-		Ped whale = CREATE_PED(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_random.GetRandomInt(0, 359), true, false);
+		Ped whale = CREATE_PED(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_Random.GetRandomInt(0, 359), true, false);
 
 		whaleAmount++;
 		for (int i = 0; i < MAX_WHALES; i++)
@@ -43,7 +43,7 @@ static void OnTick()
 		SET_PED_TO_RAGDOLL(whale, 10000, 10000, 0, true, true, false);
 		SET_ENTITY_HEALTH(whale, 0, 0);
 
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(whale, 0, 35.f, 0, -5000.f, true, false, true, true);
+		Memory::ApplyForceToEntityCenterOfMass(whale, 0, 35.f, 0, -5000.f, true, false, true, true);
 
 		SET_MODEL_AS_NO_LONGER_NEEDED(WHALE_MODEL);
 	}

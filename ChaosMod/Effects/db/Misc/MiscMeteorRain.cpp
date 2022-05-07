@@ -20,11 +20,11 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos = Vector3::Init(
-			playerPos.x + g_random.GetRandomInt(-100, 100),
-			playerPos.y + g_random.GetRandomInt(-100, 100),
-			playerPos.z + g_random.GetRandomInt(25, 50)
+			playerPos.x + g_Random.GetRandomInt(-100, 100),
+			playerPos.y + g_Random.GetRandomInt(-100, 100),
+			playerPos.z + g_Random.GetRandomInt(25, 50)
 		);
-		Hash choosenPropHash = GET_HASH_KEY(propNames[g_random.GetRandomInt(0, 4)]);
+		Hash choosenPropHash = GET_HASH_KEY(propNames[g_Random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
 
 		Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
@@ -42,7 +42,7 @@ static void OnTick()
 		}
 
 		SET_OBJECT_PHYSICS_PARAMS(meteor, 100000.f, 1.f, 1.f, 0.f, 0.f, .5f, 0.f, 0.f, 0.f, 0.f, 0.f);
-		APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(meteor, 0, 50.f, 0, -10000.f, true, false, true, true);
+		Memory::ApplyForceToEntityCenterOfMass(meteor, 0, 50.f, 0, -10000.f, true, false, true, true);
 
 		SET_MODEL_AS_NO_LONGER_NEEDED(choosenPropHash);
 	}

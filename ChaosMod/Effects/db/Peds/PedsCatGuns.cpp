@@ -1,45 +1,5 @@
 #include <stdafx.h>
 
-static Vector3 DegToRadian(const Vector3& angles)
-{
-	return Vector3::Init(
-		angles.x * .0174532925199433F,
-		angles.y * .0174532925199433F,
-		angles.z * .0174532925199433F
-	);
-}
-
-static Vector3 GetCoordsFromGameplayCam(float distance)
-{
-	Vector3 rot = DegToRadian(GET_GAMEPLAY_CAM_ROT(2));
-	Vector3 coords = GET_GAMEPLAY_CAM_COORD();
-
-	rot.y = distance * cos(rot.x);
-	coords.x = coords.x + rot.y * std::sin(rot.z * -1.f);
-	coords.y = coords.y + rot.y * std::cos(rot.z * -1.f);
-	coords.z = coords.z + distance * sin(rot.x);
-
-	return coords;
-}
-
-static bool IsWeaponShotgun(Hash wepHash)
-{
-	switch (wepHash)
-	{
-	case 487013001:
-	case 2017895192:
-	case -1654528753:
-	case -494615257:
-	case -1466123874:
-	case 984333226:
-	case -275439685:
-	case 317205821:
-		return true;
-	}
-
-	return false;
-}
-
 static void OnTick()
 {
 	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
@@ -59,7 +19,7 @@ static void OnTick()
 
 				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y, camCoords.z, true);
 
-				spawnBasePos = GetCoordsFromGameplayCam(distCamToPed + .5f);
+				spawnBasePos = Util::GetCoordsFromGameplayCam(distCamToPed + .5f);
 				spawnRot = GET_GAMEPLAY_CAM_ROT(2);
 			}
 			else
@@ -68,7 +28,7 @@ static void OnTick()
 				spawnRot = GET_ENTITY_ROTATION(ped, 2);
 			}
 
-			bool isShotgun = IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
+			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
 			int catCount = isShotgun ? 3 : 1;
 			for (int i = 0; i < catCount; i++)
 			{
@@ -88,7 +48,7 @@ static void OnTick()
 
 				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				Memory::ApplyForceToEntityCenterOfMass(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
 
 				SET_PED_AS_NO_LONGER_NEEDED(&cat);
 			}

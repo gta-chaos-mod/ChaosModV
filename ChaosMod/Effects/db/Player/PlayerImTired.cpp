@@ -18,6 +18,12 @@ static float steeringDirection;
 static void BlackOut(float alpha)
 {
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false);
+	float progress = alpha / 255;
+	if (progress > 0)
+	{
+		DRAW_RECT(.5f, progress / 4, 1, progress / 2, 0, 0, 0, 255, false); // top bar
+		DRAW_RECT(.5f, 1.f - (progress / 4), 1, progress / 2, 0, 0, 0, 255, false); // bottom bar
+	}
 }
 
 static void SteerVehicle()
@@ -40,11 +46,6 @@ static void RagdollOnFoot()
 	}
 }
 
-static void OnStop()
-{
-	BlackOut(0);
-}
-
 static void OnStart()
 {
 	currentMode = TiredMode::closingEyes;
@@ -59,7 +60,7 @@ static void OnTick()
 	case closingEyes:
 		alpha += closingIterator;
 		// Chance for player who's on foot to ragdoll halfway through blinking
-		if (alpha / closingIterator == floor(255.f / closingIterator / 2.f) && g_random.GetRandomFloat(0.f, 1.f) < .25f)
+		if (alpha / closingIterator == floor(255.f / closingIterator / 2.f) && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
 		{
 			RagdollOnFoot();
 		}
@@ -86,7 +87,7 @@ static void OnTick()
 			{
 				alpha = 0;
 				currentMode = TiredMode::waiting;
-				nextTimestamp = GET_GAME_TIMER() + g_random.GetRandomInt(250, 3000);
+				nextTimestamp = GET_GAME_TIMER() + g_Random.GetRandomInt(250, 3000);
 			}
 		}
 		break;
@@ -94,14 +95,14 @@ static void OnTick()
 		if (GET_GAME_TIMER() > nextTimestamp)
 		{
 			currentMode = TiredMode::closingEyes;
-			steeringDirection = (g_random.GetRandomFloat(0, 1) < .5f) ? 1.0f : -1.0f;
+			steeringDirection = (g_Random.GetRandomFloat(0, 1) < .5f) ? 1.0f : -1.0f;
 		}
 		break;
 	}
 	BlackOut(alpha);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "I'm So Tired",
 		.Id = "player_tired",

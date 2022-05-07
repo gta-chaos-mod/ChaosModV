@@ -2,10 +2,8 @@
 
 #include "Memory.h"
 
-#include <vector>
-
-DWORD64 m_baseAddr;
-DWORD64 m_endAddr;
+static DWORD64 ms_ullBaseAddr;
+static DWORD64 ms_ullEndAddr;
 
 namespace Memory
 {
@@ -14,16 +12,17 @@ namespace Memory
 		MODULEINFO moduleInfo;
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &moduleInfo, sizeof(moduleInfo));
 
-		m_baseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
-		m_endAddr = m_baseAddr + moduleInfo.SizeOfImage;
+		ms_ullBaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
+		ms_ullEndAddr = ms_ullBaseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
 
-		for (RegisteredHook* registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
+		LOG("Running hooks");
+		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
-			if (!registeredHook->RunHook())
+			if (!pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
-				LOG("Error while executing " << registeredHook->GetName() << " hook");
+				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
 		}
 	
@@ -66,102 +65,72 @@ namespace Memory
 		MH_Uninitialize();
 	}
 
-	Handle FindPattern(const std::string& pattern)
+	void RunLateHooks()
 	{
-		std::vector<int> bytes;
+		LOG("Running late hooks");
 
-		std::string sub = pattern;
-		int offset = 0;
-		while ((offset = sub.find(' ')) != sub.npos)
+		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
-			std::string byteStr = sub.substr(0, offset);
-
-			if (byteStr == "?" || byteStr == "??")
+			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
-				bytes.push_back(-1);
+				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
-			else
-			{
-				bytes.push_back(std::stoi(byteStr, nullptr, 16));
-			}
-
-			sub = sub.substr(offset + 1);
 		}
-		if ((offset = pattern.rfind(' ')) != sub.npos)
+	}
+
+	Handle FindPattern(const std::string& szPattern, const PatternScanRange&& scanRange)
+	{
+		if ((scanRange.m_startAddr != 0 || scanRange.m_endAddr != 0) && scanRange.m_startAddr >= scanRange.m_endAddr)
 		{
-			std::string byteStr = pattern.substr(offset + 1);
-			bytes.push_back(std::stoi(byteStr, nullptr, 16));
+			LOG("startAddr is equal / bigger than endAddr???");
+			return Handle();
 		}
 
-		if (bytes.empty())
+		std::string szCopy = szPattern;
+		for (size_t pos = szCopy.find("??"); pos != std::string::npos; pos = szCopy.find("??", pos+1))
+		{
+			szCopy.replace(pos, 2, "?");
+		}
+		
+		hook::pattern pattern = scanRange.m_startAddr == 0 && scanRange.m_endAddr == 0
+			? hook::pattern(szCopy) : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
+		if (!pattern.size())
 		{
 			return Handle();
 		}
 
-		int count = 0;
-		for (DWORD64 addr = m_baseAddr; addr < m_endAddr; addr++)
-		{
-			if (bytes[count] == -1 || *reinterpret_cast<BYTE*>(addr) == bytes[count])
-			{
-				if (++count == bytes.size())
-				{
-					return Handle(addr - count + 1);
-				}
-			}
-			else
-			{
-				count = 0;
-			}
-		}
-
-		LOG("Couldn't find pattern \"" << pattern << "\"");
-
-		return Handle();
+		return Handle(uintptr_t(pattern.get_first()));
 	}
 
-	MH_STATUS AddHook(void* target, void* detour, void** orig)
+	_NODISCARD MH_STATUS AddHook(void* pTarget, void* pDetour, void* ppOrig)
 	{
-		MH_STATUS result = MH_CreateHook(target, detour, reinterpret_cast<void**>(orig));
+		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void**>(ppOrig));
 
 		if (result == MH_OK)
 		{
-			MH_EnableHook(target);
+			MH_EnableHook(pTarget);
 		}
 
 		return result;
 	}
 
-	template <typename T>
-	void Write(T* addr, T value, int count)
+	const char* GetTypeName(__int64 ullVftAddr)
 	{
-		DWORD oldProtect;
-		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		for (int i = 0; i < count; i++)
+		if (ullVftAddr)
 		{
-			addr[i] = value;
-		}
-
-		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
-	}
-
-	const char* const GetTypeName(__int64 vptr)
-	{
-		if (vptr)
-		{
-			__int64 vftable = *reinterpret_cast<__int64*>(vptr);
-			if (vftable)
+			__int64 ullVftable = *reinterpret_cast<__int64*>(ullVftAddr);
+			if (ullVftable)
 			{
-				__int64 rtti = *reinterpret_cast<__int64*>(vftable - 8);
-				if (rtti)
+				__int64 ullRtti = *reinterpret_cast<__int64*>(ullVftable - 8);
+				if (ullRtti)
 				{
-					__int64 rva = *reinterpret_cast<DWORD*>(rtti + 12);
-					if (rva)
+					__int64 ullRva = *reinterpret_cast<DWORD*>(ullRtti + 12);
+					if (ullRva)
 					{
-						__int64 typeDesc = m_baseAddr + rva;
-						if (typeDesc)
+						__int64 ullTypeDesc = ms_ullBaseAddr + ullRva;
+						if (ullTypeDesc)
 						{
-							return reinterpret_cast<const char*>(typeDesc + 16);
+							return reinterpret_cast<const char*>(ullTypeDesc + 16);
 						}
 					}
 				}

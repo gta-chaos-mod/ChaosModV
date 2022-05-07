@@ -7,13 +7,13 @@
 
 static void OnStop()
 {
-	g_metaInfo.ShouldHideChaosUI = false;
+	MetaModifiers::m_bHideChaosUI = false;
 }
 
 
 static void OnTick()
 {
-	g_metaInfo.ShouldHideChaosUI = true;
+	MetaModifiers::m_bHideChaosUI = true;
 }
 
 static RegisterEffect registerEffect(EFFECT_META_HIDE_CHAOS_UI, nullptr, OnStop, OnTick, EffectInfo
@@ -21,6 +21,6 @@ static RegisterEffect registerEffect(EFFECT_META_HIDE_CHAOS_UI, nullptr, OnStop,
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",
 		.IsTimed = true,
-		.ExecutionType = EffectExecutionType::META
+		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
