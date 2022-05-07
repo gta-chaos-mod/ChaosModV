@@ -266,17 +266,16 @@ static RegisterEffect registerEffectMission(EFFECT_TP_MISSION, OnStartMission, E
 static struct FakeTeleportInfo
 {
 	EEffectType type;
-	Vector3 playerPos;
-	Vector3 vehiclePos;
+	void (*Start)(void);
 };
 
 static const std::vector<FakeTeleportInfo> tpLocations =
 {
-	{EFFECT_TP_LSAIRPORT, {-1388.6f, -3111.61f, 13.94f}}, // LSIA
-	{EFFECT_TP_MAZETOWER, {-75.7f, -818.62f, 326.16f}}, // Maze Tower
-	{EFFECT_TP_FORTZANCUDO, {-2360.3f, 3244.83f, 92.9f}, {-2267.89f, 3121.04f, 32.5f}}, // Fort Zancudo
-	{EFFECT_TP_MOUNTCHILLIAD, {501.77f, 5604.85f, 797.91f}, {503.33f, 5531.91f, 777.45f}}, // Mount Chilliad
-	{EFFECT_TP_SKYFALL, {935.f, 3800.f, 2300.f}} // Heaven
+	{EFFECT_TP_LSAIRPORT, OnStartLSIA}, // LSIA
+	{EFFECT_TP_MAZETOWER, OnStartMazeTower}, // Maze Tower
+	{EFFECT_TP_FORTZANCUDO, OnStartFortZancudo}, // Fort Zancudo
+	{EFFECT_TP_MOUNTCHILLIAD, OnStartMountChilliad}, // Mount Chilliad
+	{EFFECT_TP_SKYFALL, OnStartSkyFall} // Heaven
 };
 
 static void OnStartFakeTp()
@@ -294,20 +293,12 @@ static void OnStartFakeTp()
 	Hooks::EnableScriptThreadBlock();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
-	Vector3 destinationPos = selectedLocationInfo.playerPos;
-	if (playerVeh)
-	{
-		if (!selectedLocationInfo.vehiclePos.IsDefault()) {
-			destinationPos = selectedLocationInfo.vehiclePos;
-		}
-		SET_ENTITY_INVINCIBLE(playerVeh, true);
-	}
 
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 	SET_MAX_WANTED_LEVEL(0);
 
-	TeleportPlayer(destinationPos);
+	selectedLocationInfo.Start();
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
