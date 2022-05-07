@@ -78,20 +78,19 @@ void EffectDispatcher::OnRun()
 
 void EffectDispatcher::UpdateTimer()
 {
-	DWORD64 ullCurrentUpdateTime           = GetTickCount64();
-	static DWORD64 c_ullPreviousUpdateTime = ullCurrentUpdateTime;
+	DWORD64 ullCurrentUpdateTime = GetTickCount64();
 
 	if (!m_bEnableNormalEffectDispatch || m_bPauseTimer || MetaModifiers::m_bDisableChaos)
 	{
-		c_ullPreviousUpdateTime = ullCurrentUpdateTime;
+		m_ullTimerTimer = ullCurrentUpdateTime;
 		return;
 	}
 
-	m_fTimerPercentage += (ullCurrentUpdateTime - c_ullPreviousUpdateTime) * MetaModifiers::m_fTimerSpeedModifier
-	                    / m_usEffectSpawnTime / 1000;
-	c_ullPreviousUpdateTime = ullCurrentUpdateTime;
+	m_fTimerPercentage +=
+		(ullCurrentUpdateTime - m_ullTimerTimer) * MetaModifiers::m_fTimerSpeedModifier / m_usEffectSpawnTime / 1000;
+	m_ullTimerTimer = ullCurrentUpdateTime;
 
-	if (m_fTimerPercentage >= 1 && m_bDispatchEffectsOnTimer)
+	if (m_fTimerPercentage >= 1.f && m_bDispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
@@ -100,7 +99,7 @@ void EffectDispatcher::UpdateTimer()
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 		}
 
-		m_fTimerPercentage = 0;
+		m_fTimerPercentage = 0.f;
 	}
 }
 
@@ -635,8 +634,12 @@ void EffectDispatcher::Reset()
 
 void EffectDispatcher::ResetTimer()
 {
+<<<<<<< HEAD
 	m_fTimerPercentage = 0;
 	m_ullEffectsTimer  = GetTickCount64();
+	== == == = m_fTimerPercentage = 0.f;
+	m_ullTimerTimer = m_ullEffectsTimer = GetTickCount64();
+>>>>>>> c52da04 (Fixed timer going on while mod is disabled)
 }
 
 float EffectDispatcher::GetEffectTopSpace()
