@@ -51,7 +51,7 @@ inline bool ComponentExists()
 	return ComponentHolder<T>::Instance();
 }
 
-template <class T, typename... Args> requires std::is_base_of_v<Component, T>
+template <class T> requires std::is_base_of_v<Component, T>
 inline void InitComponent(auto&&... args)
 {
 	// For whatever reason the compiler prepends an additional template param to Args, breaking std::forward

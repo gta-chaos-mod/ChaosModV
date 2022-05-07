@@ -86,14 +86,14 @@ TwitchVoting::~TwitchVoting()
 
 void TwitchVoting::Run()
 {
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = false;
-	}
-
 	if (!m_bEnableTwitchVoting)
 	{
 		return;
+	}
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = false;
 	}
 
 	// Check if there's been no ping for too long and error out
