@@ -32,11 +32,7 @@ bool ControlJustPressed(int p0, int p1)
 
 bool ControlPressed(int p0, int p1)
 {
-	if (IS_CONTROL_PRESSED(p0, p1) || IS_DISABLED_CONTROL_PRESSED(p0, p1))
-	{
-		return true;
-	}
-	return false;
+	return IS_CONTROL_PRESSED(p0, p1) || IS_DISABLED_CONTROL_PRESSED(p0, p1);
 }
 
 static void OnStart()
