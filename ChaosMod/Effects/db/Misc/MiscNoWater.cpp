@@ -11,7 +11,7 @@ struct CWaterQuad
 	short MinY;    // 0x2
 	short MaxX;    // 0x4
 	short MaxY;    // 0x6
-	uint Alpha;    // 0x8
+	DWORD Alpha;   // 0x8
 	float Target;  // 0xC
 	float Angle;   // 0x10
 	float Height;  // 0x14
