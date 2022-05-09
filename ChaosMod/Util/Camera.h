@@ -45,7 +45,7 @@ namespace Util
 	}
 
 	//@param cam Leave empty to use Gameplay Cam.
-	inline int RayCastCamera(Cam cam = 0, float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity, int flags)
+	inline int RayCastCamera(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity, int flags, Cam cam = 0)
 	{
 		
 		Vector3 cameraRotation;
