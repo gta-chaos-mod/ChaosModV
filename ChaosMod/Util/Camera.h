@@ -44,7 +44,8 @@ namespace Util
 		return vCoords;
 	}
 
-	inline int RayCastGameplayCam(Cam cam = 0, float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
+	//@param cam Leave empty to use Gameplay Cam.
+	inline int RayCastCamera(Cam cam = 0, float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity, int flags)
 	{
 		
 		Vector3 cameraRotation;
@@ -62,13 +63,12 @@ namespace Util
 		
 		
 		Vector3 direction = cameraRotation.GetDirectionForRotation();
-		Vector3 destination
-		{
+		Vector3 destination = Vector3::Init
+		(
 			cameraCoord.x + direction.x * distance,
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
-		};
-		int cast = GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), hit, endCoords, surfaceNormal, entity);
-		return cast;
+		);
+		return GET_SHAPE_TEST_RESULT(START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, flags, 0, 1), hit, endCoords, surfaceNormal, entity);
 	}
 }
