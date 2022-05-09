@@ -208,6 +208,7 @@
     <ClCompile Include="Effects\db\Misc\MiscUTurn.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsTiny.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsWiggleWiggle.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
