@@ -7,87 +7,85 @@
 #include "Util/Camera.h"
 using namespace Memory;
 
-float ms_fForceX = 80;
-float ms_fGrabDist = 600;
+const float ms_fForceX = 80;
+const float ms_fGrabDist = 600;
 
 static Entity selectedObject = 0;
 
-static void CleanUp()
+static void ShootEntity(Entity &e)
 {
-	SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
-	DETACH_ENTITY(selectedObject, 0, 1);
-	selectedObject = 0;
+	SET_ENTITY_HAS_GRAVITY(e, 1);
+	DETACH_ENTITY(e, 0, 1);
+	if (GET_ENTITY_TYPE(e) == 1)
+	{
+		SET_PED_TO_RAGDOLL(e, 3000000, 3000000, 0, false, false, false); //Shooting non ragdolled peds is weird or something
+	}
+	ApplyForceToEntityCenterOfMass(e, 1, ms_fForceX, 0, 0, 1, 1, 1, 0);
+	e = 0;
 }
 
 bool GetAimedAtEntity(Entity* e)
 {
-	Vector3 coords, normal;
+	LOG(3);
+	Vector3 a, b; //unused, so name dosen't matter.
 	BOOL hit;
-	Entity out;
-	int handle = Util::RayCastGameplayCam(ms_fGrabDist, &hit, &coords, &normal, &out);
-	*e = out;
+	LOG(3.1);
+	int handle = Util::RayCastGameplayCam(ms_fGrabDist, &hit, &a, &b, e);
+	LOG(3.2);
 	return (bool)hit;
+}
+
+static void OnStart()
+{
+	DISABLE_CONTROL_ACTION(0, 24, true);
 }
 
 static void OnTick()
 {
-	static const Player player = PLAYER_ID();
+	LOG(0);
 	static const Ped playerPed = PLAYER_PED_ID();
-
-	if (DOES_ENTITY_EXIST(selectedObject))
-	{	if (IS_CONTROL_JUST_RELEASED(0, 25))
-		{
-			CleanUp();
-		}
-		else if (IS_CONTROL_JUST_PRESSED(0, 24))
-		{
-			DETACH_ENTITY(selectedObject, 0, 1);
-			SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
-			ApplyForceToEntityCenterOfMass(selectedObject, 1, ms_fForceX, 0, 0, 1, 1, 1, 0);
-			WAIT(100);
-			CleanUp();
-		}
-	}
-	else if (IS_CONTROL_JUST_PRESSED(0, 25))
+	LOG(0.1);
+	if (IS_DISABLED_CONTROL_JUST_PRESSED(0, 24))
 	{
-		Entity tmp;
-		if (GetAimedAtEntity(&tmp))
+		LOG(0.2);
+		if (DOES_ENTITY_EXIST(selectedObject))
 		{
-			if (GET_ENTITY_TYPE(tmp) != 0)
-			{
-				Entity wep = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
-				selectedObject = tmp;
-				ATTACH_ENTITY_TO_ENTITY(tmp, wep, GET_ENTITY_BONE_INDEX_BY_NAME(wep, "Gun_Nuzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
-			}
-		} 
-	}
-
-	//From Native Trainer, was too lazy to write it myself.
-	Hash cur;
-	if (WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &cur, 1))
-	{
-		if (WEAPON::IS_WEAPON_VALID(cur))
+			LOG(1);
+			ShootEntity(selectedObject);
+			LOG(1.1);
+			SET_PED_CONFIG_FLAG(playerPed, 78, false);
+			LOG(1.2);
+		}
+		else
 		{
-			int maxAmmo;
-			if (WEAPON::GET_MAX_AMMO(playerPed, cur, &maxAmmo))
+			LOG(2);
+			Entity e;
+			if (GetAimedAtEntity(&e))
 			{
-				WEAPON::SET_PED_AMMO(playerPed, cur, maxAmmo, 1);
-
-				maxAmmo = WEAPON::GET_MAX_AMMO_IN_CLIP(playerPed, cur, 1);
-				if (maxAmmo > 0)
-					WEAPON::SET_AMMO_IN_CLIP(playerPed, cur, maxAmmo);
+				LOG(2.1);
+				if (GET_ENTITY_TYPE(e) != 0)
+				{
+					LOG(2.2);
+					Entity w = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
+					ATTACH_ENTITY_TO_ENTITY(e, w, GET_ENTITY_BONE_INDEX_BY_NAME(w, "gun_muzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
+					SET_PED_CONFIG_FLAG(playerPed, 78, true);
+					selectedObject = e;
+					LOG(2.3);
+				}
 			}
 		}
 	}
-
 }
 
 static void OnStop()
 {
-	CleanUp();
+	SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
+	DETACH_ENTITY(selectedObject, 0, 1);
+	selectedObject = 0;
+	ENABLE_CONTROL_ACTION(0, 24, true);
 }
 
-static RegisterEffect reg(EFFECT_MISC_GRAVITY_GUNS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(EFFECT_MISC_GRAVITY_GUNS, OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Physic Guns",
 		.Id = "misc_gravity_guns",
