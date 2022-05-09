@@ -63,26 +63,30 @@ namespace Util
 		return direction;
 	}
 
-	inline int RayCastGameplayCam(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
+	//@param cam Leave empty to use Gameplay Cam.
+	inline int RayCastCamera(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity, int flags, Cam cam = 0)
 	{
-		Vector3 cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 cameraCoord = GET_GAMEPLAY_CAM_COORD();
-		Vector3 direction = GetGameplayCamRotationToDirection(cameraRotation);
+		Vector3 cameraRotation;
+		Vector3 cameraCoord;
+		if (cam != 0)
+		{
+			cameraRotation = GET_CAM_ROT(cam, 2);
+			cameraCoord = GET_CAM_COORD(cam);
+		}
+		else
+		{
+			cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
+			cameraCoord = GET_GAMEPLAY_CAM_COORD();
+		}
+
+
+		Vector3 direction = cameraRotation.GetDirectionForRotation();
 		Vector3 destination = Vector3::Init
 		(
 			cameraCoord.x + direction.x * distance,
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
 		);
-		BOOL a;
-		Vector3 b; 
-		Vector3 c;
-		Entity d;
-		int e = GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), &a, &b, &c, &d);
-		*hit = a;
-		*endCoords = b;
-		*surfaceNormal = c;
-		*entity = d;
-		return e;
+		return GET_SHAPE_TEST_RESULT(START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, flags, 0, 1), hit, endCoords, surfaceNormal, entity);
 	}
 }

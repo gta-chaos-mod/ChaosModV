@@ -4,7 +4,7 @@ static void OnTick()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
+		START_VEHICLE_HORN(veh, 500, GET_HASH_KEY("NORMAL"), false);
 	}
 }
 

@@ -30,7 +30,7 @@ bool GetAimedAtEntity(Entity* e)
 	Vector3 a, b; //unused, so name dosen't matter.
 	BOOL hit;
 	LOG(3.1);
-	int handle = Util::RayCastGameplayCam(ms_fGrabDist, &hit, &a, &b, e);
+	int handle = Util::RayCastCamera(ms_fGrabDist, &hit, nullptr, nullptr, e, 4294967295);
 	LOG(3.2);
 	return (bool)hit;
 }
@@ -66,7 +66,7 @@ static void OnTick()
 				if (GET_ENTITY_TYPE(e) != 0)
 				{
 					LOG(2.2);
-					Entity w = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed);
+					Entity w = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed, 0);
 					ATTACH_ENTITY_TO_ENTITY(e, w, GET_ENTITY_BONE_INDEX_BY_NAME(w, "gun_muzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
 					SET_PED_CONFIG_FLAG(playerPed, 78, true);
 					selectedObject = e;
