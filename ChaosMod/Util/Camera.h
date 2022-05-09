@@ -68,12 +68,12 @@ namespace Util
 		Vector3 cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
 		Vector3 cameraCoord = GET_GAMEPLAY_CAM_COORD();
 		Vector3 direction = GetGameplayCamRotationToDirection(cameraRotation);
-		Vector3 destination
-		{
+		Vector3 destination = Vector3::Init
+		(
 			cameraCoord.x + direction.x * distance,
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
-		};
+		);
 		BOOL a;
 		Vector3 b; 
 		Vector3 c;
