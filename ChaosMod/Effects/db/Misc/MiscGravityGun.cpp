@@ -24,53 +24,56 @@ static void ShootEntity(Entity &e)
 	e = 0;
 }
 
-bool GetAimedAtEntity(Entity* e)
+static void ToggleControls(bool ulEnabled)
 {
-	LOG(3);
-	Vector3 a, b; //unused, so name dosen't matter.
-	BOOL hit;
-	LOG(3.1);
-	int handle = Util::RayCastCamera(ms_fGrabDist, &hit, nullptr, nullptr, e, 4294967295);
-	LOG(3.2);
-	return (bool)hit;
+	if (ulEnabled)
+	{
+		ENABLE_CONTROL_ACTION(0, 24, true);
+		ENABLE_CONTROL_ACTION(0, 257, true);
+	}
+	else
+	{
+		DISABLE_CONTROL_ACTION(0, 24, true);
+		DISABLE_CONTROL_ACTION(0, 257, true);
+	}
 }
 
-static void OnStart()
+bool GetAimedAtEntity(Entity* e)
 {
-	DISABLE_CONTROL_ACTION(0, 24, true);
+	Vector3 a, b; //unused, so name dosen't matter.
+	BOOL hit;
+	int handle = Util::RayCastCamera(ms_fGrabDist, &hit, &a, &b, e, 4294967295);
+	return (bool)hit;
 }
 
 static void OnTick()
 {
-	LOG(0);
 	static const Ped playerPed = PLAYER_PED_ID();
-	LOG(0.1);
+	DISABLE_CONTROL_ACTION(0, 24, true);
+	if (IS_PLAYER_FREE_AIMING(PLAYER_ID()))
+		ToggleControls(false);
+	else
+		ToggleControls(true);
 	if (IS_DISABLED_CONTROL_JUST_PRESSED(0, 24))
 	{
-		LOG(0.2);
 		if (DOES_ENTITY_EXIST(selectedObject))
 		{
-			LOG(1);
 			ShootEntity(selectedObject);
-			LOG(1.1);
 			SET_PED_CONFIG_FLAG(playerPed, 78, false);
-			LOG(1.2);
+			SET_PED_CONFIG_FLAG(playerPed, 101, false);
 		}
 		else
 		{
-			LOG(2);
 			Entity e;
 			if (GetAimedAtEntity(&e))
 			{
-				LOG(2.1);
 				if (GET_ENTITY_TYPE(e) != 0)
 				{
-					LOG(2.2);
 					Entity w = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(playerPed, 0);
-					ATTACH_ENTITY_TO_ENTITY(e, w, GET_ENTITY_BONE_INDEX_BY_NAME(w, "gun_muzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
+					ATTACH_ENTITY_TO_ENTITY(e, w, GET_ENTITY_BONE_INDEX_BY_NAME(w, "Gun_Nuzzle"), 3.5, 0.f, 0.f, 0.f, 0.f, 0.f, 0, 0, 0, 1, 2, 1);
 					SET_PED_CONFIG_FLAG(playerPed, 78, true);
+					SET_PED_CONFIG_FLAG(playerPed, 101, true);
 					selectedObject = e;
-					LOG(2.3);
 				}
 			}
 		}
@@ -79,17 +82,20 @@ static void OnTick()
 
 static void OnStop()
 {
+	static const Ped playerPed = PLAYER_PED_ID();
 	SET_ENTITY_HAS_GRAVITY(selectedObject, 1);
 	DETACH_ENTITY(selectedObject, 0, 1);
 	selectedObject = 0;
-	ENABLE_CONTROL_ACTION(0, 24, true);
+	ToggleControls(true);
+	SET_PED_CONFIG_FLAG(playerPed, 78, false);
+	SET_PED_CONFIG_FLAG(playerPed, 101, false);
 }
 
-static RegisterEffect reg(EFFECT_MISC_GRAVITY_GUNS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(EFFECT_MISC_GRAVITY_GUNS, nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Physic Guns",
 		.Id = "misc_gravity_guns",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_MISC_NEWS_TEAM}
+		.IncompatibleWith = {EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_MISC_NEWS_TEAM, EFFECT_PEDS_CAT_GUNS}
 	}
 );

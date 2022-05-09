@@ -87,6 +87,6 @@ namespace Util
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
 		);
-		return GET_SHAPE_TEST_RESULT(START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, flags, 0, 1), hit, endCoords, surfaceNormal, entity);
+		return GET_SHAPE_TEST_RESULT(START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, flags, PLAYER_PED_ID(), 1), hit, endCoords, surfaceNormal, entity);
 	}
 }
