@@ -386,14 +386,15 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		if (groupNameOpt)
 		{
 			const auto& groupName = *groupNameOpt;
-			if (g_dictEffectGroups.find(groupName) != g_dictEffectGroups.end())
+			const auto& result = g_dictEffectGroups.find(groupName);
+			if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 			{
 				LOG(szFileName << ": WARNING: Could not register effect group \"" << groupName << "\": Already registered!");
 			}
 			else
 			{
-				// Initialize these (latter only if it doesn't exist yet)
-				g_dictEffectGroups[groupName] = { .WasRegisteredByScript = true };
+				g_dictEffectGroups[groupName].IsPlaceholder = false;
+				g_dictEffectGroups[groupName].WasRegisteredByScript = true;
 				g_dictEffectGroupMemberCount[groupName];
 
 				const sol::optional<int>& groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
