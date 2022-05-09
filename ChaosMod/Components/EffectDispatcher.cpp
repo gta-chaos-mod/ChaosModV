@@ -577,10 +577,8 @@ void EffectDispatcher::Reset()
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 	m_ullMetaTimer = GetTickCount64();
 
-	for (const auto& pair : g_dictEnabledEffects)
+	for (const auto& [ effectIdentifier, effectData ] : g_dictEnabledEffects)
 	{
-		const auto& [effectIdentifier, effectData] = pair;
-
 		if (effectData.TimedType == EEffectTimedType::Permanent)
 		{
 			// Always run permanent timed effects in background
@@ -593,7 +591,7 @@ void EffectDispatcher::Reset()
 				EffectThreads::CreateThread(pRegisteredEffect, true);
 			}
 		}
-		else
+		else if (!effectData.IsMeta() && !effectData.IsUtility())
 		{
 			// There's at least 1 enabled non-permanent effect, enable timer
 			m_bEnableNormalEffectDispatch = true;
