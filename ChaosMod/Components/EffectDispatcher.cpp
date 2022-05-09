@@ -249,8 +249,7 @@ void EffectDispatcher::DrawTimerBar()
 
 void EffectDispatcher::DrawEffectTexts()
 {
-	if (!m_bEnableNormalEffectDispatch
-		|| m_bDisableDrawEffectTexts)
+	if (m_bDisableDrawEffectTexts)
 	{
 		return;
 	}
