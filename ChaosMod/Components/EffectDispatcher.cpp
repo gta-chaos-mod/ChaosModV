@@ -80,7 +80,8 @@ void EffectDispatcher::UpdateTimer()
 {
 	DWORD64 ullCurrentUpdateTime = GetTickCount64();
 
-	if (!m_bEnableNormalEffectDispatch || m_bPauseTimer || MetaModifiers::m_bDisableChaos)
+	if (!m_bEnableNormalEffectDispatch || m_bPauseTimer || MetaModifiers::m_bDisableChaos
+	    || ullCurrentUpdateTime - m_ullTimerTimer > 1000)
 	{
 		m_ullTimerTimer = ullCurrentUpdateTime;
 		return;
@@ -634,12 +635,8 @@ void EffectDispatcher::Reset()
 
 void EffectDispatcher::ResetTimer()
 {
-<<<<<<< HEAD
-	m_fTimerPercentage = 0;
-	m_ullEffectsTimer  = GetTickCount64();
-	== == == = m_fTimerPercentage = 0.f;
+	m_fTimerPercentage = 0.f;
 	m_ullTimerTimer = m_ullEffectsTimer = GetTickCount64();
->>>>>>> c52da04 (Fixed timer going on while mod is disabled)
 }
 
 float EffectDispatcher::GetEffectTopSpace()
