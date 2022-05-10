@@ -43,8 +43,8 @@ namespace ChaosModInstaller
             _fiveMPath = fiveMPath;
             _type = type;
 
-            _chaosModFiles = Path.Combine(Directory.GetCurrentDirectory() + "\\source\\chaosmod");
-            _chaosModScript = Path.Combine(Directory.GetCurrentDirectory() + "\\source\\ChaosMod.asi");
+            _chaosModFiles = Path.Combine(Directory.GetCurrentDirectory() + "\\bin\\chaosmod");
+            _chaosModScript = Path.Combine(Directory.GetCurrentDirectory() + "\\bin\\ChaosMod.asi");
 
             InitializeComponent();
 
