@@ -32,7 +32,7 @@ namespace ChaosModInstaller
 
         private enum InstallationState
         { 
-            READY, EXECUTING, FINISHED, ERRORED
+            READY, EXECUTING, FINISHED
         }
 
         private InstallationState _state = InstallationState.READY;
@@ -60,18 +60,17 @@ namespace ChaosModInstaller
             switch (state)
             {
                 case InstallationState.EXECUTING:
+                    busyspinner.Visibility = Visibility.Visible;
                     next_btn.Visibility = Visibility.Hidden;
                     break;
                 case InstallationState.FINISHED:
+                    busyspinner.Visibility = Visibility.Hidden;
                     next_btn.Content = "Finish";
                     next_btn.Visibility = Visibility.Visible;
                     break;
                 case InstallationState.READY:
+                    busyspinner.Visibility = Visibility.Hidden;
                     next_btn.Content = "Install";
-                    next_btn.Visibility = Visibility.Visible;
-                    break;
-                case InstallationState.ERRORED:
-                    next_btn.Content = "Exit";
                     next_btn.Visibility = Visibility.Visible;
                     break;
             }

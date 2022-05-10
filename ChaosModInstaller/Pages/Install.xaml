@@ -14,8 +14,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <local:LoadingControl Grid.Row="0" Diameter="80" Color1="Green" Color2="#FF232844" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-        <Label x:Name="output_lbl" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Content="Output" Foreground="White" FontFamily="Comic Sans MS"/>
+        <local:LoadingControl x:Name="busyspinner" Grid.Row="0" Diameter="80" Color1="Green" Color2="#FF232844" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         <Button x:Name="next_btn" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="25" Content="Finish" Background="Green" Foreground="White" Visibility="Hidden"/>
     </Grid>
 </Page>
