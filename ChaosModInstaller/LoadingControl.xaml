@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="ChaosModInstaller.LoadingControl"
+             x:Name="control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <Grid DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        <Path Stroke="Transparent" StrokeThickness=".1" RenderTransformOrigin=".5,.5" Width="{Binding ElementName=control, Path=Diameter}" Height="{Binding ElementName=control, Path=Diameter}">
+            <Path.Data>
+                <CombinedGeometry GeometryCombineMode="Xor">
+                    <CombinedGeometry.Geometry1>
+                        <EllipseGeometry RadiusX="{Binding ElementName=control, Path=Radius}" RadiusY="{Binding ElementName=control, Path=Radius}" Center="{Binding ElementName=control, Path=Center}"/>
+                    </CombinedGeometry.Geometry1>
+                    <CombinedGeometry.Geometry2>
+                        <EllipseGeometry RadiusX="{Binding ElementName=control, Path=InnerRadius}" RadiusY="{Binding ElementName=control, Path=InnerRadius}" Center="{Binding ElementName=control, Path=Center}" />
+                    </CombinedGeometry.Geometry2>
+                </CombinedGeometry>
+            </Path.Data>
+            <Path.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{Binding ElementName=control, Path=Color1}" Offset=".0" />
+                    <GradientStop Color="{Binding ElementName=control, Path=Color1}" Offset=".25" />
+                    <GradientStop Color="{Binding ElementName=control, Path=Color2}" Offset="1" />
+                </LinearGradientBrush>
+            </Path.Fill>
+            <Path.RenderTransform>
+                <RotateTransform />
+                <!--This is necessary for the animation not to stop-->
+            </Path.RenderTransform>
+            <Path.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation 
+                Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
+                To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Path.Triggers>
+        </Path>
+    </Grid>
+</UserControl>
