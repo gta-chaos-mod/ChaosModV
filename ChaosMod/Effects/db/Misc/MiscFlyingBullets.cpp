@@ -68,7 +68,7 @@ static void OnStart()
 
 static RegisterEffect registerEffect(EFFECT_MISC_FLYING_BULLETS, nullptr, nullptr, OnTick, EffectInfo
 	{
-		.Name = "John Wick",
+		.Name = "Warzone",
 		.Id = "misc_flying_bullets",
 		.IsTimed = true,
 		.IsShortDuration = true

@@ -675,7 +675,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_WATER, new EffectInfo("Drought", EffectCategory.MISC, "misc_remove_water", true)},
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
-            {EffectType.EFFECT_MISC_FLYING_BULLETS, new EffectInfo("John Wick", EffectCategory.MISC, "misc_flying_bullets", true, true)},
+            {EffectType.EFFECT_MISC_FLYING_BULLETS, new EffectInfo("Warzone", EffectCategory.MISC, "misc_flying_bullets", true, true)},
         };
     }
 }
