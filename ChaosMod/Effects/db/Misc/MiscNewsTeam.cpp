@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+	Effect by Last0xygen, modified * 2
 */
 
 #include <stdafx.h>
@@ -22,58 +22,107 @@ static int lastPositionGoal = 0;
 static int scaleForm = 0;
 static Vector3 targetCoords;
 
-static const char* ms_rgTextPairs[] =
+static struct TextPair
 {
-	"Chaos Mod Player Trying To Survive",
-	"\"He won't survive\", Mod Contributors Say",
+	const char* msg1;
+	const char* msg2;
+};
 
-	"Crazy Lunatic Going On A Rampage",
-	"This Report Was Brought To You By eCola",
+static const std::vector<TextPair> ms_rgTextPairs =
+{
+	TextPair("Chaos Mod Player Trying To Survive", "\"He won't survive\", Mod Contributors Say"),
 
-	"The Aftermath Of An Experiment Gone Wrong",
-	"THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!",
+	TextPair("Crazy Lunatic Going On A Rampage",
+	"This Report Was Brought To You By eCola"),
 
-	"Wow Look At This",
-	"Crazy Ain't It?",
+	TextPair("The Aftermath Of An Experiment Gone Wrong",
+	"THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!"),
 
-	"An Example Of Our Average Law-Abiding Citizen",
-	"\"Video Games cause violence\" Officials Say",
+	TextPair("Wow Look At This",
+	"Crazy Ain't It?"),
 
-	"Holy Shit Wow Omg",
-	"LULW WTFFF xDDDDDDDD",
+	TextPair("An Example Of Our Average Law-Abiding Citizen",
+	"\"Video Games cause violence\" Officials Say"),
 
-	"What Bad RNG Looks Like",
-	"Researchers Estimate The Chances Being Close To Millions To One",
+	TextPair("Holy Shit Wow Omg",
+	"LULW WTFFF xDDDDDDDD"),
 
-	"A Speedrunner In Action",
-	"Criticizers Claim Mods Might Be At Play",
+	TextPair("What Bad RNG Looks Like",
+	"Researchers Estimate The Chances Being Close To Millions To One"),
 
-	"An Ongoing Riot All Over San Andreas",
-	"A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"",
+	TextPair("A Speedrunner In Action",
+	"Criticizers Claim Mods Might Be At Play"),
 
-	"Hey You're On Camera",
-	"Come On Do Something Cool!",
+	TextPair("An Ongoing Riot All Over San Andreas",
+	"A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\""),
 
-	"Look Up And Smile",
-	"It's The LSPD",
+	TextPair("Hey You're On Camera",
+	"Come On Do Something Cool!"),
 
-	"This Is A Nice Scaleform",
-	"Wow Is This Self-Aware?",
+	TextPair("Look Up And Smile",
+	"It's The LSPD"),
 
-	"This Is Why We Can't Have Nice Things",
-	"SMH",
+	TextPair("This Is A Nice Scaleform",
+	"Wow Is This Self-Aware?"),
 
-	"IS THAT A SUPRA???",
-	":o",
+	TextPair("This Is Why We Can't Have Nice Things",
+	"SMH"),
 
-	"Don't Mind Us",
-	"Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2",
+	TextPair("IS THAT A SUPRA???",
+	":o"),
 
-	"HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-	"HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+	TextPair("Don't Mind Us",
+	"Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2"),
 
-	"Just Imagine All The Stuff I Could Put In Here",
-	"Oh Wait..."
+	TextPair("HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+	"HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"),
+
+	TextPair("Just Imagine All The Stuff I Could Put In Here",
+	"Oh Wait..."),
+
+	TextPair("I wonder what the character limit is?",
+	"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+
+	TextPair("Wait my code actually works?",
+	":D"),
+
+	TextPair("ChasoMod stocks spike!",
+	"So much profit!"),
+
+	TextPair("Don't tell pongo I put this here",
+	"Shhhhhh"),
+
+	TextPair("You should download Rainbomizer",
+	"Parik told me it's like so cool"),
+
+	TextPair("Is this what new content looks like?",
+	"I wouldn't know"),
+
+	TextPair("TakeTwo leaks GTA VI release date",
+	"GTA 6 set to release febuary 2025!"),
+
+	TextPair("Look at me mom!",
+	"Weeeeeeeeeee"),
+
+	TextPair("Hey,Look Up Here!",
+	"Are you looking?"),
+
+	TextPair("You should play more ChaosMod contributors say",
+	"Yea! Listen to them"),
+
+	TextPair("THE END IS NEVER THEN IS NEVER THE END IS NEVER",
+	"THE END IS NEVER THEN IS NEVER THE END IS NEVER THE END IS NEVER THE END IS NEVER"),
+
+	TextPair("I'm going to hack you!",
+	"Player.Hack() Player.StealLoginCredentials() Player.BuyThingsWithTheirCreditCardBecauseIDon'tHaveAnyMoney()"),
+
+	TextPair("Contribute to the GitHub at:",
+	"https://github.com/gta-chaos-mod/ChaosModV"),
+
+	TextPair("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget ante rhoncus.",
+	"SAMPLE TEXT"),
+
+	TextPair("Rockstar leaks plans for Single Player DLC", "According to sources, this DLC will bring more facts and glitches to the game!"),
 };
 
 static void OnStart()
@@ -127,10 +176,11 @@ static void OnStart()
 		WAIT(0);
 	}
 
-	int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) * .5f - 1) * 2;
+	int iChosenIndex = g_Random.GetRandomInt(0, ms_rgTextPairs.size()-1);
+	TextPair pair = ms_rgTextPairs.at(iChosenIndex);
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex + 1]);
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(pair.msg1);
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(pair.msg2);
 
 	END_SCALEFORM_MOVIE_METHOD();
 }
@@ -168,10 +218,10 @@ static void OnTick()
 
 static RegisterEffect registerEffect(EFFECT_MISC_NEWS_TEAM, OnStart, OnStop, OnTick, EffectInfo
     {
-        .Name = "News Team",
+		.Name = "News Team",
         .Id = "misc_news_team",
-	.IsTimed = true,
-	.IsShortDuration = true,
-	.IncompatibleWith = { EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM }
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.IncompatibleWith = { EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM }
     }
 );
