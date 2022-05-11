@@ -465,7 +465,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
 			if (bLog)
 			{
-				m_rgDispatchedEffectsLog.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
+				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
 			}
 		}
 	}
