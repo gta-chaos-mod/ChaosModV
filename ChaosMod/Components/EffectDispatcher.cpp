@@ -329,7 +329,7 @@ int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
 }
 
-void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix)
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bLog)
 {
 	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
@@ -463,9 +463,16 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			}
 
 			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
+			if (bLog)
+			{
+				if (m_rgDispatchedEffectsLog.size() >= 100)
+				{
+					m_rgDispatchedEffectsLog.erase(m_rgDispatchedEffectsLog.begin());
+				}
+				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
+			}
 		}
 	}
-
 	m_fPercentage = .0f;
 }
 
@@ -530,6 +537,7 @@ void EffectDispatcher::ClearEffects(bool bIncludePermanent)
 	}
 
 	m_rgActiveEffects.clear();
+	m_rgDispatchedEffectsLog.clear();
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier& exclude)
@@ -564,6 +572,19 @@ void EffectDispatcher::ClearMostRecentEffect()
 			m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
 		}
 	}
+}
+
+std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance) const
+{
+	std::vector<RegisteredEffect*> temp;
+	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
+	{
+		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
+		if (std::find(temp.begin(), temp.end(), regeff) != temp.end()) continue;
+		temp.emplace_back(regeff);
+		distance--;
+	}
+	return temp;
 }
 
 void EffectDispatcher::Reset()

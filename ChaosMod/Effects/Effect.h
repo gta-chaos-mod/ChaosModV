@@ -44,6 +44,11 @@ public:
 		return m_EffectIdentifier == effectIdentifier;
 	}
 
+	const EffectIdentifier& GetIndentifier() const
+	{
+		return m_EffectIdentifier;
+	}
+
 	void Start()
 	{
 		if (!m_bIsRunning)
