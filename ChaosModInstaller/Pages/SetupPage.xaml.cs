@@ -117,7 +117,16 @@ namespace ChaosModInstaller
             bool b = VerifyFiveMDirectory(directory_path_fivem.Text) && VerifyGtaDirectory(directory_path_gta.Text);
             if (b)
             {
-                Install page = new Install(InstallationType.FIVEM, gtaPath, fivemPath);
+                Install page;
+                if (installationType == InstallationType.GTA5)
+                {
+                    page = new Install(gtaPath, directory_path_gta.Text);
+                }
+                else
+                {
+                    page = new Install(gtaPath, fivemPath);
+                }
+                
                 this.NavigationService.Navigate(page);
             }
         }

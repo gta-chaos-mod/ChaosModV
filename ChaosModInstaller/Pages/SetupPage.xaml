@@ -38,6 +38,6 @@
                 <Label x:Name="err_msg_fivem" Grid.Row="1" Content="Directory must include FiveM.exe" HorizontalAlignment="Center" FontSize="10" Height="15" Padding="0,0,0,0" Foreground="Red" Margin="-188,0,0,5" Visibility="Hidden"/>
             </Grid>
         </Grid>
-        <Button Grid.Row="1" x:Name="install_btn" Click="install_btn_click" Width="100" Height="25" Background="Green" VerticalAlignment="Center" HorizontalAlignment="Center"  Content="Install" Foreground="White" Grid.Column="0" Margin="0,21,0,0"/>
+        <Button Grid.Row="1" x:Name="install_btn" Click="install_btn_click" Width="100" Height="25" Background="Green" VerticalAlignment="Center" HorizontalAlignment="Center"  Content="Next" Foreground="White" Grid.Column="0" Margin="0,21,0,0"/>
     </Grid>
 </Page>
