@@ -78,6 +78,7 @@ private:
 
 	std::vector<ActiveEffect> m_rgActiveEffects;
 	std::vector<RegisteredEffect*> m_rgPermanentEffects;
+	std::vector<RegisteredEffect*> m_rgDispatchedEffectsLog;
 
 	bool m_bEnableNormalEffectDispatch = true;
 
@@ -121,12 +122,14 @@ public:
 
 	int _NODISCARD GetRemainingTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bLog = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr);
 
 	void ClearEffects(bool bIncludePermanent = true);
 	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
+
+	std::vector<RegisteredEffect*> GetRecentEffects(int distance);
 
 	void Reset();
 	void ResetTimer();
