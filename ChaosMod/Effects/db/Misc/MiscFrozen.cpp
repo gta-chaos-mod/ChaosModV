@@ -102,6 +102,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_FROZEN, OnStart, OnStop, OnTick
 	{
 		.Name = "Frozen",
 		.Id = "misc_frozen",
-		.IsTimed = true
+		.IsTimed = true,
+		.IsShortDuration = true
 	}
 );
