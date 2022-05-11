@@ -74,6 +74,15 @@ void EffectDispatcher::UpdateTimer()
 		m_usTimerTimerRuns++;
 
 		m_ullTimerTimer = ullCurrentUpdateTime;
+
+		if (MetaModifiers::m_bDisplayFakeEffectBars)
+		{
+			for (size_t i = 0; i < MetaModifiers::m_ucNumFakeEffectBars; i++)
+			{
+				MetaModifiers::m_pFakeEffectBars[i].m_usTimerTimerRuns++;
+			}
+		}
+
 		fDelta = 0;
 	}
 
@@ -92,6 +101,28 @@ void EffectDispatcher::UpdateTimer()
 
 		m_usTimerTimerRuns = 0;
 	}
+
+	if (MetaModifiers::m_bDisplayFakeEffectBars)
+	{
+		for (size_t i = 0; i < MetaModifiers::m_ucNumFakeEffectBars; i++)
+		{
+			if ((MetaModifiers::m_pFakeEffectBars[i].m_fPercentage = (fDelta + (MetaModifiers::m_pFakeEffectBars[i].m_usTimerTimerRuns * 1000)) / (m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * 1000)) > 1.f
+				&& m_bDispatchEffectsOnTimer)
+			{
+				DispatchRandomEffect(nullptr, true);
+
+				if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
+				{
+					for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
+					{
+						GetComponent<EffectDispatcher>()->DispatchRandomEffect(nullptr, true);
+					}
+				}
+
+				MetaModifiers::m_pFakeEffectBars[i].m_usTimerTimerRuns = 0;
+			}
+		}
+	}
 }
 
 void EffectDispatcher::UpdateEffects()
@@ -107,7 +138,7 @@ void EffectDispatcher::UpdateEffects()
 	for (ActiveEffect& effect : m_rgActiveEffects)
 	{
 		if (effect.m_bHideText
-			&& EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId))
+			&& (effect.m_bIsFake || EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId)))
 		{
 			effect.m_bHideText = false;
 		}
@@ -131,13 +162,25 @@ void EffectDispatcher::UpdateEffects()
 			if (effectData.IsMeta())
 			{
 				effect.m_fTimer--;
+
+				if (effect.m_bIsFake)
+				{
+					effect.m_fHiddenTimer--;
+				}
 			}
 			else
 			{
-				effect.m_fTimer -= 1 / MetaModifiers::m_fEffectDurationModifier;
+				float diff = 1 / MetaModifiers::m_fEffectDurationModifier;
+
+				effect.m_fTimer -= diff;
+
+				if (effect.m_bIsFake)
+				{
+					effect.m_fHiddenTimer -= diff;
+				}
 			}
 			bool shouldStopEffect = false;
-			if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0) 
+			if ((effect.m_bIsFake ? effect.m_fHiddenMaxTime > 0 && effect.m_fHiddenTimer <= 0 : effect.m_fMaxTime > 0 && effect.m_fTimer <= 0))
 			{
 				shouldStopEffect = true;
 			} 
@@ -242,17 +285,46 @@ void EffectDispatcher::DrawTimerBar()
 			? m_fFakeTimerBarPercentage
 			: m_fPercentage;
 
-	// New Effect Bar
-	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+#define DRAW_TIMER(fillAmount, height, yPos) \
+	if (MetaModifiers::m_bFlipChaosUI) \
+	{ \
+		DRAW_RECT(1.f - fillAmount * .5f, yPos, fillAmount, height, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false); \
+	} \
+	else \
+	{ \
+		DRAW_RECT(fillAmount * .5f, yPos, fillAmount, height, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false); \
+	}
 
-	if (MetaModifiers::m_bFlipChaosUI)
+	// New Effect Bar
+	if (MetaModifiers::m_bDisplayFakeEffectBars)
 	{
-		DRAW_RECT(1.f - fPercentage * .5f, .01f, fPercentage, .018f, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false);
+		static constexpr float BAR_HEIGHT = .0125f;
+		static constexpr float BACKGROUND_BAR_HEIGHT = BAR_HEIGHT * (.021f / .018f);
+
+		DRAW_RECT(.5f, (BACKGROUND_BAR_HEIGHT / 2.f) * (MetaModifiers::m_ucNumFakeEffectBars + 1), 1.f, BACKGROUND_BAR_HEIGHT * (MetaModifiers::m_ucNumFakeEffectBars + 1), 0, 0, 0, 127, false);
+
+		for (size_t i = 0; i < MetaModifiers::m_ucNumFakeEffectBars + 1; i++)
+		{
+			float fPercentageForBar;
+			if (i == MetaModifiers::m_ucRealEffectBarIndex)
+			{
+				fPercentageForBar = fPercentage;
+			}
+			else
+			{
+				fPercentageForBar = MetaModifiers::m_pFakeEffectBars[(i > MetaModifiers::m_ucRealEffectBarIndex ? i - 1 : i)].m_fPercentage;
+			}
+
+			DRAW_TIMER(fPercentageForBar, BAR_HEIGHT, BACKGROUND_BAR_HEIGHT * (i + .5f));
+		}
 	}
 	else
 	{
-		DRAW_RECT(fPercentage * .5f, .01f, fPercentage, .018f, m_rgTimerColor[0], m_rgTimerColor[1], m_rgTimerColor[2], 255, false);
+		DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+		DRAW_TIMER(fPercentage, .018f, .01f);
 	}
+
+#undef DRAW_TIMER
 }
 
 void EffectDispatcher::DrawEffectTexts()
@@ -326,10 +398,15 @@ bool _NODISCARD EffectDispatcher::ShouldDispatchEffectNow() const
 
 int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 {
-	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
+	return GetMaxTimerTime() - m_usTimerTimerRuns;
 }
 
-void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix)
+int _NODISCARD EffectDispatcher::GetMaxTimerTime() const
+{
+	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier;
+}
+
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool isFake)
 {
 	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
@@ -362,59 +439,66 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 		}
 	}
 
-	LOG("Dispatched effect \"" << effectData.Name << "\"");
-
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
 	bool bAlreadyExists = false;
-
-	const auto& rgIncompatibleIds = effectData.IncompatibleIds;
-
-	for (auto it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
+	if (!isFake)
 	{
-		ActiveEffect& activeEffect = *it;
+		LOG("Dispatched effect \"" << effectData.Name << "\"");
 
-		if (activeEffect.m_EffectIdentifier == effectIdentifier
-			&& effectData.TimedType != EEffectTimedType::Unk
-			&& effectData.TimedType != EEffectTimedType::NotTimed)
+		const auto& rgIncompatibleIds = effectData.IncompatibleIds;
+
+		for (auto it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
 		{
-			bAlreadyExists = true;
-			activeEffect.m_fTimer = activeEffect.m_fMaxTime;
+			ActiveEffect& activeEffect = *it;
+			if (activeEffect.m_bIsFake)
+			{
+				it++;
+				continue;
+			}
 
-			break;
-		}
+			if (activeEffect.m_EffectIdentifier == effectIdentifier
+				&& effectData.TimedType != EEffectTimedType::Unk
+				&& effectData.TimedType != EEffectTimedType::NotTimed)
+			{
+				bAlreadyExists = true;
+				activeEffect.m_fTimer = activeEffect.m_fMaxTime;
 
-		bool bFound = false;
-		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).Id)
-			!= rgIncompatibleIds.end())
-		{
-			bFound = true;
-		}
+				break;
+			}
 
-		// Check if current effect is marked as incompatible in active effect
-		if (!bFound)
-		{
-			const auto& rgActiveIncompatibleIds = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
-
-			if (std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
+			bool bFound = false;
+			if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).Id)
+				!= rgIncompatibleIds.end())
 			{
 				bFound = true;
 			}
-		}
 
-		if (bFound)
-		{
-			EffectThreads::StopThread(activeEffect.m_ullThreadId);
+			// Check if current effect is marked as incompatible in active effect
+			if (!bFound)
+			{
+				const auto& rgActiveIncompatibleIds = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
 
-			it = m_rgActiveEffects.erase(it);
-		}
-		else
-		{
-			it++;
+				if (std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
+				{
+					bFound = true;
+				}
+			}
+
+			if (bFound)
+			{
+				EffectThreads::StopThread(activeEffect.m_ullThreadId);
+
+				it = m_rgActiveEffects.erase(it);
+			}
+			else
+			{
+				it++;
+			}
 		}
 	}
 
-	if (!bAlreadyExists)
+	if (!bAlreadyExists || isFake)
 	{
 		RegisteredEffect* registeredEffect = GetRegisteredEffect(effectIdentifier);
 
@@ -440,8 +524,11 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 				}
 
-				// Play a sound if corresponding .mp3 file exists
-				Mp3Manager::PlayChaosSoundFile(effectData.Id);
+				if (!isFake)
+				{
+					// Play a sound if corresponding .mp3 file exists
+					Mp3Manager::PlayChaosSoundFile(effectData.Id);
+				}
 			}
 
 			int effectTime = -1;
@@ -462,14 +549,17 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 				break;
 			}
 
-			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
+			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime, isFake);
 		}
 	}
 
-	m_fPercentage = .0f;
+	if (!isFake)
+	{
+		m_fPercentage = .0f;
+	}
 }
 
-void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
+void EffectDispatcher::DispatchRandomEffect(const char* szSuffix, bool isFake)
 {
 	if (!m_bEnableNormalEffectDispatch)
 	{
@@ -516,7 +606,7 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 
 	if (pTargetEffectIdentifier)
 	{
-		DispatchEffect(*pTargetEffectIdentifier, szSuffix);
+		DispatchEffect(*pTargetEffectIdentifier, szSuffix, isFake);
 	}
 }
 
@@ -555,13 +645,37 @@ void EffectDispatcher::ClearMostRecentEffect()
 {
 	if (!m_rgActiveEffects.empty())
 	{
-		const ActiveEffect& mostRecentEffect = m_rgActiveEffects[m_rgActiveEffects.size() - 1];
-
-		if (mostRecentEffect.m_fTimer > 0)
+		for (int i = m_rgActiveEffects.size() - 1; i >= 0; i--)
 		{
-			EffectThreads::StopThread(mostRecentEffect.m_ullThreadId);
+			const ActiveEffect& mostRecentEffect = m_rgActiveEffects[i];
+			if (!mostRecentEffect.m_bIsFake)
+			{
+				EffectThreads::StopThread(mostRecentEffect.m_ullThreadId);
 
-			m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
+				if (mostRecentEffect.m_fTimer > 0)
+				{
+					m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
+				}
+
+				break;
+			}
+		}
+	}
+}
+
+void EffectDispatcher::ClearAllFakeEffects()
+{
+	if (!m_rgActiveEffects.empty())
+	{
+		for (int i = m_rgActiveEffects.size() - 1; i >= 0; i--)
+		{
+			ActiveEffect& activeEffect = m_rgActiveEffects[i];
+			if (activeEffect.m_bIsFake)
+			{
+				EffectThreads::StopThread(activeEffect.m_ullThreadId);
+
+				m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
+			}
 		}
 	}
 }

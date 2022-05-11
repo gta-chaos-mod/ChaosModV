@@ -6,6 +6,7 @@
 #include "../Effects/EffectData.h"
 #include "../Effects/EffectIdentifier.h"
 #include "../Effects/EnabledEffectsMap.h"
+#include "../Util/Random.h"
 
 #include <vector>
 #include <array>
@@ -37,19 +38,35 @@ private:
 
 		bool m_bHideText = true;
 
-		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* pRegisteredEffect, const std::string& szName, const std::string& szFakeName, float fTimer)
+		bool m_bIsFake = false;
+		// The "real" timer to use for fake effects (remove effect after this timer runs out, but still display the normal timer)
+		float m_fHiddenTimer = 0.f;
+		float m_fHiddenMaxTime = 0.f;
+
+		ActiveEffect(const EffectIdentifier& effectIdentifier, RegisteredEffect* pRegisteredEffect, const std::string& szName, const std::string& szFakeName, float fTimer, bool isFake = false)
 		{
 			m_EffectIdentifier = effectIdentifier;
 			m_pRegisteredEffect = pRegisteredEffect;
 			m_szName = szName;
 			m_szFakeName = szFakeName;
+			m_bIsFake = isFake;
+
 			m_fTimer = fTimer;
 			m_fMaxTime = fTimer;
 
-			EEffectTimedType eTimedType = g_dictEnabledEffects.at(effectIdentifier).TimedType;
+			if (isFake)
+			{
+				float fHiddenTimer = g_Random.GetRandomFloat(3.f, 6.f);
+				m_fHiddenTimer = fHiddenTimer;
+				m_fHiddenMaxTime = fHiddenTimer;
+			}
+			else
+			{
+				EEffectTimedType eTimedType = g_dictEnabledEffects.at(effectIdentifier).TimedType;
 
-			m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk
-				&& eTimedType != EEffectTimedType::NotTimed);
+				m_ullThreadId = EffectThreads::CreateThread(pRegisteredEffect, eTimedType != EEffectTimedType::Unk
+					&& eTimedType != EEffectTimedType::NotTimed);
+			}
 		}
 	};
 
@@ -120,13 +137,15 @@ public:
 	bool _NODISCARD ShouldDispatchEffectNow() const;
 
 	int _NODISCARD GetRemainingTimerTime() const;
+	int _NODISCARD GetMaxTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr);
-	void DispatchRandomEffect(const char* szSuffix = nullptr);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool isFake = false);
+	void DispatchRandomEffect(const char* szSuffix = nullptr, bool isFake = false);
 
 	void ClearEffects(bool bIncludePermanent = true);
 	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
+	void ClearAllFakeEffects();
 
 	void Reset();
 	void ResetTimer();

@@ -355,6 +355,7 @@ namespace ConfigApp
             EFFECT_MISC_WATER,
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
+            EFFECT_META_FAKE_CHAOS,
             _EFFECT_ENUM_MAX
         }
 
@@ -616,6 +617,7 @@ namespace ConfigApp
             {EffectType.EFFECT_META_EFFECT_DURATION_X0_5, new EffectInfo("0.5x Effect Duration", EffectCategory.META, "meta_effect_duration_0_5x", true)},
             {EffectType.EFFECT_META_HIDE_CHAOS_UI, new EffectInfo("What's Happening??", EffectCategory.META, "meta_hide_chaos_ui", true)},
             {EffectType.EFFECT_META_ADDITIONAL_EFFECTS, new EffectInfo("Combo Time", EffectCategory.META, "meta_spawn_multiple_effects", true)},
+            {EffectType.EFFECT_META_FAKE_CHAOS, new EffectInfo("Fake Chaos", EffectCategory.META, "meta_fake_chaos", true)},
             {EffectType.EFFECT_MISC_FLIP_UI, new EffectInfo("Flipped HUD", EffectCategory.MISC, "misc_flip_ui", true)},
             {EffectType.EFFECT_VEHS_CRUMBLE, new EffectInfo("Crumbling Vehicles", EffectCategory.VEHICLE, "vehs_crumble", true, true)},
             {EffectType.EFFECT_MISC_FPS_LIMIT, new EffectInfo("Console Experience", EffectCategory.MISC, "misc_fps_limit", true, true)},
