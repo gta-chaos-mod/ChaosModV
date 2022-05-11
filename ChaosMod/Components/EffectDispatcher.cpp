@@ -465,6 +465,10 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
 			if (bLog)
 			{
+				if (m_rgDispatchedEffectsLog.size() >= 100)
+				{
+					m_rgDispatchedEffectsLog.clear();
+				}
 				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
 			}
 		}
@@ -533,6 +537,7 @@ void EffectDispatcher::ClearEffects(bool bIncludePermanent)
 	}
 
 	m_rgActiveEffects.clear();
+	m_rgDispatchedEffectsLog.clear();
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier& exclude)
@@ -569,12 +574,14 @@ void EffectDispatcher::ClearMostRecentEffect()
 	}
 }
 
-std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance)
+std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance) const
 {
 	std::vector<RegisteredEffect*> temp;
-	for (int i = m_rgDispatchedEffectsLog.size() - 1; i --> distance;)
+	for (int i = m_rgDispatchedEffectsLog.size() - 1; i > distance && i > 0; i--)
 	{
-		temp.emplace_back(m_rgDispatchedEffectsLog.at(i));
+		RegisteredEffect* regeff = m_rgDispatchedEffectsLog.at(i);
+		if (std::count(temp.begin(), temp.end(), regeff)) continue;
+		temp.emplace_back(regeff);
 	}
 	return temp;
 }

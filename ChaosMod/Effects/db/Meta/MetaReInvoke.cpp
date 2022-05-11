@@ -7,10 +7,10 @@
 static void OnStart()
 {
 	EffectDispatcher* disp = GetComponent<EffectDispatcher>();
-	std::vector<RegisteredEffect*> eff = disp->GetRecentEffects(5);
-	for (int i = 0; i < eff.size(); i++)
+	const std::vector<RegisteredEffect*> eff = disp->GetRecentEffects(5);
+	for (RegisteredEffect* effect : eff)
 	{
-		disp->DispatchEffect(eff.at(i)->GetIndentifier(), nullptr, false);
+		disp->DispatchEffect(effect->GetIndentifier(), nullptr, false);
 	}
 }
 
