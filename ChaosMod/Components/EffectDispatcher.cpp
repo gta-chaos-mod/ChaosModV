@@ -467,7 +467,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			{
 				if (m_rgDispatchedEffectsLog.size() >= 100)
 				{
-					m_rgDispatchedEffectsLog.clear();
+					m_rgDispatchedEffectsLog.erase(m_rgDispatchedEffectsLog.begin());
 				}
 				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
 			}
@@ -577,11 +577,12 @@ void EffectDispatcher::ClearMostRecentEffect()
 std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance) const
 {
 	std::vector<RegisteredEffect*> temp;
-	for (int i = m_rgDispatchedEffectsLog.size() - 1; i > distance && i > 0; i--)
+	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
 	{
-		RegisteredEffect* regeff = m_rgDispatchedEffectsLog.at(i);
-		if (std::count(temp.begin(), temp.end(), regeff)) continue;
+		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
+		if (std::find(temp.begin(), temp.end(), regeff) != temp.end()) continue;
 		temp.emplace_back(regeff);
+		distance--;
 	}
 	return temp;
 }

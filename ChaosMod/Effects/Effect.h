@@ -44,7 +44,7 @@ public:
 		return m_EffectIdentifier == effectIdentifier;
 	}
 
-	EffectIdentifier GetIndentifier() const
+	const EffectIdentifier& GetIndentifier() const
 	{
 		return m_EffectIdentifier;
 	}

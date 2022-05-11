@@ -78,7 +78,7 @@ private:
 
 	std::vector<ActiveEffect> m_rgActiveEffects;
 	std::vector<RegisteredEffect*> m_rgPermanentEffects;
-	std::vector<RegisteredEffect*> m_rgDispatchedEffectsLog;
+	std::list<RegisteredEffect*> m_rgDispatchedEffectsLog;
 
 	bool m_bEnableNormalEffectDispatch = true;
 
