@@ -1,10 +1,10 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 #include "DebugMenu.h"
 
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu()
+DebugMenu::DebugMenu() : Component()
 {
 	m_bIsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_bIsEnabled)
@@ -12,13 +12,13 @@ DebugMenu::DebugMenu()
 		return;
 	}
 
-	for (const auto& pair : g_EnabledEffects)
+	for (const auto& pair : g_dictEnabledEffects)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
 		if (effectData.TimedType != EEffectTimedType::Permanent)
 		{
-			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName
+			m_rgEffects.emplace_back(effectIdentifier, effectData.HasCustomName()
 				? effectData.CustomName
 				: effectData.Name);
 		}
@@ -49,7 +49,7 @@ DebugMenu::DebugMenu()
 	});
 }
 
-void DebugMenu::Run()
+void DebugMenu::OnRun()
 {
 	if (!m_bIsEnabled
 		|| !m_bVisible)
@@ -84,7 +84,7 @@ void DebugMenu::Run()
 	{
 		m_bDispatchEffect = false;
 
-		g_pEffectDispatcher->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
+		GetComponent<EffectDispatcher>()->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
 	}
 
 	float fY = .1f;

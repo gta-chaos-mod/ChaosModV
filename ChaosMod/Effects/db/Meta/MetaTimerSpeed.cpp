@@ -7,13 +7,13 @@
 
 static void OnStop()
 {
-	g_MetaInfo.m_fTimerSpeedModifier = 1;
+	MetaModifiers::m_fTimerSpeedModifier = 1;
 }
 
 
 static void OnTick_0_5x()
 {
-	g_MetaInfo.m_fTimerSpeedModifier = 0.5;
+	MetaModifiers::m_fTimerSpeedModifier = 0.5;
 }
 
 static RegisterEffect registerEffect_0_5x(EFFECT_META_TIMER_SPEED_X0_5, nullptr, OnStop, OnTick_0_5x, EffectInfo
@@ -28,7 +28,7 @@ static RegisterEffect registerEffect_0_5x(EFFECT_META_TIMER_SPEED_X0_5, nullptr,
 
 static void OnTick_2x()
 {
-	g_MetaInfo.m_fTimerSpeedModifier = 2;
+	MetaModifiers::m_fTimerSpeedModifier = 2;
 }
 
 static RegisterEffect registerEffect_2x(EFFECT_META_TIMER_SPEED_X2, nullptr, OnStop, OnTick_2x, EffectInfo
@@ -43,7 +43,7 @@ static RegisterEffect registerEffect_2x(EFFECT_META_TIMER_SPEED_X2, nullptr, OnS
 
 static void OnTick_5x()
 {
-	g_MetaInfo.m_fTimerSpeedModifier = 5;
+	MetaModifiers::m_fTimerSpeedModifier = 5;
 }
 
 static RegisterEffect registerEffect_5x(EFFECT_META_TIMER_SPEED_X5, nullptr, OnStop, OnTick_5x, EffectInfo

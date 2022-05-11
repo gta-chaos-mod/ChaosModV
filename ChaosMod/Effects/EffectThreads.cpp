@@ -92,7 +92,7 @@ namespace EffectThreads
 
 			if (pThread->m_iPauseTime <= 0)
 			{
-				pThread->Run();
+				pThread->OnRun();
 			}
 
 			it++;

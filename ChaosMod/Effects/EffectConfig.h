@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Util/OptionsFile.h"
+#include "EffectGroups.h"
+#include "../Util/OptionsFile.h"
 
 enum EEffectType : int;
 struct EffectData;
@@ -82,11 +83,6 @@ namespace EffectConfig
 
 			if (!rgValues[0]) // enabled == false
 			{
-				if (effectInfo.EEffectGroupType != EEffectGroupType::None)
-				{
-					g_dictCurrentEffectGroupMemberCount[effectInfo.EEffectGroupType]--;
-				}
-
 				continue;
 			}
 
@@ -111,13 +107,13 @@ namespace EffectConfig
 
 			effectData.WeightMult = rgValues[3];
 			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
-			effectData.ExcludedFromVoting = rgValues[5];
-			effectData.IsMeta = effectInfo.ExecutionType == EEffectExecutionType::Meta;
+			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
+			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
 			effectData.Name = effectInfo.Name;
-			effectData.Shortcut = rgValues[7];
+			effectData.ShortcutKeycode = rgValues[7];
 			if (!szValueEffectName.empty())
 			{
-				effectData.HasCustomName = true;
+				effectData.SetAttribute(EEffectAttributes::HasCustomName, true);
 				effectData.CustomName = szValueEffectName;
 			}
 			effectData.Id = effectInfo.Id;
@@ -127,7 +123,11 @@ namespace EffectConfig
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			effectData.EEffectGroupType = effectInfo.EEffectGroupType;
+			if (effectInfo.EEffectGroupType != EEffectGroupType::None)
+			{
+				effectData.GroupType = g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EEffectGroupType))->first;
+				g_dictEffectGroupMemberCount[effectData.GroupType]++;
+			}
 
 			out.emplace(effectType, effectData);
 		}

@@ -55,8 +55,6 @@ namespace Mp3Manager
 		ossTmp.str("");
 		ossTmp.clear();
 
-		LOG(CHAOS_SOUNDFILES_DIR << szChosenSound);
-
 		ossTmp << "open \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" type mpegvideo";
 		int error = mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);
 		ossTmp.str("");
