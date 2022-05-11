@@ -23,7 +23,8 @@ namespace ChaosModInstaller
             foreach (FileInfo file in dir.GetFiles())
             {
                 string targetFilePath = Path.Combine(destinationDir, file.Name);
-                file.CopyTo(targetFilePath);
+                if (!File.Exists(targetFilePath))
+                    file.CopyTo(targetFilePath);
             }
 
             if (recursive)

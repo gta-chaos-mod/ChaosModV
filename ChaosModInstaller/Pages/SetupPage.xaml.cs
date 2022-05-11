@@ -46,6 +46,11 @@ namespace ChaosModInstaller
 
             directory_path_gta.TextChanged += Gta5TextChanged;
             directory_path_fivem.TextChanged += FivemTextChanged;
+
+            directory_path_gta.Text = (string)ApplicationData.GetValue("GTA_PATH_ENTRY");
+            directory_path_fivem.Text = (string)ApplicationData.GetValue("FIVEM_PATH_ENTRY");
+
+            
         }
 
         private string BrowseFiles()
@@ -90,12 +95,14 @@ namespace ChaosModInstaller
 
         private void Gta5TextChanged(object sender, TextChangedEventArgs e)
         {
+            ApplicationData.SetValue("GTA_PATH_ENTRY", directory_path_gta.Text);
             gtaPath = Path.Combine(directory_path_gta.Text, "chaosmod");
             VerifyGtaDirectory(directory_path_gta.Text);
         }
 
         private void FivemTextChanged(object sender, TextChangedEventArgs e)
         {
+            ApplicationData.SetValue("FIVE_PATH_ENTRY", directory_path_fivem.Text);
             fivemPath = Path.Combine(directory_path_fivem.Text, "FiveM.app\\plugins");
             VerifyFiveMDirectory(directory_path_fivem.Text);
         }

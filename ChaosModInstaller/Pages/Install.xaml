@@ -14,7 +14,11 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <local:LoadingControl x:Name="busyspinner" Grid.Row="0" Diameter="80" Color1="Green" Color2="#FF232844" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+
+        <StackPanel x:Name="spinnerpanel" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            
+        </StackPanel>
+        <Label x:Name="install_output" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="" Foreground="White" FontFamily="Comic Sans MS"/>
         <Button x:Name="next_btn" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="25" Content="Finish" Background="Green" Foreground="White" Visibility="Hidden"/>
     </Grid>
 </Page>

@@ -19,9 +19,9 @@ namespace ChaosModInstaller
 {
     public partial class Install : Page
     {
-        private InstallationType _type;
         private Installer _folderInstaller;
         private Installer _scriptInstaller;
+        LoadingControl _busyspinner;
         CancellationTokenSource cts = new CancellationTokenSource();
 
         private string _chaosModFiles;
@@ -37,11 +37,35 @@ namespace ChaosModInstaller
 
         private InstallationState _state = InstallationState.READY;
 
-        public Install(InstallationType type, string gtaPath, string fiveMPath = "")
+        private void CreateBusySpinner()
+        {
+            _busyspinner = new LoadingControl();
+            _busyspinner.Diameter = 80;
+            _busyspinner.Color1 = (Color)ColorConverter.ConvertFromString("Green");
+            _busyspinner.Color2 = (Color)ColorConverter.ConvertFromString("#FF232844");
+            _busyspinner.VerticalAlignment = VerticalAlignment.Bottom;
+            _busyspinner.HorizontalAlignment = HorizontalAlignment.Center;
+
+            spinnerpanel.Children.Add(_busyspinner);
+            InitializeComponent();
+            _busyspinner.InitializeComponent();
+            
+        }
+
+        private void RemoveBusySpinner()
+        {
+            spinnerpanel.Children.Remove(_busyspinner);
+        }
+
+        private void SetOutputText(string msg)
+        {
+            install_output.Content = msg;
+        }
+
+        public Install(string gtaPath, string fiveMPath = "")
         {
             _gtaPath = gtaPath;
             _fiveMPath = fiveMPath;
-            _type = type;
 
             _chaosModFiles = Path.Combine(Directory.GetCurrentDirectory() + "\\bin\\chaosmod");
             _chaosModScript = Path.Combine(Directory.GetCurrentDirectory() + "\\bin\\ChaosMod.asi");
@@ -51,6 +75,7 @@ namespace ChaosModInstaller
             next_btn.Content = "Start";
             next_btn.Click += OnClick;
 
+            SetOutputText("Ready to install.");
             SetState(InstallationState.READY);
         }
 
@@ -60,16 +85,16 @@ namespace ChaosModInstaller
             switch (state)
             {
                 case InstallationState.EXECUTING:
-                    busyspinner.Visibility = Visibility.Visible;
+                    
                     next_btn.Visibility = Visibility.Hidden;
                     break;
                 case InstallationState.FINISHED:
-                    busyspinner.Visibility = Visibility.Hidden;
+                    
                     next_btn.Content = "Finish";
                     next_btn.Visibility = Visibility.Visible;
                     break;
                 case InstallationState.READY:
-                    busyspinner.Visibility = Visibility.Hidden;
+                    
                     next_btn.Content = "Install";
                     next_btn.Visibility = Visibility.Visible;
                     break;
@@ -78,27 +103,25 @@ namespace ChaosModInstaller
 
         private void SimulateWork()
         {
-            Thread.SpinWait(500000);
+            Thread.Sleep(1500);
         }
 
-        private void StartInstall()
+        private void StartInstall() // Run on a seperate thred, so we call Dispathcer.Invoke, for any functions that modify the UI. (or it will crash)
         {
-            SetState(InstallationState.EXECUTING);
-
+            this.Dispatcher.Invoke(SetState, InstallationState.EXECUTING);
+            this.Dispatcher.Invoke(CreateBusySpinner);
             SimulateWork();
+            Dispatcher.Invoke(SetOutputText, "Copying ChaosMod data to directory...");
             Installer.CopyDirectoryToLocation(_chaosModFiles, _gtaPath, true);
+            SimulateWork(); // Just to make the user think heavy work is happening ;)
+            Dispatcher.Invoke(SetOutputText, "Copying ChaosMod Script to directory...");
+            Installer.CopyFileToLocation(_chaosModScript, _fiveMPath);
             SimulateWork();
-            if (_type == InstallationType.GTA5)
-            {
-                Installer.CopyFileToLocation(_chaosModScript, _gtaPath);
-            }
-            else
-            {
-                Installer.CopyFileToLocation(_chaosModScript, _fiveMPath);
-            }
+            Dispatcher.Invoke(SetOutputText, "Finishing up...");
             SimulateWork();
-
-            SetState(InstallationState.FINISHED);
+            this.Dispatcher.Invoke(SetState, InstallationState.FINISHED);
+            Dispatcher.Invoke(SetOutputText, "ChaosMod Succesfully Installed!");
+            this.Dispatcher.Invoke(RemoveBusySpinner);
         }
 
         private void OnClick(object sender, EventArgs e)
@@ -106,10 +129,10 @@ namespace ChaosModInstaller
             switch (_state)
             {
                 case InstallationState.READY:
-                    StartInstall();
+                    Thread t = new Thread(new ThreadStart(StartInstall));
+                    t.Start();
                     break;
                 case InstallationState.FINISHED:
-                case InstallationState.ERRORED:
                 default:
                     MainWindow.Exit();
                     break;

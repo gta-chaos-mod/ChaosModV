@@ -6,7 +6,33 @@
       xmlns:local="clr-namespace:ChaosModInstaller"
       mc:Ignorable="d" 
       Title="Setup" Height="268" Width="476" Background="#FF232844">
-
+    <Page.Resources>
+        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="#FF191B29" BorderBrush="#FF191B29" BorderThickness="0"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="LightSlateGray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
@@ -23,8 +49,9 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name ="directory_path_gta" Grid.Row="0" Width="250" Height="25" Margin="-85,0,0,0" Padding="5,0,0,0" Text="GTA 5 Directory Path" VerticalContentAlignment="Center" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" VerticalAlignment="Bottom"/>
-                <Button x:Name ="directory_browse_gta"  Click="directory_browse_gta_clk" Grid.Row="0" Margin="0,0,-265, 0" Width="70" Height="25" Content="Browse" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" VerticalAlignment="Bottom"/>
+
+                <TextBox x:Name ="directory_path_gta" Grid.Row="0" Width="250" Margin="-85,0,0,0" Padding="5,0,0,0" Text="" VerticalContentAlignment="Center" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" VerticalAlignment="Bottom" Style="{StaticResource MyWaterMarkStyle}"  Tag="Gta5.exe Path" Height="25"/>
+                <Button x:Name ="directory_browse_gta"  Click="directory_browse_gta_clk" Grid.Row="0" Margin="0,0,-265, 0" BorderBrush="#FF191B29" BorderThickness="0" Width="70" Height="25" Content="Browse" Background="#FF191B29" Foreground="White" VerticalAlignment="Bottom"/>
                 <Label x:Name="err_msg_gta" Grid.Row="1" Content="Directory must include Gta5.exe" HorizontalAlignment="Center" FontSize="10" Height="15" Padding="0,0,0,0" Foreground="Red" Margin="-188,0,0,5" Visibility="Hidden"/>
                 
             </Grid>
@@ -33,8 +60,9 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBox x:Name ="directory_path_fivem" Grid.Row="0" Width="250" Height="25" Margin="-85,0,0,0" Padding="5,0,0,0" Text="FiveM Directory Path" VerticalContentAlignment="Center" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" Visibility="Hidden"/>
-                <Button x:Name ="directory_browse_fivem"  Click="directory_browse_fivem_clk" Grid.Row="0" Margin="0,0,-265, 0" Width="70" Height="25" Content="Browse" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" Visibility="Hidden"/>
+
+                <TextBox x:Name ="directory_path_fivem" Grid.Row="0" Width="250" Margin="-85,0,0,0" Padding="5,0,0,0" Text="" VerticalContentAlignment="Center" Background="#FF191B29" Foreground="White" BorderBrush="{x:Null}" VerticalAlignment="Bottom" Style="{StaticResource MyWaterMarkStyle}" Tag="FiveM.exe Path" Height="25" Visibility="Hidden"/>
+                <Button x:Name ="directory_browse_fivem"  Click="directory_browse_fivem_clk" Grid.Row="0" Margin="0,0,-265, 0" BorderBrush="#FF191B29" BorderThickness="0" Width="70" Height="25" Content="Browse" Background="#FF191B29" Foreground="White" VerticalAlignment="Bottom" Visibility="Hidden"/>
                 <Label x:Name="err_msg_fivem" Grid.Row="1" Content="Directory must include FiveM.exe" HorizontalAlignment="Center" FontSize="10" Height="15" Padding="0,0,0,0" Foreground="Red" Margin="-188,0,0,5" Visibility="Hidden"/>
             </Grid>
         </Grid>

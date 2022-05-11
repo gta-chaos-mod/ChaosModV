@@ -22,5 +22,29 @@ namespace ChaosModInstaller.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GTA_PATH_ENTRY {
+            get {
+                return ((string)(this["GTA_PATH_ENTRY"]));
+            }
+            set {
+                this["GTA_PATH_ENTRY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FIVEM_PATH_ENTRY {
+            get {
+                return ((string)(this["FIVEM_PATH_ENTRY"]));
+            }
+            set {
+                this["FIVEM_PATH_ENTRY"] = value;
+            }
+        }
     }
 }
