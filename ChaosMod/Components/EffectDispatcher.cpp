@@ -581,6 +581,7 @@ std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance) 
 	{
 		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
 		if (std::find(temp.begin(), temp.end(), regeff) != temp.end()) continue;
+		if (regeff->GetIndentifier() == EEffectType::EFFECT_META_EFFECT_REINVOKE) continue;
 		temp.emplace_back(regeff);
 		distance--;
 	}
