@@ -31,7 +31,7 @@ private:
 	template <typename T>
 	inline T GetOptionValue(const OptionsFile& optionsFile, const std::string& szKey, T defaultValue = T())
 	{
-		if constexpr (std::is_same<std::remove_cv<T>::type, std::string>() || std::is_same<std::remove_cv<T>::type, char*>())
+		if constexpr (std::is_same<typename std::remove_cv<T>::type, std::string>() || std::is_same<typename std::remove_cv<T>::type, char*>())
 		{
 			return optionsFile.ReadValueString(szKey, defaultValue);
 		}

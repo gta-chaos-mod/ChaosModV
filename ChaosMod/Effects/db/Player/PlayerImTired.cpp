@@ -83,7 +83,7 @@ static void OnTick()
 			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
 			if (closingIterator > 1)
 			{
-				closingIterator = max(1, closingIterator - 2);
+				closingIterator = std::max(1, closingIterator - 2);
 			}
 		}
 		break;

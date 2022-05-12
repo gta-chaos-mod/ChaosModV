@@ -95,6 +95,7 @@ private:
 
 	std::vector<ActiveEffect> m_rgActiveEffects;
 	std::vector<RegisteredEffect*> m_rgPermanentEffects;
+	std::list<RegisteredEffect*> m_rgDispatchedEffectsLog;
 
 	bool m_bEnableNormalEffectDispatch = true;
 
@@ -139,13 +140,15 @@ public:
 	int _NODISCARD GetRemainingTimerTime() const;
 	int _NODISCARD GetMaxTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool isFake = false);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool isFake = false, bool bAddToLog = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr, bool isFake = false);
 
 	void ClearEffects(bool bIncludePermanent = true);
 	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 	void ClearAllFakeEffects();
+
+	std::vector<RegisteredEffect*> GetRecentEffects(int distance, EEffectType ignore = EFFECT_INVALID) const;
 
 	void Reset();
 	void ResetTimer();
