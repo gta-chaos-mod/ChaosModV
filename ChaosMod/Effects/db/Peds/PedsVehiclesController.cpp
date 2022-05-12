@@ -30,11 +30,11 @@ static RegisterEffect registerEffect2(EFFECT_PEDS_BUSBOIS, OnStartBuses, EffectI
 
 static void OnStartTanks()
 {
-	static const Hash tankHash = GET_HASH_KEY("rhino");
+	static const Hash tankHash = GET_HASH_KEY("RHINO");
 	SetSurroundingPedsInVehicles(tankHash, 120.f);
 }
 
-static RegisterEffect registerEffect3(EFFECT_PEDS_TANK_BOIS, OnStartTanks, nullptr, nullptr, EffectInfo // by Last0xygen
+static RegisterEffect registerEffect3(EFFECT_PEDS_TANK_BOIS, OnStartTanks, nullptr, nullptr, EffectInfo //by Last0xygen
 	{
 		.Name = "Tanks A Lot",
 		.Id = "peds_tank_bois",
@@ -76,10 +76,10 @@ static void OnStartMowers()
 	SetSurroundingPedsInVehicles(mowerHash, -1);
 }
 
-static RegisterEffect registerEffect6(EFFECT_PEDS_MOWERS, OnStartMowers, EffectInfo //by OnlyRealNubs
+static RegisterEffect registerEffect6(EFFECT_PEDS_MOWERMATES, OnStartMowers, EffectInfo //by ubscal, modified
 	{
 		.Name = "Mower Mates",
-		.Id = "peds_mowers",
+		.Id = "peds_mowermates",
 		.EEffectGroupType = EEffectGroupType::TrafficSpawner
 	}
 );

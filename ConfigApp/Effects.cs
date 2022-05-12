@@ -679,7 +679,6 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
             {EffectType.EFFECT_PEDS_TRAINS, new EffectInfo("Freight Friends", EffectCategory.PEDS, "peds_trains")},
             {EffectType.EFFECT_PEDS_DOZERS, new EffectInfo("Dozer Dudes", EffectCategory.PEDS, "peds_dozers")},
-            {EffectType.EFFECT_PEDS_MOWERS, new EffectInfo("Mower Mates", EffectCategory.PEDS, "peds_mowers")},
         };
     }
 }
