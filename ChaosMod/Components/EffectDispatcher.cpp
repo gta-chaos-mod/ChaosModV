@@ -121,7 +121,7 @@ void EffectDispatcher::UpdateEffects()
 
 		int activeEffectsSize = m_rgActiveEffects.size();
 		int maxEffects = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
-		maxEffects = min(maxEffects, m_iMaxRunningEffects);
+		maxEffects = std::min(maxEffects, m_iMaxRunningEffects);
 		int effectCountToCheckCleaning = 3;
 		std::vector<ActiveEffect>::iterator it;
 		for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
@@ -141,7 +141,7 @@ void EffectDispatcher::UpdateEffects()
 			{
 				shouldStopEffect = true;
 			} 
-			else if (!effectData.IsMeta())
+			else if (!effectData.IsMeta() || effectData.TimedType == EEffectTimedType::NotTimed)
 			{
 				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime < 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
 				{
@@ -216,7 +216,7 @@ void EffectDispatcher::UpdateMetaEffects()
 
 			if (targetEffectIdentifier)
 			{
-				DispatchEffect(*targetEffectIdentifier, "(Meta)");
+				DispatchEffect(*targetEffectIdentifier, "(Meta)", false);
 			}
 		}
 		else
@@ -257,8 +257,7 @@ void EffectDispatcher::DrawTimerBar()
 
 void EffectDispatcher::DrawEffectTexts()
 {
-	if (!m_bEnableNormalEffectDispatch
-		|| m_bDisableDrawEffectTexts)
+	if (m_bDisableDrawEffectTexts)
 	{
 		return;
 	}
@@ -330,7 +329,7 @@ int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
 }
 
-void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix)
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bAddToLog)
 {
 	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
@@ -464,9 +463,19 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			}
 
 			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
+
+			// There might be a reason to include meta effects in the future, for now we will just exclude them
+			if (bAddToLog && !effectData.IsMeta())
+			{
+				if (m_rgDispatchedEffectsLog.size() >= 100)
+				{
+					m_rgDispatchedEffectsLog.erase(m_rgDispatchedEffectsLog.begin());
+				}
+
+				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
+			}
 		}
 	}
-
 	m_fPercentage = .0f;
 }
 
@@ -531,6 +540,7 @@ void EffectDispatcher::ClearEffects(bool bIncludePermanent)
 	}
 
 	m_rgActiveEffects.clear();
+	m_rgDispatchedEffectsLog.clear();
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier& exclude)
@@ -565,6 +575,23 @@ void EffectDispatcher::ClearMostRecentEffect()
 			m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
 		}
 	}
+}
+
+std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance, EEffectType ignore) const
+{
+	std::vector<RegisteredEffect*> temp;
+	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
+	{
+		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
+		if ((!regeff->IsScript() && regeff->GetIndentifier().GetEffectType() == ignore)
+			|| std::find(temp.begin(), temp.end(), regeff) != temp.end())
+		{
+			continue;
+		}
+		temp.emplace_back(regeff);
+		distance--;
+	}
+	return temp;
 }
 
 void EffectDispatcher::Reset()
@@ -622,7 +649,7 @@ bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, 
 	float additionalTime = 0;
 	if (effectCount > minAmountAdvancedCleaning)
 	{
-		additionalTime = min((min(effectCount, 10) - 3) * 20, 160);
+		additionalTime = std::min((std::min(effectCount, 10) - 3) * 20, 160);
 	}
 	return timer < -m_usEffectTimedDur + additionalTime;
 }

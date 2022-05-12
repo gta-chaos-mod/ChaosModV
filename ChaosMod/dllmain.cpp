@@ -5,14 +5,9 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		__try
-		{
-			Memory::Init();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		Memory::Init();
 
 		scriptRegister(hInstance, Main::OnRun);
 

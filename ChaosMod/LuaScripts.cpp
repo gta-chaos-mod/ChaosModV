@@ -1,8 +1,9 @@
+#include <errhandlingapi.h>
 #include <stdafx.h>
 
 #include "LuaScripts.h"
 
-#define _LUAFUNC static __forceinline
+#define _LUAFUNC static inline
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -22,52 +23,45 @@ _LUAFUNC void LuaPrint(const std::string& szName, const std::string& szText)
 	COLOR_PREFIX_LOG("[" << szName << "]", szText);
 }
 
+_LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS* pException)
+{
+    return pException->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION
+		? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
+}
+
 _LUAFUNC char* _TryParseString(void* pStr)
 {
-	__try
+	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
+
+	char* pcString = reinterpret_cast<char*>(pStr);
+
+	// Access string to try to trigger a segfault
+	for (char* c = pcString; *c; c++)
 	{
-		char* pcString = reinterpret_cast<char*>(pStr);
 
-		// Access string to try to trigger a segfault
-		for (char* c = pcString; *c; c++)
-		{
-
-		}
-
-		return pcString;
 	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
-	{
-		return nullptr;
-	}
+
+	RemoveVectoredContinueHandler(exHandler);
+
+	return pcString;
 }
 
 _LUAFUNC bool _TryParseVector3(void** pVector, float& fX, float& fY, float& fZ)
 {
-	__try
-	{
-		fX = *reinterpret_cast<float*>(pVector);
-		fY = *reinterpret_cast<float*>(pVector + 1);
-		fZ = *reinterpret_cast<float*>(pVector + 2);
-	}
-	__except (GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
-	{
-		return false;
-	}
+	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
+
+	fX = *reinterpret_cast<float*>(pVector);
+	fY = *reinterpret_cast<float*>(pVector + 1);
+	fZ = *reinterpret_cast<float*>(pVector + 2);
+
+	RemoveVectoredContinueHandler(exHandler);
 
 	return true;
 }
 
 _LUAFUNC bool _CallNative(void*** ppResult)
 {
-	__try
-	{
-		*ppResult = reinterpret_cast<void**>(nativeCall());
-	}
-	__except (EXCEPTION_EXECUTE_HANDLER)
-	{
-		return false;
-	}
+	*ppResult = reinterpret_cast<void**>(nativeCall());
 
 	return true;
 }
@@ -386,14 +380,15 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		if (groupNameOpt)
 		{
 			const auto& groupName = *groupNameOpt;
-			if (g_dictEffectGroups.find(groupName) != g_dictEffectGroups.end())
+			const auto& result = g_dictEffectGroups.find(groupName);
+			if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 			{
 				LOG(szFileName << ": WARNING: Could not register effect group \"" << groupName << "\": Already registered!");
 			}
 			else
 			{
-				// Initialize these (latter only if it doesn't exist yet)
-				g_dictEffectGroups[groupName] = { .WasRegisteredByScript = true };
+				g_dictEffectGroups[groupName].IsPlaceholder = false;
+				g_dictEffectGroups[groupName].WasRegisteredByScript = true;
 				g_dictEffectGroupMemberCount[groupName];
 
 				const sol::optional<int>& groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
