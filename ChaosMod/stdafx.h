@@ -71,12 +71,13 @@
 #include "../vendor/sol3/sol.hpp"
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinUser.h>
-#include <Psapi.h>
-#include <mciapi.h>
-#include <minidumpapiset.h>
-#include <TlHelp32.h>
+#include <windows.h>
+#include <winuser.h>
+#include <psapi.h>
+//#include <mciapi.h>
+#include <dbghelp.h>
+#include <tlhelp32.h>
+#include <mmsystem.h>
 
 #include <fstream>
 #include <array>
