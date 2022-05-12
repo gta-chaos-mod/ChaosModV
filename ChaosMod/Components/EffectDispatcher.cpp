@@ -574,13 +574,13 @@ void EffectDispatcher::ClearMostRecentEffect()
 	}
 }
 
-std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance) const
+std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance, EEffectType ignore) const
 {
 	std::vector<RegisteredEffect*> temp;
 	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
 	{
 		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
-		if (std::find(temp.begin(), temp.end(), regeff) != temp.end() || regeff->GetIndentifier() == EEffectType::EFFECT_META_EFFECT_REINVOKE) continue;
+		if (std::find(temp.begin(), temp.end(), regeff) != temp.end() || regeff->GetIndentifier() == ignore) continue;
 		temp.emplace_back(regeff);
 		distance--;
 	}
