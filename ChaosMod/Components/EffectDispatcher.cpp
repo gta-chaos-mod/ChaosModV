@@ -216,7 +216,7 @@ void EffectDispatcher::UpdateMetaEffects()
 
 			if (targetEffectIdentifier)
 			{
-				DispatchEffect(*targetEffectIdentifier, "(Meta)");
+				DispatchEffect(*targetEffectIdentifier, "(Meta)", false);
 			}
 		}
 		else
@@ -329,7 +329,7 @@ int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
 }
 
-void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bLog)
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bAddToLog)
 {
 	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
@@ -463,12 +463,15 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			}
 
 			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName, effectTime);
-			if (bLog)
+
+			// There might be a reason to include meta effects in the future, for now we will just exclude them
+			if (bAddToLog && !effectData.IsMeta())
 			{
 				if (m_rgDispatchedEffectsLog.size() >= 100)
 				{
 					m_rgDispatchedEffectsLog.erase(m_rgDispatchedEffectsLog.begin());
 				}
+
 				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
 			}
 		}
