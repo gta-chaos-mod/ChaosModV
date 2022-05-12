@@ -129,7 +129,7 @@ public:
 	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 
-	std::vector<RegisteredEffect*> GetRecentEffects(int distance, EEffectType ignore == EFFECT_INVALID) const;
+	std::vector<RegisteredEffect*> GetRecentEffects(int distance, EEffectType ignore = EFFECT_INVALID) const;
 
 	void Reset();
 	void ResetTimer();
