@@ -43,6 +43,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
 
+	auto str = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD ulAttributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -50,10 +51,11 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		ulAttributes = CREATE_NO_WINDOW;
 	}
 
-	bool bResult = CreateProcess(NULL, const_cast<LPWSTR>(VOTING_PROXY_START_ARGS), NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
 #else
-	bool bResult = CreateProcess(NULL, const_cast<LPWSTR>(VOTING_PROXY_START_ARGS), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
+	free(str);
 
 	if (!bResult)
 	{
