@@ -122,7 +122,7 @@ public:
 
 	int _NODISCARD GetRemainingTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bLog = true);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bAddToLog = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr);
 
 	void ClearEffects(bool bIncludePermanent = true);

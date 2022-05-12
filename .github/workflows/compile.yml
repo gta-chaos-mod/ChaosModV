@@ -52,7 +52,7 @@ jobs:
         C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
         7z.exe x data.zip
         rm data.zip
-        cp ../ChaosMod/build/ChaosModV.asi
+        cp ../ChaosMod/build/ChaosMod.asi
         cp ../ConfigApp/bin/Release/ChaosModVConfig.exe chaosmod/
         cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.exe chaosmod/
         cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
