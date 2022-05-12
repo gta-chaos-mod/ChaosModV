@@ -580,7 +580,11 @@ std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance, 
 	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
 	{
 		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
-		if (std::find(temp.begin(), temp.end(), regeff) != temp.end() || regeff->GetIndentifier() == ignore) continue;
+		if ((!regeff->IsScript() && regeff->GetIndentifier().GetEffectType() == ignore)
+			|| std::find(temp.begin(), temp.end(), regeff) != temp.end())
+		{
+			continue;
+		}
 		temp.emplace_back(regeff);
 		distance--;
 	}
