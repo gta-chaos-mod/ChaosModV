@@ -141,7 +141,7 @@ void EffectDispatcher::UpdateEffects()
 			{
 				shouldStopEffect = true;
 			} 
-			else if (!effectData.IsMeta())
+			else if (!effectData.IsMeta() || effectData.TimedType == EEffectTimedType::NotTimed)
 			{
 				if (activeEffectsSize > maxEffects || (effect.m_fMaxTime < 0 && ShouldRemoveEffectForTimeOut(effect.m_fTimer, activeEffectsSize, effectCountToCheckCleaning)))
 				{
