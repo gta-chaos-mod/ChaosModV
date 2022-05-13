@@ -16,6 +16,7 @@ static const char* ms_rgTextPairs[] =
 	"Did I get ya that time?",
 	"oof",
 	"Very convincing",
+	"got 'em",
 	"~r~detsaw",
 	"Why would u do that?!"
 };
