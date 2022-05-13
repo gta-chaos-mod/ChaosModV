@@ -53,8 +53,8 @@ static void Reset()
 
 static void Init()
 {
-	static std::streambuf* c_pOldStreamBuf;
 	LOG("ChaosMod Version: 1.10.4");
+	static std::streambuf* c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
 		if (GetConsoleWindow())
