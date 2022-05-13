@@ -153,7 +153,7 @@ static void OnStart()
 			}
 
 			// Set the fake name accordingly
-			g_pEffectDispatcher->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
+			GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
 
 			nextModeTime = 0;
 			break;

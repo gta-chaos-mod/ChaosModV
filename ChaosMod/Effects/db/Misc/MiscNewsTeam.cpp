@@ -98,7 +98,7 @@ static void OnStart()
 		aroundCoords = GetCoordsAround(pos, 70);
 		isValidCoord = GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
 	} while (!isValidCoord);
-	groundZ = max(groundZ, aroundCoords.z);
+	groundZ = std::max(groundZ, aroundCoords.z);
 	heli = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);
 	SET_VEHICLE_ENGINE_ON(heli, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(heli, 0); // Needed, so the heli doesn't fall down instantly
