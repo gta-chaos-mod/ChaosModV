@@ -12,7 +12,12 @@ static const char* ms_rgTextPairs[] =
 	"~g~(No you're fine)",
 	"Did this scare you?",
 	"~r~FISSION MAILED",
-	"ded"
+	"ded",
+	"Did I get ya that time?",
+	"oof",
+	"Very convincing",
+	"~r~detsaw",
+	"Why would u do that?!"
 };
 
 enum FakeDeathState
@@ -30,12 +35,32 @@ static int lastModeTime = 0;
 static int nextModeTime = 0;
 static const char* deathAnimationName = "";
 
-static void OnStart()
+static std::string GetPlayerName()
 {
+	Ped ped = PLAYER_PED_ID();
+	switch (GET_ENTITY_MODEL(ped))
+	{
+	case 225514697: // Michael 
+		return "Michael";
+	case 2602752943: // Franklin
+		return "Franklin";
+	case 2608926626: // Trevor
+		return "Trevor";
+	default: // default
+		return "You";
+	}
+}
+
+static void OnStart()
+{	
+	AUDIO::REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", 0, -1);
+	static int soundId = GET_SOUND_ID();
 	scaleForm = 0;
 	currentMode = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
+
+
 
 	while (currentMode < FakeDeathState::cleanup)
 	{
@@ -117,7 +142,7 @@ static void OnStart()
 						{
 							beepTimer *= .8f;
 
-							PLAY_SOUND_FROM_ENTITY(-1, "Beep_Red", veh, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, false);
+							PLAY_SOUND_FROM_ENTITY(soundId, "Beep_Red", veh, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, false);
 						}
 
 						if (!IS_PED_IN_VEHICLE(PLAYER_PED_ID(), veh, false))
@@ -158,6 +183,7 @@ static void OnStart()
 			nextModeTime = 0;
 			break;
 		case FakeDeathState::soundStart: // Apply Screen Effect
+		{
 			lastModeTime = GetTickCount64();
 			nextModeTime = 2000;
 			switch (GET_ENTITY_MODEL(playerPed))
@@ -177,12 +203,12 @@ static void OnStart()
 			}
 			START_AUDIO_SCENE("DEATH_SCENE");
 			ANIMPOSTFX_PLAY(deathAnimationName, 0, false);
-			PLAY_SOUND_FRONTEND(-1, "ScreenFlash", "WastedSounds", true);
-
-			PLAY_SOUND_FRONTEND(-1, "Bed", "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "ScreenFlash", "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "Bed", "WastedSounds", true);
 			SET_TIME_SCALE(0.1f);
 			SHAKE_GAMEPLAY_CAM("DEATH_FAIL_IN_EFFECT_SHAKE", 1);
 			break;
+		}
 		case FakeDeathState::overlay: // 2 Seconds later, Show Fake Wasted Screen Message
 		{
 			scaleForm = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
@@ -196,13 +222,21 @@ static void OnStart()
 			ANIMPOSTFX_STOP(deathAnimationName);
 			ANIMPOSTFX_PLAY("DeathFailOut", 0, false);
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
-
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
 			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
+
+			if (GET_MISSION_FLAG())
+			{
+				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~mission failed");
+				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(std::string(GetPlayerName()+" Died. " + ms_rgTextPairs[iChosenIndex]).c_str());
+			}
+			else
+			{
+				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
+				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
+			}
 
 			END_SCALEFORM_MOVIE_METHOD();
-			PLAY_SOUND_FRONTEND(-1, "TextHit", "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "TextHit", "WastedSounds", true);
 			break;
 		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
