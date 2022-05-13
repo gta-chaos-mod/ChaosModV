@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+	Effect by OnlyRealNubs, Gorakh
 */
 
 #include <stdafx.h>
