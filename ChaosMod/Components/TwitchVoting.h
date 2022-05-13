@@ -72,11 +72,13 @@ private:
 
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
 
-public:
+protected:
 	TwitchVoting(const std::array<BYTE, 3>& rgTextColor);
-	~TwitchVoting();
+	virtual ~TwitchVoting() override;
 
-	virtual void Run() override;
+public:
+	virtual void OnModPauseCleanup() override;
+	virtual void OnRun() override;
 
 	_NODISCARD bool IsEnabled() const;
 
@@ -85,4 +87,7 @@ public:
 	void SendToPipe(std::string&& szMsg);
 
 	void ErrorOutWithMsg(const std::string&& szMsg);
+
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };
