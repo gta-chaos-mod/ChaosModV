@@ -4,46 +4,28 @@
 
 #include <stdafx.h>
 
-Ped policePed;
-Vehicle veh;
+static const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
 
 static void OnStart()
 {
-	Hash policeCar = 0x79FBB0C5;
-	Ped playerPed = PLAYER_PED_ID();
+	static const Ped plr = PLAYER_PED_ID();
+	Vector3 pos = GET_ENTITY_COORDS(plr, false);
 
-	Vector3 policeStation = {495, -1020, 27};
+	Vehicle car = CreatePoolVehicle(GET_HASH_KEY("POLICE2"), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(plr));
+	Ped cop = CreatePoolPedInsideVehicle(car, 4, GET_HASH_KEY("S_M_Y_Cop_01"), -1);
 
-	//Possible peds, (male or female)
-	std::vector<Hash> policePeds = { 0x15F8700D,  0x5E3DA4A4 };
+	SET_PED_INTO_VEHICLE(plr, car, 1);
+	SET_VEHICLE_SIREN(car, 1);
 
-	float heading = GET_ENTITY_HEADING(playerPed);
-	Vector3 pos = GET_ENTITY_COORDS(playerPed, false);
+	TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(cop, car, destination.x, destination.y, destination.z, 9999, 537395716, 10.f);
+	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cop, true);
 
-	//Get a random police ped
-	Hash randomPed = policePeds[g_Random.GetRandomInt(0, 1)];
-
-	//Create the police car
-	veh = CREATE_VEHICLE(policeCar, pos.x, pos.y, pos.z, heading, true, true, true);
-	//Create the police ped
-	policePed = CREATE_PED_INSIDE_VEHICLE(veh, 4, randomPed, -1, true, true);
-	//Put the player in the police car
-	SET_PED_INTO_VEHICLE(playerPed, veh, 1);
-	//Turn on the police siren
-	SET_VEHICLE_SIREN(veh, 1);
-
-	//Have the police car drive to the police station
-	TASK_VEHICLE_DRIVE_TO_COORD(policePed, veh, policeStation.x, policeStation.y, policeStation.z, 40, 1, policeCar, 6, 1, true);
-	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(policePed, true);
-	SET_PED_KEEP_TASK(policePed, 1);
+	SET_ENTITY_AS_NO_LONGER_NEEDED(&cop);
+	SET_ENTITY_AS_NO_LONGER_NEEDED(&car);
 }
 
-
-
-// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
-static RegisterEffect registerEffect(EFFECT_MISC_GO_TO_JAIL, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(EFFECT_MISC_GO_TO_JAIL, OnStart, EffectInfo
 	{
-		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Go Straight To Jail",
 		.Id = "misc_go_to_jail"
 	}
