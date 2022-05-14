@@ -1,11 +1,12 @@
 #pragma once
 
+#include "../../vendor/minhook/include/MinHook.h"
+
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
 
 class Handle;
-enum MH_STATUS : int;
 
 using DWORD64 = unsigned long long;
 

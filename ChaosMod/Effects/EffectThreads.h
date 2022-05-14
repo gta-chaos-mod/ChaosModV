@@ -116,7 +116,7 @@ public:
 		return pThisThread->m_pThread == pThread;
 	}
 
-	inline void Run() const
+	inline void OnRun() const
 	{
 		SwitchToFiber(m_pThread);
 	}
@@ -127,16 +127,16 @@ public:
 		{
 			m_bIsRunning = false;
 
-			Run();
+			OnRun();
 		}
 	}
 
-	inline _NODISCARD bool HasStopped() const
+	_NODISCARD inline bool HasStopped() const
 	{
 		return m_bHasStopped;
 	}
 
-	inline _NODISCARD bool HasOnStartExecuted() const
+	_NODISCARD inline bool HasOnStartExecuted() const
 	{
 		return m_bHasOnStartExecuted;
 	}

@@ -4,7 +4,7 @@ static void OnStart()
 {
 	ClearEntityPool();
 
-	g_pEffectDispatcher->ClearActiveEffects(EFFECT_META_NO_CHAOS);
+	GetComponent<EffectDispatcher>()->ClearActiveEffects(EFFECT_META_NO_CHAOS);
 }
 
 static void OnStop()

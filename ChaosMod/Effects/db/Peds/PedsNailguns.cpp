@@ -39,7 +39,7 @@ static void OnTick() {
 
 
 				if (isHoldingGun) {
-					Entity currWeapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+					Entity currWeapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped, 0);
 					heldWeapons[ped] = currWeapon;
 
 					SET_ENTITY_VISIBLE(currWeapon, false, 0);
