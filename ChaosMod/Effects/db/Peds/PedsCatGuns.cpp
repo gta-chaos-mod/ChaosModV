@@ -28,7 +28,7 @@ static void OnTick()
 				spawnRot = GET_ENTITY_ROTATION(ped, 2);
 			}
 
-			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
+			bool isShotgun = Memory::IsPedWeaponShotgun(ped);
 			int catCount = isShotgun ? 3 : 1;
 			for (int i = 0; i < catCount; i++)
 			{

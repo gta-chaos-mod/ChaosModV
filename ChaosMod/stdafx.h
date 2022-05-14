@@ -37,6 +37,7 @@
 #include "Memory/Physics.h"
 #include "Memory/Entity.h"
 #include "Memory/Script.h"
+#include "Memory/Weapon.h"
 
 #include "Memory/Hooks/Hook.h"
 
@@ -60,7 +61,6 @@
 #include "Util/Macros.h"
 #include "Util/Natives.h"
 #include "Util/Random.h"
-#include "Util/Weapon.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"

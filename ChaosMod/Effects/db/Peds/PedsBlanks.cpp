@@ -4,59 +4,74 @@
 
 #include "stdafx.h"
 
-static const float f_targetRange = 0.1f;
-static std::vector<float> ranges;
-static std::vector<Hash> weps;
+static const float fRange = 0.1f;
 
-static Hash lastWep = 0;
-
-static Hash GetPlayerWep()
+struct BlanksPed
 {
-	Ped plr = PLAYER_PED_ID();
+	Ped ped;
+	std::vector<Hash> weps;
+	std::vector<float> wepsb;
+	Hash lastWep;
+};
+
+std::vector<BlanksPed> peds;
+
+bool PedMapped(Ped& ped)
+{
+	auto iter = std::find_if(peds.begin(), peds.end(),
+		[&](const BlanksPed& ts) {return ts.ped == ped;});
+	return iter != peds.end();
+}
+
+static Hash GetPedWepHash(Ped ped)
+{
 	Hash h;
-	GET_CURRENT_PED_WEAPON(plr, &h, true);
+	GET_CURRENT_PED_WEAPON(ped, &h, true);
 	return h;
 }
 
 static void OnStop()
 {
-	Ped plr = PLAYER_PED_ID();
-	for (int i = 0; i < weps.size(); i++)
+	for (BlanksPed& ped : peds)
 	{
-		Hash h = weps.at(i);
-		float r = ranges.at(i);
-		SET_CURRENT_PED_WEAPON(plr, h, true);
-		Util::SetPlayerWeaponRange(r);
+		for (int i = 0; i < ped.weps.size(); i++)
+		{
+			SET_CURRENT_PED_WEAPON(ped.ped, ped.weps[i], true);
+			Memory::SetPedWeaponRange(ped.ped, ped.wepsb[i]);
+		}
+		SET_CURRENT_PED_WEAPON(ped.ped, ped.lastWep, true);
 	}
-	if (IS_WEAPON_VALID(lastWep))
-	{
-		SET_CURRENT_PED_WEAPON(plr, lastWep, true);
-	}
-}
-
-static void OnStart()
-{
-	weps.clear();
-	ranges.clear();
+	peds.clear();
 }
 
 static void OnTick()
 {
-	Ped plr = PLAYER_PED_ID();
-	Hash nowWep = GetPlayerWep();
-	if (nowWep != lastWep)
+	for (Ped ped : GetAllPeds())
 	{
-		if (!std::count(weps.begin(), weps.end(), nowWep) && Util::IsWeaponRangable(nowWep))
+		if (!PedMapped(ped))
 		{
-			weps.push_back(nowWep);
-			ranges.push_back(Util::GetPlayerWeaponRange());
-			Util::SetPlayerWeaponRange(f_targetRange);
+			Hash wepHash = GetPedWepHash(ped);
+			if (!IS_PED_ARMED(ped, 7) || !Memory::IsWeaponRangable(wepHash)) continue;
+			peds.push_back(BlanksPed(ped, {wepHash}, {Memory::GetPedWeaponRange(ped)}, wepHash));
+			Memory::SetPedWeaponRange(ped, fRange);
+			continue;
 		}
-		lastWep = nowWep;
+	}
+
+	for (BlanksPed& bped : peds)
+	{
+		Hash wepHash = GetPedWepHash(bped.ped);
+		if (wepHash != bped.lastWep && Memory::IsWeaponRangable(wepHash))
+		{
+			bped.weps.push_back(wepHash);
+			bped.wepsb.push_back(Memory::GetPedWeaponRange(bped.ped));
+			bped.lastWep = wepHash;
+			Memory::SetPedWeaponRange(bped.ped, fRange);
+		}
 	}
 }
 
-static RegisterEffect reg(EFFECT_PEDS_BLANKS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(EFFECT_PEDS_BLANKS, nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Blanks",
 		.Id = "peds_blanks",

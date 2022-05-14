@@ -391,6 +391,7 @@
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />
+    <ClInclude Include="Memory\Weapon.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Natives.h" />
@@ -417,7 +418,6 @@
     <ClInclude Include="Util\Player.h" />
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
-    <ClInclude Include="Util\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />
