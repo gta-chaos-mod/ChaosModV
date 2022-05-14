@@ -124,7 +124,7 @@ public:
 
 	_NODISCARD int GetRemainingTimerTime() const;
 
-	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bAddToLog = true);
+	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bAddToLog = true, bool bPlayMp3 = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr);
 
 	void ClearEffects(bool bIncludePermanent = true);

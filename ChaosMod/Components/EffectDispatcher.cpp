@@ -329,7 +329,7 @@ int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
 	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
 }
 
-void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bAddToLog)
+void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix, bool bAddToLog, bool bPlayMp3)
 {
 	EffectData& effectData = g_dictEnabledEffects.at(effectIdentifier);
 	if (effectData.TimedType == EEffectTimedType::Permanent)
@@ -430,7 +430,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 
 			ossEffectName << std::endl;
 
-			if (!MetaModifiers::m_bHideChaosUI)
+			if (!MetaModifiers::m_bHideChaosUI && bPlayMp3)
 			{
 				// Play global sound (if one exists)
 				// Workaround: Force no global sound for "Fake Crash" and "Fake Death"
