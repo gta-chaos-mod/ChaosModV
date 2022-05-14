@@ -98,12 +98,12 @@ public:
 		}
 	}
 
-	inline _NODISCARD bool IsRunning() const
+	_NODISCARD inline bool IsRunning() const
 	{
 		return m_bIsRunning;
 	}
 
-	inline _NODISCARD bool IsScript() const
+	_NODISCARD inline bool IsScript() const
 	{
 		return m_EffectIdentifier.IsScript();
 	}
@@ -111,7 +111,7 @@ public:
 
 inline std::vector<RegisteredEffect> g_RegisteredEffects;
 
-inline _NODISCARD RegisteredEffect* GetRegisteredEffect(const EffectIdentifier& effectIdentifier)
+_NODISCARD inline RegisteredEffect* GetRegisteredEffect(const EffectIdentifier& effectIdentifier)
 {
 	const auto& result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectIdentifier);
 

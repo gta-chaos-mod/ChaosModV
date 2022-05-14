@@ -4,6 +4,7 @@
 #include "EEffectExecutionType.h"
 
 #include <unordered_map>
+#include <vector>
 
 enum EEffectType : int
 {

@@ -2,6 +2,7 @@
 
 #include "Component.h"
 
+#include "../Effects/Effect.h"
 #include "../Effects/EffectThreads.h"
 #include "../Effects/EffectData.h"
 #include "../Effects/EffectIdentifier.h"
@@ -10,6 +11,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <list>
 
 #define _NODISCARD [[nodiscard]]
 
@@ -118,9 +120,9 @@ public:
 	void DrawTimerBar();
 	void DrawEffectTexts();
 
-	bool _NODISCARD ShouldDispatchEffectNow() const;
+	_NODISCARD bool ShouldDispatchEffectNow() const;
 
-	int _NODISCARD GetRemainingTimerTime() const;
+	_NODISCARD int GetRemainingTimerTime() const;
 
 	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bAddToLog = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr);
