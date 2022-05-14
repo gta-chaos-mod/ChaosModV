@@ -356,6 +356,7 @@ namespace ConfigApp
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
             EFFECT_META_EFFECT_REINVOKE,
+            EFFECT_PLAYER_SNEEZE,
             _EFFECT_ENUM_MAX
         }
 
@@ -676,6 +677,7 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
             {EffectType.EFFECT_META_EFFECT_REINVOKE, new EffectInfo("Re-Invoke Previous Effects", EffectCategory.META, "meta_re_invoke")},
+            {EffectType.EFFECT_PLAYER_SNEEZE, new EffectInfo("Bless You", EffectCategory.PLAYER, "player_sneeze", true, true)},
         };
     }
 }
