@@ -24,11 +24,11 @@ namespace Memory
 
 			pfGravAddr = handle.At(3).Into().Get<float>();
 
-			pSomeFunc1 = handle.At(8).Into().Get<void(__cdecl)(float)>();
+			pSomeFunc1 = handle.At(8).Into().Get<void(float)>();
 
-			pSomeFunc2 = handle.At(13).Into().Get<void(__cdecl)()>();
+			pSomeFunc2 = handle.At(13).Into().Get<void()>();
 
-			pSomeFunc3 = handle.At(18).Into().Get<void(__cdecl)()>();
+			pSomeFunc3 = handle.At(18).Into().Get<void()>();
 		}
 
 		*pfGravAddr = fGravity;

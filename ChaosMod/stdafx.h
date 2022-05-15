@@ -3,15 +3,13 @@
 #include "Main.h"
 #include "Mp3Manager.h"
 #include "LuaScripts.h"
-#include "EffectThreads.h"
-#include "EffectConfig.h"
 
 #include "Components/Component.h"
 #include "Components/DebugMenu.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/TwitchVoting.h"
-#include "Components/ShortCut.h"
+#include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 
 #include "Effects/EffectIdentifier.h"
@@ -19,9 +17,12 @@
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/Effect.h"
-#include "Effects/MetaEffectInfo.h"
+#include "Effects/MetaModifiers.h"
 #include "Effects/EffectGroups.h"
 #include "Effects/EEffectExecutionType.h"
+#include "Effects/EEffectAttributes.h"
+#include "Effects/EffectThreads.h"
+#include "Effects/EffectConfig.h"
 
 #include "Lib/scrThread.h"
 
@@ -70,12 +71,13 @@
 #include "../vendor/sol3/sol.hpp"
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinUser.h>
-#include <Psapi.h>
-#include <mciapi.h>
-#include <minidumpapiset.h>
-#include <TlHelp32.h>
+#include <windows.h>
+#include <winuser.h>
+#include <psapi.h>
+//#include <mciapi.h>
+#include <dbghelp.h>
+#include <tlhelp32.h>
+#include <mmsystem.h>
 
 #include <fstream>
 #include <array>
