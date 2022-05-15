@@ -14,42 +14,33 @@ static void OnTickFpsLimit()
 	}
 }
 
-Cam camera; // for E&E effect
+Cam eCamera;
 
-static void OnTickEnE() // just copied the on tick created by Last0xygen and added some code for the motion blur cam
+static void OnTickENE()
 {
-	#pragma region Lag Stuff
-	static const int lagTimeDelay = 1000 / 60; //cap at 60
-	int lastUpdateTick = GetTickCount64();
-	while (lastUpdateTick > GetTickCount64() - lagTimeDelay)
-	{
-		// Create Lag
-	}
-	#pragma endregion
-
 	#pragma region Cam Stuff
 	Vector3 pos = GET_GAMEPLAY_CAM_COORD();
 	Vector3 rot = GET_GAMEPLAY_CAM_ROT(2);
-	SET_CAM_PARAMS(camera, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, GET_GAMEPLAY_CAM_FOV(), 0, 1, 1, 2);
+	SET_CAM_PARAMS(eCamera, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, GET_GAMEPLAY_CAM_FOV(), 0, 1, 1, 2);
 	#pragma endregion
 
 }
 
-static void OnStartEnE() //By OnlyRealNubs
+static void OnStartENE()
 {
 	Vector3 pos = GET_GAMEPLAY_CAM_COORD();
 	Vector3 rot = GET_GAMEPLAY_CAM_ROT(2);
-	camera = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, GET_GAMEPLAY_CAM_FOV(), 1, 2);
-	SET_CAM_MOTION_BLUR_STRENGTH(camera, 1.5);
+	eCamera = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, GET_GAMEPLAY_CAM_FOV(), 1, 2);
+	SET_CAM_MOTION_BLUR_STRENGTH(eCamera, 1.5);
 	CAM::RENDER_SCRIPT_CAMS(1, 1, 700, 1, 1, 1);
 }
 
-static void OnStopEnE() //By OnlyRealNubs
+static void OnStopENE()
 {
-	CAM::SET_CAM_ACTIVE(camera, 0);
+	CAM::SET_CAM_ACTIVE(eCamera, 0);
 	CAM::RENDER_SCRIPT_CAMS(0, 1, 700, 1, 1, 1);
-	CAM::DESTROY_CAM(camera, 1);
-	camera = 0;
+	CAM::DESTROY_CAM(eCamera, 1);
+	eCamera = 0;
 }
 
 static RegisterEffect registerEffect(EFFECT_MISC_FPS_LIMIT, nullptr, nullptr, OnTickFpsLimit, EffectInfo
@@ -62,7 +53,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_FPS_LIMIT, nullptr, nullptr, On
 	}
 );
 
-static RegisterEffect registerEffect(EFFECT_MISC_EnE, OnStartEnE, OnStopEnE, OnTickEnE, EffectInfo //By OnlyRealNubs
+static RegisterEffect registerEffect(EFFECT_MISC_ENE, OnStartENE, OnStopENE, OnTickENE, EffectInfo //OnlyRealNubs
 	{
 		.Name = "\"Expanded & Enhanced\"",
 		.Id = "misc_e_and_e",
