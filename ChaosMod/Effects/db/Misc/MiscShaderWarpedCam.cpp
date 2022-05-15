@@ -33,6 +33,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_WARPEDCAM, OnStart, OnStop, Eff
 		.Name = "Warped Camera",
 		.Id = "misc_warpedcam",
 		.IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Shader
 	}
 );

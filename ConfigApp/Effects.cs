@@ -680,8 +680,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
             {EffectType.EFFECT_META_EFFECT_REINVOKE, new EffectInfo("Re-Invoke Previous Effects", EffectCategory.META, "meta_re_invoke")},
             {EffectType.EFFECT_MISC_TNPANEL, new EffectInfo("TN Panel", EffectCategory.MISC, "misc_tnpanel", true)},
-            {EffectType.EFFECT_MISC_FCK_AUTOROTATE, new EffectInfo("Goddamn Auto-Rotate", EffectCategory.MISC, "misc_fckautorotate", true)},
-            {EffectType.EFFECT_MISC_WARPEDCAM, new EffectInfo("Warped Camera", EffectCategory.MISC, "misc_warpedcam", true)},
+            {EffectType.EFFECT_MISC_FCK_AUTOROTATE, new EffectInfo("Goddamn Auto-Rotate", EffectCategory.MISC, "misc_fckautorotate", true, true)},
+            {EffectType.EFFECT_MISC_WARPEDCAM, new EffectInfo("Warped Camera", EffectCategory.MISC, "misc_warpedcam", true, true)},
         };
     }
 }

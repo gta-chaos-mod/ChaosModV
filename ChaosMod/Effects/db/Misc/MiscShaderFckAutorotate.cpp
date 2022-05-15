@@ -34,6 +34,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_FCK_AUTOROTATE, OnStart, OnStop
 		.Name = "Goddamn Auto-Rotate",
 		.Id = "misc_fckautorotate",
 		.IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Shader
 	}
 );
