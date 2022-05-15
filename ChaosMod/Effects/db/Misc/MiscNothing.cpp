@@ -28,7 +28,7 @@ static void OnStart()
 	
 	std::string effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
 	WAIT(0);
-	g_pEffectDispatcher->OverrideEffectName(EFFECT_NOTHING, effectOverride);
+	GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_NOTHING, effectOverride);
 	WAIT(25000);
 	
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 enum class EEffectGroupType
 {
@@ -18,25 +19,41 @@ enum class EEffectGroupType
 	WeatherChange,      // Effects which change the weather
 };
 
-struct EffectGroup
+struct EffectGroupData
 {
-	int WeightMult = 1;
+	unsigned short WeightMult = 1;
+	bool IsPlaceholder = false;
+	bool WasRegisteredByScript = false;
 };
 
-inline const std::unordered_map<EEffectGroupType, EffectGroup> g_EffectGroups
+inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups
 {
-	{EEffectGroupType::Teleport, {.WeightMult = 2 }},
-	{EEffectGroupType::SpawnGeneric, { .WeightMult = 5 }},
-	{EEffectGroupType::SpawnEnemySpecial, {.WeightMult = 5 }},
-	{EEffectGroupType::SpawnEnemy, { .WeightMult = 4 }},
-	{EEffectGroupType::SpawnCompanion, {.WeightMult = 5 }},
-	{EEffectGroupType::Weapons, { .WeightMult = 4 }},
-	{EEffectGroupType::PlayerKill, { .WeightMult = 2 }},
-	{EEffectGroupType::TrafficSpawner, {.WeightMult = 3 }},
-	{EEffectGroupType::TrafficColor, { .WeightMult = 3 }},
-	{EEffectGroupType::TimeChange, {.WeightMult = 2 }},
-	{EEffectGroupType::WeatherChange, {.WeightMult = 2 }},
+	{"_group_teleport", { .WeightMult = 2 }},
+	{"_group_spawngeneric", { .WeightMult = 5 }},
+	{"_group_spawnenemyspecial", { .WeightMult = 5 }},
+	{"_group_spawnenemy", { .WeightMult = 4 }},
+	{"_group_spawncompanion", { .WeightMult = 5 }},
+	{"_group_weapons", { .WeightMult = 4 }},
+	{"_group_playerkill", { .WeightMult = 2 }},
+	{"_group_trafficspawner", { .WeightMult = 3 }},
+	{"_group_trafficcolor", { .WeightMult = 3 }},
+	{"_group_timechange", { .WeightMult = 2 }},
+	{"_group_weatherchange", { .WeightMult = 2 }},
 };
 
-inline std::unordered_map<EEffectGroupType, int> g_dictAllEffectGroupMemberCount;
-inline std::unordered_map<EEffectGroupType, int> g_dictCurrentEffectGroupMemberCount;
+inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeToGroup
+{
+	{EEffectGroupType::Teleport, "_group_teleport"},
+	{EEffectGroupType::SpawnGeneric, "_group_spawngeneric"},
+	{EEffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial"},
+	{EEffectGroupType::SpawnEnemy, "_group_spawnenemy"},
+	{EEffectGroupType::SpawnCompanion, "_group_spawncompanion"},
+	{EEffectGroupType::Weapons, "_group_weapons"},
+	{EEffectGroupType::PlayerKill, "_group_playerkill"},
+	{EEffectGroupType::TrafficSpawner, "_group_trafficspawner"},
+	{EEffectGroupType::TrafficColor, "_group_trafficcolor"},
+	{EEffectGroupType::TimeChange, "_group_timechange"},
+	{EEffectGroupType::WeatherChange, "_group_weatherchange"},
+};
+
+inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;
