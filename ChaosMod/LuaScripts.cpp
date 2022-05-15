@@ -1,9 +1,14 @@
-#include <errhandlingapi.h>
 #include <stdafx.h>
 
 #include "LuaScripts.h"
 
-#define _LUAFUNC static inline
+#if defined(_MSC_VER)
+	#define _LUAFUNC static __forceinline
+#elif defined(__clang__) || defined(__GNUC__)
+	#define _LUAFUNC __attribute__((always_inline)) static inline
+#else
+	#define _LUAFUNC static inline
+#endif
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -362,6 +367,9 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 	lua["GetAllPedModels"] = Memory::GetAllPedModels;
 	lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
 
+	lua["OverrideScreenShader"] = Hooks::OverrideScreenShader;
+	lua["ResetScreenShader"] = Hooks::ResetScreenShader;
+
 	const auto& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
@@ -514,6 +522,17 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 			{
 				effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
 			}
+		}
+	}
+
+	const sol::optional<std::string>& effectCategoryOpt = scriptInfo["EffectCategory"];
+	if (effectCategoryOpt)
+	{
+		const auto& effectCategoryStr = *effectCategoryOpt;
+		auto effectCategoryIt = g_dictNameToEffectCategory.find(effectCategoryStr);
+		if (effectCategoryIt != g_dictNameToEffectCategory.end())
+		{
+			effectData.EffectCategory = effectCategoryIt->second;
 		}
 	}
 
