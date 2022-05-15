@@ -26,7 +26,7 @@ static void OnStart()
 
 static RegisterEffect registerEffect(EFFECT_MISC_GO_TO_JAIL, OnStart, EffectInfo
 	{
-		.Name = "Go Straight To Jail",
+		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail"
 	}
 );
