@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#define SHADER_CACHE_MAX_ENTRIES 20
+
 using DWORD64 = unsigned long long;
 
 static std::vector<BYTE> ms_rgShaderBytecode;
@@ -58,6 +60,11 @@ namespace Hooks
                     std::vector<BYTE> rgShaderBytecode;
                     rgShaderBytecode.reserve(pShader->GetBufferSize());
                     std::copy(ptr, ptr + pShader->GetBufferSize(), std::back_inserter(rgShaderBytecode));
+
+                    if (dictShaderCache.size() > SHADER_CACHE_MAX_ENTRIES)
+                    {
+                        dictShaderCache.erase(dictShaderCache.begin());
+                    }
 
                     dictShaderCache[hash] = rgShaderBytecode;
                     result = dictShaderCache.find(hash);
