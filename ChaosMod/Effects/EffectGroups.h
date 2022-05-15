@@ -56,7 +56,7 @@ inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeT
 	{EEffectGroupType::TrafficColor, "_group_trafficcolor"},
 	{EEffectGroupType::TimeChange, "_group_timechange"},
 	{EEffectGroupType::WeatherChange, "_group_weatherchange"},
-	{EEffectGroupType::Shader, "_group_shaders"},
+	{EEffectGroupType::Shader, "_group_shader"},
 };
 
 inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;

@@ -35,6 +35,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_DIMWARP, OnStart, OnStop, Effec
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );
