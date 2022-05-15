@@ -35,6 +35,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_FCK_AUTOROTATE, OnStart, OnStop
 		.Id = "misc_fckautorotate",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Shader
+		.EffectCategory = EEffectCategory::Shader,
+        .EffectGroupType = EEffectGroupType::Shader
 	}
 );

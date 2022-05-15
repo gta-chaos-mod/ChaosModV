@@ -35,6 +35,7 @@ static RegisterEffect registerEffect(EFFECT_MISC_TNPANEL, OnStart, OnStop, Effec
 		.Name = "TN Panel",
 		.Id = "misc_tnpanel",
 		.IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader
+        .EffectCategory = EEffectCategory::Shader,
+        .EffectGroupType = EEffectGroupType::Shader
 	}
 );

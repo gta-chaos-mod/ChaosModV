@@ -11,7 +11,7 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
-	texcoord.x = saturate(sin(texcoord.x * 1.1 * sin(texcoord.y * 1.1)));
+	texcoord.x = saturate(texcoord.x % texcoord.y);
     float4 col = HDRSampler.Sample(g_samLinear, texcoord);
 
     return col;
@@ -28,13 +28,12 @@ static void OnStop()
     Hooks::ResetScreenShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_WARPEDCAM, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(EFFECT_MISC_SHATTEREDSCREEN, OnStart, OnStop, EffectInfo
 	{
-		.Name = "Warped Camera",
-		.Id = "misc_warpedcam",
+		.Name = "Shattered Screen",
+		.Id = "misc_shatteredscreen",
 		.IsTimed = true,
-		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-		.EffectGroupType = EEffectGroupType::Shader
+        .EffectGroupType = EEffectGroupType::Shader
 	}
 );

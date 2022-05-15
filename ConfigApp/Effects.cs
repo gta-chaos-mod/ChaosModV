@@ -359,6 +359,8 @@ namespace ConfigApp
             EFFECT_MISC_TNPANEL,
             EFFECT_MISC_FCK_AUTOROTATE,
             EFFECT_MISC_WARPEDCAM,
+            EFFECT_MISC_DIMWARP,
+            EFFECT_MISC_SHATTEREDSCREEN,
             _EFFECT_ENUM_MAX
         }
 
@@ -682,6 +684,8 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_TNPANEL, new EffectInfo("TN Panel", EffectCategory.MISC, "misc_tnpanel", true)},
             {EffectType.EFFECT_MISC_FCK_AUTOROTATE, new EffectInfo("Goddamn Auto-Rotate", EffectCategory.MISC, "misc_fckautorotate", true, true)},
             {EffectType.EFFECT_MISC_WARPEDCAM, new EffectInfo("Warped Camera", EffectCategory.MISC, "misc_warpedcam", true, true)},
+            {EffectType.EFFECT_MISC_DIMWARP, new EffectInfo("Dimension Warp", EffectCategory.MISC, "misc_dimwarp", true, true)},
+            {EffectType.EFFECT_MISC_SHATTEREDSCREEN, new EffectInfo("Shattered Screen", EffectCategory.MISC, "misc_shatteredscreen", true)},
         };
     }
 }
