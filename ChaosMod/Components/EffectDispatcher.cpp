@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "EffectDispatcher.h"
+#include "Effects/EEffectCategory.h"
 
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, const std::array<BYTE, 3>& rgTextColor, const std::array<BYTE, 3>& rgEffectTimerColor)
 	: Component()
@@ -319,12 +320,12 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 }
 
-bool _NODISCARD EffectDispatcher::ShouldDispatchEffectNow() const
+_NODISCARD bool EffectDispatcher::ShouldDispatchEffectNow() const
 {
 	return GetRemainingTimerTime() <= 0;
 }
 
-int _NODISCARD EffectDispatcher::GetRemainingTimerTime() const
+_NODISCARD int EffectDispatcher::GetRemainingTimerTime() const
 {
 	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
 }
@@ -373,6 +374,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 	for (auto it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end(); )
 	{
 		ActiveEffect& activeEffect = *it;
+		auto& activeEffectData = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier);
 
 		if (activeEffect.m_EffectIdentifier == effectIdentifier
 			&& effectData.TimedType != EEffectTimedType::Unk
@@ -385,18 +387,17 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 		}
 
 		bool bFound = false;
-		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).Id)
-			!= rgIncompatibleIds.end())
+		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), activeEffectData.Id) != rgIncompatibleIds.end())
 		{
 			bFound = true;
 		}
 
-		// Check if current effect is marked as incompatible in active effect
+		// Check if current effect is either the same effect category or marked as incompatible in active effect
 		if (!bFound)
 		{
-			const auto& rgActiveIncompatibleIds = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier).IncompatibleIds;
-
-			if (std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
+			const auto& rgActiveIncompatibleIds = activeEffectData.IncompatibleIds;
+			if ((effectData.EffectCategory != EEffectCategory::None && effectData.EffectCategory == activeEffectData.EffectCategory)
+				|| std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id) != rgActiveIncompatibleIds.end())
 			{
 				bFound = true;
 			}

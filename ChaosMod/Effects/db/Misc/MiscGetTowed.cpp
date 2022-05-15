@@ -57,6 +57,6 @@ static RegisterEffect registerEffect(EFFECT_MISC_GET_TOWED, OnStart, nullptr, nu
     {
         .Name = "Get Towed",
         .Id = "misc_get_towed",
-		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+		.EffectGroupType = EEffectGroupType::SpawnGeneric
     }
 );

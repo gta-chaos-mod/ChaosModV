@@ -356,6 +356,8 @@ namespace ConfigApp
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
             EFFECT_META_EFFECT_REINVOKE,
+            EFFECT_MISC_TNPANEL,
+            EFFECT_MISC_FCK_AUTOROTATE,
             _EFFECT_ENUM_MAX
         }
 
@@ -676,6 +678,8 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
             {EffectType.EFFECT_META_EFFECT_REINVOKE, new EffectInfo("Re-Invoke Previous Effects", EffectCategory.META, "meta_re_invoke")},
+            {EffectType.EFFECT_MISC_TNPANEL, new EffectInfo("TN Panel", EffectCategory.MISC, "misc_tnpanel", true)},
+            {EffectType.EFFECT_MISC_FCK_AUTOROTATE, new EffectInfo("Goddamn Auto-Rotate", EffectCategory.MISC, "misc_fckautorotate", true)},
         };
     }
 }

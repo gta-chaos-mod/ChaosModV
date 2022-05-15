@@ -61,7 +61,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -81,7 +81,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -113,6 +113,8 @@
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
@@ -344,6 +346,7 @@
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
+    <ClCompile Include="Memory\Hooks\ShaderHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="..\vendor\Patterns\Patterns.cpp" />
     <ClCompile Include="Components\SplashTexts.cpp" />
@@ -366,6 +369,7 @@
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="Components\Shortcuts.h" />
+    <ClInclude Include="Effects\EEffectCategory.h" />
     <ClInclude Include="Effects\EffectConfig.h" />
     <ClInclude Include="Effects\EEffectAttributes.h" />
     <ClInclude Include="Effects\EffectData.h" />
@@ -383,6 +387,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />
@@ -393,6 +398,7 @@
     <ClInclude Include="Memory\Misc.h" />
     <ClInclude Include="Memory\PedModels.h" />
     <ClInclude Include="Memory\Script.h" />
+    <ClInclude Include="Memory\Shader.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />

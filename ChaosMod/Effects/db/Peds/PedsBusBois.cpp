@@ -17,6 +17,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_BUSBOIS, OnStart, EffectInfo
 	{
 		.Name = "Bus Bois",
 		.Id = "peds_busbois",
-		.EEffectGroupType = EEffectGroupType::TrafficSpawner
+		.EffectGroupType = EEffectGroupType::TrafficSpawner
 	}
 );

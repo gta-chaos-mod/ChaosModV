@@ -2,6 +2,7 @@
 
 #include "Main.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Misc.h"
 
 static bool ms_bClearAllEffects = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
@@ -10,7 +11,7 @@ static bool ms_bDisableMod = false;
 static bool ms_bEnablePauseTimerShortcut = false;
 static bool ms_bHaveLateHooksRan = false;
 
-static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
+_NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
 	// Format: #ARGB
 	std::array<BYTE, 3> rgColors;
@@ -220,6 +221,19 @@ namespace Main
 		SetUnhandledExceptionFilter(CrashHandler);
 
 		MainRun();
+	}
+
+	void OnCleanup()
+	{
+		LuaScripts::Unload();
+		
+		Hooks::ResetScreenShader();
+		Memory::InvalidateShaderCache();
+	}
+
+	void OnPresent(IDXGISwapChain* pSwapChain)
+	{
+		Hooks::OnPresentShaderHook(pSwapChain);
 	}
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)

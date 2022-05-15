@@ -65,6 +65,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_IMPOTENTRAGE, OnStart, EffectI
 	{
 		.Name = "Spawn Impotent Rage",
 		.Id = "peds_spawnimrage",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

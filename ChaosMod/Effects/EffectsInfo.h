@@ -2,6 +2,7 @@
 
 #include "EffectGroups.h"
 #include "EEffectExecutionType.h"
+#include "Effects/EEffectCategory.h"
 
 #include <unordered_map>
 #include <vector>
@@ -324,6 +325,8 @@ enum EEffectType : int
 	EFFECT_VEHS_PROP_MODELS,
 	EFFECT_VEHS_TINY,
 	EFFECT_META_EFFECT_REINVOKE,
+	EFFECT_MISC_TNPANEL,
+	EFFECT_MISC_FCK_AUTOROTATE,
 	_EFFECT_ENUM_MAX
 };
 
@@ -334,7 +337,8 @@ struct EffectInfo
 	bool IsTimed = false;
 	bool IsShortDuration = false;
 	std::vector<EEffectType> IncompatibleWith;
-	EEffectGroupType EEffectGroupType = EEffectGroupType::None;
+	EEffectCategory EffectCategory = EEffectCategory::None;
+	EEffectGroupType EffectGroupType = EEffectGroupType::None;
 	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
 };
 

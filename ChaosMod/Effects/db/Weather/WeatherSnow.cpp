@@ -19,6 +19,6 @@ static RegisterEffect registerEffect(EFFECT_SNOW, nullptr, OnStop, OnTick, Effec
 		.Name = "Snow",
 		.Id = "world_snow",
 		.IsTimed = true,
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );

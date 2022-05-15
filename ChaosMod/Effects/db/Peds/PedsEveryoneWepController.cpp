@@ -15,7 +15,7 @@ static RegisterEffect registerEffect1(EFFECT_EVERYONE_RPG, OnStartRPG, EffectInf
 	{
 		.Name = "Give Everyone An RPG",
 		.Id = "peds_giverpg",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartTazer()
@@ -33,7 +33,7 @@ static RegisterEffect registerEffect2(EFFECT_EVERYONE_TAZER, OnStartTazer, Effec
 	{
 		.Name = "Give Everyone A Stun Gun",
 		.Id = "peds_stungun",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartMinigun()
@@ -51,7 +51,7 @@ static RegisterEffect registerEffect3(EFFECT_EVERYONE_MINIGUN, OnStartMinigun, E
 	{
 		.Name = "Give Everyone A Minigun",
 		.Id = "peds_minigun",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartUpNAtomizer()
@@ -69,7 +69,7 @@ static RegisterEffect registerEffect4(EFFECT_EVERYONE_UPNATOMIZER, OnStartUpNAto
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
 		.Id = "peds_upnatomizer",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartRandom()
@@ -89,7 +89,7 @@ static RegisterEffect registerEffect5(EFFECT_EVERYONE_RANDOMWEP, OnStartRandom, 
 	{
 		.Name = "Give Everyone A Random Weapon",
 		.Id = "peds_randomwep",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartRailgun()
@@ -107,7 +107,7 @@ static RegisterEffect registerEffect6(EFFECT_EVERYONE_RAILGUN, OnStartRailgun, E
 	{
 		.Name = "Give Everyone A Railgun",
 		.Id = "peds_railgun",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
 static void OnStartBattleAxe()
@@ -125,6 +125,6 @@ static RegisterEffect registerEffect7(EFFECT_EVERYONE_BATTLEAXE, OnStartBattleAx
 	{
 		.Name = "Give Everyone A Battle Axe",
 		.Id = "peds_battleaxe",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );

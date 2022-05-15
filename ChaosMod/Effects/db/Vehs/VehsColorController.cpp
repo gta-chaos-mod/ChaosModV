@@ -20,7 +20,7 @@ static RegisterEffect registerEffect1(EFFECT_RED_VEHS, nullptr, nullptr, OnTickR
 		.Id = "vehs_red",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
 static void OnTickBlue()
@@ -43,7 +43,7 @@ static RegisterEffect registerEffect2(EFFECT_BLUE_VEHS, nullptr, nullptr, OnTick
 		.Id = "vehs_blue",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
 static void OnTickGreen()
@@ -66,7 +66,7 @@ static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTic
 		.Id = "vehs_green",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
 static void OnTickChrome()
@@ -92,7 +92,7 @@ static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTi
 		.Id = "vehs_chrome",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
 static std::map<Vehicle, int> flameByCar;
@@ -156,7 +156,7 @@ static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, OnStopPink, OnT
 		.Id = "vehs_pink",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
 static void OnStopRainbow()
@@ -226,6 +226,6 @@ static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, OnStopRainbo
 		.Id = "vehs_rainbow",
 		.IsTimed = true,
 		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );

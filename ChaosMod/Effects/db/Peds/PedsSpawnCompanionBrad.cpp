@@ -36,6 +36,6 @@ static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_BRAD, OnStart, Effec
 	{
 		.Name = "Spawn Companion Brad",
 		.Id = "spawn_compbrad",
-		.EEffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );
