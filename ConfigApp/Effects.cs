@@ -363,6 +363,7 @@ namespace ConfigApp
             EFFECT_MISC_SHATTEREDSCREEN,
             EFFECT_MISC_LOCALCOOP,
             EFFECT_MISC_INVERTEDCOLORS,
+            EFFECT_MISC_FOURTHDIMENSION,
             _EFFECT_ENUM_MAX
         }
 
@@ -690,6 +691,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_SHATTEREDSCREEN, new EffectInfo("Shattered Screen", EffectCategory.MISC, "misc_shatteredscreen", true)},
             {EffectType.EFFECT_MISC_LOCALCOOP, new EffectInfo("Split Screen Co-op", EffectCategory.MISC, "misc_localcoop", true, true)},
             {EffectType.EFFECT_MISC_INVERTEDCOLORS, new EffectInfo("Inverted Colors", EffectCategory.MISC, "misc_invertedcolors", true)},
+            {EffectType.EFFECT_MISC_FOURTHDIMENSION, new EffectInfo("Fourth Dimension", EffectCategory.MISC, "misc_fourthdimension", true, true)},
         };
     }
 }
