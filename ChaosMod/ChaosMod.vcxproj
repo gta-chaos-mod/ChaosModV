@@ -116,6 +116,7 @@
     <ClCompile Include="Effects\db\Misc\MiscShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderFckAutorotate.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderFourthDimension.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderInvertedColors.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderLocalCoop.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
