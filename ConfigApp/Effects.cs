@@ -356,6 +356,14 @@ namespace ConfigApp
             EFFECT_VEHS_PROP_MODELS,
             EFFECT_VEHS_TINY,
             EFFECT_META_EFFECT_REINVOKE,
+            EFFECT_MISC_TNPANEL,
+            EFFECT_MISC_FCK_AUTOROTATE,
+            EFFECT_MISC_WARPEDCAM,
+            EFFECT_MISC_DIMWARP,
+            EFFECT_MISC_SHATTEREDSCREEN,
+            EFFECT_MISC_LOCALCOOP,
+            EFFECT_MISC_INVERTEDCOLORS,
+            EFFECT_MISC_FOURTHDIMENSION,
             EFFECT_MISC_AUDIO_MUFFLED,
             _EFFECT_ENUM_MAX
         }
@@ -677,6 +685,14 @@ namespace ConfigApp
             {EffectType.EFFECT_VEHS_PROP_MODELS, new EffectInfo("Prop Cars", EffectCategory.VEHICLE, "vehs_prop_models", true)},
             {EffectType.EFFECT_VEHS_TINY, new EffectInfo("Tiny Vehicles", EffectCategory.VEHICLE, "vehs_tiny", true)},
             {EffectType.EFFECT_META_EFFECT_REINVOKE, new EffectInfo("Re-Invoke Previous Effects", EffectCategory.META, "meta_re_invoke")},
+            {EffectType.EFFECT_MISC_TNPANEL, new EffectInfo("TN Panel", EffectCategory.MISC, "misc_tnpanel", true)},
+            {EffectType.EFFECT_MISC_FCK_AUTOROTATE, new EffectInfo("Goddamn Auto-Rotate", EffectCategory.MISC, "misc_fckautorotate", true, true)},
+            {EffectType.EFFECT_MISC_WARPEDCAM, new EffectInfo("Warped Camera", EffectCategory.MISC, "misc_warpedcam", true, true)},
+            {EffectType.EFFECT_MISC_DIMWARP, new EffectInfo("Dimension Warp", EffectCategory.MISC, "misc_dimwarp", true, true)},
+            {EffectType.EFFECT_MISC_SHATTEREDSCREEN, new EffectInfo("Shattered Screen", EffectCategory.MISC, "misc_shatteredscreen", true)},
+            {EffectType.EFFECT_MISC_LOCALCOOP, new EffectInfo("Split Screen Co-op", EffectCategory.MISC, "misc_localcoop", true, true)},
+            {EffectType.EFFECT_MISC_INVERTEDCOLORS, new EffectInfo("Inverted Colors", EffectCategory.MISC, "misc_invertedcolors", true)},
+            {EffectType.EFFECT_MISC_FOURTHDIMENSION, new EffectInfo("Fourth Dimension", EffectCategory.MISC, "misc_fourthdimension", true, true)},
             {EffectType.EFFECT_MISC_AUDIO_MUFFLED, new EffectInfo("Muffled Audio", EffectCategory.MISC, "misc_audio_muffled", true)},
         };
     }

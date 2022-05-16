@@ -1,6 +1,10 @@
 #pragma once
 
 #include "EffectGroups.h"
+#include "EEffectTimedType.h"
+#include "EEffectCategory.h"
+#include "EffectsInfo.h"
+#include "EffectData.h"
 #include "../Util/OptionsFile.h"
 
 enum EEffectType : int;
@@ -39,7 +43,7 @@ namespace EffectConfig
 
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for name-override", Shortcut
-			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0};
+			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0 };
 			// HACK: Store EffectCustomName seperately
 			std::string szValueEffectName;
 
@@ -102,7 +106,8 @@ namespace EffectConfig
 			}
 			else
 			{
-				effectData.TimedType = static_cast<EEffectTimedType>(static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration : rgValues[1]);
+				effectData.TimedType = static_cast<EEffectTimedType>(static_cast<EEffectTimedType>(rgValues[1])
+					== EEffectTimedType::Unk ? effectInfo.IsShortDuration : rgValues[1]);
 			}
 
 			effectData.WeightMult = rgValues[3];
@@ -117,15 +122,16 @@ namespace EffectConfig
 				effectData.CustomName = szValueEffectName;
 			}
 			effectData.Id = effectInfo.Id;
+			effectData.EffectCategory = effectInfo.EffectCategory;
 
 			for (EEffectType effectType : effectInfo.IncompatibleWith)
 			{
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
 
-			if (effectInfo.EEffectGroupType != EEffectGroupType::None)
+			if (effectInfo.EffectGroupType != EEffectGroupType::None)
 			{
-				effectData.GroupType = g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EEffectGroupType))->first;
+				effectData.GroupType = g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
 				g_dictEffectGroupMemberCount[effectData.GroupType]++;
 			}
 

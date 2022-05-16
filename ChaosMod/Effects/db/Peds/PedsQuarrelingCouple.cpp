@@ -19,6 +19,6 @@ static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_QUARRELING_COUPLE, OnStar
 	{
 		.Name = "Spawn Quarreling Couple",
 		.Id = "peds_spawn_quarreling_couple",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EEffectGroupType::SpawnEnemy
 	}
 );

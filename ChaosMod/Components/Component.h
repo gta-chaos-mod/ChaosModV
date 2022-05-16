@@ -26,6 +26,7 @@ struct ComponentHolder
 		{
 			std::apply([&](auto&&... args)
 			{
+				m_Ptr.reset();
 				m_Ptr = std::unique_ptr<T, Deleter>(new T(args...));
 			}, args);
 		}

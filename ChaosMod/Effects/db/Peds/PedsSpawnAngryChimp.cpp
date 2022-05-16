@@ -17,6 +17,6 @@ static RegisterEffect registerEffect(EFFECT_ANGRY_CHIMP, OnStart, EffectInfo
 	{
 		.Name = "Spawn Angry Chimp",
 		.Id = "spawn_angry_chimp",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemy,
+		.EffectGroupType = EEffectGroupType::SpawnEnemy,
 	}
 );

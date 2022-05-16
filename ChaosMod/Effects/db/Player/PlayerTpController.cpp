@@ -11,7 +11,7 @@ static RegisterEffect registerEffect1(EFFECT_TP_LSAIRPORT, OnStartLSIA, EffectIn
 	{
 		.Name = "Teleport To LS Airport",
 		.Id = "tp_lsairport",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartMazeTower()
@@ -23,7 +23,7 @@ static RegisterEffect registerEffect2(EFFECT_TP_MAZETOWER, OnStartMazeTower, Eff
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
 		.Id = "tp_mazebanktower",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartFortZancudo()
@@ -42,7 +42,7 @@ static RegisterEffect registerEffect3(EFFECT_TP_FORTZANCUDO, OnStartFortZancudo,
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartMountChilliad()
@@ -61,7 +61,7 @@ static RegisterEffect registerEffect4(EFFECT_TP_MOUNTCHILLIAD, OnStartMountChill
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartSkyFall()
@@ -73,7 +73,7 @@ static RegisterEffect registerEffect5(EFFECT_TP_SKYFALL, OnStartSkyFall, EffectI
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 static void OnStartWaypoint()
@@ -209,7 +209,7 @@ static RegisterEffect registerEffect8(EFFECT_TP_RANDOM, OnStartRandom, EffectInf
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
-		.EEffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EEffectGroupType::Teleport
 	}
 );
 

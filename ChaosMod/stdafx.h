@@ -23,6 +23,7 @@
 #include "Effects/EEffectAttributes.h"
 #include "Effects/EffectThreads.h"
 #include "Effects/EffectConfig.h"
+#include "Effects/EEffectCategory.h"
 
 #include "Lib/scrThread.h"
 
@@ -37,8 +38,10 @@
 #include "Memory/Physics.h"
 #include "Memory/Entity.h"
 #include "Memory/Script.h"
+#include "Memory/Shader.h"
 
 #include "Memory/Hooks/Hook.h"
+#include "Memory/Hooks/ShaderHook.h"
 
 #include "Util/Camera.h"
 #include "Util/EntityIterator.h"
@@ -61,6 +64,7 @@
 #include "Util/Natives.h"
 #include "Util/Random.h"
 #include "Util/Weapon.h"
+#include "Util/Hash.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 #include "../vendor/scripthookv/inc/natives.h"
@@ -78,6 +82,9 @@
 #include <dbghelp.h>
 #include <tlhelp32.h>
 #include <mmsystem.h>
+#include <dxgi.h>
+#include <d3d11.h>
+#include <d3dcompiler.h>
 
 #include <fstream>
 #include <array>
@@ -88,3 +95,4 @@
 #include <filesystem>
 #include <map>
 #include <unordered_map>
+#include <future>
