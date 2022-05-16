@@ -488,10 +488,8 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 	}
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-	for (const auto& pair : g_dictEnabledEffects)
+	for (const auto& [ effectIdentifier, effectData ] : g_dictEnabledEffects)
 	{
-		const auto& [effectIdentifier, effectData] = pair;
-
 		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta() && !effectData.IsUtility())
 		{
 			choosableEffects.emplace(effectIdentifier, effectData);
@@ -499,10 +497,8 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 	}
 
 	float fTotalWeight = 0.f;
-	for (const auto& pair : choosableEffects)
+	for (const auto& [ effectIdentifier, effectData ] : choosableEffects)
 	{
-		const EffectData& effectData = pair.second;
-
 		fTotalWeight += GetEffectWeight(effectData);
 	}
 
@@ -511,10 +507,8 @@ void EffectDispatcher::DispatchRandomEffect(const char* szSuffix)
 	fTotalWeight = 0.f;
 
 	const EffectIdentifier* pTargetEffectIdentifier = nullptr;
-	for (const auto& pair : choosableEffects)
+	for (const auto& [ effectIdentifier, effectData ] : choosableEffects)
 	{
-		const auto& [effectIdentifier, effectData] = pair;
-
 		fTotalWeight += GetEffectWeight(effectData);
 
 		if (fChosen <= fTotalWeight)
