@@ -361,6 +361,7 @@ namespace ConfigApp
             EFFECT_MISC_WARPEDCAM,
             EFFECT_MISC_DIMWARP,
             EFFECT_MISC_SHATTEREDSCREEN,
+            EFFECT_MISC_LOCALCOOP,
             _EFFECT_ENUM_MAX
         }
 
@@ -686,6 +687,7 @@ namespace ConfigApp
             {EffectType.EFFECT_MISC_WARPEDCAM, new EffectInfo("Warped Camera", EffectCategory.MISC, "misc_warpedcam", true, true)},
             {EffectType.EFFECT_MISC_DIMWARP, new EffectInfo("Dimension Warp", EffectCategory.MISC, "misc_dimwarp", true, true)},
             {EffectType.EFFECT_MISC_SHATTEREDSCREEN, new EffectInfo("Shattered Screen", EffectCategory.MISC, "misc_shatteredscreen", true)},
+            {EffectType.EFFECT_MISC_LOCALCOOP, new EffectInfo("Split Screen Co-op", EffectCategory.MISC, "misc_localcoop", true, true)},
         };
     }
 }

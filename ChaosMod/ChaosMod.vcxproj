@@ -113,7 +113,9 @@
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
