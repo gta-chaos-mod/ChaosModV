@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#define NULL ((void*)0)
-
 static enum class FakeSpawnType : int
 {
 	PEDTYPE, 
@@ -24,7 +22,7 @@ struct FakeSpawnInfo
 	EEffectType type;
 	Hash model;
 	FakeSpawnType spawnType;
-	const PedSpawnAttributes* pedAttributes = nullptr;
+	PedSpawnAttributes* pedAttributes = nullptr;
 };
 
 static const std::vector<FakeSpawnInfo> fakeSpawns =
