@@ -2,6 +2,11 @@
 
 #include "TwitchVoting.h"
 
+#include "Effects/MetaModifiers.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/Text.h"
+
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
 

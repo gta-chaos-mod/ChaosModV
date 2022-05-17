@@ -4,12 +4,11 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Util/Peds.h"
 
 static void OnStart()
 {
-    static Hash enemyHash = GET_HASH_KEY("u_m_y_juggernaut_01");
-    static Hash weaponHash = GET_HASH_KEY("weapon_minigun");
-    Ped ped = CreateHostilePed(enemyHash, weaponHash);
+    Ped ped = CreateHostilePed("u_m_y_juggernaut_01"_hash, "weapon_minigun"_hash);
     SET_PED_ARMOUR(ped, 250);
     SET_PED_ACCURACY(ped, 3);
 }

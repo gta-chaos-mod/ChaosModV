@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static void SleepAllThreads(DWORD ms)
 {
 	std::vector<HANDLE> threads;

@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();

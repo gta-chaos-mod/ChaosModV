@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/WeaponPool.h"
+
 static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");

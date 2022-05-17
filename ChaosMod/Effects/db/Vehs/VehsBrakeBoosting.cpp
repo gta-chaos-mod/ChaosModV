@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+#include "Memory/Vehicle.h"
+
 static void OnTick()
 {
 	static const Hash blimpHash = GET_HASH_KEY("BLIMP");

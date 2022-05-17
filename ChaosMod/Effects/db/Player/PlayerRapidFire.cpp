@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Camera.h"
+
 static void OnTick()
 {
 	Player playerPed = PLAYER_PED_ID();

@@ -1,8 +1,9 @@
+/*
+	Effect by juhana
+*/
 #include <stdafx.h>
 
-/*
-Effect by juhana
-*/
+#include "Util/Peds.h"
 
 static void OnStart()
 {

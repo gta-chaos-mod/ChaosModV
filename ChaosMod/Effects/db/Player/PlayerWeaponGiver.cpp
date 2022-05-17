@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/WeaponPool.h"
+
 static void OnStartAll()
 {
 	Ped playerPed = PLAYER_PED_ID();

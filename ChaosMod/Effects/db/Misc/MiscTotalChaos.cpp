@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static DWORD64 m_anchorTick;
 
 static void OnStart()

@@ -4,12 +4,12 @@
 
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
 
 static void OnStop()
 {
 	MetaModifiers::m_fTimerSpeedModifier = 1;
 }
-
 
 static void OnTick_0_5x()
 {

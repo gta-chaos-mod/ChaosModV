@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnStart()
 {
 	Ped player = PLAYER_PED_ID();

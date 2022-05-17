@@ -2,8 +2,12 @@
 
 #include "Natives.h"
 #include "Random.h"
+
+#include "Memory/Vehicle.h"
 #include "Memory/Hooks/HandleToEntityStructHook.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+
+#include "Util/Model.h"
 
 inline Vehicle CreateTempVehicle(Hash ulModel, float fPosX, float fPosY, float fPosZ, float fHeading)
 {

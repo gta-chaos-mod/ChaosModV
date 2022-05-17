@@ -4,12 +4,12 @@
 
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
 
 static void OnStop()
 {
 	MetaModifiers::m_bHideChaosUI = false;
 }
-
 
 static void OnTick()
 {

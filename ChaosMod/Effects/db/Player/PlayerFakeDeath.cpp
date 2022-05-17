@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static const char* ms_rgTextPairs[] =
 {
 	"Just kidding, keep playing",

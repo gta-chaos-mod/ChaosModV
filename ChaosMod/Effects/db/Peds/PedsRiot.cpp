@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/WeaponPool.h"
+
 static void OnStart()
 {
 	Hash groupHash;

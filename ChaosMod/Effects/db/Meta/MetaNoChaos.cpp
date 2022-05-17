@@ -1,5 +1,9 @@
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
+
+#include "Components/EffectDispatcher.h"
+
 static void OnStart()
 {
 	ClearEntityPool();

@@ -1,9 +1,24 @@
 #include <stdafx.h>
 
 #include "Main.h"
-#include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Mp3Manager.h"
+
+#include "Effects/EffectConfig.h"
+
 #include "Memory/Misc.h"
 #include "Memory/Shader.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Hooks/ShaderHook.h"
+
+#include "Components/DebugMenu.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/TwitchVoting.h"
+#include "Components/Shortcuts.h"
+#include "Components/SplashTexts.h"
+
+#include "Util/PoolSpawner.h"
+#include "Util/OptionsManager.h"
 
 static bool ms_bClearAllEffects = false;
 static bool ms_bClearEffectsShortcutEnabled = false;

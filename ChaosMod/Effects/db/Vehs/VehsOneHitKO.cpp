@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Vehicle.h"
+
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())

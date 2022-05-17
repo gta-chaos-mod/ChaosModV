@@ -2,6 +2,8 @@
 
 #include "OptionsFile.h"
 
+#include "Util/OptionDefaults.h"
+
 class OptionsManager
 {
 private:

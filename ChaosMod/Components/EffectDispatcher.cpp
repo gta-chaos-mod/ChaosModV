@@ -1,7 +1,16 @@
 #include <stdafx.h>
 
 #include "EffectDispatcher.h"
+#include "Mp3Manager.h"
+
+#include "Components/TwitchVoting.h"
+
 #include "Effects/EEffectCategory.h"
+#include "Effects/MetaModifiers.h"
+
+#include "Util/Random.h"
+#include "Util/OptionsManager.h"
+#include "Util/Text.h"
 
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, const std::array<BYTE, 3>& rgTextColor, const std::array<BYTE, 3>& rgEffectTimerColor)
 	: Component()

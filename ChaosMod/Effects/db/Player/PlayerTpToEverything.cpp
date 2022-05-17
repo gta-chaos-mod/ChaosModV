@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Player.h"
+
 static int lastTpTime;
 static int currentTpWaitTime;
 

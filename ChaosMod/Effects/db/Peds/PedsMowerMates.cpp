@@ -1,6 +1,8 @@
+// Effect by ubscal, modified from Bus Bois, modified by Last0xygen
+
 #include <stdafx.h>
 
-//effect by ubscal, modified from Bus Bois, modified by Last0xygen
+#include "Util/Vehicle.h"
 
 static void OnStart()
 {

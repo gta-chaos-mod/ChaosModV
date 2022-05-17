@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Camera.h"
+
 struct PedHitInfo
 {
 	Ped pedHandle;

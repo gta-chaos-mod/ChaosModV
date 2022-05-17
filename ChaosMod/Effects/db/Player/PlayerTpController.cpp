@@ -1,6 +1,10 @@
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+
+#include "Util/Player.h"
 
 static void OnStartLSIA()
 {

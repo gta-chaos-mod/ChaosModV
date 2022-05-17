@@ -1,6 +1,8 @@
+//effect by ProfessorBiddle
+
 #include <stdafx.h>
 
-//effect by ProfessorBiddle
+#include "Util/Vehicle.h"
 
 static void OnStart()
 {
@@ -8,9 +10,7 @@ static void OnStart()
 	// now it's 120 because why not
 	static const float maxDistance = 120.f;
 
-	static const Hash busHash = GET_HASH_KEY("BUS");
-
-	SetSurroundingPedsInVehicles(busHash, maxDistance);
+	SetSurroundingPedsInVehicles("bus"_hash, maxDistance);
 }
 
 static RegisterEffect registerEffect(EFFECT_PEDS_BUSBOIS, OnStart, EffectInfo

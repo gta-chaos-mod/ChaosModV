@@ -1,8 +1,10 @@
-#include <stdafx.h>
-
 /*
 	Effect by ProfessorBiddle
 */
+
+#include <stdafx.h>
+
+#include "Memory/Physics.h"
 
 static void OnTick()
 {

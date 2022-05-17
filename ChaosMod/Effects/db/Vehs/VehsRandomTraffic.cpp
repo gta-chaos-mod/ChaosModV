@@ -1,5 +1,8 @@
+// Effect by ProfessorBiddle, this is a bit clunky but it works well.
+
 #include <stdafx.h>
-//effect by ProfessorBiddle, this is a bit clunky but it works well.
+
+#include "Util/Vehicle.h"
 
 static void OnTick()
 {

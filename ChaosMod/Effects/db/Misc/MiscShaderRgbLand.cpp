@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Memory/Snow.h"
+#include "Memory/Hooks/ShaderHook.h"
+
 static const char* ms_szShaderSrc = R"SRC(
 cbuffer misc_globals : register(b2)
 {

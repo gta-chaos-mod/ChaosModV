@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
+
 static void OnStop()
 {
 	MetaModifiers::m_fEffectDurationModifier = 1;

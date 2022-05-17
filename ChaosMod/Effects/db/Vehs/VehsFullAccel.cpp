@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Vehicle.h"
+
 static void OnTick()
 {
 	for (Vehicle veh : GetAllVehs())

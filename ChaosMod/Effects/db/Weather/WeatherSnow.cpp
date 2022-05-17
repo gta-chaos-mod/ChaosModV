@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Snow.h"
+
 static void OnStop()
 {
 	Memory::SetSnow(false);

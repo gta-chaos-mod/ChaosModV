@@ -3,6 +3,9 @@
 */
 
 #include <stdafx.h>
+
+#include "Memory/Physics.h"
+
 static int lastCheck = 0;
 
 static void OnTick()

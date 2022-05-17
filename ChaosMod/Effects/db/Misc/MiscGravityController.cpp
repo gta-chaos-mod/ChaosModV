@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+#include "Memory/Gravity.h"
+
 static void OnStop()
 {
 	SET_GRAVITY_LEVEL(0);
@@ -97,7 +100,7 @@ static RegisterEffect registerEffect4(EFFECT_INVERT_GRAV, OnStartInvert, OnStop,
 	}
 );
 
-Vector3 sidewaysGravityForce;
+static Vector3 sidewaysGravityForce;
 static void OnStartSideways()
 {
 	// Z is 0 since we don't want any upwards or downwards gravity

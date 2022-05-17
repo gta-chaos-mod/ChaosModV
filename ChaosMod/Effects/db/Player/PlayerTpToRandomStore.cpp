@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Player.h"
+
 static std::vector<Vector3> allPossibleStores = {
     
     // Convenience Stores

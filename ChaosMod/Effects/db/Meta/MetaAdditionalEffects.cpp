@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
 
 static void OnStop()
 {

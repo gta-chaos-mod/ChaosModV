@@ -2,7 +2,9 @@
 	Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
+#include <stdafx.h>
+
+#include "Components/EffectDispatcher.h"
 
 static void OnStart()
 {

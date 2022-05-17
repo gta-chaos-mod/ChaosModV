@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Peds.h"
+
 #define PI 3.14159265
 
 static void OnStart()

@@ -2,6 +2,10 @@
 
 #include "DebugMenu.h"
 
+#include "Components/EffectDispatcher.h"
+
+#include "Util/OptionsManager.h"
+
 #define MAX_VIS_ITEMS 15
 
 DebugMenu::DebugMenu() : Component()

@@ -1,6 +1,10 @@
+//Effect by ProfessorBiddle
+
 #include <stdafx.h>
 
-//Effect by ProfessorBiddle
+#include "Memory/Vehicle.h"
+
+#include "Util/Vehicle.h"
 
 static void OnTick()
 {

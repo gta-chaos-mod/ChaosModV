@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	// Thanks to menyoo for the prop names

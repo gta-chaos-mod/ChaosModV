@@ -3,6 +3,9 @@
 */
 
 #include <stdafx.h>
+
+#include "Effects/MetaModifiers.h"
+
 #include "Memory/UI.h"
 
 static constexpr int NUM_HUD_COMPONENTS = 21;

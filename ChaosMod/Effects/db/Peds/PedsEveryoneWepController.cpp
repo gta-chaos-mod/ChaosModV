@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/WeaponPool.h"
+
 static void OnStartRPG()
 {
 	static const Hash rpgHash = GET_HASH_KEY("WEAPON_RPG");

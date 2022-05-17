@@ -1,6 +1,9 @@
 #include <stdafx.h>
 
-#include "../Shader.h"
+#include "ShaderHook.h"
+
+#include "Memory/Shader.h"
+#include "Memory/Hooks/Hook.h"
 
 #define SHADER_CACHE_MAX_ENTRIES 20
 

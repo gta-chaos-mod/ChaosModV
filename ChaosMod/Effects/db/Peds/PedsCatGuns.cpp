@@ -1,5 +1,10 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
+#include "Util/Camera.h"
+#include "Util/Weapon.h"
+
 static void OnTick()
 {
 	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");

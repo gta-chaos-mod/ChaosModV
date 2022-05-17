@@ -2,6 +2,23 @@
 
 #include "LuaScripts.h"
 
+#include "Effects/Effect.h"
+#include "Effects/MetaModifiers.h"
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffectsMap.h"
+
+#include "Memory/WeaponPool.h"
+#include "Memory/PedModels.h"
+#include "Memory/Vehicle.h"
+#include "Memory/Snow.h"
+#include "Memory/Hooks/ShaderHook.h"
+
+#include "Util/File.h"
+#include "Util/Script.h"
+#include "Util/EntityIterator.h"
+#include "Util/PoolSpawner.h"
+#include "Util/Vehicle.h"
+
 #if defined(_MSC_VER)
 	#define _LUAFUNC static __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
@@ -174,7 +191,7 @@ public:
 		return *reinterpret_cast<T*>(&m_pData);
 	}
 
-	__forceinline _NODISCARD bool IsValid() const
+	_NODISCARD __forceinline bool IsValid() const
 	{
 		return m_pData || m_Obj.valid();
 	}

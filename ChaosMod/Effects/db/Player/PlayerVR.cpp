@@ -1,8 +1,9 @@
-#include <stdafx.h>
-
 /*
 * Effect by kolyaventuri
 */
+#include <stdafx.h>
+
+#include "Util/Player.h"
 
 static Ped clone;
 static Vector3 coords;

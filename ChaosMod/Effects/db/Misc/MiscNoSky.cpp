@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Misc.h"
+
 static void OnTick()
 {
 	Memory::SetSkyDisabled(true);

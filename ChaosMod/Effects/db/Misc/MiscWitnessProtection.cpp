@@ -4,6 +4,8 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Util/Types.h"
+
 struct OrbitPed
 {
     Ped ped;

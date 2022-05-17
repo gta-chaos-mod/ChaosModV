@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())

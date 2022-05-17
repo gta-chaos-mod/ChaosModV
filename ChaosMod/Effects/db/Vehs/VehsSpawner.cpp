@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Vehicle.h"
+
 static Vector3 GetPlayerPos()
 {
 	Ped playerPed = PLAYER_PED_ID();

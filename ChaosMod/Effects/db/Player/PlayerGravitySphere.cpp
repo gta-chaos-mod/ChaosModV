@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static float sphereRadius = 10.f;
 
 static void OnTick()

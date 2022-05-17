@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Player.h"
+
 struct Location
 {
     Vector3 coordinates;

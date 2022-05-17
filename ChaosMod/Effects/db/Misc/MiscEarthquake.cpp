@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnStop()
 {
 	CAM::STOP_GAMEPLAY_CAM_SHAKING(true);

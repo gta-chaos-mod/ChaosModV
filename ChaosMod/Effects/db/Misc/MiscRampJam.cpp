@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 //Effect by ProfessorBiddle
 
 static void OnTick()
