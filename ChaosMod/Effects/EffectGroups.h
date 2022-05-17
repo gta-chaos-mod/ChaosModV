@@ -17,7 +17,8 @@ enum class EEffectGroupType
 	TrafficSpawner,	    // Effects which change or spawn a lot of vehicles
 	TimeChange,         // Effects which change time of day
 	WeatherChange,      // Effects which change the weather
-	Shader              // Shader effects
+	Shader,             // Shader effects
+	Audio				// Audio effects
 };
 
 struct EffectGroupData
@@ -41,6 +42,7 @@ inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups
 	{"_group_timechange", { .WeightMult = 2 }},
 	{"_group_weatherchange", { .WeightMult = 2 }},
 	{"_group_shader", { .WeightMult = 3 }},
+	{"_group_audio", { .WeightMult = 4 }},
 };
 
 inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeToGroup
@@ -57,6 +59,7 @@ inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeT
 	{EEffectGroupType::TimeChange, "_group_timechange"},
 	{EEffectGroupType::WeatherChange, "_group_weatherchange"},
 	{EEffectGroupType::Shader, "_group_shader"},
+	{EEffectGroupType::Audio, "_group_audio"},
 };
 
 inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;

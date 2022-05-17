@@ -94,6 +94,7 @@
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscDeaf.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
@@ -348,6 +349,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioVolumeHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
@@ -393,6 +395,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\AudioVolumeHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
