@@ -8,15 +8,33 @@
 
 static void OnStart()
 {
-	Hooks::SetAudioVolume(0.029678);
+	Hooks::SetAudioVolume(2);
+	SET_FRONTEND_RADIO_ACTIVE(false);
 }
 
 static void OnStop()
 {
 	Hooks::ResetAudioVolume();
+	for (Vehicle veh : GetAllVehs())
+	{
+		SET_VEHICLE_RADIO_ENABLED(veh, true);
+	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_MISC_SUPER_HEARING, OnStart, OnStop, EffectInfo
+static void OnTick()
+{
+	Vehicle plrVeh = GET_VEHICLE_PED_IS_USING(PLAYER_PED_ID());
+	//Prevent all that you are hearing is radio music
+	for (Vehicle veh : GetAllVehs())
+	{
+		if (veh != plrVeh)
+			SET_VEHICLE_RADIO_ENABLED(veh, false);
+		else
+			SET_VEHICLE_RADIO_ENABLED(veh, true);
+	}
+}
+
+static RegisterEffect registerEffect2(EFFECT_MISC_SUPER_HEARING, OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Hearing",
 		.Id = "misc_super_hearing",
