@@ -46,7 +46,7 @@ namespace Memory
 			{
 				std::vector<Hash> ugBlacklistedModels;
 
-				if (getGameVersion() == VER_1_0_2612_0_STEAM || getGameVersion() == VER_1_0_2612_0_NOSTEAM)
+				if (getGameVersion() >= VER_1_0_2612_0_STEAM && getGameVersion() <= VER_1_0_2628_0_NOSTEAM)
 				{
 					// Stub vehicles, thanks R* lol
 					ugBlacklistedModels.insert(ugBlacklistedModels.end(), {
