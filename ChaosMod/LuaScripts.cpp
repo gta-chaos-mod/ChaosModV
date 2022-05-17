@@ -339,14 +339,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		"AsFloat", &LuaHolder::As<float>,
 		"AsString", &LuaHolder::As<char*>,
 		"AsVector3", &LuaHolder::As<LuaVector3>
-		);
+	);
 	lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 	lua.new_usertype<LuaVector3>("_Vector3",
 		"x", &LuaVector3::m_fX,
 		"y", &LuaVector3::m_fY,
 		"z", &LuaVector3::m_fZ
-		);
+	);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 	lua["_invoke"] = [szFileName](const sol::this_state& lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType, const sol::variadic_args& args)
@@ -367,8 +367,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 	lua["GetAllPedModels"] = Memory::GetAllPedModels;
 	lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
 
-	lua["OverrideScreenShader"] = Hooks::OverrideScreenShader;
-	lua["ResetScreenShader"] = Hooks::ResetScreenShader;
+	lua.new_enum("EOverrideShaderType",
+		"LensDistortion", 	EOverrideShaderType::LensDistortion,
+		"Snow", 			EOverrideShaderType::Snow
+	);
+	lua["OverrideShader"] = Hooks::OverrideShader;
+	lua["ResetShader"] = Hooks::ResetShader;
+
+	lua["SetSnowState"] = Memory::SetSnow;
 
 	const auto& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())

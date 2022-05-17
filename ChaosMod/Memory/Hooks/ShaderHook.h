@@ -4,9 +4,15 @@
 
 class IDXGISwapChain;
 
+enum class EOverrideShaderType
+{
+    LensDistortion,
+    Snow
+};
+
 namespace Hooks
 {
-    void OverrideScreenShader(std::string_view szShaderSrc);
-    void ResetScreenShader();
+    void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc);
+    void ResetShader();
     void OnPresentShaderHook(IDXGISwapChain* pSwapChain);
 }

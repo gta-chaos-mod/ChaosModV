@@ -38,7 +38,6 @@
 #include "Memory/Physics.h"
 #include "Memory/Entity.h"
 #include "Memory/Script.h"
-#include "Memory/Shader.h"
 
 #include "Memory/Hooks/Hook.h"
 #include "Memory/Hooks/ShaderHook.h"

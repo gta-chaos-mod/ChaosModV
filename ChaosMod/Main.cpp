@@ -3,6 +3,7 @@
 #include "Main.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 #include "Memory/Misc.h"
+#include "Memory/Shader.h"
 
 static bool ms_bClearAllEffects = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
@@ -19,7 +20,7 @@ _NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
+		Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
 	}
 
 	return rgColors;
@@ -227,7 +228,7 @@ namespace Main
 	{
 		LuaScripts::Unload();
 		
-		Hooks::ResetScreenShader();
+		Hooks::ResetShader();
 		Memory::InvalidateShaderCache();
 	}
 
