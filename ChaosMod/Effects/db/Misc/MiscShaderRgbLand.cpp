@@ -58,7 +58,7 @@ static void OnTick()
     Memory::SetSnow(true);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_RGBLAND, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(EFFECT_MISC_RGBLAND, OnStart, OnStop, OnTick, EffectInfo
 	  {
         .Name = "RGB Land",
         .Id = "misc_rgbland",
