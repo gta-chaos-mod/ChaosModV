@@ -92,6 +92,7 @@
     <ClCompile Include="Components\EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscFakeDisconnect.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
