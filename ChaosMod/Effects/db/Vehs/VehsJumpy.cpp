@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	static int lastTick = GET_GAME_TIMER();
@@ -20,7 +22,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Vehicles",
 		.Id = "vehs_jumpy",

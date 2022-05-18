@@ -43,15 +43,25 @@ using namespace SYSTEM;
 using namespace DECORATOR;
 using namespace SOCIALCLUB;
 
-// Thanks to menyoo!
-inline _NODISCARD Hash GET_HASH_KEY(const char* string)
+_NODISCARD constexpr inline int _strlen(const char *str)
 {
-	int length = strlen(string);
+    return *str ? 1 + _strlen(str + 1) : 0;
+}
+
+_NODISCARD constexpr inline char __tolower(const char c)
+{
+	return c >= 'A' && c <= 'Z' ? c + 'a' - 'A' : c;
+}
+
+// Thanks to menyoo!
+_NODISCARD constexpr inline Hash GET_HASH_KEY(const char *str)
+{
+	int length = _strlen(str);
 
 	DWORD hash, i;
 	for (hash = i = 0; i < length; ++i)
 	{
-		hash += tolower(string[i]);
+		hash += __tolower(str[i]);
 		hash += (hash << 10);
 		hash ^= (hash >> 6);
 	}

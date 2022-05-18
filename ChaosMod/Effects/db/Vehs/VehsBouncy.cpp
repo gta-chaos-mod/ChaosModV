@@ -1,8 +1,10 @@
-#include <stdafx.h>
-
 /*
 	Effect by ProfessorBiddle
 */
+
+#include <stdafx.h>
+
+#include "Memory/Physics.h"
 
 static void OnTick()
 {
@@ -34,7 +36,7 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect2(EFFECT_VEH_BOUNCY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect2(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Bouncy Vehicles",
 		.Id = "veh_bouncy",
