@@ -38,7 +38,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_CRUISE_CONTROL, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Cruise Control",
 		.Id = "vehs_cruise_control",

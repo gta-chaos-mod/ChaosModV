@@ -38,7 +38,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ROT_ALL_VEHS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Flip All Vehicles",
 		.Id = "vehs_rotall"

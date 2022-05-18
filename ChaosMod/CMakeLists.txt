@@ -20,7 +20,7 @@ else()
 endif()
 target_compile_options(ChaosMod PRIVATE ${COMPILE_OPTIONS})
 
-target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR})
+target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor)
 
 if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_link_options(ChaosMod PRIVATE -static)

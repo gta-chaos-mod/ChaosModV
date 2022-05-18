@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,7 +75,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,6 +119,7 @@
     <ClCompile Include="Effects\db\Misc\MiscShaderFourthDimension.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderInvertedColors.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderLocalCoop.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderRgbLand.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderWarpedCam.cpp" />
@@ -411,6 +412,7 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
+    <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />

@@ -84,7 +84,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_ROASTING, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Get Roasted",
 		.Id = "peds_roasting",

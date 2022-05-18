@@ -310,7 +310,7 @@ static void OnStart()
     }
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_HACKING, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Realistic Hacking",
 		.Id = "player_hacking"

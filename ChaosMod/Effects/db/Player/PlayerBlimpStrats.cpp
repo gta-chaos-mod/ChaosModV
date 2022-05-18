@@ -70,7 +70,7 @@ static void OnStart()
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_BLIMP_STRATS, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Blimp Strats",
         .Id = "player_blimp_strats",

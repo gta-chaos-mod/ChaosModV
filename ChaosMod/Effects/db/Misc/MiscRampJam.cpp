@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 //Effect by ProfessorBiddle
 
 static void OnTick()
@@ -27,7 +29,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_RAMPJAM, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Ramp Jam (Press Jump In Vehicle)",
 		.Id = "misc_rampjam",

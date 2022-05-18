@@ -1,20 +1,39 @@
 #include <stdafx.h>
 
+#include "ShaderHook.h"
+
+#include "Memory/Shader.h"
+#include "Memory/Hooks/Hook.h"
+
 #define SHADER_CACHE_MAX_ENTRIES 20
 
 using DWORD64 = unsigned long long;
 
 static std::vector<BYTE> ms_rgShaderBytecode;
+static EOverrideShaderType ms_ShaderType;
 
 static bool ms_bRefreshShaders = false;
 
 void*(*OG_rage__CreateShader)(const char*, BYTE*, DWORD, DWORD, DWORD*);
 void* HK_rage__CreateShader(const char* name, BYTE* data, DWORD size, DWORD type, DWORD* out)
 {
-    if (!ms_rgShaderBytecode.empty()
-        && std::string_view(name).find("PS_LensDistortion") != std::string_view::npos)
+    if (!ms_rgShaderBytecode.empty())
     {
-        return OG_rage__CreateShader(name, ms_rgShaderBytecode.data(), ms_rgShaderBytecode.size(), type, out);
+        const char* nameFilter = nullptr;
+        switch (ms_ShaderType)
+        {
+        case EOverrideShaderType::LensDistortion:
+            nameFilter = "PS_LensDistortion";
+            break;
+        case EOverrideShaderType::Snow:
+            nameFilter = "PS_snow";
+            break;
+        }
+
+        if (nameFilter && std::string_view(name).find(nameFilter) != std::string_view::npos)
+        {
+            return OG_rage__CreateShader(name, ms_rgShaderBytecode.data(), ms_rgShaderBytecode.size(), type, out);
+        }
     }
 
     return OG_rage__CreateShader(name, data, size, type, out);
@@ -41,7 +60,7 @@ static RegisterHook registerHook(OnHook, "ShaderHook", true);
 
 namespace Hooks
 {
-    void OverrideScreenShader(std::string_view szShaderSrc)
+    void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc)
     {
         static std::unordered_map<size_t, std::vector<BYTE>> dictShaderCache;
 
@@ -95,11 +114,12 @@ namespace Hooks
         if (result != dictShaderCache.end())
         {
             ms_rgShaderBytecode = result->second;
+            ms_ShaderType = shaderType;
             ms_bRefreshShaders = true;
         }
     }
 
-    void ResetScreenShader()
+    void ResetShader()
     {
         ms_rgShaderBytecode.clear();
         ms_bRefreshShaders = true;

@@ -35,7 +35,7 @@ static void OnStart()
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_CARBINERIFLE"), 9999, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHIMP, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Companion Chimp",
 		.Id = "spawn_chimp",
