@@ -67,7 +67,7 @@
  		if (animationHandleByPed.count(ped) < 1)
  		{
  			USE_PARTICLE_FX_ASSET("core");
- 			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+ 			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped, 1);
             SET_PARTICLE_FX_SHOOTOUT_BOAT(1);
  			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("water_cannon_jet", weapon, 0, 0, 0, 180, 0, 90, GET_ENTITY_BONE_INDEX_BY_NAME(weapon, "Gun_Nuzzle"), 2, false, false, false);
  			ShooterInfo animInfo;
