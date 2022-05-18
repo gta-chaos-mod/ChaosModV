@@ -68,7 +68,7 @@ static void OnStart()
 	SET_PLAYER_CONTROL(PLAYER_ID(), true, 1 << 8);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_GET_SLAPPED, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Get Slapped",
 		.Id = "misc_get_slapped"
