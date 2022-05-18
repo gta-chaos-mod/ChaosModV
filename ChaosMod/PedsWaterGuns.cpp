@@ -86,7 +86,7 @@
  	}
  }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_WATER_GUNS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Water Guns",
 		.Id = "peds_waterguns",
