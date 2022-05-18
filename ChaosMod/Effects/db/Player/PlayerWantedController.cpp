@@ -20,12 +20,12 @@ static void OnStopSix()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect4(EFFECT_6_STARS, OnStartSix, OnStopSix, nullptr, EffectInfo
+static RegisterEffect registerEffect4(OnStartSix, OnStopSix, EffectInfo
 	{
 		.Name = "6 Wanted Stars",
 		.Id = "player_6stars",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
 
@@ -37,11 +37,11 @@ static void OnStartFive()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_5_STARS, OnStartFive, EffectInfo
+static RegisterEffect registerEffect(OnStartFive, EffectInfo
 	{
 		.Name = "5 Wanted Stars",
 		.Id = "player_5stars",
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
 
@@ -53,11 +53,11 @@ static void OnStartPlusTwo()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect2(EFFECT_PLUS_2_STARS, OnStartPlusTwo, EffectInfo
+static RegisterEffect registerEffect2(OnStartPlusTwo, EffectInfo
 	{
 		.Name = "+2 Wanted Stars",
 		.Id = "player_plus2stars",
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
 
@@ -67,7 +67,7 @@ static void OnTickNeverWanted()
 	SET_PLAYER_WANTED_LEVEL_NOW(PLAYER_ID(), true);
 }
 
-static RegisterEffect registerEffect3(EFFECT_NEVER_WANTED, nullptr, nullptr, OnTickNeverWanted, EffectInfo
+static RegisterEffect registerEffect3(nullptr, nullptr, OnTickNeverWanted, EffectInfo
 	{
 		.Name = "Never Wanted",
 		.Id = "player_neverwanted",

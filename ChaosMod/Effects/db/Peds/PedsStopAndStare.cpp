@@ -23,7 +23,7 @@ static void OnStart()
 		}
 	}
 }
-static RegisterEffect registerEffect(EFFECT_PEDS_STOP_AND_STARE, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Stop and Stare",
 		.Id = "peds_stop_stare"
