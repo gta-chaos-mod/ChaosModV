@@ -36,7 +36,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_TPRANDOMPEDS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Teleport Random Peds Into Current Vehicle",
 		.Id = "playerveh_tprandompeds"

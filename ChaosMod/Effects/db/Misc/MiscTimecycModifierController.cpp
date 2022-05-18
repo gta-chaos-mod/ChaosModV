@@ -18,12 +18,12 @@ static void OnTickMexico()
 	StartTransitionTimecycle("trevorspliff");
 }
 
-static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico, EffectInfo
+static RegisterEffect registerEffect1(nullptr, OnStop, OnTickMexico, EffectInfo
 	{
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnStopBright()
@@ -54,13 +54,13 @@ static void OnTickBright()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright, EffectInfo
+static RegisterEffect registerEffect2(nullptr, OnStopBright, OnTickBright, EffectInfo
 	{
 		.Name = "Deep Fried",
 		.Id = "screen_bright",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnTickFog()
@@ -68,13 +68,13 @@ static void OnTickFog()
 	StartTransitionTimecycle("prologue_ending_fog");
 }
 
-static RegisterEffect registerEffect3(EFFECT_SCREEN_FOG, nullptr, OnStop, OnTickFog, EffectInfo
+static RegisterEffect registerEffect3(nullptr, OnStop, OnTickFog, EffectInfo
 	{
 		.Name = "Extreme Fog",
 		.Id = "screen_fog",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnTickRenderdist()
@@ -82,13 +82,13 @@ static void OnTickRenderdist()
 	StartTransitionTimecycle("Mp_apart_mid");
 }
 
-static RegisterEffect registerEffect4(EFFECT_SCREEN_RENDERDIST, nullptr, OnStop, OnTickRenderdist, EffectInfo
+static RegisterEffect registerEffect4(nullptr, OnStop, OnTickRenderdist, EffectInfo
 	{
 		.Name = "Where Did Everything Go?",
 		.Id = "screen_lowrenderdist",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 
@@ -168,12 +168,12 @@ static void OnTickLSD()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD, EffectInfo
+static RegisterEffect registerEffect6(nullptr, OnStopLSD, OnTickLSD, EffectInfo
 	{
 		.Name = "LSD",
 		.Id = "screen_lsd",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnStartFullbright()
@@ -186,12 +186,12 @@ static void OnTickFullbright()
 	StartTransitionTimecycle("int_lesters");
 }
 
-static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+static RegisterEffect registerEffect7(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
 	{
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnTickBubbleVision()
@@ -201,13 +201,13 @@ static void OnTickBubbleVision()
 	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
 
-static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision, EffectInfo
+static RegisterEffect registerEffect8(nullptr, OnStop, OnTickBubbleVision, EffectInfo
 	{
 		.Name = "Bubble Vision",
 		.Id = "screen_bubblevision",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnStartLSNoire()
@@ -267,12 +267,12 @@ static void OnTickLSNoire()
 	StartTransitionTimecycle("NG_filmnoir_BW01");
 }
 
-static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+static RegisterEffect registerEffectLsNoire(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
 	{
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
 static void OnTickNeedGlasses()
@@ -280,12 +280,12 @@ static void OnTickNeedGlasses()
 	StartTransitionTimecycle("hud_def_blur");
 }
 
-static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+static RegisterEffect registerEffectGlases(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );

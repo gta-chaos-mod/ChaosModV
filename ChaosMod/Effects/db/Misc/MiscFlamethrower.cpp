@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static struct ShooterInfo
+struct ShooterInfo
 {
 	float fullDuration = 0;
 	float durationSinceLastShot = 0;
@@ -90,7 +90,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLAMETHROWER, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Flamethrowers",
 		.Id = "misc_flamethrower",

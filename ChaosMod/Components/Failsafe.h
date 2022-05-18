@@ -14,11 +14,15 @@ private:
 
 	static inline int ms_iStateGlobalIdx = 0;
 
-public:
+protected:
 	Failsafe();
 
+public:
 	static void SetGlobalIndex(int idx);
 	static int GetGlobalIndex();
 
-	virtual void Run() override;
+	virtual void OnRun() override;
+
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };

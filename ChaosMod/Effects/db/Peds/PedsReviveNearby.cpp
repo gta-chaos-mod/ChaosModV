@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/WeaponPool.h"
+
 static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
@@ -97,7 +99,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_REVIVE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Revive Dead Peds",
 		.Id = "peds_revive"

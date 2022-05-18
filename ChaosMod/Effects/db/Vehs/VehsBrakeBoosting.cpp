@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+#include "Memory/Vehicle.h"
+
 static void OnTick()
 {
 	static const Hash blimpHash = GET_HASH_KEY("BLIMP");
@@ -18,7 +21,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BRAKEBOOST, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Brake Boosting",
 		.Id = "veh_brakeboost",

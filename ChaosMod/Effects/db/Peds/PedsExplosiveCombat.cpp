@@ -18,7 +18,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_COMBAT, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Explosive Combat",
 		.Id = "player_explosivecombat",

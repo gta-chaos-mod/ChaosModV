@@ -42,7 +42,7 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_SPAM_DOORS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Spammy Vehicle Doors",
 		.Id = "vehs_spamdoors",
