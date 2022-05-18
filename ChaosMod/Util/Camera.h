@@ -74,15 +74,6 @@ namespace Util
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
 		};
-		BOOL a;
-		Vector3 b;
-		Vector3 c;
-		Entity d;
-		int e = GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), &a, &b, &c, &d);
-		*hit = a;
-		*endCoords = b;
-		*surfaceNormal = c;
-		*entity = d;
-		return e;
+		return GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), hit, endCoords , surfaceNormal , entity);
 	}
 }
