@@ -32,7 +32,7 @@ static void OnStop()
     Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_TNPANEL, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "TN Panel",
 		.Id = "misc_tnpanel",

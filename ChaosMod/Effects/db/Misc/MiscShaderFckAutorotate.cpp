@@ -31,7 +31,7 @@ static void OnStop()
     Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FCK_AUTOROTATE, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Goddamn Auto-Rotate",
 		.Id = "misc_fckautorotate",

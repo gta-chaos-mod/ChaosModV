@@ -22,7 +22,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_FAN_CATS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Fan Cats",
 		.Id = "peds_spawnfancats",

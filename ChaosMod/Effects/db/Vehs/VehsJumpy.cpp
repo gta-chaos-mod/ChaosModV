@@ -22,7 +22,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_JUMPY_VEHS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Vehicles",
 		.Id = "vehs_jumpy",

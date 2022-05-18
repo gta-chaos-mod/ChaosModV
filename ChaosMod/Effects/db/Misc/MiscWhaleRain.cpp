@@ -86,7 +86,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_WHALE_RAIN, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Whale Rain",
 		.Id = "world_whalerain",

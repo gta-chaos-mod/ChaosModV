@@ -96,7 +96,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_TOTAL_CHAOS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Doomsday",
 		.Id = "chaosmode",

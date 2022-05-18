@@ -5,7 +5,7 @@ static void OnStartMorning()
 	SET_CLOCK_TIME(8, 0, 0);
 }
 
-static RegisterEffect registerEffect1(EFFECT_TIME_MORNING, OnStartMorning, EffectInfo
+static RegisterEffect registerEffect1(OnStartMorning, EffectInfo
 	{
 		.Name = "Set Time To Morning",
 		.Id = "time_morning",
@@ -17,7 +17,7 @@ static void OnStartDay()
 	SET_CLOCK_TIME(12, 0, 0);
 }
 
-static RegisterEffect registerEffect2(EFFECT_TIME_DAY, OnStartDay, EffectInfo
+static RegisterEffect registerEffect2(OnStartDay, EffectInfo
 	{
 		.Name = "Set Time To Daytime",
 		.Id = "time_day",
@@ -29,7 +29,7 @@ static void OnStartEvening()
 	SET_CLOCK_TIME(18, 0, 0);
 }
 
-static RegisterEffect registerEffect3(EFFECT_TIME_EVENING, OnStartEvening, EffectInfo
+static RegisterEffect registerEffect3(OnStartEvening, EffectInfo
 	{
 		.Name = "Set Time To Evening",
 		.Id = "time_evening",
@@ -41,7 +41,7 @@ static void OnStartNight()
 	SET_CLOCK_TIME(0, 0, 0);
 }
 
-static RegisterEffect registerEffect4(EFFECT_TIME_NIGHT, OnStartNight, EffectInfo
+static RegisterEffect registerEffect4(OnStartNight, EffectInfo
 	{
 		.Name = "Set Time To Night",
 		.Id = "time_night",
@@ -53,7 +53,7 @@ static void OnTickTimelapse()
 	ADD_TO_CLOCK_TIME(0, 1, 0);
 }
 
-static RegisterEffect registerEffect6(EFFECT_QUICK_TIME, nullptr, nullptr, OnTickTimelapse, EffectInfo
+static RegisterEffect registerEffect6(nullptr, nullptr, OnTickTimelapse, EffectInfo
 	{
 		.Name = "Timelapse",
 		.Id = "time_quickday",

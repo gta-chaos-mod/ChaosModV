@@ -86,7 +86,7 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_GRAVITY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Gravity Field",
 		.Id = "player_gravity",

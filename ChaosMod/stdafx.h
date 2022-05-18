@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Effects/Effect.h"
-#include "Effects/EffectsInfo.h"
 
 #include "Util/Logging.h"
 #include "Util/Random.h"

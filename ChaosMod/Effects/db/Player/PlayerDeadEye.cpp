@@ -152,11 +152,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Dead Eye",
 		.Id = "player_dead_eye",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_SUPERHOT }
+		.IncompatibleWith = { "time_x02", "time_x05", "time_superhot" }
 	}
 );

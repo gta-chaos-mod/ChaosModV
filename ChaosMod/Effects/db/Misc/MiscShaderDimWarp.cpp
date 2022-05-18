@@ -30,7 +30,7 @@ static void OnStop()
     Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_DIMWARP, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Dimension Warp",
 		.Id = "misc_dimwarp",

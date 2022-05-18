@@ -27,7 +27,7 @@ static void OnStart()
 	Memory::ApplyForceToEntityCenterOfMass(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true), GetRandomForce(false), false, false, true, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FLING_PLAYER, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Fling Player",
         .Id = "player_fling_player"

@@ -31,7 +31,7 @@ static void OnStop()
     Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FOURTHDIMENSION, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Fourth Dimension",
 		.Id = "misc_fourthdimension",

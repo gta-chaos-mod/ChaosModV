@@ -30,7 +30,7 @@ static void OnStop()
     Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_INVERTEDCOLORS, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Inverted Colors",
 		.Id = "misc_invertedcolors",

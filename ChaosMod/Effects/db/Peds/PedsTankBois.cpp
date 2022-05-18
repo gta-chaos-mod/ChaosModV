@@ -12,7 +12,7 @@ static void OnStart()
     SetSurroundingPedsInVehicles("rhino"_hash, maxDistance);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_TANK_BOIS, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Tanks A Lot",
         .Id = "peds_tank_bois",

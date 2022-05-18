@@ -16,7 +16,7 @@ static void OnStartRhino()
 	CreatePoolVehicle(GET_HASH_KEY("RHINO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect1(EFFECT_SPAWN_TANK, OnStartRhino, EffectInfo
+static RegisterEffect registerEffect1(OnStartRhino, EffectInfo
 	{
 		.Name = "Spawn Rhino",
 		.Id = "spawn_rhino",
@@ -30,7 +30,7 @@ static void OnStartAdder()
 	CreatePoolVehicle(GET_HASH_KEY("ADDER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect2(EFFECT_SPAWN_ADDER, OnStartAdder, EffectInfo
+static RegisterEffect registerEffect2(OnStartAdder, EffectInfo
 	{
 		.Name = "Spawn Adder",
 		.Id = "spawn_adder",
@@ -44,7 +44,7 @@ static void OnStartDump()
 	CreatePoolVehicle(GET_HASH_KEY("DUMP"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect3(EFFECT_SPAWN_DUMP, OnStartDump, EffectInfo
+static RegisterEffect registerEffect3(OnStartDump, EffectInfo
 	{
 		.Name = "Spawn Dump",
 		.Id = "spawn_dump",
@@ -58,7 +58,7 @@ static void OnStartMonster()
 	CreatePoolVehicle(GET_HASH_KEY("MONSTER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect4(EFFECT_SPAWN_MONSTER, OnStartMonster, EffectInfo
+static RegisterEffect registerEffect4(OnStartMonster, EffectInfo
 	{
 		.Name = "Spawn Monster",
 		.Id = "spawn_monster",
@@ -72,7 +72,7 @@ static void OnStartBMX()
 	CreatePoolVehicle(GET_HASH_KEY("BMX"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect5(EFFECT_SPAWN_BMX, OnStartBMX, EffectInfo
+static RegisterEffect registerEffect5(OnStartBMX, EffectInfo
 	{
 		.Name = "Spawn BMX",
 		.Id = "spawn_bmx",
@@ -86,7 +86,7 @@ static void OnStartTug()
 	CreatePoolVehicle(GET_HASH_KEY("TUG"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect6(EFFECT_SPAWN_TUG, OnStartTug, EffectInfo
+static RegisterEffect registerEffect6(OnStartTug, EffectInfo
 	{
 		.Name = "Spawn Tug",
 		.Id = "spawn_tug",
@@ -100,7 +100,7 @@ static void OnStartCargoplane()
 	CreatePoolVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect7(EFFECT_SPAWN_CARGO, OnStartCargoplane, EffectInfo
+static RegisterEffect registerEffect7(OnStartCargoplane, EffectInfo
 	{
 		.Name = "Spawn Cargo Plane",
 		.Id = "spawn_cargo",
@@ -114,7 +114,7 @@ static void OnStartBus()
 	CreatePoolVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect8(EFFECT_SPAWN_BUS, OnStartBus, EffectInfo
+static RegisterEffect registerEffect8(OnStartBus, EffectInfo
 	{
 		.Name = "Spawn Bus",
 		.Id = "spawn_bus",
@@ -128,7 +128,7 @@ static void OnStartBlimp()
 	CreatePoolVehicle(GET_HASH_KEY("BLIMP"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect9(EFFECT_SPAWN_BLIMP, OnStartBlimp, EffectInfo
+static RegisterEffect registerEffect9(OnStartBlimp, EffectInfo
 	{
 		.Name = "Spawn Blimp",
 		.Id = "spawn_blimp",
@@ -142,7 +142,7 @@ static void OnStartBuzzard()
 	CreatePoolVehicle(GET_HASH_KEY("BUZZARD"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect10(EFFECT_SPAWN_BUZZARD, OnStartBuzzard, EffectInfo
+static RegisterEffect registerEffect10(OnStartBuzzard, EffectInfo
 	{
 		.Name = "Spawn Buzzard",
 		.Id = "spawn_buzzard",
@@ -156,7 +156,7 @@ static void OnStartFaggio()
 	CreatePoolVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect11(EFFECT_SPAWN_FAGGIO, OnStartFaggio, EffectInfo
+static RegisterEffect registerEffect11(OnStartFaggio, EffectInfo
 	{
 		.Name = "Spawn Faggio",
 		.Id = "spawn_faggio",
@@ -170,7 +170,7 @@ static void OnStartRuiner3()
 	CreatePoolVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect12(EFFECT_SPAWN_RUINER3, OnStartRuiner3, EffectInfo
+static RegisterEffect registerEffect12(OnStartRuiner3, EffectInfo
 	{
 		.Name = "Spawn Ruined Ruiner",
 		.Id = "spawn_ruiner3",
@@ -219,7 +219,7 @@ static void OnStartRandom()
 	}
 }
 
-static RegisterEffect registerEffect13(EFFECT_SPAWN_RANDOM, OnStartRandom, EffectInfo
+static RegisterEffect registerEffect13(OnStartRandom, EffectInfo
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
@@ -233,7 +233,7 @@ static void OnStartBaletrailer()
 	CreatePoolVehicle(GET_HASH_KEY("BALETRAILER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect14(EFFECT_SPAWN_BALETRAILER, OnStartBaletrailer, EffectInfo
+static RegisterEffect registerEffect14(OnStartBaletrailer, EffectInfo
 	{
 		.Name = "Spawn Bale Trailer",
 		.Id = "spawn_baletrailer",
@@ -247,7 +247,7 @@ static void OnStartRomero()
 	CreatePoolVehicle(GET_HASH_KEY("ROMERO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect15(EFFECT_SPAWN_ROMERO, OnStartRomero, EffectInfo
+static RegisterEffect registerEffect15(OnStartRomero, EffectInfo
 	{
 		.Name = "Where's The Funeral?",
 		.Id = "spawn_romero",
@@ -281,7 +281,7 @@ static void OnStartWizardBroom()
 }
 
 
-static RegisterEffect registerEffect(EFFECT_VEHS_WIZARD_BROOM, OnStartWizardBroom, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStartWizardBroom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",

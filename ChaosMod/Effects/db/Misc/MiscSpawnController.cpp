@@ -16,7 +16,7 @@ static void OnStartUFO()
 	SpawnProp("p_spinning_anus_s");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_UFO, OnStartUFO, EffectInfo
+static RegisterEffect registerEffect(OnStartUFO, EffectInfo
 	{
 		.Name = "Spawn UFO",
 		.Id = "misc_spawnufo",
@@ -28,7 +28,7 @@ static void OnStartFerrisWheel()
 	SpawnProp("prop_ld_ferris_wheel");
 }
 
-static RegisterEffect registerEffect2(EFFECT_SPAWN_FERRISWHEEL, OnStartFerrisWheel, EffectInfo
+static RegisterEffect registerEffect2(OnStartFerrisWheel, EffectInfo
 	{
 		.Name = "Spawn Ferris Wheel",
 		.Id = "misc_spawnferriswheel",

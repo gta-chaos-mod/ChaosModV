@@ -64,7 +64,7 @@ static void OnStart()
     TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
 }
 
-static RegisterEffect registerEffect(EFFECT_TP_TO_STORE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",

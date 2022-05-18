@@ -87,11 +87,11 @@ static void OnStop()
 	Memory::SetRadarOffsetX(0.f);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLIP_UI, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_HUD }
+		.IncompatibleWith = { "no_hud" }
 	}
 );

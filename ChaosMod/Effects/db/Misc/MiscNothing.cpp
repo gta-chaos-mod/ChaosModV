@@ -30,11 +30,11 @@ static const std::array options =
 static void OnStart()
 {
 	const auto& effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
-	GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_NOTHING, effectOverride);
+	GetComponent<EffectDispatcher>()->OverrideEffectName("nothing", effectOverride);
 	WAIT(25000);
 	
 }
-static RegisterEffect registerEffect(EFFECT_NOTHING, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Nothing",
 		.Id = "nothing"

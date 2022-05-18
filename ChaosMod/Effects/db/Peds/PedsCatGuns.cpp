@@ -63,7 +63,7 @@ static void OnTick()
 	SET_MODEL_AS_NO_LONGER_NEEDED(catHash);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_CAT_GUNS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Catto Guns",
 		.Id = "peds_catguns",

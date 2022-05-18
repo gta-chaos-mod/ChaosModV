@@ -34,7 +34,7 @@ static void OnStart()
     SET_PED_INTO_VEHICLE(ped, veh, -1);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_BIKER, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
     {
         .Name = "Spawn Biker",
         .Id = "peds_spawn_biker",

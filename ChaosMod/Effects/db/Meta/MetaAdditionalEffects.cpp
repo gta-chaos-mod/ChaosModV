@@ -17,7 +17,7 @@ static void OnTick()
 	MetaModifiers::m_ucAdditionalEffectsToDispatch = 2;
 }
 
-static RegisterEffect registerEffect(EFFECT_META_ADDITIONAL_EFFECTS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Combo Time",
 		.Id = "meta_spawn_multiple_effects",

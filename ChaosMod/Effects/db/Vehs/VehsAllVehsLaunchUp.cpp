@@ -10,7 +10,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_LAUNCH, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Launch All Vehicles Up",
 		.Id = "vehs_upupaway"

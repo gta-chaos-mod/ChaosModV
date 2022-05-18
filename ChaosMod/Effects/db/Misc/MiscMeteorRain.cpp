@@ -85,7 +85,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_METEOR_RAIN, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Meteor Shower",
 		.Id = "meteorrain",

@@ -33,7 +33,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_RAPID_FIRE, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Rapid Fire",
 		.Id = "player_rapid_fire",

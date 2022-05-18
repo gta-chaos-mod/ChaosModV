@@ -13,7 +13,7 @@ static void OnStart()
     SET_PED_ACCURACY(ped, 3);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_JUGGERNAUT, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Juggernaut",
         .Id = "peds_spawn_juggernaut",

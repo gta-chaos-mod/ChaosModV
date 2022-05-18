@@ -13,7 +13,7 @@ static void OnStart()
 	CreateHostilePed(chimpHash, weaponHash);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_CHIMP, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Angry Chimp",
 		.Id = "spawn_angry_chimp",

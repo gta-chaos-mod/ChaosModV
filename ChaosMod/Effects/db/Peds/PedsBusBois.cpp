@@ -13,7 +13,7 @@ static void OnStart()
 	SetSurroundingPedsInVehicles("bus"_hash, maxDistance);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_BUSBOIS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Bus Bois",
 		.Id = "peds_busbois",

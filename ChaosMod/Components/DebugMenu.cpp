@@ -30,7 +30,7 @@ DebugMenu::DebugMenu() : Component()
 
 	if (m_rgEffects.empty())
 	{
-		m_rgEffects.emplace_back(EFFECT_INVALID, "No enabled effects :(");
+		m_rgEffects.emplace_back(EffectIdentifier(), "No enabled effects :(");
 
 		return;
 	}
@@ -234,7 +234,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID || m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.IsScript())
+		if (!m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectId().empty())
 		{
 			m_bDispatchEffect = true;
 		}

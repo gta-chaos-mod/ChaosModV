@@ -11,7 +11,7 @@ static void OnStart()
     Ped ped = CreateHostilePed("u_m_y_rsranger_01"_hash, "weapon_raycarbine"_hash);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_SPACE_RANGER, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Space Ranger",
         .Id = "peds_spawn_space_ranger",

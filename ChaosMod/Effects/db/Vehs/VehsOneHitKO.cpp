@@ -30,11 +30,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_OHKO_VEHICLES, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Vehicles Explode On Impact",
 		.Id = "vehs_ohko",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEHS_INVINCIBLE }
+		.IncompatibleWith = { "vehs_invincible" }
 	}
 );

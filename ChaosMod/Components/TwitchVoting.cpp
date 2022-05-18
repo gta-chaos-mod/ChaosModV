@@ -196,8 +196,7 @@ void TwitchVoting::OnRun()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectType() == EFFECT_INVALID
-				&& m_pChosenEffectIdentifier->GetScriptId().empty())
+			if (m_pChosenEffectIdentifier->GetEffectId().empty())
 			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
@@ -266,9 +265,8 @@ void TwitchVoting::OnRun()
 			{
 				if (m_bEnableTwitchRandomEffectVoteable)
 				{
-					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_INVALID, "Random Effect", !m_bAlternatedVotingRound
-						? 4
-						: 8));
+					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EffectIdentifier(),
+						"Random Effect", !m_bAlternatedVotingRound ? 4 : 8));
 				}
 
 				break;
@@ -429,7 +427,8 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 		m_bHasReceivedResult = true;
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3 ? EFFECT_INVALID : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3
+			? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
 	}
 	else if (szMsg.starts_with("currentvotes"))
 	{
