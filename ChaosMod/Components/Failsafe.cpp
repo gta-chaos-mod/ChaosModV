@@ -2,6 +2,11 @@
 
 #include "Failsafe.h"
 
+#include "Components/EffectDispatcher.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/PoolSpawner.h"
+
 Failsafe::Failsafe() : Component()
 {
 	m_bEnabled = g_OptionsManager.GetConfigValue<bool>("EnableFailsafe", OPTION_DEFAULT_FAILSAFE);

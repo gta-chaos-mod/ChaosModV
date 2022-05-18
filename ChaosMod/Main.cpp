@@ -1,7 +1,24 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "Mp3Manager.h"
+
+#include "Effects/EffectConfig.h"
+
+#include "Memory/Misc.h"
+#include "Memory/Shader.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Hooks/ShaderHook.h"
+
+#include "Components/DebugMenu.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/TwitchVoting.h"
+#include "Components/Shortcuts.h"
+#include "Components/SplashTexts.h"
+
+#include "Util/PoolSpawner.h"
+#include "Util/OptionsManager.h"
 
 static bool ms_bClearAllEffects = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
@@ -10,7 +27,7 @@ static bool ms_bDisableMod = false;
 static bool ms_bEnablePauseTimerShortcut = false;
 static bool ms_bHaveLateHooksRan = false;
 
-static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
+_NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
 {
 	// Format: #ARGB
 	std::array<BYTE, 3> rgColors;
@@ -18,7 +35,7 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
+		Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
 	}
 
 	return rgColors;
@@ -66,7 +83,7 @@ static void Init()
 
 			AllocConsole();
 
-			SetConsoleTitle("Chaos Mod");
+			SetConsoleTitle(L"ChaosModV");
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
 			c_pOldStreamBuf = std::cout.rdbuf();
@@ -217,14 +234,22 @@ namespace Main
 {
 	void OnRun()
 	{
-		__try
-		{
-			MainRun();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		MainRun();
+	}
+
+	void OnCleanup()
+	{
+		LuaScripts::Unload();
+		
+		Hooks::ResetShader();
+		Memory::InvalidateShaderCache();
+	}
+
+	void OnPresent(IDXGISwapChain* pSwapChain)
+	{
+		Hooks::OnPresentShaderHook(pSwapChain);
 	}
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)

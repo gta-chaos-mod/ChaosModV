@@ -32,7 +32,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_BOOST_VELOCITY, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Speed Boost",
 		.Id = "misc_boost_velocity"

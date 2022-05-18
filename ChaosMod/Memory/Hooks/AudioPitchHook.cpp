@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Hooks/Hook.h"
+
 static bool ms_bEnabledHook = false;
 static float ms_fTargetPitch = 0;
 
