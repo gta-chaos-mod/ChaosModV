@@ -280,11 +280,25 @@ static void OnStartWizardBroom()
 	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, 0.3, -80.0, 0, 0, true, false, false, false, 0, true);
 }
 
-
 static RegisterEffect registerEffect(OnStartWizardBroom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",
 		.EffectGroupType = EEffectGroupType::SpawnGeneric
+	}
+);
+
+static void OnStartRake()
+{
+	Vector3 playerPos = GetPlayerPos();
+
+	CreatePoolVehicle(GET_HASH_KEY("RAKETRAILER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+}
+
+static RegisterEffect registerEffect17(OnStartRake, nullptr, nullptr, EffectInfo
+	{
+		.Name = "Spawn Rake",
+		.Id = "spawn_rake",
+		.EEffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
