@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Memory/Physics.h"
 
 static const float m_fTargetNormalForce = 100.f;
 static const float m_fTargetSideForce = 60.f;
