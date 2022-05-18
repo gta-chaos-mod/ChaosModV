@@ -22,17 +22,17 @@ static void OnTick()
 		if (!IS_PED_GETTING_INTO_A_VEHICLE(playerPed) && !IS_PED_CLIMBING(playerPed) && !IS_PED_DIVING(playerPed) && !IS_PED_JUMPING_OUT_OF_VEHICLE(playerPed) && !IS_PED_RAGDOLL(playerPed) && !IS_PED_GETTING_UP(playerPed))
 		{
 			float speed = GET_ENTITY_SPEED(playerPed);
-			gameSpeed = max(min(speed, 4.f) / 4, 0.2);
+			gameSpeed = std::max(std::min(speed, 4.f) / 4.f, 0.2f);
 		}
 		SET_TIME_SCALE(gameSpeed);
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_GAMESPEED_SUPERHOT, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Superhot",
 		.Id = "time_superhot",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }
+		.IncompatibleWith = { "player_dead_eye", "time_x02", "time_x05" }
 	}
 );

@@ -3,6 +3,9 @@
 */
 
 #include <stdafx.h>
+
+#include "Effects/MetaModifiers.h"
+
 #include "Memory/UI.h"
 
 static constexpr int NUM_HUD_COMPONENTS = 21;
@@ -45,7 +48,7 @@ static void OnStart()
 
 static void OnTick()
 {
-	g_MetaInfo.m_bFlipChaosUI = true;
+	MetaModifiers::m_bFlipChaosUI = true;
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -67,7 +70,7 @@ static void OnTick()
 
 static void OnStop()
 {
-	g_MetaInfo.m_bFlipChaosUI = false;
+	MetaModifiers::m_bFlipChaosUI = false;
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -84,11 +87,11 @@ static void OnStop()
 	Memory::SetRadarOffsetX(0.f);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLIP_UI, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_HUD }
+		.IncompatibleWith = { "no_hud" }
 	}
 );

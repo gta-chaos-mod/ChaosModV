@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Player.h"
+
 static int lastTpTime;
 static int currentTpWaitTime;
 
@@ -53,7 +55,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TP_TO_EVERYTHING, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Teleporter Malfunction",
 		.Id = "player_tp_to_everything",
