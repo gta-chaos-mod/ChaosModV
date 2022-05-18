@@ -397,10 +397,7 @@
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Hooks\AudioClearnessHook.h" />
-<<<<<<< HEAD
-=======
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
->>>>>>> 72b565edbc11c2d39eafca1605ee0b350ab02371
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />

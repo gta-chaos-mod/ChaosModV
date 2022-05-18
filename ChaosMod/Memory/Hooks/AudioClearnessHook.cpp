@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Hook.h"
+
 static bool ms_bEnabledHook = false;
 static int ms_fValue = 0;
 
