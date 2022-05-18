@@ -111,12 +111,12 @@ static void OnTick()
 	#pragma endregion
 }
 
-static RegisterEffect registerEffect(EFFECT_ILLEGAL_INNOCENCE, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Innocence Is Illegal",
 		.Id = "player_illegalinnocence",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
 

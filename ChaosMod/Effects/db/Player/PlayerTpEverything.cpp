@@ -55,7 +55,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TPEVERYTHING, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Teleport Everything To Player",
 		.Id = "player_tpeverything"

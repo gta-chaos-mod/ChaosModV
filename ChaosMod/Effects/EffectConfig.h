@@ -1,18 +1,23 @@
 #pragma once
 
-#include "EffectGroups.h"
-#include "EEffectTimedType.h"
-#include "EEffectCategory.h"
-#include "EffectsInfo.h"
-#include "EffectData.h"
-#include "../Util/OptionsFile.h"
+#include "Effects/EffectGroups.h"
+#include "Effects/EEffectTimedType.h"
+#include "Effects/EEffectCategory.h"
+#include "Effects/EffectsInfo.h"
+#include "Effects/EffectData.h"
+#include "Effects/EffectIdentifier.h"
+
+#include "Util/OptionsFile.h"
+
+#include <string>
+#include <vector>
 
 enum EEffectType : int;
 struct EffectData;
 
 namespace EffectConfig
 {
-	inline size_t GetNextDelimiterOffset(std::string input)
+	inline size_t GetNextDelimiterOffset(const std::string& input)
 	{
 		bool isInQuotes = false;
 		if (input.length() > 0)
@@ -36,19 +41,15 @@ namespace EffectConfig
 	{
 		OptionsFile effectsFile(szConfigPath);
 
-		for (int i = 0; i < _EFFECT_ENUM_MAX; i++)
+		for (auto& [ effectId, effectInfo ] : g_dictEffectsMap)
 		{
-			EEffectType effectType = static_cast<EEffectType>(i);
-			const EffectInfo& effectInfo = g_dictEffectsMap.at(effectType);
-
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for name-override", Shortcut
-			std::vector<int> rgValues{ true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0 };
+			std::vector<int> rgValues = { true, static_cast<int>(EEffectTimedType::Unk), -1, 5, false, false, 0, 0 };
 			// HACK: Store EffectCustomName seperately
 			std::string szValueEffectName;
 
-			std::string szValue = effectsFile.ReadValueString(effectInfo.Id);
-
+			auto szValue = effectsFile.ReadValueString(std::string(effectId));
 			if (!szValue.empty())
 			{
 				size_t ullSplitIndex = GetNextDelimiterOffset(szValue);
@@ -124,7 +125,7 @@ namespace EffectConfig
 			effectData.Id = effectInfo.Id;
 			effectData.EffectCategory = effectInfo.EffectCategory;
 
-			for (EEffectType effectType : effectInfo.IncompatibleWith)
+			for (auto effectType : effectInfo.IncompatibleWith)
 			{
 				effectData.IncompatibleIds.push_back(g_dictEffectsMap.at(effectType).Id);
 			}
@@ -135,7 +136,7 @@ namespace EffectConfig
 				g_dictEffectGroupMemberCount[effectData.GroupType]++;
 			}
 
-			out.emplace(effectType, effectData);
+			out.emplace(EffectIdentifier(std::string(effectId)), effectData);
 		}
 	}
 }

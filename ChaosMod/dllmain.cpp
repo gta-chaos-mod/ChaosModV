@@ -1,5 +1,10 @@
-#include "Main.h"
 #include <stdafx.h>
+
+#include "Main.h"
+
+#include "Memory/Memory.h"
+
+#include "Util/CrashHandler.h"
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {

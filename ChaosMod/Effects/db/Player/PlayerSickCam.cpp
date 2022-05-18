@@ -70,12 +70,12 @@ static void OnStop()
     sickCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SICK_CAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
         .Name = "I Feel Sick",
         .Id = "player_sick_cam",
         .IsTimed = true,
         .IsShortDuration = true,
-        .IncompatibleWith = { EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SPIN_CAMERA }
+        .EffectCategory = EEffectCategory::Camera
     }
 );
