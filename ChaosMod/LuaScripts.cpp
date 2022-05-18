@@ -450,8 +450,26 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		return;
 	}
 
-	const auto& szScriptId = *scriptIdOpt;
-	const auto& szScriptName = *scriptNameOpt;
+	auto trim = [](std::string str) -> std::string
+	{
+		if (str.find_first_not_of(' ') == str.npos)
+		{
+			return "";
+		}
+
+		str = str.substr(str.find_first_not_of(' '));
+		str = str.substr(0, str.find_last_not_of(' ') == str.npos ? str.npos : str.find_last_not_of(' ') + 1);
+		return str;
+	};
+
+	const auto& szScriptId = trim(*scriptIdOpt);
+	if (szScriptId.empty())
+	{
+		// Id is empty
+		return;
+	}
+
+	const auto& szScriptName = trim(*scriptNameOpt);
 
 	bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
 	if (!bDoesIdAlreadyExist)
