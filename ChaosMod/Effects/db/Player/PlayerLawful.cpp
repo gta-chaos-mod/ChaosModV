@@ -52,7 +52,7 @@ static void OnTick()
 	lastPlayerKills = allPlayerKills;
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_LAWFUL, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect reg(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Law Abiding Citizen",
 		.Id = "player_lawful",
