@@ -20,7 +20,7 @@ static void OnStart()
 	APPLY_FORCE_TO_ENTITY(veh, 3, 0.f, 0.f, 13.f, -0.3f, 0.f, 0.f, 0, true, true, true, false, true);
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_BARREL_ROLL, OnStart, EffectInfo
+static RegisterEffect reg(OnStart, EffectInfo
 	{
 		.Name = "Do A Barrel Roll",
 		.Id = "player_barrel_roll"
