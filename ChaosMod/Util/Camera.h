@@ -44,36 +44,30 @@ namespace Util
 		return vCoords;
 	}
 
-	inline Vector3 GetGameplayCamRotationToDirection(Vector3 rotation)
+	inline int RayCastCamera(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity, int flags, Cam cam = 0)
 	{
-		const float pi = 2 * acos(0.0);
 
-		Vector3 adjustedRotation =
+		Vector3 cameraRotation;
+		Vector3 cameraCoord;
+		if (cam != 0)
 		{
-			(pi / 180) * rotation.x,
-			(pi / 180) * rotation.y,
-			(pi / 180) * rotation.z
-		};
-		Vector3 direction =
+			cameraRotation = GET_CAM_ROT(cam, 2);
+			cameraCoord = GET_CAM_COORD(cam);
+		}
+		else
 		{
-			-sin(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
-			cos(adjustedRotation.z) * abs(cos(adjustedRotation.x)),
-			sin(adjustedRotation.x)
-		};
-		return direction;
-	}
+			cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
+			cameraCoord = GET_GAMEPLAY_CAM_COORD();
+		}
 
-	inline int RayCastGameplayCam(float distance, BOOL* hit, Vector3* endCoords, Vector3* surfaceNormal, Entity* entity)
-	{
-		Vector3 cameraRotation = GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 cameraCoord = GET_GAMEPLAY_CAM_COORD();
-		Vector3 direction = GetGameplayCamRotationToDirection(cameraRotation);
-		Vector3 destination
-		{
+
+		Vector3 direction = cameraRotation.GetDirectionForRotation();
+		Vector3 destination = Vector3::Init
+		(
 			cameraCoord.x + direction.x * distance,
 			cameraCoord.y + direction.y * distance,
 			cameraCoord.z + direction.z * distance
-		};
-		return GET_SHAPE_TEST_RESULT(_START_SHAPE_TEST_RAY(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, -1, -1, 1), hit, endCoords , surfaceNormal , entity);
+		);
+		return GET_SHAPE_TEST_RESULT(START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(cameraCoord.x, cameraCoord.y, cameraCoord.z, destination.x, destination.y, destination.z, flags, 0, 1), hit, endCoords, surfaceNormal, entity);
 	}
 }

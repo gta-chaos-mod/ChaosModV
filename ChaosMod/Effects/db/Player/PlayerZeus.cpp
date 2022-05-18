@@ -15,7 +15,7 @@ bool GetAimedAtEntity(Entity* e)
 {
 	Vector3 coords, normal;
 	BOOL hit;
-	Util::RayCastGameplayCam(ms_fMaxDist, &hit, &coords, &normal, e);
+	Util::RayCastCamera(ms_fMaxDist, &hit, &coords, &normal, e, -1);
 	return (bool)hit;
 
 }
