@@ -55,11 +55,11 @@ static void OnStop() {
     CLEAR_TIMECYCLE_MODIFIER();
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_BEES, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Bees",
 		.Id = "player_bees",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_OHKO }
+		.IncompatibleWith = { "player_ohko" }
 	}
 );

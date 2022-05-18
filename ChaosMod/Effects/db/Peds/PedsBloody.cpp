@@ -27,7 +27,7 @@ static void OnStart()
 }
 	
 
-static RegisterEffect registerEffect(EFFECT_BLOODY_PEDS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Everyone Is Bloody",
 		.Id = "peds_bloody"
