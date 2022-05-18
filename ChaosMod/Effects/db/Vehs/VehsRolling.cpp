@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Memory/Physics.h"
 
 static const float force = 20.f;
 static const float offsetX = 0.3;
