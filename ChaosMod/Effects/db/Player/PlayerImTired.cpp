@@ -83,7 +83,7 @@ static void OnTick()
 			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
 			if (closingIterator > 1)
 			{
-				closingIterator = max(1, closingIterator - 2);
+				closingIterator = std::max(1, closingIterator - 2);
 			}
 		}
 		break;
@@ -110,7 +110,7 @@ static void OnTick()
 	BlackOut(alpha);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_TIRED, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "I'm So Tired",
 		.Id = "player_tired",

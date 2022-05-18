@@ -23,7 +23,7 @@ static void OnTick()
 	REMOVE_NAMED_PTFX_ASSET("scr_sr_tr");
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_GUNSMOKE, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Gunsmoke",
 		.Id = "peds_gunsmoke",

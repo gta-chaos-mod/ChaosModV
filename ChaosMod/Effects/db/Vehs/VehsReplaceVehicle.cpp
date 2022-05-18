@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Vehicle.h"
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -23,7 +25,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_REPLACEVEHICLE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Replace Current Vehicle",
 		.Id = "misc_replacevehicle"

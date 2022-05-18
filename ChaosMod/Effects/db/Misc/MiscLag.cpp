@@ -97,7 +97,7 @@ static void OnTickLag()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_GAMESPEED_LAG, OnStart, nullptr, OnTickLag, EffectInfo
+static RegisterEffect registerEffect3(OnStart, nullptr, OnTickLag, EffectInfo
 	{
 		.Name = "Lag",
 		.Id = "time_lag",

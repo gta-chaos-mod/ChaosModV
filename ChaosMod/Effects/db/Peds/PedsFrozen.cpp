@@ -65,7 +65,7 @@ static void OnTick()
 	SET_PED_CONFIG_FLAG(PLAYER_PED_ID(), 292, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FROZEN, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Peds Are Brainless",
 		.Id = "peds_frozen",
