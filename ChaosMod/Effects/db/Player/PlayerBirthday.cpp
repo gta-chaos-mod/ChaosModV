@@ -103,7 +103,7 @@ static void OnStart()
 	UnloadAssets();
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_BIRTHDAY, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Happy Birthday!",
 		.Id = "player_birthday"
