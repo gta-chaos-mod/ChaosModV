@@ -16,12 +16,11 @@ static void OnStop()
 	Hooks::ResetAudioVolume();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_DEAF, OnStart, OnStop, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Deaf",
 		.Id = "misc_deaf",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_MISC_SUPER_HEARING},
 		.EffectGroupType = EEffectGroupType::Audio
 	}
 );
