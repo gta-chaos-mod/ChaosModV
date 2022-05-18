@@ -186,11 +186,10 @@ static void OnStop()
 	pedPropsMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_ALL_PROPS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Land",
 		.Id = "misc_all_props",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_INVISIBLE, EFFECT_VEHS_INVISIBLE, EFFECT_PEDS_PROP_HUNT, EFFECT_VEHS_PROP_MODELS }
 	}
 );
