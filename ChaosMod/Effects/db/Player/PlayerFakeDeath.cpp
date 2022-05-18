@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static const char* ms_rgTextPairs[] =
 {
 	"Just kidding, keep playing",
@@ -70,8 +72,7 @@ static void OnStart()
 		}
 
 		// Eager assumption
-		EEffectType eFakeEffectType = EFFECT_PLAYER_SUICIDE;
-
+		std::string fakeEffectId = "player_suicide";
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
@@ -97,7 +98,7 @@ static void OnStart()
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
 					// Fake veh explosion
-					eFakeEffectType = EFFECT_EXPLODE_CUR_VEH;
+					fakeEffectId = "playerveh_explode";
 
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
@@ -153,7 +154,7 @@ static void OnStart()
 			}
 
 			// Set the fake name accordingly
-			GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_PLAYER_FAKEDEATH, eFakeEffectType);
+			GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
 
 			nextModeTime = 0;
 			break;
@@ -221,7 +222,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FAKEDEATH, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Fake Death",
 		.Id = "player_fakedeath"

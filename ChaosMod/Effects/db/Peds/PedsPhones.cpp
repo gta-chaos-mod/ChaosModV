@@ -23,7 +23,7 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PHONES, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Whose Phone Is Ringing?",
 		.Id = "peds_phones",

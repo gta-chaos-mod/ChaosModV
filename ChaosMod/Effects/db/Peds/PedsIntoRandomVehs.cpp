@@ -56,7 +56,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_INTORANDOMVEHS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Set Everyone Into Random Vehicles",
 		.Id = "peds_intorandomvehs"

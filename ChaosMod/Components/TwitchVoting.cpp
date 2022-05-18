@@ -2,8 +2,13 @@
 
 #include "TwitchVoting.h"
 
+#include "Effects/MetaModifiers.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/Text.h"
+
 #define BUFFER_SIZE 256
-#define VOTING_PROXY_START_ARGS LPSTR("chaosmod\\TwitchChatVotingProxy.exe --startProxy")
+#define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
 
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component(), m_rgTextColor(rgTextColor)
 {
@@ -23,7 +28,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 	}
 
 	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
-	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, "ChaosModVVotingMutex");
+	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
 	if (hMutex)
 	{
 		WaitForSingleObject(hMutex, INFINITE);
@@ -43,6 +48,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
 
+	auto str = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD ulAttributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -50,10 +56,11 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		ulAttributes = CREATE_NO_WINDOW;
 	}
 
-	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
 #else
-	bool bResult = CreateProcess(NULL, VOTING_PROXY_START_ARGS, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
+	free(str);
 
 	if (!bResult)
 	{
@@ -62,7 +69,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		return;
 	}
 
-	m_hPipeHandle = CreateNamedPipe("\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
+	m_hPipeHandle = CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
 		1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
 	
 	if (m_hPipeHandle == INVALID_HANDLE_VALUE)
@@ -189,8 +196,7 @@ void TwitchVoting::OnRun()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectType() == EFFECT_INVALID
-				&& m_pChosenEffectIdentifier->GetScriptId().empty())
+			if (m_pChosenEffectIdentifier->GetEffectId().empty())
 			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
@@ -259,9 +265,8 @@ void TwitchVoting::OnRun()
 			{
 				if (m_bEnableTwitchRandomEffectVoteable)
 				{
-					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_INVALID, "Random Effect", !m_bAlternatedVotingRound
-						? 4
-						: 8));
+					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EffectIdentifier(),
+						"Random Effect", !m_bAlternatedVotingRound ? 4 : 8));
 				}
 
 				break;
@@ -415,16 +420,17 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 
 		return false;
 	}
-	else if (szMsg._Starts_with("voteresult"))
+	else if (szMsg.starts_with("voteresult"))
 	{
 		int iResult = std::stoi(szMsg.substr(szMsg.find(":") + 1));
 
 		m_bHasReceivedResult = true;
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3 ? EFFECT_INVALID : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3
+			? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
 	}
-	else if (szMsg._Starts_with("currentvotes"))
+	else if (szMsg.starts_with("currentvotes"))
 	{
 		std::string szValuesStr = szMsg.substr(szMsg.find(":") + 1);
 
@@ -457,7 +463,7 @@ void TwitchVoting::SendToPipe(std::string&& szMsg)
 
 void TwitchVoting::ErrorOutWithMsg(const std::string&& szMsg)
 {
-	MessageBox(NULL, szMsg.c_str(), "ChaosModV Error", MB_OK | MB_ICONERROR);
+	MessageBox(NULL, reinterpret_cast<LPCWSTR>(szMsg.c_str()), L"ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_hPipeHandle);
 	CloseHandle(m_hPipeHandle);
