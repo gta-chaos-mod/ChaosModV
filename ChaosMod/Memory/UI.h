@@ -44,7 +44,7 @@ namespace Memory
 				return;
 			}
 
-			refreshMinimapFunc = handle.Get<void(__cdecl)()>();
+			refreshMinimapFunc = handle.Get<void()>();
 		}
 
 		data[0].PosX = defaultValues[0].PosX + xOffset; // minimap

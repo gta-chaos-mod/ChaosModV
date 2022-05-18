@@ -42,12 +42,12 @@ static void OnStop()
     zoomCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_ZOOMZOOM_CAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
         .Name = "Zoom Zoom Cam",
         .Id = "player_zoomzoom_cam",
         .IsTimed = true,
         .IsShortDuration = true,
-        .IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_SICK_CAM }
+        .EffectCategory = EEffectCategory::Camera
     }
 );

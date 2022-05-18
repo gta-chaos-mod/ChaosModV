@@ -55,7 +55,7 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_WALK_ON_WATER, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Walk On Water",
 		.Id = "player_walkonwater",
