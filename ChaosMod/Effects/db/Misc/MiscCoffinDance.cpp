@@ -77,7 +77,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_COFFIN_DANCE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Coffin Dance",
 		.Id = "misc_coffin_dance"
