@@ -34,12 +34,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_MISC_SUPER_HEARING, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect2(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Hearing",
 		.Id = "misc_super_hearing",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_MISC_DEAF},
 		.EffectGroupType = EEffectGroupType::Audio
 	}
 );
