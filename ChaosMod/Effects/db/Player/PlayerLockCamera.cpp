@@ -16,7 +16,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_LOCKCAMERA, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Lock Camera",
 		.Id = "player_lockcamera",

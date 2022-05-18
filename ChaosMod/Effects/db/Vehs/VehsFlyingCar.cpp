@@ -62,7 +62,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_FLYING_CAR, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Flying Cars",
 		.Id = "vehs_flyingcars",

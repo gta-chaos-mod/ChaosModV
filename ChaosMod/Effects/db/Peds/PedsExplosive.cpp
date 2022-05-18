@@ -21,7 +21,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLOSIVE_PEDS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Explosive Peds",
 		.Id = "peds_explosive",
