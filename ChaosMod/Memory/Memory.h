@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../vendor/minhook/include/MinHook.h"
+#include "Handle.h"
+
+#include <minhook/include/MinHook.h>
 
 #include <string>
 

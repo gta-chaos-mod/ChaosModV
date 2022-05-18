@@ -1,9 +1,31 @@
-#include <errhandlingapi.h>
 #include <stdafx.h>
 
 #include "LuaScripts.h"
 
-#define _LUAFUNC static inline
+#include "Effects/Effect.h"
+#include "Effects/MetaModifiers.h"
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffectsMap.h"
+
+#include "Memory/WeaponPool.h"
+#include "Memory/PedModels.h"
+#include "Memory/Vehicle.h"
+#include "Memory/Snow.h"
+#include "Memory/Hooks/ShaderHook.h"
+
+#include "Util/File.h"
+#include "Util/Script.h"
+#include "Util/EntityIterator.h"
+#include "Util/PoolSpawner.h"
+#include "Util/Vehicle.h"
+
+#if defined(_MSC_VER)
+	#define _LUAFUNC static __forceinline
+#elif defined(__clang__) || defined(__GNUC__)
+	#define _LUAFUNC __attribute__((always_inline)) static inline
+#else
+	#define _LUAFUNC static inline
+#endif
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -169,7 +191,7 @@ public:
 		return *reinterpret_cast<T*>(&m_pData);
 	}
 
-	__forceinline _NODISCARD bool IsValid() const
+	_NODISCARD __forceinline bool IsValid() const
 	{
 		return m_pData || m_Obj.valid();
 	}
@@ -334,14 +356,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		"AsFloat", &LuaHolder::As<float>,
 		"AsString", &LuaHolder::As<char*>,
 		"AsVector3", &LuaHolder::As<LuaVector3>
-		);
+	);
 	lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object&>);
 
 	lua.new_usertype<LuaVector3>("_Vector3",
 		"x", &LuaVector3::m_fX,
 		"y", &LuaVector3::m_fY,
 		"z", &LuaVector3::m_fZ
-		);
+	);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 	lua["_invoke"] = [szFileName](const sol::this_state& lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType, const sol::variadic_args& args)
@@ -361,6 +383,15 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 	lua["GetAllWeapons"] = Memory::GetAllWeapons;
 	lua["GetAllPedModels"] = Memory::GetAllPedModels;
 	lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
+
+	lua.new_enum("EOverrideShaderType",
+		"LensDistortion", 	EOverrideShaderType::LensDistortion,
+		"Snow", 			EOverrideShaderType::Snow
+	);
+	lua["OverrideShader"] = Hooks::OverrideShader;
+	lua["ResetShader"] = Hooks::ResetShader;
+
+	lua["SetSnowState"] = Memory::SetSnow;
 
 	const auto& result = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
@@ -419,8 +450,26 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 		return;
 	}
 
-	const auto& szScriptId = *scriptIdOpt;
-	const auto& szScriptName = *scriptNameOpt;
+	auto trim = [](std::string str) -> std::string
+	{
+		if (str.find_first_not_of(' ') == str.npos)
+		{
+			return "";
+		}
+
+		str = str.substr(str.find_first_not_of(' '));
+		str = str.substr(0, str.find_last_not_of(' ') == str.npos ? str.npos : str.find_last_not_of(' ') + 1);
+		return str;
+	};
+
+	const auto& szScriptId = trim(*scriptIdOpt);
+	if (szScriptId.empty())
+	{
+		// Id is empty
+		return;
+	}
+
+	const auto& szScriptName = trim(*scriptNameOpt);
 
 	bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
 	if (!bDoesIdAlreadyExist)
@@ -514,6 +563,17 @@ static void ParseScriptEntry(const std::filesystem::directory_entry& entry)
 			{
 				effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
 			}
+		}
+	}
+
+	const sol::optional<std::string>& effectCategoryOpt = scriptInfo["EffectCategory"];
+	if (effectCategoryOpt)
+	{
+		const auto& effectCategoryStr = *effectCategoryOpt;
+		auto effectCategoryIt = g_dictNameToEffectCategory.find(effectCategoryStr);
+		if (effectCategoryIt != g_dictNameToEffectCategory.end())
+		{
+			effectData.EffectCategory = effectCategoryIt->second;
 		}
 	}
 

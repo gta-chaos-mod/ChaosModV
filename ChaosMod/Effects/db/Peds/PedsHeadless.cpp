@@ -12,11 +12,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_HEADLESS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Mannequins",
 		.Id = "peds_headless",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_MINIONS }
+		.IncompatibleWith = { "peds_minions" }
 	}
 );
