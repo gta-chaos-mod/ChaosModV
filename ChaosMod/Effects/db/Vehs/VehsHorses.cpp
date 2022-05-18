@@ -27,7 +27,7 @@ static void OnStart()
 	SET_PED_INTO_VEHICLE(PLAYER_PED_ID(), b, -1);
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_HORSE, OnStart, EffectInfo
+static RegisterEffect reg(OnStart, EffectInfo
 	{
 		.Name = "Red Dead Redemption",
 		.Id = "player_horse"
