@@ -1,5 +1,9 @@
 #include "stdafx.h"
 
+#include "Components/Component.h"
+#include "Components/EffectDispatcher.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+
 static enum class FakeSpawnType : int
 {
 	PEDTYPE, 
@@ -19,7 +23,7 @@ struct PedSpawnAttributes
 
 struct FakeSpawnInfo
 {
-	EEffectType type;
+	const char* id;
 	Hash model;
 	FakeSpawnType spawnType;
 	PedSpawnAttributes* pedAttributes = nullptr;
@@ -27,22 +31,23 @@ struct FakeSpawnInfo
 
 static const std::vector<FakeSpawnInfo> fakeSpawns =
 {
-	{EFFECT_SPAWN_ADDER, 0xB779A091, FakeSpawnType::VEHICLETYPE}, // Adder
-	{EFFECT_ANGRY_ALIEN, 0x570462B9, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0x7FD62962, 5)}, // Jimmy
-	{EFFECT_SPAWN_TANK, 0x2EA68690, FakeSpawnType::VEHICLETYPE}, // Rhino
-	{EFFECT_ANGRY_JESUS, 0xCE2CB751, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0x6D544C99, 5)}, // Griefer Jesus
-	{EFFECT_SPAWN_BUZZARD, 0x2F03547B, FakeSpawnType::VEHICLETYPE}, // Buzzard
-	{EFFECT_SPAWN_IMPOTENTRAGE, 0x348065F5, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0, 5)}, // Impotent Rage
-	{EFFECT_SPAWN_MONSTER, 0xCD93A7DB, FakeSpawnType::VEHICLETYPE}, // Monster
-	{EFFECT_SPAWN_COMPANION_BRAD, 0xBDBB4922, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0xB1CA77B1, 0)}, // Brad (Companion)
+	{"spawn_adder", 0xB779A091, FakeSpawnType::VEHICLETYPE}, // Adder
+	{"peds_angryjimmy", 0x570462B9, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0x7FD62962, 5)}, // Jimmy
+	{"spawn_rhino", 0x2EA68690, FakeSpawnType::VEHICLETYPE}, // Rhino
+	{"spawn_grieferjesus", 0xCE2CB751, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0x6D544C99, 5)}, // Griefer Jesus
+	{"spawn_buzzard", 0x2F03547B, FakeSpawnType::VEHICLETYPE}, // Buzzard
+	{"peds_spawnimrage", 0x348065F5, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0, 5)}, // Impotent Rage
+	{"spawn_monster", 0xCD93A7DB, FakeSpawnType::VEHICLETYPE}, // Monster
+	{"spawn_compbrad", 0xBDBB4922, FakeSpawnType::PEDTYPE, new PedSpawnAttributes(0xB1CA77B1, 0)}, // Brad (Companion)
 };
 
 static void OnStart()
 {
 	FakeSpawnInfo selectedSpawnInfo = fakeSpawns.at(g_Random.GetRandomInt(0, fakeSpawns.size()-1));
-	EEffectType overideType = selectedSpawnInfo.type;
+	const char* overideId = selectedSpawnInfo.id;
 	Hash modelHash = selectedSpawnInfo.model;
-	GetComponent<EffectDispatcher>()->OverrideEffectName(EFFECT_FAKE_SPAWN, overideType);
+	
+	GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fake_spawn", overideId);
 
 	LoadModel(modelHash);
 
