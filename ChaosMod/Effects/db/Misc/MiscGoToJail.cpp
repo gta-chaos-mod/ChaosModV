@@ -24,7 +24,7 @@ static void OnStart()
 	SET_ENTITY_AS_NO_LONGER_NEEDED(&car);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_GO_TO_JAIL, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail"
