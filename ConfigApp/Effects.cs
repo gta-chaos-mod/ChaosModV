@@ -364,7 +364,7 @@ namespace ConfigApp
             { "misc_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.MISC, true, true) },
             { "misc_rgbland", new EffectInfo("RGB Land", EffectCategory.MISC, true) },
             { "misc_deaf", new EffectInfo("Deaf", EffectCategory.MISC, true) },
-            { "misc_super_hearing", new EFfectInfo("Super Hearing", EffectCategory.MISC, true) },
+            { "misc_super_hearing", new EffectInfo("Super Hearing", EffectCategory.MISC, true) },
         };
     }
 }

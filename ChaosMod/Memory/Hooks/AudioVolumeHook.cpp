@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Hook.h"
 
 static bool ms_bEnabledHook = false;
 static float ms_fTargetVolume = 0;
