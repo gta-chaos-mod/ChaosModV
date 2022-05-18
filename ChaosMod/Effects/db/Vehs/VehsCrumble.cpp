@@ -17,7 +17,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_CRUMBLE, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Crumbling Vehicles",
 		.Id = "vehs_crumble",

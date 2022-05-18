@@ -54,7 +54,7 @@ static void OnStart()
 	SET_ENTITY_INVINCIBLE(playerPed, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_ROCKET, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Rocket Man",
 		.Id = "player_rocket"

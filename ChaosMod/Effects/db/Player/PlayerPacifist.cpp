@@ -30,7 +30,7 @@ static void OnTick()
 	}
 	lastPlayerKills = allPlayerKills;
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_PACIFIST, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Pacifist",
 		.Id = "player_pacifist",

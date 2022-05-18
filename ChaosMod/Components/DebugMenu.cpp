@@ -1,10 +1,14 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 #include "DebugMenu.h"
 
+#include "Components/EffectDispatcher.h"
+
+#include "Util/OptionsManager.h"
+
 #define MAX_VIS_ITEMS 15
 
-DebugMenu::DebugMenu()
+DebugMenu::DebugMenu() : Component()
 {
 	m_bIsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_bIsEnabled)
@@ -12,7 +16,7 @@ DebugMenu::DebugMenu()
 		return;
 	}
 
-	for (const auto& pair : g_EnabledEffects)
+	for (const auto& pair : g_dictEnabledEffects)
 	{
 		const auto& [effectIdentifier, effectData] = pair;
 
@@ -26,7 +30,7 @@ DebugMenu::DebugMenu()
 
 	if (m_rgEffects.empty())
 	{
-		m_rgEffects.emplace_back(EFFECT_INVALID, "No enabled effects :(");
+		m_rgEffects.emplace_back(EffectIdentifier(), "No enabled effects :(");
 
 		return;
 	}
@@ -49,7 +53,7 @@ DebugMenu::DebugMenu()
 	});
 }
 
-void DebugMenu::Run()
+void DebugMenu::OnRun()
 {
 	if (!m_bIsEnabled
 		|| !m_bVisible)
@@ -84,7 +88,7 @@ void DebugMenu::Run()
 	{
 		m_bDispatchEffect = false;
 
-		g_pEffectDispatcher->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
+		GetComponent<EffectDispatcher>()->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
 	}
 
 	float fY = .1f;
@@ -230,7 +234,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectType() != EFFECT_INVALID || m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.IsScript())
+		if (!m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectId().empty())
 		{
 			m_bDispatchEffect = true;
 		}

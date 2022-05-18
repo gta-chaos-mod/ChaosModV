@@ -77,7 +77,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SET_INTO_CLOSEST_VEH, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Set Player Into Closest Vehicle",
 		.Id = "player_tpclosestveh"

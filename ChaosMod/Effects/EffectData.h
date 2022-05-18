@@ -3,6 +3,7 @@
 #include "EffectGroups.h"
 #include "EEffectTimedType.h"
 #include "EEffectAttributes.h"
+#include "EEffectCategory.h"
 
 #include <string>
 #include <vector>
@@ -16,12 +17,13 @@ struct EffectData
 	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
-	float Weight = WeightMult;
+	float Weight = 5.f;
 	int CustomTime = -1;
 	int WeightMult = 5;
-	int Shortcut = 0;
+	int ShortcutKeycode = 0;
 	EEffectTimedType TimedType = EEffectTimedType::Unk;
-	EEffectGroupType GroupType = EEffectGroupType::None;
+	EEffectCategory EffectCategory = EEffectCategory::None;
+	std::string GroupType;
 
 private:
 	EEffectAttributes Attributes {};
@@ -41,7 +43,8 @@ public:
 
 	inline bool ExcludedFromVoting() const
 	{
-		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting);
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting)
+			|| IsMeta() || IsUtility();
 	}
 
 	inline bool HasCustomName() const
@@ -62,10 +65,10 @@ public:
 
 inline float GetEffectWeight(const EffectData& effectData)
 {
-	EEffectGroupType effectGroupType = effectData.GroupType;
-	float effectWeight = effectData.Weight;
+	const auto& effectGroup = effectData.GroupType;
+	auto effectWeight = effectData.Weight;
 
-	return g_bEnableGroupWeighting && effectGroupType != EEffectGroupType::None
-		? effectWeight / g_dictCurrentEffectGroupMemberCount[effectGroupType] * g_EffectGroups.at(effectGroupType).WeightMult
+	return g_bEnableGroupWeighting && !effectGroup.empty() && !g_dictEffectGroups.at(effectGroup).IsPlaceholder
+		? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup) * g_dictEffectGroups.at(effectGroup).WeightMult
 		: effectWeight;
 }

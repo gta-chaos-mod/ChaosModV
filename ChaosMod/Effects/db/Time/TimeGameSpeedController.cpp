@@ -22,13 +22,14 @@ static void OnTickX02()
 	SET_TIME_SCALE(.2f);
 }
 
-static RegisterEffect registerEffect1(EFFECT_GAMESPEED_X02, nullptr, OnStop, OnTickX02, EffectInfo
+static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX02, EffectInfo
 	{
 		.Name = "x0.2 Gamespeed",
 		.Id = "time_x02",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X05, EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_SUPERHOT }
+		.IncompatibleWith = { "time_x05", "player_dead_eye", "time_superhot" },
+		.EffectCategory = EEffectCategory::Pitch
 	}
 );
 static void OnTickX05()
@@ -41,12 +42,13 @@ static void OnTickX05()
 	SET_TIME_SCALE(.5f);
 }
 
-static RegisterEffect registerEffect2(EFFECT_GAMESPEED_X05, nullptr, OnStop, OnTickX05, EffectInfo
+static RegisterEffect registerEffect2(nullptr, OnStop, OnTickX05, EffectInfo
 	{
 		.Name = "x0.5 Gamespeed",
 		.Id = "time_x05",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X02, EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_SUPERHOT }
+		.IncompatibleWith = { "time_x02", "player_dead_eye", "time_superhot" },
+		.EffectCategory = EEffectCategory::Pitch
 	}
 );

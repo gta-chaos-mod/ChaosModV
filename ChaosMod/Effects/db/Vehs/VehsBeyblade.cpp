@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -51,7 +53,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Beyblades",
 		.Id = "vehs_beyblade",

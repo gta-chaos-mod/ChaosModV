@@ -111,7 +111,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MOV_NO_RANDOM, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Disable Random Direction",
 		.Id = "player_no_random_movement",
