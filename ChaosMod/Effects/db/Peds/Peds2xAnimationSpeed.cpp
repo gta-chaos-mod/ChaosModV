@@ -12,7 +12,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_2X_ANIMATION_SPEED, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "2x Animation Speed",
 		.Id = "peds_2x_animation_speed",

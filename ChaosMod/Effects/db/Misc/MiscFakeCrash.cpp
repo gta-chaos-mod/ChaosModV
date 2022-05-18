@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static void SleepAllThreads(DWORD ms)
 {
 	std::vector<HANDLE> threads;
@@ -49,7 +51,7 @@ static void OnStart()
 
 	if (fakeTimer)
 	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
+		GetComponent<EffectDispatcher>()->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
 
 	SleepAllThreads(500);
@@ -60,11 +62,11 @@ static void OnStart()
 
 	if (fakeTimer)
 	{
-		g_pEffectDispatcher->m_fFakeTimerBarPercentage = 0.f;
+		GetComponent<EffectDispatcher>()->m_fFakeTimerBarPercentage = 0.f;
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Fake Crash",
 		.Id = "misc_fakecrash"

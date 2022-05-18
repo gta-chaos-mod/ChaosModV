@@ -1,8 +1,9 @@
+/*
+	Effect by juhana
+*/
 #include <stdafx.h>
 
-/*
-Effect by juhana
-*/
+#include "Util/Peds.h"
 
 static void OnStart()
 {
@@ -15,10 +16,10 @@ static void OnStart()
 	CreateHostilePed(floydModelHash, knifeModelHash);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_SPAWN_QUARRELING_COUPLE, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Quarreling Couple",
 		.Id = "peds_spawn_quarreling_couple",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EEffectGroupType::SpawnEnemy
 	}
 );
