@@ -8,7 +8,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_KILL_ENGINE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Kill Engine Of Every Vehicle",
 		.Id = "playerveh_killengine"

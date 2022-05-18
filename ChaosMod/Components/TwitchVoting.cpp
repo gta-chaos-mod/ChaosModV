@@ -2,6 +2,11 @@
 
 #include "TwitchVoting.h"
 
+#include "Effects/MetaModifiers.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/Text.h"
+
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
 
@@ -43,6 +48,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 	STARTUPINFO startupInfo = {};
 	PROCESS_INFORMATION procInfo = {};
 
+	auto str = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD ulAttributes = NULL;
 	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
@@ -50,10 +56,11 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 		ulAttributes = CREATE_NO_WINDOW;
 	}
 
-	bool bResult = CreateProcess(NULL, const_cast<LPWSTR>(VOTING_PROXY_START_ARGS), NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, ulAttributes, NULL, NULL, &startupInfo, &procInfo);
 #else
-	bool bResult = CreateProcess(NULL, const_cast<LPWSTR>(VOTING_PROXY_START_ARGS), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+	bool bResult = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
 #endif
+	free(str);
 
 	if (!bResult)
 	{
@@ -189,8 +196,7 @@ void TwitchVoting::OnRun()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectType() == EFFECT_INVALID
-				&& m_pChosenEffectIdentifier->GetScriptId().empty())
+			if (m_pChosenEffectIdentifier->GetEffectId().empty())
 			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}
@@ -259,9 +265,8 @@ void TwitchVoting::OnRun()
 			{
 				if (m_bEnableTwitchRandomEffectVoteable)
 				{
-					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EFFECT_INVALID, "Random Effect", !m_bAlternatedVotingRound
-						? 4
-						: 8));
+					m_rgEffectChoices.push_back(std::make_unique<ChoosableEffect>(EffectIdentifier(),
+						"Random Effect", !m_bAlternatedVotingRound ? 4 : 8));
 				}
 
 				break;
@@ -422,7 +427,8 @@ bool TwitchVoting::HandleMsg(const std::string& szMsg)
 		m_bHasReceivedResult = true;
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3 ? EFFECT_INVALID : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(iResult == 3
+			? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
 	}
 	else if (szMsg.starts_with("currentvotes"))
 	{

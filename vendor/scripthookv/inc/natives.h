@@ -9,7 +9,7 @@
 #if defined(_MSC_VER)
 	#define NATIVE_DECL __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
-	#define NATIVE_DECL __attribute__((always_inline))
+	#define NATIVE_DECL __attribute__((always_inline)) inline
 #else
 	#define NATIVE_DECL inline
 #endif

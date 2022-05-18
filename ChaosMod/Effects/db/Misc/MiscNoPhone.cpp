@@ -19,7 +19,7 @@ static void OnTick()
 	TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_PHONE, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Phone",
 		.Id = "player_nophone",

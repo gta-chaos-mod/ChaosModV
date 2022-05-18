@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Util/Natives.h"
+#include "Util/Natives.h"
 
 using BYTE = unsigned char;
 
