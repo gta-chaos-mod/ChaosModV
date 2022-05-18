@@ -18,12 +18,12 @@ static void OnStopSix()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect4(EFFECT_6_STARS, OnStartSix, OnStopSix, nullptr, EffectInfo
+static RegisterEffect registerEffect4(OnStartSix, OnStopSix, EffectInfo
 	{
 		.Name = "6 Wanted Stars",
 		.Id = "player_6stars",
 		.IsTimed = true,
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
 
