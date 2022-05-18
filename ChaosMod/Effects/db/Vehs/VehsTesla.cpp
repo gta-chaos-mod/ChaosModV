@@ -151,10 +151,10 @@ static void OnStop()
 	playerState = PlayerState::NONE;
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_TESLA, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Self Drving Cars",
 		.Id = "vehs_tesla",
-		.IsTimed = true,
+		.IsTimed = true
 	}
 );
