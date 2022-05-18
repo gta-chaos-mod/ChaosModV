@@ -93,7 +93,7 @@ static void OnStart()
 	Hooks::DisableScriptThreadBlock();
 }
 
-static RegisterEffect registerEffect(EFFECT_FAKE_SPAWN, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Fake Spawn",
 		.Id = "misc_fake_spawn",
