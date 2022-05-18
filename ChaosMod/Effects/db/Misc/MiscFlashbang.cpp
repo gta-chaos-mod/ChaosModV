@@ -14,7 +14,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLASHBANG, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Flashbang",
 		.Id = "misc_flashbang"
