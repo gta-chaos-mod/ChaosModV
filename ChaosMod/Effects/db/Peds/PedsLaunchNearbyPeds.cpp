@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-static struct SpacePed
+struct SpacePed
 {
 	SpacePed(Ped ped, Vector3 vel) : Ped(ped), Vel(vel)
 	{
@@ -42,7 +42,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LAUNCH_ALL_PEDS, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Launch All Nearby Peds Up",
 		.Id = "peds_launchnearby"

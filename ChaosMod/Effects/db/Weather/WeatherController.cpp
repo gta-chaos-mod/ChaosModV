@@ -5,11 +5,11 @@ static void OnStartExtraSunny()
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
-static RegisterEffect registerEffect(EFFECT_WEATHER_EXTRASUNNY, OnStartExtraSunny, EffectInfo
+static RegisterEffect registerEffect(OnStartExtraSunny, EffectInfo
 	{
 		.Name = "Extra Sunny Weather",
 		.Id = "weather_extrasunny",
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
 static void OnStartThunder()
@@ -17,11 +17,11 @@ static void OnStartThunder()
 	SET_WEATHER_TYPE_NOW("THUNDER");
 }
 
-static RegisterEffect registerEffect2(EFFECT_WEATHER_THUNDER, OnStartThunder, EffectInfo
+static RegisterEffect registerEffect2(OnStartThunder, EffectInfo
 	{
 		.Name = "Stormy Weather",
 		.Id = "weather_stormy",
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
 static void OnStartFoggy()
@@ -29,11 +29,11 @@ static void OnStartFoggy()
 	SET_WEATHER_TYPE_NOW("FOGGY");
 }
 
-static RegisterEffect registerEffect3(EFFECT_WEATHER_FOGGY, OnStartFoggy, EffectInfo
+static RegisterEffect registerEffect3(OnStartFoggy, EffectInfo
 	{
 		.Name = "Foggy Weather",
 		.Id = "weather_foggy",
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
 static void OnStartNeutral()
@@ -41,11 +41,11 @@ static void OnStartNeutral()
 	SET_WEATHER_TYPE_NOW("NEUTRAL");
 }
 
-static RegisterEffect registerEffect4(EFFECT_WEATHER_NEUTRAL, OnStartNeutral, EffectInfo
+static RegisterEffect registerEffect4(OnStartNeutral, EffectInfo
 	{
 		.Name = "Neutral Weather",
 		.Id = "weather_neutral",
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
 static void OnStartXmas()
@@ -53,11 +53,11 @@ static void OnStartXmas()
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect5(EFFECT_WEATHER_XMAS, OnStartXmas, EffectInfo
+static RegisterEffect registerEffect5(OnStartXmas, EffectInfo
 	{
 		.Name = "Snowy Weather",
 		.Id = "weather_snowy",
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
 static void OnTickRandom()
@@ -79,11 +79,11 @@ static void OnTickRandom()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_WEATHER_RANDOMWEATHER, nullptr, nullptr, OnTickRandom, EffectInfo
+static RegisterEffect registerEffect6(nullptr, nullptr, OnTickRandom, EffectInfo
 	{
 		.Name = "Disco Weather",
 		.Id = "weather_randomizer",
 		.IsTimed = true,
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );

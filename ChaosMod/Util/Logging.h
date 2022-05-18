@@ -1,6 +1,7 @@
 #pragma once
 
-#include <wincon.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 #include <sstream>
 #include <fstream>
@@ -13,7 +14,8 @@ inline std::ofstream g_ConsoleOut;
 
 #define _OSS std::ostringstream()
 
-#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 \
+	: strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define _LOG(_text, _stream) _stream << _text
 

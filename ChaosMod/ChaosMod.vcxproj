@@ -21,14 +21,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -56,12 +56,12 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -74,24 +74,26 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\DebugMenu.cpp" />
-    <ClCompile Include="Components\ShortCut.cpp" />
+    <ClCompile Include="Components\Shortcuts.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Components\EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
+    <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
@@ -105,11 +107,23 @@
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderDimWarp.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderFourthDimension.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderInvertedColors.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderLocalCoop.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderRgbLand.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscShaderWarpedCam.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
@@ -127,7 +141,9 @@
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsPropHunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsQuarrelingCouple.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSpawnAngryChimp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
@@ -151,6 +167,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
@@ -264,6 +281,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsTankBois.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsMowerMates.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
@@ -336,6 +354,7 @@
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
+    <ClCompile Include="Memory\Hooks\ShaderHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="..\vendor\Patterns\Patterns.cpp" />
     <ClCompile Include="Components\SplashTexts.cpp" />
@@ -343,7 +362,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="EffectThreads.cpp" />
+    <ClCompile Include="Effects\EffectThreads.cpp" />
     <ClCompile Include="Components\TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
@@ -357,15 +376,17 @@
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
-    <ClInclude Include="Components\ShortCut.h" />
-    <ClInclude Include="EffectConfig.h" />
+    <ClInclude Include="Components\Shortcuts.h" />
+    <ClInclude Include="Effects\EEffectCategory.h" />
+    <ClInclude Include="Effects\EffectConfig.h" />
+    <ClInclude Include="Effects\EEffectAttributes.h" />
     <ClInclude Include="Effects\EffectData.h" />
     <ClInclude Include="Effects\EEffectExecutionType.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
-    <ClInclude Include="Effects\MetaEffectInfo.h" />
+    <ClInclude Include="Effects\MetaModifiers.h" />
     <ClInclude Include="Effects\EEffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
     <ClInclude Include="Components\Failsafe.h" />
@@ -374,6 +395,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />
@@ -383,18 +405,21 @@
     <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Memory\Misc.h" />
     <ClInclude Include="Memory\PedModels.h" />
+    <ClInclude Include="Memory\Script.h" />
+    <ClInclude Include="Memory\Shader.h" />
     <ClInclude Include="Memory\Snow.h" />
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
+    <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
     <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="EffectThreads.h" />
+    <ClInclude Include="Effects\EffectThreads.h" />
     <ClInclude Include="Components\TwitchVoting.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\CrashHandler.h" />

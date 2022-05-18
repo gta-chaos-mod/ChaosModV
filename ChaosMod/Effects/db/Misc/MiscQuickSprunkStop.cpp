@@ -15,10 +15,10 @@ static void OnStart()
     SET_ENTITY_ROTATION(obj, GET_ENTITY_PITCH(player), -GET_ENTITY_ROLL(player), GET_ENTITY_HEADING(player), 0, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_QUICK_SPRUNK_STOP, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Quick Sprunk Stop",
         .Id = "misc_quick_sprunk_stop",
-        .EEffectGroupType = EEffectGroupType::SpawnGeneric
+        .EffectGroupType = EEffectGroupType::SpawnGeneric
     }
 );

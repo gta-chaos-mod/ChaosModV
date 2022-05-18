@@ -98,7 +98,7 @@ static void OnStart()
 		aroundCoords = GetCoordsAround(pos, 70);
 		isValidCoord = GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
 	} while (!isValidCoord);
-	groundZ = max(groundZ, aroundCoords.z);
+	groundZ = std::max(groundZ, aroundCoords.z);
 	heli = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);
 	SET_VEHICLE_ENGINE_ON(heli, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(heli, 0); // Needed, so the heli doesn't fall down instantly
@@ -166,12 +166,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_NEWS_TEAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
-        .Name = "News Team",
-        .Id = "misc_news_team",
-	.IsTimed = true,
-	.IsShortDuration = true,
-	.IncompatibleWith = { EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_FREEZE_CAM }
+		.Name = "News Team",
+		.Id = "misc_news_team",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Camera
     }
 );

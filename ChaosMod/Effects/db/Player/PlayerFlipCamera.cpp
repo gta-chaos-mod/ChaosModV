@@ -36,12 +36,12 @@ static void OnStop()
     flippedCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_FLIP_CAMERA, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Turn Turtle",
 		.Id = "player_flip_camera",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SICK_CAM, EFFECT_PLAYER_FREEZE_CAM }
+		.EffectCategory = EEffectCategory::Camera
 	}
 );
