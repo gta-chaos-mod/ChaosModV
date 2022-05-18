@@ -27,7 +27,7 @@ static void OnTick()
 }
 
 
-static RegisterEffect registerEffectBrakes(EFFECT_VEH_FAULTY_BRAKES, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffectBrakes(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Faulty Brakes",
 		.Id = "vehs_faulty_brakes",
