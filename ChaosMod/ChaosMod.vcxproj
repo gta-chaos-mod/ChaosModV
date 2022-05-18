@@ -171,6 +171,7 @@
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSpinCam.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerZeus.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSickCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
