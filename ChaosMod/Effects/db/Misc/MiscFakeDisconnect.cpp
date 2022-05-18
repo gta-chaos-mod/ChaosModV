@@ -16,7 +16,7 @@ static void OnStart()
 	SET_PLAYER_CONTROL(player, 1, 1 << 8);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FAKE_DISCONNECT, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Fake Disconnect",
 		.Id = "misc_fake_disconnect"
