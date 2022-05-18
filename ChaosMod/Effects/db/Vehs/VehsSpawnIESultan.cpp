@@ -56,10 +56,10 @@ static void OnStart()
 	WAIT(0);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Blue Sultan",
 		.Id = "spawn_bluesultan",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

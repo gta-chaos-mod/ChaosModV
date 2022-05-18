@@ -14,7 +14,8 @@ class DebugMenu : public Component
 private:
 	struct DebugEffect
 	{
-		DebugEffect(const EffectIdentifier& effectIdentifier, const std::string& szEffectName) : m_EffectIdentifier(effectIdentifier), m_szEffectName(szEffectName)
+		DebugEffect(const EffectIdentifier& effectIdentifier, const std::string& szEffectName)
+			: m_EffectIdentifier(effectIdentifier), m_szEffectName(szEffectName)
 		{
 
 		}

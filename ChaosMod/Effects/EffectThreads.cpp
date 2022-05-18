@@ -2,6 +2,8 @@
 
 #include "EffectThreads.h"
 
+#include "Util/Script.h"
+
 static std::list<std::unique_ptr<EffectThread>> m_rgThreads;
 static DWORD64 m_ullLastTimestamp;
 
