@@ -72,7 +72,7 @@ static void OnStart()
 		
 }
 
-static RegisterEffect registerEffect(EFFECT_REPOSSESSION, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Repossession",
 		.Id = "veh_repossession",

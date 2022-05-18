@@ -19,7 +19,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_POLY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Low Render Distance",
 		.Id = "world_lowpoly",

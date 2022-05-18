@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Player.h"
+
 struct Location
 {
     Vector3 coordinates;
@@ -77,7 +79,7 @@ static void OnStart()
     SET_VEHICLE_FORWARD_SPEED(veh, loc.speed);
 }
 
-static RegisterEffect registerEffect(EFFECT_MAKE_STUNT, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
     {
         .Name = "Make Random Stunt Jump",
         .Id = "player_tp_stunt",

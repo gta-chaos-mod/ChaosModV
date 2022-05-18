@@ -53,7 +53,7 @@ static void OnStart()
 	TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(tonyaPed, towTruck, 404, -1630, 29, 9999.f, 262668, 0.f);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_GET_TOWED, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Get Towed",
         .Id = "misc_get_towed",

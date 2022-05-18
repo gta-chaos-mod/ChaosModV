@@ -1,7 +1,16 @@
 #include <stdafx.h>
 
 #include "EffectDispatcher.h"
+#include "Mp3Manager.h"
+
+#include "Components/TwitchVoting.h"
+
 #include "Effects/EEffectCategory.h"
+#include "Effects/MetaModifiers.h"
+
+#include "Util/Random.h"
+#include "Util/OptionsManager.h"
+#include "Util/Text.h"
 
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, const std::array<BYTE, 3>& rgTextColor, const std::array<BYTE, 3>& rgEffectTimerColor)
 	: Component()
@@ -435,8 +444,8 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier& effectIdentifier, 
 			{
 				// Play global sound (if one exists)
 				// Workaround: Force no global sound for "Fake Crash" and "Fake Death"
-				if (effectIdentifier.GetEffectType() != EFFECT_MISC_CRASH
-					&& effectIdentifier.GetEffectType() != EFFECT_PLAYER_FAKEDEATH)
+				if (effectIdentifier.GetEffectId() != "misc_fakecrash"
+					&& effectIdentifier.GetEffectId() != "player_fakedeath")
 				{
 					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 				}
@@ -572,21 +581,24 @@ void EffectDispatcher::ClearMostRecentEffect()
 	}
 }
 
-std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance, EEffectType ignore) const
+std::vector<RegisteredEffect*> EffectDispatcher::GetRecentEffects(int distance, std::string_view  ignoreEffect) const
 {
-	std::vector<RegisteredEffect*> temp;
+	std::vector<RegisteredEffect*> effects;
+
 	for (int i = m_rgDispatchedEffectsLog.size() - 1; distance > 0 && i >= 0; i--)
 	{
-		RegisteredEffect* regeff = *std::next(m_rgDispatchedEffectsLog.begin(), i);
-		if ((!regeff->IsScript() && regeff->GetIndentifier().GetEffectType() == ignore)
-			|| std::find(temp.begin(), temp.end(), regeff) != temp.end())
+		auto effect = *std::next(m_rgDispatchedEffectsLog.begin(), i);
+		if ((!ignoreEffect.empty() && effect->GetIndentifier().GetEffectId() == ignoreEffect)
+			|| std::find(effects.begin(), effects.end(), effect) != effects.end())
 		{
 			continue;
 		}
-		temp.emplace_back(regeff);
+
+		effects.emplace_back(effect);
 		distance--;
 	}
-	return temp;
+
+	return effects;
 }
 
 void EffectDispatcher::Reset()
@@ -650,11 +662,11 @@ bool EffectDispatcher::ShouldRemoveEffectForTimeOut(int timer, int effectCount, 
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using any given string
-void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName)
+void EffectDispatcher::OverrideEffectName(std::string_view effectId, const std::string& szOverrideName)
 {
-	for (ActiveEffect& effect : m_rgActiveEffects)
+	for (auto& effect : m_rgActiveEffects)
 	{
-		if (effect.m_EffectIdentifier.GetEffectType() == eEffectType)
+		if (effect.m_EffectIdentifier.GetEffectId() == effectId)
 		{
 			effect.m_szFakeName = szOverrideName;
 		}
@@ -662,13 +674,17 @@ void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, const std::st
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
-void EffectDispatcher::OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType) {
-	for (ActiveEffect& effect : m_rgActiveEffects)
+void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId)
+{
+	for (auto& effect : m_rgActiveEffects)
 	{
-		if (effect.m_EffectIdentifier.GetEffectType() == eEffectType)
+		if (effect.m_EffectIdentifier.GetEffectId() == effectId)
 		{
-			EffectInfo fakeEffectInfo = g_dictEffectsMap.find(eFakeEffectType)->second;
-			effect.m_szFakeName = fakeEffectInfo.Name;
+			auto result = g_dictEffectsMap.find(fakeEffectId);
+			if (result != g_dictEffectsMap.end())
+			{
+				effect.m_szFakeName = result->second.Name;
+			}
 		}
 	}
 }

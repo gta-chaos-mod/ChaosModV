@@ -21,13 +21,11 @@ static void OnTick()
 	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_PITCH, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
-		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 },
 		.EffectGroupType = EEffectGroupType::Audio
 	}
 );

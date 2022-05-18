@@ -46,7 +46,7 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_JIMMY, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Jealous Jimmy",
 		.Id = "peds_angryjimmy",
