@@ -148,6 +148,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsWaterGuns.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBladeHunger.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
@@ -357,7 +358,6 @@
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="..\vendor\Patterns\Patterns.cpp" />
     <ClCompile Include="Components\SplashTexts.cpp" />
-    <ClCompile Include="PedsWaterGuns.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
