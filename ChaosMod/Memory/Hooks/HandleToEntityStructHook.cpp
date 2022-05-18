@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Hooks/Hook.h"
+
 static std::unordered_map<Entity, Entity> ms_dictVehicleMap;
 
 __int64(*_OG_HandleToEntityStruct)(Entity entity);

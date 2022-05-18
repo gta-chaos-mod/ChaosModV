@@ -15,7 +15,7 @@ static void OnTick()
 		playerPos.y + g_Random.GetRandomInt(-20, 20), playerPos.z + g_Random.GetRandomInt(5, 10), 0, 1000, model, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_MONEYDROPS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Money Rain",
 		.Id = "player_moneydrops",

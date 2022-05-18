@@ -29,7 +29,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_HEAL, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "HESOYAM",
 		.Id = "player_heal"
