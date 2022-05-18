@@ -22,7 +22,7 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-    Hooks::OverrideShader(EOverrideShaderType::Snow, ms_szShaderSrc);
+    Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
 }
 
 static void OnStop()
