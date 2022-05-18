@@ -48,7 +48,7 @@ static void OnStart()
 	HUD::END_TEXT_COMMAND_DISPLAY_HELP(0, 0, 1, -1); // When shape is set to a negative number, the help message will disapear by it's self after 7.5 seconds.
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FACTS, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Useful Fact",
 		.Id = "player_facts"
