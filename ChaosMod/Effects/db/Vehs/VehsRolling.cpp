@@ -40,7 +40,7 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_ROLLING, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Rolling Stones",
 		.Id = "vehs_rolling",
