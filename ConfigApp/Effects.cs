@@ -39,7 +39,6 @@ namespace ConfigApp
 
         public static readonly Dictionary<string, EffectInfo> EffectsMap = new Dictionary<string, EffectInfo>()
         {
-
             { "player_suicide", new EffectInfo("Suicide", EffectCategory.PLAYER) },
             { "player_plus2stars", new EffectInfo("+2 Wanted Stars", EffectCategory.PLAYER) },
             { "player_5stars", new EffectInfo("5 Wanted Stars", EffectCategory.PLAYER) },
