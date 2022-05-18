@@ -343,7 +343,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_AUTOPILOT, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Autopilot",
 		.Id = "player_break",
