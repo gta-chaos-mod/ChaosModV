@@ -29,7 +29,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SNEEZE, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Bless You",
 		.Id = "player_sneeze",
