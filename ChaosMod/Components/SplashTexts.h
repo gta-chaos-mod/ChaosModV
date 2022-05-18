@@ -12,9 +12,12 @@ private:
 	float m_fClearEffectsSplashTime = 0.f;
 
 public:
-	virtual void Run() override;
+	virtual void OnRun() override;
 
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
 	void ShowClearEffectsSplash();
+
+	template <class T> requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };

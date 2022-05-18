@@ -19,7 +19,7 @@ static void OnTick()
 	//trevor
 	if (playerHash == 2608926626)
 	{
-		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0);
+		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0, 0);
 	}
 
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
@@ -34,11 +34,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "One Hit KO",
 		.Id = "player_ohko",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PLAYER_BEES }
+		.IncompatibleWith = { "player_bees" }
 	}
 );
