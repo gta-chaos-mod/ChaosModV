@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static void SleepAllThreads(DWORD ms)
 {
 	std::vector<HANDLE> threads;
@@ -64,7 +66,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Fake Crash",
 		.Id = "misc_fakecrash"

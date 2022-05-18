@@ -7,7 +7,7 @@ namespace Util
 	// TODO: Maybe CWeaponInfo has some field which can be checked (instead of hardcoding the weapon hashes)
 	inline bool IsWeaponShotgun(Hash ulWepHash)
 	{
-		switch (ulWepHash)
+		switch ((long)ulWepHash)
 		{
 		case 487013001:
 		case 2017895192:

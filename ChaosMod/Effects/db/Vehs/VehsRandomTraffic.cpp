@@ -1,5 +1,8 @@
+// Effect by ProfessorBiddle, this is a bit clunky but it works well.
+
 #include <stdafx.h>
-//effect by ProfessorBiddle, this is a bit clunky but it works well.
+
+#include "Util/Vehicle.h"
 
 static void OnTick()
 {
@@ -26,7 +29,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Random Traffic",
 		.Id = "veh_randtraffic",
