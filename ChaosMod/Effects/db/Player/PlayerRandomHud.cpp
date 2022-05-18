@@ -18,7 +18,7 @@ static void OnTick()
 	HIDE_HUD_COMPONENT_THIS_FRAME(selectedComponent);
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_DISABLE_RANDOM_HUD, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect reg(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Disable Random Hud Component",
 		.Id = "player_random_hud",
