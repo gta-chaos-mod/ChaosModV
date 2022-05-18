@@ -363,6 +363,7 @@ namespace ConfigApp
             { "misc_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.MISC, true) },
             { "misc_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.MISC, true, true) },
             { "misc_rgbland", new EffectInfo("RGB Land", EffectCategory.MISC, true) },
+            { "player_invert_veh_controls", new EffectInfo("Invert Vehicle Controls", EffectCategory.PLAYER, true, true) },
         };
     }
 }
