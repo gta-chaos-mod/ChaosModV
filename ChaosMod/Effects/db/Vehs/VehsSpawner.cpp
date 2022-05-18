@@ -295,7 +295,7 @@ static void OnStartRake()
 	CreatePoolVehicle(GET_HASH_KEY("RAKETRAILER"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
-static RegisterEffect registerEffect17(EFFECT_SPAWN_RAKE, OnStartRake, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect17(OnStartRake, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Rake",
 		.Id = "spawn_rake",
