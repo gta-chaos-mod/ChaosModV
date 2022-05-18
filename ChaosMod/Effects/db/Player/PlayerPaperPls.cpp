@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 std::string txtRoot = "chaosmod\\data\\player_paper_pls\\";
 
