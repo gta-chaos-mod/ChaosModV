@@ -28,8 +28,11 @@ jobs:
 
     - name: Compile ASI & Dependencies
       run: |
-        msbuild vendor/minhook/build/VC16/MinHookVC16.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
-        msbuild ChaosMod.sln /t:ChaosMod /p:Configuration=Release
+        cd ChaosMod
+        mkdir build
+        cd build
+        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" ../
+        ninja
 
     - name: Compile Voting Overlay
       run: |
@@ -49,7 +52,7 @@ jobs:
         C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
         7z.exe x data.zip
         rm data.zip
-        cp ../x64/Release/ChaosMod.asi
+        cp ../ChaosMod/build/ChaosMod.asi
         cp ../ConfigApp/bin/Release/ChaosModVConfig.exe chaosmod/
         cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.exe chaosmod/
         cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay

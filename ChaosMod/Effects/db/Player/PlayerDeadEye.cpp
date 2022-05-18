@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/Camera.h"
+
 struct PedHitInfo
 {
 	Ped pedHandle;
@@ -50,7 +52,7 @@ static void OnTick()
 				Vector3 launchPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));
 				Vector3 targPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
 
-				int rayHandle = START_SHAPE_TEST_LOS_PROBE(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
+				int rayHandle = START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
 				if (rayHandle != 0)
 				{
 					BOOL didHit;
@@ -150,11 +152,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DEAD_EYE, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Dead Eye",
 		.Id = "player_dead_eye",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_GAMESPEED_SUPERHOT }
+		.IncompatibleWith = { "time_x02", "time_x05", "time_superhot" }
 	}
 );

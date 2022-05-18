@@ -200,7 +200,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_MERCENARIES, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Mercenaries",
 		.Id = "peds_mercenaries",

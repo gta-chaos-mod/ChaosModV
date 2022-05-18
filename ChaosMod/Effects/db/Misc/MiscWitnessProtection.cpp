@@ -4,6 +4,8 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Util/Types.h"
+
 struct OrbitPed
 {
     Ped ped;
@@ -104,7 +106,7 @@ static void OnStop()
     orbitingPeds.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_WITNESS_PROTECTION, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
         .Name = "Witness Protection",
         .Id = "misc_witness_protection",

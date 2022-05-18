@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+#include "Memory/Gravity.h"
+
 static void OnStop()
 {
 	SET_GRAVITY_LEVEL(0);
@@ -10,13 +13,13 @@ static void OnTickLow()
 	SET_GRAVITY_LEVEL(1);
 }
 
-static RegisterEffect registerEffect1(EFFECT_LOW_GRAV, nullptr, OnStop, OnTickLow, EffectInfo
+static RegisterEffect registerEffect1(nullptr, OnStop, OnTickLow, EffectInfo
 	{
 		.Name = "Low Gravity",
 		.Id = "lowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_VERY_LOW_GRAV, EFFECT_INSANE_GRAV, EFFECT_INVERT_GRAV, EFFECT_SIDEWAYS_GRAVITY }
+		.EffectCategory = EEffectCategory::Gravity
 	}
 );
 static void OnTickVeryLow()
@@ -24,13 +27,13 @@ static void OnTickVeryLow()
 	SET_GRAVITY_LEVEL(2);
 }
 
-static RegisterEffect registerEffect2(EFFECT_VERY_LOW_GRAV, nullptr, OnStop, OnTickVeryLow, EffectInfo
+static RegisterEffect registerEffect2(nullptr, OnStop, OnTickVeryLow, EffectInfo
 	{
 		.Name = "Very Low Gravity",
 		.Id = "verylowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_LOW_GRAV, EFFECT_INSANE_GRAV, EFFECT_INVERT_GRAV, EFFECT_SIDEWAYS_GRAVITY }
+		.EffectCategory = EEffectCategory::Gravity
 	}
 );
 static void OnTickInsane()
@@ -53,13 +56,13 @@ static void OnTickInsane()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_INSANE_GRAV, nullptr, OnStop, OnTickInsane, EffectInfo
+static RegisterEffect registerEffect3(nullptr, OnStop, OnTickInsane, EffectInfo
 	{
 		.Name = "Insane Gravity",
 		.Id = "insanegravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_LOW_GRAV, EFFECT_VERY_LOW_GRAV, EFFECT_INVERT_GRAV, EFFECT_SIDEWAYS_GRAVITY }
+		.EffectCategory = EEffectCategory::Gravity
 	}
 );
 static void OnStartInvert()
@@ -87,17 +90,17 @@ static void OnTickInvert()
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_INVERT_GRAV, OnStartInvert, OnStop, OnTickInvert, EffectInfo
+static RegisterEffect registerEffect4(OnStartInvert, OnStop, OnTickInvert, EffectInfo
 	{
 		.Name = "Invert Gravity",
 		.Id = "invertgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_LOW_GRAV, EFFECT_VERY_LOW_GRAV, EFFECT_INSANE_GRAV, EFFECT_SIDEWAYS_GRAVITY }
+		.EffectCategory = EEffectCategory::Gravity
 	}
 );
 
-Vector3 sidewaysGravityForce;
+static Vector3 sidewaysGravityForce;
 static void OnStartSideways()
 {
 	// Z is 0 since we don't want any upwards or downwards gravity
@@ -131,12 +134,12 @@ static void OnTickSideways()
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_SIDEWAYS_GRAVITY, OnStartSideways, OnStop, OnTickSideways, EffectInfo
+static RegisterEffect registerEffect5(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 	{
 		.Name = "Sideways Gravity",
 		.Id = "misc_sideways_gravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_LOW_GRAV, EFFECT_VERY_LOW_GRAV, EFFECT_INVERT_GRAV, EFFECT_INSANE_GRAV }
+		.EffectCategory = EEffectCategory::Gravity
 	}
 );

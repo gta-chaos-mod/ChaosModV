@@ -34,11 +34,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "One Hit KO",
 		.Id = "player_ohko",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PLAYER_BEES }
+		.IncompatibleWith = { "player_bees" }
 	}
 );

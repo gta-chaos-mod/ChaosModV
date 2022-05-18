@@ -1,6 +1,6 @@
 #pragma once
 
-#define _HANDLEFUNC inline [[nodiscard]]
+#define _HANDLEFUNC [[nodiscard]] inline
 
 using DWORD64 = unsigned long long;
 using DWORD = unsigned long;

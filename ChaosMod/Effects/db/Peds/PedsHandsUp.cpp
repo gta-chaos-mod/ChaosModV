@@ -18,7 +18,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_HANDS_UP, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Hands Up!",
 		.Id = "peds_hands_up"
