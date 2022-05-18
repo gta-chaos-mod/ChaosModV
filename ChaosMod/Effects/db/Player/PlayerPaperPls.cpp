@@ -233,7 +233,7 @@ static void OnStart()
 	Hooks::DisableScriptThreadBlock();
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_PAPER_PLS, OnStart, EffectInfo
+static RegisterEffect reg(OnStart, EffectInfo
 	{
 		.Name = "Papers Please",
 		.Id = "player_paper_pls",
