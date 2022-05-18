@@ -2,6 +2,8 @@
 
 #include "Memory.h"
 
+#include "Memory/Hooks/Hook.h"
+
 static DWORD64 ms_ullBaseAddr;
 static DWORD64 ms_ullEndAddr;
 

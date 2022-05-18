@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	Ped player = PLAYER_ID();
@@ -84,7 +86,7 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_GRAVITY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Gravity Field",
 		.Id = "player_gravity",

@@ -15,7 +15,7 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FLEE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "All Nearby Peds Are Fleeing",
 		.Id = "peds_flee"

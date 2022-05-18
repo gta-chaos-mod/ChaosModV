@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
+#include <minhook/include/MinHook.h>
 
-#include "../../../vendor/minhook/include/MinHook.h"
+#include <string>
 
 #define _NODISCARD [[nodiscard]]
 
@@ -37,22 +37,22 @@ namespace Memory
 
 		RegisteredHook& operator=(const RegisteredHook&) = delete;
 
-		inline _NODISCARD bool RunHook()
+		_NODISCARD inline bool RunHook()
 		{
 			return m_pHookFunc();
 		}
 
-		inline _NODISCARD const std::string& GetName() const
+		_NODISCARD inline const std::string& GetName() const
 		{
 			return m_szName;
 		}
 
-		inline _NODISCARD RegisteredHook* GetNext() const
+		_NODISCARD inline RegisteredHook* GetNext() const
 		{
 			return m_pNext;
 		}
 
-		inline _NODISCARD bool IsLateHook() const
+		_NODISCARD inline bool IsLateHook() const
 		{
 			return m_bIsLateHook;
 		}

@@ -28,11 +28,11 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_GAMESPEED_SUPERHOT, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Superhot",
 		.Id = "time_superhot",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PLAYER_DEAD_EYE, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }
+		.IncompatibleWith = { "player_dead_eye", "time_x02", "time_x05" }
 	}
 );
