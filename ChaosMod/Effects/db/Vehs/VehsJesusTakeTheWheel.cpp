@@ -17,8 +17,6 @@ static void OnStart()
 		SET_VEHICLE_COLOURS(veh, 135, 135);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}
-
-
 	
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
@@ -72,7 +70,7 @@ static void OnStart()
 
 }
 
-static RegisterEffect registerEffect(EFFECT_JESUS_TAKE_THE_WHEEL, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Jesus Take The Wheel",
 		.Id = "veh_jesustakethewheel"

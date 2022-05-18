@@ -64,7 +64,7 @@ static void OnTick()
 	DRAW_RECT(1 - (rightWidth / 2), 0.5, rightWidth, 1, 0, 0, 0, 255, false); // Right bar
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_DVDSCREENSAVER, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "DVD Screensaver",
 		.Id = "misc_dvdscreensaver",

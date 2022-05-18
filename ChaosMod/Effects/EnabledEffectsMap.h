@@ -1,8 +1,10 @@
 #pragma once
 
-#include "EffectIdentifier.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectData.h"
 
 #include <unordered_map>
+#include <functional>
 
 using size_t = unsigned long long;
 
@@ -13,10 +15,7 @@ class EffectsIdentifierHasher
 public:
     size_t operator()(const EffectIdentifier& effectIdentifier) const
     {
-        size_t ullHash1 = std::hash<int>()(effectIdentifier.GetEffectType());
-        size_t ullHash2 = std::hash<std::string>()(effectIdentifier.GetScriptId());
-
-        return ullHash1 ^ ullHash2;
+        return std::hash<std::string_view>()(effectIdentifier.GetEffectId());
     }
 };
 

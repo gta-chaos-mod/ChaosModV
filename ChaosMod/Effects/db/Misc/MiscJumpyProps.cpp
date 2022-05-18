@@ -48,7 +48,7 @@ static void OnStop()
 	propDataMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_JUMPY_PROPS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Props",
 		.Id = "misc_jumpy_props",
