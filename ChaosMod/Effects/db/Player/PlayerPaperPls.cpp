@@ -233,10 +233,9 @@ static void OnStart()
 	Hooks::DisableScriptThreadBlock();
 }
 
-static RegisterEffect reg(OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Papers Please",
 		.Id = "player_paper_pls",
-		.IsTimed = false,
 	}
 );
