@@ -51,7 +51,7 @@ namespace rage
 
 		virtual DWORD* Reset(int a2, const void* a3, int a4) = 0;
 
-		virtual __int64 Run() = 0;
+		virtual __int64 OnRun() = 0;
 
 		virtual __int64 Update() = 0;
 

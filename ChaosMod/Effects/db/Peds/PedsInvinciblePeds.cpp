@@ -16,7 +16,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EVERYONE_INVINCIBLE, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Everyone Is Invincible",
 		.Id = "peds_invincible",

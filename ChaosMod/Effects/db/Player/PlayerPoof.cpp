@@ -25,7 +25,7 @@ static void OnTick()
 
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_POOF, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Deadly Aim",
 		.Id = "player_poof",

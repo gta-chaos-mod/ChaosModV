@@ -27,7 +27,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPINNING_PROPS, OnStart, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Spinning Props",
 		.Id = "misc_spinning_props",
