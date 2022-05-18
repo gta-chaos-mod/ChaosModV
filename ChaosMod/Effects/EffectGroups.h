@@ -18,7 +18,7 @@ enum class EEffectGroupType
 	TimeChange,         // Effects which change time of day
 	WeatherChange,      // Effects which change the weather
 	Shader,             // Shader effects
-	Audio				// Audio effects
+	Audio		    // Audio effects
 };
 
 struct EffectGroupData
