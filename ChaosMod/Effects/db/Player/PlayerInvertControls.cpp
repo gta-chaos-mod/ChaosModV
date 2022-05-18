@@ -23,7 +23,7 @@ static void OnStop()
 	lastVeh = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_INVERT_VEH_CONTROLS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Invert Vehicle Controls",
 		.Id = "player_invert_veh_controls",
