@@ -41,7 +41,7 @@ static void OnStart()
 	cooldown = 0;
 }
 
-RegisterEffect reg(EFFECT_VEHS_BOOST, OnStart, nullptr, OnTick, EffectInfo
+RegisterEffect reg(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "What's the boost button? (E/LS)",
 		.Id = "vehs_boost",
