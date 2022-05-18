@@ -1,21 +1,23 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 enum class EEffectGroupType
 {
 	None,
-	Teleport,            // Effects which teleport the player potentially far away without (explicitly) being helpful
+	Teleport,           // Effects which teleport the player potentially far away without (explicitly) being helpful
 	SpawnGeneric,       // Effects which spawn "generic" objects (like vehicles or props)
-	SpawnEnemySpecial, // Effects which spawn "special" enemy peds, DO NOT ADD ANY ADDITIONAL EFFECTS TO THIS GROUP
+	SpawnEnemySpecial,  // Effects which spawn "special" enemy peds, DO NOT ADD ANY ADDITIONAL EFFECTS TO THIS GROUP
 	SpawnEnemy,         // Effects which spawn enemy peds
 	SpawnCompanion,     // Effects which spawn friendly peds
-	Weapons,             // Effects which give/remove weapons
-	PlayerKill,          // Effects which are (almost) guaranteed to immediately kill the player under any circumstance
+	Weapons,            // Effects which give/remove weapons
+	PlayerKill,         // Effects which are (almost) guaranteed to immediately kill the player under any circumstance
 	TrafficColor,       // Effects which change the color of traffic
-	TrafficSpawner,	 // Effects which change or spawn a lot of vehicles
+	TrafficSpawner,	    // Effects which change or spawn a lot of vehicles
 	TimeChange,         // Effects which change time of day
 	WeatherChange,      // Effects which change the weather
+	Shader              // Shader effects
 };
 
 struct EffectGroupData
@@ -38,6 +40,7 @@ inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups
 	{"_group_trafficcolor", { .WeightMult = 3 }},
 	{"_group_timechange", { .WeightMult = 2 }},
 	{"_group_weatherchange", { .WeightMult = 2 }},
+	{"_group_shader", { .WeightMult = 3 }},
 };
 
 inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeToGroup
@@ -53,6 +56,7 @@ inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeT
 	{EEffectGroupType::TrafficColor, "_group_trafficcolor"},
 	{EEffectGroupType::TimeChange, "_group_timechange"},
 	{EEffectGroupType::WeatherChange, "_group_weatherchange"},
+	{EEffectGroupType::Shader, "_group_shader"},
 };
 
 inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;

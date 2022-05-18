@@ -131,12 +131,12 @@ public:
 		}
 	}
 
-	inline _NODISCARD bool HasStopped() const
+	_NODISCARD inline bool HasStopped() const
 	{
 		return m_bHasStopped;
 	}
 
-	inline _NODISCARD bool HasOnStartExecuted() const
+	_NODISCARD inline bool HasOnStartExecuted() const
 	{
 		return m_bHasOnStartExecuted;
 	}

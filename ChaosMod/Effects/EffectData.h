@@ -3,6 +3,7 @@
 #include "EffectGroups.h"
 #include "EEffectTimedType.h"
 #include "EEffectAttributes.h"
+#include "EEffectCategory.h"
 
 #include <string>
 #include <vector>
@@ -21,6 +22,7 @@ struct EffectData
 	int WeightMult = 5;
 	int ShortcutKeycode = 0;
 	EEffectTimedType TimedType = EEffectTimedType::Unk;
+	EEffectCategory EffectCategory = EEffectCategory::None;
 	std::string GroupType;
 
 private:
