@@ -2,12 +2,12 @@
 
 static void OnStop()
 {
-	_0xA76359FC80B2438E(1.f);
+	OVERRIDE_LODSCALE_THIS_FRAME(1.f);
 }
 
 static void OnTick()
 {
-	_0xA76359FC80B2438E(.04f);
+	OVERRIDE_LODSCALE_THIS_FRAME(.04f);
 
 	// By Juhana
 	for (Ped ped : GetAllPeds())
@@ -19,7 +19,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_POLY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Low Render Distance",
 		.Id = "world_lowpoly",

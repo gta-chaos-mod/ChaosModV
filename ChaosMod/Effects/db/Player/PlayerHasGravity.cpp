@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	Ped player = PLAYER_ID();
@@ -51,7 +53,7 @@ static void OnTick()
 			{
 				SET_PED_TO_RAGDOLL(entity, 5000, 5000, 0, true, true, false);
 			}
-			float forceDistance = min(max(0.f, (startDistance - distance)), maxForceDistance);
+			float forceDistance = std::min(std::max(0.f, (startDistance - distance)), maxForceDistance);
 			float force = (forceDistance / maxForceDistance) * maxForce;
 			Memory::ApplyForceToEntity(entity, 3, (entityCoord.x - playerCoord.x) * -1.f, (entityCoord.y - playerCoord.y) * -1.f, (entityCoord.z - playerCoord.z) * -1.f, 0, 0, 0, false, false, true, true, false, true);
 		
@@ -84,7 +86,7 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect(EFFECT_PLAYER_GRAVITY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Gravity Field",
 		.Id = "player_gravity",

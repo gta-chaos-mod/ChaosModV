@@ -42,6 +42,25 @@ namespace Memory
 			handle = handle.At(2).Into();
 			WORD usMaxModels = handle.Value<WORD>();
 
+			static auto ugBlacklistedModels = []
+			{
+				std::vector<Hash> ugBlacklistedModels;
+
+				if (getGameVersion() >= VER_1_0_2612_0_STEAM && getGameVersion() <= VER_1_0_2628_0_NOSTEAM)
+				{
+					// Stub vehicles, thanks R* lol
+					ugBlacklistedModels.insert(ugBlacklistedModels.end(), {
+						0x5C54030C, // arbitergt
+						0xA71D0D4F, // astron2
+						0x170341C2, // cyclone2
+						0x39085F47, // ignus2
+						0x438F6593  // s95
+					});
+				}
+
+				return ugBlacklistedModels;
+			}();
+
 			for (WORD usIdx = 0; usIdx < usMaxModels; usIdx++)
 			{
 				DWORD64 ullEntry = *reinterpret_cast<DWORD64*>(ullModelList + 8 * usIdx);
@@ -52,7 +71,9 @@ namespace Memory
 
 				Hash ulModel = *reinterpret_cast<Hash*>(ullEntry);
 
-				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel))
+				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel)
+					&& std::find(ugBlacklistedModels.begin(), ugBlacklistedModels.end(), ulModel)
+						== ugBlacklistedModels.end())
 				{
 					c_rgVehModels.push_back(ulModel);
 				}
@@ -94,12 +115,8 @@ namespace Memory
 		__int64 v6 = sub_7FF69C749B98(vehicle);
 		if (v6)
 		{
-			(*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
-			if (v6)
-			{
-				*reinterpret_cast<BYTE*>(v6 + 2373) &= 0xFEu;
-				*reinterpret_cast<BYTE*>(v6 + 2373) |= bState;
-			}
+			*reinterpret_cast<BYTE*>(v6 + 2373) &= 0xFEu;
+			*reinterpret_cast<BYTE*>(v6 + 2373) |= bState;
 		}
 	}
 

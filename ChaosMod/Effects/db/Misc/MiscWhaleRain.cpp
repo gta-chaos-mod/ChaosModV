@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	static constexpr int MAX_WHALES = 20;
@@ -84,7 +86,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_WHALE_RAIN, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Whale Rain",
 		.Id = "world_whalerain",
