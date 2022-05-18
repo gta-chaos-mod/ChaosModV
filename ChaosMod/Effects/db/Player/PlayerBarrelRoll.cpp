@@ -11,7 +11,7 @@ static void OnStart()
 
 	if (!DOES_ENTITY_EXIST(veh))
 	{
-		Vector3 p = GET_ENTITY_COORDS(plr);
+		Vector3 p = GET_ENTITY_COORDS(plr, true);
 		Vehicle veh = CreatePoolVehicle(GET_HASH_KEY("buffalo"), p.x, p.y, p.z, GET_ENTITY_HEADING(plr));
 		SET_PED_INTO_VEHICLE(plr, veh, -1);
 	}
