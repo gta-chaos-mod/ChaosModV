@@ -36,11 +36,11 @@ static void OnTick()
 	UpdateCam();
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FACECAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
         .Name = "FaceTime",
         .Id = "player_facecam",
-		.IsTimed = true,
-		.IsShortDuration = true
+        .IsTimed = true,
+	.IsShortDuration = true
     }
 );
