@@ -62,7 +62,7 @@ static void OnStart()
 	RESET_AI_MELEE_WEAPON_DAMAGE_MODIFIER();
 }
 
-static RegisterEffect reg(EFFECT_PEDS_BEAST, OnStart, EffectInfo
+static RegisterEffect reg(OnStart, EffectInfo
 	{
 		.Name = "Spawn Beast",
 		.Id = "peds_spawn_beast"
