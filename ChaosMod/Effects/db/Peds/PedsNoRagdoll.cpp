@@ -16,7 +16,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_RAGDOLL, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Ragdoll",
 		.Id = "player_noragdoll",

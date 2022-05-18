@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	// Thanks to menyoo for the prop names
@@ -83,7 +85,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_METEOR_RAIN, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Meteor Shower",
 		.Id = "meteorrain",

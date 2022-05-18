@@ -42,7 +42,7 @@ static void OnStop()
 	vehicleDefaultSizes.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_TINY, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Tiny Vehicles",
 		.Id = "vehs_tiny",

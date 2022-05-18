@@ -25,7 +25,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ALL_VEH_POP_TIRES, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Now This Is Some Tire Poppin'",
 		.Id = "vehs_poptiresconstant",

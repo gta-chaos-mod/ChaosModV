@@ -36,7 +36,7 @@ static void OnStart()
 	SET_GAMEPLAY_CAM_RELATIVE_HEADING(camHeading);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_UTURN, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "U-Turn",
 		.Id = "misc_uturn"

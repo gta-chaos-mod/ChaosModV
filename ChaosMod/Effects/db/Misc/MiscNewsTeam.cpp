@@ -166,12 +166,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_NEWS_TEAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
-        .Name = "News Team",
-        .Id = "misc_news_team",
-	.IsTimed = true,
-	.IsShortDuration = true,
-	.IncompatibleWith = { EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM }
+		.Name = "News Team",
+		.Id = "misc_news_team",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Camera
     }
 );

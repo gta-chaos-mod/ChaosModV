@@ -1,5 +1,10 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
+#include "Util/Camera.h"
+#include "Util/Weapon.h"
+
 static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
@@ -85,7 +90,7 @@ static void OnTick()
 					}
 					break;
 				}
-				if (thing != NULL)
+				if (thing)
 				{
 					SET_ENTITY_NO_COLLISION_ENTITY(ped, thing, true);
 					SET_ENTITY_COORDS(thing, spawnPos.x, spawnPos.y, spawnPos.z, false, false, false, false);
@@ -108,7 +113,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_STUFFGUNS, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Improvised Weaponry",
 		.Id = "misc_stuffguns",
