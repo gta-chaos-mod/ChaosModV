@@ -39,7 +39,7 @@ static void OnStart()
 	REMOVE_NAMED_PTFX_ASSET("scr_xm_orbital_blast");
 }
 
-static RegisterEffect registerEffect(EFFECT_NEARBY_PEDS_OBLITERATE, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Obliterate All Nearby Peds",
 		.Id = "peds_obliterate"

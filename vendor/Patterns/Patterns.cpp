@@ -228,7 +228,7 @@ void pattern::EnsureMatches(uint32_t maxCount)
 			}
 			i++;
 		}
-		else i += max(ptrdiff_t(1), j - Last[ ptr[j] ]);
+		else i += std::max(ptrdiff_t(1), j - Last[ ptr[j] ]);
 	}
 
 	m_matched = true;

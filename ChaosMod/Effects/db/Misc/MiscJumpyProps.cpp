@@ -25,7 +25,7 @@ static void OnTick()
 
 		PropData data = propDataMap[prop];
 
-		float Z = data.originalZ + (max(sin((GET_GAME_TIMER() - data.startOffset) / 150.f) * 2.5f, 0.f));
+		float Z = data.originalZ + (std::max(std::sin((GET_GAME_TIMER() - data.startOffset) / 150.f) * 2.5f, 0.f));
 
 		SET_ENTITY_COORDS(prop, coords.x, coords.y, Z, false, false, false, false);
 	}
@@ -48,7 +48,7 @@ static void OnStop()
 	propDataMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_JUMPY_PROPS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Props",
 		.Id = "misc_jumpy_props",
