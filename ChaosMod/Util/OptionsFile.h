@@ -5,6 +5,7 @@
 
 #include <unordered_map>
 #include <iostream>
+#include <string>
 
 class OptionsFile
 {
@@ -53,7 +54,7 @@ public:
 	template <typename T>
 	inline T ReadValue(const std::string& szKey, T defaultValue) const
 	{
-		const std::string& szValue = ReadValueString(szKey);
+		const auto& szValue = ReadValueString(szKey);
 
 		if (!szValue.empty())
 		{
@@ -67,7 +68,7 @@ public:
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::string& szKey, std::string szDefaultValue = std::string()) const
+	inline std::string ReadValueString(const std::string& szKey, const std::string& szDefaultValue = {}) const
 	{
 		const auto& result = m_dictOptions.find(szKey);
 

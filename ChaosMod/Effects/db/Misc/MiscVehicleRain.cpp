@@ -1,6 +1,10 @@
+//Effect by ProfessorBiddle
+
 #include <stdafx.h>
 
-//Effect by ProfessorBiddle
+#include "Memory/Vehicle.h"
+
+#include "Util/Vehicle.h"
 
 static void OnTick()
 {
@@ -41,7 +45,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_VEHICLE_RAIN, nullptr, nullptr, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Vehicle Rain",
 		.Id = "misc_vehicle_rain",

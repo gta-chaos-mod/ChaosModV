@@ -139,11 +139,11 @@ static void OnStop()
 	vehPropsMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_PROP_MODELS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Cars",
 		.Id = "vehs_prop_models",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEHS_INVISIBLE }
+		.IncompatibleWith = { "vehs_ghost" }
 	}
 );

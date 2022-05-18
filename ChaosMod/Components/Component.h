@@ -24,8 +24,9 @@ struct ComponentHolder
 	public:
 		void operator=(auto&& args)
 		{
-			std::apply([&]<typename... Args>(auto&&... args)
+			std::apply([&](auto&&... args)
 			{
+				m_Ptr.reset();
 				m_Ptr = std::unique_ptr<T, Deleter>(new T(args...));
 			}, args);
 		}

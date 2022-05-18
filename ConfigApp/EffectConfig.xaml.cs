@@ -19,7 +19,7 @@ namespace ConfigApp
             }
         }
 
-        public EffectConfig(EffectData effectData, EffectInfo effectInfo)
+        public EffectConfig(string effectId, EffectData effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
 
@@ -60,8 +60,8 @@ namespace ConfigApp
             effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
 
             effectconf_mp3_label.Text = $@"
-                Sound to play when this effect gets activated: chaosmod/sounds/{effectInfo.Id}.mp3
-                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectInfo.Id}
+                Sound to play when this effect gets activated: chaosmod/sounds/{effectId}.mp3
+                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectId}
                 ";
 
             // Meta Effect Handling
