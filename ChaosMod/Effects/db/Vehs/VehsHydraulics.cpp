@@ -53,7 +53,7 @@ static void OnStop()
 	ENABLE_CONTROL_ACTION(0, 172, true);
 }
 
-static RegisterEffect reg(EFFECT_VEHS_HYDRAULICS, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Hydraulics (Arrow/Space)",
 		.Id = "vehs_hydraulics",
