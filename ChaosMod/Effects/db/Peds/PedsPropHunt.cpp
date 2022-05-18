@@ -156,11 +156,11 @@ static void OnStop()
 	pedPropsMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PROP_HUNT, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Hunt",
 		.Id = "peds_prop_hunt",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_INVISIBLE }
+		.IncompatibleWith = { "peds_ghost" }
 	}
 );

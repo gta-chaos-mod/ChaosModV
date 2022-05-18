@@ -33,12 +33,12 @@ static void OnStop()
     fovCamera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_BINOCULARS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
     {
         .Name = "Binoculars",
         .Id = "player_binoculars",
         .IsTimed = true,
         .IsShortDuration = true,
-        .IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SICK_CAM }
+        .EffectCategory = EEffectCategory::Camera
     }
 );
