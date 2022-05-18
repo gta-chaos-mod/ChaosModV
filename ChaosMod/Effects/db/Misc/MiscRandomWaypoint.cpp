@@ -16,7 +16,7 @@ static void OnStart()
 	REFRESH_WAYPOINT();
 }
 
-static RegisterEffect registerEffect(EFFECT_RANDOM_WAYPOINT, OnStart, EffectInfo
+static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Random Waypoint",
 		.Id = "misc_random_waypoint"

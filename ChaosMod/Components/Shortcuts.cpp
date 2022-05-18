@@ -2,7 +2,7 @@
 
 #include "Shortcuts.h"
 
-#include <sstream>
+#include "Components/EffectDispatcher.h"
 
 Shortcuts::Shortcuts() : Component()
 {

@@ -117,7 +117,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_KILLER_CLOWNS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Killer Clowns",
 		.Id = "peds_killerclowns",
