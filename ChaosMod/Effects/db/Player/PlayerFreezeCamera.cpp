@@ -36,11 +36,12 @@ static void OnTick()
 	UpdateCam();
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_FREEZE_CAM, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Freeze Camera",
 		.Id = "player_freeze_cam",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_MISC_NEWS_TEAM, EFFECT_PLAYER_BINOCULARS, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_PLAYER_SICK_CAM }
-	});
+                .EffectCategory = EEffectCategory::Camera
+	}
+);
