@@ -56,14 +56,14 @@ namespace Mp3Manager
 		ossTmp.clear();
 
 		ossTmp << "open \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" type mpegvideo";
-		int error = mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);
+		int error = mciSendString(reinterpret_cast<LPCWSTR>(ossTmp.str().c_str()), NULL, 0, NULL);
 		ossTmp.str("");
 		ossTmp.clear();
 
 		if (!error || error == MCIERR_DEVICE_OPEN)
 		{
 			ossTmp << "play \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" from 0";
-			mciSendString(ossTmp.str().c_str(), NULL, 0, NULL);
+			mciSendString(reinterpret_cast<LPCWSTR>(ossTmp.str().c_str()), NULL, 0, NULL);
 		}
 	}
 
@@ -75,7 +75,7 @@ namespace Mp3Manager
 			{
 				std::ostringstream oss;
 				oss << "close \"" << CHAOS_SOUNDFILES_DIR << szSoundFileName << "\"";
-				mciSendString(oss.str().c_str(), NULL, 0, NULL);
+				mciSendString(reinterpret_cast<LPCWSTR>(oss.str().c_str()), NULL, 0, NULL);
 			}
 		}
 

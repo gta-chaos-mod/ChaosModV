@@ -50,7 +50,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOOSE_TRIGGER, nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Loose Triggers",
 		.Id = "peds_loosetrigger",
