@@ -94,7 +94,7 @@ static void OnStop()
 	busy = false;
 }
 
-static RegisterEffect reg(EFFECT_PLAYER_ZEUS, OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect reg(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Smite",
 		.Id = "player_zeus",
