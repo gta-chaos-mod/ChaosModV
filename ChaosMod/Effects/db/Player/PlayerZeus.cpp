@@ -94,11 +94,10 @@ static void OnStop()
 	busy = false;
 }
 
-static RegisterEffect reg(OnStart, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Smite",
 		.Id = "player_zeus",
 		.IsTimed = true,
-		.IsShortDuration = false
 	}
 );
