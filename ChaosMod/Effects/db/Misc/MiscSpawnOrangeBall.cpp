@@ -27,10 +27,10 @@ static void OnStart()
     SHOOT_SINGLE_BULLET_BETWEEN_COORDS(spawnPos.x, spawnPos.y, spawnPos.z + max.z - min.z, spawnPos.x, spawnPos.y, spawnPos.z, 0, true, weaponHash, 0, false, true, 0.01);
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_SPAWN_ORANGE_BALL, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Orange Ball",
         .Id = "misc_spawn_orange_ball",
-        .EEffectGroupType = EEffectGroupType::SpawnGeneric
+        .EffectGroupType = EEffectGroupType::SpawnGeneric
     }
 );
