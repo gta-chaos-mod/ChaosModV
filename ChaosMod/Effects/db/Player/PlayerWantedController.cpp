@@ -13,6 +13,8 @@ static void OnStartSix()
 
 static void OnStopSix()
 {
+	Player player = PLAYER_ID();
+
 	SET_FAKE_WANTED_LEVEL(0);
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
