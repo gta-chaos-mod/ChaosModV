@@ -63,8 +63,8 @@ static void OnTick()
 	
 }
 
-// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Generic Effect",
@@ -72,5 +72,7 @@ static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	}
 );
 ```
+
+The project makes use of clang-format which will mess up the formatting of the list-initialization, thus it's necessary to exempt it using `// clang-format off`.
 
 2. Add the same info to `ConfigApp/Effects.cs`
