@@ -37,4 +37,4 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "MiscHooks", true);
+static RegisterHook registerHook(OnHook, nullptr, "MiscHooks", true);

@@ -56,7 +56,7 @@ static bool OnHook()
     return true;
 }
 
-static RegisterHook registerHook(OnHook, "ShaderHook", true);
+static RegisterHook registerHook(OnHook, nullptr, "ShaderHook", true);
 
 namespace Hooks
 {
@@ -125,7 +125,7 @@ namespace Hooks
         ms_bRefreshShaders = true;
     }
 
-    void OnPresentShaderHook(IDXGISwapChain* pSwapChain)
+    void OnPresentCallback()
     {
         if (ms_bRefreshShaders)
 		{

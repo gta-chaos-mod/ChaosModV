@@ -2,8 +2,6 @@
 
 #include <string_view>
 
-class IDXGISwapChain;
-
 enum class EOverrideShaderType
 {
     LensDistortion,
@@ -14,5 +12,5 @@ namespace Hooks
 {
     void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc);
     void ResetShader();
-    void OnPresentShaderHook(IDXGISwapChain* pSwapChain);
+    void OnPresentCallback();
 }

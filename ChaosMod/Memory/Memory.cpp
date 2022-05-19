@@ -62,6 +62,12 @@ namespace Memory
 
 	void Uninit()
 	{
+		LOG("Running hook cleanups");
+		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		{
+			pRegisteredHook->RunCleanup();
+		}
+
 		MH_DisableHook(MH_ALL_HOOKS);
 
 		MH_Uninitialize();
@@ -71,13 +77,15 @@ namespace Memory
 	{
 		LOG("Running late hooks");
 
-		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
 			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
 				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
 		}
+
+		MH_EnableHook(MH_ALL_HOOKS);
 	}
 
 	Handle FindPattern(const std::string& szPattern, const PatternScanRange&& scanRange)

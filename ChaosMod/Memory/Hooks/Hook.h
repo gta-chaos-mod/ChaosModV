@@ -18,12 +18,13 @@ namespace Memory
 		RegisteredHook* m_pNext = nullptr;
 		const std::string m_szName;
 		bool(*m_pHookFunc)();
+		void(*m_pCleanupFunc)();
 		const bool m_bIsLateHook = false;
 
 	public:
-		RegisteredHook(bool(*pHookFunc)(), const std::string& szName,
-			bool bIsLateHook) : m_pHookFunc(pHookFunc), m_szName(szName),
-				m_bIsLateHook(bIsLateHook)
+		RegisteredHook(bool(*pHookFunc)(), void(*pCleanupFunc)(), const std::string& szName,
+			bool bIsLateHook)
+			: m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
 		{
 			if (g_pRegisteredHooks)
 			{
@@ -39,7 +40,15 @@ namespace Memory
 
 		_NODISCARD inline bool RunHook()
 		{
-			return m_pHookFunc();
+			return m_pHookFunc ? m_pHookFunc() : true;
+		}
+
+		inline void RunCleanup()
+		{
+			if (m_pCleanupFunc)
+			{
+				m_pCleanupFunc();
+			}
 		}
 
 		_NODISCARD inline const std::string& GetName() const
@@ -65,8 +74,8 @@ private:
 	const Memory::RegisteredHook m_RegisteredHook;
 
 public:
-	RegisterHook(bool(*pHookFunc)(), const std::string&& szName, 
-		bool bIsLateHook = false) : m_RegisteredHook(pHookFunc, szName, bIsLateHook)
+	RegisterHook(bool(*pHookFunc)(), void(*pCleanupFunc)(), const std::string&& szName, 
+		bool bIsLateHook = false) : m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
 	{
 
 	}

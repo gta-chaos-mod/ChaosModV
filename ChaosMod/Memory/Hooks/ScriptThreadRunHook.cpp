@@ -110,7 +110,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "rage::scrThread::Run");
+static RegisterHook registerHook(OnHook, nullptr, "rage::scrThread::Run");
 
 namespace Hooks
 {
