@@ -33,7 +33,7 @@ __int64 _HK_rage__audRequestedSettings__SetPostition(__int64 _this, Vec3V *posit
 		{
 			Vector3 dir = GET_ENTITY_COORDS(ms_eTargetEntity, false) - Vector3::FromInternal(position);
 			float reqAngle = atan2(dir.x, dir.y) / PI;
-			vOveride = GetCoordAround(ms_eTargetEntity, reqAngle + ms_fTargetAngle, Vector3::FromInternal(position).DistanceTo(GET_ENTITY_COORDS(ms_eTargetEntity, false)) / 2, 0, true).GetInternal();
+			vOveride = GetCoordAround(ms_eTargetEntity, reqAngle + ms_fTargetAngle, Vector3::FromInternal(position).DistanceTo(GET_ENTITY_COORDS(ms_eTargetEntity, false)) + 5, 0, true).GetInternal();
 			break;
 		}
 	}
