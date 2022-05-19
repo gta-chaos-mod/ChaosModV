@@ -1,5 +1,15 @@
 #include <stdafx.h>
 
+#include "ScriptThreadRunHook.h"
+
+#include "Memory/Memory.h"
+#include "Memory/Script.h"
+#include "Memory/Hooks/Hook.h"
+
+#include "Components/Failsafe.h"
+
+#include "Lib/scrThread.h"
+
 static bool ms_bEnabledHook = false;
 static int ms_iOnlineVehicleMeasureEnableGlobal = 0;
 static bool ms_bSearchedForMissionStateGlobal = false;
@@ -100,7 +110,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "rage::scrThread::Run");
+static RegisterHook registerHook(OnHook, nullptr, "rage::scrThread::Run");
 
 namespace Hooks
 {

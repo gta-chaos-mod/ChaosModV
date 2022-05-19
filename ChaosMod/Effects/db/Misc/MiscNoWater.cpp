@@ -57,7 +57,7 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_WATER, OnStart, OnStop, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Drought",
 		.Id = "misc_remove_water",

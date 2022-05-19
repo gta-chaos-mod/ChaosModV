@@ -2,14 +2,17 @@
 
 #include "Component.h"
 
-#include "../Effects/EffectThreads.h"
-#include "../Effects/EffectData.h"
-#include "../Effects/EffectIdentifier.h"
-#include "../Effects/EnabledEffectsMap.h"
+#include "Effects/Effect.h"
+#include "Effects/EffectThreads.h"
+#include "Effects/EffectData.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EnabledEffectsMap.h"
 
 #include <vector>
 #include <array>
 #include <memory>
+#include <list>
+#include <string_view>
 
 #define _NODISCARD [[nodiscard]]
 
@@ -118,9 +121,9 @@ public:
 	void DrawTimerBar();
 	void DrawEffectTexts();
 
-	bool _NODISCARD ShouldDispatchEffectNow() const;
+	_NODISCARD bool ShouldDispatchEffectNow() const;
 
-	int _NODISCARD GetRemainingTimerTime() const;
+	_NODISCARD int GetRemainingTimerTime() const;
 
 	void DispatchEffect(const EffectIdentifier& effectIdentifier, const char* szSuffix = nullptr, bool bAddToLog = true);
 	void DispatchRandomEffect(const char* szSuffix = nullptr);
@@ -129,13 +132,13 @@ public:
 	void ClearActiveEffects(const EffectIdentifier& exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 
-	std::vector<RegisteredEffect*> GetRecentEffects(int distance, EEffectType ignore = EFFECT_INVALID) const;
+	std::vector<RegisteredEffect*> GetRecentEffects(int distance, std::string_view ignoreEffect = {}) const;
 
 	void Reset();
 	void ResetTimer();
 
-	void OverrideEffectName(EEffectType eEffectType, const std::string& szOverrideName);
-	void OverrideEffectName(EEffectType eEffectType, EEffectType eFakeEffectType);
+	void OverrideEffectName(std::string_view effectId, const std::string& szOverrideName);
+	void OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId);
 
 	template <class T> requires std::is_base_of_v<Component, T>
 	friend struct ComponentHolder;

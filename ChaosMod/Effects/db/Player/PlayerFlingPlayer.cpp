@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static float GetRandomForce(bool negativeAllowed)
 {
 	return g_Random.GetRandomFloat(50, 100) * (negativeAllowed && g_Random.GetRandomInt(0, 2) == 0 ? -1 : 1);
@@ -25,7 +27,7 @@ static void OnStart()
 	Memory::ApplyForceToEntityCenterOfMass(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true), GetRandomForce(false), false, false, true, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_FLING_PLAYER, OnStart, nullptr, nullptr, EffectInfo
+static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Fling Player",
         .Id = "player_fling_player"

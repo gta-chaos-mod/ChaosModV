@@ -20,12 +20,12 @@ static void OnStart()
 	SET_ENTITY_HEALTH(playerPed, 0, 0);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SUICIDE, OnStart,
+static RegisterEffect registerEffect(OnStart,
 	{
 		.Name = "Suicide",
 		.Id = "player_suicide",
 		.IsTimed = false,
-		.IncompatibleWith = { EFFECT_PLAYER_INVINCIBLE },
-		.EEffectGroupType = EEffectGroupType::PlayerKill
+		.IncompatibleWith = { "player_invincible" },
+		.EffectGroupType = EEffectGroupType::PlayerKill
 	}
 );
