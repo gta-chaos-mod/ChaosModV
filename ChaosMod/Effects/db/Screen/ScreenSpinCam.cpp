@@ -1,11 +1,11 @@
 /*
-	Effect by ProfessorBiddle, based on code from DrUnderscore, Idea from Synfetic
+    Effect by ProfessorBiddle, based on code from DrUnderscore, Idea from Synfetic
 */
 
 #include <stdafx.h>
 static Camera spinningCamera = 0;
-float camRot				 = 0.f;
-const float camRotRate		 = 1.2f;
+float camRot                 = 0.f;
+const float camRotRate       = 1.2f;
 
 static void UpdateCamera()
 {

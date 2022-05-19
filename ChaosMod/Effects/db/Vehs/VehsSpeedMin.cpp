@@ -1,19 +1,19 @@
 /*
-	   Effect by Lucas7yoshi, modified
+       Effect by Lucas7yoshi, modified
 */
 
 #include <cmath>
 #include <stdafx.h>
 #include <string>
 
-#define WAIT_TIME 10000		 // ms
+#define WAIT_TIME 10000      // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
 
 static int m_overlay = 0;
 static Vehicle m_lastVeh;
 
 static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick	 = 0;
+static DWORD64 m_lastTick    = 0;
 static bool m_enteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
@@ -36,7 +36,7 @@ static std::string FormatSpeed(float ms)
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vehicle veh	  = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vehicle veh   = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	if (m_lastVeh != 0 && veh != m_lastVeh)
 	{
@@ -44,26 +44,26 @@ static void OnTick()
 	}
 
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false) && IS_PED_IN_ANY_VEHICLE(playerPed, false)
-		&& GET_IS_VEHICLE_ENGINE_RUNNING(veh))
+	    && GET_IS_VEHICLE_ENGINE_RUNNING(veh))
 	{
 		if (!m_enteredVehicle)
 		{
 			m_enteredVehicle = true;
 
-			m_lastVeh		 = 0;
-			m_timeReserve	 = WAIT_TIME;
-			m_lastTick		 = GET_GAME_TIMER();
+			m_lastVeh        = 0;
+			m_timeReserve    = WAIT_TIME;
+			m_lastTick       = GET_GAME_TIMER();
 
 			return;
 		}
 
-		m_lastVeh			= veh;
+		m_lastVeh           = veh;
 
-		float minSpeed		= GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
-		float speedms		= GET_ENTITY_SPEED(veh);
+		float minSpeed      = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
+		float speedms       = GET_ENTITY_SPEED(veh);
 		DWORD64 currentTick = GET_GAME_TIMER();
-		DWORD64 tickDelta	= currentTick - m_lastTick;
-		int overlaycolor	= 0;
+		DWORD64 tickDelta   = currentTick - m_lastTick;
+		int overlaycolor    = 0;
 		if (speedms < minSpeed)
 		{
 			overlaycolor = 75;
@@ -96,7 +96,7 @@ static void OnTick()
 		BEGIN_SCALEFORM_MOVIE_METHOD(m_overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 
 		char charBuf[64];
-		auto displaySpeed	 = FormatSpeed(speedms);
+		auto displaySpeed    = FormatSpeed(speedms);
 		auto displayMinSpeed = FormatSpeed(minSpeed);
 		sprintf_s(charBuf, "%s", displaySpeed.c_str());
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
@@ -104,12 +104,12 @@ static void OnTick()
 		if (m_timeReserve != WAIT_TIME && speedms < minSpeed)
 		{
 			sprintf_s(charBuf, "Minimum: %s\nDetonation In: %.1fs", displayMinSpeed.c_str(),
-					  float(m_timeReserve) / 1000);
+			          float(m_timeReserve) / 1000);
 		}
 		else if (m_timeReserve != WAIT_TIME && speedms > minSpeed)
 		{
 			sprintf_s(charBuf, "Minimum: %s\nDetonation In: %.1fs (Recovering)", displayMinSpeed.c_str(),
-					  float(m_timeReserve) / 1000);
+			          float(m_timeReserve) / 1000);
 		}
 		else
 		{
@@ -134,9 +134,9 @@ static void OnStart()
 		WAIT(0);
 	}
 	m_enteredVehicle = false;
-	m_lastTick		 = GET_GAME_TIMER();
-	m_lastVeh		 = 0;
-	m_timeReserve	 = WAIT_TIME;
+	m_lastTick       = GET_GAME_TIMER();
+	m_lastVeh        = 0;
+	m_timeReserve    = WAIT_TIME;
 }
 
 // clang-format off

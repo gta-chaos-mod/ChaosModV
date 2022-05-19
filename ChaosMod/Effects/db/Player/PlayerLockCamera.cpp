@@ -1,5 +1,5 @@
 /*
-	Effect by dzwdz
+    Effect by dzwdz
 */
 
 #include <stdafx.h>

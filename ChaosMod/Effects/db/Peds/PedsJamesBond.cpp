@@ -1,5 +1,5 @@
 /*
-	Effect by Slothersbee
+    Effect by Slothersbee
 */
 
 #include <math.h>
@@ -9,9 +9,9 @@
 
 static void OnStart()
 {
-	Ped playerPed				  = PLAYER_PED_ID();
+	Ped playerPed                 = PLAYER_PED_ID();
 
-	static const Hash model		  = GET_HASH_KEY("cs_milton");
+	static const Hash model       = GET_HASH_KEY("cs_milton");
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 
@@ -22,10 +22,10 @@ static void OnStart()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
-																			   : playerPed);
+	                                                                           : playerPed);
 
-	float x_pos	  = sin((360 - heading) * PI / 180) * 10;
-	float y_pos	  = cos((360 - heading) * PI / 180) * 10;
+	float x_pos   = sin((360 - heading) * PI / 180) * 10;
+	float y_pos   = cos((360 - heading) * PI / 180) * 10;
 
 	Vehicle veh =
 		CreatePoolVehicle(GET_HASH_KEY("JB700"), playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);

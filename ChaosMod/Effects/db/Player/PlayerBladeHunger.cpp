@@ -1,5 +1,5 @@
 /*
-	   Effect by ProfessorBiddle, modified
+       Effect by ProfessorBiddle, modified
 */
 
 #include <stdafx.h>
@@ -10,10 +10,10 @@ static Hash bladeHash;
 static void OnStart()
 {
 	lastPlayerKills = -1;
-	bladeHash		= GET_HASH_KEY("WEAPON_MACHETE");
-	fade			= 0;
-	alpha			= 0;
-	orange			= 0;
+	bladeHash       = GET_HASH_KEY("WEAPON_MACHETE");
+	fade            = 0;
+	alpha           = 0;
+	orange          = 0;
 }
 
 static void OnTick()
@@ -26,10 +26,10 @@ static void OnTick()
 
 	GIVE_WEAPON_TO_PED(playerPed, bladeHash, 1, false, true);
 
-	Hash playerHash	   = GET_ENTITY_MODEL(playerPed);
+	Hash playerHash    = GET_ENTITY_MODEL(playerPed);
 
 	int allPlayerKills = 0;
-	int curKills	   = 0;
+	int curKills       = 0;
 	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
 	{
 		STAT_GET_INT(hash, &curKills, -1);
@@ -48,7 +48,7 @@ static void OnTick()
 	alpha += GET_RANDOM_INT_IN_RANGE(-4, 10);
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 150)
 	{

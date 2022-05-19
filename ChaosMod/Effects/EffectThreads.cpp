@@ -25,7 +25,7 @@ namespace EffectThreads
 	{
 		std::unique_ptr<EffectThread> pThread = std::make_unique<EffectThread>(pEffect, bIsTimed);
 
-		DWORD64 threadId					  = pThread->m_ullId;
+		DWORD64 threadId                      = pThread->m_ullId;
 
 		m_rgThreads.push_back(std::move(pThread));
 
@@ -52,7 +52,7 @@ namespace EffectThreads
 
 	void PutThreadOnPause(DWORD ulTimeMs)
 	{
-		PVOID fiber			 = GetCurrentFiber();
+		PVOID fiber          = GetCurrentFiber();
 
 		const auto &ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
 
@@ -65,14 +65,14 @@ namespace EffectThreads
 	void RunThreads()
 	{
 		static int c_iLastFrame = GET_FRAME_COUNT();
-		int iCurFrame			= GET_FRAME_COUNT();
+		int iCurFrame           = GET_FRAME_COUNT();
 
 		if (c_iLastFrame == iCurFrame)
 		{
 			return;
 		}
 
-		c_iLastFrame			= iCurFrame;
+		c_iLastFrame            = iCurFrame;
 
 		DWORD64 ullCurTimestamp = GetTickCount64();
 

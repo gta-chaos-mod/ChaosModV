@@ -27,8 +27,8 @@ class DebugMenu : public Component
 
 	bool m_bIsEnabled;
 
-	int m_iSelectedIdx	   = 0;
-	bool m_bVisible		   = false;
+	int m_iSelectedIdx     = 0;
+	bool m_bVisible        = false;
 
 	DWORD m_ulRepeatTime   = 0;
 	bool m_bDispatchEffect = false;

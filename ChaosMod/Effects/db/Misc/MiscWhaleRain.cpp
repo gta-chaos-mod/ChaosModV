@@ -5,16 +5,16 @@
 static void OnTick()
 {
 	static constexpr int MAX_WHALES = 20;
-	static const Hash WHALE_MODEL	= 1193010354;
+	static const Hash WHALE_MODEL   = 1193010354;
 
-	static Ped whales[MAX_WHALES]	= {};
+	static Ped whales[MAX_WHALES]   = {};
 	static int whaleDespawnTime[MAX_WHALES];
-	static int whaleAmount	= 0;
+	static int whaleAmount  = 0;
 
-	Vector3 playerPos		= GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	Vector3 playerPos       = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (whaleAmount <= MAX_WHALES && curTick > lastTick + 200)
 	{
@@ -22,7 +22,7 @@ static void OnTick()
 
 		Vector3 spawnPos =
 			Vector3::Init(playerPos.x + g_Random.GetRandomInt(-100, 100),
-						  playerPos.y + g_Random.GetRandomInt(-100, 100), playerPos.z + g_Random.GetRandomInt(25, 50));
+		                  playerPos.y + g_Random.GetRandomInt(-100, 100), playerPos.z + g_Random.GetRandomInt(25, 50));
 
 		LoadModel(WHALE_MODEL);
 
@@ -35,7 +35,7 @@ static void OnTick()
 			Ped &ped = whales[i];
 			if (!ped)
 			{
-				ped					= whale;
+				ped                 = whale;
 				whaleDespawnTime[i] = 5;
 				break;
 			}
@@ -59,8 +59,8 @@ static void OnTick()
 			{
 				Vector3 propPos = GET_ENTITY_COORDS(whale, false);
 				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, propPos.x, propPos.y, propPos.z,
-												true)
-					< 400.f)
+				                                true)
+				    < 400.f)
 				{
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(whale))
 					{

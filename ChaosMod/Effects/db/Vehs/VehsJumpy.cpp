@@ -5,9 +5,9 @@
 static void OnTick()
 {
 	static int lastTick = GET_GAME_TIMER();
-	int curTick			= GET_GAME_TIMER();
+	int curTick         = GET_GAME_TIMER();
 
-	Vehicle playerVeh	= GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
+	Vehicle playerVeh   = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 	if (lastTick < curTick - 50)
 	{
 		lastTick = curTick;

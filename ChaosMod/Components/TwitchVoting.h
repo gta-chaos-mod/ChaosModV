@@ -9,7 +9,7 @@
 #define _NODISCARD [[nodiscard]]
 
 using DWORD64 = unsigned long long;
-using BYTE	  = unsigned char;
+using BYTE    = unsigned char;
 
 using HANDLE  = void *;
 
@@ -38,24 +38,24 @@ class TwitchVoting : public Component
 
 	bool m_bEnableTwitchVoting;
 
-	bool m_bReceivedHello	  = false;
+	bool m_bReceivedHello     = false;
 	bool m_bReceivedFirstPing = false;
 	bool m_bHasReceivedResult = false;
 
 	int m_iTwitchSecsBeforeVoting;
 
-	bool m_bEnableTwitchPollVoting	= false;
+	bool m_bEnableTwitchPollVoting  = false;
 
-	HANDLE m_hPipeHandle			= INVALID_HANDLE_VALUE;
+	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
 
-	DWORD64 m_ullLastPing			= GetTickCount64();
+	DWORD64 m_ullLastPing           = GetTickCount64();
 	DWORD64 m_ullLastVotesFetchTime = GetTickCount64();
 
-	int m_iNoPingRuns				= 0;
+	int m_iNoPingRuns               = 0;
 
-	bool m_bIsVotingRoundDone		= true;
-	bool m_bNoVoteRound				= false;
-	bool m_bAlternatedVotingRound	= false;
+	bool m_bIsVotingRoundDone       = true;
+	bool m_bNoVoteRound             = false;
+	bool m_bAlternatedVotingRound   = false;
 
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 

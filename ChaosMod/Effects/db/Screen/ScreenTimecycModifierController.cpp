@@ -52,7 +52,7 @@ static void OnTickBright()
 
 	for (auto car : GetAllVehs())
 	{
-		SET_VEHICLE_LIGHTS(car, 2);				  // Vehicles lights always on even if no peds inside
+		SET_VEHICLE_LIGHTS(car, 2);               // Vehicles lights always on even if no peds inside
 		SET_VEHICLE_LIGHT_MULTIPLIER(car, 10000); // Make lights eye hurting
 	}
 }

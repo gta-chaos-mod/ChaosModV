@@ -64,7 +64,7 @@ namespace Hooks
 	{
 		static std::unordered_map<size_t, std::vector<BYTE>> dictShaderCache;
 
-		auto hash	= std::hash<std::string_view>()(szShaderSrc);
+		auto hash   = std::hash<std::string_view>()(szShaderSrc);
 		auto result = dictShaderCache.find(hash);
 		if (result == dictShaderCache.end())
 		{
@@ -76,8 +76,8 @@ namespace Hooks
 					ID3DBlob *pErrorMessages;
 					HRESULT compileResult;
 					if ((compileResult = D3DCompile(szShaderSrc.data(), szShaderSrc.size(), NULL, NULL, NULL, "main",
-													"ps_4_0", 0, 0, &pShader, &pErrorMessages))
-						== S_OK)
+				                                    "ps_4_0", 0, 0, &pShader, &pErrorMessages))
+				        == S_OK)
 					{
 						auto ptr = reinterpret_cast<BYTE *>(pShader->GetBufferPointer());
 						std::vector<BYTE> rgShaderBytecode;
@@ -90,7 +90,7 @@ namespace Hooks
 						}
 
 						dictShaderCache[hash] = rgShaderBytecode;
-						result				  = dictShaderCache.find(hash);
+						result                = dictShaderCache.find(hash);
 					}
 					else
 					{
@@ -118,8 +118,8 @@ namespace Hooks
 		if (result != dictShaderCache.end())
 		{
 			ms_rgShaderBytecode = result->second;
-			ms_ShaderType		= shaderType;
-			ms_bRefreshShaders	= true;
+			ms_ShaderType       = shaderType;
+			ms_bRefreshShaders  = true;
 		}
 	}
 

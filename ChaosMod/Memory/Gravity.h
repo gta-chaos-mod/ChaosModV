@@ -21,7 +21,7 @@ namespace Memory
 				return;
 			}
 
-			handle	   = handle.Into().At(24);
+			handle     = handle.Into().At(24);
 
 			pfGravAddr = handle.At(3).Into().Get<float>();
 

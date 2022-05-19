@@ -1,5 +1,5 @@
 /*
-	Effect by juhana
+    Effect by juhana
 */
 #include <stdafx.h>
 

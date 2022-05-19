@@ -7,8 +7,8 @@
 #include <vector>
 
 using DWORD64 = unsigned long long;
-using DWORD	  = unsigned long;
-using WORD	  = unsigned short;
+using DWORD   = unsigned long;
+using WORD    = unsigned short;
 
 namespace Memory
 {
@@ -34,7 +34,7 @@ namespace Memory
 
 			handle =
 				Memory::FindPattern("4C 8B 1D ?? ?? ?? ?? 46 8D 04 12 41 D1 F8 4B 8B 0C C3 44 3B 49 10 74 13 73 06 41 "
-									"8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
+			                        "8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
 			if (!handle.IsValid())
 			{
 				return c_rgWeapons;

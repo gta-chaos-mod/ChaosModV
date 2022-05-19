@@ -82,7 +82,7 @@ class RegisterHook
 
 	RegisterHook &operator=(const RegisterHook &) = delete;
 
-	RegisterHook(RegisterHook &&) noexcept		  = delete;
+	RegisterHook(RegisterHook &&) noexcept        = delete;
 
 	RegisterHook &operator=(RegisterHook &&) noexcept = delete;
 };

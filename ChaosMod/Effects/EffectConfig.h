@@ -83,7 +83,7 @@ namespace EffectConfig
 						break;
 					}
 
-					szValue		  = szValue.substr(ullSplitIndex + 1);
+					szValue       = szValue.substr(ullSplitIndex + 1);
 					ullSplitIndex = GetNextDelimiterOffset(szValue);
 				}
 			}
@@ -115,17 +115,17 @@ namespace EffectConfig
 			}
 
 			effectData.WeightMult = rgValues[3];
-			effectData.Weight	  = effectData.WeightMult; // Set initial effect weight to WeightMult
+			effectData.Weight     = effectData.WeightMult; // Set initial effect weight to WeightMult
 			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
 			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
-			effectData.Name			   = effectInfo.Name;
+			effectData.Name            = effectInfo.Name;
 			effectData.ShortcutKeycode = rgValues[7];
 			if (!szValueEffectName.empty())
 			{
 				effectData.SetAttribute(EEffectAttributes::HasCustomName, true);
 				effectData.CustomName = szValueEffectName;
 			}
-			effectData.Id			  = effectInfo.Id;
+			effectData.Id             = effectInfo.Id;
 			effectData.EffectCategory = effectInfo.EffectCategory;
 
 			for (auto effectType : effectInfo.IncompatibleWith)

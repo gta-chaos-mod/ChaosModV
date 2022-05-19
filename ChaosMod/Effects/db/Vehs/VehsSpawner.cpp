@@ -14,7 +14,7 @@ static void OnStartRhino()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("RHINO"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -32,7 +32,7 @@ static void OnStartAdder()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("ADDER"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -67,7 +67,7 @@ static void OnStartMonster()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("MONSTER"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -119,7 +119,7 @@ static void OnStartCargoplane()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -154,7 +154,7 @@ static void OnStartBlimp()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("BLIMP"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -172,7 +172,7 @@ static void OnStartBuzzard()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("BUZZARD"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -190,7 +190,7 @@ static void OnStartFaggio()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -208,7 +208,7 @@ static void OnStartRuiner3()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -223,14 +223,14 @@ REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, EffectInfo
 
 static void OnStartRandom()
 {
-	Vector3 playerPos				   = GetPlayerPos();
+	Vector3 playerPos                  = GetPlayerPos();
 
 	static std::vector<Hash> vehModels = Memory::GetAllVehModels();
 
 	if (!vehModels.empty())
 	{
 		Vehicle veh = CreatePoolVehicle(vehModels[g_Random.GetRandomInt(0, vehModels.size() - 1)], playerPos.x,
-										playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		                                playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 
 		// Also apply random upgrades
 		SET_VEHICLE_MOD_KIT(veh, 0);
@@ -252,12 +252,12 @@ static void OnStartRandom()
 		SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-										  g_Random.GetRandomInt(0, 255));
+		                                  g_Random.GetRandomInt(0, 255));
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-											g_Random.GetRandomInt(0, 255));
+		                                    g_Random.GetRandomInt(0, 255));
 
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-										g_Random.GetRandomInt(0, 255));
+		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
 		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
@@ -282,7 +282,7 @@ static void OnStartBaletrailer()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("BALETRAILER"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -300,7 +300,7 @@ static void OnStartRomero()
 	Vector3 playerPos = GetPlayerPos();
 
 	CreatePoolVehicle(GET_HASH_KEY("ROMERO"), playerPos.x, playerPos.y, playerPos.z,
-					  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -316,11 +316,11 @@ REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, EffectInfo
 static void OnStartWizardBroom()
 {
 	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
-	static const Hash broomHash		= GET_HASH_KEY("prop_tool_broom");
+	static const Hash broomHash     = GET_HASH_KEY("prop_tool_broom");
 	LoadModel(oppressorHash);
 	LoadModel(broomHash);
 
-	Ped player		  = PLAYER_PED_ID();
+	Ped player        = PLAYER_PED_ID();
 	Vector3 playerPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 1, 0);
 
 	Vehicle veh = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(player));

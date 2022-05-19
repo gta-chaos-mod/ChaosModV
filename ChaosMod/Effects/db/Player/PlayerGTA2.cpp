@@ -4,14 +4,14 @@
  * Effect by kolyaventuri
  */
 
-static const float height	   = 35.f;
+static const float height      = 35.f;
 static const float speedFactor = 1.f + (0.5f / (180.f / 2.236936f));
 static float baseFov;
 static Cam camera;
 
 static void UpdateLocation()
 {
-	Ped player	= PLAYER_PED_ID();
+	Ped player  = PLAYER_PED_ID();
 	Vector3 pos = GET_ENTITY_COORDS(player, IS_PED_DEAD_OR_DYING(player, 1));
 
 	SET_CAM_COORD(camera, pos.x, pos.y, pos.z + height);
@@ -31,8 +31,8 @@ static void OnStart()
 
 static void OnTick()
 {
-	Ped player	 = PLAYER_PED_ID();
-	float speed	 = GET_ENTITY_SPEED(player);
+	Ped player   = PLAYER_PED_ID();
+	float speed  = GET_ENTITY_SPEED(player);
 	float offset = speed * speedFactor;
 
 	SET_CAM_FOV(camera, baseFov + offset);

@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi
+    Effect by Lucas7yoshi
 */
 
 #include <stdafx.h>

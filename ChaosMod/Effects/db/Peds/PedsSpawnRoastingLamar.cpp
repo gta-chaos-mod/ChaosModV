@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
 /*
-	Effect by Juhana
+    Effect by Juhana
 */
 
 static Ped lamarPed;
@@ -15,7 +15,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
 
-	Ped playerPed	  = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	LoadModel(lamarModel);
@@ -53,7 +53,7 @@ static void OnStop()
 			WAIT(1000);
 
 			TASK_PLAY_ANIM(lamarPed, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000.f, 1,
-						   0.f, false, false, false);
+			               0.f, false, false, false);
 			WAIT(2000);
 			PLAY_PED_AMBIENT_SPEECH_NATIVE(playerPed, "GENERIC_SHOCKED_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 
@@ -72,8 +72,8 @@ static void OnStop()
 static void OnTick()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
-	Ped playerPed			= PLAYER_PED_ID();
+	DWORD64 curTick         = GET_GAME_TIMER();
+	Ped playerPed           = PLAYER_PED_ID();
 
 	if (lastTick < curTick - 500)
 	{

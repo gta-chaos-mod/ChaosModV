@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -40,7 +40,7 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float m
 }
 
 static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGroup, Hash modelHash, Hash weaponHash,
-								std::vector<Ped> &listToAddPedTo, bool canExitVehicle)
+                                std::vector<Ped> &listToAddPedTo, bool canExitVehicle)
 {
 	for (int seatPos = -1; seatPos < 3; seatPos++)
 	{
@@ -70,28 +70,28 @@ static void fillVehicleWithPeds(Vehicle veh, Ped playerPed, Hash relationshipGro
 
 static void spawnBuzzard()
 {
-	Ped playerPed	   = PLAYER_PED_ID();
+	Ped playerPed      = PLAYER_PED_ID();
 	Vector3 playerPos  = GET_ENTITY_COORDS(playerPed, false);
 	Hash buzzardHash   = GET_HASH_KEY("BUZZARD");
 	Vector3 spawnPoint = getRandomOffsetCoord(playerPos, 200, 250);
-	float xDiff		   = playerPos.x - spawnPoint.x;
-	float yDiff		   = playerPos.y - spawnPoint.y;
-	float heading	   = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
-	helicopterGroup	   = EnemyGroup();
+	float xDiff        = playerPos.x - spawnPoint.x;
+	float yDiff        = playerPos.y - spawnPoint.y;
+	float heading      = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
+	helicopterGroup    = EnemyGroup();
 	LoadModel(buzzardHash);
 	helicopterGroup.vehicle =
 		CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(helicopterGroup.vehicle, true, true, true);
-	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0);		  // Needed, so the heli doesn't fall down instantly
+	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0);        // Needed, so the heli doesn't fall down instantly
 	SET_VEHICLE_CHEAT_POWER_INCREASE(helicopterGroup.vehicle, 2); // Make it easier to catch up
 	fillVehicleWithPeds(helicopterGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash,
-						helicopterGroup.peds, false);
+	                    helicopterGroup.peds, false);
 }
 
 static void spawnMesa()
 {
-	Ped playerPed	  = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Vector3 spawnPoint;
 	// Try spawning on a vehicle node, fall back to random coord
@@ -105,11 +105,11 @@ static void spawnMesa()
 			spawnPoint.z = groundZ;
 		}
 	}
-	float xDiff	  = playerPos.x - spawnPoint.x;
-	float yDiff	  = playerPos.y - spawnPoint.y;
+	float xDiff   = playerPos.x - spawnPoint.x;
+	float yDiff   = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
 	Hash mesaHash = GET_HASH_KEY("Mesa3");
-	mesaGroup	  = EnemyGroup();
+	mesaGroup     = EnemyGroup();
 	LoadModel(mesaHash);
 	mesaGroup.vehicle =
 		CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
@@ -122,11 +122,11 @@ static void spawnMesa()
 
 static void OnStart()
 {
-	Ped playerPed				  = PLAYER_PED_ID();
-	Vector3 playerPos			  = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                 = PLAYER_PED_ID();
+	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
-	model						  = GET_HASH_KEY("csb_mweather");
-	microSmgHash				  = GET_HASH_KEY("WEAPON_MICROSMG");
+	model                         = GET_HASH_KEY("csb_mweather");
+	microSmgHash                  = GET_HASH_KEY("WEAPON_MICROSMG");
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_MERRYWEATHER", &relationshipGroup);
@@ -155,7 +155,7 @@ static void OnStop()
 static bool checkPedsAlive(std::vector<Ped> pedList)
 {
 	bool allDead = true;
-	Ped player	 = PLAYER_PED_ID();
+	Ped player   = PLAYER_PED_ID();
 	for (Ped ped : pedList)
 	{
 		if (!DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, false))
@@ -165,12 +165,12 @@ static bool checkPedsAlive(std::vector<Ped> pedList)
 		}
 		else
 		{
-			allDead			  = false;
+			allDead           = false;
 			Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 			Vector3 enemyPos  = GET_ENTITY_COORDS(ped, false);
 			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, enemyPos.x, enemyPos.y, enemyPos.z,
-											false)
-				> 350)
+			                                false)
+			    > 350)
 			{
 				SET_ENTITY_HEALTH(ped, 0, false);
 				SET_PED_AS_NO_LONGER_NEEDED(&ped);

@@ -79,20 +79,20 @@ namespace Memory
 	// Safe version of APPLY_FORCE_TO_ENTITY with checks for available colliders to ensure the physics engine is not
 	// overwhelmed.
 	inline void ApplyForceToEntity(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY,
-								   float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel,
-								   BOOL p12, BOOL p13)
+	                               float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel,
+	                               BOOL p12, BOOL p13)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
 		{
 			invoke<Void>(0xC5F68BE9613E2D18, entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel,
-						 ignoreUpVec, isForceRel, p12, p13);
+			             ignoreUpVec, isForceRel, p12, p13);
 		}
 	}
 
 	// Safe version of APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS with checks for available colliders to ensure the physics
 	// engine is not overwhelmed.
 	inline void ApplyForceToEntityCenterOfMass(Entity entity, int forceType, float x, float y, float z, BOOL p5,
-											   BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
+	                                           BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
 		{

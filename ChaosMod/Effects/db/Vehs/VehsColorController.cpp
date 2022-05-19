@@ -151,7 +151,7 @@ static void OnTickPink()
 			USE_PARTICLE_FX_ASSET("des_trailerpark");
 			int boneId = GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis");
 			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0,
-																 boneId, 1, false, false, false);
+			                                                     boneId, 1, false, false, false);
 			flameByCar[veh] = handle;
 		}
 
@@ -189,8 +189,8 @@ static void OnTickRainbow()
 {
 	static int headlightColor = 0;
 
-	static ULONG cnt		  = 0;
-	static const float freq	  = .1f;
+	static ULONG cnt          = 0;
+	static const float freq   = .1f;
 
 	if (++cnt >= (ULONG)-1)
 	{

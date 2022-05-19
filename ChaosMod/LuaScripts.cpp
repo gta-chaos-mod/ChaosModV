@@ -44,7 +44,7 @@ _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 _LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS *pException)
 {
 	return pException->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER
-																					: EXCEPTION_CONTINUE_SEARCH;
+	                                                                                : EXCEPTION_CONTINUE_SEARCH;
 }
 
 _LUAFUNC char *_TryParseString(void *pStr)
@@ -67,9 +67,9 @@ _LUAFUNC bool _TryParseVector3(void **pVector, float &fX, float &fY, float &fZ)
 {
 	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
 
-	fX			   = *reinterpret_cast<float *>(pVector);
-	fY			   = *reinterpret_cast<float *>(pVector + 1);
-	fZ			   = *reinterpret_cast<float *>(pVector + 2);
+	fX             = *reinterpret_cast<float *>(pVector);
+	fY             = *reinterpret_cast<float *>(pVector + 1);
+	fZ             = *reinterpret_cast<float *>(pVector + 2);
 
 	RemoveVectoredContinueHandler(exHandler);
 
@@ -111,7 +111,7 @@ class LuaScript
 	LuaScript &operator=(LuaScript &&script) noexcept
 	{
 		m_szFileName = std::move(script.m_szFileName);
-		m_Lua		 = std::move(script.m_Lua);
+		m_Lua        = std::move(script.m_Lua);
 	}
 
 	void Execute(const char *szFuncName) const
@@ -138,7 +138,7 @@ struct LuaVector3
 	alignas(8) float m_fY = 0.f;
 	alignas(8) float m_fZ = 0.f;
 
-	LuaVector3()		  = default;
+	LuaVector3()          = default;
 
 	LuaVector3(float fX, float fY, float fZ) : m_fX(fX), m_fY(fY), m_fZ(fZ)
 	{
@@ -200,7 +200,7 @@ enum class ELuaNativeReturnType
 static std::unordered_map<std::string, LuaScript> ms_dictRegisteredScripts;
 
 _LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_state &lua, DWORD64 ullNativeHash,
-							   ELuaNativeReturnType eReturnType, const sol::variadic_args &args)
+                               ELuaNativeReturnType eReturnType, const sol::variadic_args &args)
 {
 	nativeInit(ullNativeHash);
 
@@ -243,8 +243,8 @@ _LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_st
 	if (!_CallNative(&pReturned))
 	{
 		LuaPrint(szFileName, (std::ostringstream()
-							  << "Error while invoking native 0x" << std::uppercase << std::hex << ullNativeHash)
-								 .str());
+		                      << "Error while invoking native 0x" << std::uppercase << std::hex << ullNativeHash)
+		                         .str());
 	}
 	else if (pReturned)
 	{
@@ -278,7 +278,7 @@ _LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_st
 
 static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 {
-	const auto &path	   = entry.path();
+	const auto &path       = entry.path();
 	const auto &szFileName = path.filename().string();
 
 	const auto &szPathStr  = path.string();
@@ -293,8 +293,8 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua["ReturnType"] =
 		lua.create_table_with("None", ELuaNativeReturnType::None, "Boolean", ELuaNativeReturnType::Bool, "Integer",
-							  ELuaNativeReturnType::Int, "String", ELuaNativeReturnType::String, "Float",
-							  ELuaNativeReturnType::Float, "Vector3", ELuaNativeReturnType::Vector3);
+	                          ELuaNativeReturnType::Int, "String", ELuaNativeReturnType::String, "Float",
+	                          ELuaNativeReturnType::Float, "Vector3", ELuaNativeReturnType::Vector3);
 
 	auto getMetaModFactory = []<typename T>(T &modifier)
 	{
@@ -314,7 +314,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 #define P(x) sol::property(getMetaModFactory(x), setMetaModFactory(x))
 
-	auto metaModifiersTable		= lua.create_named_table("MetaModifiers");
+	auto metaModifiersTable     = lua.create_named_table("MetaModifiers");
 	auto metaModifiersMetaTable = lua.create_table_with(
 		"EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier), "TimerSpeedModifier",
 		P(MetaModifiers::m_fTimerSpeedModifier), "AdditionalEffectsToDispatch",
@@ -323,7 +323,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	metaModifiersMetaTable[sol::meta_function::new_index] = [] {
 	};
 	metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
-	metaModifiersTable[sol::metatable_key]			  = metaModifiersMetaTable;
+	metaModifiersTable[sol::metatable_key]            = metaModifiersMetaTable;
 
 #undef P
 
@@ -340,45 +340,45 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	lua["GET_HASH_KEY"] = GET_HASH_KEY;
 
 	lua.new_usertype<LuaHolder>("_Holder", "IsValid", &LuaHolder::IsValid, "AsBoolean", &LuaHolder::As<bool>,
-								"AsInteger", &LuaHolder::As<int>, "AsFloat", &LuaHolder::As<float>, "AsString",
-								&LuaHolder::As<char *>, "AsVector3", &LuaHolder::As<LuaVector3>);
+	                            "AsInteger", &LuaHolder::As<int>, "AsFloat", &LuaHolder::As<float>, "AsString",
+	                            &LuaHolder::As<char *>, "AsVector3", &LuaHolder::As<LuaVector3>);
 	lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object &>);
 
 	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::m_fX, "y", &LuaVector3::m_fY, "z", &LuaVector3::m_fZ);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 	lua["_invoke"] = [szFileName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
-								  const sol::variadic_args &args)
+	                              const sol::variadic_args &args)
 	{
 		return LuaInvoke(szFileName, lua, ullHash, eReturnType, args);
 	};
-	lua["WAIT"]									= WAIT;
+	lua["WAIT"]                                 = WAIT;
 	// Replace those natives with our own safe versions
-	lua["APPLY_FORCE_TO_ENTITY"]				= APPLY_FORCE_TO_ENTITY;
+	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
 	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
 
-	lua["GetAllPeds"]							= GetAllPedsArray;
-	lua["CreatePoolPed"]						= CreatePoolPed;
+	lua["GetAllPeds"]                           = GetAllPedsArray;
+	lua["CreatePoolPed"]                        = CreatePoolPed;
 
-	lua["GetAllVehicles"]						= GetAllVehsArray;
-	lua["CreatePoolVehicle"]					= CreatePoolVehicle;
-	lua["CreateTempVehicle"]					= CreateTempVehicle;
+	lua["GetAllVehicles"]                       = GetAllVehsArray;
+	lua["CreatePoolVehicle"]                    = CreatePoolVehicle;
+	lua["CreateTempVehicle"]                    = CreateTempVehicle;
 
-	lua["GetAllProps"]							= GetAllPropsArray;
-	lua["CreatePoolProp"]						= CreatePoolProp;
+	lua["GetAllProps"]                          = GetAllPropsArray;
+	lua["CreatePoolProp"]                       = CreatePoolProp;
 
-	lua["GetAllWeapons"]						= Memory::GetAllWeapons;
-	lua["GetAllPedModels"]						= Memory::GetAllPedModels;
-	lua["GetAllVehicleModels"]					= Memory::GetAllVehModels;
+	lua["GetAllWeapons"]                        = Memory::GetAllWeapons;
+	lua["GetAllPedModels"]                      = Memory::GetAllPedModels;
+	lua["GetAllVehicleModels"]                  = Memory::GetAllVehModels;
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
-				 EOverrideShaderType::Snow);
+	             EOverrideShaderType::Snow);
 	lua["OverrideShader"] = Hooks::OverrideShader;
-	lua["ResetShader"]	  = Hooks::ResetShader;
+	lua["ResetShader"]    = Hooks::ResetShader;
 
-	lua["SetSnowState"]	  = Memory::SetSnow;
+	lua["SetSnowState"]   = Memory::SetSnow;
 
-	const auto &result	  = lua.safe_script_file(path.string(), sol::load_mode::text);
+	const auto &result    = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
 		const sol::error &error = result;
@@ -390,21 +390,21 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	const sol::optional<sol::table> &effectGroupInfoOpt = lua["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
-		const auto &effectGroupInfo					   = *effectGroupInfoOpt;
+		const auto &effectGroupInfo                    = *effectGroupInfoOpt;
 
 		const sol::optional<std::string> &groupNameOpt = effectGroupInfo["Name"];
 		if (groupNameOpt)
 		{
 			const auto &groupName = *groupNameOpt;
-			const auto &result	  = g_dictEffectGroups.find(groupName);
+			const auto &result    = g_dictEffectGroups.find(groupName);
 			if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 			{
 				LOG(szFileName << ": WARNING: Could not register effect group \"" << groupName
-							   << "\": Already registered!");
+				               << "\": Already registered!");
 			}
 			else
 			{
-				g_dictEffectGroups[groupName].IsPlaceholder			= false;
+				g_dictEffectGroups[groupName].IsPlaceholder         = false;
 				g_dictEffectGroups[groupName].WasRegisteredByScript = true;
 				g_dictEffectGroupMemberCount[groupName];
 
@@ -416,7 +416,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 				}
 
 				LOG(szFileName << ": Registered effect group \"" << groupName
-							   << "\" with weight multiplier: " << g_dictEffectGroups[groupName].WeightMult);
+				               << "\" with weight multiplier: " << g_dictEffectGroups[groupName].WeightMult);
 			}
 		}
 	}
@@ -427,10 +427,10 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		return;
 	}
 
-	const auto &scriptInfo							= *scriptInfoOpt;
+	const auto &scriptInfo                          = *scriptInfoOpt;
 
 	const sol::optional<std::string> &scriptNameOpt = scriptInfo["Name"];
-	const sol::optional<std::string> &scriptIdOpt	= scriptInfo["ScriptId"];
+	const sol::optional<std::string> &scriptIdOpt   = scriptInfo["ScriptId"];
 	if (!scriptNameOpt || !scriptIdOpt)
 	{
 		return;
@@ -473,14 +473,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	if (bDoesIdAlreadyExist)
 	{
 		LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName << "\": Id \"" << szScriptId
-					   << "\" already registered!");
+		               << "\" already registered!");
 
 		return;
 	}
 
 	EffectData effectData;
-	effectData.Name									   = szScriptName;
-	effectData.Id									   = *scriptIdOpt;
+	effectData.Name                                    = szScriptName;
+	effectData.Id                                      = *scriptIdOpt;
 
 	const sol::optional<std::string> &timedTypeTextOpt = scriptInfo["TimedType"];
 	if (timedTypeTextOpt)
@@ -518,7 +518,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	if (weightMultOpt)
 	{
 		effectData.WeightMult = (std::max)(1, *weightMultOpt);
-		effectData.Weight	  = effectData.WeightMult;
+		effectData.Weight     = effectData.WeightMult;
 	}
 
 	const sol::optional<bool> &isMetaOpt = scriptInfo["IsMeta"];
@@ -556,7 +556,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	if (effectCategoryOpt)
 	{
 		const auto &effectCategoryStr = *effectCategoryOpt;
-		auto effectCategoryIt		  = g_dictNameToEffectCategory.find(effectCategoryStr);
+		auto effectCategoryIt         = g_dictNameToEffectCategory.find(effectCategoryStr);
 		if (effectCategoryIt != g_dictNameToEffectCategory.end())
 		{
 			effectData.EffectCategory = effectCategoryIt->second;
@@ -567,7 +567,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	if (effectGroupOpt)
 	{
 		const auto &effectGroup = *effectGroupOpt;
-		effectData.GroupType	= effectGroup;
+		effectData.GroupType    = effectGroup;
 
 		if (g_dictEffectGroups.find(effectGroup) == g_dictEffectGroups.end())
 		{
@@ -612,7 +612,7 @@ namespace LuaScripts
 			for (const auto &entry : std::filesystem::recursive_directory_iterator(dir))
 			{
 				if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".lua"
-					&& entry.file_size() > 0)
+				    && entry.file_size() > 0)
 				{
 					ParseScriptEntry(entry);
 				}

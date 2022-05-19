@@ -4,14 +4,14 @@ static void OnTick()
 {
 	static std::vector<Ped> goneThrough;
 
-	Ped playerPed	  = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	for (Ped ped : GetAllPeds())
 	{
 		if (!IS_PED_A_PLAYER(ped) && IS_PED_IN_ANY_VEHICLE(ped, false)
-			&& GET_PED_IN_VEHICLE_SEAT(GET_VEHICLE_PED_IS_IN(ped, false), -1, 0) == ped
-			&& std::find(goneThrough.begin(), goneThrough.end(), ped) == goneThrough.end())
+		    && GET_PED_IN_VEHICLE_SEAT(GET_VEHICLE_PED_IS_IN(ped, false), -1, 0) == ped
+		    && std::find(goneThrough.begin(), goneThrough.end(), ped) == goneThrough.end())
 		{
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
 

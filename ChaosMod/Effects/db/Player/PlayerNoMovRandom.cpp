@@ -1,5 +1,5 @@
 /*
-	Effect by Moxi
+    Effect by Moxi
 */
 
 #include <stdafx.h>

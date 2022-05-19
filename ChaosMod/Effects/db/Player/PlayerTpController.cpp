@@ -101,8 +101,8 @@ static void OnStartWaypoint()
 	bool found = false, playerBlip = false;
 	if (IS_WAYPOINT_ACTIVE())
 	{
-		coords	   = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
-		found	   = true;
+		coords     = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+		found      = true;
 		playerBlip = true;
 	}
 	else
@@ -158,7 +158,7 @@ static void OnStartWaypoint()
 			{
 				Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-				z				  = playerPos.z;
+				z                 = playerPos.z;
 			}
 		}
 
@@ -196,7 +196,7 @@ REGISTER_EFFECT(OnStartFront, nullptr, nullptr, EffectInfo
 
 static void OnStartRandom()
 {
-	Ped playerPed	  = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	float x, y, z = playerPos.z, _;
@@ -257,9 +257,9 @@ static void OnStartMission()
 		excludedColors = {};
 		break;
 	}
-	const int possibleBlipIds[] = { 66,	 76,  77,  78,	79,	 80,  86,  88,	89,	 96,  104, 105, 106, 107, 112, 113,
-									118, 120, 123, 124, 208, 209, 210, 211, 214, 267, 293, 355, 363, 381, 382, 383,
-									384, 385, 386, 387, 388, 389, 428, 445, 447, 448, 449, 450, 451, 452, 453, 454 };
+	const int possibleBlipIds[] = { 66,  76,  77,  78,  79,  80,  86,  88,  89,  96,  104, 105, 106, 107, 112, 113,
+		                            118, 120, 123, 124, 208, 209, 210, 211, 214, 267, 293, 355, 363, 381, 382, 383,
+		                            384, 385, 386, 387, 388, 389, 428, 445, 447, 448, 449, 450, 451, 452, 453, 454 };
 	std::vector<Blip> validBlips;
 	for (int i : possibleBlipIds)
 	{
@@ -278,7 +278,7 @@ static void OnStartMission()
 	}
 	if (validBlips.size() >= 1)
 	{
-		Blip randomBlip	  = validBlips[g_Random.GetRandomInt(0, validBlips.size() - 1)];
+		Blip randomBlip   = validBlips[g_Random.GetRandomInt(0, validBlips.size() - 1)];
 		Vector3 blipCoord = GET_BLIP_COORDS(randomBlip);
 		TeleportPlayer(blipCoord.x, blipCoord.y, blipCoord.z, true);
 	}
@@ -301,11 +301,11 @@ struct FakeTeleportInfo
 };
 
 static const std::vector<FakeTeleportInfo> tpLocations = {
-	{ "tp_lsairport", { -1388.6f, -3111.61f, 13.94f } },									// LSIA
-	{ "tp_mazebanktower", { -75.7f, -818.62f, 326.16f } },									// Maze Tower
-	{ "tp_fortzancudo", { -2360.3f, 3244.83f, 92.9f }, { -2267.89f, 3121.04f, 32.5f } },	// Fort Zancudo
+	{ "tp_lsairport", { -1388.6f, -3111.61f, 13.94f } },                                    // LSIA
+	{ "tp_mazebanktower", { -75.7f, -818.62f, 326.16f } },                                  // Maze Tower
+	{ "tp_fortzancudo", { -2360.3f, 3244.83f, 92.9f }, { -2267.89f, 3121.04f, 32.5f } },    // Fort Zancudo
 	{ "tp_mountchilliad", { 501.77f, 5604.85f, 797.91f }, { 503.33f, 5531.91f, 777.45f } }, // Mount Chilliad
-	{ "tp_skyfall", { 935.f, 3800.f, 2300.f } }												// Heaven
+	{ "tp_skyfall", { 935.f, 3800.f, 2300.f } }                                             // Heaven
 };
 
 static int GetFakeWantedLevel(std::string_view effect)
@@ -325,11 +325,11 @@ static int GetFakeWantedLevel(std::string_view effect)
 static void OnStartFakeTp()
 {
 	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId						  = selectedLocationInfo.type;
+	auto overrideId                       = selectedLocationInfo.type;
 	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
 
-	Player player	  = PLAYER_ID();
-	Ped playerPed	  = PLAYER_PED_ID();
+	Player player     = PLAYER_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vehicle playerVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : 0;
 
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -348,7 +348,7 @@ static void OnStartFakeTp()
 	}
 
 	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
-	int wanted		  = GetFakeWantedLevel(selectedLocationInfo.type);
+	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
 	if (wanted == 0 || wanted < currentWanted)
 	{
 		wanted = currentWanted;

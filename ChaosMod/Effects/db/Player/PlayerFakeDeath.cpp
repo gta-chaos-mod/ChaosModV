@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -7,12 +7,12 @@
 #include "Components/EffectDispatcher.h"
 
 static const char *ms_rgTextPairs[] = { "Just kidding, keep playing",
-										"lol u suck",
-										"Did you really fall for that?",
-										"~g~(No you're fine)",
-										"Did this scare you?",
-										"~r~FISSION MAILED",
-										"ded" };
+	                                    "lol u suck",
+	                                    "Did you really fall for that?",
+	                                    "~g~(No you're fine)",
+	                                    "Did this scare you?",
+	                                    "~r~FISSION MAILED",
+	                                    "ded" };
 
 enum FakeDeathState
 {
@@ -23,16 +23,16 @@ enum FakeDeathState
 	cleanup
 };
 
-static int scaleForm				  = 0;
-static int currentMode				  = FakeDeathState::start;
-static int lastModeTime				  = 0;
-static int nextModeTime				  = 0;
+static int scaleForm                  = 0;
+static int currentMode                = FakeDeathState::start;
+static int lastModeTime               = 0;
+static int nextModeTime               = 0;
 static const char *deathAnimationName = "";
 
 static void OnStart()
 {
-	scaleForm	 = 0;
-	currentMode	 = FakeDeathState::start;
+	scaleForm    = 0;
+	currentMode  = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
 
@@ -89,7 +89,7 @@ static void OnStart()
 						Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
 						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150.f, 1, 0.f, false, false,
-									   false);
+						               false);
 						nextModeTime = 750;
 						break;
 					}
@@ -97,16 +97,16 @@ static void OnStart()
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
 					// Fake veh explosion
-					fakeEffectId	  = "playerveh_explode";
+					fakeEffectId      = "playerveh_explode";
 
-					Vehicle veh		  = GET_VEHICLE_PED_IS_IN(playerPed, false);
+					Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 					int lastTimestamp = GET_GAME_TIMER();
 
-					int seats		  = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+					int seats         = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
 					int detonateTimer = 5000;
-					int beepTimer	  = 5000;
+					int beepTimer     = 5000;
 					while (DOES_ENTITY_EXIST(veh))
 					{
 						WAIT(0);

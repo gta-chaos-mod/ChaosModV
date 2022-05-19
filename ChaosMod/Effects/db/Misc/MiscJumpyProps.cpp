@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -35,7 +35,7 @@ static void OnStop()
 {
 	for (auto propData : propDataMap)
 	{
-		Object prop	  = propData.first;
+		Object prop   = propData.first;
 		PropData data = propData.second;
 
 		if (prop && DOES_ENTITY_EXIST(prop))

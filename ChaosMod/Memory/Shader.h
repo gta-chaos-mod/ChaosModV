@@ -52,11 +52,11 @@ namespace Memory
 		if (reloadShaders && rage_sgaShader_ResolveShader && rage_sgaShader_destructor)
 		{
 			static const std::vector<Hash> ugToDelete = { "postfx"_hash,
-														  "postfxms"_hash,
-														  "postfxms0"_hash,
-														  "deferred_lighting"_hash,
-														  "deferred_lightingms"_hash,
-														  "deferred_lightingms0"_hash };
+				                                          "postfxms"_hash,
+				                                          "postfxms0"_hash,
+				                                          "deferred_lighting"_hash,
+				                                          "deferred_lightingms"_hash,
+				                                          "deferred_lightingms0"_hash };
 
 			for (auto hash : ugToDelete)
 			{

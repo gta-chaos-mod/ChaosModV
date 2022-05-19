@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi
+    Effect by Lucas7yoshi
 */
 
 #include <stdafx.h>
@@ -7,7 +7,7 @@
 static void OnTick()
 {
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 currentTick		= GET_GAME_TIMER();
+	DWORD64 currentTick     = GET_GAME_TIMER();
 
 	if (lastTick < currentTick - 500) // every second, half of second
 	{

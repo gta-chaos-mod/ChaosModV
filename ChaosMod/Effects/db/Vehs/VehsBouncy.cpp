@@ -1,5 +1,5 @@
 /*
-	Effect by ProfessorBiddle
+    Effect by ProfessorBiddle
 */
 
 #include <stdafx.h>
@@ -25,7 +25,7 @@ static void OnTick()
 				velFactor = 60.f;
 			}
 			Memory::ApplyForceToEntity(veh, 0, vel.x * -velFactor, vel.y * -velFactor, vel.z * -velFactor, .0f, .0f,
-									   .0f, 0, true, true, true, false, true);
+			                           .0f, 0, true, true, true, false, true);
 		}
 	}
 }

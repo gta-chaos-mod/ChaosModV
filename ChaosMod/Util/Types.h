@@ -14,6 +14,6 @@ inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zO
 	{
 		Vector3 entityPosition = GET_ENTITY_COORDS(entity, false);
 		return Vector3::Init(entityPosition.x - radius * SIN(angle + 90), entityPosition.y + radius * SIN(angle),
-							 entityPosition.z + zOffset);
+		                     entityPosition.z + zOffset);
 	}
 }

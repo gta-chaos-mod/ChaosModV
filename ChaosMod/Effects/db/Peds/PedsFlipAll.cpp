@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
 /*
-	Effect by ProfessorBiddle
+    Effect by ProfessorBiddle
 */
 
 static void OnTick()

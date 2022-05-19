@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh, code mostly repurposed from "Prop Hunt"
+    Effect by Gorakh, code mostly repurposed from "Prop Hunt"
 */
 
 #include <stdafx.h>
@@ -25,13 +25,13 @@ static void RefreshVehiclePropLink(Vehicle veh, Object prop)
 
 	Vector3 offset = GetPropOffset(GET_ENTITY_MODEL(prop));
 	ATTACH_ENTITY_TO_ENTITY(prop, veh, GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis"), offset.x, offset.y, offset.z, 0.f,
-							0.f, 0.f, false, false, false, false, 0, true);
+	                        0.f, 0.f, false, false, false, false, 0, true);
 }
 
 static void OnTick()
 {
 	static int lastModelsUpdateTick = 0;
-	int currentTick					= GET_GAME_TIMER();
+	int currentTick                 = GET_GAME_TIMER();
 	if (currentTick - lastModelsUpdateTick > 1000 || availablePropModels.empty())
 	{
 		lastModelsUpdateTick = currentTick;
@@ -81,12 +81,12 @@ static void OnTick()
 	}
 
 	static int lastPropVehsCheckTick = 0;
-	currentTick						 = GET_GAME_TIMER();
+	currentTick                      = GET_GAME_TIMER();
 	if (currentTick - lastPropVehsCheckTick > 500)
 	{
 		lastPropVehsCheckTick = currentTick;
 
-		int count			  = 20;
+		int count             = 20;
 		for (auto it = vehPropsMap.cbegin(); it != vehPropsMap.cend();)
 		{
 			Vehicle veh = it->first;

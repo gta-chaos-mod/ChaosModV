@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -9,14 +9,14 @@ static void OnTick()
 	Ped player = PLAYER_PED_ID();
 	if (IS_PED_IN_ANY_VEHICLE(player, 0))
 	{
-		Vehicle veh	 = GET_VEHICLE_PED_IS_IN(player, 0);
+		Vehicle veh  = GET_VEHICLE_PED_IS_IN(player, 0);
 		int vehClass = GET_VEHICLE_CLASS(veh);
 		if (vehClass == 15 || vehClass == 16)
 		{
 			return;
 		}
 		float currentSpeed = GET_ENTITY_SPEED(veh);
-		float maxSpeed	   = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh));
+		float maxSpeed     = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh));
 		if (currentSpeed < maxSpeed * 0.6)
 		{
 			return;

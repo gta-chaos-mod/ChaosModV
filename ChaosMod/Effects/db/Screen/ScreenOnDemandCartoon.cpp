@@ -1,15 +1,15 @@
 /*
-	Effect by DrUnderscore (James), modified
+    Effect by DrUnderscore (James), modified
 */
 
 #include <stdafx.h>
 
 static const char *TV_PLAYLISTS[] = {
-	"PL_WEB_KFLF",	  // Kung Fu Rainbow Lazerforce
+	"PL_WEB_KFLF",    // Kung Fu Rainbow Lazerforce
 	"PL_WEB_RANGERS", // Republican Space Rangers
-	"PL_WEB_PRB2",	  // Princess Robot Bubblegum
-	"PL_WEB_FOS",	  // Fame or Shame
-	"PL_WEB_CAS",	  // Diamond Casino DLC intro
+	"PL_WEB_PRB2",    // Princess Robot Bubblegum
+	"PL_WEB_FOS",     // Fame or Shame
+	"PL_WEB_CAS",     // Diamond Casino DLC intro
 	"PL_WEB_FOS",
 	"PL_WEB_HOWITZER", // Howitzer Documentary
 	"PL_WEB_KFLF",

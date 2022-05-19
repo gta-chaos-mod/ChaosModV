@@ -20,9 +20,9 @@ static void OnStop()
 
 static void OnTick()
 {
-	Ped playerPed		  = PLAYER_PED_ID();
+	Ped playerPed         = PLAYER_PED_ID();
 	bool isPlayerInAnyVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false);
-	Vehicle playerVeh	  = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vehicle playerVeh     = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	if (isPlayerInAnyVeh)
 	{
@@ -30,7 +30,7 @@ static void OnTick()
 	}
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 2000)
 	{
@@ -42,18 +42,18 @@ static void OnTick()
 		{
 			if (!IS_PED_A_PLAYER(ped))
 			{
-				bool isPedInAnyVeh		  = IS_PED_IN_ANY_VEHICLE(ped, true);
+				bool isPedInAnyVeh        = IS_PED_IN_ANY_VEHICLE(ped, true);
 				bool isPedGettingInAnyVeh = IS_PED_GETTING_INTO_A_VEHICLE(ped);
-				Vehicle pedVeh			  = GET_VEHICLE_PED_IS_IN(ped, false);
-				Vehicle pedTargetVeh	  = GET_VEHICLE_PED_IS_ENTERING(ped);
+				Vehicle pedVeh            = GET_VEHICLE_PED_IS_IN(ped, false);
+				Vehicle pedTargetVeh      = GET_VEHICLE_PED_IS_ENTERING(ped);
 
 				if (isPlayerInAnyVeh && (!isPedInAnyVeh || pedVeh != m_savedPlayerVeh)
-					&& (!isPedGettingInAnyVeh || pedTargetVeh != m_savedPlayerVeh))
+				    && (!isPedGettingInAnyVeh || pedTargetVeh != m_savedPlayerVeh))
 				{
 					TASK_ENTER_VEHICLE(ped, m_savedPlayerVeh, -1, -2, 2.f, 1, 0);
 				}
 				else if ((isPedInAnyVeh && pedVeh == m_savedPlayerVeh)
-						 || (isPedGettingInAnyVeh && pedTargetVeh == m_savedPlayerVeh))
+				         || (isPedGettingInAnyVeh && pedTargetVeh == m_savedPlayerVeh))
 				{
 					if (GET_PED_IN_VEHICLE_SEAT(m_savedPlayerVeh, -1, 0) == ped)
 					{

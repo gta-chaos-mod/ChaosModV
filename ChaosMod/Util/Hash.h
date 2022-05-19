@@ -2,7 +2,7 @@
 
 #include "Natives.h"
 
-using Hash	 = unsigned long;
+using Hash   = unsigned long;
 using size_t = unsigned long long;
 
 constexpr Hash operator""_hash(const char *str, size_t n)

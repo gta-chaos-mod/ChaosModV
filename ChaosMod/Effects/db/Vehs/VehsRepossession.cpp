@@ -1,5 +1,5 @@
 /*
-	Effect by ubscal, modified from Jesus take the wheel
+    Effect by ubscal, modified from Jesus take the wheel
 */
 
 #include <stdafx.h>
@@ -38,10 +38,10 @@ static void OnStart()
 	else
 	{
 
-		Vector3 playerPos		   = GET_ENTITY_COORDS(playerPed, false);
-		float heading			   = GET_ENTITY_HEADING(playerPed);
+		Vector3 playerPos          = GET_ENTITY_COORDS(playerPed, false);
+		float heading              = GET_ENTITY_HEADING(playerPed);
 		static const Hash carModel = GET_HASH_KEY("BJXL");
-		Vehicle veh				   = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z, heading);
+		Vehicle veh                = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z, heading);
 		SET_VEHICLE_COLOURS(veh, 88, 0);
 		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 		static constexpr Hash modelHash = -1692214353;

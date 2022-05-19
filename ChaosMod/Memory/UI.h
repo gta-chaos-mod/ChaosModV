@@ -18,8 +18,8 @@ namespace Memory
 {
 	inline void SetRadarOffsetX(float xOffset)
 	{
-		static MinimapData *data					= nullptr;
-		static MinimapData defaultValues[3]			= {};
+		static MinimapData *data                    = nullptr;
+		static MinimapData defaultValues[3]         = {};
 
 		static void(__cdecl * refreshMinimapFunc)() = nullptr;
 
@@ -33,7 +33,7 @@ namespace Memory
 				return;
 			}
 
-			data			 = handle.Get<MinimapData>();
+			data             = handle.Get<MinimapData>();
 
 			defaultValues[0] = data[0]; // minimap
 			defaultValues[1] = data[1]; // minimap_mask

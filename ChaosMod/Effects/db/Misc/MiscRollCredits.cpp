@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -9,7 +9,7 @@ static float s_alphaTimer;
 
 static void OnStart()
 {
-	s_alpha		 = 0;
+	s_alpha      = 0;
 	s_alphaTimer = 0.f;
 
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);

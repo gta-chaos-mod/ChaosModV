@@ -3,7 +3,7 @@
 static void OnTickFriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -35,7 +35,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickFriendly, EffectInfo
 static void OnTickUnfriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -46,7 +46,7 @@ static void OnTickUnfriendly()
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
 			{
 				constexpr const char *speechesUnfriendly[3] { "GENERIC_CURSE_HIGH", "GENERIC_INSULT_HIGH",
-															  "GENERIC_WAR_CRY" };
+					                                          "GENERIC_WAR_CRY" };
 
 				int choice = g_Random.GetRandomInt(0, 2);
 				PLAY_PED_AMBIENT_SPEECH_NATIVE(ped, speechesUnfriendly[choice], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
@@ -68,7 +68,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickUnfriendly, EffectInfo
 static void OnTickKifflom()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{

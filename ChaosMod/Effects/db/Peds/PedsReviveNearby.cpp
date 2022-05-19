@@ -5,7 +5,7 @@
 static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup	  = GET_HASH_KEY("CIVMALE");
+	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
@@ -18,8 +18,8 @@ static void OnStart()
 	{
 		if (!IS_PED_A_PLAYER(ped) && IS_PED_DEAD_OR_DYING(ped, false))
 		{
-			int pedType				   = GET_PED_TYPE(ped);
-			Hash pedModel			   = GET_ENTITY_MODEL(ped);
+			int pedType                = GET_PED_TYPE(ped);
+			Hash pedModel              = GET_ENTITY_MODEL(ped);
 
 			bool isMissionEntityCorpse = IS_ENTITY_A_MISSION_ENTITY(ped);
 
@@ -38,10 +38,10 @@ static void OnStart()
 			// See if corpse is in any vehicle
 			// If yes, set clone into seat corpse is occupying later
 			Vehicle targetVeh = 0;
-			int targetSeat	  = 0;
+			int targetSeat    = 0;
 			if (IS_PED_IN_ANY_VEHICLE(ped, false))
 			{
-				Vehicle veh	  = GET_VEHICLE_PED_IS_IN(ped, false);
+				Vehicle veh   = GET_VEHICLE_PED_IS_IN(ped, false);
 				Hash vehModel = GET_ENTITY_MODEL(veh);
 				int maxSeats  = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
 

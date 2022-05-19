@@ -1,7 +1,7 @@
 /*
-	Effect by ShySkream
+    Effect by ShySkream
 
-	uses modified code from "pacifist", "need for speed", and "never wanted".
+    uses modified code from "pacifist", "need for speed", and "never wanted".
 */
 
 #include <stdafx.h>
@@ -20,8 +20,8 @@ static void OnStart()
 {
 #pragma region variable initializations
 	lastWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER_ID());
-	m_lastTick		= GET_GAME_TIMER();
-	m_timeReserve	= WAIT_TIME;
+	m_lastTick      = GET_GAME_TIMER();
+	m_timeReserve   = WAIT_TIME;
 	lastPlayerKills = -1;
 #pragma endregion
 }
@@ -30,12 +30,12 @@ static void OnTick()
 {
 #pragma region variable updates
 	DWORD64 currentTick = GET_GAME_TIMER();
-	DWORD64 tickDelta	= currentTick - m_lastTick;
+	DWORD64 tickDelta   = currentTick - m_lastTick;
 
-	Player player		= PLAYER_ID();
-	int wantedLevel		= PLAYER::GET_PLAYER_WANTED_LEVEL(player);
+	Player player       = PLAYER_ID();
+	int wantedLevel     = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
 
-	Hash playerHash		= GET_ENTITY_MODEL(PLAYER_PED_ID());
+	Hash playerHash     = GET_ENTITY_MODEL(PLAYER_PED_ID());
 #pragma endregion
 
 #pragma region check if player ran over someone
@@ -51,7 +51,7 @@ static void OnTick()
 #pragma region check if player shot someone
 
 	int allPlayerKills = 0;
-	int curKills	   = 0;
+	int curKills       = 0;
 	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
 	{
 		STAT_GET_INT(hash, &curKills, -1);
@@ -89,7 +89,7 @@ static void OnTick()
 	else if (lastWantedLevel > wantedLevel)
 	{
 		lastWantedLevel = wantedLevel;
-		m_timeReserve	= WAIT_TIME;
+		m_timeReserve   = WAIT_TIME;
 	}
 #pragma endregion
 
