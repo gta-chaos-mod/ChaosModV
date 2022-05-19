@@ -23,7 +23,8 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Whose Phone Is Ringing?",
 		.Id = "peds_phones",

@@ -16,7 +16,8 @@ static void OnTick_0_5x()
 	MetaModifiers::m_fTimerSpeedModifier = 0.5;
 }
 
-static RegisterEffect registerEffect_0_5x(nullptr, OnStop, OnTick_0_5x, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 	{
 		.Name = "0.5x Timer Speed",
 		.Id = "meta_timerspeed_0_5x",
@@ -25,13 +26,15 @@ static RegisterEffect registerEffect_0_5x(nullptr, OnStop, OnTick_0_5x, EffectIn
 		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
+// clang-format on
 
 static void OnTick_2x()
 {
 	MetaModifiers::m_fTimerSpeedModifier = 2;
 }
 
-static RegisterEffect registerEffect_2x(nullptr, OnStop, OnTick_2x, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 	{
 		.Name = "2x Timer Speed",
 		.Id = "meta_timerspeed_2x",
@@ -40,13 +43,15 @@ static RegisterEffect registerEffect_2x(nullptr, OnStop, OnTick_2x, EffectInfo
 		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
+// clang-format on
 
 static void OnTick_5x()
 {
 	MetaModifiers::m_fTimerSpeedModifier = 5;
 }
 
-static RegisterEffect registerEffect_5x(nullptr, OnStop, OnTick_5x, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick_5x, EffectInfo
 	{
 		.Name = "5x Timer Speed",
 		.Id = "meta_timerspeed_5x",

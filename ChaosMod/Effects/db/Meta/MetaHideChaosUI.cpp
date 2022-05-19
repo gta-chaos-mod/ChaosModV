@@ -16,7 +16,8 @@ static void OnTick()
 	MetaModifiers::m_bHideChaosUI = true;
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",

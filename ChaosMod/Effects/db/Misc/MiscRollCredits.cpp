@@ -9,7 +9,7 @@ static float s_alphaTimer;
 
 static void OnStart()
 {
-	s_alpha = 0;
+	s_alpha		 = 0;
 	s_alphaTimer = 0.f;
 
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
@@ -65,7 +65,8 @@ static void OnTick()
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, s_alpha, false);
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Roll Credits",
 		.Id = "misc_credits",

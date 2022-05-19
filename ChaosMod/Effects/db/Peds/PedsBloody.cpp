@@ -25,9 +25,9 @@ static void OnStart()
 		APPLY_PED_DAMAGE_PACK(ped, "MTD_melee_face_jaw", 0, 10);
 	}
 }
-	
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Everyone Is Bloody",
 		.Id = "peds_bloody"

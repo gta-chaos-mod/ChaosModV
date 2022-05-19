@@ -12,7 +12,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "2x Animation Speed",
 		.Id = "peds_2x_animation_speed",

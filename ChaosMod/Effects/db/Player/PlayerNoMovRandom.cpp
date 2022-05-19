@@ -111,7 +111,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Disable Random Direction",
 		.Id = "player_no_random_movement",

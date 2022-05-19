@@ -14,7 +14,8 @@ static void OnStop()
 static void OnTick()
 {
 	CAM::SHAKE_GAMEPLAY_CAM("LARGE_EXPLOSION_SHAKE", 0.05f);
-	float shook = GET_RANDOM_FLOAT_IN_RANGE(-9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
+	float shook = GET_RANDOM_FLOAT_IN_RANGE(
+		-9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
 
 	std::vector<Entity> entities;
 	for (Vehicle veh : GetAllVehs())
@@ -43,7 +44,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Earthquake",
 		.Id = "misc_earthquake",

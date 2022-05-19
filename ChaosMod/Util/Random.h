@@ -4,11 +4,11 @@
 
 class Random
 {
-private:
+  private:
 	std::random_device m_RandomDevice;
-	std::mt19937 m_Random {m_RandomDevice()};
+	std::mt19937 m_Random { m_RandomDevice() };
 
-public:
+  public:
 	inline void SetSeed(int iSeed)
 	{
 		if (iSeed > 0)
@@ -23,7 +23,8 @@ public:
 		return distr(m_Random);
 	}
 
-	inline float GetRandomFloat(float fLower, float fUpper) {
+	inline float GetRandomFloat(float fLower, float fUpper)
+	{
 		std::uniform_real_distribution<float> distr(fLower, fUpper);
 		return distr(m_Random);
 	}

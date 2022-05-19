@@ -17,7 +17,7 @@ static void OnStop()
 static void OnTick()
 {
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick			= GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -30,7 +30,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Vehicles Explode On Impact",
 		.Id = "vehs_ohko",

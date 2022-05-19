@@ -29,13 +29,13 @@ namespace ConfigApp
 
             if (m_isTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = effectData.TimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
+                effectconf_timer_type_enable.IsChecked = effectData.TimedType != (effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal);
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short"
                 };
-                effectconf_timer_type.SelectedIndex = effectData.TimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
+                effectconf_timer_type.SelectedIndex = effectData.TimedType == EffectTimedType.TimedShort ? 1 : 0;
 
                 if (effectData.CustomTime >= 0)
                 {
@@ -66,7 +66,7 @@ namespace ConfigApp
 
             // Meta Effect Handling
 
-            if (effectInfo.EffectCategory == EffectCategory.META)
+            if (effectInfo.EffectCategory == EffectCategory.Meta)
             {
                 effectconf_exclude_voting_enable_title.Visibility = Visibility.Hidden;
                 effectconf_exclude_voting_enable.Visibility = Visibility.Hidden;
