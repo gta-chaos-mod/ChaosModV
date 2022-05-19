@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../vendor/scripthookv/inc/natives.h"
+#include "Memory/Physics.h"
+
+#include <scripthookv/inc/natives.h>
 
 #define _NODISCARD [[nodiscard]]
 
@@ -92,4 +94,18 @@ inline void SET_PED_AS_NO_LONGER_NEEDED(Ped *ped)
 inline void SET_VEHICLE_AS_NO_LONGER_NEEDED(Vehicle *veh)
 {
 	SET_ENTITY_AS_NO_LONGER_NEEDED(veh);
+}
+
+NATIVE_DECL void APPLY_FORCE_TO_ENTITY(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY,
+									   float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec,
+									   BOOL isForceRel, BOOL p12, BOOL p13)
+{
+	Memory::ApplyForceToEntity(entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec,
+							   isForceRel, p12, p13);
+}
+
+NATIVE_DECL void APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(Entity entity, int forceType, float x, float y, float z, BOOL p5,
+													  BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
+{
+	Memory::ApplyForceToEntityCenterOfMass(entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
 }

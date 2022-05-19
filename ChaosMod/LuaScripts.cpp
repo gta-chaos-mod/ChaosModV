@@ -352,21 +352,24 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	{
 		return LuaInvoke(szFileName, lua, ullHash, eReturnType, args);
 	};
-	lua["WAIT"]				   = WAIT;
+	lua["WAIT"]									= WAIT;
+	// Replace those natives with our own safe versions
+	lua["APPLY_FORCE_TO_ENTITY"]				= APPLY_FORCE_TO_ENTITY;
+	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
 
-	lua["GetAllPeds"]		   = GetAllPedsArray;
-	lua["CreatePoolPed"]	   = CreatePoolPed;
+	lua["GetAllPeds"]							= GetAllPedsArray;
+	lua["CreatePoolPed"]						= CreatePoolPed;
 
-	lua["GetAllVehicles"]	   = GetAllVehsArray;
-	lua["CreatePoolVehicle"]   = CreatePoolVehicle;
-	lua["CreateTempVehicle"]   = CreateTempVehicle;
+	lua["GetAllVehicles"]						= GetAllVehsArray;
+	lua["CreatePoolVehicle"]					= CreatePoolVehicle;
+	lua["CreateTempVehicle"]					= CreateTempVehicle;
 
-	lua["GetAllProps"]		   = GetAllPropsArray;
-	lua["CreatePoolProp"]	   = CreatePoolProp;
+	lua["GetAllProps"]							= GetAllPropsArray;
+	lua["CreatePoolProp"]						= CreatePoolProp;
 
-	lua["GetAllWeapons"]	   = Memory::GetAllWeapons;
-	lua["GetAllPedModels"]	   = Memory::GetAllPedModels;
-	lua["GetAllVehicleModels"] = Memory::GetAllVehModels;
+	lua["GetAllWeapons"]						= Memory::GetAllWeapons;
+	lua["GetAllPedModels"]						= Memory::GetAllPedModels;
+	lua["GetAllVehicleModels"]					= Memory::GetAllVehModels;
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 				 EOverrideShaderType::Snow);

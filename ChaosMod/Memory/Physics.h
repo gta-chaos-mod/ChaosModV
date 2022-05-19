@@ -1,9 +1,15 @@
 #pragma once
 
-#include "../Util/Logging.h"
-#include "Entity.h"
-#include "Handle.h"
-#include "Memory.h"
+#include "Memory/Entity.h"
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
+
+#include "Util/Logging.h"
+
+#include <scripthookv/inc/nativeCaller.h>
+#include <scripthookv/inc/types.h>
+
+#include <tuple>
 
 using DWORD64 = unsigned long long;
 
@@ -77,8 +83,10 @@ namespace Memory
 								   BOOL p12, BOOL p13)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
-			APPLY_FORCE_TO_ENTITY(entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec,
-								  isForceRel, p12, p13);
+		{
+			invoke<Void>(0xC5F68BE9613E2D18, entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel,
+						 ignoreUpVec, isForceRel, p12, p13);
+		}
 	}
 
 	// Safe version of APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS with checks for available colliders to ensure the physics
@@ -87,6 +95,8 @@ namespace Memory
 											   BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
+		{
+			invoke<Void>(0x18FF00FC7EFF559E, entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
+		}
 	}
 }
