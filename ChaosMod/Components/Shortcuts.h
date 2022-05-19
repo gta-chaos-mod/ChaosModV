@@ -3,28 +3,29 @@
 #include "Component.h"
 #include "Effects/EffectIdentifier.h"
 
-#include <unordered_map>
-#include <queue>
 #include <mutex>
+#include <queue>
+#include <unordered_map>
 
 using DWORD = unsigned long;
 
 class Shortcuts : public Component
 {
-private:
+  private:
 	std::unordered_map<int, std::vector<EffectIdentifier>> m_ugAvailableShortcuts;
 
 	std::queue<EffectIdentifier> m_effectQueue;
 	std::mutex m_effectQueueMtx;
 
-protected:
+  protected:
 	Shortcuts();
 
-public:
+  public:
 	virtual void OnRun() override;
 
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 
-	template <class T> requires std::is_base_of_v<Component, T>
+	template <class T>
+	requires std::is_base_of_v<Component, T>
 	friend struct ComponentHolder;
 };

@@ -3,7 +3,7 @@
 static void OnTickFriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -13,7 +13,7 @@ static void OnTickFriendly()
 		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
 			{
-				constexpr const char* speechesFriendly[3]{ "GENERIC_HI", "GENERIC_HOWS_IT_GOING", "GENERIC_THANKS" };
+				constexpr const char *speechesFriendly[3] { "GENERIC_HI", "GENERIC_HOWS_IT_GOING", "GENERIC_THANKS" };
 
 				int choice = g_Random.GetRandomInt(0, 2);
 				PLAY_PED_AMBIENT_SPEECH_NATIVE(ped, speechesFriendly[choice], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
@@ -22,17 +22,20 @@ static void OnTickFriendly()
 	}
 }
 
-static RegisterEffect registerEffect1(nullptr, nullptr, OnTickFriendly, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickFriendly, EffectInfo
 	{
 		.Name = "Friendly Neighborhood",
 		.Id = "peds_sayhi",
 		.IsTimed = true
 	}
 );
+// clang-format on
+
 static void OnTickUnfriendly()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -42,7 +45,8 @@ static void OnTickUnfriendly()
 		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
 			{
-				constexpr const char* speechesUnfriendly[3]{ "GENERIC_CURSE_HIGH", "GENERIC_INSULT_HIGH", "GENERIC_WAR_CRY" };
+				constexpr const char *speechesUnfriendly[3] { "GENERIC_CURSE_HIGH", "GENERIC_INSULT_HIGH",
+					                                          "GENERIC_WAR_CRY" };
 
 				int choice = g_Random.GetRandomInt(0, 2);
 				PLAY_PED_AMBIENT_SPEECH_NATIVE(ped, speechesUnfriendly[choice], "SPEECH_PARAMS_FORCE_SHOUTED", 1);
@@ -51,17 +55,20 @@ static void OnTickUnfriendly()
 	}
 }
 
-static RegisterEffect registerEffect2(nullptr, nullptr, OnTickUnfriendly, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickUnfriendly, EffectInfo
 	{
 		.Name = "Unfriendly Neighborhood",
 		.Id = "peds_insult",
 		.IsTimed = true
 	}
 );
+// clang-format on
+
 static void OnTickKifflom()
 {
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 1000)
 	{
@@ -77,7 +84,8 @@ static void OnTickKifflom()
 	}
 }
 
-static RegisterEffect registerEffect3(nullptr, nullptr, OnTickKifflom, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickKifflom, EffectInfo
 	{
 		.Name = "Kifflom!",
 		.Id = "peds_kifflom",

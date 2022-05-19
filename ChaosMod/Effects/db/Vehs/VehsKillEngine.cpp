@@ -8,7 +8,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Kill Engine Of Every Vehicle",
 		.Id = "playerveh_killengine"

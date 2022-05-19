@@ -8,7 +8,7 @@ static void OnTick()
 {
 	for (auto veh : GetAllVehs())
 	{
-		//detect if vehicle already randomized
+		// detect if vehicle already randomized
 		auto carModified = GET_VEHICLE_WINDOW_TINT(veh);
 
 		if (carModified != 3)
@@ -29,7 +29,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Random Traffic",
 		.Id = "veh_randtraffic",

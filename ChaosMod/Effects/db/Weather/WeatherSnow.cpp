@@ -16,7 +16,8 @@ static void OnTick()
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Snow",
 		.Id = "world_snow",

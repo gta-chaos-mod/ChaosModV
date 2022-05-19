@@ -1,15 +1,14 @@
 #pragma once
 
 #include <cstdlib>
-#include <type_traits>
 #include <string_view>
+#include <type_traits>
 
 namespace Util
 {
-	template <typename T>
-	inline bool TryParse(std::string_view szText, T& result, int iRadix = 10)
+	template <typename T> inline bool TryParse(std::string_view szText, T &result, int iRadix = 10)
 	{
-		char* cEnd;
+		char *cEnd;
 
 		long lParseResult;
 

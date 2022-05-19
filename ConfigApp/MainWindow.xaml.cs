@@ -108,7 +108,7 @@ namespace ConfigApp
             // Create EffectData in case effect wasn't saved yet
             if (!m_effectDataMap.TryGetValue(effectId, out EffectData effectData))
             {
-                effectData = new EffectData(EffectsMap[effectId].IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL, -1, 5, false, false, null, 0);
+                effectData = new EffectData(EffectsMap[effectId].IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal, -1, 5, false, false, null, 0);
 
                 m_effectDataMap.Add(effectId, effectData);
             }
@@ -231,7 +231,7 @@ namespace ConfigApp
                     continue;
                 }
 
-                EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
                 int effectTimedTime = -1;
                 int effectWeight = 5;
                 bool effectPermanent = false;
@@ -285,7 +285,7 @@ namespace ConfigApp
                 EffectData effectData = GetEffectData(pair.Key);
 
                 m_effectsFile.WriteValue(pair.Key, $"{(m_treeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
-                    + $",{(effectData.TimedType == EffectTimedType.TIMED_NORMAL ? 0 : 1)}"
+                    + $",{(effectData.TimedType == EffectTimedType.TimedNormal ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
                     + $",{(effectData.Shortcut)}");
@@ -302,6 +302,7 @@ namespace ConfigApp
             TreeMenuItem playerParentItem = new TreeMenuItem("Player");
             TreeMenuItem vehicleParentItem = new TreeMenuItem("Vehicle");
             TreeMenuItem pedsParentItem = new TreeMenuItem("Peds");
+            TreeMenuItem screenParentItem = new TreeMenuItem("Screen");
             TreeMenuItem timeParentItem = new TreeMenuItem("Time");
             TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
             TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
@@ -323,25 +324,28 @@ namespace ConfigApp
 
                 switch (effectTuple.Item2)
                 {
-                    case EffectCategory.PLAYER:
+                    case EffectCategory.Player:
                         playerParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.VEHICLE:
+                    case EffectCategory.Vehicle:
                         vehicleParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.PEDS:
+                    case EffectCategory.Peds:
                         pedsParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.TIME:
+                    case EffectCategory.Screen:
+                        screenParentItem.AddChild(menuItem);
+                        break;
+                    case EffectCategory.Time:
                         timeParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.WEATHER:
+                    case EffectCategory.Weather:
                         weatherParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.MISC:
+                    case EffectCategory.Misc:
                         miscParentItem.AddChild(menuItem);
                         break;
-                    case EffectCategory.META:
+                    case EffectCategory.Meta:
                         metaParentItem.AddChild(menuItem);
                         break;
                 }
@@ -351,6 +355,7 @@ namespace ConfigApp
             effects_user_effects_tree_view.Items.Add(playerParentItem);
             effects_user_effects_tree_view.Items.Add(vehicleParentItem);
             effects_user_effects_tree_view.Items.Add(pedsParentItem);
+            effects_user_effects_tree_view.Items.Add(screenParentItem);
             effects_user_effects_tree_view.Items.Add(timeParentItem);
             effects_user_effects_tree_view.Items.Add(weatherParentItem);
             effects_user_effects_tree_view.Items.Add(miscParentItem);
@@ -475,7 +480,7 @@ namespace ConfigApp
                 if (effectConfig.IsSaved)
                 {
                     effectData.TimedType = effectConfig.effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectConfig.effectconf_timer_type.SelectedIndex
-                        : effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL;
+                        : effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
                     effectData.CustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
                         ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
                     effectData.Permanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;

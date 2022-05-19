@@ -10,7 +10,8 @@ static void OnStart()
 	SetSurroundingPedsInVehicles(mowerHash, 120);
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Mower Mates",
 		.Id = "peds_mowermates"

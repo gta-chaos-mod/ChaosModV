@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -26,13 +26,14 @@ static void OnStart()
 	for (Entity ent : entities)
 	{
 		Vector3 velocity = GET_ENTITY_VELOCITY(ent);
-		velocity = velocity * 5.f;
+		velocity         = velocity * 5.f;
 
 		SET_ENTITY_VELOCITY(ent, velocity.x, velocity.y, velocity.z);
 	}
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Speed Boost",
 		.Id = "misc_boost_velocity"
