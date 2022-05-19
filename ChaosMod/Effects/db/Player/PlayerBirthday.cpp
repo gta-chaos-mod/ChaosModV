@@ -90,7 +90,7 @@ static void OnStart()
 	//Give cake to player
 	Object cake = CreatePoolProp(GET_HASH_KEY(cakeModel), 0.f, 0.f, 0.f, false);
 	ATTACH_ENTITY_TO_ENTITY(cake, playerPed, GET_PED_BONE_INDEX(playerPed, 57005), 0.f, 0.f, 0.f, -90.f, 50.f, 0.f, true, true, false, true, 1, true);
-        SET_ENTITY_COLLISION(cake, false, true);
+        SET_ENTITY_COMPLETELY_DISABLE_COLLISION(cake, false, true);
 
 	//Start the ptfx at the player ped (head)
 	USE_PARTICLE_FX_ASSET(ptfxDict);
