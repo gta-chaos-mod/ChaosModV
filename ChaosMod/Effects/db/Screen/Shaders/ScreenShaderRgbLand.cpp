@@ -33,7 +33,7 @@ cbuffer misc_globals : register(b2)
 
 float rgb(float mult)
 {
-    return (sin(globalScalars.x * mult) + 1) * 0.5;
+    return (sin(globalScalars.x * globalScalars2.x * mult) + 1) * 0.5;
 }
 
 float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOORD1) : SV_Target0
