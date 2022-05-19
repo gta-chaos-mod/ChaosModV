@@ -38,6 +38,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Flip All Vehicles",

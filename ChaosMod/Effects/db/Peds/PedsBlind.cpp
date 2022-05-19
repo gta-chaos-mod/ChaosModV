@@ -51,6 +51,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Blind Peds",

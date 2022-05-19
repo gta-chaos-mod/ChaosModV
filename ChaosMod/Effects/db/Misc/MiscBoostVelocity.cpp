@@ -26,12 +26,13 @@ static void OnStart()
 	for (Entity ent : entities)
 	{
 		Vector3 velocity = GET_ENTITY_VELOCITY(ent);
-		velocity = velocity * 5.f;
+		velocity		 = velocity * 5.f;
 
 		SET_ENTITY_VELOCITY(ent, velocity.x, velocity.y, velocity.z);
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Speed Boost",

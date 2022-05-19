@@ -45,6 +45,7 @@ static void OnStop()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Ghost Town",

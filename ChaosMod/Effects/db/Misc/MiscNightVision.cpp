@@ -10,6 +10,7 @@ static void OnTick()
 	SET_NIGHTVISION(true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Night Vision",

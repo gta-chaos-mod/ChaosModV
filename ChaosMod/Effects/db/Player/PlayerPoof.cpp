@@ -22,9 +22,9 @@ static void OnTick()
 			ADD_EXPLOSION(pos.x, pos.y, pos.z, 9, 100.f, true, false, 3.f, false);
 		}
 	}
-
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Deadly Aim",

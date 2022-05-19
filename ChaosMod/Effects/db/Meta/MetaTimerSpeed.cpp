@@ -16,6 +16,7 @@ static void OnTick_0_5x()
 	MetaModifiers::m_fTimerSpeedModifier = 0.5;
 }
 
+// clang-format off
 static RegisterEffect registerEffect_0_5x(nullptr, OnStop, OnTick_0_5x, EffectInfo
 	{
 		.Name = "0.5x Timer Speed",
@@ -25,12 +26,14 @@ static RegisterEffect registerEffect_0_5x(nullptr, OnStop, OnTick_0_5x, EffectIn
 		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
+// clang-format on
 
 static void OnTick_2x()
 {
 	MetaModifiers::m_fTimerSpeedModifier = 2;
 }
 
+// clang-format off
 static RegisterEffect registerEffect_2x(nullptr, OnStop, OnTick_2x, EffectInfo
 	{
 		.Name = "2x Timer Speed",
@@ -40,12 +43,14 @@ static RegisterEffect registerEffect_2x(nullptr, OnStop, OnTick_2x, EffectInfo
 		.ExecutionType = EEffectExecutionType::Meta
 	}
 );
+// clang-format on
 
 static void OnTick_5x()
 {
 	MetaModifiers::m_fTimerSpeedModifier = 5;
 }
 
+// clang-format off
 static RegisterEffect registerEffect_5x(nullptr, OnStop, OnTick_5x, EffectInfo
 	{
 		.Name = "5x Timer Speed",

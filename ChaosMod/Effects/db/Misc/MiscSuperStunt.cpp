@@ -6,12 +6,12 @@
 
 static void OnStart()
 {
-	Ped player = PLAYER_PED_ID();
-	Hash rampHash = GET_HASH_KEY("prop_mp_ramp_03");
+	Ped player		  = PLAYER_PED_ID();
+	Hash rampHash	  = GET_HASH_KEY("prop_mp_ramp_03");
 	Vector3 playerPos = GET_ENTITY_COORDS(player, false);
-	Vector3 rampPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 5, 0);
+	Vector3 rampPos	  = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 5, 0);
 
-	Object ramp = CREATE_OBJECT(rampHash, rampPos.x, rampPos.y, rampPos.z, true, false, true);
+	Object ramp		  = CREATE_OBJECT(rampHash, rampPos.x, rampPos.y, rampPos.z, true, false, true);
 	PLACE_OBJECT_ON_GROUND_PROPERLY(ramp);
 	rampPos = GET_ENTITY_COORDS(ramp, false);
 	SET_ENTITY_COORDS(ramp, rampPos.x, rampPos.y, rampPos.z - 0.3, true, true, true, false);
@@ -19,6 +19,7 @@ static void OnStart()
 	SET_ENTITY_AS_NO_LONGER_NEEDED(&ramp);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Super Stunt",

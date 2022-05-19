@@ -2,8 +2,8 @@
 	Effect by Gorakh
 */
 
-#include <stdafx.h>
 #include "Memory/Vehicle.h"
+#include <stdafx.h>
 
 static std::map<Vehicle, Vector3> vehicleDefaultSizes;
 
@@ -17,7 +17,9 @@ static void OnTick()
 	for (Vehicle veh : GetAllVehs())
 	{
 		Hash vehModel = GET_ENTITY_MODEL(veh);
-		if (!IS_THIS_MODEL_A_BIKE(vehModel) && !IS_THIS_MODEL_A_BICYCLE(vehModel)) // Changing the scale of bikes makes them fly up into the air the moment they touch the ground, making them impossible to drive
+		if (!IS_THIS_MODEL_A_BIKE(vehModel)
+			&& !IS_THIS_MODEL_A_BICYCLE(vehModel)) // Changing the scale of bikes makes them fly up into the air the
+												   // moment they touch the ground, making them impossible to drive
 		{
 			Vector3 rightVector, forwardVector, upVector, position;
 			GET_ENTITY_MATRIX(veh, &rightVector, &forwardVector, &upVector, &position);
@@ -42,6 +44,7 @@ static void OnStop()
 	vehicleDefaultSizes.clear();
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Tiny Vehicles",

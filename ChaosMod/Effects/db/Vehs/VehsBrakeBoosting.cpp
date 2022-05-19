@@ -10,7 +10,7 @@ static void OnTick()
 	for (Vehicle veh : GetAllVehs())
 	{
 		Hash vehModel = GET_ENTITY_MODEL(veh);
-		int vehClass = GET_VEHICLE_CLASS(veh);
+		int vehClass  = GET_VEHICLE_CLASS(veh);
 
 		// Exclude helis since the "braking" flag seems to be always set for those
 		// Also manually exclude blimps since those don't seem to be categorized as either of those
@@ -21,6 +21,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Brake Boosting",

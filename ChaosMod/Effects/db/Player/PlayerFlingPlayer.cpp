@@ -24,9 +24,11 @@ static void OnStart()
 		entityToFlip = player;
 		SET_PED_TO_RAGDOLL(player, 5000, 0, 0, true, true, false);
 	}
-	Memory::ApplyForceToEntityCenterOfMass(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true), GetRandomForce(false), false, false, true, false);
+	Memory::ApplyForceToEntityCenterOfMass(entityToFlip, 1, GetRandomForce(true), GetRandomForce(true),
+										   GetRandomForce(false), false, false, true, false);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Fling Player",

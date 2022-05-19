@@ -18,6 +18,7 @@ static void OnTickX2()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX2, EffectInfo
 	{
 		.Name = "2x Vehicle Engine Speed",
@@ -26,6 +27,8 @@ static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX2, EffectInfo
 		.IncompatibleWith = { "vehs_x10engine", "vehs_x05engine" }
 	}
 );
+// clang-format on
+
 static void OnTickX10()
 {
 	for (auto veh : GetAllVehs())
@@ -35,6 +38,7 @@ static void OnTickX10()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect2(nullptr, OnStop, OnTickX10, EffectInfo
 	{
 		.Name = "10x Vehicle Engine Speed",
@@ -43,6 +47,8 @@ static RegisterEffect registerEffect2(nullptr, OnStop, OnTickX10, EffectInfo
 		.IncompatibleWith = { "vehs_x2engine", "vehs_x05engine" }
 	}
 );
+// clang-format on
+
 static void OnTickX05()
 {
 	for (auto veh : GetAllVehs())
@@ -52,6 +58,7 @@ static void OnTickX05()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect3(nullptr, OnStop, OnTickX05, EffectInfo
 	{
 		.Name = "0.5x Vehicle Engine Speed",

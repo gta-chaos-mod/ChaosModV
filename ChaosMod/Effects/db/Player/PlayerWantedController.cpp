@@ -8,6 +8,7 @@ static void OnStartFive()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStartFive, EffectInfo
 	{
 		.Name = "5 Wanted Stars",
@@ -15,6 +16,8 @@ static RegisterEffect registerEffect(OnStartFive, EffectInfo
 		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
+// clang-format on
+
 static void OnStartPlusTwo()
 {
 	Ped player = PLAYER_ID();
@@ -23,6 +26,7 @@ static void OnStartPlusTwo()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
+// clang-format off
 static RegisterEffect registerEffect2(OnStartPlusTwo, EffectInfo
 	{
 		.Name = "+2 Wanted Stars",
@@ -30,12 +34,15 @@ static RegisterEffect registerEffect2(OnStartPlusTwo, EffectInfo
 		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
+// clang-format on
+
 static void OnTickNeverWanted()
 {
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(PLAYER_ID(), true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect3(nullptr, nullptr, OnTickNeverWanted, EffectInfo
 	{
 		.Name = "Never Wanted",

@@ -14,6 +14,7 @@ static void OnTick()
 	SET_SUPER_JUMP_THIS_FRAME(player);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Run & Super Jump",

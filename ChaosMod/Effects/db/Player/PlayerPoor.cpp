@@ -13,6 +13,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Poor Boy",

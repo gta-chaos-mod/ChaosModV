@@ -8,7 +8,7 @@ static void OnStart()
 {
 	ClearEntityPool();
 
-	GetComponent<EffectDispatcher>()->ClearActiveEffects({"meta_nochaos"});
+	GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
 }
 
 static void OnStop()
@@ -21,6 +21,7 @@ static void OnTick()
 	MetaModifiers::m_bDisableChaos = true;
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Chaos",

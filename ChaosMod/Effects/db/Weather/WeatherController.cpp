@@ -5,6 +5,7 @@ static void OnStartExtraSunny()
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStartExtraSunny, EffectInfo
 	{
 		.Name = "Extra Sunny Weather",
@@ -12,11 +13,14 @@ static RegisterEffect registerEffect(OnStartExtraSunny, EffectInfo
 		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
+// clang-format on
+
 static void OnStartThunder()
 {
 	SET_WEATHER_TYPE_NOW("THUNDER");
 }
 
+// clang-format off
 static RegisterEffect registerEffect2(OnStartThunder, EffectInfo
 	{
 		.Name = "Stormy Weather",
@@ -24,11 +28,14 @@ static RegisterEffect registerEffect2(OnStartThunder, EffectInfo
 		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
+// clang-format on
+
 static void OnStartFoggy()
 {
 	SET_WEATHER_TYPE_NOW("FOGGY");
 }
 
+// clang-format off
 static RegisterEffect registerEffect3(OnStartFoggy, EffectInfo
 	{
 		.Name = "Foggy Weather",
@@ -36,11 +43,14 @@ static RegisterEffect registerEffect3(OnStartFoggy, EffectInfo
 		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
+// clang-format on
+
 static void OnStartNeutral()
 {
 	SET_WEATHER_TYPE_NOW("NEUTRAL");
 }
 
+// clang-format off
 static RegisterEffect registerEffect4(OnStartNeutral, EffectInfo
 	{
 		.Name = "Neutral Weather",
@@ -48,11 +58,14 @@ static RegisterEffect registerEffect4(OnStartNeutral, EffectInfo
 		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
+// clang-format on
+
 static void OnStartXmas()
 {
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
+// clang-format off
 static RegisterEffect registerEffect5(OnStartXmas, EffectInfo
 	{
 		.Name = "Snowy Weather",
@@ -60,17 +73,22 @@ static RegisterEffect registerEffect5(OnStartXmas, EffectInfo
 		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );
+// clang-format on
+
 static void OnTickRandom()
 {
-	static constexpr const char* weathers[] = { "CLEAR", "EXTRASUNNY" , "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "XMAS", "SNOWLIGHT", "BLIZZARD" };
+	static constexpr const char *weathers[] = {
+		"CLEAR",   "EXTRASUNNY", "CLOUDS", "OVERCAST", "RAIN",		"CLEARING",
+		"THUNDER", "SMOG",		 "FOGGY",  "XMAS",	   "SNOWLIGHT", "BLIZZARD"
+	};
 	static constexpr int weatherSize = 12;
 
-	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 curTick = GET_GAME_TIMER();
+	static DWORD64 lastTick			 = GET_GAME_TIMER();
+	DWORD64 curTick					 = GET_GAME_TIMER();
 
 	// Note: setting the compare to a low number (e.g. < 1000, or faster than once per sec) could cause the
 	// effect to flicker the screen, which is a known trigger for some types of motion sickness and epilepsy
-	
+
 	if (lastTick < curTick - 1000)
 	{
 		lastTick = curTick;
@@ -79,6 +97,7 @@ static void OnTickRandom()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect6(nullptr, nullptr, OnTickRandom, EffectInfo
 	{
 		.Name = "Disco Weather",

@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
-#include "Memory/Physics.h"
 #include "Memory/Gravity.h"
+#include "Memory/Physics.h"
 
 static void OnStop()
 {
@@ -13,6 +13,7 @@ static void OnTickLow()
 	SET_GRAVITY_LEVEL(1);
 }
 
+// clang-format off
 static RegisterEffect registerEffect1(nullptr, OnStop, OnTickLow, EffectInfo
 	{
 		.Name = "Low Gravity",
@@ -22,11 +23,14 @@ static RegisterEffect registerEffect1(nullptr, OnStop, OnTickLow, EffectInfo
 		.EffectCategory = EEffectCategory::Gravity
 	}
 );
+// clang-format on
+
 static void OnTickVeryLow()
 {
 	SET_GRAVITY_LEVEL(2);
 }
 
+// clang-format off
 static RegisterEffect registerEffect2(nullptr, OnStop, OnTickVeryLow, EffectInfo
 	{
 		.Name = "Very Low Gravity",
@@ -36,6 +40,8 @@ static RegisterEffect registerEffect2(nullptr, OnStop, OnTickVeryLow, EffectInfo
 		.EffectCategory = EEffectCategory::Gravity
 	}
 );
+// clang-format on
+
 static void OnTickInsane()
 {
 	Memory::SetGravityLevel(200.f);
@@ -56,6 +62,7 @@ static void OnTickInsane()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect3(nullptr, OnStop, OnTickInsane, EffectInfo
 	{
 		.Name = "Insane Gravity",
@@ -65,6 +72,8 @@ static RegisterEffect registerEffect3(nullptr, OnStop, OnTickInsane, EffectInfo
 		.EffectCategory = EEffectCategory::Gravity
 	}
 );
+// clang-format on
+
 static void OnStartInvert()
 {
 	GIVE_WEAPON_TO_PED(PLAYER_PED_ID(), GET_HASH_KEY("WEAPON_PARACHUTE"), 9999, true, true);
@@ -90,6 +99,7 @@ static void OnTickInvert()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect4(OnStartInvert, OnStop, OnTickInvert, EffectInfo
 	{
 		.Name = "Invert Gravity",
@@ -99,6 +109,7 @@ static RegisterEffect registerEffect4(OnStartInvert, OnStop, OnTickInvert, Effec
 		.EffectCategory = EEffectCategory::Gravity
 	}
 );
+// clang-format on
 
 static Vector3 sidewaysGravityForce;
 static void OnStartSideways()
@@ -119,21 +130,25 @@ static void OnTickSideways()
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
-			Memory::ApplyForceToEntityCenterOfMass(ped, 1, sidewaysGravityForce.x, sidewaysGravityForce.y, sidewaysGravityForce.z, false, false, true, false);
+			Memory::ApplyForceToEntityCenterOfMass(ped, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
+												   sidewaysGravityForce.z, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
-		Memory::ApplyForceToEntityCenterOfMass(object, 1, sidewaysGravityForce.x, sidewaysGravityForce.y, sidewaysGravityForce.z, false, false, true, false);
+		Memory::ApplyForceToEntityCenterOfMass(object, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
+											   sidewaysGravityForce.z, false, false, true, false);
 	}
 
 	for (auto veh : GetAllVehs())
 	{
-		Memory::ApplyForceToEntityCenterOfMass(veh, 1, sidewaysGravityForce.x, sidewaysGravityForce.y, sidewaysGravityForce.z, false, false, true, false);
+		Memory::ApplyForceToEntityCenterOfMass(veh, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
+											   sidewaysGravityForce.z, false, false, true, false);
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect5(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 	{
 		.Name = "Sideways Gravity",

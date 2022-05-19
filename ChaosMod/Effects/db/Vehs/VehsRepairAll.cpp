@@ -23,6 +23,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Repair All Vehicles",

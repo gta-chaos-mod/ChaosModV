@@ -19,6 +19,7 @@ static void OnTick()
 	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "High Pitch",

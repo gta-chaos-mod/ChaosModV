@@ -15,6 +15,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Can't Tie My Shoes",

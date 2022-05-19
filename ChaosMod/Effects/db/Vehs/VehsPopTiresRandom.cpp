@@ -7,7 +7,7 @@
 static void OnTick()
 {
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 currentTick = GET_GAME_TIMER();
+	DWORD64 currentTick		= GET_GAME_TIMER();
 
 	if (lastTick < currentTick - 1750) // 1750MS = every 1.75 seconds.
 	{
@@ -31,6 +31,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Random Tire Popping",

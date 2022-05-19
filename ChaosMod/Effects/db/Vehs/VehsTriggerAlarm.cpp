@@ -3,7 +3,7 @@
 static void OnTick()
 {
 	static auto lastTick = GET_GAME_TIMER();
-	auto curTick = GET_GAME_TIMER();
+	auto curTick		 = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 2000)
 	{
@@ -25,6 +25,7 @@ static void OnStop()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Alarmy Vehicles",

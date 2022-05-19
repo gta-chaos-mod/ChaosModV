@@ -4,7 +4,7 @@ static void OnStart()
 {
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 
-	int count = 3;
+	int count		  = 3;
 
 	for (Vehicle veh : GetAllVehs())
 	{
@@ -22,6 +22,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Explode All Nearby Vehicles",

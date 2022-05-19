@@ -4,7 +4,8 @@
 
 #include <stdafx.h>
 
-enum TiredMode {
+enum TiredMode
+{
 	closingEyes,
 	openingEyes,
 	waiting,
@@ -21,7 +22,7 @@ static void BlackOut(int alpha)
 	float progress = alpha / 255;
 	if (progress > 0)
 	{
-		DRAW_RECT(.5f, progress / 4, 1, progress / 2, 0, 0, 0, 255, false); // top bar
+		DRAW_RECT(.5f, progress / 4, 1, progress / 2, 0, 0, 0, 255, false);			// top bar
 		DRAW_RECT(.5f, 1.f - (progress / 4), 1, progress / 2, 0, 0, 0, 255, false); // bottom bar
 	}
 }
@@ -35,7 +36,8 @@ static void SteerVehicle()
 
 		if (IS_PED_IN_FLYING_VEHICLE(playerPed))
 		{
-			APPLY_FORCE_TO_ENTITY(veh, 1, 0, 0, -0.05f, steeringDirection * 5.f, 0, 0, 0, true, true, true, false, true);
+			APPLY_FORCE_TO_ENTITY(veh, 1, 0, 0, -0.05f, steeringDirection * 5.f, 0, 0, 0, true, true, true, false,
+								  true);
 		}
 		else
 		{
@@ -56,8 +58,8 @@ static void RagdollOnFoot()
 
 static void OnStart()
 {
-	currentMode = TiredMode::closingEyes;
-	alpha = 0;
+	currentMode		= TiredMode::closingEyes;
+	alpha			= 0;
 	closingIterator = 20;
 }
 
@@ -79,7 +81,7 @@ static void OnTick()
 		}
 		if (alpha >= 255)
 		{
-			currentMode = TiredMode::openingEyes;
+			currentMode	  = TiredMode::openingEyes;
 			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
 			if (closingIterator > 1)
 			{
@@ -93,8 +95,8 @@ static void OnTick()
 			alpha -= 30;
 			if (alpha <= 0)
 			{
-				alpha = 0;
-				currentMode = TiredMode::waiting;
+				alpha		  = 0;
+				currentMode	  = TiredMode::waiting;
 				nextTimestamp = GET_GAME_TIMER() + g_Random.GetRandomInt(250, 3000);
 			}
 		}
@@ -102,7 +104,7 @@ static void OnTick()
 	case TiredMode::waiting:
 		if (GET_GAME_TIMER() > nextTimestamp)
 		{
-			currentMode = TiredMode::closingEyes;
+			currentMode		  = TiredMode::closingEyes;
 			steeringDirection = (g_Random.GetRandomFloat(0, 1) < .5f) ? 1.0f : -1.0f;
 		}
 		break;
@@ -110,6 +112,7 @@ static void OnTick()
 	BlackOut(alpha);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "I'm So Tired",

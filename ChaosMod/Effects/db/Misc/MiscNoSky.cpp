@@ -12,6 +12,7 @@ static void OnStop()
 	Memory::SetSkyDisabled(false);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Sky",

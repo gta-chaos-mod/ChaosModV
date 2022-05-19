@@ -8,12 +8,12 @@ static void OnStart()
 {
 	static constexpr Hash modelHash = 1459905209;
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed					= PLAYER_PED_ID();
+	Vector3 playerPos				= GET_ENTITY_COORDS(playerPed, false);
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroup	= GET_HASH_KEY("PLAYER");
+	static const Hash civGroup		= GET_HASH_KEY("CIVMALE");
+	static const Hash femCivGroup	= GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_JIMMY", &relationshipGroup);
@@ -46,6 +46,7 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Spawn Jealous Jimmy",

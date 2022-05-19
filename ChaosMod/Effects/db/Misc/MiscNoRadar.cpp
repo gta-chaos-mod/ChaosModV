@@ -14,6 +14,7 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 200, true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Radar",

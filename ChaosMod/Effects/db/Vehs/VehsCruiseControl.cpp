@@ -32,12 +32,13 @@ static void OnTick()
 			}
 		}
 	}
-	else 
+	else
 	{
 		currentVel = -1;
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Cruise Control",

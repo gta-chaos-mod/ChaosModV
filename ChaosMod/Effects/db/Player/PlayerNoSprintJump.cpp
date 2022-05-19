@@ -6,6 +6,7 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 22, true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "No Sprint & No Jump",

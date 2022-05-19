@@ -12,6 +12,7 @@ static void OnStartAll()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStartAll, EffectInfo
 	{
 		.Name = "Give All Weapons",

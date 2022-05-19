@@ -9,6 +9,7 @@ static void OnStart()
 	SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Ragdoll",

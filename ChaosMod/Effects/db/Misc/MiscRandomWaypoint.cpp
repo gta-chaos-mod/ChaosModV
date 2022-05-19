@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-//Effect by Netux
+// Effect by Netux
 
 static void OnStart()
 {
@@ -16,6 +16,7 @@ static void OnStart()
 	REFRESH_WAYPOINT();
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Random Waypoint",

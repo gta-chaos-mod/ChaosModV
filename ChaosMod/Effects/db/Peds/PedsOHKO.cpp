@@ -16,7 +16,7 @@ static void OnStop()
 static void OnTick()
 {
 	Hash playerHash = GET_ENTITY_MODEL(PLAYER_PED_ID());
-	//trevor
+	// trevor
 	if (playerHash == 2608926626)
 	{
 		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0, 0);
@@ -34,6 +34,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "One Hit KO",

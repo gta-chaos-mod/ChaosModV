@@ -5,7 +5,7 @@
 static void OnStartRPG()
 {
 	static const Hash rpgHash = GET_HASH_KEY("WEAPON_RPG");
-	
+
 	for (Ped ped : GetAllPeds())
 	{
 		GIVE_WEAPON_TO_PED(ped, rpgHash, 9999, true, true);
@@ -13,6 +13,7 @@ static void OnStartRPG()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect1(OnStartRPG, EffectInfo
 	{
 		.Name = "Give Everyone An RPG",
@@ -20,6 +21,8 @@ static RegisterEffect registerEffect1(OnStartRPG, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartTazer()
 {
 	static const Hash tazerHash = GET_HASH_KEY("WEAPON_STUNGUN");
@@ -31,6 +34,7 @@ static void OnStartTazer()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect2(OnStartTazer, EffectInfo
 	{
 		.Name = "Give Everyone A Stun Gun",
@@ -38,6 +42,8 @@ static RegisterEffect registerEffect2(OnStartTazer, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartMinigun()
 {
 	static const Hash minigunHash = GET_HASH_KEY("WEAPON_MINIGUN");
@@ -49,6 +55,7 @@ static void OnStartMinigun()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect3(OnStartMinigun, EffectInfo
 	{
 		.Name = "Give Everyone A Minigun",
@@ -56,6 +63,8 @@ static RegisterEffect registerEffect3(OnStartMinigun, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartUpNAtomizer()
 {
 	static const Hash raypistolHash = GET_HASH_KEY("WEAPON_RAYPISTOL");
@@ -67,6 +76,7 @@ static void OnStartUpNAtomizer()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect4(OnStartUpNAtomizer, EffectInfo
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
@@ -74,9 +84,11 @@ static RegisterEffect registerEffect4(OnStartUpNAtomizer, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartRandom()
 {
-	static const std::vector<Hash>& weps = Memory::GetAllWeapons();
+	static const std::vector<Hash> &weps = Memory::GetAllWeapons();
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -87,6 +99,7 @@ static void OnStartRandom()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect5(OnStartRandom, EffectInfo
 	{
 		.Name = "Give Everyone A Random Weapon",
@@ -94,6 +107,8 @@ static RegisterEffect registerEffect5(OnStartRandom, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartRailgun()
 {
 	static const Hash railgunHash = GET_HASH_KEY("WEAPON_RAILGUN");
@@ -105,6 +120,7 @@ static void OnStartRailgun()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect6(OnStartRailgun, EffectInfo
 	{
 		.Name = "Give Everyone A Railgun",
@@ -112,6 +128,8 @@ static RegisterEffect registerEffect6(OnStartRailgun, EffectInfo
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
+// clang-format on
+
 static void OnStartBattleAxe()
 {
 	static const Hash axeHash = GET_HASH_KEY("WEAPON_BATTLEAXE");
@@ -123,6 +141,7 @@ static void OnStartBattleAxe()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect7(OnStartBattleAxe, EffectInfo
 	{
 		.Name = "Give Everyone A Battle Axe",

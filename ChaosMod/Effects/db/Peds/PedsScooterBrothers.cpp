@@ -8,6 +8,7 @@ static void OnStart()
 	SetSurroundingPedsInVehicles(faggioHash, -1);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Scooter Brothers",

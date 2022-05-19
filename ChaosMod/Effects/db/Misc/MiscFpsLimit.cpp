@@ -7,13 +7,14 @@
 static void OnTick()
 {
 	static const int lagTimeDelay = 1000 / 25;
-	int lastUpdateTick = GetTickCount64();
+	int lastUpdateTick			  = GetTickCount64();
 	while (lastUpdateTick > GetTickCount64() - lagTimeDelay)
 	{
 		// Create Lag
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Console Experience",

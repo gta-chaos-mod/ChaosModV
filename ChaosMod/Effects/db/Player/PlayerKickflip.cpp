@@ -22,6 +22,7 @@ static void OnStart()
 	Memory::ApplyForceToEntity(entityToFlip, 1, 0, 0, 10, 2, 0, 0, 0, true, true, true, false, true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Kickflip",

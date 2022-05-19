@@ -1,5 +1,5 @@
 /*
-    Effect by Last0xygen
+	Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -9,9 +9,10 @@
 static void OnStart()
 {
 	static const float maxDistance = 120.f;
-    SetSurroundingPedsInVehicles("rhino"_hash, maxDistance);
+	SetSurroundingPedsInVehicles("rhino"_hash, maxDistance);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Tanks A Lot",

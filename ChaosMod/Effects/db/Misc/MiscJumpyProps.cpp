@@ -35,7 +35,7 @@ static void OnStop()
 {
 	for (auto propData : propDataMap)
 	{
-		Object prop = propData.first;
+		Object prop	  = propData.first;
 		PropData data = propData.second;
 
 		if (prop && DOES_ENTITY_EXIST(prop))
@@ -48,6 +48,7 @@ static void OnStop()
 	propDataMap.clear();
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Props",

@@ -8,14 +8,15 @@
 
 static void OnStart()
 {
-	EffectDispatcher* disp = GetComponent<EffectDispatcher>();
-	const std::vector<RegisteredEffect*>& eff = disp->GetRecentEffects(5, "meta_re_invoke");
-	for (RegisteredEffect* effect : eff)
+	auto disp		= GetComponent<EffectDispatcher>();
+	const auto &eff = disp->GetRecentEffects(5, "meta_re_invoke");
+	for (RegisteredEffect *effect : eff)
 	{
 		disp->DispatchEffect(effect->GetIndentifier(), nullptr, false);
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect_0_5x(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Re-Invoke Previous Effects",

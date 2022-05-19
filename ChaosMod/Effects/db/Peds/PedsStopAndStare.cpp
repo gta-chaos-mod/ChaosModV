@@ -14,15 +14,17 @@ static void OnStart()
 		{
 			Vehicle pedVeh = GET_VEHICLE_PED_IS_IN(ped, true);
 			TASK_LEAVE_VEHICLE(ped, pedVeh, 256);
-			BRING_VEHICLE_TO_HALT(pedVeh, 0.1f, 10, 0);	
+			BRING_VEHICLE_TO_HALT(pedVeh, 0.1f, 10, 0);
 		}
-		if(ped != playerPed)
+		if (ped != playerPed)
 		{
 			TASK_TURN_PED_TO_FACE_ENTITY(ped, playerPed, -1);
 			TASK_LOOK_AT_ENTITY(ped, playerPed, -1, 2048, 3);
 		}
 	}
 }
+
+// clang-format off
 static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Stop and Stare",

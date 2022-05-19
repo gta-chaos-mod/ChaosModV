@@ -10,6 +10,7 @@ static void OnTick()
 	SET_PLAYER_INVINCIBLE(PLAYER_ID(), true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Invincibility",

@@ -20,7 +20,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed	  = PLAYER_PED_ID();
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	for (Vehicle veh : GetAllVehs())
@@ -36,7 +36,7 @@ static void OnTick()
 		Memory::ApplyForceToEntity(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick			= GET_GAME_TIMER();
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	if (lastTick < curTick - 100)
@@ -61,7 +61,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		static DWORD64 timeUntilSteer	= GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -96,6 +96,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Doomsday",

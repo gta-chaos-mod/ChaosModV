@@ -10,6 +10,7 @@ static void OnStop()
 	TRIGGER_MUSIC_EVENT("MP_MC_CMH_IAA_FINALE_START");
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
 	{
 		.Name = "Play Arena Wars Theme",

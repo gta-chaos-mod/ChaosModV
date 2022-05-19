@@ -11,12 +11,12 @@ static void OnStop()
 	MetaModifiers::m_ucAdditionalEffectsToDispatch = 0;
 }
 
-
 static void OnTick()
 {
 	MetaModifiers::m_ucAdditionalEffectsToDispatch = 2;
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Combo Time",

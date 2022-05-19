@@ -4,7 +4,6 @@ struct SpacePed
 {
 	SpacePed(Ped ped, Vector3 vel) : Ped(ped), Vel(vel)
 	{
-
 	}
 
 	Ped Ped;
@@ -34,14 +33,15 @@ static void OnStart()
 
 	WAIT(0);
 
-	for (const SpacePed& spacePed : spacePeds)
+	for (const SpacePed &spacePed : spacePeds)
 	{
-		const Vector3& vel = spacePed.Vel;
+		const Vector3 &vel = spacePed.Vel;
 
 		SET_ENTITY_VELOCITY(spacePed.Ped, vel.x, vel.y, 100.f);
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Launch All Nearby Peds Up",

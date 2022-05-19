@@ -11,14 +11,14 @@ static void OnStart()
 		return;
 	}
 
-	Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vehicle veh		  = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	int lastTimestamp = GET_GAME_TIMER();
 
-	int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+	int seats		  = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
 	int detonateTimer = DETONATE_TIMER;
-	int beepTimer = DETONATE_TIMER;
+	int beepTimer	  = DETONATE_TIMER;
 	while (DOES_ENTITY_EXIST(veh))
 	{
 		WAIT(0);
@@ -58,6 +58,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, EffectInfo
 	{
 		.Name = "Detonate Current Vehicle",

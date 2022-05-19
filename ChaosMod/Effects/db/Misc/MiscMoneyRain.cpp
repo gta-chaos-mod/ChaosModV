@@ -12,9 +12,11 @@ static void OnTick()
 
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_MONEY_SECURITY_CASE"), playerPos.x + g_Random.GetRandomInt(-20, 20),
-		playerPos.y + g_Random.GetRandomInt(-20, 20), playerPos.z + g_Random.GetRandomInt(5, 10), 0, 1000, model, false, true);
+						  playerPos.y + g_Random.GetRandomInt(-20, 20), playerPos.z + g_Random.GetRandomInt(5, 10), 0,
+						  1000, model, false, true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Money Rain",

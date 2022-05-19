@@ -17,13 +17,14 @@ static void OnStop()
 
 static void OnTick()
 {
-	int count = 5;
+	int count				 = 5;
 
-	float force = 100;
+	float force				 = 100;
 	float velocityMultiplier = 3;
 	for (Vehicle veh : GetAllVehs())
 	{
-		bool doBeyblade = IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
+		bool doBeyblade =
+			IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
 
 		if (doBeyblade)
 		{
@@ -53,6 +54,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Beyblades",

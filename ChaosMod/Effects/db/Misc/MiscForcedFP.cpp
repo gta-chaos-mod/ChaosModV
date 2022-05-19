@@ -17,6 +17,7 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 0, true);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "First Person",

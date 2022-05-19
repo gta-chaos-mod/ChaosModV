@@ -15,7 +15,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	static const Hash riotGroupHash = GET_HASH_KEY("_RIOT");
+	static const Hash riotGroupHash	  = GET_HASH_KEY("_RIOT");
 	static const Hash playerGroupHash = GET_HASH_KEY("PLAYER");
 
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, riotGroupHash);
@@ -40,7 +40,7 @@ static void OnTick()
 
 			if (std::find(goneThroughPeds.begin(), goneThroughPeds.end(), ped) == goneThroughPeds.end())
 			{
-				static const std::vector<Hash>& weps = Memory::GetAllWeapons();
+				static const std::vector<Hash> &weps = Memory::GetAllWeapons();
 				GIVE_WEAPON_TO_PED(ped, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
 
 				goneThroughPeds.push_back(ped);
@@ -48,7 +48,7 @@ static void OnTick()
 		}
 	}
 
-	for (std::list<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end(); )
+	for (std::list<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end();)
 	{
 		if (!DOES_ENTITY_EXIST(*it))
 		{
@@ -61,6 +61,7 @@ static void OnTick()
 	}
 }
 
+// clang-format off
 static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Peds Riot",

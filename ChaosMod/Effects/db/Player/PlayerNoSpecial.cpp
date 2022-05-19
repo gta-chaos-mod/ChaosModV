@@ -5,6 +5,7 @@ static void OnTick()
 	SPECIAL_ABILITY_DEPLETE_METER(PLAYER_ID(), true, 0);
 }
 
+// clang-format off
 static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "No Special Ability",
