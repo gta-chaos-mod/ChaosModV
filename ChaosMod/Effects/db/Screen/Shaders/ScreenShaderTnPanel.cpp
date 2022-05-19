@@ -36,7 +36,7 @@ static void OnStop()
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "TN Panel",
-		.Id = "misc_tnpanel",
+		.Id = "screen_tnpanel",
 		.IsTimed = true,
         .EffectCategory = EEffectCategory::Shader,
         .EffectGroupType = EEffectGroupType::Shader

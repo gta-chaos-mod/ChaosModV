@@ -62,7 +62,7 @@ static void OnTick()
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
         .Name = "RGB Land",
-        .Id = "misc_rgbland",
+        .Id = "screen_rgbland",
         .IsTimed = true,
         .EffectCategory = EEffectCategory::Shader,
         .EffectGroupType = EEffectGroupType::Shader

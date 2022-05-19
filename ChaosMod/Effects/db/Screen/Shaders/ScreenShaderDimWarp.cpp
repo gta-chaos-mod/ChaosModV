@@ -34,7 +34,7 @@ static void OnStop()
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Dimension Warp",
-		.Id = "misc_dimwarp",
+		.Id = "screen_dimwarp",
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,

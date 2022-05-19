@@ -34,7 +34,7 @@ static void OnStop()
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Warped Camera",
-		.Id = "misc_warpedcam",
+		.Id = "screen_warpedcam",
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
