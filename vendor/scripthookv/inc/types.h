@@ -36,6 +36,37 @@ typedef int ColourIndex;
 typedef int Sphere;
 typedef int ScrHandle;
 
+struct Vec3V
+{
+	float x;
+	float y;
+	float z;
+	float w;
+
+	Vec3V(float x, float y, float z, float w)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+
+	Vec3V Init(float x, float y, float z, float w)
+	{
+		return Vec3V(x, y, z, w);
+	}
+
+	Vec3V operator +(Vec3V val)
+	{
+		return Vec3V(
+			this->x + val.x,
+			this->y + val.y,
+			this->z + val.z,
+			this->w + val.w
+		);
+	}
+};
+
 #pragma pack(push, 1)
 struct Vector3
 {
@@ -135,7 +166,14 @@ struct Vector3
 		return this->x == 0 && this->y == 0 && this->z == 0;
 	}
 
+	Vec3V* GetInternal()
+	{
+		return new Vec3V(this->x, this->y, this->z, 0.f);
+	}
+
+	static Vector3 FromInternal(Vec3V* val)
+	{
+		return Vector3(val->x, val->y, val->z);
+	}
 };
-
-
 #pragma pack(pop)

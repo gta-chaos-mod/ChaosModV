@@ -122,6 +122,7 @@
     <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscShaderWarpedCam.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSpinningAudio.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
@@ -349,6 +350,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioPositionHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
@@ -394,6 +396,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\AudioPositionHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
