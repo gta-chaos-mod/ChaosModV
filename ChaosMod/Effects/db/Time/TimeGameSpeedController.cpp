@@ -23,7 +23,7 @@ static void OnTickX02()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX02, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX02, EffectInfo
 	{
 		.Name = "x0.2 Gamespeed",
 		.Id = "time_x02",
@@ -46,7 +46,7 @@ static void OnTickX05()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, OnStop, OnTickX05, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX05, EffectInfo
 	{
 		.Name = "x0.5 Gamespeed",
 		.Id = "time_x05",

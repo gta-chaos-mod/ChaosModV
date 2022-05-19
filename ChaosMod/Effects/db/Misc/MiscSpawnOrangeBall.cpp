@@ -29,7 +29,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Orange Ball",
         .Id = "misc_spawn_orange_ball",

@@ -31,7 +31,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Ramp Jam (Press Jump In Vehicle)",
 		.Id = "misc_rampjam",

@@ -63,7 +63,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Bees",
 		.Id = "player_bees",

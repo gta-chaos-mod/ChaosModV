@@ -6,7 +6,7 @@ static void OnStartExtraSunny()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStartExtraSunny, EffectInfo
+REGISTER_EFFECT(OnStartExtraSunny, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Extra Sunny Weather",
 		.Id = "weather_extrasunny",
@@ -21,7 +21,7 @@ static void OnStartThunder()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartThunder, EffectInfo
+REGISTER_EFFECT(OnStartThunder, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Stormy Weather",
 		.Id = "weather_stormy",
@@ -36,7 +36,7 @@ static void OnStartFoggy()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStartFoggy, EffectInfo
+REGISTER_EFFECT(OnStartFoggy, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Foggy Weather",
 		.Id = "weather_foggy",
@@ -51,7 +51,7 @@ static void OnStartNeutral()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartNeutral, EffectInfo
+REGISTER_EFFECT(OnStartNeutral, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Neutral Weather",
 		.Id = "weather_neutral",
@@ -66,7 +66,7 @@ static void OnStartXmas()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(OnStartXmas, EffectInfo
+REGISTER_EFFECT(OnStartXmas, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Snowy Weather",
 		.Id = "weather_snowy",
@@ -98,7 +98,7 @@ static void OnTickRandom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(nullptr, nullptr, OnTickRandom, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickRandom, EffectInfo
 	{
 		.Name = "Disco Weather",
 		.Id = "weather_randomizer",

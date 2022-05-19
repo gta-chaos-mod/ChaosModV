@@ -49,7 +49,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Clone Player",
 		.Id = "player_clone"

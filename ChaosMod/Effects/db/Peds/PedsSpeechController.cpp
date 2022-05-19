@@ -23,7 +23,7 @@ static void OnTickFriendly()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(nullptr, nullptr, OnTickFriendly, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickFriendly, EffectInfo
 	{
 		.Name = "Friendly Neighborhood",
 		.Id = "peds_sayhi",
@@ -56,7 +56,7 @@ static void OnTickUnfriendly()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, nullptr, OnTickUnfriendly, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickUnfriendly, EffectInfo
 	{
 		.Name = "Unfriendly Neighborhood",
 		.Id = "peds_insult",
@@ -85,7 +85,7 @@ static void OnTickKifflom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(nullptr, nullptr, OnTickKifflom, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickKifflom, EffectInfo
 	{
 		.Name = "Kifflom!",
 		.Id = "peds_kifflom",

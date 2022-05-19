@@ -161,7 +161,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Hunt",
 		.Id = "peds_prop_hunt",

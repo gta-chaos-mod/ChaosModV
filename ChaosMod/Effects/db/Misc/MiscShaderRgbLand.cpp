@@ -59,7 +59,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
         .Name = "RGB Land",
         .Id = "misc_rgbland",

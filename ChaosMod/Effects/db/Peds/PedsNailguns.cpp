@@ -102,7 +102,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Nailguns",
 		.Id = "peds_nailguns",

@@ -2,12 +2,12 @@
 	Effect by Last0xygen, modified
 */
 
-#include "Memory/Hooks/ScriptThreadRunHook.h"
 #include <stdafx.h>
+
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStart()
 {
-
 	Hooks::EnableScriptThreadBlock();
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
@@ -70,7 +70,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Blimp Strats",
         .Id = "player_blimp_strats",

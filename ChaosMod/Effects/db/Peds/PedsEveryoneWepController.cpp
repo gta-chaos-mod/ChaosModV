@@ -14,7 +14,7 @@ static void OnStartRPG()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(OnStartRPG, EffectInfo
+REGISTER_EFFECT(OnStartRPG, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone An RPG",
 		.Id = "peds_giverpg",
@@ -35,7 +35,7 @@ static void OnStartTazer()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartTazer, EffectInfo
+REGISTER_EFFECT(OnStartTazer, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Stun Gun",
 		.Id = "peds_stungun",
@@ -56,7 +56,7 @@ static void OnStartMinigun()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStartMinigun, EffectInfo
+REGISTER_EFFECT(OnStartMinigun, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Minigun",
 		.Id = "peds_minigun",
@@ -77,7 +77,7 @@ static void OnStartUpNAtomizer()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartUpNAtomizer, EffectInfo
+REGISTER_EFFECT(OnStartUpNAtomizer, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
 		.Id = "peds_upnatomizer",
@@ -100,7 +100,7 @@ static void OnStartRandom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(OnStartRandom, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Random Weapon",
 		.Id = "peds_randomwep",
@@ -121,7 +121,7 @@ static void OnStartRailgun()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(OnStartRailgun, EffectInfo
+REGISTER_EFFECT(OnStartRailgun, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Railgun",
 		.Id = "peds_railgun",
@@ -142,7 +142,7 @@ static void OnStartBattleAxe()
 }
 
 // clang-format off
-static RegisterEffect registerEffect7(OnStartBattleAxe, EffectInfo
+REGISTER_EFFECT(OnStartBattleAxe, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Battle Axe",
 		.Id = "peds_battleaxe",

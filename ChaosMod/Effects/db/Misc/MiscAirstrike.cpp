@@ -50,7 +50,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Airstrike Inbound",
 		.Id = "misc_airstrike",

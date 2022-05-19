@@ -34,7 +34,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Quake FOV",
 		.Id = "player_quake_fov",

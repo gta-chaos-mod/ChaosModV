@@ -2,8 +2,8 @@
 	Effect by Gorakh
 */
 
-#include "Memory/Vehicle.h"
 #include <stdafx.h>
+#include "Memory/Vehicle.h"
 
 static std::map<Vehicle, Vector3> vehicleDefaultSizes;
 
@@ -45,7 +45,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Tiny Vehicles",
 		.Id = "vehs_tiny",

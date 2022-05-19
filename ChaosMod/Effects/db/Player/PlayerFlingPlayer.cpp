@@ -29,7 +29,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Fling Player",
         .Id = "player_fling_player"

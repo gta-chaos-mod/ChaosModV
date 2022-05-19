@@ -21,7 +21,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Break Doors Of Every Vehicle",
 		.Id = "playerveh_breakdoors"

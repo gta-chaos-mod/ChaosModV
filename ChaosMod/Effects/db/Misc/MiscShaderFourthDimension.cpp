@@ -32,7 +32,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Fourth Dimension",
 		.Id = "misc_fourthdimension",

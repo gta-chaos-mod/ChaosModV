@@ -2,8 +2,9 @@
 		Effect by DrUnderscore (James), modified
 */
 
-#include "../vendor/scripthookv/inc/enums.h"
 #include <stdafx.h>
+
+#include <scripthookv/inc/enums.h>
 
 // These should be 8 characters all uppercase.
 // But there isn't anything enforcing that :^)
@@ -264,7 +265,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Realistic Hacking",
 		.Id = "player_hacking"

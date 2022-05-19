@@ -17,7 +17,7 @@ static void OnTick_0_5x()
 }
 
 // clang-format off
-static RegisterEffect registerEffect_0_5x(nullptr, OnStop, OnTick_0_5x, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 	{
 		.Name = "0.5x Effect Duration",
 		.Id = "meta_effect_duration_0_5x",
@@ -34,7 +34,7 @@ static void OnTick_2x()
 }
 
 // clang-format off
-static RegisterEffect registerEffect_2x(nullptr, OnStop, OnTick_2x, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 	{
 		.Name = "2x Effect Duration",
 		.Id = "meta_effect_duration_2x",

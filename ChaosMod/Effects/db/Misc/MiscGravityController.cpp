@@ -14,7 +14,7 @@ static void OnTickLow()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(nullptr, OnStop, OnTickLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickLow, EffectInfo
 	{
 		.Name = "Low Gravity",
 		.Id = "lowgravity",
@@ -31,7 +31,7 @@ static void OnTickVeryLow()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, OnStop, OnTickVeryLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, EffectInfo
 	{
 		.Name = "Very Low Gravity",
 		.Id = "verylowgravity",
@@ -63,7 +63,7 @@ static void OnTickInsane()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(nullptr, OnStop, OnTickInsane, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
 	{
 		.Name = "Insane Gravity",
 		.Id = "insanegravity",
@@ -100,7 +100,7 @@ static void OnTickInvert()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartInvert, OnStop, OnTickInvert, EffectInfo
+REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, EffectInfo
 	{
 		.Name = "Invert Gravity",
 		.Id = "invertgravity",
@@ -149,7 +149,7 @@ static void OnTickSideways()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(OnStartSideways, OnStop, OnTickSideways, EffectInfo
+REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 	{
 		.Name = "Sideways Gravity",
 		.Id = "misc_sideways_gravity",

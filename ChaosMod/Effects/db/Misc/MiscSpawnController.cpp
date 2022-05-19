@@ -17,7 +17,7 @@ static void OnStartUFO()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStartUFO, EffectInfo
+REGISTER_EFFECT(OnStartUFO, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn UFO",
 		.Id = "misc_spawnufo",
@@ -32,7 +32,7 @@ static void OnStartFerrisWheel()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartFerrisWheel, EffectInfo
+REGISTER_EFFECT(OnStartFerrisWheel, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Ferris Wheel",
 		.Id = "misc_spawnferriswheel",

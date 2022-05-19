@@ -51,7 +51,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Oil Trails",
 		.Id = "misc_oilleaks",

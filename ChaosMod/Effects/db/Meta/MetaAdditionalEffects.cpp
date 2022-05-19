@@ -17,7 +17,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Combo Time",
 		.Id = "meta_spawn_multiple_effects",

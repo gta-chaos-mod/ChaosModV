@@ -13,7 +13,7 @@ static void OnStartAll()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStartAll, EffectInfo
+REGISTER_EFFECT(OnStartAll, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give All Weapons",
 		.Id = "player_allweps",

@@ -57,7 +57,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Teleporter Malfunction",
 		.Id = "player_tp_to_everything",

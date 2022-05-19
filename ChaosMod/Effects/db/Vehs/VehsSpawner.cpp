@@ -18,7 +18,7 @@ static void OnStartRhino()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(OnStartRhino, EffectInfo
+REGISTER_EFFECT(OnStartRhino, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Rhino",
 		.Id = "spawn_rhino",
@@ -36,7 +36,7 @@ static void OnStartAdder()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartAdder, EffectInfo
+REGISTER_EFFECT(OnStartAdder, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Adder",
 		.Id = "spawn_adder",
@@ -53,7 +53,7 @@ static void OnStartDump()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStartDump, EffectInfo
+REGISTER_EFFECT(OnStartDump, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Dump",
 		.Id = "spawn_dump",
@@ -71,7 +71,7 @@ static void OnStartMonster()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartMonster, EffectInfo
+REGISTER_EFFECT(OnStartMonster, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Monster",
 		.Id = "spawn_monster",
@@ -88,7 +88,7 @@ static void OnStartBMX()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(OnStartBMX, EffectInfo
+REGISTER_EFFECT(OnStartBMX, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn BMX",
 		.Id = "spawn_bmx",
@@ -105,7 +105,7 @@ static void OnStartTug()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(OnStartTug, EffectInfo
+REGISTER_EFFECT(OnStartTug, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Tug",
 		.Id = "spawn_tug",
@@ -123,7 +123,7 @@ static void OnStartCargoplane()
 }
 
 // clang-format off
-static RegisterEffect registerEffect7(OnStartCargoplane, EffectInfo
+REGISTER_EFFECT(OnStartCargoplane, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Cargo Plane",
 		.Id = "spawn_cargo",
@@ -140,7 +140,7 @@ static void OnStartBus()
 }
 
 // clang-format off
-static RegisterEffect registerEffect8(OnStartBus, EffectInfo
+REGISTER_EFFECT(OnStartBus, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Bus",
 		.Id = "spawn_bus",
@@ -158,7 +158,7 @@ static void OnStartBlimp()
 }
 
 // clang-format off
-static RegisterEffect registerEffect9(OnStartBlimp, EffectInfo
+REGISTER_EFFECT(OnStartBlimp, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Blimp",
 		.Id = "spawn_blimp",
@@ -176,7 +176,7 @@ static void OnStartBuzzard()
 }
 
 // clang-format off
-static RegisterEffect registerEffect10(OnStartBuzzard, EffectInfo
+REGISTER_EFFECT(OnStartBuzzard, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Buzzard",
 		.Id = "spawn_buzzard",
@@ -194,7 +194,7 @@ static void OnStartFaggio()
 }
 
 // clang-format off
-static RegisterEffect registerEffect11(OnStartFaggio, EffectInfo
+REGISTER_EFFECT(OnStartFaggio, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Faggio",
 		.Id = "spawn_faggio",
@@ -212,7 +212,7 @@ static void OnStartRuiner3()
 }
 
 // clang-format off
-static RegisterEffect registerEffect12(OnStartRuiner3, EffectInfo
+REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Ruined Ruiner",
 		.Id = "spawn_ruiner3",
@@ -268,7 +268,7 @@ static void OnStartRandom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect13(OnStartRandom, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
@@ -286,7 +286,7 @@ static void OnStartBaletrailer()
 }
 
 // clang-format off
-static RegisterEffect registerEffect14(OnStartBaletrailer, EffectInfo
+REGISTER_EFFECT(OnStartBaletrailer, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Bale Trailer",
 		.Id = "spawn_baletrailer",
@@ -304,7 +304,7 @@ static void OnStartRomero()
 }
 
 // clang-format off
-static RegisterEffect registerEffect15(OnStartRomero, EffectInfo
+REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Where's The Funeral?",
 		.Id = "spawn_romero",
@@ -339,7 +339,7 @@ static void OnStartWizardBroom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStartWizardBroom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",

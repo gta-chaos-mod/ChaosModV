@@ -31,7 +31,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Warped Camera",
 		.Id = "misc_warpedcam",

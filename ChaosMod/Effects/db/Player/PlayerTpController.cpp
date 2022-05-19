@@ -12,7 +12,7 @@ static void OnStartLSIA()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(OnStartLSIA, EffectInfo
+REGISTER_EFFECT(OnStartLSIA, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To LS Airport",
 		.Id = "tp_lsairport",
@@ -27,7 +27,7 @@ static void OnStartMazeTower()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartMazeTower, EffectInfo
+REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
 		.Id = "tp_mazebanktower",
@@ -49,7 +49,7 @@ static void OnStartFortZancudo()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStartFortZancudo, EffectInfo
+REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
@@ -71,7 +71,7 @@ static void OnStartMountChilliad()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartMountChilliad, EffectInfo
+REGISTER_EFFECT(OnStartMountChilliad, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
@@ -86,7 +86,7 @@ static void OnStartSkyFall()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(OnStartSkyFall, EffectInfo
+REGISTER_EFFECT(OnStartSkyFall, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
@@ -167,7 +167,7 @@ static void OnStartWaypoint()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(OnStartWaypoint, EffectInfo
+REGISTER_EFFECT(OnStartWaypoint, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Waypoint",
 		.Id = "player_tptowaypoint"
@@ -186,7 +186,7 @@ static void OnStartFront()
 }
 
 // clang-format off
-static RegisterEffect registerEffect7(OnStartFront, EffectInfo
+REGISTER_EFFECT(OnStartFront, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport Player A Few Meters",
 		.Id = "player_tpfront"
@@ -230,7 +230,7 @@ static void OnStartRandom()
 }
 
 // clang-format off
-static RegisterEffect registerEffect8(OnStartRandom, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
@@ -285,7 +285,7 @@ static void OnStartMission()
 }
 
 // clang-format off
-static RegisterEffect registerEffectMission(OnStartMission, EffectInfo
+REGISTER_EFFECT(OnStartMission, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Random Mission",
 		.Id = "tp_mission"
@@ -381,7 +381,7 @@ static void OnStartFakeTp()
 }
 
 // clang-format off
-static RegisterEffect registerEffectFake(OnStartFakeTp, EffectInfo
+REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Teleport",
 		.Id = "tp_fake"

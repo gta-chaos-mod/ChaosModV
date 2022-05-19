@@ -17,7 +17,7 @@ static void OnStart()
 }
 
 // clang-format off
-static RegisterEffect registerEffect_0_5x(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Re-Invoke Previous Effects",
 		.Id = "meta_re_invoke",

@@ -9,7 +9,7 @@ static void OnStartFive()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStartFive, EffectInfo
+REGISTER_EFFECT(OnStartFive, nullptr, nullptr, EffectInfo
 	{
 		.Name = "5 Wanted Stars",
 		.Id = "player_5stars",
@@ -27,7 +27,7 @@ static void OnStartPlusTwo()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartPlusTwo, EffectInfo
+REGISTER_EFFECT(OnStartPlusTwo, nullptr, nullptr, EffectInfo
 	{
 		.Name = "+2 Wanted Stars",
 		.Id = "player_plus2stars",
@@ -43,7 +43,7 @@ static void OnTickNeverWanted()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(nullptr, nullptr, OnTickNeverWanted, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickNeverWanted, EffectInfo
 	{
 		.Name = "Never Wanted",
 		.Id = "player_neverwanted",

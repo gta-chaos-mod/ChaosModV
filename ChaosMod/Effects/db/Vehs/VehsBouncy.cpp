@@ -39,7 +39,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Bouncy Vehicles",
 		.Id = "veh_bouncy",

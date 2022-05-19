@@ -99,7 +99,7 @@ static void OnTickLag()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStart, nullptr, OnTickLag, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTickLag, EffectInfo
 	{
 		.Name = "Lag",
 		.Id = "time_lag",

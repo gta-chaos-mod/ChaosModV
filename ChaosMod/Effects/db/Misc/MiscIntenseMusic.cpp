@@ -11,7 +11,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Play Arena Wars Theme",
 		.Id = "player_arenawarstheme",

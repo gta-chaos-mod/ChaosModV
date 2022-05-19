@@ -13,7 +13,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Sky",
 		.Id = "misc_nosky",

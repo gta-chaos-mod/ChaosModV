@@ -17,7 +17,7 @@ static void OnTickRed()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(nullptr, nullptr, OnTickRed, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
 	{
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
@@ -43,7 +43,7 @@ static void OnTickBlue()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, nullptr, OnTickBlue, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
 	{
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
@@ -69,7 +69,7 @@ static void OnTickGreen()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(nullptr, nullptr, OnTickGreen, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
 	{
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
@@ -98,7 +98,7 @@ static void OnTickChrome()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(nullptr, nullptr, OnTickChrome, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
 	{
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
@@ -166,7 +166,7 @@ static void OnTickPink()
 }
 
 // clang-format off
-static RegisterEffect registerEffect5(nullptr, OnStopPink, OnTickPink, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 	{
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
@@ -239,7 +239,7 @@ static void OnTickRainbow()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
 	{
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",

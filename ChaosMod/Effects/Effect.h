@@ -1,14 +1,22 @@
 #pragma once
 
-#include "EEffectTimedType.h"
-#include "EffectIdentifier.h"
-#include "EffectsInfo.h"
+#include "LuaScripts.h"
 
-#include "../LuaScripts.h"
+#include "Effects/EEffectTimedType.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectsInfo.h"
 
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
+
+#define _EFFECT_CONCAT(a, b) a##b
+#define EFFECT_CONCAT(a, b) _EFFECT_CONCAT(a, b)
+#define REGISTER_EFFECT(OnStart, OnStop, OnTick, ...)                                         \
+	namespace                                                                                 \
+	{                                                                                         \
+		RegisterEffect EFFECT_CONCAT(effect, __LINE__)(OnStart, OnStop, OnTick, __VA_ARGS__); \
+	}
 
 struct RegisteredEffect
 {
@@ -131,40 +139,18 @@ inline void ClearRegisteredScriptEffects()
 
 class RegisterEffect
 {
-  private:
 	RegisteredEffect m_RegisteredEffect;
 
   public:
 	RegisterEffect(void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)(), EffectInfo &&effectInfo)
-	{
-		_RegisterEffect(pOnStart, pOnStop, pOnTick, std::move(effectInfo));
-	}
-
-	RegisterEffect(void (*pOnStart)(), void (*pOnStop)(), EffectInfo &&effectInfo)
-	{
-		_RegisterEffect(pOnStart, pOnStop, nullptr, std::move(effectInfo));
-	}
-
-	RegisterEffect(void (*pOnStart)(), EffectInfo &&effectInfo)
-	{
-		_RegisterEffect(pOnStart, nullptr, nullptr, std::move(effectInfo));
-	}
-
-	RegisterEffect(EffectInfo &&effectInfo)
-	{
-		_RegisterEffect(nullptr, nullptr, nullptr, std::move(effectInfo));
-	}
-
-	RegisterEffect(const RegisterEffect &) = delete;
-
-	RegisterEffect &operator=(const RegisterEffect &) = delete;
-
-  private:
-	void _RegisterEffect(void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)(), EffectInfo &&effectInfo)
 	{
 		m_RegisteredEffect = { effectInfo.Id, pOnStart, pOnStop, pOnTick };
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);
 		g_dictEffectsMap[effectInfo.Id] = std::move(effectInfo);
 	}
+
+	RegisterEffect(const RegisterEffect &) = delete;
+
+	RegisterEffect &operator=(const RegisterEffect &) = delete;
 };

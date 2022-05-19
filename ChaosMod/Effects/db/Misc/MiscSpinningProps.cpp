@@ -28,7 +28,7 @@ static void OnTick()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Spinning Props",
 		.Id = "misc_spinning_props",

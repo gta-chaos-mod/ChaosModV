@@ -58,7 +58,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Drought",
 		.Id = "misc_remove_water",

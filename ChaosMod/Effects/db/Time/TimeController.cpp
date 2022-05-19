@@ -6,7 +6,7 @@ static void OnStartMorning()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(OnStartMorning, EffectInfo
+REGISTER_EFFECT(OnStartMorning, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Morning",
 		.Id = "time_morning",
@@ -21,7 +21,7 @@ static void OnStartDay()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(OnStartDay, EffectInfo
+REGISTER_EFFECT(OnStartDay, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Daytime",
 		.Id = "time_day",
@@ -36,7 +36,7 @@ static void OnStartEvening()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(OnStartEvening, EffectInfo
+REGISTER_EFFECT(OnStartEvening, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Evening",
 		.Id = "time_evening",
@@ -51,7 +51,7 @@ static void OnStartNight()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(OnStartNight, EffectInfo
+REGISTER_EFFECT(OnStartNight, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Night",
 		.Id = "time_night",
@@ -66,7 +66,7 @@ static void OnTickTimelapse()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(nullptr, nullptr, OnTickTimelapse, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickTimelapse, EffectInfo
 	{
 		.Name = "Timelapse",
 		.Id = "time_quickday",

@@ -19,7 +19,7 @@ static void OnTickMexico()
 }
 
 // clang-format off
-static RegisterEffect registerEffect1(nullptr, OnStop, OnTickMexico, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, EffectInfo
 	{
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
@@ -58,7 +58,7 @@ static void OnTickBright()
 }
 
 // clang-format off
-static RegisterEffect registerEffect2(nullptr, OnStopBright, OnTickBright, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, EffectInfo
 	{
 		.Name = "Deep Fried",
 		.Id = "screen_bright",
@@ -75,7 +75,7 @@ static void OnTickFog()
 }
 
 // clang-format off
-static RegisterEffect registerEffect3(nullptr, OnStop, OnTickFog, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickFog, EffectInfo
 	{
 		.Name = "Extreme Fog",
 		.Id = "screen_fog",
@@ -92,7 +92,7 @@ static void OnTickRenderdist()
 }
 
 // clang-format off
-static RegisterEffect registerEffect4(nullptr, OnStop, OnTickRenderdist, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, EffectInfo
 	{
 		.Name = "Where Did Everything Go?",
 		.Id = "screen_lowrenderdist",
@@ -181,7 +181,7 @@ static void OnTickLSD()
 }
 
 // clang-format off
-static RegisterEffect registerEffect6(nullptr, OnStopLSD, OnTickLSD, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, EffectInfo
 	{
 		.Name = "LSD",
 		.Id = "screen_lsd",
@@ -202,7 +202,7 @@ static void OnTickFullbright()
 }
 
 // clang-format off
-static RegisterEffect registerEffect7(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
 	{
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
@@ -220,7 +220,7 @@ static void OnTickBubbleVision()
 }
 
 // clang-format off
-static RegisterEffect registerEffect8(nullptr, OnStop, OnTickBubbleVision, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, EffectInfo
 	{
 		.Name = "Bubble Vision",
 		.Id = "screen_bubblevision",
@@ -289,7 +289,7 @@ static void OnTickLSNoire()
 }
 
 // clang-format off
-static RegisterEffect registerEffectLsNoire(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
 	{
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
@@ -305,7 +305,7 @@ static void OnTickNeedGlasses()
 }
 
 // clang-format off
-static RegisterEffect registerEffectGlases(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",

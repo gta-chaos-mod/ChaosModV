@@ -30,7 +30,7 @@ static void OnStop()
 }
 
 // clang-format off
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Split Screen Co-op",
 		.Id = "misc_localcoop",
