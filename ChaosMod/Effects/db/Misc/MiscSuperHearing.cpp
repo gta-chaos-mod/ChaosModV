@@ -34,7 +34,7 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect2(OnStart, OnStop, OnTick, EffectInfo
+RegisterEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Hearing",
 		.Id = "misc_super_hearing",
