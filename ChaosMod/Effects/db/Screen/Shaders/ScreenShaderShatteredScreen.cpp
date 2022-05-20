@@ -37,6 +37,6 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Id = "screen_shatteredscreen",
 		.IsTimed = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

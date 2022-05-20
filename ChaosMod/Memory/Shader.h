@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../Util/Hash.h"
-#include "../Util/Logging.h"
-#include "Handle.h"
-#include "Memory.h"
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
+
+#include "Util/Hash.h"
+#include "Util/Logging.h"
 
 #include <vector>
 
