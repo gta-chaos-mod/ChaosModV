@@ -364,6 +364,7 @@ namespace ConfigApp
             { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
             { "screen_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.Screen, true, true) },
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
+            { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true, true) },
         };
     }
 }

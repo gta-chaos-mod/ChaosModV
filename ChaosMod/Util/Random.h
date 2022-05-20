@@ -2,6 +2,8 @@
 
 #include <random>
 
+//#include "Colour.h"
+
 class Random
 {
   private:
@@ -27,6 +29,18 @@ class Random
 	{
 		std::uniform_real_distribution<float> distr(fLower, fUpper);
 		return distr(m_Random);
+	}
+
+	// Returns a random RGBA value without a random alpha: 255 or max.
+	inline CRGBA GetRandomColourRGB(unsigned int min = 0, unsigned int max = 255)
+	{
+		return { (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), max };
+	}
+
+	// Returns a random RGBA value with a random alpha.
+	inline CRGBA GetRandomColourRGBA(unsigned int min = 0, unsigned int max = 255)
+	{
+		return { (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max) };
 	}
 };
 
