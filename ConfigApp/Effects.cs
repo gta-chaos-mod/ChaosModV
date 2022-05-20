@@ -366,6 +366,7 @@ namespace ConfigApp
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
             { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
             { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
+            { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
         };
     }
 }
