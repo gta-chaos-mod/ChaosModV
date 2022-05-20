@@ -371,6 +371,7 @@ namespace ConfigApp
             { "screen_screenfreakout", new EffectInfo("Screen Freakout", EffectCategory.Screen, true, true) },
             { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
+            { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
         };
     }
 }
