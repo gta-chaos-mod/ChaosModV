@@ -31,7 +31,7 @@ static void OnStop()
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Arched Screen",
+		.Name = "Arced Screen",
 		.Id = "screen_arc",
 		.IsTimed = true,
 		.IsShortDuration = true,
