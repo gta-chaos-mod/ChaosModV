@@ -98,6 +98,7 @@
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscBlackHole.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
