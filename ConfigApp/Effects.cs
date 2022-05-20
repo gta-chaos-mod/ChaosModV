@@ -368,6 +368,8 @@ namespace ConfigApp
             { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
             { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
             { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
+            { "screen_blue", new EffectInfo("I'm Blue", EffectCategory.Screen, true, true) },
+            { "screen_red", new EffectInfo("Bloody Hell", EffectCategory.Screen, true, true) },
         };
     }
 }
