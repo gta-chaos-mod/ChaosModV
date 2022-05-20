@@ -13,7 +13,7 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float2 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
-    texcoord.y *= saturate(texcoord.x <= 0.5 ? texcoord.x * 2.4 : (0.5 - (texcoord.x - 0.5)) * 2.4);
+    texcoord.y *= (1 - 4 * (texcoord.x - 0.5) * (texcoord.x - 0.5)); // Thanks Reguas
     return HDRSampler.Sample(g_samLinear, texcoord);
 }
 )SRC";
