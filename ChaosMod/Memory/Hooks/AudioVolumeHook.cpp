@@ -10,7 +10,7 @@ __int64 _HK_rage__audRequestedSettings__SetVolume(__int64 _this, float volume)
 	return _OG_rage__audRequestedSettings__SetVolume(_this, ms_bEnabledHook ? ms_fTargetVolume : volume);
 }
 
-static bool OnHook()
+bool OnHook()
 {
 	Handle handle = Memory::FindPattern("E8 ? ? ? ? 4A 8B 84 EE ? ? ? ?");
 	if (!handle.IsValid())
@@ -23,7 +23,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "rage__audRequestedSettings__SetVolume");
+static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__SetVolume");
 
 namespace Hooks
 {

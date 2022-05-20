@@ -34,7 +34,8 @@ static void OnTick()
 	}
 }
 
-RegisterEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Hearing",
 		.Id = "misc_super_hearing",

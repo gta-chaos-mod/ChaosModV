@@ -16,7 +16,8 @@ static void OnStop()
 	Hooks::ResetAudioVolume();
 }
 
-RegisterEffect(OnStart, OnStop, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Deaf",
 		.Id = "misc_deaf",
