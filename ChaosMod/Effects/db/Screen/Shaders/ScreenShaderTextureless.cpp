@@ -29,10 +29,10 @@ static void OnTick()
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
-        .Name = "Textureless",
-        .Id = "screen_textureless",
-        .IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.Name = "Textureless",
+		.Id = "screen_textureless",
+		.IsTimed = true,
+		.EffectCategory = EEffectCategory::Shader,
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

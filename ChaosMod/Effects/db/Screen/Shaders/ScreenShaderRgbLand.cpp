@@ -61,10 +61,10 @@ static void OnTick()
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
-        .Name = "RGB Land",
-        .Id = "screen_rgbland",
-        .IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.Name = "RGB Land",
+		.Id = "screen_rgbland",
+		.IsTimed = true,
+		.EffectCategory = EEffectCategory::Shader,
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

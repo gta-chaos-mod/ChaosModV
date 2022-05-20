@@ -365,6 +365,7 @@ namespace ConfigApp
             { "screen_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.Screen, true, true) },
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
             { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
+            { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
         };
     }
 }
