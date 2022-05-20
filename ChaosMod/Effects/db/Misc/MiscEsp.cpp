@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Util/Graphics.h"
 
-static const float maxDistance = 100.f;
+static const float maxDistance = 75.f;
 static const float lineThicknes = 0.001f;
 
 static CRGBA RGBA;
