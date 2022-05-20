@@ -364,8 +364,8 @@ namespace ConfigApp
             { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
             { "screen_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.Screen, true, true) },
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
-            { "misc_deaf", new EffectInfo("Deaf", EffectCategory.MISC, true) },
-            { "misc_super_hearing", new EffectInfo("Super Hearing", EffectCategory.MISC, true) },
+            { "misc_deaf", new EffectInfo("Deaf", EffectCategory.Misc, true) },
+            { "misc_super_hearing", new EffectInfo("Super Hearing", EffectCategory.Misc, true) },
         };
     }
 }
