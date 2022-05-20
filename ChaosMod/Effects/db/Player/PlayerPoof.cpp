@@ -1,5 +1,5 @@
 /*
-	Effect by Slothersbee, modified
+    Effect by Slothersbee, modified
 */
 
 #include <stdafx.h>

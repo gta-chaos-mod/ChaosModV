@@ -16,7 +16,7 @@ static int pedCount = 20;
 
 static void OnStart()
 {
-	Ped player	= PLAYER_PED_ID();
+	Ped player  = PLAYER_PED_ID();
 	Vector3 pos = GET_ENTITY_COORDS(player, false);
 }
 
@@ -36,7 +36,7 @@ static void OnTick()
 			SET_PED_CAN_RAGDOLL(ped, false);
 			SET_ENTITY_COLLISION(ped, false, true);
 			SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
-			float offset	= (360 / pedCount) * i;
+			float offset    = (360 / pedCount) * i;
 			OrbitPed orbPed = { ped, offset };
 			orbitingPeds.push_back(orbPed);
 			if (--count == 0)
@@ -55,9 +55,9 @@ static void OnTick()
 	Vector3 min;
 	Vector3 max;
 	GET_MODEL_DIMENSIONS(GET_ENTITY_MODEL(entityToCircle), &min, &max);
-	float height	  = max.z - min.z;
+	float height      = max.z - min.z;
 	float zCorrection = (-height / 2) + 0.3;
-	float heading	  = GET_ENTITY_HEADING(entityToCircle);
+	float heading     = GET_ENTITY_HEADING(entityToCircle);
 	for (std::vector<OrbitPed>::iterator it = orbitingPeds.begin(); it != orbitingPeds.end();)
 	{
 		OrbitPed pedInfo = *it;

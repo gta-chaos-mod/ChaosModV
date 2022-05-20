@@ -6,7 +6,7 @@ static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	int curTime	  = GET_GAME_TIMER();
+	int curTime   = GET_GAME_TIMER();
 
 	for (Hash weapon : Memory::GetAllWeapons())
 	{

@@ -15,10 +15,10 @@ static void SleepAllThreads(DWORD ms)
 	do
 	{
 		if (threadEntry.dwSize
-			>= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(threadEntry.th32OwnerProcessID))
+		    >= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(threadEntry.th32OwnerProcessID))
 		{
 			if (threadEntry.th32ThreadID != GetCurrentThreadId()
-				&& threadEntry.th32OwnerProcessID == GetCurrentProcessId())
+			    && threadEntry.th32OwnerProcessID == GetCurrentProcessId())
 			{
 				HANDLE thread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
 

@@ -11,10 +11,10 @@ static void OnStop()
 static void OnTick()
 {
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
-	Ped playerPed			= PLAYER_PED_ID();
-	Vector3 playerPos		= GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed           = PLAYER_PED_ID();
+	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
 
 	static std::vector<Ped> wentThroughPeds;
 
@@ -29,8 +29,8 @@ static void OnTick()
 				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
 				if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, pedPos.x, pedPos.y, pedPos.z,
-												false)
-					< 50.f)
+				                                false)
+				    < 50.f)
 				{
 					SET_PED_CONFIG_FLAG(ped, 292, true);
 
@@ -42,16 +42,16 @@ static void OnTick()
 		std::vector<Ped>::iterator it;
 		for (it = wentThroughPeds.begin(); it != wentThroughPeds.end();)
 		{
-			Ped ped		   = *it;
+			Ped ped        = *it;
 
 			Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
 			bool pedExists = DOES_ENTITY_EXIST(ped);
 
 			if (!pedExists
-				|| GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, pedPos.x, pedPos.y, pedPos.z,
-											   false)
-					   > 50.f)
+			    || GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, pedPos.x, pedPos.y, pedPos.z,
+			                                   false)
+			           > 50.f)
 			{
 				if (pedExists)
 				{

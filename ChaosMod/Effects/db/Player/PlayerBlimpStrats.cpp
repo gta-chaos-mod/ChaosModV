@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -11,8 +11,8 @@ static void OnStart()
 	Hooks::EnableScriptThreadBlock();
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
-	Hash blimpHash		 = GET_HASH_KEY("blimp");
-	Hash daveHash		 = GET_HASH_KEY("ig_davenorton");
+	Hash blimpHash       = GET_HASH_KEY("blimp");
+	Hash daveHash        = GET_HASH_KEY("ig_davenorton");
 
 	LoadModel(blimpHash);
 
@@ -58,7 +58,7 @@ static void OnStart()
 		Ped pedDave = CREATE_PED(4, daveHash, -442.2f, 1059.25f, 326.66f, 180.6f, true, false);
 
 		TASK_PLAY_ANIM(pedDave, "missfbi1leadinout", "fbi_1_int_leadin_loop_daven", 8.0f, 1.0f, -1, 1, 0.0f, false,
-					   false, false);
+		               false, false);
 		SET_PED_KEEP_TASK(pedDave, true);
 
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);

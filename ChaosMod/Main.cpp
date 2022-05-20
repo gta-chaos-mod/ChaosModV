@@ -20,12 +20,12 @@
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
 
-static bool ms_bClearAllEffects				= false;
+static bool ms_bClearAllEffects             = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
-static bool ms_bToggleModShortcutEnabled	= false;
-static bool ms_bDisableMod					= false;
-static bool ms_bEnablePauseTimerShortcut	= false;
-static bool ms_bHaveLateHooksRan			= false;
+static bool ms_bToggleModShortcutEnabled    = false;
+static bool ms_bDisableMod                  = false;
+static bool ms_bEnablePauseTimerShortcut    = false;
+static bool ms_bHaveLateHooksRan            = false;
 
 _NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
 {
@@ -88,7 +88,7 @@ static void Init()
 
 			c_pOldStreamBuf = std::cout.rdbuf();
 
-			g_ConsoleOut	= std::ofstream("CONOUT$");
+			g_ConsoleOut    = std::ofstream("CONOUT$");
 			std::cout.rdbuf(g_ConsoleOut.rdbuf());
 
 			std::cout.clear();
@@ -204,7 +204,7 @@ static void MainRun()
 					c_bJustReenabled = false;
 
 					// Clear log
-					g_Log			 = std::ofstream("chaosmod/chaoslog.txt");
+					g_Log            = std::ofstream("chaosmod/chaoslog.txt");
 
 					// Restart the main part of the mod completely
 					Init();
@@ -249,13 +249,10 @@ namespace Main
 	void OnCleanup()
 	{
 		LuaScripts::Unload();
-
-		Hooks::ResetShader();
-		Memory::InvalidateShaderCache();
 	}
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
-						 BOOL bWasDownBefore, BOOL bIsUpNow)
+	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
 		static bool c_bIsCtrlPressed = false;
 

@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -13,8 +13,8 @@ static void OnStart()
 	{
 		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
 
-		Vehicle veh		  = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z,
-											  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		Vehicle veh       = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z,
+		                                      GET_ENTITY_HEADING(PLAYER_PED_ID()));
 		SET_VEHICLE_COLOURS(veh, 135, 135);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}

@@ -32,7 +32,7 @@ namespace Mp3Manager
 				for (const auto &entry : std::filesystem::directory_iterator(ossTmp.str()))
 				{
 					if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".mp3"
-						&& entry.file_size() > 0)
+					    && entry.file_size() > 0)
 					{
 						rgSoundFiles.push_back(szSoundFile + "\\" + entry.path().filename().string());
 					}
@@ -50,7 +50,7 @@ namespace Mp3Manager
 			return;
 		}
 
-		auto size		   = rgCachedSoundFiles.size();
+		auto size          = rgCachedSoundFiles.size();
 		auto szChosenSound = size > 1 ? rgCachedSoundFiles[g_Random.GetRandomInt(0, size - 1)] : rgCachedSoundFiles[0];
 
 		ossTmp.str("");

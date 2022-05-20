@@ -131,20 +131,20 @@ static void OnTickSideways()
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
 
 			Memory::ApplyForceToEntityCenterOfMass(ped, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
-												   sidewaysGravityForce.z, false, false, true, false);
+			                                       sidewaysGravityForce.z, false, false, true, false);
 		}
 	}
 
 	for (auto object : GetAllProps())
 	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
-											   sidewaysGravityForce.z, false, false, true, false);
+		                                       sidewaysGravityForce.z, false, false, true, false);
 	}
 
 	for (auto veh : GetAllVehs())
 	{
 		Memory::ApplyForceToEntityCenterOfMass(veh, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
-											   sidewaysGravityForce.z, false, false, true, false);
+		                                       sidewaysGravityForce.z, false, false, true, false);
 	}
 }
 

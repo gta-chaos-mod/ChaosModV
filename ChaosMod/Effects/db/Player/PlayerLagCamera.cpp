@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -25,7 +25,7 @@ struct CameraSnapshot
 
 		position  = GET_GAMEPLAY_CAM_COORD();
 		rotation  = GET_GAMEPLAY_CAM_ROT(2);
-		fov		  = GET_GAMEPLAY_CAM_FOV();
+		fov       = GET_GAMEPLAY_CAM_FOV();
 	}
 };
 
@@ -44,8 +44,8 @@ static void OnStart()
 {
 	Vector3 pos = GET_GAMEPLAY_CAM_COORD();
 	Vector3 rot = GET_GAMEPLAY_CAM_ROT(2);
-	camera		= CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z,
-											  GET_GAMEPLAY_CAM_FOV(), true, 2);
+	camera      = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z,
+	                                          GET_GAMEPLAY_CAM_FOV(), true, 2);
 	CAM::RENDER_SCRIPT_CAMS(true, true, 700, 1, 1, 1);
 
 	cameraSnapshots = {};
@@ -79,7 +79,7 @@ static void OnTick()
 
 		// If the step this frame overshot the target, snap back to it
 		if ((direction == 1 && currentCamDelay > targetCamDelay)
-			|| (direction == -1 && currentCamDelay < targetCamDelay))
+		    || (direction == -1 && currentCamDelay < targetCamDelay))
 			currentCamDelay = targetCamDelay;
 	}
 

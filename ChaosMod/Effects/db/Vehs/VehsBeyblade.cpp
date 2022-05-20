@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -17,9 +17,9 @@ static void OnStop()
 
 static void OnTick()
 {
-	int count				 = 5;
+	int count                = 5;
 
-	float force				 = 100;
+	float force              = 100;
 	float velocityMultiplier = 3;
 	for (Vehicle veh : GetAllVehs())
 	{

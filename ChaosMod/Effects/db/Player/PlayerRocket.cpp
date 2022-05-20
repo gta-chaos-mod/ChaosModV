@@ -1,5 +1,5 @@
 /*
-	Effect by Moxi, based on "Detonate Current Vehicle", modified
+    Effect by Moxi, based on "Detonate Current Vehicle", modified
 */
 
 #include <stdafx.h>
@@ -8,7 +8,7 @@
 
 static void OnStart()
 {
-	Ped playerPed					= PLAYER_PED_ID();
+	Ped playerPed                   = PLAYER_PED_ID();
 	static const Hash parachuteHash = GET_HASH_KEY("GADGET_PARACHUTE");
 
 	CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
@@ -18,8 +18,8 @@ static void OnStart()
 	// REQUEST_NAMED_PTFX_ASSET("core"); Doesn't seem to be necessary
 
 	int lastTimestamp = GET_GAME_TIMER();
-	int launchTimer	  = LAUNCH_TIMER;
-	int beepTimer	  = LAUNCH_TIMER;
+	int launchTimer   = LAUNCH_TIMER;
+	int beepTimer     = LAUNCH_TIMER;
 	while (true)
 	{
 		SET_ENTITY_INVINCIBLE(playerPed, true);
@@ -33,7 +33,7 @@ static void OnStart()
 			USE_PARTICLE_FX_ASSET("core");
 			PLAY_SOUND_FROM_ENTITY(-1, "Beep_Red", playerPed, "DLC_HEIST_HACKING_SNAKE_SOUNDS", true, false);
 			START_PARTICLE_FX_LOOPED_ON_ENTITY("exp_air_molotov", playerPed, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, .7f, false,
-											   false, false);
+			                                   false, false);
 			SET_ENTITY_VELOCITY(playerPed, 0.f, 0.f, 5.f);
 		}
 
@@ -41,9 +41,9 @@ static void OnStart()
 		{
 			USE_PARTICLE_FX_ASSET("core");
 			START_PARTICLE_FX_LOOPED_ON_ENTITY("exp_air_rpg", playerPed, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 2.f, false,
-											   false, false);
+			                                   false, false);
 			START_PARTICLE_FX_LOOPED_ON_ENTITY("exp_air_molotov", playerPed, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 5.f, false,
-											   false, false);
+			                                   false, false);
 			SET_ENTITY_VELOCITY(
 				playerPed, 0.f, 0.f,
 				100.f); // Increasing the z value doesn't seem to affect the force anymore while ragdolling.

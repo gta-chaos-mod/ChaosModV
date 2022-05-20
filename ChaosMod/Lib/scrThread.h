@@ -1,6 +1,6 @@
 #pragma once
 
-using DWORD	  = unsigned long;
+using DWORD   = unsigned long;
 using DWORD64 = unsigned long long;
 
 namespace rage
@@ -47,15 +47,15 @@ namespace rage
 		char chSomething3;
 		char pad4[3];
 
-		virtual ~scrThread()								 = 0;
+		virtual ~scrThread()                                 = 0;
 
 		virtual DWORD *Reset(int a2, const void *a3, int a4) = 0;
 
-		virtual __int64 OnRun()								 = 0;
+		virtual __int64 OnRun()                              = 0;
 
-		virtual __int64 Update()							 = 0;
+		virtual __int64 Update()                             = 0;
 
-		virtual __int64 Kill()								 = 0;
+		virtual __int64 Kill()                               = 0;
 	};
 }
 

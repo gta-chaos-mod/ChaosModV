@@ -8,7 +8,7 @@
 
 #define _NODISCARD [[nodiscard]]
 
-using DWORD	  = unsigned long;
+using DWORD   = unsigned long;
 using DWORD64 = unsigned long long;
 
 using LPVOID  = void *;

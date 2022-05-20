@@ -45,9 +45,9 @@ inline float GetScreenTextWidth(const std::string &szText, float fScale)
 }
 
 inline void DrawScreenText(const std::string &szText, const ScreenTextVector &textPos, float fScale,
-						   ScreenTextColor textColor, bool bOutline = false,
-						   EScreenTextAdjust eTextAdjust	= EScreenTextAdjust::Center,
-						   const ScreenTextVector &textWrap = { 0.f, 1.f }, bool bAddBackground = false)
+                           ScreenTextColor textColor, bool bOutline = false,
+                           EScreenTextAdjust eTextAdjust    = EScreenTextAdjust::Center,
+                           const ScreenTextVector &textWrap = { 0.f, 1.f }, bool bAddBackground = false)
 {
 	BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 	ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(szText.c_str());
@@ -66,10 +66,10 @@ inline void DrawScreenText(const std::string &szText, const ScreenTextVector &te
 	END_TEXT_COMMAND_DISPLAY_TEXT(textPos.m_fX, textPos.m_fY, 0);
 	if (bAddBackground)
 	{
-		float fWidth		   = GetScreenTextWidth(szText, fScale);
-		float fHeight		   = fScale / 10;
+		float fWidth           = GetScreenTextWidth(szText, fScale);
+		float fHeight          = fScale / 10;
 		float fAdditionalWidth = 0.02;
 		DRAW_RECT(textPos.m_fX - (fWidth * 0.5f), textPos.m_fY + 0.015, fWidth + fAdditionalWidth, fHeight, 0, 0, 0,
-				  127, true);
+		          127, true);
 	}
 }

@@ -10,12 +10,12 @@ static void OnStart()
 
 static void OnTick()
 {
-	Ped playerPed	   = PLAYER_PED_ID();
+	Ped playerPed      = PLAYER_PED_ID();
 
-	Hash playerHash	   = GET_ENTITY_MODEL(playerPed);
+	Hash playerHash    = GET_ENTITY_MODEL(playerPed);
 
 	int allPlayerKills = 0;
-	int curKills	   = 0;
+	int curKills       = 0;
 	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
 	{
 		STAT_GET_INT(hash, &curKills, -1);

@@ -21,7 +21,7 @@ static void giveNailgun(const Ped ped)
 	Entity nailgun =
 		CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
 	ATTACH_ENTITY_TO_ENTITY(nailgun, ped, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2,
-							true);
+	                        true);
 	pedGuns[ped] = nailgun;
 }
 
@@ -44,8 +44,8 @@ static void OnTick()
 			else
 			{
 				// (kolyaventuri): Check for weapon visiblity
-				Weapon weapon	 = GET_SELECTED_PED_WEAPON(ped);
-				int weaponType	 = GET_WEAPON_DAMAGE_TYPE(weapon);
+				Weapon weapon    = GET_SELECTED_PED_WEAPON(ped);
+				int weaponType   = GET_WEAPON_DAMAGE_TYPE(weapon);
 
 				int isHoldingGun = weaponType == 3;
 				SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);

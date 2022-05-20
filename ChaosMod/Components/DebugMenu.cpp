@@ -23,7 +23,7 @@ DebugMenu::DebugMenu() : Component()
 		if (effectData.TimedType != EEffectTimedType::Permanent)
 		{
 			m_rgEffects.emplace_back(effectIdentifier,
-									 effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
+			                         effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
 		}
 	}
 
@@ -35,17 +35,17 @@ DebugMenu::DebugMenu() : Component()
 	}
 
 	std::sort(m_rgEffects.begin(), m_rgEffects.end(),
-			  [](const DebugEffect &a, const DebugEffect &b)
-			  {
+	          [](const DebugEffect &a, const DebugEffect &b)
+	          {
 				  for (int idx = 0;; idx++)
 				  {
 					  if (idx >= a.m_szEffectName.size()
-						  || std::toupper(a.m_szEffectName[idx]) < std::toupper(b.m_szEffectName[idx]))
+			              || std::toupper(a.m_szEffectName[idx]) < std::toupper(b.m_szEffectName[idx]))
 					  {
 						  return true;
 					  }
 					  else if (idx >= b.m_szEffectName.size()
-							   || std::toupper(b.m_szEffectName[idx]) < std::toupper(a.m_szEffectName[idx]))
+			                   || std::toupper(b.m_szEffectName[idx]) < std::toupper(a.m_szEffectName[idx]))
 					  {
 						  return false;
 					  }
@@ -90,7 +90,7 @@ void DebugMenu::OnRun()
 		GetComponent<EffectDispatcher>()->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
 	}
 
-	float fY				   = .1f;
+	float fY                   = .1f;
 	WORD culRemainingDrawItems = MAX_VIS_ITEMS;
 
 	for (int idx = 0; culRemainingDrawItems > 0; idx++)
@@ -179,7 +179,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	{
 		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
 
-		bool bFound		 = false;
+		bool bFound      = false;
 		while (!bFound)
 		{
 			if (cSearchChar++ == SCHAR_MAX)
@@ -193,7 +193,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 				{
 					m_iSelectedIdx = idx;
 
-					bFound		   = true;
+					bFound         = true;
 
 					break;
 				}
@@ -206,7 +206,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	{
 		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
 
-		bool bFound		 = false;
+		bool bFound      = false;
 		while (!bFound)
 		{
 			if (cSearchChar-- == SCHAR_MIN)
@@ -220,7 +220,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 				{
 					m_iSelectedIdx = idx;
 
-					bFound		   = true;
+					bFound         = true;
 
 					break;
 				}

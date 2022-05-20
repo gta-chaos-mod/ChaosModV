@@ -21,7 +21,7 @@ namespace Memory
 
 		LOG("Running hooks");
 		for (RegisteredHook *pRegisteredHook = g_pRegisteredHooks; pRegisteredHook;
-			 pRegisteredHook				 = pRegisteredHook->GetNext())
+		     pRegisteredHook                 = pRegisteredHook->GetNext())
 		{
 			if (!pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
@@ -104,8 +104,8 @@ namespace Memory
 		}
 
 		hook::pattern pattern = scanRange.m_startAddr == 0 && scanRange.m_endAddr == 0
-								  ? hook::pattern(szCopy)
-								  : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
+		                          ? hook::pattern(szCopy)
+		                          : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
 		if (!pattern.size())
 		{
 			return Handle();

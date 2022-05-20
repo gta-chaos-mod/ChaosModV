@@ -55,7 +55,7 @@ void ClearEntityPool(int iDistance)
 			{
 				Vector3 entityCoords = GET_ENTITY_COORDS(frontEntity, false);
 
-				bDoRemove			 = playerCoords.DistanceTo(entityCoords) < iDistance;
+				bDoRemove            = playerCoords.DistanceTo(entityCoords) < iDistance;
 			}
 
 			if (bDoRemove)
@@ -81,8 +81,8 @@ void ClearEntityPool(int iDistance)
 Ped CreatePoolClonePed(Ped pedToClone)
 {
 	Vector3 pos = GET_ENTITY_COORDS(pedToClone, !IS_ENTITY_DEAD(pedToClone, 0));
-	Ped clone	= CreatePoolPed(GET_PED_TYPE(pedToClone), GET_ENTITY_MODEL(pedToClone), pos.x, pos.y, pos.z + 2.f,
-								GET_ENTITY_HEADING(pedToClone));
+	Ped clone   = CreatePoolPed(GET_PED_TYPE(pedToClone), GET_ENTITY_MODEL(pedToClone), pos.x, pos.y, pos.z + 2.f,
+	                            GET_ENTITY_HEADING(pedToClone));
 
 	CLONE_PED_TO_TARGET(pedToClone, clone);
 
@@ -146,7 +146,7 @@ Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading)
 	{
 		Hash model = c_rgPedModels[g_Random.GetRandomInt(0, c_rgPedModels.size() - 1)];
 
-		ped		   = CreatePoolPed(4, model, fPosX, fPosY, fPosZ, fHeading);
+		ped        = CreatePoolPed(4, model, fPosX, fPosY, fPosZ, fHeading);
 	}
 	else
 	{
@@ -158,20 +158,20 @@ Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading)
 	for (int i = 0; i < 12; i++)
 	{
 		int drawableAmount = GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(ped, i);
-		int drawable	   = drawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, drawableAmount - 1);
+		int drawable       = drawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, drawableAmount - 1);
 
 		int textureAmount  = GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(ped, i, drawable);
-		int texture		   = textureAmount == 0 ? 0 : g_Random.GetRandomInt(0, textureAmount - 1);
+		int texture        = textureAmount == 0 ? 0 : g_Random.GetRandomInt(0, textureAmount - 1);
 
 		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_Random.GetRandomInt(0, 3));
 
 		if (i < 4)
 		{
 			int propDrawableAmount = GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(ped, i);
-			int propDrawable	   = propDrawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, propDrawableAmount - 1);
+			int propDrawable       = propDrawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, propDrawableAmount - 1);
 
 			int propTextureAmount  = GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(ped, i, drawable);
-			int propTexture		   = propTextureAmount == 0 ? 0 : g_Random.GetRandomInt(0, propTextureAmount - 1);
+			int propTexture        = propTextureAmount == 0 ? 0 : g_Random.GetRandomInt(0, propTextureAmount - 1);
 
 			SET_PED_PROP_INDEX(ped, i, propDrawable, propTexture, true);
 		}

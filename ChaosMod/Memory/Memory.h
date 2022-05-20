@@ -21,9 +21,9 @@ namespace Memory
 	struct PatternScanRange
 	{
 		DWORD64 m_startAddr = 0;
-		DWORD64 m_endAddr	= 0;
+		DWORD64 m_endAddr   = 0;
 
-		PatternScanRange()	= default;
+		PatternScanRange()  = default;
 
 		PatternScanRange(DWORD64 startAddr, DWORD64 endAddr) : m_startAddr(startAddr), m_endAddr(endAddr)
 		{

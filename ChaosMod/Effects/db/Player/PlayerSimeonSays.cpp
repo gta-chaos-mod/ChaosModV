@@ -1,5 +1,5 @@
 /*
-	Effect by Slothersbee, modified
+    Effect by Slothersbee, modified
 */
 
 #include <stdafx.h>
@@ -31,9 +31,9 @@ static std::map<std::string, std::vector<int>> actionKeys = {
 // clang-format on
 
 static int scaleForm = 0;
-static int lastTime	 = 0;
-static int waitTime	 = 2000;
-static bool dead	 = false;
+static int lastTime  = 0;
+static int waitTime  = 2000;
+static bool dead     = false;
 
 static std::string action;
 
@@ -90,7 +90,7 @@ static void ShowPopup()
 
 static void OnStart()
 {
-	action		 = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
+	action       = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
 
 	int rand_int = g_Random.GetRandomInt(0, 1);
 
@@ -104,7 +104,7 @@ static void OnStart()
 	}
 
 	lastTime = 0;
-	dead	 = false;
+	dead     = false;
 
 	ShowPopup();
 }
@@ -113,7 +113,7 @@ static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	bool kill	  = false;
+	bool kill     = false;
 	if (!opposite)
 	{
 		if (_IS_PLAYER_CAM_CONTROL_DISABLED())

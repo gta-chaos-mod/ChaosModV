@@ -15,12 +15,12 @@
 template <typename T> class PoolIterator
 {
   public:
-	T *Pool		  = nullptr;
+	T *Pool       = nullptr;
 	int32_t Index = 0;
 
 	explicit PoolIterator(T *pool, int32_t index = 0)
 	{
-		this->Pool	= pool;
+		this->Pool  = pool;
 		this->Index = index;
 	}
 
@@ -47,7 +47,7 @@ template <typename T> class PoolIterator
 		}();
 
 		__int64 ullAddr = Pool->GetAddress(Index);
-		int iHandle		= _addEntityToPoolFunc(ullAddr);
+		int iHandle     = _addEntityToPoolFunc(ullAddr);
 		return iHandle;
 	}
 

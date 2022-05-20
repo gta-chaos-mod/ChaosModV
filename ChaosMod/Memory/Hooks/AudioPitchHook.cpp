@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/Hook.h"
 
-static bool ms_bEnabledHook	 = false;
+static bool ms_bEnabledHook  = false;
 static float ms_fTargetPitch = 0;
 
 __int64 (*_OG_rage__audRequestedSettings__SetPitch)(__int64 _this, int iPitch);
@@ -21,7 +21,7 @@ static bool OnHook()
 	}
 
 	Memory::AddHook(handle.Into().Get<void>(), _HK_rage__audRequestedSettings__SetPitch,
-					&_OG_rage__audRequestedSettings__SetPitch);
+	                &_OG_rage__audRequestedSettings__SetPitch);
 
 	return true;
 }

@@ -1,5 +1,5 @@
 /*
-	Effect By OnlyRealNubs
+    Effect By OnlyRealNubs
 */
 
 #include <stdafx.h>
@@ -8,7 +8,7 @@
 
 static void OnStart()
 {
-	auto disp		= GetComponent<EffectDispatcher>();
+	auto disp       = GetComponent<EffectDispatcher>();
 	const auto &eff = disp->GetRecentEffects(5, "meta_re_invoke");
 	for (RegisteredEffect *effect : eff)
 	{

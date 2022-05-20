@@ -1,11 +1,11 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
 
 static const double maxBoxWidth = 0.35;
-static double currentBoxWidth	= 0;
+static double currentBoxWidth   = 0;
 
 static void OnStart()
 {
@@ -14,7 +14,7 @@ static void OnStart()
 
 static void OnTick()
 {
-	DRAW_RECT((currentBoxWidth / 2), 0.5, currentBoxWidth, 1, 0, 0, 0, 255, false);		// Left bar
+	DRAW_RECT((currentBoxWidth / 2), 0.5, currentBoxWidth, 1, 0, 0, 0, 255, false);     // Left bar
 	DRAW_RECT(1 - (currentBoxWidth / 2), 0.5, currentBoxWidth, 1, 0, 0, 0, 255, false); // Right bar
 	if (currentBoxWidth < maxBoxWidth)
 	{

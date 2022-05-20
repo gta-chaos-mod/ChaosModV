@@ -24,10 +24,10 @@ struct RegisteredEffect
 	EffectIdentifier m_EffectIdentifier;
 
 	void (*m_pOnStart)() = nullptr;
-	void (*m_pOnStop)()	 = nullptr;
-	void (*m_pOnTick)()	 = nullptr;
+	void (*m_pOnStop)()  = nullptr;
+	void (*m_pOnTick)()  = nullptr;
 
-	bool m_bIsRunning	 = false;
+	bool m_bIsRunning    = false;
 
   public:
 	RegisteredEffect()

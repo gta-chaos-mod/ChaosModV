@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -19,7 +19,7 @@ static Vector3 GetPropOffset(Hash propModel)
 static void OnTick()
 {
 	static int lastModelsUpdateTick = 0;
-	int currentTick					= GET_GAME_TIMER();
+	int currentTick                 = GET_GAME_TIMER();
 	if (currentTick - lastModelsUpdateTick > 1000 || availablePropModels.empty())
 	{
 		lastModelsUpdateTick = currentTick;
@@ -62,7 +62,7 @@ static void OnTick()
 
 				Vector3 offset = GetPropOffset(propModel);
 				ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f, 0.f,
-										0.f, false, false, false, false, 0, true);
+				                        0.f, false, false, false, false, 0, true);
 				SET_ENTITY_VISIBLE(prop, true, 0);
 
 				pedPropsMap[ped] = prop;
@@ -77,15 +77,15 @@ static void OnTick()
 	}
 
 	static int lastPropPedsCheckTick = 0;
-	currentTick						 = GET_GAME_TIMER();
+	currentTick                      = GET_GAME_TIMER();
 	if (currentTick - lastPropPedsCheckTick > 500)
 	{
 		lastPropPedsCheckTick = currentTick;
 
-		int count			  = 20;
+		int count             = 20;
 		for (auto it = pedPropsMap.cbegin(); it != pedPropsMap.cend();)
 		{
-			Ped ped		= it->first;
+			Ped ped     = it->first;
 			Object prop = it->second;
 			if (!DOES_ENTITY_EXIST(ped))
 			{
@@ -122,7 +122,7 @@ static void OnTick()
 				{
 					Vector3 offset = GetPropOffset(GET_ENTITY_MODEL(prop));
 					ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f,
-											0.f, 0.f, false, false, false, false, 0, true);
+					                        0.f, 0.f, false, false, false, false, 0, true);
 				}
 
 				SET_ENTITY_VISIBLE(prop, true, 0);
@@ -143,7 +143,7 @@ static void OnStop()
 {
 	for (auto &it : pedPropsMap)
 	{
-		Ped ped		= it.first;
+		Ped ped     = it.first;
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(ped))

@@ -1,10 +1,10 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
 
-static Object waterObj	= 0;
+static Object waterObj  = 0;
 static Hash displayHash = 0;
 
 static void OnStart()
@@ -14,7 +14,7 @@ static void OnStart()
 
 static void OnTick()
 {
-	Ped player			= PLAYER_PED_ID();
+	Ped player          = PLAYER_PED_ID();
 	Vector3 playerCoord = GET_ENTITY_COORDS(player, 1);
 	LoadModel(displayHash);
 	waterObj = GET_CLOSEST_OBJECT_OF_TYPE(playerCoord.x, playerCoord.y, playerCoord.z, 300, displayHash, 1, 0, 1);
@@ -34,7 +34,7 @@ static void OnTick()
 			SET_ENTITY_COORDS(waterObj, playerCoord.x, playerCoord.y, waterZ, 1, 0, 0, false);
 			if (playerCoord.z < waterZ)
 			{
-				Entity entityToPort	 = player;
+				Entity entityToPort  = player;
 				Vector3 coordsToPort = playerCoord;
 				if (IS_PED_IN_ANY_VEHICLE(player, false))
 				{

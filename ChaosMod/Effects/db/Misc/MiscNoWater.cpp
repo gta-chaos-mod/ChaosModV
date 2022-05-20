@@ -1,21 +1,21 @@
 /*
-	Effect by MoneyWasted
-	Special Thanks to Parik for the Help :)
+    Effect by MoneyWasted
+    Special Thanks to Parik for the Help :)
 */
 
 #include <stdafx.h>
 
 struct CWaterQuad
 {
-	short MinX;	  // 0x0
-	short MinY;	  // 0x2
-	short MaxX;	  // 0x4
-	short MaxY;	  // 0x6
-	uint Color;	  // 0x8
+	short MinX;   // 0x0
+	short MinY;   // 0x2
+	short MaxX;   // 0x4
+	short MaxY;   // 0x6
+	uint Color;   // 0x8
 	char unk1[4]; // 0xC
 	char unk2[4]; // 0x10
-	float Z;	  // 0x14
-	uint Flags;	  // 0x18
+	float Z;      // 0x14
+	uint Flags;   // 0x18
 };
 static_assert(sizeof(CWaterQuad) == 0x1C);
 
@@ -40,7 +40,7 @@ static void OnStart()
 		for (int i = 0; i < 821; i++) // 821 = Max Water Items
 		{
 			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
-			WaterQuads[i].Z = -1000.0f;				 // Remove Water
+			WaterQuads[i].Z = -1000.0f;              // Remove Water
 		}
 	}
 }

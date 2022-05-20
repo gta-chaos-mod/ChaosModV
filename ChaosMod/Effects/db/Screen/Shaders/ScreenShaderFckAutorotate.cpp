@@ -39,6 +39,6 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

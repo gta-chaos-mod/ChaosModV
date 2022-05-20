@@ -3,7 +3,7 @@
 #define _HANDLEFUNC [[nodiscard]] inline
 
 using DWORD64 = unsigned long long;
-using DWORD	  = unsigned long;
+using DWORD   = unsigned long;
 
 class Handle
 {

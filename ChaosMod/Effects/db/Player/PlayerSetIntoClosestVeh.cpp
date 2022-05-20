@@ -2,7 +2,7 @@
 
 static void OnStart()
 {
-	Ped playerPed	   = PLAYER_PED_ID();
+	Ped playerPed      = PLAYER_PED_ID();
 	Vehicle playerVeh  = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	Vector3 playerPos  = GET_ENTITY_COORDS(playerPed, false);
@@ -21,14 +21,14 @@ static void OnStart()
 			GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
 		if (dist < closestDist)
 		{
-			closestVeh	= veh;
+			closestVeh  = veh;
 			closestDist = dist;
 		}
 	}
 
 	if (closestVeh != -1)
 	{
-		Hash playerVehModel	  = GET_ENTITY_MODEL(playerVeh);
+		Hash playerVehModel   = GET_ENTITY_MODEL(playerVeh);
 		int playerVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(playerVehModel);
 
 		// Store all ped in current vehicle (if existant) to set them into chosen vehicle afterwards if possible

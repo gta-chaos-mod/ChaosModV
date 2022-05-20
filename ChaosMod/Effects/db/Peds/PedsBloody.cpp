@@ -1,5 +1,5 @@
 /*
-	Effect by ubscal
+    Effect by ubscal
 */
 
 #include <stdafx.h>

@@ -17,7 +17,7 @@ inline std::ofstream g_ConsoleOut;
 #define __FILENAME__                                        \
 	(strrchr(__FILE__, '\\')  ? strrchr(__FILE__, '\\') + 1 \
 	 : strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1  \
-							  : __FILE__)
+	                          : __FILE__)
 
 #define _LOG(_text, _stream) _stream << _text
 
@@ -39,8 +39,8 @@ inline std::ofstream g_ConsoleOut;
 		{                                                                                                        \
 			_LOG(_prefix << " " << _text << std::endl, g_Log);                                                   \
 			_LOG("\033[" << 90 + (std::hash<std::string> {}((std::ostringstream() << _prefix).str()) % 6) << "m" \
-						 << _prefix << "\033[0m " << _text << std::endl,                                         \
-				 std::cout);                                                                                     \
+			             << _prefix << "\033[0m " << _text << std::endl,                                         \
+			     std::cout);                                                                                     \
 		}                                                                                                        \
 	} while (0)
 

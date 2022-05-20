@@ -15,7 +15,7 @@ static void OnTickLag()
 {
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick			= GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
@@ -52,10 +52,10 @@ static void OnTickLag()
 
 			for (const auto &pair : m_toTpPeds)
 			{
-				const Ped &ped		 = pair.first;
+				const Ped &ped       = pair.first;
 
-				Vector3 vel			 = GET_ENTITY_VELOCITY(ped);
-				float heading		 = GET_ENTITY_HEADING(ped);
+				Vector3 vel          = GET_ENTITY_VELOCITY(ped);
+				float heading        = GET_ENTITY_HEADING(ped);
 
 				const Vector3 &tpPos = pair.second;
 
@@ -71,8 +71,8 @@ static void OnTickLag()
 			{
 				const Vehicle &veh = pair.first;
 
-				Vector3 vel		   = GET_ENTITY_VELOCITY(veh);
-				float heading	   = GET_ENTITY_HEADING(veh);
+				Vector3 vel        = GET_ENTITY_VELOCITY(veh);
+				float heading      = GET_ENTITY_HEADING(veh);
 				float forwardSpeed = GET_ENTITY_SPEED(veh);
 
 				// if the vehicle is reversing use a negative forward speed

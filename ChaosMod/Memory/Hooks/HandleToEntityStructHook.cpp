@@ -49,11 +49,11 @@ namespace Hooks
 		{
 			found = false;
 			for (std::unordered_map<Entity, Entity>::iterator it = ms_dictVehicleMap.begin();
-				 it != ms_dictVehicleMap.end();)
+			     it != ms_dictVehicleMap.end();)
 			{
 				if (!DOES_ENTITY_EXIST(it->second))
 				{
-					it	  = ms_dictVehicleMap.erase(it);
+					it    = ms_dictVehicleMap.erase(it);
 					found = true;
 				}
 				else

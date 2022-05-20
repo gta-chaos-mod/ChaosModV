@@ -10,9 +10,9 @@
 
 #include "Lib/scrThread.h"
 
-static bool ms_bEnabledHook						= false;
+static bool ms_bEnabledHook                     = false;
 static int ms_iOnlineVehicleMeasureEnableGlobal = 0;
-static bool ms_bSearchedForMissionStateGlobal	= false;
+static bool ms_bSearchedForMissionStateGlobal   = false;
 
 __int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
 __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
@@ -33,13 +33,13 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 					Handle handle = Memory::FindPattern(
 						"2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
 						{ pProgram->m_pCodeBlocks[i],
-						  pProgram->m_pCodeBlocks[i]
-							  + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
+					      pProgram->m_pCodeBlocks[i]
+					          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
 					if (handle.IsValid())
 					{
 						ms_iOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
 						LOG("SP online vehicle despawn mechanism successfully blocked! Hopefully? ("
-							<< ms_iOnlineVehicleMeasureEnableGlobal << ")");
+						    << ms_iOnlineVehicleMeasureEnableGlobal << ")");
 
 						break;
 					}
@@ -66,14 +66,14 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 		{
 			ms_bSearchedForMissionStateGlobal = true;
 
-			auto codeBlocksSize				  = pProgram->m_nCodeSize + 0x3FFF >> 14;
+			auto codeBlocksSize               = pProgram->m_nCodeSize + 0x3FFF >> 14;
 			for (int i = 0; i < codeBlocksSize; i++)
 			{
 				Handle handle = Memory::FindPattern(
 					"2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E",
 					{ pProgram->m_pCodeBlocks[i],
-					  pProgram->m_pCodeBlocks[i]
-						  + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
+				      pProgram->m_pCodeBlocks[i]
+				          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
 				if (handle.IsValid())
 				{
 					Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
@@ -91,7 +91,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 		// Scripthook (most likely) relies on these to run our script thread
 		// We don't want to block ourselves of course :p
 		if (strcmp(szScriptName, "main") && strcmp(szScriptName, "main_persistent")
-			&& strcmp(szScriptName, "control_thread"))
+		    && strcmp(szScriptName, "control_thread"))
 		{
 			return 0;
 		}

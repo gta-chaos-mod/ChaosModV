@@ -27,9 +27,9 @@ static bool OnHook()
 	}
 
 	// IDXGISwapChain
-	handle					  = *handle.At(6).Into().Value<DWORD64 *>();
+	handle                    = *handle.At(6).Into().Value<DWORD64 *>();
 
-	ms_pPresentAddr			  = handle.At(64).Get<void *>();
+	ms_pPresentAddr           = handle.At(64).Get<void *>();
 	OG_IDXGISwapChain_Present = *(HRESULT(**)(IDXGISwapChain *, UINT, UINT))ms_pPresentAddr;
 	Memory::Write<void *>(ms_pPresentAddr, HK_IDXGISwapChain_Present);
 

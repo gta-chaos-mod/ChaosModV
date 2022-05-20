@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -11,7 +11,7 @@ struct TemporarilyInvincibleEntity
 
 	TemporarilyInvincibleEntity(Entity _entity, int waitTime)
 	{
-		entity				 = _entity;
+		entity               = _entity;
 		endInvincibilityTick = GET_GAME_TIMER() + waitTime;
 	}
 };
@@ -49,7 +49,7 @@ static void OnTick()
 	for (Ped ped : GetAllPeds())
 	{
 		if (DOES_ENTITY_EXIST(ped) && IS_ENTITY_DEAD(ped, 0)
-			&& std::find(excludeEntities.begin(), excludeEntities.end(), ped) == excludeEntities.end())
+		    && std::find(excludeEntities.begin(), excludeEntities.end(), ped) == excludeEntities.end())
 		{
 			excludeEntities.push_back(ped);
 			Ped clone = CreatePoolClonePed(ped);
@@ -60,7 +60,7 @@ static void OnTick()
 
 				int pedSeatIndex   = -2;
 
-				int maxSeats	   = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(pedVehicle));
+				int maxSeats       = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(pedVehicle));
 				for (int i = -1; i < maxSeats; i++)
 				{
 					if (!IS_VEHICLE_SEAT_FREE(pedVehicle, i, false) && GET_PED_IN_VEHICLE_SEAT(pedVehicle, i, 0) == ped)
@@ -87,12 +87,12 @@ static void OnTick()
 	for (Vehicle veh : GetAllVehs())
 	{
 		if (DOES_ENTITY_EXIST(veh) && IS_ENTITY_DEAD(veh, 0)
-			&& std::find(excludeEntities.begin(), excludeEntities.end(), veh) == excludeEntities.end())
+		    && std::find(excludeEntities.begin(), excludeEntities.end(), veh) == excludeEntities.end())
 		{
 			excludeEntities.push_back(veh);
 			Vehicle cloneVeh = CreatePoolCloneVehicle(veh);
 
-			int maxSeats	 = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+			int maxSeats     = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 			for (int i = -1; i < maxSeats; i++)
 			{
 				if (!IS_VEHICLE_SEAT_FREE(veh, i, false))

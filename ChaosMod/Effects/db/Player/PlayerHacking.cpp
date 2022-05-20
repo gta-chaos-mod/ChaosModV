@@ -1,5 +1,5 @@
 ﻿/*
-		Effect by DrUnderscore (James), modified
+        Effect by DrUnderscore (James), modified
 */
 
 #include <stdafx.h>
@@ -9,50 +9,50 @@
 // These should be 8 characters all uppercase.
 // But there isn't anything enforcing that :^)
 const char *ROULETTE_WORDS[] = { "ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG", "TAKE_TWO", "DAVEYYYY", "MWEATHER",
-								 "RED_DEAD", "CHAOSMOD", "HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS",
-								 "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY", "ELIAS_GR", "KOLYA_VE", "LU7YOSHI",
-								 "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH", "$$WASTED",
-								 "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE",
-								 "HUGO_ONE", "GATMUN!!", "MOXI____", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
-								 "{RANDOM}", "ROULETTE", "PASS1234", "/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__",
-								 "LESTER__", "SYNFETIC" };
+	                             "RED_DEAD", "CHAOSMOD", "HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS",
+	                             "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY", "ELIAS_GR", "KOLYA_VE", "LU7YOSHI",
+	                             "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH", "$$WASTED",
+	                             "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE",
+	                             "HUGO_ONE", "GATMUN!!", "MOXI____", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
+	                             "{RANDOM}", "ROULETTE", "PASS1234", "/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__",
+	                             "LESTER__", "SYNFETIC" };
 
-const char *WIN_PHRASES[]	 = { "Rockstar: Creating realistic hacking since 1998.",
-								 "I swear that was made for a child, by a child.",
-								 "I wonder what would happen if you failed...",
-								 "I'll make it harder next time, I promise!",
-								 "https://youtube.com/watch?v=dQw4w9WgXcQ",
-								 "I'm not sure what you hacked, but it's now hacked.",
-								 "i ran out of phrases to put here. please pity me.",
-								 "I should get Linux.",
-								 "Yay, hacking!",
-								 "ping rockstargames.com",
-								 "You obviously must know something about something...",
-								 "I can read machine code!",
-								 "Well that wasn't fun",
-								 "Was that a promotion?",
-								 "We'll get right back to normal gameplay, hope you weren't doing anything important",
-								 "I use arch btw",
-								 "Vim > Emacs",
-								 "loooool cool hacker reference xdd",
-								 "You wouldn't download a car...",
-								 "Needs more blockchain",
-								 "HTML is my favorite programming language.",
-								 "Don't worry, it's not like you were mining cryptocurrencies for us...",
-								 "What? You wanted a witty win phrase? Too bad!",
-								 "sudo rm -rf /",
-								 "can you hack my friends instagram account plz?????",
-								 "Good thing I have 2FA",
-								 "/hack GTA5.exe",
-								 "Well that certainly was... something.",
-								 "Good job! You didn't lose a single time!",
-								 "Dude, that's illegal, I'm calling the cops.",
-								 "It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
-								 "GTA Online just went down... I'm sure it's unrelated.",
-								 "int* hacked = true;",
-								 "Matrix reference",
-								 "\"I'm in the mainframe\"",
-								 "I frequent r/ProgrammerHumor." };
+const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 1998.",
+                              "I swear that was made for a child, by a child.",
+                              "I wonder what would happen if you failed...",
+                              "I'll make it harder next time, I promise!",
+                              "https://youtube.com/watch?v=dQw4w9WgXcQ",
+                              "I'm not sure what you hacked, but it's now hacked.",
+                              "i ran out of phrases to put here. please pity me.",
+                              "I should get Linux.",
+                              "Yay, hacking!",
+                              "ping rockstargames.com",
+                              "You obviously must know something about something...",
+                              "I can read machine code!",
+                              "Well that wasn't fun",
+                              "Was that a promotion?",
+                              "We'll get right back to normal gameplay, hope you weren't doing anything important",
+                              "I use arch btw",
+                              "Vim > Emacs",
+                              "loooool cool hacker reference xdd",
+                              "You wouldn't download a car...",
+                              "Needs more blockchain",
+                              "HTML is my favorite programming language.",
+                              "Don't worry, it's not like you were mining cryptocurrencies for us...",
+                              "What? You wanted a witty win phrase? Too bad!",
+                              "sudo rm -rf /",
+                              "can you hack my friends instagram account plz?????",
+                              "Good thing I have 2FA",
+                              "/hack GTA5.exe",
+                              "Well that certainly was... something.",
+                              "Good job! You didn't lose a single time!",
+                              "Dude, that's illegal, I'm calling the cops.",
+                              "It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
+                              "GTA Online just went down... I'm sure it's unrelated.",
+                              "int* hacked = true;",
+                              "Matrix reference",
+                              "\"I'm in the mainframe\"",
+                              "I frequent r/ProgrammerHumor." };
 
 enum class TimerAction
 {
@@ -62,12 +62,12 @@ enum class TimerAction
 	KILL
 };
 
-static int lives			 = 0;
-static int scaleform		 = 0;
-static int timer			 = 0;
-static TimerAction act		 = TimerAction::NONE;
+static int lives             = 0;
+static int scaleform         = 0;
+static int timer             = 0;
+static TimerAction act       = TimerAction::NONE;
 static int selectInputReturn = 0;
-static bool finished		 = false;
+static bool finished         = false;
 
 static void ScaleformPushString(const char *text)
 {
@@ -116,11 +116,11 @@ static void ScaleformReset()
 
 static void OnStart()
 {
-	act				  = TimerAction::NONE;
-	timer			  = 0;
-	lives			  = 2;
+	act               = TimerAction::NONE;
+	timer             = 0;
+	lives             = 2;
 	selectInputReturn = 0;
-	finished		  = false;
+	finished          = false;
 	PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), false, 0);
 
 	scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
@@ -178,8 +178,8 @@ static void OnStart()
 				{
 				case 86: // Player succeeded in hack
 				{
-					timer		= MISC::GET_GAME_TIMER() + 2000;
-					act			= TimerAction::REMOVE;
+					timer       = MISC::GET_GAME_TIMER() + 2000;
+					act         = TimerAction::REMOVE;
 					auto phrase = g_Random.GetRandomInt(0, sizeof(WIN_PHRASES) / sizeof(WIN_PHRASES[0]) - 1);
 					AUDIO::PLAY_SOUND_FRONTEND(-1, "HACKING_SUCCESS", 0, 1);
 					GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_ROULETTE_OUTCOME");
@@ -193,15 +193,15 @@ static void OnStart()
 					if (lives-- == 0) // Out of lives
 					{
 						timer = MISC::GET_GAME_TIMER() + 2000;
-						act	  = TimerAction::KILL;
+						act   = TimerAction::KILL;
 						ScaleformRemove();
 						AUDIO::PLAY_PED_AMBIENT_SPEECH_NATIVE(PLAYER::PLAYER_PED_ID(), "GENERIC_CURSE_HIGH",
-															  "SPEECH_PARAMS_FORCE_FRONTEND", 1);
+						                                      "SPEECH_PARAMS_FORCE_FRONTEND", 1);
 					}
 					else
 					{
 						timer = MISC::GET_GAME_TIMER() + 500;
-						act	  = TimerAction::RESET;
+						act   = TimerAction::RESET;
 						GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleform, "STOP_ROULETTE");
 						ScaleformUpdateLives();
 					}
@@ -247,7 +247,7 @@ static void OnStart()
 				{
 					auto coords = ENTITY::GET_ENTITY_COORDS(ped, true);
 					FIRE::ADD_EXPLOSION(coords.x, coords.y, coords.z, ExplosionTypeStickyBomb, 500.0f, true, false,
-										3.0f, false);
+					                    3.0f, false);
 				}
 				ENTITY::SET_ENTITY_HEALTH(ped, 0, 0);
 				PLAYER::SET_PLAYER_CONTROL(PLAYER::PLAYER_ID(), true, 0);
@@ -259,7 +259,7 @@ static void OnStart()
 			}
 
 			timer = 0;
-			act	  = TimerAction::NONE;
+			act   = TimerAction::NONE;
 		}
 	}
 }

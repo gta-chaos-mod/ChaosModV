@@ -17,11 +17,11 @@ struct EffectData
 	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
-	float Weight				   = 5.f;
-	int CustomTime				   = -1;
-	int WeightMult				   = 5;
-	int ShortcutKeycode			   = 0;
-	EEffectTimedType TimedType	   = EEffectTimedType::Unk;
+	float Weight                   = 5.f;
+	int CustomTime                 = -1;
+	int WeightMult                 = 5;
+	int ShortcutKeycode            = 0;
+	EEffectTimedType TimedType     = EEffectTimedType::Unk;
 	EEffectCategory EffectCategory = EEffectCategory::None;
 	std::string GroupType;
 
@@ -65,10 +65,10 @@ struct EffectData
 inline float GetEffectWeight(const EffectData &effectData)
 {
 	const auto &effectGroup = effectData.GroupType;
-	auto effectWeight		= effectData.Weight;
+	auto effectWeight       = effectData.Weight;
 
 	return g_bEnableGroupWeighting && !effectGroup.empty() && !g_dictEffectGroups.at(effectGroup).IsPlaceholder
-			 ? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup)
-				   * g_dictEffectGroups.at(effectGroup).WeightMult
-			 : effectWeight;
+	         ? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup)
+	               * g_dictEffectGroups.at(effectGroup).WeightMult
+	         : effectWeight;
 }

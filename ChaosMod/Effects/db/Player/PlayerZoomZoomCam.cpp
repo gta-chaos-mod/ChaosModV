@@ -1,20 +1,20 @@
 /*
-	Effect by Moxi, based on code from DrUnderscore & ProfessorBiddle, cleaned by Last0xygen.
+    Effect by Moxi, based on code from DrUnderscore & ProfessorBiddle, cleaned by Last0xygen.
 */
 
 #include <stdafx.h>
-static Camera zoomCamera		  = 0;
-static float camZoom			  = 80.f;
-const static float camZoomRate	  = 0.15f;
-const static float minZoom		  = 10.f;
-const static float maxZoom		  = 120.f;
-const static float zoomMidpoint	  = (maxZoom - minZoom) / 2 + minZoom;
+static Camera zoomCamera          = 0;
+static float camZoom              = 80.f;
+const static float camZoomRate    = 0.15f;
+const static float minZoom        = 10.f;
+const static float maxZoom        = 120.f;
+const static float zoomMidpoint   = (maxZoom - minZoom) / 2 + minZoom;
 const static float zoomMultiplier = maxZoom - zoomMidpoint;
 
 static void UpdateCamera()
 {
 	Vector3 coord = GET_GAMEPLAY_CAM_COORD();
-	Vector3 rot	  = GET_GAMEPLAY_CAM_ROT(2);
+	Vector3 rot   = GET_GAMEPLAY_CAM_ROT(2);
 	SET_CAM_PARAMS(zoomCamera, coord.x, coord.y, coord.z, rot.x, rot.y, rot.z, camZoom, 0, 1, 1, 2);
 }
 
@@ -28,7 +28,7 @@ static void OnTick()
 {
 	DWORD64 curTick = GET_GAME_TIMER();
 
-	camZoom			= SIN((float)curTick * camZoomRate) * zoomMultiplier + zoomMidpoint;
+	camZoom         = SIN((float)curTick * camZoomRate) * zoomMultiplier + zoomMidpoint;
 
 	SET_CAM_ACTIVE(zoomCamera, true);
 	UpdateCamera();

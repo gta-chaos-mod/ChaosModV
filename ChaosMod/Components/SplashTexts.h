@@ -7,7 +7,7 @@
 class SplashTexts : public Component
 {
   private:
-	float m_fStartupSplashTime		= 0.f;
+	float m_fStartupSplashTime      = 0.f;
 	float m_fTwitchVotingSplashTime = 0.f;
 	float m_fClearEffectsSplashTime = 0.f;
 

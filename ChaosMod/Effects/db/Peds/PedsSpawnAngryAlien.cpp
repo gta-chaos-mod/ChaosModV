@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -9,13 +9,13 @@ static std::vector<Ped> m_peds;
 // based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {
-	static const Hash alienHash	  = GET_HASH_KEY("s_m_m_movalien_01");
+	static const Hash alienHash   = GET_HASH_KEY("s_m_m_movalien_01");
 
-	Ped playerPed				  = PLAYER_PED_ID();
-	Vector3 playerPos			  = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                 = PLAYER_PED_ID();
+	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup	  = GET_HASH_KEY("CIVMALE");
+	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;

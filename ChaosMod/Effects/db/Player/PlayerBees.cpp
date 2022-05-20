@@ -2,8 +2,8 @@
 
 // Effect by kolyaventuri
 
-static int CHANCE = 100;							  // Higher is less chance
-int match		  = g_Random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
+static int CHANCE = 100;                              // Higher is less chance
+int match         = g_Random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
 int particleId;
 
 static void OnStart()
@@ -33,8 +33,8 @@ static void ApplyVig()
 static void OnTick()
 {
 	static DWORD64 timeUntilClear = GET_GAME_TIMER();
-	Ped player					  = PLAYER_PED_ID();
-	int rand_int				  = g_Random.GetRandomInt(0, CHANCE);
+	Ped player                    = PLAYER_PED_ID();
+	int rand_int                  = g_Random.GetRandomInt(0, CHANCE);
 
 	PLAY_STREAM_FROM_PED(player);
 	if (rand_int == match)

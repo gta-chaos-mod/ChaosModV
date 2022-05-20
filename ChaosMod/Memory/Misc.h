@@ -6,10 +6,10 @@
 #include <vector>
 
 using DWORD64 = unsigned long long;
-using WORD	  = unsigned short;
-using BYTE	  = unsigned char;
+using WORD    = unsigned short;
+using BYTE    = unsigned char;
 
-using Hash	  = unsigned long;
+using Hash    = unsigned long;
 
 namespace Memory
 {
