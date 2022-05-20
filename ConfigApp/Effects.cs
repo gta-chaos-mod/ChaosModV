@@ -367,6 +367,7 @@ namespace ConfigApp
             { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
             { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
             { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
+            { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
         };
     }
 }

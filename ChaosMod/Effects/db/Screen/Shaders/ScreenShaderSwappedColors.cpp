@@ -13,31 +13,29 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
+    float4 col = HDRSampler.Sample(g_samLinear, texcoord);
 )SRC";
 
 static void OnStart()
 {
 	// Build shader source
 	std::string shaderSrcSuffix;
-	switch (g_Random.GetRandomInt(0, 3))
+	switch (g_Random.GetRandomInt(0, 4))
 	{
 	case 0:
-		shaderSrcSuffix = "return HDRSampler.Sample(g_samLinear, float2(lerp(texcoord.x >= 0.5, texcoord.x < 0.5, "
-						  "texcoord.x), texcoord.y));}";
+		shaderSrcSuffix = "col.rgb = col.brg;return col;}";
 		break;
 	case 1:
-		shaderSrcSuffix = "return HDRSampler.Sample(g_samLinear, float2(lerp(texcoord.x < 0.5, texcoord.x >= 0.5, "
-						  "texcoord.x), texcoord.y));}";
+		shaderSrcSuffix = "col.rgb = col.grb;return col;}";
 		break;
 	case 2:
-		shaderSrcSuffix =
-			"return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y >= 0.5, texcoord.y < 0.5, "
-			"texcoord.y)));}";
+		shaderSrcSuffix = "col.rgb = col.rbg;return col;}";
 		break;
 	case 3:
-		shaderSrcSuffix =
-			"return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y < 0.5, texcoord.y >= 0.5, "
-			"texcoord.y)));}";
+		shaderSrcSuffix = "col.rgb = col.bgr;return col;}";
+		break;
+	case 4:
+		shaderSrcSuffix = "col.rgb = col.gbr;return col;}";
 		break;
 	}
 
@@ -55,10 +53,9 @@ static void OnStop()
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Folded Screen",
-		.Id = "screen_foldedscreen",
+		.Name = "Swapped Colors",
+		.Id = "screen_swappedcolors",
 		.IsTimed = true,
-		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
 		.EffectGroupType = EEffectGroupType::Shader
 	}

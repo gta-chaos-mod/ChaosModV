@@ -174,11 +174,13 @@
     <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFoldedScreen.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderInvertedColors.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLocalCoop.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderRgbLand.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderSwappedColors.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
