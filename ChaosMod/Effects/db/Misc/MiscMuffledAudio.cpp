@@ -11,7 +11,7 @@ static void OnStop()
 	Hooks::ResetAudioClearness();
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Muffled Audio",
 		.Id = "misc_audio_muffled",
