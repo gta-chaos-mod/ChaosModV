@@ -113,8 +113,7 @@
                 <TabItem Header="Misc" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="137" />
-                            <ColumnDefinition Width="173"/>
+                            <ColumnDefinition Width="310" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="550" />
                             <ColumnDefinition Width="10" />
@@ -134,94 +133,94 @@
                         </Grid.RowDefinitions>
 
                         <Label Content="How often should a new effect start (in seconds)?" Grid.Row="0" Grid.Column="0"
-                               HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,7" />
-                        <TextBox x:Name="misc_user_effects_spawn_dur" Width="60" Height="20" Grid.Row="0" Grid.Column="3"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_spawn_dur" Width="60" Height="20" Grid.Row="0" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
                         <Label Content="How long should timed effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
-                               HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,7" />
-                        <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="3"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
                         <Label Content="How long should short timed effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
-                               HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,7" />
-                        <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="3"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
                         <Label Content="Random Seed (Leave empty for random seed every time)" Grid.Row="3" Grid.Column="0"
-                               HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,7" />
-                        <TextBox x:Name="misc_user_effects_random_seed" Height="20" Width="60" Grid.Row="3" Grid.Column="3"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBox x:Name="misc_user_effects_random_seed" Height="20" Width="60" Grid.Row="3" Grid.Column="2"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  MaxLength="9" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
-                        <Label Content="Timer Bar Color" Grid.Row="5" Grid.Column="1"
+                                 Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Label Content="Timer Bar Color" Grid.Row="5" Grid.Column="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,6" />
-                        <xctk:ColorPicker Name="misc_user_effects_timer_color" Width="60" Height="25" Grid.Row="5" Grid.Column="3"
+                        <xctk:ColorPicker Name="misc_user_effects_timer_color" Width="60" Height="25" Grid.Row="5" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#4040FF" ShowStandardColors="False" UsingAlphaChannel="False" Margin="0,8,0,7" />
-                        <Label Content="Effect Text Color" Grid.Row="6" Grid.Column="1"
-                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,6" />
-                        <xctk:ColorPicker x:Name="misc_user_effects_text_color" Width="60" Height="25" Grid.Row="6" Grid.Column="3"
+                        <Label Content="Effect Text Color" Grid.Row="6" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7,0,6" />
+                        <xctk:ColorPicker x:Name="misc_user_effects_text_color" Width="60" Height="25" Grid.Row="6" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#FFFFFF" ShowStandardColors="False" UsingAlphaChannel="False" Margin="0,8,0,7" />
-                        <Label Content="Effect Timer Bar Color" Grid.Row="7" Grid.Column="1"
+                        <Label Content="Effect Timer Bar Color" Grid.Row="7" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,6" />
-                        <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" Width="60" Height="25" Grid.Row="7" Grid.Column="3"
+                        <xctk:ColorPicker x:Name="misc_user_effects_effect_timer_color" Width="60" Height="25" Grid.Row="7" Grid.Column="2"
                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                           SelectedColor="#B4B4B4" ShowStandardColors="False" UsingAlphaChannel="False" Margin="0,8,0,7" />
-                        <Label Content="Don't draw timer bar" Grid.Column="3"
+                        <Label Content="Don't draw timer bar" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,0,9" />
-                        <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_drawtimer_disable" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,10,0,14" />
-                        <Label Content="Don't draw effect text" Grid.Row="1" Grid.Column="3"
+                        <Label Content="Don't draw effect text" Grid.Row="1" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,0,9" />
-                        <CheckBox x:Name="misc_user_effects_drawtext_disable" Grid.Row="1" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_drawtext_disable" Grid.Row="1" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,10,0,14" />
-                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="2" Grid.Column="3"
+                        <Label Content="Enable clear active effects shortcut (CTRL + -)" Grid.Row="2" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="2" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_clear_enable" Grid.Row="2" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="3" Grid.Column="3"
+                        <Label Content="Enable toggle mod shortcut (CTRL + L)" Grid.Row="3" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_toggle_mod_shortcut" Grid.Row="3" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_toggle_mod_shortcut" Grid.Row="3" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Grid.Row="4" Grid.Column="3"
+                        <Label Content="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Grid.Row="4" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_menu_enable" Grid.Row="4" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_menu_enable" Grid.Row="4" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Enable pause timer shortcut (CTRL + .)" Grid.Row="5" Grid.Column="3"
+                        <Label Content="Enable pause timer shortcut (CTRL + .)" Grid.Row="5" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="5" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="5" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Disable mod on startup by default" Grid.Row="6" Grid.Column="3"
+                        <Label Content="Disable mod on startup by default" Grid.Row="6" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_disable_startup" Grid.Row="6" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_disable_startup" Grid.Row="6" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Enable effect group weighting (Recommended)" Grid.Row="7" Grid.Column="3"
+                        <Label Content="Enable effect group weighting (Recommended)" Grid.Row="7" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_enable_group_weighting" Grid.Row="7" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_enable_group_weighting" Grid.Row="7" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Allow prevention of repetitive mission fails (Failsafe)" Grid.Row="8" Grid.Column="3"
+                        <Label Content="Allow prevention of repetitive mission fails (Failsafe)" Grid.Row="8" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_enable_failsafe" Grid.Row="8" Grid.Column="5"
+                        <CheckBox x:Name="misc_user_effects_enable_failsafe" Grid.Row="8" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                         <Label Content="Max amount of simultaneously running effects" Grid.Row="4" Grid.Column="0"
-                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" Grid.ColumnSpan="2" />
-                        <TextBox x:Name="misc_user_effects_max_running_effects" Height="20" Width="60" Grid.Row="4" Grid.Column="3"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
+                        <TextBox x:Name="misc_user_effects_max_running_effects" Height="20" Width="60" Grid.Row="4" Grid.Column="2"
                             HorizontalAlignment="Left" VerticalAlignment="Center"
                             MaxLength="2" PreviewTextInput="OnlyNumbersPreviewTextInput"
                             CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                             Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
-                        <Label Content="Chaos Interface Side" Grid.Row="8" Grid.Column="1"
+                        <Label Content="Chaos Interface Side" Grid.Row="8" Grid.Column="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,6" />
-                        <ComboBox x:Name="misc_user_interface_side" Width="80" Height="25" Grid.Row="8" Grid.Column="3"
+                        <ComboBox x:Name="misc_user_interface_side" Width="80" Height="25" Grid.Row="8" Grid.Column="2"
                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,8,0,7" />
                     </Grid>
                 </TabItem>
