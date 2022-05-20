@@ -119,7 +119,6 @@
     <ClCompile Include="Effects\db\Misc\MiscWeirdPitch.cpp" />
     <ClCompile Include="Effects\db\Peds\Peds2xAnimationSpeed.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBloody.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscCloneOnDeath.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="Effects\db\Screen\ScreenSickCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenSpinCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
-    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderArc.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFckAutorotate.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
@@ -255,7 +253,6 @@
     <ClCompile Include="Effects\db\Peds\PedsRagdoll.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRagdollOnTouch.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReviveNearby.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsScooterBrothers.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsRiot.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryAlien.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJesus.cpp" />
@@ -279,10 +276,8 @@
     <ClCompile Include="Effects\db\Peds\PedsSlipperyPeds.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBiker.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnJuggernaut.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsTankBois.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsMowerMates.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
