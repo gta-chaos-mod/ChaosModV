@@ -367,7 +367,10 @@ namespace ConfigApp
             { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
             { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
             { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
-            { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
+            { "screen_swappedcolors", new EffectInfo("Swapped Colors", EffectCategory.Screen, true) },
+            { "screen_screenfreakout", new EffectInfo("Screen Freakout", EffectCategory.Screen, true, true) },
+            { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
+            { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
         };
     }
