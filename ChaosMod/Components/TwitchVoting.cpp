@@ -468,7 +468,8 @@ void TwitchVoting::SendToPipe(std::string &&szMsg)
 
 void TwitchVoting::ErrorOutWithMsg(const std::string &&szMsg)
 {
-	MessageBox(NULL, reinterpret_cast<LPCWSTR>(szMsg.c_str()), L"ChaosModV Error", MB_OK | MB_ICONERROR);
+	std::wstring stemp = std::wstring(szMsg.begin(), szMsg.end());
+	MessageBox(NULL, stemp.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_hPipeHandle);
 	CloseHandle(m_hPipeHandle);
