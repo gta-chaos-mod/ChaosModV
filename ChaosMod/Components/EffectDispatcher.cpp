@@ -66,13 +66,11 @@ void EffectDispatcher::OnRun()
 
 	if (!m_bPauseTimer)
 	{
-		if (!MetaModifiers::m_bDisableChaos)
-		{
-			UpdateTimer();
-		}
 
 		UpdateMetaEffects();
 	}
+
+	UpdateTimer();
 
 	DrawTimerBar();
 	DrawEffectTexts();
@@ -80,38 +78,29 @@ void EffectDispatcher::OnRun()
 
 void EffectDispatcher::UpdateTimer()
 {
-	if (!m_bEnableNormalEffectDispatch)
+	DWORD64 ullCurrentUpdateTime = GetTickCount64();
+
+	if (!m_bEnableNormalEffectDispatch || m_bPauseTimer || MetaModifiers::m_bDisableChaos
+	    || ullCurrentUpdateTime - m_ullTimerTimer > 1000)
 	{
+		m_ullTimerTimer = ullCurrentUpdateTime;
 		return;
 	}
 
-	DWORD64 ullCurrentUpdateTime = GetTickCount64();
+	m_fTimerPercentage +=
+		(ullCurrentUpdateTime - m_ullTimerTimer) * MetaModifiers::m_fTimerSpeedModifier / m_usEffectSpawnTime / 1000;
+	m_ullTimerTimer = ullCurrentUpdateTime;
 
-	float fDelta                 = ullCurrentUpdateTime - m_ullTimerTimer;
-	if (fDelta > 1000.f)
-	{
-		m_usTimerTimerRuns++;
-
-		m_ullTimerTimer = ullCurrentUpdateTime;
-		fDelta          = 0;
-	}
-
-	if ((m_fPercentage = (fDelta + (m_usTimerTimerRuns * 1000))
-	                   / (m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * 1000))
-	        > 1.f
-	    && m_bDispatchEffectsOnTimer)
+	if (m_fTimerPercentage >= 1.f && m_bDispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
-		if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
+		for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
 		{
-			for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
-			{
-				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
+			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 		}
 
-		m_usTimerTimerRuns = 0;
+		m_fTimerPercentage = 0.f;
 	}
 }
 
@@ -258,8 +247,8 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
-	float fPercentage =
-		m_fFakeTimerBarPercentage > 0.f && m_fFakeTimerBarPercentage <= 1.f ? m_fFakeTimerBarPercentage : m_fPercentage;
+	float fPercentage = m_fFakeTimerBarPercentage > 0.f && m_fFakeTimerBarPercentage <= 1.f ? m_fFakeTimerBarPercentage
+	                                                                                        : m_fTimerPercentage;
 
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
@@ -348,7 +337,7 @@ _NODISCARD bool EffectDispatcher::ShouldDispatchEffectNow() const
 
 _NODISCARD int EffectDispatcher::GetRemainingTimerTime() const
 {
-	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
+	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * (1 - m_fTimerPercentage);
 }
 
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, const char *szSuffix, bool bAddToLog)
@@ -498,7 +487,6 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 			}
 		}
 	}
-	m_fPercentage = .0f;
 }
 
 void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
@@ -647,9 +635,8 @@ void EffectDispatcher::Reset()
 
 void EffectDispatcher::ResetTimer()
 {
-	m_ullTimerTimer    = GetTickCount64();
-	m_usTimerTimerRuns = 0;
-	m_ullEffectsTimer  = GetTickCount64();
+	m_fTimerPercentage = 0.f;
+	m_ullTimerTimer = m_ullEffectsTimer = GetTickCount64();
 }
 
 float EffectDispatcher::GetEffectTopSpace()
