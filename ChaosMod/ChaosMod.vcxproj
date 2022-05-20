@@ -171,6 +171,7 @@
     <ClCompile Include="Effects\db\Screen\ScreenSickCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenSpinCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderArc.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFckAutorotate.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
