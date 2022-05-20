@@ -118,7 +118,7 @@
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWeirdPitch.cpp" />
     <ClCompile Include="Effects\db\Peds\Peds2xAnimationSpeed.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsBloody.cpp" /
+    <ClCompile Include="Effects\db\Peds\PedsBloody.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscCloneOnDeath.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
@@ -278,7 +278,6 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnJuggernaut.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnSpaceRanger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsExplosiveCombat.cpp" />
-    <ClCompile Include="Effects\db\Peds\PedsVehiclesController.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHesoyam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIgnitePlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvincibility.cpp" />
