@@ -35,6 +35,8 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3>& rgTextColor) : Component()
 
 	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>("TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
+	m_bLeftSideInterface = g_OptionsManager.GetConfigValue<bool>("LeftSideInterface", OPTION_DEFAULT_LEFT_SIDE_INTERFACE);
+
 	m_bEnableTwitchChanceSystem = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
 	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
@@ -346,6 +348,7 @@ void TwitchVoting::OnRun()
 		}
 
 		float fY = .1f;
+		float fX = m_bLeftSideInterface ? 0.05f : 0.95f;
 		for (const auto& pChoosableEffect : m_rgEffectChoices)
 		{
 			std::ostringstream oss;
@@ -373,7 +376,8 @@ void TwitchVoting::OnRun()
 
 			oss << std::endl;
 
-			DrawScreenText(oss.str(), { .95f, fY }, .41f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true, EScreenTextAdjust::Right, { .0f, .95f }, true);
+			DrawScreenText(oss.str(), { fX, fY }, .41f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true, 
+				m_bLeftSideInterface ? EScreenTextAdjust::Left : EScreenTextAdjust::Right, { .0f, .95f }, true);
 
 			fY += .05f;
 		}

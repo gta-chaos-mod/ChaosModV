@@ -12,6 +12,7 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3>& rgTimerColor, cons
 
 	m_bDisableDrawTimerBar = g_OptionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_bDisableDrawEffectTexts = g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+	m_bLeftSideInterface = g_OptionsManager.GetConfigValue<bool>("LeftSideInterface", OPTION_DEFAULT_LEFT_SIDE_INTERFACE);
 
 	m_usEffectSpawnTime = g_OptionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 	m_usEffectTimedDur = g_OptionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
@@ -289,7 +290,7 @@ void EffectDispatcher::DrawEffectTexts()
 			name = effect.m_szName;
 		}
 
-		if (MetaModifiers::m_bFlipChaosUI)
+		if (m_bLeftSideInterface ^ MetaModifiers::m_bFlipChaosUI)
 		{
 			DrawScreenText(name, { .085f, fPosY }, .47f, { m_rgTextColor[0], m_rgTextColor[1], m_rgTextColor[2] }, true,
 				EScreenTextAdjust::Left, { .0f, .915f });
@@ -302,18 +303,21 @@ void EffectDispatcher::DrawEffectTexts()
 
 		if (effect.m_fTimer > 0)
 		{
+			float posX = 0.96f;
+			if (m_bLeftSideInterface ^ MetaModifiers::m_bFlipChaosUI)
+			{
+				posX = 1 - posX;
+			}
+
+			float timerX = effect.m_fTimer / effect.m_fMaxTime;
 			if (MetaModifiers::m_bFlipChaosUI)
 			{
-				DRAW_RECT(.04f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-				DRAW_RECT(.04f, fPosY + .0185f, .048f * (1.f - (effect.m_fTimer / effect.m_fMaxTime)), .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
-					m_rgEffectTimerColor[2], 255, false);
+				timerX = 1 - timerX;
 			}
-			else
-			{
-				DRAW_RECT(.96f, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-				DRAW_RECT(.96f, fPosY + .0185f, .048f * effect.m_fTimer / effect.m_fMaxTime, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
-					m_rgEffectTimerColor[2], 255, false);
-			}
+
+			DRAW_RECT(posX, fPosY + .0185f, .05f, .019f, 0, 0, 0, 127, false);
+			DRAW_RECT(posX, fPosY + .0185f, .048f * timerX, .017f, m_rgEffectTimerColor[0], m_rgEffectTimerColor[1],
+				m_rgEffectTimerColor[2], 255, false);
 		}
 
 		fPosY += effectSpacing;

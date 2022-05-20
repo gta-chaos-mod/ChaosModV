@@ -61,6 +61,7 @@ private:
 
 	bool m_bDisableDrawTimerBar = false;
 	bool m_bDisableDrawEffectTexts = false;
+	bool m_bLeftSideInterface = false;
 
 	WORD m_usEffectSpawnTime = 0;
 	WORD m_usEffectTimedDur = 0;

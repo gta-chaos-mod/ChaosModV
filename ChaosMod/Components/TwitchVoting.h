@@ -58,6 +58,8 @@ private:
 	bool m_bNoVoteRound = false;
 	bool m_bAlternatedVotingRound = false;
 
+	bool m_bLeftSideInterface = false;
+
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 
 	bool m_bEnableTwitchChanceSystem;

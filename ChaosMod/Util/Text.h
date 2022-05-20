@@ -67,6 +67,19 @@ inline void DrawScreenText(const std::string& szText, const ScreenTextVector& te
 		float fWidth = GetScreenTextWidth(szText, fScale);
 		float fHeight = fScale / 10;
 		float fAdditionalWidth = 0.02;
-		DRAW_RECT(textPos.m_fX - (fWidth * 0.5f), textPos.m_fY + 0.015, fWidth + fAdditionalWidth, fHeight, 0, 0, 0, 127, true);
+		float fX = 0;
+		switch (eTextAdjust)
+		{
+		case EScreenTextAdjust::Center:
+			fX = textPos.m_fX;
+			break;
+		case EScreenTextAdjust::Left:
+			fX = textPos.m_fX + (fWidth * 0.5f);
+			break;
+		case EScreenTextAdjust::Right:
+			fX = textPos.m_fX - (fWidth * 0.5f);
+			break;
+		}
+		DRAW_RECT(fX, textPos.m_fY + 0.015, fWidth + fAdditionalWidth, fHeight, 0, 0, 0, 127, true);
 	}
 }
