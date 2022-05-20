@@ -249,9 +249,6 @@ namespace Main
 	void OnCleanup()
 	{
 		LuaScripts::Unload();
-
-		Hooks::ResetShader();
-		Memory::InvalidateShaderCache();
 	}
 
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,

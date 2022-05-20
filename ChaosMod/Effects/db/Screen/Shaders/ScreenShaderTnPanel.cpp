@@ -38,7 +38,7 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Name = "TN Panel",
 		.Id = "screen_tnpanel",
 		.IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectCategory = EEffectCategory::Shader,
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );
