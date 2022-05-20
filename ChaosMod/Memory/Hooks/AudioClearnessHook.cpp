@@ -24,7 +24,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, "rage__audRequestedSettings__SetClearness");
+static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__SetClearness");
 
 namespace Hooks
 {
