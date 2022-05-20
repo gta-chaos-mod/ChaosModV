@@ -1,6 +1,8 @@
 #include <stdafx.h>
 
-static const char* ms_szShaderSrc = R"SRC(
+#include "Memory/Hooks/ShaderHook.h"
+
+static const char *ms_szShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -11,9 +13,8 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
+	texcoord.x = saturate(texcoord.x % texcoord.y);
     float4 col = HDRSampler.Sample(g_samLinear, texcoord);
-    texcoord.x = col.r;
-    col = HDRSampler.Sample(g_samLinear, texcoord);
 
     return col;
 }
@@ -21,21 +22,21 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-    Hooks::OverrideScreenShader(ms_szShaderSrc);
+	Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
 }
 
 static void OnStop()
 {
-    Hooks::ResetScreenShader();
+	Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FOURTHDIMENSION, OnStart, OnStop, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Fourth Dimension",
-		.Id = "misc_fourthdimension",
+		.Name = "Shattered Screen",
+		.Id = "screen_shatteredscreen",
 		.IsTimed = true,
-        .IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

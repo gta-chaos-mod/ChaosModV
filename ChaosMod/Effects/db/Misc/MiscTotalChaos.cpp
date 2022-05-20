@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static DWORD64 m_anchorTick;
 
 static void OnStart()
@@ -18,7 +20,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	for (Vehicle veh : GetAllVehs())
@@ -34,7 +36,7 @@ static void OnTick()
 		Memory::ApplyForceToEntity(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
 	}
 
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	if (lastTick < curTick - 100)
@@ -59,7 +61,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -94,7 +96,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_TOTAL_CHAOS, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Doomsday",
 		.Id = "chaosmode",

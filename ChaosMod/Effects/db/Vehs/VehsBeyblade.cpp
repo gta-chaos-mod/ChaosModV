@@ -1,8 +1,10 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
+
+#include "Memory/Physics.h"
 
 static void OnStop()
 {
@@ -15,13 +17,14 @@ static void OnStop()
 
 static void OnTick()
 {
-	int count = 5;
+	int count                = 5;
 
-	float force = 100;
+	float force              = 100;
 	float velocityMultiplier = 3;
 	for (Vehicle veh : GetAllVehs())
 	{
-		bool doBeyblade = IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
+		bool doBeyblade =
+			IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
 
 		if (doBeyblade)
 		{
@@ -51,7 +54,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_BEYBLADE, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Beyblades",
 		.Id = "vehs_beyblade",

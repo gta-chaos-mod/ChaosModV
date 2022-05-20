@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -19,7 +19,7 @@ static Vector3 GetPropOffset(Hash propModel)
 static void OnTick()
 {
 	static int lastModelsUpdateTick = 0;
-	int currentTick = GET_GAME_TIMER();
+	int currentTick                 = GET_GAME_TIMER();
 	if (currentTick - lastModelsUpdateTick > 1000 || availablePropModels.empty())
 	{
 		lastModelsUpdateTick = currentTick;
@@ -48,7 +48,8 @@ static void OnTick()
 		{
 			if (DOES_ENTITY_EXIST(ped) && !IS_PED_A_PLAYER(ped) && pedPropsMap.count(ped) == 0)
 			{
-				// Rather than using a predefined list of prop hashes, get a random existing prop and use that as the model
+				// Rather than using a predefined list of prop hashes, get a random existing prop and use that as the
+				// model
 				Hash propModel = availablePropModels[g_Random.GetRandomInt(0, availablePropModels.size() - 1)];
 				LoadModel(propModel);
 
@@ -60,7 +61,8 @@ static void OnTick()
 				SET_ENTITY_VISIBLE(ped, false, 0);
 
 				Vector3 offset = GetPropOffset(propModel);
-				ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f, 0.f, 0.f, false, false, false, false, 0, true);
+				ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f, 0.f,
+				                        0.f, false, false, false, false, 0, true);
 				SET_ENTITY_VISIBLE(prop, true, 0);
 
 				pedPropsMap[ped] = prop;
@@ -75,15 +77,15 @@ static void OnTick()
 	}
 
 	static int lastPropPedsCheckTick = 0;
-	currentTick = GET_GAME_TIMER();
+	currentTick                      = GET_GAME_TIMER();
 	if (currentTick - lastPropPedsCheckTick > 500)
 	{
 		lastPropPedsCheckTick = currentTick;
 
-		int count = 20;
+		int count             = 20;
 		for (auto it = pedPropsMap.cbegin(); it != pedPropsMap.cend();)
 		{
-			Ped ped = it->first;
+			Ped ped     = it->first;
 			Object prop = it->second;
 			if (!DOES_ENTITY_EXIST(ped))
 			{
@@ -94,7 +96,8 @@ static void OnTick()
 
 				it = pedPropsMap.erase(it);
 			}
-			else if (IS_PED_A_PLAYER(ped)) // If player has a prop attached to them (this can happen after switching characters)
+			else if (IS_PED_A_PLAYER(
+						 ped)) // If player has a prop attached to them (this can happen after switching characters)
 			{
 				SET_ENTITY_VISIBLE(ped, true, 0);
 
@@ -118,7 +121,8 @@ static void OnTick()
 				if (!IS_ENTITY_ATTACHED_TO_ENTITY(prop, ped))
 				{
 					Vector3 offset = GetPropOffset(GET_ENTITY_MODEL(prop));
-					ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f, 0.f, 0.f, false, false, false, false, 0, true);
+					ATTACH_ENTITY_TO_ENTITY(prop, ped, GET_PED_BONE_INDEX(ped, 0x0), offset.x, offset.y, offset.z, 0.f,
+					                        0.f, 0.f, false, false, false, false, 0, true);
 				}
 
 				SET_ENTITY_VISIBLE(prop, true, 0);
@@ -137,9 +141,9 @@ static void OnTick()
 
 static void OnStop()
 {
-	for (auto& it : pedPropsMap)
+	for (auto &it : pedPropsMap)
 	{
-		Ped ped = it.first;
+		Ped ped     = it.first;
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(ped))
@@ -156,11 +160,12 @@ static void OnStop()
 	pedPropsMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PROP_HUNT, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Hunt",
 		.Id = "peds_prop_hunt",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_INVISIBLE }
+		.IncompatibleWith = { "peds_ghost" }
 	}
 );

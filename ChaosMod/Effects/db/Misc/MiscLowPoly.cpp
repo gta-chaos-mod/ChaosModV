@@ -14,12 +14,13 @@ static void OnTick()
 	{
 		if (!IS_PED_A_PLAYER(ped) && !IS_ENTITY_A_MISSION_ENTITY(ped))
 		{
-			FORCE_PED_MOTION_STATE(ped, 0xbac0f10b, 0, 0, 0);	// 0xbac0f10b is "nothing" according to Script Hook V
+			FORCE_PED_MOTION_STATE(ped, 0xbac0f10b, 0, 0, 0); // 0xbac0f10b is "nothing" according to Script Hook V
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_POLY, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Low Render Distance",
 		.Id = "world_lowpoly",

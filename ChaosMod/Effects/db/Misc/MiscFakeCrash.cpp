@@ -1,20 +1,24 @@
 #include <stdafx.h>
 
+#include "Components/EffectDispatcher.h"
+
 static void SleepAllThreads(DWORD ms)
 {
 	std::vector<HANDLE> threads;
 
 	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-	
+
 	THREADENTRY32 threadEntry {};
 	threadEntry.dwSize = sizeof(threadEntry);
 
 	Thread32First(handle, &threadEntry);
 	do
 	{
-		if (threadEntry.dwSize >= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(threadEntry.th32OwnerProcessID))
+		if (threadEntry.dwSize
+		    >= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(threadEntry.th32OwnerProcessID))
 		{
-			if (threadEntry.th32ThreadID != GetCurrentThreadId() && threadEntry.th32OwnerProcessID == GetCurrentProcessId())
+			if (threadEntry.th32ThreadID != GetCurrentThreadId()
+			    && threadEntry.th32OwnerProcessID == GetCurrentProcessId())
 			{
 				HANDLE thread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
 
@@ -23,8 +27,7 @@ static void SleepAllThreads(DWORD ms)
 		}
 
 		threadEntry.dwSize = sizeof(threadEntry);
-	}
-	while (Thread32Next(handle, &threadEntry));
+	} while (Thread32Next(handle, &threadEntry));
 
 	for (HANDLE thread : threads)
 	{
@@ -64,7 +67,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CRASH, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Crash",
 		.Id = "misc_fakecrash"

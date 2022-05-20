@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())
@@ -11,7 +13,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_HONK_BOOSTING, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Honk Boosting",
 		.Id = "vehs_honkboost",

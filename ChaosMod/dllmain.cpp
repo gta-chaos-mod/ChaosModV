@@ -1,5 +1,10 @@
-#include "Main.h"
 #include <stdafx.h>
+
+#include "Main.h"
+
+#include "Memory/Memory.h"
+
+#include "Util/CrashHandler.h"
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
@@ -14,18 +19,14 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
-		presentCallbackRegister((PresentCallback)Main::OnPresent);
-
 		break;
 	case DLL_PROCESS_DETACH:
-		Memory::Uninit();
 		Main::OnCleanup();
+		Memory::Uninit();
 
 		scriptUnregister(hInstance);
 
 		keyboardHandlerUnregister(Main::OnKeyboardInput);
-
-		presentCallbackUnregister((PresentCallback)Main::OnPresent);
 
 		if (GetConsoleWindow())
 		{

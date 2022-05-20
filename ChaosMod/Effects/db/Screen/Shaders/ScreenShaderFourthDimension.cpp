@@ -1,6 +1,8 @@
 #include <stdafx.h>
 
-static const char* ms_szShaderSrc = R"SRC(
+#include "Memory/Hooks/ShaderHook.h"
+
+static const char *ms_szShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -12,7 +14,8 @@ SamplerState g_samLinear : register(s5)
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
     float4 col = HDRSampler.Sample(g_samLinear, texcoord);
-    col.rgb = col.brg;
+    texcoord.x = col.r;
+    col = HDRSampler.Sample(g_samLinear, texcoord);
 
     return col;
 }
@@ -20,20 +23,22 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-    Hooks::OverrideScreenShader(ms_szShaderSrc);
+	Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
 }
 
 static void OnStop()
 {
-    Hooks::ResetScreenShader();
+	Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_INVERTEDCOLORS, OnStart, OnStop, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Inverted Colors",
-		.Id = "misc_invertedcolors",
+		.Name = "Fourth Dimension",
+		.Id = "screen_fourthdimension",
 		.IsTimed = true,
+		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );
