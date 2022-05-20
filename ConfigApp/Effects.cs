@@ -370,7 +370,10 @@ namespace ConfigApp
             { "screen_swappedcolors", new EffectInfo("Swapped Colors", EffectCategory.Screen, true) },
             { "screen_screenfreakout", new EffectInfo("Screen Freakout", EffectCategory.Screen, true, true) },
             { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
-            { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
+            { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },            
+            { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
+            { "screen_blue", new EffectInfo("I'm Blue", EffectCategory.Screen, true, true) },
+            { "screen_red", new EffectInfo("Bloody Hell", EffectCategory.Screen, true, true) },
         };
     }
 }
