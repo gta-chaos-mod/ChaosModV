@@ -55,11 +55,17 @@ static void OnStart()
 		GetComponent<EffectDispatcher>()->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 	}
 
-	SleepAllThreads(500);
+	WAIT(0);
 
-	WAIT(500);
+	if (g_Random.GetRandomInt(0, 1))
+	{
+		int delay = g_Random.GetRandomInt(250, 2000);
 
-	SleepAllThreads(g_Random.GetRandomInt(3000, 5000));
+		SleepAllThreads(delay);
+		WAIT(delay);
+	}
+
+	SleepAllThreads(g_Random.GetRandomInt(3000, 10000));
 
 	if (fakeTimer)
 	{
