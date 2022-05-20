@@ -1,21 +1,21 @@
 #pragma once
 
-#include "Memory.h"
 #include "Handle.h"
+#include "Memory.h"
 
 #include <vector>
 
 using DWORD64 = unsigned long long;
-using WORD = unsigned short;
-using BYTE = unsigned char;
+using WORD    = unsigned short;
+using BYTE    = unsigned char;
 
-using Hash = unsigned long;
+using Hash    = unsigned long;
 
 namespace Memory
 {
 	inline void SetSkyDisabled(bool bState)
 	{
-		static BYTE* c_pucPatchByte = nullptr;
+		static BYTE *c_pucPatchByte = nullptr;
 
 		if (!c_pucPatchByte)
 		{

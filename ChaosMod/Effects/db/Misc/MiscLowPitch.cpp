@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/AudioPitchHook.h"
 
-//Effect by ProfessorBiddle, but the code is pretty much copied and pasted
+// Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
 static int ms_fTargetPitch;
 
@@ -21,7 +21,8 @@ static void OnTick()
 	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",

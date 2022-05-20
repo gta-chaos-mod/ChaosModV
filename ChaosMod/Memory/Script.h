@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Memory.h"
-#include "Handle.h"
 #include "../Lib/scrThread.h"
 #include "../Util/Logging.h"
+#include "Handle.h"
+#include "Memory.h"
 
 using Hash = unsigned long;
 
 namespace Memory
 {
 	// Thanks to rainbomizer for this one!
-	inline rage::scrProgram* ScriptThreadToProgram(rage::scrThread* pThread)
+	inline rage::scrProgram *ScriptThreadToProgram(rage::scrThread *pThread)
 	{
 		if (!pThread)
 		{
@@ -29,14 +29,14 @@ namespace Memory
 			return handle;
 		}();
 
-		static auto scrProgramRegistry__FindProgramByHash = []() -> rage::scrProgram*(*)(DWORD64, Hash)
+		static auto scrProgramRegistry__FindProgramByHash = []() -> rage::scrProgram *(*)(DWORD64, Hash)
 		{
 			if (!sharedHandle.IsValid())
 			{
 				return nullptr;
 			}
 
-			return sharedHandle.At(14).Into().Get<rage::scrProgram*(DWORD64, Hash)>();
+			return sharedHandle.At(14).Into().Get<rage::scrProgram *(DWORD64, Hash)>();
 		}();
 
 		static auto scrProgramDirectory = []() -> DWORD64

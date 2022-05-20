@@ -1,16 +1,15 @@
 /*
-	Effect by DrUnderscore (James), modified
+    Effect by DrUnderscore (James), modified
 */
 
 #include <stdafx.h>
 
-static const char* TV_PLAYLISTS[] =
-{
-	"PL_WEB_KFLF", // Kung Fu Rainbow Lazerforce
+static const char *TV_PLAYLISTS[] = {
+	"PL_WEB_KFLF",    // Kung Fu Rainbow Lazerforce
 	"PL_WEB_RANGERS", // Republican Space Rangers
-	"PL_WEB_PRB2", // Princess Robot Bubblegum
-	"PL_WEB_FOS", // Fame or Shame
-	"PL_WEB_CAS", // Diamond Casino DLC intro
+	"PL_WEB_PRB2",    // Princess Robot Bubblegum
+	"PL_WEB_FOS",     // Fame or Shame
+	"PL_WEB_CAS",     // Diamond Casino DLC intro
 	"PL_WEB_FOS",
 	"PL_WEB_HOWITZER", // Howitzer Documentary
 	"PL_WEB_KFLF",
@@ -34,7 +33,7 @@ static const char* TV_PLAYLISTS[] =
 	"PL_CINEMA_ARTHOUSE",
 	"PL_CINEMA_ACTION",
 	"PL_CINEMA_MULTIPLAYER",
-	"PL_CINEMA_MULTIPLAYER_NO_MELTDOWN"
+	"PL_CINEMA_MULTIPLAYER_NO_MELTDOWN",
 };
 
 static float ms_fPosX = 0.f;
@@ -42,7 +41,7 @@ static float ms_fPosY = 0.f;
 
 static void OnStart()
 {
-	const char* szPlaylist = TV_PLAYLISTS[g_Random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1)];
+	const char *szPlaylist = TV_PLAYLISTS[g_Random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1)];
 
 	GRAPHICS::SET_TV_CHANNEL_PLAYLIST_AT_HOUR(0, szPlaylist, g_Random.GetRandomInt(0, 23));
 	GRAPHICS::SET_TV_AUDIO_FRONTEND(true);
@@ -69,7 +68,8 @@ static void OnTick()
 	GRAPHICS::DRAW_TV_CHANNEL(ms_fPosX, ms_fPosY, 0.3f, 0.3f, 0.0f, 255, 255, 255, 255);
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "On-Demand TV",
 		.Id = "player_on_demand_cartoon",

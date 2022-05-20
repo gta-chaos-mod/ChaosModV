@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char* ms_szShaderSrc = R"SRC(
+static const char *ms_szShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -23,18 +23,19 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-    Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
+	Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
 }
 
 static void OnStop()
 {
-    Hooks::ResetShader();
+	Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Fourth Dimension",
-		.Id = "misc_fourthdimension",
+		.Id = "screen_fourthdimension",
 		.IsTimed = true,
         .IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
