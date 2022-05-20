@@ -179,6 +179,7 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLocalCoop.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderRgbLand.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
