@@ -33,6 +33,12 @@ namespace ConfigApp
         {
             InitializeComponent();
 
+            misc_user_interface_side.ItemsSource = new string[]
+            {
+                "Right",
+                "Left"
+            };
+
             twitch_user_overlay_mode.ItemsSource = new string[]
             {
                 "Chat Messages",
@@ -143,6 +149,7 @@ namespace ConfigApp
             {
                 misc_user_effects_effect_timer_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_configFile.ReadValue("EffectTimedTimerColor"));
             }
+            misc_user_interface_side.SelectedIndex = m_configFile.ReadValueBool("LeftSideInterface", false) ? 1 : 0;
             misc_user_effects_disable_startup.IsChecked = m_configFile.ReadValueBool("DisableStartup", false);
             misc_user_effects_enable_group_weighting.IsChecked = m_configFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
             misc_user_effects_enable_failsafe.IsChecked = m_configFile.ReadValueBool("EnableFailsafe", true);
@@ -168,6 +175,7 @@ namespace ConfigApp
             m_configFile.WriteValue("EffectTimerColor", misc_user_effects_timer_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTextColor", misc_user_effects_text_color.SelectedColor.ToString());
             m_configFile.WriteValue("EffectTimedTimerColor", misc_user_effects_effect_timer_color.SelectedColor.ToString());
+            m_configFile.WriteValue("LeftSideInterface", misc_user_interface_side.SelectedIndex);
             m_configFile.WriteValue("DisableStartup", misc_user_effects_disable_startup.IsChecked.Value);
             m_configFile.WriteValue("EnableGroupWeightingAdjustments", misc_user_effects_enable_group_weighting.IsChecked.Value);
             m_configFile.WriteValue("EnableFailsafe", misc_user_effects_enable_failsafe.IsChecked.Value);

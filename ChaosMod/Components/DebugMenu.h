@@ -29,6 +29,7 @@ class DebugMenu : public Component
 
 	int m_iSelectedIdx     = 0;
 	bool m_bVisible        = false;
+	bool m_bRightSide      = false;
 
 	DWORD m_ulRepeatTime   = 0;
 	bool m_bDispatchEffect = false;

@@ -218,6 +218,10 @@
                             MaxLength="2" PreviewTextInput="OnlyNumbersPreviewTextInput"
                             CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                             Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
+                        <Label Content="Chaos Interface Side" Grid.Row="8" Grid.Column="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,6" />
+                        <ComboBox x:Name="misc_user_interface_side" Width="80" Height="25" Grid.Row="8" Grid.Column="2"
+                            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,8,0,7" />
                     </Grid>
                 </TabItem>
 

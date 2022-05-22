@@ -61,8 +61,9 @@ class EffectDispatcher : public Component
 	std::array<BYTE, 3> m_rgTextColor;
 	std::array<BYTE, 3> m_rgEffectTimerColor;
 
-	bool m_bDisableDrawTimerBar          = false;
-	bool m_bDisableDrawEffectTexts       = false;
+	bool m_bDisableDrawTimerBar    = false;
+	bool m_bDisableDrawEffectTexts = false;
+	bool m_bLeftSideInterface      = false;
 
 	WORD m_usEffectSpawnTime             = 0;
 	WORD m_usEffectTimedDur              = 0;

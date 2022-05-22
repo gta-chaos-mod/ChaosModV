@@ -11,6 +11,8 @@
 DebugMenu::DebugMenu() : Component()
 {
 	m_bIsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	m_bRightSide = g_OptionsManager.GetConfigValue<bool>("LeftSideInterface", OPTION_DEFAULT_LEFT_SIDE_INTERFACE);
+
 	if (!m_bIsEnabled)
 	{
 		return;
@@ -90,7 +92,8 @@ void DebugMenu::OnRun()
 		GetComponent<EffectDispatcher>()->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
 	}
 
-	float fY                   = .1f;
+	float fY = .1f;
+	float fX = m_bRightSide ? .9f : .1f;
 	WORD culRemainingDrawItems = MAX_VIS_ITEMS;
 
 	for (int idx = 0; culRemainingDrawItems > 0; idx++)
@@ -115,18 +118,18 @@ void DebugMenu::OnRun()
 
 		if (idx == m_iSelectedIdx)
 		{
-			DRAW_RECT(.1f, fY, .2f, .05f, 255, 255, 255, 200, true);
+			DRAW_RECT(fX, fY, .2f, .05f, 255, 255, 255, 200, true);
 
 			SET_TEXT_COLOUR(0, 0, 0, 255);
 		}
 		else
 		{
-			DRAW_RECT(.1f, fY, .2f, .05f, 0, 0, 0, 200, true);
+			DRAW_RECT(fX, fY, .2f, .05f, 0, 0, 0, 200, true);
 
 			SET_TEXT_COLOUR(255, 255, 255, 255);
 		}
 
-		END_TEXT_COMMAND_DISPLAY_TEXT(.1f, fY - .0125f, 0);
+		END_TEXT_COMMAND_DISPLAY_TEXT(fX, fY - .0125f, 0);
 
 		fY += .05f;
 		culRemainingDrawItems--;
