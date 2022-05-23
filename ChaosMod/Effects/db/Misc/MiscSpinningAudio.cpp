@@ -4,12 +4,24 @@
 #include "Util/Types.h"
 
 static float angle = 0.f;
+static int speedMulti = 1.f;
+
+static bool clockwise = true;
+
+static void OnStart()
+{
+	speedMulti = g_Random.GetRandomInt(1, 5);
+	clockwise = g_Random.GetRandomBool();
+}
 
 static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
 	Hooks::SetAudioAngleFromEntity(player, angle);
-	angle += 4.f;
+	if (clockwise)
+		angle += 1.f * speedMulti;
+	else
+		angle -= 1.f * speedMulti;
 }
 
 static void OnStop()
@@ -18,7 +30,7 @@ static void OnStop()
 	Hooks::ResetAudioPostionHook();
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Spinning Audio",
 		.Id = "misc_spinning_audio",

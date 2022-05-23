@@ -27,6 +27,11 @@ public:
 		std::uniform_real_distribution<float> distr(fLower, fUpper);
 		return distr(m_Random);
 	}
+
+	inline bool GetRandomBool()
+	{
+		return (bool)GetRandomInt(0, 1);
+	}
 };
 
 inline Random g_Random;
