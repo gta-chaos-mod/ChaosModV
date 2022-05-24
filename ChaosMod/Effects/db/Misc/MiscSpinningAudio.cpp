@@ -22,6 +22,9 @@ static void OnTick()
 		angle += 1.f * speedMulti;
 	else
 		angle -= 1.f * speedMulti;
+
+	if (angle > 359.f)
+		angle = 0.f;
 }
 
 static void OnStop()
