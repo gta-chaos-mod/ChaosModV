@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char* ms_szShaderSrc = R"SRC(
+static const char *ms_szShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -13,31 +13,31 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
-    float prevx = texcoord.x;
-    texcoord.x = 1.0 - texcoord.y;
-    texcoord.y = prevx;
+	texcoord.x = saturate(sin(texcoord.x * 1.1 * sin(texcoord.y * 1.1)));
+    float4 col = HDRSampler.Sample(g_samLinear, texcoord);
 
-    return HDRSampler.Sample(g_samLinear, texcoord);
+    return col;
 }
 )SRC";
 
 static void OnStart()
 {
-    Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
+	Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
 }
 
 static void OnStop()
 {
-    Hooks::ResetShader();
+	Hooks::ResetShader();
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Goddamn Auto-Rotate",
-		.Id = "misc_fckautorotate",
+		.Name = "Warped Camera",
+		.Id = "screen_warpedcam",
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

@@ -12,7 +12,8 @@ static void OnTick()
 	Hooks::SetAudioPitch(g_Random.GetRandomInt(-900, 2000));
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Weird Pitch",
 		.Id = "misc_weirdpitch",

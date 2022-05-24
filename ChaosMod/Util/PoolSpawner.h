@@ -1,8 +1,8 @@
 #pragma once
 
-using Ped = int;
+using Ped     = int;
 using Vehicle = int;
-using Hash = unsigned long;
+using Hash    = unsigned long;
 
 void ClearEntityPool(int iDistance = 0);
 

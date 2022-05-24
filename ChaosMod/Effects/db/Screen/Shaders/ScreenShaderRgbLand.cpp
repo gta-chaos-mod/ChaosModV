@@ -1,9 +1,9 @@
 #include <stdafx.h>
 
-#include "Memory/Snow.h"
 #include "Memory/Hooks/ShaderHook.h"
+#include "Memory/Snow.h"
 
-static const char* ms_szShaderSrc = R"SRC(
+static const char *ms_szShaderSrc = R"SRC(
 cbuffer misc_globals : register(b2)
 {
     float4 globalFade;                 // Offset:    0 Size:    16 [unused]
@@ -33,7 +33,7 @@ cbuffer misc_globals : register(b2)
 
 float rgb(float mult)
 {
-    return (sin(globalScalars.x * mult) + 1) * 0.5;
+    return (sin(globalScalars.x * globalScalars2.x * mult) + 1) * 0.5;
 }
 
 float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOORD1) : SV_Target0
@@ -44,26 +44,27 @@ float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOOR
 
 static void OnStart()
 {
-    Hooks::OverrideShader(EOverrideShaderType::Snow, ms_szShaderSrc);
+	Hooks::OverrideShader(EOverrideShaderType::Snow, ms_szShaderSrc);
 }
 
 static void OnStop()
 {
-    Memory::SetSnow(false);
-    Hooks::ResetShader();
+	Memory::SetSnow(false);
+	Hooks::ResetShader();
 }
 
 static void OnTick()
 {
-    Memory::SetSnow(true);
+	Memory::SetSnow(true);
 }
 
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
-	  {
-        .Name = "RGB Land",
-        .Id = "misc_rgbland",
-        .IsTimed = true,
-        .EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
-	  }
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+	{
+		.Name = "RGB Land",
+		.Id = "screen_rgbland",
+		.IsTimed = true,
+		.EffectCategory = EEffectCategory::Shader,
+		.EffectGroupType = EEffectGroupType::Shader
+	}
 );
