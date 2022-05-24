@@ -51,6 +51,8 @@ struct Vec3V
 		this->w = w;
 	}
 
+	Vec3V() = default;
+
 	Vec3V Init(float x, float y, float z, float w)
 	{
 		return Vec3V(x, y, z, w);
@@ -166,9 +168,9 @@ struct Vector3
 		return this->x == 0 && this->y == 0 && this->z == 0;
 	}
 
-	Vec3V* GetInternal()
+	Vec3V GetInternal()
 	{
-		return new Vec3V(this->x, this->y, this->z, 0.f);
+		return Vec3V(this->x, this->y, this->z, 0.f);
 	}
 
 	static Vector3 FromInternal(Vec3V* val)

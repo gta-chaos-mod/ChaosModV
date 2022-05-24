@@ -20,7 +20,7 @@ static Vector3 ms_vTargetPosition;
 __int64(*_OG_rage__audRequestedSettings__SetPosition)(__int64 _this, Vec3V *vPosition);
 __int64 _HK_rage__audRequestedSettings__SetPostition(__int64 _this, Vec3V *position)
 {
-	Vec3V* vOveride;
+	Vec3V vOveride;
 
 	switch (ms_eAudioPositionType)
 	{	
@@ -39,11 +39,11 @@ __int64 _HK_rage__audRequestedSettings__SetPostition(__int64 _this, Vec3V *posit
 		}
 	}
 	default:
-		vOveride = position;
+		vOveride = *position;
 		break;
 	}
 
-	return _OG_rage__audRequestedSettings__SetPosition(_this, ms_bEnabledHook ? vOveride : position);
+	return _OG_rage__audRequestedSettings__SetPosition(_this, ms_bEnabledHook ? &vOveride : position);
 }
 
 static bool OnHook()
@@ -60,7 +60,7 @@ static bool OnHook()
 }
 
 //Late hook since it relies on natives to calculate. If it is getting an angle offset from an entity 
-static RegisterHook registerHook(OnHook, "rage__audRequestedSettings__SetPosition", true);
+static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__SetPosition", true);
 
 namespace Hooks
 {
