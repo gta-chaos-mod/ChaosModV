@@ -154,7 +154,7 @@ static void Init()
 
 	LOG("Completed init!");
 
-	if (GetComponent<TwitchVoting>()->IsEnabled())
+	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
 	{
 		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
 	}

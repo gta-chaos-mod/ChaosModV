@@ -468,13 +468,16 @@ void TwitchVoting::SendToPipe(std::string &&szMsg)
 
 void TwitchVoting::ErrorOutWithMsg(const std::string &&szMsg)
 {
-	std::wstring stemp = std::wstring(szMsg.begin(), szMsg.end());
-	MessageBox(NULL, stemp.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
+	std::wstring wStr = { szMsg.begin(), szMsg.end() };
+	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_hPipeHandle);
 	CloseHandle(m_hPipeHandle);
-	m_hPipeHandle                                               = INVALID_HANDLE_VALUE;
+	m_hPipeHandle = INVALID_HANDLE_VALUE;
 
-	GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = true;
-	m_bEnableTwitchVoting                                       = false;
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = true;
+	}
+	m_bEnableTwitchVoting = false;
 }

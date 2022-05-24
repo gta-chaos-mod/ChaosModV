@@ -97,7 +97,7 @@ void EffectDispatcher::UpdateTimer()
 
 		for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
 		{
-			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
+			DispatchRandomEffect();
 		}
 
 		m_fTimerPercentage = 0.f;
