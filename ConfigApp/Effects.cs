@@ -372,6 +372,7 @@ namespace ConfigApp
             { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
+            { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
         };
     }

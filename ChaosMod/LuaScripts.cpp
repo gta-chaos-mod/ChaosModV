@@ -373,12 +373,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"] = Hooks::OverrideShader;
-	lua["ResetShader"]    = Hooks::ResetShader;
+	lua["OverrideShader"]   = Hooks::OverrideShader;
+	lua["ResetShader"]      = Hooks::ResetShader;
 
-	lua["SetSnowState"]   = Memory::SetSnow;
+	lua["SetSnowState"]     = Memory::SetSnow;
 
-	const auto &result    = lua.safe_script_file(path.string(), sol::load_mode::text);
+	lua["IsVehicleBraking"] = Memory::IsVehicleBraking;
+
+	const auto &result      = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
 		const sol::error &error = result;
