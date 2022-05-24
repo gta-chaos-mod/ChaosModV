@@ -28,7 +28,7 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 153, true);
 
 	// Disable aiming actions, would cancel forward movement
-	DISABLE_CONTROL_ACTION(0, 25, true); //	INPUT_AIM
+	DISABLE_CONTROL_ACTION(0, 25, true); //	    INPUT_AIM
 	DISABLE_CONTROL_ACTION(0, 44, true); //  	INPUT_COVER
 	DISABLE_CONTROL_ACTION(0, 50, true); //  	INPUT_ACCURATE_AIM
 	DISABLE_CONTROL_ACTION(0, 68, true); //  	INPUT_VEH_AIM
