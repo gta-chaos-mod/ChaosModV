@@ -10,18 +10,6 @@ const char *ptfxName = "scr_ar_trail_smoke";
 std::vector<Ped> peds = {};
 std::vector<int> handles = {};
 
-template<typename T>
-static bool Contains(std::vector<T> vec, T& elem)
-{
-	bool result = false;
-	if (find(vec.begin(), vec.end(), elem) != vec.end())
-	{
-		result = true;
-	}
-	LOG("Vector contains: " << result);
-	return result;
-}
-
 static void OnStart()
 {
 	REQUEST_NAMED_PTFX_ASSET(ptfxDict);
@@ -33,25 +21,19 @@ static void OnStart()
 
 static void OnStop()
 {
-	for (int i : handles)
-	{
-		STOP_PARTICLE_FX_LOOPED(i, false);
-	}
-
 	for (int i = 0; i < peds.size(); i++)
 	{
+		REMOVE_PARTICLE_FX_FROM_ENTITY(peds.at(i));
 		peds.erase(peds.begin()+i);
 	}
-	handles.clear();
 	peds.clear();
 }
 
 static void OnTick()
 {
-
 	for (Ped ped : GetAllPeds())
 	{
-		if (!Contains(peds, ped))
+		if (std::find(peds.begin(), peds.end(), ped) == peds.end())
 		{
 			USE_PARTICLE_FX_ASSET(ptfxDict);
 
@@ -61,7 +43,6 @@ static void OnTick()
 			SET_PARTICLE_FX_LOOPED_COLOUR(ptfx, g_Random.GetRandomFloat(0, 1), g_Random.GetRandomFloat(0, 1),
 				                            g_Random.GetRandomFloat(0, 1), false);
 
-			LOG("ids : " << ptfx << " / " << ped);
 			peds.emplace_back(ped);
 		}
 	}
