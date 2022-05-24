@@ -8,7 +8,6 @@ const char *ptfxDict = "scr_ar_planes";
 const char *ptfxName = "scr_ar_trail_smoke";
 
 std::vector<Ped> peds = {};
-std::vector<int> handles = {};
 
 static void OnStart()
 {
