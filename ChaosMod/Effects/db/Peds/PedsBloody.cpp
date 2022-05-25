@@ -1,5 +1,5 @@
 /*
-	Effect by ubscal
+    Effect by ubscal
 */
 
 #include <stdafx.h>
@@ -25,9 +25,9 @@ static void OnStart()
 		APPLY_PED_DAMAGE_PACK(ped, "MTD_melee_face_jaw", 0, 10);
 	}
 }
-	
 
-static RegisterEffect registerEffect(EFFECT_BLOODY_PEDS, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Everyone Is Bloody",
 		.Id = "peds_bloody"

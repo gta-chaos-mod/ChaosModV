@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../vendor/scripthookv/inc/natives.h"
+#include "Memory/Physics.h"
+
+#include <scripthookv/inc/natives.h>
 
 #define _NODISCARD [[nodiscard]]
 
@@ -43,15 +45,25 @@ using namespace SYSTEM;
 using namespace DECORATOR;
 using namespace SOCIALCLUB;
 
-// Thanks to menyoo!
-inline _NODISCARD Hash GET_HASH_KEY(const char* string)
+_NODISCARD constexpr inline int _strlen(const char *str)
 {
-	int length = strlen(string);
+	return *str ? 1 + _strlen(str + 1) : 0;
+}
+
+_NODISCARD constexpr inline char __tolower(const char c)
+{
+	return c >= 'A' && c <= 'Z' ? c + 'a' - 'A' : c;
+}
+
+// Thanks to menyoo!
+_NODISCARD constexpr inline Hash GET_HASH_KEY(const char *str)
+{
+	int length = _strlen(str);
 
 	DWORD hash, i;
 	for (hash = i = 0; i < length; ++i)
 	{
-		hash += tolower(string[i]);
+		hash += __tolower(str[i]);
 		hash += (hash << 10);
 		hash ^= (hash >> 6);
 	}
@@ -63,23 +75,37 @@ inline _NODISCARD Hash GET_HASH_KEY(const char* string)
 	return hash;
 }
 
-inline void SET_ENTITY_AS_NO_LONGER_NEEDED(Entity* entity)
+inline void SET_ENTITY_AS_NO_LONGER_NEEDED(Entity *entity)
 {
 	SET_ENTITY_AS_MISSION_ENTITY(*entity, true, true);
 	invoke<Void>(0xB736A491E64A32CF, entity); // orig native
 }
 
-inline void SET_OBJECT_AS_NO_LONGER_NEEDED(Object* prop)
+inline void SET_OBJECT_AS_NO_LONGER_NEEDED(Object *prop)
 {
 	SET_ENTITY_AS_NO_LONGER_NEEDED(prop);
 }
 
-inline void SET_PED_AS_NO_LONGER_NEEDED(Ped* ped)
+inline void SET_PED_AS_NO_LONGER_NEEDED(Ped *ped)
 {
 	SET_ENTITY_AS_NO_LONGER_NEEDED(ped);
 }
 
-inline void SET_VEHICLE_AS_NO_LONGER_NEEDED(Vehicle* veh)
+inline void SET_VEHICLE_AS_NO_LONGER_NEEDED(Vehicle *veh)
 {
 	SET_ENTITY_AS_NO_LONGER_NEEDED(veh);
+}
+
+NATIVE_DECL void APPLY_FORCE_TO_ENTITY(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY,
+                                       float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec,
+                                       BOOL isForceRel, BOOL p12, BOOL p13)
+{
+	Memory::ApplyForceToEntity(entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec,
+	                           isForceRel, p12, p13);
+}
+
+NATIVE_DECL void APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(Entity entity, int forceType, float x, float y, float z, BOOL p5,
+                                                      BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
+{
+	Memory::ApplyForceToEntityCenterOfMass(entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
 }

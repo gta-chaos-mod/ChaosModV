@@ -45,7 +45,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -80,7 +80,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DRUNK, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Drunk",
 		.Id = "player_drunk",

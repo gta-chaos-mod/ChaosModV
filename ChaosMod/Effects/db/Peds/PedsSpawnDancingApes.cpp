@@ -9,7 +9,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
 
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	REQUEST_ANIM_DICT("missfbi3_sniping");
@@ -18,7 +18,7 @@ static void OnStart()
 	{
 		Hash modelHash = GET_HASH_KEY(g_Random.GetRandomInt(0, 1) ? "a_c_chimp" : "a_c_rhesus");
 
-		Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
+		Ped ped        = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 
 		if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
@@ -38,10 +38,11 @@ static void OnStart()
 	REMOVE_ANIM_DICT("missfbi3_sniping");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_DANCING_APES, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Dance Troupe",
 		.Id = "peds_spawndancingapes",
-		.EEffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );

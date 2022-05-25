@@ -98,7 +98,8 @@ static void OnStop()
 	freeEntities.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FROZEN, OnStart, OnStop, OnTick, EffectInfo
+//clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Frozen",
 		.Id = "misc_frozen",

@@ -20,7 +20,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SLIPPERY_VEHS, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Slippery Vehicles",
 		.Id = "vehs_slippery",

@@ -3,7 +3,8 @@
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false) && IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
+	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false) && IS_PED_ON_FOOT(playerPed)
+	    && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 	{
 		REQUEST_ANIM_DICT("mp_suicide");
 		while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
@@ -20,12 +21,13 @@ static void OnStart()
 	SET_ENTITY_HEALTH(playerPed, 0, 0);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SUICIDE, OnStart,
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Suicide",
 		.Id = "player_suicide",
 		.IsTimed = false,
-		.IncompatibleWith = { EFFECT_PLAYER_INVINCIBLE },
-		.EEffectGroupType = EEffectGroupType::PlayerKill
+		.IncompatibleWith = { "player_invincible" },
+		.EffectGroupType = EEffectGroupType::PlayerKill
 	}
 );

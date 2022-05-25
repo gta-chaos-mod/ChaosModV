@@ -1,10 +1,14 @@
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
+
+#include "Components/EffectDispatcher.h"
+
 static void OnStart()
 {
 	ClearEntityPool();
 
-	GetComponent<EffectDispatcher>()->ClearActiveEffects(EFFECT_META_NO_CHAOS);
+	GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
 }
 
 static void OnStop()
@@ -17,12 +21,13 @@ static void OnTick()
 	MetaModifiers::m_bDisableChaos = true;
 }
 
-static RegisterEffect registerEffect(EFFECT_META_NO_CHAOS, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Chaos",
 		.Id = "meta_nochaos",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_META_HIDE_CHAOS_UI },
+		.IncompatibleWith = { "meta_hide_chaos_ui" },
 		.ExecutionType = EEffectExecutionType::Meta
 	}
 );

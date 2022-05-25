@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Snow.h"
+
 static void OnStop()
 {
 	Memory::SetSnow(false);
@@ -14,11 +16,12 @@ static void OnTick()
 	SET_WEATHER_TYPE_NOW("XMAS");
 }
 
-static RegisterEffect registerEffect(EFFECT_SNOW, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Snow",
 		.Id = "world_snow",
 		.IsTimed = true,
-		.EEffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EEffectGroupType::WeatherChange
 	}
 );

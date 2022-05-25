@@ -13,7 +13,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_EXIT_VEH, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Everyone Exits Their Vehicles",
 		.Id = "playerveh_exit"
