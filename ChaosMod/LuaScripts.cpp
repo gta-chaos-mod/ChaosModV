@@ -459,6 +459,12 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	const auto &szScriptName = trim(*scriptNameOpt);
 
+	if (szScriptId.starts_with('.'))
+	{
+		LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName << "\": Invalid effect id!");
+		return;
+	}
+
 	bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
 	if (!bDoesIdAlreadyExist)
 	{
