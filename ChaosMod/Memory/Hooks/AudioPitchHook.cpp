@@ -26,7 +26,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__SetPitch");
+static RegisterHook registerHook(OnHook, nullptr, "rage::audRequestedSettings::SetPitch");
 
 namespace Hooks
 {
