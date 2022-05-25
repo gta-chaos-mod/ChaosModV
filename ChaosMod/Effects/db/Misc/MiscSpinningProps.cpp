@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -7,7 +7,7 @@
 // Degrees per millisecond, current value means 1.3 full rotations per second
 static constexpr float ROTATION_SPEED = (1.3f * 360.f) / 1000.f;
 
-static int lastTick = 0;
+static int lastTick                   = 0;
 
 static void OnStart()
 {
@@ -17,8 +17,8 @@ static void OnStart()
 static void OnTick()
 {
 	int currentTick = GET_GAME_TIMER();
-	int tickDelta = currentTick - lastTick;
-	lastTick = currentTick;
+	int tickDelta   = currentTick - lastTick;
+	lastTick        = currentTick;
 
 	for (Entity prop : GetAllProps())
 	{
@@ -27,7 +27,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPINNING_PROPS, OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Spinning Props",
 		.Id = "misc_spinning_props",

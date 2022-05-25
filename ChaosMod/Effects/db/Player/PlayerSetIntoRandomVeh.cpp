@@ -2,9 +2,9 @@
 
 static void OnStart()
 {
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed              = PLAYER_PED_ID();
 	bool playerPedInAnyVehicle = IS_PED_IN_ANY_VEHICLE(playerPed, false);
-	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vehicle playerVeh          = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	std::vector<Vehicle> vehs;
 
@@ -12,7 +12,8 @@ static void OnStart()
 	for (Vehicle veh : GetAllVehs())
 	{
 		Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
-		if (veh != playerVeh && GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false) && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
+		if (veh != playerVeh && GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false)
+		    && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
 		{
 			vehs.push_back(veh);
 		}
@@ -20,7 +21,7 @@ static void OnStart()
 
 	if (!vehs.empty())
 	{
-		Hash playerVehModel = GET_ENTITY_MODEL(playerVeh);
+		Hash playerVehModel   = GET_ENTITY_MODEL(playerVeh);
 		int playerVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(playerVehModel);
 
 		// Store all ped in current vehicle (if existant) to set them into chosen vehicle afterwards if possible
@@ -43,10 +44,10 @@ static void OnStart()
 				}
 			}
 		}
-    
-		Vehicle targetVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 
-		Hash targetVehModel = GET_ENTITY_MODEL(targetVeh);
+		Vehicle targetVeh     = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
+
+		Hash targetVehModel   = GET_ENTITY_MODEL(targetVeh);
 		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
 		for (int i = 0; i < teleportPeds.size(); i++)
@@ -72,7 +73,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SETINTORANDVEH, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Player Into Random Vehicle",
 		.Id = "player_setintorandveh"

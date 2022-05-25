@@ -1,25 +1,27 @@
 #include <stdafx.h>
 
+#include "Main.h"
+
+#include "Memory/Memory.h"
+
+#include "Util/CrashHandler.h"
+
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		__try
-		{
-			Memory::Init();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		Memory::Init();
 
-		scriptRegister(hInstance, Main::Run);
+		scriptRegister(hInstance, Main::OnRun);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
 		break;
 	case DLL_PROCESS_DETACH:
+		Main::OnCleanup();
 		Memory::Uninit();
 
 		scriptUnregister(hInstance);

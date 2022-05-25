@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Memory.h"
 #include "Handle.h"
+#include "Memory.h"
 
 struct MinimapData
 {

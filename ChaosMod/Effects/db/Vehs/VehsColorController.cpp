@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Memory/Vehicle.h"
+
 static void OnTickRed()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -14,15 +16,18 @@ static void OnTickRed()
 	}
 }
 
-static RegisterEffect registerEffect1(EFFECT_RED_VEHS, nullptr, nullptr, OnTickRed, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
 	{
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickBlue()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -37,15 +42,18 @@ static void OnTickBlue()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_BLUE_VEHS, nullptr, nullptr, OnTickBlue, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
 	{
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickGreen()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -60,15 +68,18 @@ static void OnTickGreen()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTickGreen, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
 	{
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickChrome()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -86,15 +97,18 @@ static void OnTickChrome()
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTickChrome, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
 	{
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_PINK_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static std::map<Vehicle, int> flameByCar;
 
 static void OnStopPink()
@@ -136,7 +150,8 @@ static void OnTickPink()
 		{
 			USE_PARTICLE_FX_ASSET("des_trailerpark");
 			int boneId = GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis");
-			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0, boneId, 1, false, false, false);
+			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0,
+			                                                     boneId, 1, false, false, false);
 			flameByCar[veh] = handle;
 		}
 
@@ -150,15 +165,18 @@ static void OnTickPink()
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, OnStopPink, OnTickPink, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 	{
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnStopRainbow()
 {
 	for (int i = 0; i < 13; i++)
@@ -171,8 +189,8 @@ static void OnTickRainbow()
 {
 	static int headlightColor = 0;
 
-	static ULONG cnt = 0;
-	static const float freq = .1f;
+	static ULONG cnt          = 0;
+	static const float freq   = .1f;
 
 	if (++cnt >= (ULONG)-1)
 	{
@@ -220,12 +238,13 @@ static void OnTickRainbow()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
 	{
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_CHROME_VEHS, EFFECT_PINK_VEHS, EFFECT_VEHS_INVISIBLE },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );

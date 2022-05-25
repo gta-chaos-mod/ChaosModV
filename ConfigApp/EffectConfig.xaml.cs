@@ -19,7 +19,7 @@ namespace ConfigApp
             }
         }
 
-        public EffectConfig(EffectData effectData, EffectInfo effectInfo)
+        public EffectConfig(string effectId, EffectData effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
 
@@ -29,13 +29,13 @@ namespace ConfigApp
 
             if (m_isTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = effectData.TimedType != (effectInfo.IsShort ? EffectTimedType.TIMED_SHORT : EffectTimedType.TIMED_NORMAL);
+                effectconf_timer_type_enable.IsChecked = effectData.TimedType != (effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal);
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short"
                 };
-                effectconf_timer_type.SelectedIndex = effectData.TimedType == EffectTimedType.TIMED_SHORT ? 1 : 0;
+                effectconf_timer_type.SelectedIndex = effectData.TimedType == EffectTimedType.TimedShort ? 1 : 0;
 
                 if (effectData.CustomTime >= 0)
                 {
@@ -58,16 +58,15 @@ namespace ConfigApp
 
             effectconf_effect_custom_name.Text = effectData.CustomName;
             effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
-            effectconf_effect_custom_name.KeyDown += Effectconf_effect_custom_name_KeyDown;
 
             effectconf_mp3_label.Text = $@"
-                Sound to play when this effect gets activated: chaosmod/sounds/{effectInfo.Id}.mp3
-                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectInfo.Id}
+                Sound to play when this effect gets activated: chaosmod/sounds/{effectId}.mp3
+                Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectId}
                 ";
 
             // Meta Effect Handling
 
-            if (effectInfo.EffectCategory == EffectCategory.META)
+            if (effectInfo.EffectCategory == EffectCategory.Meta)
             {
                 effectconf_exclude_voting_enable_title.Visibility = Visibility.Hidden;
                 effectconf_exclude_voting_enable.Visibility = Visibility.Hidden;
@@ -90,17 +89,6 @@ namespace ConfigApp
             effectconf_effect_shortcut_combo.SelectedItem = selectedKey;
 
             CheckEnableConfigurables();
-        }
-
-        private void Effectconf_effect_custom_name_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.LeftShift)
-            {
-                if (e.Key == Key.D2)
-                {
-                    e.Handled = true;
-                }
-            }
         }
 
         private void CustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)

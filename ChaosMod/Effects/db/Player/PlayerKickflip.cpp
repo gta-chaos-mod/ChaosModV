@@ -1,8 +1,10 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
+
+#include "Memory/Physics.h"
 
 static void OnStart()
 {
@@ -20,7 +22,8 @@ static void OnStart()
 	Memory::ApplyForceToEntity(entityToFlip, 1, 0, 0, 10, 2, 0, 0, 0, true, true, true, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_KICKFLIP, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Kickflip",
 		.Id = "player_kickflip"

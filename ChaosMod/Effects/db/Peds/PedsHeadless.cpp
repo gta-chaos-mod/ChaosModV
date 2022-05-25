@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -12,11 +12,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_HEADLESS, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Mannequins",
 		.Id = "peds_headless",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_MINIONS }
+		.IncompatibleWith = { "peds_minions" }
 	}
 );

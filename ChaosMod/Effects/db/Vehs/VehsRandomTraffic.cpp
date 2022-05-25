@@ -1,11 +1,14 @@
+// Effect by ProfessorBiddle, this is a bit clunky but it works well.
+
 #include <stdafx.h>
-//effect by ProfessorBiddle, this is a bit clunky but it works well.
+
+#include "Util/Vehicle.h"
 
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())
 	{
-		//detect if vehicle already randomized
+		// detect if vehicle already randomized
 		auto carModified = GET_VEHICLE_WINDOW_TINT(veh);
 
 		if (carModified != 3)
@@ -26,7 +29,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_RANDTRAFFIC, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Random Traffic",
 		.Id = "veh_randtraffic",

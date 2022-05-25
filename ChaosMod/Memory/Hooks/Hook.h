@@ -1,29 +1,29 @@
 #pragma once
 
+#include <minhook/include/MinHook.h>
+
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
-
-enum MH_STATUS : int;
 
 namespace Memory
 {
 	class RegisteredHook;
 
-	inline RegisteredHook* g_pRegisteredHooks = nullptr;
+	inline RegisteredHook *g_pRegisteredHooks = nullptr;
 
 	class RegisteredHook
 	{
-	private:
-		RegisteredHook* m_pNext = nullptr;
+	  private:
+		RegisteredHook *m_pNext = nullptr;
 		const std::string m_szName;
-		bool(*m_pHookFunc)();
+		bool (*m_pHookFunc)();
+		void (*m_pCleanupFunc)();
 		const bool m_bIsLateHook = false;
 
-	public:
-		RegisteredHook(bool(*pHookFunc)(), const std::string& szName,
-			bool bIsLateHook) : m_pHookFunc(pHookFunc), m_szName(szName),
-				m_bIsLateHook(bIsLateHook)
+	  public:
+		RegisteredHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &szName, bool bIsLateHook)
+		    : m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
 		{
 			if (g_pRegisteredHooks)
 			{
@@ -33,26 +33,34 @@ namespace Memory
 			g_pRegisteredHooks = this;
 		}
 
-		RegisteredHook(const RegisteredHook&) = delete;
+		RegisteredHook(const RegisteredHook &) = delete;
 
-		RegisteredHook& operator=(const RegisteredHook&) = delete;
+		RegisteredHook &operator=(const RegisteredHook &) = delete;
 
-		inline _NODISCARD bool RunHook()
+		_NODISCARD inline bool RunHook()
 		{
-			return m_pHookFunc();
+			return m_pHookFunc ? m_pHookFunc() : true;
 		}
 
-		inline _NODISCARD const std::string& GetName() const
+		inline void RunCleanup()
+		{
+			if (m_pCleanupFunc)
+			{
+				m_pCleanupFunc();
+			}
+		}
+
+		_NODISCARD inline const std::string &GetName() const
 		{
 			return m_szName;
 		}
 
-		inline _NODISCARD RegisteredHook* GetNext() const
+		_NODISCARD inline RegisteredHook *GetNext() const
 		{
 			return m_pNext;
 		}
 
-		inline _NODISCARD bool IsLateHook() const
+		_NODISCARD inline bool IsLateHook() const
 		{
 			return m_bIsLateHook;
 		}
@@ -61,21 +69,20 @@ namespace Memory
 
 class RegisterHook
 {
-private:
+  private:
 	const Memory::RegisteredHook m_RegisteredHook;
 
-public:
-	RegisterHook(bool(*pHookFunc)(), const std::string&& szName, 
-		bool bIsLateHook = false) : m_RegisteredHook(pHookFunc, szName, bIsLateHook)
+  public:
+	RegisterHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &&szName, bool bIsLateHook = false)
+	    : m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
 	{
-
 	}
 
-	RegisterHook(const RegisterHook&) = delete;
+	RegisterHook(const RegisterHook &) = delete;
 
-	RegisterHook& operator=(const RegisterHook&) = delete;
+	RegisterHook &operator=(const RegisterHook &) = delete;
 
-	RegisterHook(RegisterHook&&) noexcept = delete;
+	RegisterHook(RegisterHook &&) noexcept        = delete;
 
-	RegisterHook& operator=(RegisterHook&&) noexcept = delete;
+	RegisterHook &operator=(RegisterHook &&) noexcept = delete;
 };

@@ -1,5 +1,10 @@
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+
+#include "Util/Camera.h"
+#include "Util/Weapon.h"
+
 static void OnTick()
 {
 	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
@@ -14,22 +19,23 @@ static void OnTick()
 
 			if (IS_PED_A_PLAYER(ped))
 			{
-				Vector3 camCoords = GET_GAMEPLAY_CAM_COORD();
-				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
+				Vector3 camCoords  = GET_GAMEPLAY_CAM_COORD();
+				Vector3 pedPos     = GET_ENTITY_COORDS(ped, false);
 
-				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y, camCoords.z, true);
+				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y,
+				                                                 camCoords.z, true);
 
-				spawnBasePos = Util::GetCoordsFromGameplayCam(distCamToPed + .5f);
-				spawnRot = GET_GAMEPLAY_CAM_ROT(2);
+				spawnBasePos       = Util::GetCoordsFromGameplayCam(distCamToPed + .5f);
+				spawnRot           = GET_GAMEPLAY_CAM_ROT(2);
 			}
 			else
 			{
 				spawnBasePos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, .0f, 1.f, .0f);
-				spawnRot = GET_ENTITY_ROTATION(ped, 2);
+				spawnRot     = GET_ENTITY_ROTATION(ped, 2);
 			}
 
 			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
-			int catCount = isShotgun ? 3 : 1;
+			int catCount   = isShotgun ? 3 : 1;
 			for (int i = 0; i < catCount; i++)
 			{
 				if (i > 0)
@@ -58,7 +64,8 @@ static void OnTick()
 	SET_MODEL_AS_NO_LONGER_NEEDED(catHash);
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_CAT_GUNS, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Catto Guns",
 		.Id = "peds_catguns",

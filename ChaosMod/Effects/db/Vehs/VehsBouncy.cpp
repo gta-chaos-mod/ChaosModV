@@ -1,8 +1,10 @@
+/*
+    Effect by ProfessorBiddle
+*/
+
 #include <stdafx.h>
 
-/*
-	Effect by ProfessorBiddle
-*/
+#include "Memory/Physics.h"
 
 static void OnTick()
 {
@@ -10,7 +12,7 @@ static void OnTick()
 	for (auto veh : GetAllVehs())
 	{
 		SET_ENTITY_INVINCIBLE(veh, true);
-		//SET_VEHICLE_FIXED(veh);
+		// SET_VEHICLE_FIXED(veh);
 		if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh))
 		{
 			Vector3 vel = GET_ENTITY_VELOCITY(veh);
@@ -22,11 +24,12 @@ static void OnTick()
 			{
 				velFactor = 60.f;
 			}
-			Memory::ApplyForceToEntity(veh, 0, vel.x * -velFactor, vel.y * -velFactor, vel.z * -velFactor, .0f, .0f, .0f, 0, true, true, true, false, true);
-			
+			Memory::ApplyForceToEntity(veh, 0, vel.x * -velFactor, vel.y * -velFactor, vel.z * -velFactor, .0f, .0f,
+			                           .0f, 0, true, true, true, false, true);
 		}
 	}
 }
+
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
@@ -34,7 +37,9 @@ static void OnStop()
 		SET_ENTITY_INVINCIBLE(veh, false);
 	}
 }
-static RegisterEffect registerEffect2(EFFECT_VEH_BOUNCY, nullptr, OnStop, OnTick, EffectInfo
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Bouncy Vehicles",
 		.Id = "veh_bouncy",
