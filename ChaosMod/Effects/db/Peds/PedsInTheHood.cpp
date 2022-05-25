@@ -23,8 +23,8 @@ static void OnTick()
 	{
 		int rel = GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, ped);
 
-		if (!IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3) && !IS_PED_A_PLAYER(ped) &&
-			(!IS_ENTITY_A_MISSION_ENTITY(ped) || rel == 4 || rel == 5))
+		if (!IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3) && !IS_PED_A_PLAYER(ped)
+		    && (!IS_ENTITY_A_MISSION_ENTITY(ped) || rel == 4 || rel == 5))
 		{
 			TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
 			SET_PED_KEEP_TASK(ped, true);
@@ -33,7 +33,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_IN_THE_HOOD, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "In The Hood",
 		.Id = "peds_dance",

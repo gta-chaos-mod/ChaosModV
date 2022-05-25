@@ -17,11 +17,12 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 0, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_FORCED_FP, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "First Person",
 		.Id = "player_firstperson",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_FORCED_CINEMATIC }
+		.IncompatibleWith = { "player_forcedcinematiccam" }
 	}
 );

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../EffectThreads.h"
+#include "../Effects/EffectThreads.h"
 
 #include "../vendor/scripthookv/inc/main.h"
 
-using DWORD = unsigned long;
+using DWORD               = unsigned long;
 
-inline void* g_MainThread = nullptr;
+inline void *g_MainThread = nullptr;
 
 inline void WAIT(DWORD ulTimeMs)
 {

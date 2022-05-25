@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -45,11 +45,12 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_GHOST_WORLD, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Ghost Town",
 		.Id = "misc_ghost_world",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PEDS_INVISIBLE, EFFECT_VEHS_INVISIBLE }
+		.IncompatibleWith = { "peds_ghost", "vehs_ghost" }
 	}
 );

@@ -1,22 +1,23 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
 
+#include "Effects/MetaModifiers.h"
 
 static void OnStop()
 {
-	g_MetaInfo.m_bShouldHideChaosUI = false;
+	MetaModifiers::m_bHideChaosUI = false;
 }
-
 
 static void OnTick()
 {
-	g_MetaInfo.m_bShouldHideChaosUI = true;
+	MetaModifiers::m_bHideChaosUI = true;
 }
 
-static RegisterEffect registerEffect(EFFECT_META_HIDE_CHAOS_UI, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",

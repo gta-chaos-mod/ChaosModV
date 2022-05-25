@@ -1,10 +1,10 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
 
-static int constexpr CAM_DELAY_NORMAL = 250;
+static int constexpr CAM_DELAY_NORMAL  = 250;
 static int constexpr CAM_DELAY_VEHICLE = 1000;
 
 static int GetTargetCamDelay()
@@ -23,9 +23,9 @@ struct CameraSnapshot
 	{
 		timestamp = GET_GAME_TIMER();
 
-		position = GET_GAMEPLAY_CAM_COORD();
-		rotation = GET_GAMEPLAY_CAM_ROT(2);
-		fov = GET_GAMEPLAY_CAM_FOV();
+		position  = GET_GAMEPLAY_CAM_COORD();
+		rotation  = GET_GAMEPLAY_CAM_ROT(2);
+		fov       = GET_GAMEPLAY_CAM_FOV();
 	}
 };
 
@@ -44,7 +44,8 @@ static void OnStart()
 {
 	Vector3 pos = GET_GAMEPLAY_CAM_COORD();
 	Vector3 rot = GET_GAMEPLAY_CAM_ROT(2);
-	camera = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, GET_GAMEPLAY_CAM_FOV(), true, 2);
+	camera      = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z,
+	                                          GET_GAMEPLAY_CAM_FOV(), true, 2);
 	CAM::RENDER_SCRIPT_CAMS(true, true, 700, 1, 1, 1);
 
 	cameraSnapshots = {};
@@ -77,7 +78,8 @@ static void OnTick()
 		currentCamDelay += 300 * direction * GET_FRAME_TIME();
 
 		// If the step this frame overshot the target, snap back to it
-		if ((direction == 1 && currentCamDelay > targetCamDelay) || (direction == -1 && currentCamDelay < targetCamDelay))
+		if ((direction == 1 && currentCamDelay > targetCamDelay)
+		    || (direction == -1 && currentCamDelay < targetCamDelay))
 			currentCamDelay = targetCamDelay;
 	}
 
@@ -92,11 +94,12 @@ static void OnStop()
 	camera = 0;
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_LAGGY_CAMERA, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Delayed Camera",
 		.Id = "player_laggy_camera",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_PLAYER_BINOCULARS, EFFECT_FLIP_CAMERA, EFFECT_PLAYER_GTA_2, EFFECT_PLAYER_QUAKE_FOV, EFFECT_PLAYER_SPIN_CAMERA, EFFECT_PLAYER_ZOOMZOOM_CAM, EFFECT_MISC_NEWS_TEAM }
+		.EffectCategory = EEffectCategory::Camera
 	}
 );

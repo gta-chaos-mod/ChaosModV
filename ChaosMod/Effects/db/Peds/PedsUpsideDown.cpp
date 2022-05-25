@@ -5,6 +5,8 @@
 #include <stdafx.h>
 #include <map>
 
+#include "Memory/ViewMatrix.h"
+
 static std::map<Ped, Vector3> savedVectors;
 
 static float angleCos(Vector3 a, Vector3 b)
@@ -59,7 +61,8 @@ static void OnStop()
 	savedVectors.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_UPSIDEDOWN, nullptr, OnStop, OnTick, EffectInfo
+//clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Upside Down Peds",
 		.Id = "peds_upsidedown",
