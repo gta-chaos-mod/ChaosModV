@@ -161,6 +161,7 @@
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenBinoculars.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenCinemaFormat.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
