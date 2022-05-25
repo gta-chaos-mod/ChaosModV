@@ -31,8 +31,8 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 				{
 					// Thanks to drp4lyf
 					Handle handle = Memory::FindPattern(
-						"2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
-						{ pProgram->m_pCodeBlocks[i],
+					    "2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
+					    { pProgram->m_pCodeBlocks[i],
 					      pProgram->m_pCodeBlocks[i]
 					          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
 					if (handle.IsValid())
@@ -70,8 +70,8 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 			for (int i = 0; i < codeBlocksSize; i++)
 			{
 				Handle handle = Memory::FindPattern(
-					"2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E",
-					{ pProgram->m_pCodeBlocks[i],
+				    "2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E",
+				    { pProgram->m_pCodeBlocks[i],
 				      pProgram->m_pCodeBlocks[i]
 				          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
 				if (handle.IsValid())
@@ -105,7 +105,7 @@ static bool OnHook()
 	Handle handle;
 
 	handle = Memory::FindPattern(
-		"48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 D0 00 00 00");
+	    "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 D0 00 00 00");
 	if (!handle.IsValid())
 	{
 		return false;

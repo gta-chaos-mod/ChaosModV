@@ -74,8 +74,8 @@ static void OnTick()
 			else if (distance > sphereRadius * 1.1) // entity is outside the sphere
 			{
 				Memory::ApplyForceToEntity(
-					entity, 3, (entityCoord.x - playerCoord.x) * -1.f, (entityCoord.y - playerCoord.y) * -1.f,
-					(entityCoord.z - playerCoord.z) * -1.f, 0, 0, 0, false, false, true, true, false, true);
+				    entity, 3, (entityCoord.x - playerCoord.x) * -1.f, (entityCoord.y - playerCoord.y) * -1.f,
+				    (entityCoord.z - playerCoord.z) * -1.f, 0, 0, 0, false, false, true, true, false, true);
 			}
 			else // entity is on the surface
 			{

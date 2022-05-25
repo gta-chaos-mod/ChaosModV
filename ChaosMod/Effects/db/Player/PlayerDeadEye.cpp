@@ -54,7 +54,7 @@ static void OnTick()
 				Vector3 targPos   = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 10000, 0));
 
 				int rayHandle     = START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE(
-						launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
+				        launchPos.x, launchPos.y, launchPos.z, targPos.x, targPos.y, targPos.z, 12, player, 7);
 				if (rayHandle != 0)
 				{
 					BOOL didHit;

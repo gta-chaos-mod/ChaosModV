@@ -13,7 +13,7 @@
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component(), m_rgTextColor(rgTextColor)
 {
 	m_bEnableTwitchVoting =
-		g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	    g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
 	if (!m_bEnableTwitchVoting)
 	{
@@ -40,18 +40,18 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 	}
 
 	m_iTwitchSecsBeforeVoting =
-		g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
 	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>(
-		"TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	    "TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	m_bEnableTwitchChanceSystem =
-		g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
 	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>(
-		"TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
 	m_bEnableTwitchRandomEffectVoteable =
-		g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	STARTUPINFO startupInfo      = {};
 	PROCESS_INFORMATION procInfo = {};
@@ -81,7 +81,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 	}
 
 	m_hPipeHandle =
-		CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX,
+	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX,
 	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
 
 	if (m_hPipeHandle == INVALID_HANDLE_VALUE)
@@ -308,8 +308,8 @@ void TwitchVoting::OnRun()
 					pTargetChoice     = std::make_unique<ChoosableEffect>(
                         effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name,
                         !m_bAlternatedVotingRound             ? idx + 1
-							: m_bEnableTwitchRandomEffectVoteable ? idx + 5
-																  : idx + 4);
+					        : m_bEnableTwitchRandomEffectVoteable ? idx + 5
+					                                              : idx + 4);
 					break;
 				}
 			}
@@ -365,13 +365,13 @@ void TwitchVoting::OnRun()
 				else
 				{
 					int iChanceVotes =
-						pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
+					    pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
 
 					fPercentage =
-						!iChanceVotes
-							? .0f
-							: std::roundf(static_cast<float>(iChanceVotes) / static_cast<float>(iTotalVotes) * 100.f)
-								  / 100.f;
+					    !iChanceVotes
+					        ? .0f
+					        : std::roundf(static_cast<float>(iChanceVotes) / static_cast<float>(iTotalVotes) * 100.f)
+					              / 100.f;
 				}
 
 				oss << " (" << fPercentage * 100.f << "%)";
@@ -433,7 +433,7 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 		// If random effect voteable (result == 3) won, dispatch random effect later
 		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-			iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+		    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
 	}
 	else if (szMsg.starts_with("currentvotes"))
 	{
@@ -468,13 +468,16 @@ void TwitchVoting::SendToPipe(std::string &&szMsg)
 
 void TwitchVoting::ErrorOutWithMsg(const std::string &&szMsg)
 {
-	std::wstring stemp = std::wstring(szMsg.begin(), szMsg.end());
-	MessageBox(NULL, stemp.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
+	std::wstring wStr = { szMsg.begin(), szMsg.end() };
+	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_hPipeHandle);
 	CloseHandle(m_hPipeHandle);
-	m_hPipeHandle                                               = INVALID_HANDLE_VALUE;
+	m_hPipeHandle = INVALID_HANDLE_VALUE;
 
-	GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = true;
-	m_bEnableTwitchVoting                                       = false;
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->m_bDispatchEffectsOnTimer = true;
+	}
+	m_bEnableTwitchVoting = false;
 }

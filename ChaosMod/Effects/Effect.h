@@ -35,7 +35,7 @@ struct RegisteredEffect
 	}
 
 	RegisteredEffect(const std::string &szScriptId, void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)())
-		: m_EffectIdentifier(szScriptId), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
+	    : m_EffectIdentifier(szScriptId), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
 	{
 	}
 

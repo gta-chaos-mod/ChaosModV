@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Entity.h"
-#include "Handle.h"
-#include "Memory.h"
+#include "Memory/Entity.h"
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
 
-#include "../Util/Natives.h"
+#include "Util/Hash.h"
+#include "Util/Natives.h"
 
+#include <unordered_set>
 #include <vector>
 
 using DWORD64 = unsigned long long;
@@ -39,27 +41,13 @@ namespace Memory
 				return c_rgVehModels;
 			}
 
-			handle                          = handle.At(2).Into();
-			WORD usMaxModels                = handle.Value<WORD>();
+			handle           = handle.At(2).Into();
+			WORD usMaxModels = handle.Value<WORD>();
 
-			static auto ugBlacklistedModels = []
-			{
-				std::vector<Hash> ugBlacklistedModels;
-
-				if (getGameVersion() >= VER_1_0_2612_0_STEAM && getGameVersion() <= VER_1_0_2628_0_NOSTEAM)
-				{
-					// Stub vehicles, thanks R* lol
-					ugBlacklistedModels.insert(ugBlacklistedModels.end(), {
-																			  0x5C54030C, // arbitergt
-																			  0xA71D0D4F, // astron2
-																			  0x170341C2, // cyclone2
-																			  0x39085F47, // ignus2
-																			  0x438F6593  // s95
-																		  });
-				}
-
-				return ugBlacklistedModels;
-			}();
+			//  Stub vehicles, thanks R* lol
+			static const std::unordered_set<Hash> blacklistedModels {
+				"arbitergt"_hash, "astron2"_hash, "cyclone2"_hash, "ignus2"_hash, "s95"_hash,
+			};
 
 			for (WORD usIdx = 0; usIdx < usMaxModels; usIdx++)
 			{
@@ -71,9 +59,7 @@ namespace Memory
 
 				Hash ulModel = *reinterpret_cast<Hash *>(ullEntry);
 
-				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel)
-				    && std::find(ugBlacklistedModels.begin(), ugBlacklistedModels.end(), ulModel)
-				           == ugBlacklistedModels.end())
+				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel) && !blacklistedModels.contains(ulModel))
 				{
 					c_rgVehModels.push_back(ulModel);
 				}

@@ -80,7 +80,7 @@ static void spawnBuzzard()
 	helicopterGroup    = EnemyGroup();
 	LoadModel(buzzardHash);
 	helicopterGroup.vehicle =
-		CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
+	    CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(helicopterGroup.vehicle, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0);        // Needed, so the heli doesn't fall down instantly
@@ -112,7 +112,7 @@ static void spawnMesa()
 	mesaGroup     = EnemyGroup();
 	LoadModel(mesaHash);
 	mesaGroup.vehicle =
-		CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
+	    CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
 	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
 	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
