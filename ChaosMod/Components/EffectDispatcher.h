@@ -53,7 +53,7 @@ class EffectDispatcher : public Component
 			EEffectTimedType eTimedType = g_dictEnabledEffects.at(effectIdentifier).TimedType;
 
 			m_ullThreadId               = EffectThreads::CreateThread(
-							  pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
+			                  pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
 		}
 	};
 

@@ -49,13 +49,14 @@ namespace Memory
 				if (getGameVersion() >= VER_1_0_2612_0_STEAM && getGameVersion() <= VER_1_0_2628_0_NOSTEAM)
 				{
 					// Stub vehicles, thanks R* lol
-					ugBlacklistedModels.insert(ugBlacklistedModels.end(), {
-																			  0x5C54030C, // arbitergt
-																			  0xA71D0D4F, // astron2
-																			  0x170341C2, // cyclone2
-																			  0x39085F47, // ignus2
-																			  0x438F6593  // s95
-																		  });
+					ugBlacklistedModels.insert(ugBlacklistedModels.end(),
+					                           {
+					                               0x5C54030C, // arbitergt
+					                               0xA71D0D4F, // astron2
+					                               0x170341C2, // cyclone2
+					                               0x39085F47, // ignus2
+					                               0x438F6593, // s95
+					                           });
 				}
 
 				return ugBlacklistedModels;

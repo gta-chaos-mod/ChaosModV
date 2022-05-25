@@ -45,8 +45,8 @@ static void OnStart()
 			START_PARTICLE_FX_LOOPED_ON_ENTITY("exp_air_molotov", playerPed, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 5.f, false,
 			                                   false, false);
 			SET_ENTITY_VELOCITY(
-				playerPed, 0.f, 0.f,
-				100.f); // Increasing the z value doesn't seem to affect the force anymore while ragdolling.
+			    playerPed, 0.f, 0.f,
+			    100.f); // Increasing the z value doesn't seem to affect the force anymore while ragdolling.
 
 			break;
 		}

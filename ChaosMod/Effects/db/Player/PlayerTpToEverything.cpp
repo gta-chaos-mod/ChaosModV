@@ -34,7 +34,7 @@ static void OnTick()
 		}
 
 		Vehicle playerVeh =
-			IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false) ? GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false) : 0;
+		    IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false) ? GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false) : 0;
 		for (Vehicle veh : GetAllVehs())
 		{
 			if (!playerVeh || veh != playerVeh)

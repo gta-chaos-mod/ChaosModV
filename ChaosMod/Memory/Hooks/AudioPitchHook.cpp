@@ -14,7 +14,7 @@ __int64 _HK_rage__audRequestedSettings__SetPitch(__int64 _this, int pitch)
 static bool OnHook()
 {
 	Handle handle =
-		Memory::FindPattern("E8 ? ? ? ? 49 8B 8F 00 31 00 00 0F B6 81 80 00 00 00 3D FF 00 00 00 74 25 0F AF 05");
+	    Memory::FindPattern("E8 ? ? ? ? 49 8B 8F 00 31 00 00 0F B6 81 80 00 00 00 3D FF 00 00 00 74 25 0F AF 05");
 	if (!handle.IsValid())
 	{
 		return false;

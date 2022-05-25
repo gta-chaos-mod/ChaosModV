@@ -18,7 +18,7 @@ inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 
 	std::ostringstream fileName;
 	fileName << "chaosmod\\crashes\\" << systemTime.wYear << "-" << systemTime.wMonth << "-" << systemTime.wDay << "-"
-			 << systemTime.wHour << "-" << systemTime.wMinute << ".dmp";
+	         << systemTime.wHour << "-" << systemTime.wMinute << ".dmp";
 
 	auto fileNameStr          = fileName.str();
 	std::wstring wFileNameStr = { fileNameStr.begin(), fileNameStr.end() };

@@ -2,8 +2,8 @@
     Effect by Gorakh
 */
 
-#include <stdafx.h>
 #include "Memory/Vehicle.h"
+#include <stdafx.h>
 
 static std::map<Vehicle, Vector3> vehicleDefaultSizes;
 

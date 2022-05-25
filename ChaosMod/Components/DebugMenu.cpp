@@ -37,20 +37,20 @@ DebugMenu::DebugMenu() : Component()
 	std::sort(m_rgEffects.begin(), m_rgEffects.end(),
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
-				  for (int idx = 0;; idx++)
-				  {
-					  if (idx >= a.m_szEffectName.size()
+		          for (int idx = 0;; idx++)
+		          {
+			          if (idx >= a.m_szEffectName.size()
 			              || std::toupper(a.m_szEffectName[idx]) < std::toupper(b.m_szEffectName[idx]))
-					  {
-						  return true;
-					  }
-					  else if (idx >= b.m_szEffectName.size()
+			          {
+				          return true;
+			          }
+			          else if (idx >= b.m_szEffectName.size()
 			                   || std::toupper(b.m_szEffectName[idx]) < std::toupper(a.m_szEffectName[idx]))
-					  {
-						  return false;
-					  }
-				  }
-			  });
+			          {
+				          return false;
+			          }
+		          }
+	          });
 }
 
 void DebugMenu::OnRun()

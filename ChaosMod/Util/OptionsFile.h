@@ -46,7 +46,7 @@ class OptionsFile
 			}
 
 			std::string szValue =
-				szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
+			    szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
 
 			m_dictOptions.emplace(szKey, szValue);
 		}
