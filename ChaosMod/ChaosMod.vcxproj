@@ -191,6 +191,7 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDamageController.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
@@ -322,7 +323,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsExplodeNearby.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsFullAccel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsHonkBoosting.cpp" />
-    <ClCompile Include="Effects\db\Vehs\VehsInvincible.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsInvisible.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJesusTakeTheWheel.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsJumpy.cpp" />
