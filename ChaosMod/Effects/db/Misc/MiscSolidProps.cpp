@@ -21,7 +21,9 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_SOLID_PROPS, nullptr, OnStop, OnTick, EffectInfo
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Solid Props",
 		.Id = "misc_solid_props",

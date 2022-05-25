@@ -1,8 +1,10 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
+
+#include "Util/Vehicle.h"
 
 static void OnStart()
 {
@@ -14,16 +16,17 @@ static void OnStart()
 	else
 	{
 		std::vector<SeatPed> peds = { { playerPed, -1 } };
-		Vector3 coords = GET_ENTITY_COORDS(playerPed, 0);
-		float heading = GET_ENTITY_HEADING(playerPed);
-		Vector3 velocity = GET_ENTITY_VELOCITY(playerPed);
-		float forwardSpeed = GET_ENTITY_SPEED(playerPed);
+		Vector3 coords            = GET_ENTITY_COORDS(playerPed, 0);
+		float heading             = GET_ENTITY_HEADING(playerPed);
+		Vector3 velocity          = GET_ENTITY_VELOCITY(playerPed);
+		float forwardSpeed        = GET_ENTITY_SPEED(playerPed);
 
 		CreateRandomVehicleWithPeds(0, peds, false, coords, heading, false, velocity, forwardSpeed);
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_REPLACEVEHICLE, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Replace Current Vehicle",
 		.Id = "misc_replacevehicle"

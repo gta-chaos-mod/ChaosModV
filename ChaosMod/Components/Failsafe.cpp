@@ -2,7 +2,12 @@
 
 #include "Failsafe.h"
 
-Failsafe::Failsafe()
+#include "Components/EffectDispatcher.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/PoolSpawner.h"
+
+Failsafe::Failsafe() : Component()
 {
 	m_bEnabled = g_OptionsManager.GetConfigValue<bool>("EnableFailsafe", OPTION_DEFAULT_FAILSAFE);
 	if (!m_bEnabled)
@@ -23,7 +28,7 @@ int Failsafe::GetGlobalIndex()
 	return ms_iStateGlobalIdx;
 }
 
-void Failsafe::Run()
+void Failsafe::OnRun()
 {
 	if (!m_bEnabled || !ms_iStateGlobalIdx)
 	{
@@ -32,7 +37,7 @@ void Failsafe::Run()
 
 	if (!m_piStateGlobal)
 	{
-		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(ms_iStateGlobalIdx));
+		m_piStateGlobal = reinterpret_cast<int *>(getGlobalPtr(ms_iStateGlobalIdx));
 	}
 
 	if (!*m_piStateGlobal && m_iLastState)
@@ -50,7 +55,7 @@ void Failsafe::Run()
 		case 3:
 			LOG("[3 Fails] Clear most recent effect");
 
-			g_pEffectDispatcher->ClearMostRecentEffect();
+			GetComponent<EffectDispatcher>()->ClearMostRecentEffect();
 
 			break;
 		case 4:
@@ -62,7 +67,7 @@ void Failsafe::Run()
 		case 5:
 			LOG("[5 Fails] Clear all effects and spawned entities");
 
-			g_pEffectDispatcher->ClearEffects(false);
+			GetComponent<EffectDispatcher>()->ClearEffects(false);
 			ClearEntityPool();
 
 			m_cFailCounts = 0;

@@ -34,65 +34,78 @@
 
                 <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500" />
-                            <ColumnDefinition Width="300" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
 
-                        <Grid Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="330" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="40" />
-                                <RowDefinition Height="40" />
-                                <RowDefinition Height="40" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-
-                            <Label Content="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_spawn_dur" Height="20" Width="60" Grid.Row="0" Grid.Column="2"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                            <Label Content="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                            <Label Content="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_short_timed_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
-                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
-                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                        <Grid Grid.Row="0">
+                            <Label Content="Meta effects modify various aspects of mod itself on a regular basis to add more variety.&#xA;They are not a part of the normal effects pool; instead, they are automatically dispatched by the mod on a fixed interval (configurable below)."
+                                   Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Grid>
 
-                        <Grid Grid.Column="1">
-                            <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}">
-                                <TreeView.ItemContainerStyle>
-                                    <Style TargetType="{x:Type TreeViewItem}">
-                                        <Setter Property="IsExpanded" Value="True" />
-                                    </Style>
-                                </TreeView.ItemContainerStyle>
-                                <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
-                                        <StackPanel Orientation="Horizontal" Height="20">
-                                            <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
-                                            <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
-                                            <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.Resources>
-                            </TreeView>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="500" />
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="330" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_spawn_dur" Height="20" Width="60" Grid.Row="0" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                                <Label Content="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                                <Label Content="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_short_timed_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}">
+                                    <TreeView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type TreeViewItem}">
+                                            <Setter Property="IsExpanded" Value="True" />
+                                        </Style>
+                                    </TreeView.ItemContainerStyle>
+                                    <TreeView.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                            <StackPanel Orientation="Horizontal" Height="20">
+                                                <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                                                <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.Resources>
+                                </TreeView>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </TabItem>

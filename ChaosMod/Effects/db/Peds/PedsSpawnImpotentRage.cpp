@@ -3,7 +3,7 @@
 static void OnStart()
 {
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
+	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relGroup;
@@ -12,12 +12,12 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, femCivGroup);
 
-	Hash model = GET_HASH_KEY("u_m_y_imporage");
+	Hash model        = GET_HASH_KEY("u_m_y_imporage");
 
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	Ped ped           = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 	SET_ENTITY_HEALTH(ped, 1000, 0);
 	SET_PED_ARMOUR(ped, 1000);
 
@@ -61,10 +61,11 @@ static void OnStart()
 	RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_IMPOTENTRAGE, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Impotent Rage",
 		.Id = "peds_spawnimrage",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

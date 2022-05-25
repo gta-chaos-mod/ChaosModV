@@ -9,9 +9,9 @@ static void OnStart()
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 		std::vector<Ped> vehPeds;
-		
+
 		Hash vehModel = GET_ENTITY_MODEL(playerVeh);
-		int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
+		int maxSeats  = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(vehModel);
 		for (int i = -1; i < maxSeats - 1; i++)
 		{
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
@@ -42,7 +42,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_DESPAWN, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Remove Current Vehicle",
 		.Id = "playerveh_despawn"
