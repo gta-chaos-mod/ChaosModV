@@ -28,7 +28,7 @@ static void OnTick()
 		Hash choosenPropHash = GET_HASH_KEY(propNames[g_Random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
 
-		Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
+		Object meteor = CreatePoolProp(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true);
 		meteorsAmount++;
 
 		for (int i = 0; i < MAX_METEORS; i++)
