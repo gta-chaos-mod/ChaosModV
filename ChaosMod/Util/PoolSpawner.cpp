@@ -247,7 +247,7 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 	return clone;
 }
 
-Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
+Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
 {
 	LoadModel(ulModelHash);
 
