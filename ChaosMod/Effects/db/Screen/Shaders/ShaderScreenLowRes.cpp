@@ -41,8 +41,8 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Id = "screen_lowres",
 		.IsTimed = true,
 		.IsShortDuration = true,
+		.IncompatibleWith = { "misc_dvdscreensaver" },
 		.EffectCategory = EEffectCategory::Shader,
 		.EffectGroupType = EEffectGroupType::Shader,
-		.IncompatibleWith = { "misc_dvdscreensaver" }
 	}
 );
