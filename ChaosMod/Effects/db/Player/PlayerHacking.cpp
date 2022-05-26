@@ -52,7 +52,12 @@ const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 199
                               "int* hacked = true;",
                               "Matrix reference",
                               "\"I'm in the mainframe\"",
-                              "I frequent r/ProgrammerHumor." };
+                              "I frequent r/ProgrammerHumor.",
+			      "Aaaand... bingo!",
+			      "Access encoded... Gigabyte o'RAM should do the trick... We're in!",
+			      "Kernel bitrate overclocked!",
+			      "[ Hacking skill raised by 1 ]",
+			      "Ah ah ah, you didn't say the magic word!"};
 
 enum class TimerAction
 {
