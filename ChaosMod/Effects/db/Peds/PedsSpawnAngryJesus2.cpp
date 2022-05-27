@@ -4,15 +4,16 @@ static void OnStart()
 {
 	static constexpr Hash modelHash = -835930287;
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                   = PLAYER_PED_ID();
+	Vector3 playerPos               = GET_ENTITY_COORDS(playerPed, false);
 
 	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
 	LoadModel(oppressorHash);
 
-	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
+	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
+	                                                                           : playerPed);
 
-	Vehicle veh = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading);
+	Vehicle veh   = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -26,7 +27,7 @@ static void OnStart()
 	SET_MODEL_AS_NO_LONGER_NEEDED(oppressorHash);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
+	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
@@ -57,10 +58,11 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS2, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Extreme Griefer Jesus",
 		.Id = "spawn_grieferjesus2",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

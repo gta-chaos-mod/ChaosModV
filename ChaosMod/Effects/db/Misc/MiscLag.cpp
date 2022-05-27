@@ -15,7 +15,7 @@ static void OnTickLag()
 {
 
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
@@ -50,14 +50,14 @@ static void OnTickLag()
 			// save current camera heading to apply after teleporting
 			float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 
-			for (const auto& pair : m_toTpPeds)
+			for (const auto &pair : m_toTpPeds)
 			{
-				const Ped& ped = pair.first;
+				const Ped &ped       = pair.first;
 
-				Vector3 vel = GET_ENTITY_VELOCITY(ped);
-				float heading = GET_ENTITY_HEADING(ped);
+				Vector3 vel          = GET_ENTITY_VELOCITY(ped);
+				float heading        = GET_ENTITY_HEADING(ped);
 
-				const Vector3& tpPos = pair.second;
+				const Vector3 &tpPos = pair.second;
 
 				SET_ENTITY_COORDS_NO_OFFSET(ped, tpPos.x, tpPos.y, tpPos.z, false, false, false);
 
@@ -67,20 +67,21 @@ static void OnTickLag()
 
 			m_toTpPeds.clear();
 
-			for (const auto& pair : m_toTpVehs)
+			for (const auto &pair : m_toTpVehs)
 			{
-				const Vehicle& veh = pair.first;
+				const Vehicle &veh = pair.first;
 
-				Vector3 vel = GET_ENTITY_VELOCITY(veh);
-				float heading = GET_ENTITY_HEADING(veh);
+				Vector3 vel        = GET_ENTITY_VELOCITY(veh);
+				float heading      = GET_ENTITY_HEADING(veh);
 				float forwardSpeed = GET_ENTITY_SPEED(veh);
 
 				// if the vehicle is reversing use a negative forward speed
-				if (GET_ENTITY_SPEED_VECTOR(veh, true).y < 0) {
+				if (GET_ENTITY_SPEED_VECTOR(veh, true).y < 0)
+				{
 					forwardSpeed *= -1;
 				}
 
-				const Vector3& tpPos = pair.second;
+				const Vector3 &tpPos = pair.second;
 
 				SET_ENTITY_COORDS_NO_OFFSET(veh, tpPos.x, tpPos.y, tpPos.z, false, false, false);
 
@@ -97,7 +98,8 @@ static void OnTickLag()
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_GAMESPEED_LAG, OnStart, nullptr, OnTickLag, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTickLag, EffectInfo
 	{
 		.Name = "Lag",
 		.Id = "time_lag",

@@ -10,7 +10,8 @@ static void OnTick()
 	SET_NIGHTVISION(true);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_NIGHTVISION, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Night Vision",
 		.Id = "player_nightvision",

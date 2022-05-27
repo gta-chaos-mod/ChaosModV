@@ -1,16 +1,33 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "Mp3Manager.h"
+
+#include "Effects/EffectConfig.h"
+
 #include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Hooks/ShaderHook.h"
+#include "Memory/Misc.h"
+#include "Memory/Shader.h"
 
-static bool ms_bClearAllEffects = false;
+#include "Components/DebugMenu.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/Shortcuts.h"
+#include "Components/SplashTexts.h"
+#include "Components/TwitchVoting.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/PoolSpawner.h"
+
+static bool ms_bClearAllEffects             = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
-static bool ms_bToggleModShortcutEnabled = false;
-static bool ms_bDisableMod = false;
-static bool ms_bEnablePauseTimerShortcut = false;
-static bool ms_bHaveLateHooksRan = false;
+static bool ms_bToggleModShortcutEnabled    = false;
+static bool ms_bDisableMod                  = false;
+static bool ms_bEnablePauseTimerShortcut    = false;
+static bool ms_bHaveLateHooksRan            = false;
 
-static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
+_NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
 {
 	// Format: #ARGB
 	std::array<BYTE, 3> rgColors;
@@ -18,7 +35,7 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
+		Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
 	}
 
 	return rgColors;
@@ -53,8 +70,7 @@ static void Reset()
 
 static void Init()
 {
-	
-	static std::streambuf* c_pOldStreamBuf;
+	static std::streambuf *c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
 		if (GetConsoleWindow())
@@ -72,7 +88,7 @@ static void Init()
 
 			c_pOldStreamBuf = std::cout.rdbuf();
 
-			g_ConsoleOut = std::ofstream("CONOUT$");
+			g_ConsoleOut    = std::ofstream("CONOUT$");
 			std::cout.rdbuf(g_ConsoleOut.rdbuf());
 
 			std::cout.clear();
@@ -103,15 +119,22 @@ static void Init()
 
 	g_OptionsManager.Reset();
 
-	ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
-	ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
-	ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	ms_bClearEffectsShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	ms_bToggleModShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	ms_bEnablePauseTimerShortcut =
+	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 
-	g_bEnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	g_bEnableGroupWeighting =
+	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
-	const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
-	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
-	const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+	const auto &rgTimerColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	const auto &rgTextColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	const auto &rgEffectTimerColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
 	LOG("Running custom scripts");
 	LuaScripts::Load();
@@ -134,7 +157,7 @@ static void Init()
 
 	LOG("Completed init!");
 
-	if (GetComponent<TwitchVoting>()->IsEnabled())
+	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
 	{
 		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
 	}
@@ -184,7 +207,7 @@ static void MainRun()
 					c_bJustReenabled = false;
 
 					// Clear log
-					g_Log = std::ofstream("chaosmod/chaoslog.txt");
+					g_Log            = std::ofstream("chaosmod/chaoslog.txt");
 
 					// Restart the main part of the mod completely
 					Init();
@@ -226,7 +249,13 @@ namespace Main
 		MainRun();
 	}
 
-	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)
+	void OnCleanup()
+	{
+		LuaScripts::Unload();
+	}
+
+	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
+	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
 		static bool c_bIsCtrlPressed = false;
 

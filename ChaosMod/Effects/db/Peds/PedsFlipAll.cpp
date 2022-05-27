@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
 /*
-	Effect by ProfessorBiddle
+    Effect by ProfessorBiddle
 */
 
 static void OnTick()
@@ -14,13 +14,12 @@ static void OnTick()
 			Vector3 rot = GET_ENTITY_ROTATION(ped, 2);
 
 			SET_ENTITY_ROTATION(ped, rot.x + 40.f, rot.y + 40.f, rot.z, 2, true);
-
 		}
-		
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_FLIP, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Spinning Peds",
 		.Id = "peds_flip",

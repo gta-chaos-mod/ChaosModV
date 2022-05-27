@@ -2,13 +2,13 @@
 
 static void OnStart()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Ped playerPed      = PLAYER_PED_ID();
+	Vehicle playerVeh  = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Vector3 playerPos  = GET_ENTITY_COORDS(playerPed, false);
 
 	Vehicle closestVeh = -1;
-	float closestDist = 9999.f;
+	float closestDist  = 9999.f;
 	for (Vehicle veh : GetAllVehs())
 	{
 		if (veh == playerVeh)
@@ -17,17 +17,18 @@ static void OnStart()
 		}
 
 		Vector3 coords = GET_ENTITY_COORDS(veh, false);
-		float dist = GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
+		float dist =
+		    GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
 		if (dist < closestDist)
 		{
-			closestVeh = veh;
+			closestVeh  = veh;
 			closestDist = dist;
 		}
 	}
 
 	if (closestVeh != -1)
 	{
-		Hash playerVehModel = GET_ENTITY_MODEL(playerVeh);
+		Hash playerVehModel   = GET_ENTITY_MODEL(playerVeh);
 		int playerVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(playerVehModel);
 
 		// Store all ped in current vehicle (if existant) to set them into chosen vehicle afterwards if possible
@@ -51,7 +52,7 @@ static void OnStart()
 			}
 		}
 
-		Hash closestVehModel = GET_ENTITY_MODEL(closestVeh);
+		Hash closestVehModel   = GET_ENTITY_MODEL(closestVeh);
 		int closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
 
 		for (int i = 0; i < teleportPeds.size(); i++)
@@ -77,7 +78,8 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SET_INTO_CLOSEST_VEH, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Player Into Closest Vehicle",
 		.Id = "player_tpclosestveh"

@@ -1,8 +1,8 @@
 #pragma once
 
-using Ped = int;
+using Ped     = int;
 using Vehicle = int;
-using Hash = unsigned long;
+using Hash    = unsigned long;
 
 void ClearEntityPool(int iDistance = 0);
 
@@ -14,4 +14,4 @@ Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, 
 Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
 Vehicle CreatePoolCloneVehicle(Vehicle vehToClone);
 
-Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);
+Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);

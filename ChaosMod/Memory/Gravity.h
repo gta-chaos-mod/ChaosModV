@@ -1,26 +1,27 @@
 #pragma once
 
-#include "Memory.h"
 #include "Handle.h"
+#include "Memory.h"
 
 namespace Memory
 {
 	inline void SetGravityLevel(float fGravity)
 	{
-		static float* pfGravAddr = nullptr;
-		static void(__cdecl* pSomeFunc1)(float grav);
-		static void(__cdecl* pSomeFunc2)();
-		static void(__cdecl* pSomeFunc3)();
+		static float *pfGravAddr = nullptr;
+		static void(__cdecl * pSomeFunc1)(float grav);
+		static void(__cdecl * pSomeFunc2)();
+		static void(__cdecl * pSomeFunc3)();
 
 		if (!pfGravAddr)
 		{
-			Handle handle = FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
+			Handle handle =
+			    FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
 			if (!handle.IsValid())
 			{
 				return;
 			}
 
-			handle = handle.Into().At(24);
+			handle     = handle.Into().At(24);
 
 			pfGravAddr = handle.At(3).Into().Get<float>();
 

@@ -14,11 +14,12 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 200, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_RADAR, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Radar",
 		.Id = "no_radar",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_HUD }
+		.IncompatibleWith = { "no_hud" }
 	}
 );

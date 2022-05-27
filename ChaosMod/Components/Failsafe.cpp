@@ -2,6 +2,11 @@
 
 #include "Failsafe.h"
 
+#include "Components/EffectDispatcher.h"
+
+#include "Util/OptionsManager.h"
+#include "Util/PoolSpawner.h"
+
 Failsafe::Failsafe() : Component()
 {
 	m_bEnabled = g_OptionsManager.GetConfigValue<bool>("EnableFailsafe", OPTION_DEFAULT_FAILSAFE);
@@ -32,7 +37,7 @@ void Failsafe::OnRun()
 
 	if (!m_piStateGlobal)
 	{
-		m_piStateGlobal = reinterpret_cast<int*>(getGlobalPtr(ms_iStateGlobalIdx));
+		m_piStateGlobal = reinterpret_cast<int *>(getGlobalPtr(ms_iStateGlobalIdx));
 	}
 
 	if (!*m_piStateGlobal && m_iLastState)

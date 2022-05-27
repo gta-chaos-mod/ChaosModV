@@ -1,5 +1,11 @@
 #include <stdafx.h>
 
+#include "Main.h"
+
+#include "Memory/Memory.h"
+
+#include "Util/CrashHandler.h"
+
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
@@ -15,6 +21,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		break;
 	case DLL_PROCESS_DETACH:
+		Main::OnCleanup();
 		Memory::Uninit();
 
 		scriptUnregister(hInstance);
