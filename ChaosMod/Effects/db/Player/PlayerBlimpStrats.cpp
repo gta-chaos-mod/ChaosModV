@@ -8,7 +8,7 @@
 
 #include "PlayerBlimpStrats.h"
 
-static void OnStartBlimpStrats(bool bHandleThreadBlock)
+void OnStartBlimpStrats(bool bHandleThreadBlock)
 {
 	if (bHandleThreadBlock)
 	{

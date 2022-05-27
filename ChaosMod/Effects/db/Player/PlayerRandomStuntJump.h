@@ -1,3 +1,3 @@
 #pragma once
 
-static void OnStartMakeRandomStuntJump();
+void OnStartMakeRandomStuntJump();

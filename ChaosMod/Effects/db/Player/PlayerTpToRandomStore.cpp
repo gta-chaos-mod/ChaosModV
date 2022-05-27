@@ -61,7 +61,7 @@ static std::vector<Vector3> allPossibleStores = {
 
 };
 
-static void OnStartTpRandomStore()
+void OnStartTpRandomStore()
 {
 	TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
 }

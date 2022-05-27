@@ -1,3 +1,3 @@
 #pragma once
 
-static void OnStartTpRandomStore();
+void OnStartTpRandomStore();

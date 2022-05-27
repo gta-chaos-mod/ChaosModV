@@ -6,9 +6,9 @@
 
 #include "Util/Player.h"
 
-#include "Effects/db/Player/PlayerRandomStuntJump.cpp"
-#include "Effects/db/Player/PlayerTpToRandomStore.cpp"
-#include "Effects/db/Player/PlayerBlimpStrats.cpp"
+#include "Effects/db/Player/PlayerRandomStuntJump.h"
+#include "Effects/db/Player/PlayerTpToRandomStore.h"
+#include "Effects/db/Player/PlayerBlimpStrats.h"
 
 static void OnStartLSIA()
 {

@@ -50,7 +50,7 @@ static std::vector<Location> allPossibleJumps = {
 
 };
 
-static void OnStartMakeRandomStuntJump()
+void OnStartMakeRandomStuntJump()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh;
