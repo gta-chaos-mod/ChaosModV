@@ -53,7 +53,7 @@ static void Reset()
 
 static void Init()
 {
-	LOG("ChaosMod Version: 1.10.4");
+	
 	static std::streambuf* c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
@@ -94,6 +94,9 @@ static void Init()
 
 		FreeConsole();
 	}
+	
+	LOG("GTA 5 Version: " << GetGameVersionStr((int)getGameVersion()));
+	LOG("ChaosMod Version: " << MOD_VERSION);
 
 	LOG("Parsing config files");
 	ParseEffectsFile();

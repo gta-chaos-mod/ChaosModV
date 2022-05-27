@@ -1,5 +1,7 @@
 #pragma once
 
+#define MOD_VERSION "1.11.1"
+
 using DWORD = unsigned long;
 using WORD = unsigned short;
 using BYTE = unsigned char;
