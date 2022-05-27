@@ -1,76 +1,114 @@
 #include <stdafx.h>
 
+#include "Memory/Vehicle.h"
+
 static void OnTickRed()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
-static RegisterEffect registerEffect1(EFFECT_RED_VEHS, nullptr, nullptr, OnTickRed, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
 	{
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickBlue()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_BLUE_VEHS, nullptr, nullptr, OnTickBlue, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
 	{
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickGreen()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 0, 255, 0);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 0, 255, 0);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 0, 255, 0);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
-static RegisterEffect registerEffect3(EFFECT_GREEN_VEHS, nullptr, nullptr, OnTickGreen, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
 	{
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnTickChrome()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 219, 226, 233);
+
+		// If the vehicle has a custom color, the effect won't work
+		CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh);
+		CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh);
+
 		SET_VEHICLE_COLOURS(veh, 120, 120);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
-static RegisterEffect registerEffect4(EFFECT_CHROME_VEHS, nullptr, nullptr, OnTickChrome, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
 	{
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_RAINBOW_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static std::map<Vehicle, int> flameByCar;
 
 static void OnStopPink()
@@ -112,24 +150,33 @@ static void OnTickPink()
 		{
 			USE_PARTICLE_FX_ASSET("des_trailerpark");
 			int boneId = GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis");
-			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0, boneId, 1, false, false, false);
+			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE("ent_ray_trailerpark_fires", veh, 0, 0, 0, 0, 0, 0,
+			                                                     boneId, 1, false, false, false);
 			flameByCar[veh] = handle;
 		}
 
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, 255, 0, 255);
+
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, 255, 0, 255);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, 255, 0, 255);
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 }
 
-static RegisterEffect registerEffect5(EFFECT_PINK_VEHS, nullptr, OnStopPink, OnTickPink, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 	{
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEHS_INVISIBLE, EFFECT_CHROME_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );
+// clang-format on
+
 static void OnStopRainbow()
 {
 	for (int i = 0; i < 13; i++)
@@ -142,8 +189,8 @@ static void OnTickRainbow()
 {
 	static int headlightColor = 0;
 
-	static ULONG cnt = 0;
-	static const float freq = .1f;
+	static ULONG cnt          = 0;
+	static const float freq   = .1f;
 
 	if (++cnt >= (ULONG)-1)
 	{
@@ -171,6 +218,12 @@ static void OnTickRainbow()
 
 		TOGGLE_VEHICLE_MOD(veh, 22, true);
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, headlightColor);
+
+		TOGGLE_VEHICLE_MOD(veh, 20, true); // Enable custom tyre smoke
+		SET_VEHICLE_TYRE_SMOKE_COLOR(veh, r, g, b);
+
+		SET_VEHICLE_ENVEFF_SCALE(veh, 0.f);
+		SET_VEHICLE_DIRT_LEVEL(veh, 0.f);
 	}
 
 	// Headlight color switcher
@@ -185,12 +238,13 @@ static void OnTickRainbow()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_RAINBOW_VEHS, nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
 	{
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_RED_VEHS, EFFECT_BLUE_VEHS, EFFECT_GREEN_VEHS, EFFECT_VEHS_INVISIBLE, EFFECT_PINK_VEHS },
-		.EEffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EEffectCategory::TrafficColor,
+		.EffectGroupType = EEffectGroupType::TrafficColor
 	}
 );

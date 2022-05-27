@@ -1,18 +1,18 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
 
-static struct ShooterInfo
+struct ShooterInfo
 {
-	float fullDuration = 0;
+	float fullDuration          = 0;
 	float durationSinceLastShot = 0;
-	int fxHandle = 0;
+	int fxHandle                = 0;
 };
 
 static int MAX_DURATION_BETWEEN_SHOTS = 10;
-static int MAX_DURATION_ANIMATION = 150;
+static int MAX_DURATION_ANIMATION     = 150;
 
 static std::map<Ped, ShooterInfo> animationHandleByPed;
 
@@ -47,7 +47,10 @@ static void OnTick()
 	for (auto it = animationHandleByPed.cbegin(); it != animationHandleByPed.cend();)
 	{
 		ShooterInfo animationInfo = it->second;
-		if (!DOES_ENTITY_EXIST(it->first) || animationInfo.fxHandle <= 0 || it->second.fullDuration > MAX_DURATION_ANIMATION || ((!IS_PED_SHOOTING(it->first) && IS_PED_WEAPON_READY_TO_SHOOT(it->first)) && animationInfo.durationSinceLastShot > MAX_DURATION_BETWEEN_SHOTS))
+		if (!DOES_ENTITY_EXIST(it->first) || animationInfo.fxHandle <= 0
+		    || it->second.fullDuration > MAX_DURATION_ANIMATION
+		    || ((!IS_PED_SHOOTING(it->first) && IS_PED_WEAPON_READY_TO_SHOOT(it->first))
+		        && animationInfo.durationSinceLastShot > MAX_DURATION_BETWEEN_SHOTS))
 		{
 			STOP_PARTICLE_FX_LOOPED(animationInfo.fxHandle, false);
 			animationHandleByPed.erase(it++);
@@ -72,10 +75,11 @@ static void OnTick()
 		if (animationHandleByPed.count(ped) < 1)
 		{
 			USE_PARTICLE_FX_ASSET("core");
-			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
-			int handle = START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_sht_flame", weapon, 1, 0, 0, 90, 0, 90, 2, false, false, false);
+			Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped, 0);
+			int handle =
+				START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_sht_flame", weapon, 1, 0, 0, 90, 0, 90, 2, false, false, false);
 			ShooterInfo animInfo;
-			animInfo.fxHandle = handle;
+			animInfo.fxHandle         = handle;
 			animationHandleByPed[ped] = animInfo;
 		}
 		else
@@ -90,7 +94,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_FLAMETHROWER, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Flamethrowers",
 		.Id = "misc_flamethrower",

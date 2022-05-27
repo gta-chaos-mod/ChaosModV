@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -8,18 +8,17 @@ static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	//If the player isn't in a vehicle, put him in a pink panto
+	// If the player isn't in a vehicle, put him in a pink panto
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
 
-		Vehicle veh = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		Vehicle veh       = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z,
+		                                      GET_ENTITY_HEADING(PLAYER_PED_ID()));
 		SET_VEHICLE_COLOURS(veh, 135, 135);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}
 
-
-	
 	static constexpr Hash modelHash = -835930287;
 	LoadModel(modelHash);
 
@@ -41,7 +40,7 @@ static void OnStart()
 	if (IS_WAYPOINT_ACTIVE())
 	{
 		coords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
-		found = true;
+		found  = true;
 	}
 	else
 	{
@@ -51,7 +50,7 @@ static void OnStart()
 			if (DOES_BLIP_EXIST(blip))
 			{
 				coords = GET_BLIP_COORDS(blip);
-				found = true;
+				found  = true;
 
 				break;
 			}
@@ -69,10 +68,10 @@ static void OnStart()
 
 	SET_PED_KEEP_TASK(jesus, true);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true);
-
 }
 
-static RegisterEffect registerEffect(EFFECT_JESUS_TAKE_THE_WHEEL, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Jesus Take The Wheel",
 		.Id = "veh_jesustakethewheel"

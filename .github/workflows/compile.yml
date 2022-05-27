@@ -1,0 +1,65 @@
+name: Compile
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1.10.0
+    - uses: actions/checkout@v3
+
+    - name: Setup
+      run: git submodule update --init --recursive
+
+    - name: Get NuGet Packages
+      run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
+
+    - name: Compile Config App
+      run: msbuild ChaosMod.sln /t:ConfigApp /p:Configuration=Release
+
+    - name: Compile Voting Proxy
+      run: msbuild ChaosMod.sln /t:TwitchChatVotingProxy /p:Configuration=Release
+
+    - name: Compile ASI & Dependencies
+      run: |
+        cd ChaosMod
+        mkdir build
+        cd build
+        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" ../
+        ninja
+
+    - name: Compile Voting Overlay
+      run: |
+        cd twitchVotingOverlay
+        npm install
+        npm run compile:prod
+
+    - name: Generate Native Definitions for Lua Runtime
+      run: |
+        cd scripts
+        python generate_natives.py
+
+    - name: Ready up for distribution
+      run: |
+        mkdir dist
+        cd dist
+        C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
+        7z.exe x data.zip
+        rm data.zip
+        cp ../ChaosMod/build/ChaosMod.asi
+        cp ../ConfigApp/bin/Release/ChaosModVConfig.exe chaosmod/
+        cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.exe chaosmod/
+        cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
+        cp ../scripts/natives_def.lua chaosmod/
+
+    - name: Upload :)
+      uses: actions/upload-artifact@v1
+      with:
+        name: chaosmod
+        path: dist

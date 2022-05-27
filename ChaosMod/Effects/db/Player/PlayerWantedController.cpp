@@ -8,13 +8,16 @@ static void OnStartFive()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_5_STARS, OnStartFive, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartFive, nullptr, nullptr, EffectInfo
 	{
 		.Name = "5 Wanted Stars",
 		.Id = "player_5stars",
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
+// clang-format on
+
 static void OnStartPlusTwo()
 {
 	Ped player = PLAYER_ID();
@@ -23,20 +26,24 @@ static void OnStartPlusTwo()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 }
 
-static RegisterEffect registerEffect2(EFFECT_PLUS_2_STARS, OnStartPlusTwo, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartPlusTwo, nullptr, nullptr, EffectInfo
 	{
 		.Name = "+2 Wanted Stars",
 		.Id = "player_plus2stars",
-		.IncompatibleWith = {EFFECT_NEVER_WANTED}
+		.IncompatibleWith = { "player_neverwanted" }
 	}
 );
+// clang-format on
+
 static void OnTickNeverWanted()
 {
 	SET_PLAYER_WANTED_LEVEL(PLAYER_ID(), 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(PLAYER_ID(), true);
 }
 
-static RegisterEffect registerEffect3(EFFECT_NEVER_WANTED, nullptr, nullptr, OnTickNeverWanted, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTickNeverWanted, EffectInfo
 	{
 		.Name = "Never Wanted",
 		.Id = "player_neverwanted",

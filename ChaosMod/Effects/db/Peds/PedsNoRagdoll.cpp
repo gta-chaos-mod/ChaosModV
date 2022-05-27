@@ -16,7 +16,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_RAGDOLL, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Ragdoll",
 		.Id = "player_noragdoll",

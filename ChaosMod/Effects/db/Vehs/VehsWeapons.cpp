@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -22,7 +22,7 @@ static void OnTick()
 			int current_time = GET_GAME_TIMER();
 			if (current_time - last_shot > 1000)
 			{
-				last_shot = current_time;
+				last_shot       = current_time;
 				Hash weaponHash = GET_HASH_KEY("VEHICLE_WEAPON_TANK");
 				if (!HAS_WEAPON_ASSET_LOADED(weaponHash))
 				{
@@ -32,23 +32,27 @@ static void OnTick()
 						WAIT(0);
 					}
 				}
-				Vehicle veh = GET_VEHICLE_PED_IS_IN(player, false);
-				Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
-				float zOffset = 0.35;
+				Vehicle veh             = GET_VEHICLE_PED_IS_IN(player, false);
+				Vector3 vehPos          = GET_ENTITY_COORDS(veh, false);
+				float zOffset           = 0.35;
 				Vector3 leftWeaponStart = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 0.5, zOffset);
-				Vector3 leftWeaponEnd = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 100, zOffset);
-				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(leftWeaponStart.x, leftWeaponStart.y, leftWeaponStart.z, leftWeaponEnd.x, leftWeaponEnd.y, leftWeaponEnd.z, 0, true, weaponHash, player, true, false, 200);
+				Vector3 leftWeaponEnd   = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 100, zOffset);
+				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(leftWeaponStart.x, leftWeaponStart.y, leftWeaponStart.z,
+				                                   leftWeaponEnd.x, leftWeaponEnd.y, leftWeaponEnd.z, 0, true,
+				                                   weaponHash, player, true, false, 200);
 				Vector3 rightWeaponStart = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, 1.5, 0.5, zOffset);
-				Vector3 rightWeaponEnd = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, 1.5, 100, zOffset);
-				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(rightWeaponStart.x, rightWeaponStart.y, rightWeaponStart.z, rightWeaponEnd.x, rightWeaponEnd.y, rightWeaponEnd.z, 0, true, weaponHash, player, true, false, 200);
+				Vector3 rightWeaponEnd   = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, 1.5, 100, zOffset);
+				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(rightWeaponStart.x, rightWeaponStart.y, rightWeaponStart.z,
+				                                   rightWeaponEnd.x, rightWeaponEnd.y, rightWeaponEnd.z, 0, true,
+				                                   weaponHash, player, true, false, 200);
 				REMOVE_WEAPON_ASSET(weaponHash);
 			}
-
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_WEAPONS, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Vehicles Shoot Rockets (Left Click/RB)",
 		.Id = "veh_weapons",

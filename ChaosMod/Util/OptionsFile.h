@@ -1,19 +1,20 @@
 #pragma once
 
-#include "TryParse.h"
 #include "Logging.h"
+#include "TryParse.h"
 
-#include <unordered_map>
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 class OptionsFile
 {
-private:
-	const char* m_szFileName;
+  private:
+	const char *m_szFileName;
 	std::unordered_map<std::string, std::string> m_dictOptions;
 
-public:
-	OptionsFile(const char* szFileName) : m_szFileName(szFileName)
+  public:
+	OptionsFile(const char *szFileName) : m_szFileName(szFileName)
 	{
 		Reset();
 	}
@@ -44,16 +45,16 @@ public:
 				continue;
 			}
 
-			std::string szValue = szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
+			std::string szValue =
+				szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
 
 			m_dictOptions.emplace(szKey, szValue);
 		}
 	}
 
-	template <typename T>
-	inline T ReadValue(const std::string& szKey, T defaultValue) const
+	template <typename T> inline T ReadValue(const std::string &szKey, T defaultValue) const
 	{
-		const std::string& szValue = ReadValueString(szKey);
+		const auto &szValue = ReadValueString(szKey);
 
 		if (!szValue.empty())
 		{
@@ -67,9 +68,9 @@ public:
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::string& szKey, std::string szDefaultValue = std::string()) const
+	inline std::string ReadValueString(const std::string &szKey, const std::string &szDefaultValue = {}) const
 	{
-		const auto& result = m_dictOptions.find(szKey);
+		const auto &result = m_dictOptions.find(szKey);
 
 		if (result != m_dictOptions.end())
 		{

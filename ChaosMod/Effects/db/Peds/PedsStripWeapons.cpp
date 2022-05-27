@@ -8,10 +8,11 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_STRIP_WEAPONS, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Remove Weapons From Everyone",
 		.Id = "peds_remweps",
-		.EEffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );

@@ -11,7 +11,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
 
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	for (int i = 0; i < FAN_CATS_AMOUNT; i++)
@@ -22,10 +22,11 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_FAN_CATS, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Fan Cats",
 		.Id = "peds_spawnfancats",
-		.EEffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );

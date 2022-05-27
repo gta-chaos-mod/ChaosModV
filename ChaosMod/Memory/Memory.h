@@ -1,11 +1,16 @@
 #pragma once
 
+#include "Handle.h"
+
+#include <minhook/include/MinHook.h>
+
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
 
 class Handle;
-enum MH_STATUS : int;
+
+using DWORD64 = unsigned long long;
 
 namespace Memory
 {
@@ -13,11 +18,22 @@ namespace Memory
 	void Uninit();
 	void RunLateHooks();
 
-	_NODISCARD Handle FindPattern(const std::string& szPattern);
-	MH_STATUS AddHook(void* pTarget, void* pTetour, void* ppOrig);
+	struct PatternScanRange
+	{
+		DWORD64 m_startAddr = 0;
+		DWORD64 m_endAddr   = 0;
 
-	template <typename T>
-	inline void Write(T* pAddr, T value, int iCount = 1)
+		PatternScanRange()  = default;
+
+		PatternScanRange(DWORD64 startAddr, DWORD64 endAddr) : m_startAddr(startAddr), m_endAddr(endAddr)
+		{
+		}
+	};
+
+	_NODISCARD Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange = {});
+	MH_STATUS AddHook(void *pTarget, void *pTetour, void *ppOrig);
+
+	template <typename T> inline void Write(T *pAddr, T value, int iCount = 1)
 	{
 		DWORD ulOldProtect;
 		VirtualProtect(pAddr, sizeof(T) * iCount, PAGE_EXECUTE_READWRITE, &ulOldProtect);
@@ -30,5 +46,5 @@ namespace Memory
 		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
 	}
 
-	const char* GetTypeName(__int64 ullVftAddr);
+	_NODISCARD const char *GetTypeName(__int64 ullVftAddr);
 }
