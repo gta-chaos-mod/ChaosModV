@@ -7,7 +7,7 @@
 static int currentTier  = 0;
 static int lastPlayerKills;
 
-// clang-format off
+static const int checkInterval = 1000;
 
 //Going from worst to best
 std::vector<Hash> tiers = 
@@ -57,32 +57,49 @@ static void OnTick()
 		SET_CURRENT_PED_WEAPON(player, tiers.at(currentTier), false);
 	}
 
-	int allPlayerKills = 0;
-	int curKills       = 0;
-	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
-	{
-		STAT_GET_INT(hash, &curKills, -1);
-		allPlayerKills += curKills;
-	}
+	static DWORD64 lastTick = 0;
+	DWORD64 curTick         = GET_GAME_TIMER();
 
-	if (allPlayerKills > lastPlayerKills)
+	if (lastTick < curTick - checkInterval)
 	{
-		lastPlayerKills = allPlayerKills;
-		if (currentTier >= maxTier)
+		int allPlayerKills = 0;
+		int curKills       = 0;
+		for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
 		{
-			int maxHealth = GET_PED_MAX_HEALTH(player);
-
-			SET_ENTITY_HEALTH(player, maxHealth, 0);
-			ADD_ARMOUR_TO_PED(player, 200);
-
-			int $ = GET_PED_MONEY(player);
-			SET_PED_MONEY(player, $ + g_Random.GetRandomInt(10000, 1000000));
-
-			currentTier = 0;
+			STAT_GET_INT(hash, &curKills, -1);
+			allPlayerKills += curKills;
 		}
-		else
-			currentTier++;
+
+		if (allPlayerKills > lastPlayerKills)
+		{
+			lastPlayerKills = allPlayerKills;
+			if (currentTier >= maxTier)
+			{
+				//Reward the player with health, armour and a random amount of money.
+				int maxHealth = GET_PED_MAX_HEALTH(player);
+
+				SET_ENTITY_HEALTH(player, maxHealth, 0);
+				ADD_ARMOUR_TO_PED(player, 200);
+
+				for (int i = 0; i < 3; i++)
+				{
+					char statNameFull[32];
+					sprintf_s(statNameFull, "SP%d_TOTAL_CASH", i);
+
+					auto hash = GET_HASH_KEY(statNameFull);
+
+					int money;
+					STAT_GET_INT(hash, &money, -1);
+					STAT_SET_INT(hash, money + g_Random.GetRandomInt(100, 100000), 1);
+				}
+
+				currentTier = 0;
+			}
+			else
+				currentTier++;
+		}
 	}
+
 }
 
 static void OnStop()
@@ -97,6 +114,7 @@ static void OnStop()
 	lastPlayerKills = 0;
 }
 
+// clang-format off
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Gun Game",
