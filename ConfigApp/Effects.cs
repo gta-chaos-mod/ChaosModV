@@ -372,6 +372,9 @@ namespace ConfigApp
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
+            { "vehs_damage_x2", new EffectInfo("2x Vehicle Damage", EffectCategory.Vehicle, true) },
+            { "vehs_damage_x5", new EffectInfo("5x Vehicle Damage", EffectCategory.Vehicle, true) },
+            { "vehs_damage_x05", new EffectInfo("0.5x Vehicle Damage", EffectCategory.Vehicle, true) },
         };
     }
 }
