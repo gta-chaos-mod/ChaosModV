@@ -57,7 +57,7 @@ static bool OnHook()
 		return false;
 	}
 
-	Memory::AddHook(handle.At(8).Get<void>(), HK_ApplyChangeSetEntryStub, &OG_ApplyChangeSetEntryStub);
+	Memory::AddHook(handle.At(8).Into().Get<void>(), HK_ApplyChangeSetEntryStub, &OG_ApplyChangeSetEntryStub);
 
 	return true;
 }
