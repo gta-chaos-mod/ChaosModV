@@ -32,7 +32,7 @@ static void OnStart()
 
 	Vector3 spawnPoint = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, spawnOffset, 0);
 	Vehicle towTruck =
-		CreatePoolVehicle(towTruckHash, spawnPoint.x, spawnPoint.y, spawnPoint.z, GET_ENTITY_HEADING(player));
+	    CreatePoolVehicle(towTruckHash, spawnPoint.x, spawnPoint.y, spawnPoint.z, GET_ENTITY_HEADING(player));
 	SET_VEHICLE_ENGINE_ON(towTruck, true, true, false);
 	SET_VEHICLE_FORWARD_SPEED(towTruck, GET_ENTITY_SPEED(player));
 	SET_VEHICLE_ON_GROUND_PROPERLY(towTruck, 5);

@@ -10,7 +10,7 @@
 using DWORD64 = unsigned long long;
 
 static std::vector<BYTE> ms_rgShaderBytecode;
-static EOverrideShaderType ms_ShaderType;
+static EOverrideShaderType ms_eShaderType;
 
 static bool ms_bRefreshShaders = false;
 
@@ -20,7 +20,7 @@ void *HK_rage__CreateShader(const char *name, BYTE *data, DWORD size, DWORD type
 	if (!ms_rgShaderBytecode.empty())
 	{
 		const char *nameFilter = nullptr;
-		switch (ms_ShaderType)
+		switch (ms_eShaderType)
 		{
 		case EOverrideShaderType::LensDistortion:
 			nameFilter = "PS_LensDistortion";
@@ -69,44 +69,44 @@ namespace Hooks
 		if (result == dictShaderCache.end())
 		{
 			auto future = std::async(
-				std::launch::async,
-				[&]
-				{
-					ID3DBlob *pShader;
-					ID3DBlob *pErrorMessages;
-					HRESULT compileResult;
-					if ((compileResult = D3DCompile(szShaderSrc.data(), szShaderSrc.size(), NULL, NULL, NULL, "main",
+			    std::launch::async,
+			    [&]
+			    {
+				    ID3DBlob *pShader;
+				    ID3DBlob *pErrorMessages;
+				    HRESULT compileResult;
+				    if ((compileResult = D3DCompile(szShaderSrc.data(), szShaderSrc.size(), NULL, NULL, NULL, "main",
 				                                    "ps_4_0", 0, 0, &pShader, &pErrorMessages))
 				        == S_OK)
-					{
-						auto ptr = reinterpret_cast<BYTE *>(pShader->GetBufferPointer());
-						std::vector<BYTE> rgShaderBytecode;
-						rgShaderBytecode.reserve(pShader->GetBufferSize());
-						std::copy(ptr, ptr + pShader->GetBufferSize(), std::back_inserter(rgShaderBytecode));
+				    {
+					    auto ptr = reinterpret_cast<BYTE *>(pShader->GetBufferPointer());
+					    std::vector<BYTE> rgShaderBytecode;
+					    rgShaderBytecode.reserve(pShader->GetBufferSize());
+					    std::copy(ptr, ptr + pShader->GetBufferSize(), std::back_inserter(rgShaderBytecode));
 
-						if (dictShaderCache.size() > SHADER_CACHE_MAX_ENTRIES)
-						{
-							dictShaderCache.erase(dictShaderCache.begin());
-						}
+					    if (dictShaderCache.size() > SHADER_CACHE_MAX_ENTRIES)
+					    {
+						    dictShaderCache.erase(dictShaderCache.begin());
+					    }
 
-						dictShaderCache[hash] = rgShaderBytecode;
-						result                = dictShaderCache.find(hash);
-					}
-					else
-					{
-						LOG("Error compiling shader: Error code 0x" << std::hex << std::uppercase << compileResult);
-						if (pErrorMessages)
-						{
-							auto ptr = reinterpret_cast<BYTE *>(pErrorMessages->GetBufferPointer());
-							std::string buffer;
-							buffer.reserve(pErrorMessages->GetBufferSize());
-							std::copy(ptr, ptr + pErrorMessages->GetBufferSize(), std::back_inserter(buffer));
+					    dictShaderCache[hash] = rgShaderBytecode;
+					    result                = dictShaderCache.find(hash);
+				    }
+				    else
+				    {
+					    LOG("Error compiling shader: Error code 0x" << std::hex << std::uppercase << compileResult);
+					    if (pErrorMessages)
+					    {
+						    auto ptr = reinterpret_cast<BYTE *>(pErrorMessages->GetBufferPointer());
+						    std::string buffer;
+						    buffer.reserve(pErrorMessages->GetBufferSize());
+						    std::copy(ptr, ptr + pErrorMessages->GetBufferSize(), std::back_inserter(buffer));
 
-							LOG(buffer);
-							return;
-						}
-					}
-				});
+						    LOG(buffer);
+						    return;
+					    }
+				    }
+			    });
 
 			using namespace std::chrono_literals;
 			while (future.wait_for(0ms) != std::future_status::ready)
@@ -118,7 +118,7 @@ namespace Hooks
 		if (result != dictShaderCache.end())
 		{
 			ms_rgShaderBytecode = result->second;
-			ms_ShaderType       = shaderType;
+			ms_eShaderType      = shaderType;
 			ms_bRefreshShaders  = true;
 		}
 	}

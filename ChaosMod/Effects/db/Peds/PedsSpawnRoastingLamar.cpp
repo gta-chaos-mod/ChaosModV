@@ -20,7 +20,7 @@ static void OnStart()
 
 	LoadModel(lamarModel);
 	lamarPed =
-		CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
+	    CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(lamarModel);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))

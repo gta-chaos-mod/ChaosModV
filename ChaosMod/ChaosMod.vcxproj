@@ -98,6 +98,7 @@
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscBlackHole.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
@@ -136,7 +137,6 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBladeHunger.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
@@ -171,13 +171,21 @@
     <ClCompile Include="Effects\db\Screen\ScreenSickCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenSpinCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderArc.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderColorfulWorld.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFoldedScreen.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderInvertedColors.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLocalCoop.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderMirrored.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderRgbLand.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenFreakout.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenPotato.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderSwappedColors.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
@@ -345,6 +353,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />

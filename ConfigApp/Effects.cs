@@ -330,7 +330,6 @@ namespace ConfigApp
             { "misc_stuffguns", new EffectInfo("Improvised Weaponry", EffectCategory.Misc, true, true) },
             { "misc_random_waypoint", new EffectInfo("Random Waypoint", EffectCategory.Misc) },
             { "peds_eternal_screams", new EffectInfo("Eternal Screams", EffectCategory.Peds, true, true) },
-            { "player_blade_hunger", new EffectInfo("The Blade Hungers", EffectCategory.Player, true) },
             { "spawn_angry_chimp", new EffectInfo("Spawn Angry Chimp", EffectCategory.Peds, true) },
             { "misc_uturn", new EffectInfo("U-Turn", EffectCategory.Misc) },
             { "peds_spawn_quarreling_couple", new EffectInfo("Spawn Quarreling Couple", EffectCategory.Peds) },
@@ -364,6 +363,15 @@ namespace ConfigApp
             { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
             { "screen_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.Screen, true, true) },
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
+            { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
+            { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
+            { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
+            { "screen_swappedcolors", new EffectInfo("Swapped Colors", EffectCategory.Screen, true) },
+            { "screen_screenfreakout", new EffectInfo("Screen Freakout", EffectCategory.Screen, true, true) },
+            { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
+            { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
+            { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
+            { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
         };
     }
 }
