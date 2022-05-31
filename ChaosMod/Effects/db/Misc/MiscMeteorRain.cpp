@@ -23,12 +23,12 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos =
-			Vector3::Init(playerPos.x + g_Random.GetRandomInt(-100, 100),
+		    Vector3::Init(playerPos.x + g_Random.GetRandomInt(-100, 100),
 		                  playerPos.y + g_Random.GetRandomInt(-100, 100), playerPos.z + g_Random.GetRandomInt(25, 50));
 		Hash choosenPropHash = GET_HASH_KEY(propNames[g_Random.GetRandomInt(0, 4)]);
 		LoadModel(choosenPropHash);
 
-		Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
+		Object meteor = CreatePoolProp(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true);
 		meteorsAmount++;
 
 		for (int i = 0; i < MAX_METEORS; i++)

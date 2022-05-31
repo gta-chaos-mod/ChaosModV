@@ -14,7 +14,7 @@
 
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, const std::array<BYTE, 3> &rgTextColor,
                                    const std::array<BYTE, 3> &rgEffectTimerColor)
-	: Component()
+    : Component()
 {
 	m_rgTimerColor         = rgTimerColor;
 	m_rgTextColor          = rgTextColor;
@@ -22,30 +22,30 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, cons
 
 	m_bDisableDrawTimerBar = g_OptionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_bDisableDrawEffectTexts =
-		g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+	    g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
 
 	m_usEffectSpawnTime = g_OptionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 	m_usEffectTimedDur  = g_OptionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
 	m_usEffectTimedShortDur =
-		g_OptionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
 
 	m_usMetaEffectSpawnTime =
-		g_OptionsManager.GetConfigValue<int>("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
+	    g_OptionsManager.GetConfigValue<int>("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
 	m_usMetaEffectTimedDur =
-		g_OptionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
 	m_usMetaEffectShortDur =
-		g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
 	m_iMaxRunningEffects =
-		g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
+	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
 
 	m_iMetaEffectTimer = m_usMetaEffectSpawnTime;
 
 	m_bEnableTwitchVoting =
-		g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	    g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
 	m_eTwitchOverlayMode = static_cast<ETwitchOverlayMode>(
-		g_OptionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	Reset();
 }
@@ -66,13 +66,11 @@ void EffectDispatcher::OnRun()
 
 	if (!m_bPauseTimer)
 	{
-		if (!MetaModifiers::m_bDisableChaos)
-		{
-			UpdateTimer();
-		}
 
 		UpdateMetaEffects();
 	}
+
+	UpdateTimer();
 
 	DrawTimerBar();
 	DrawEffectTexts();
@@ -80,38 +78,29 @@ void EffectDispatcher::OnRun()
 
 void EffectDispatcher::UpdateTimer()
 {
-	if (!m_bEnableNormalEffectDispatch)
+	DWORD64 ullCurrentUpdateTime = GetTickCount64();
+
+	if (!m_bEnableNormalEffectDispatch || m_bPauseTimer || MetaModifiers::m_bDisableChaos
+	    || ullCurrentUpdateTime - m_ullTimerTimer > 1000)
 	{
+		m_ullTimerTimer = ullCurrentUpdateTime;
 		return;
 	}
 
-	DWORD64 ullCurrentUpdateTime = GetTickCount64();
+	m_fTimerPercentage +=
+	    (ullCurrentUpdateTime - m_ullTimerTimer) * MetaModifiers::m_fTimerSpeedModifier / m_usEffectSpawnTime / 1000;
+	m_ullTimerTimer = ullCurrentUpdateTime;
 
-	float fDelta                 = ullCurrentUpdateTime - m_ullTimerTimer;
-	if (fDelta > 1000.f)
-	{
-		m_usTimerTimerRuns++;
-
-		m_ullTimerTimer = ullCurrentUpdateTime;
-		fDelta          = 0;
-	}
-
-	if ((m_fPercentage = (fDelta + (m_usTimerTimerRuns * 1000))
-	                   / (m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * 1000))
-	        > 1.f
-	    && m_bDispatchEffectsOnTimer)
+	if (m_fTimerPercentage >= 1.f && m_bDispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
-		if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
+		for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
 		{
-			for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_ucAdditionalEffectsToDispatch; ucIdx++)
-			{
-				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
+			DispatchRandomEffect();
 		}
 
-		m_usTimerTimerRuns = 0;
+		m_fTimerPercentage = 0.f;
 	}
 }
 
@@ -258,8 +247,8 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
-	float fPercentage =
-		m_fFakeTimerBarPercentage > 0.f && m_fFakeTimerBarPercentage <= 1.f ? m_fFakeTimerBarPercentage : m_fPercentage;
+	float fPercentage = m_fFakeTimerBarPercentage > 0.f && m_fFakeTimerBarPercentage <= 1.f ? m_fFakeTimerBarPercentage
+	                                                                                        : m_fTimerPercentage;
 
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
@@ -348,7 +337,7 @@ _NODISCARD bool EffectDispatcher::ShouldDispatchEffectNow() const
 
 _NODISCARD int EffectDispatcher::GetRemainingTimerTime() const
 {
-	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier - m_usTimerTimerRuns;
+	return m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * (1 - m_fTimerPercentage);
 }
 
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, const char *szSuffix, bool bAddToLog)
@@ -498,7 +487,6 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 			}
 		}
 	}
-	m_fPercentage = .0f;
 }
 
 void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
@@ -647,9 +635,8 @@ void EffectDispatcher::Reset()
 
 void EffectDispatcher::ResetTimer()
 {
-	m_ullTimerTimer    = GetTickCount64();
-	m_usTimerTimerRuns = 0;
-	m_ullEffectsTimer  = GetTickCount64();
+	m_fTimerPercentage = 0.f;
+	m_ullTimerTimer = m_ullEffectsTimer = GetTickCount64();
 }
 
 float EffectDispatcher::GetEffectTopSpace()

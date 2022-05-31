@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 
 project(ChaosMod)
 
@@ -14,11 +14,11 @@ add_library(ChaosMod MODULE ${ROOT_SRC} ${SRC} ${PATTERNS_SRC} ChaosMod.rc)
 set_property(TARGET ChaosMod PROPERTY CXX_STANDARD 20)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(COMPILE_OPTIONS -DUNICODE -D_UNICODE -DNOMINMAX)
+    target_compile_options(ChaosMod PRIVATE -DUNICODE -D_UNICODE -DNOMINMAX /Zi)
+    target_link_options(ChaosMod PRIVATE /DEBUG /OPT:REF /OPT:ICF)
 else()
-    set(COMPILE_OPTIONS -municode -fpermissive)
+    target_compile_options(ChaosMod PRIVATE -municode -fpermissive)
 endif()
-target_compile_options(ChaosMod PRIVATE ${COMPILE_OPTIONS})
 
 target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor)
 

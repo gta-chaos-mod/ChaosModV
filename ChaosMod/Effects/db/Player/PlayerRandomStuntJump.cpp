@@ -5,6 +5,7 @@
 #include <stdafx.h>
 
 #include "Util/Player.h"
+#include "Util/Vehicle.h"
 
 struct Location
 {
@@ -61,8 +62,8 @@ static void OnStart()
 	{
 		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-		veh               = CreatePoolVehicle(GET_HASH_KEY("BATI"), playerPos.x, playerPos.y, playerPos.z,
-		                                      GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		veh =
+		    CreateTempVehicle("bati"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}

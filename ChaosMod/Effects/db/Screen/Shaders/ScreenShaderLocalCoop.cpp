@@ -35,8 +35,8 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Name = "Split Screen Co-op",
 		.Id = "screen_localcoop",
 		.IsTimed = true,
-        .IsShortDuration = true,
+		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

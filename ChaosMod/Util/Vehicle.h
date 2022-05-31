@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Natives.h"
-#include "Random.h"
+#include "Util/Natives.h"
+#include "Util/Random.h"
 
 #include "Memory/Hooks/HandleToEntityStructHook.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 #include "Memory/Vehicle.h"
 
+#include "Util/EntityIterator.h"
 #include "Util/Model.h"
+#include "Util/PoolSpawner.h"
 
 inline Vehicle CreateTempVehicle(Hash ulModel, float fPosX, float fPosY, float fPosZ, float fHeading)
 {

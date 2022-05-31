@@ -57,9 +57,21 @@ jobs:
         cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.exe chaosmod/
         cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
         cp ../scripts/natives_def.lua chaosmod/
+        cd ..
+        mkdir symbols
+        cd symbols
+        cp ../ChaosMod/build/ChaosMod.pdb
+        cp ../ConfigApp/bin/Release/ChaosModVConfig.pdb
+        cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.pdb
 
     - name: Upload :)
       uses: actions/upload-artifact@v1
       with:
         name: chaosmod
         path: dist
+
+    - name: Upload symbols too
+      uses: actions/upload-artifact@v1
+      with:
+        name: symbols
+        path: symbols

@@ -21,9 +21,9 @@ struct ScreenTextColor
 	const BYTE m_ucB;
 
 	ScreenTextColor(int r, int g, int b)
-		: m_ucR(static_cast<unsigned char>(r)),
-		  m_ucG(static_cast<unsigned char>(g)),
-		  m_ucB(static_cast<unsigned char>(b))
+	    : m_ucR(static_cast<unsigned char>(r)),
+	      m_ucG(static_cast<unsigned char>(g)),
+	      m_ucB(static_cast<unsigned char>(b))
 	{
 	}
 };

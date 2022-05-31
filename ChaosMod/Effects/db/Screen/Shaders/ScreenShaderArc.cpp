@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 
 #include "Memory/Hooks/ShaderHook.h"
 
@@ -11,12 +11,10 @@ SamplerState g_samLinear : register(s5)
     AddressV = Wrap;
 };
 
-float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
+float4 main(float4 position : SV_POSITION, float2 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
-    float4 col = HDRSampler.Sample(g_samLinear, texcoord);
-    col.rgb = 1. - col.rgb;
-
-    return col;
+    texcoord.y *= (1 - 4 * (texcoord.x - 0.5) * (texcoord.x - 0.5)); // Thanks Reguas
+    return HDRSampler.Sample(g_samLinear, texcoord);
 }
 )SRC";
 
@@ -33,9 +31,10 @@ static void OnStop()
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
-		.Name = "Inverted Colors",
-		.Id = "screen_invertedcolors",
+		.Name = "Arced Screen",
+		.Id = "screen_arc",
 		.IsTimed = true,
+		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
 		.EffectGroupType = EEffectGroupType::Shader
 	}

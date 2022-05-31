@@ -37,8 +37,8 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Name = "Fourth Dimension",
 		.Id = "screen_fourthdimension",
 		.IsTimed = true,
-        .IsShortDuration = true,
+		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Shader,
-        .EffectGroupType = EEffectGroupType::Shader
+		.EffectGroupType = EEffectGroupType::Shader
 	}
 );

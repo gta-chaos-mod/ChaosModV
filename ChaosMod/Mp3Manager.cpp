@@ -11,6 +11,7 @@ namespace Mp3Manager
 	void PlayChaosSoundFile(const std::string &szSoundFile)
 	{
 		std::ostringstream ossTmp;
+		std::string tmpStr;
 
 		if (ms_dictEffectSoundFilesCache.find(szSoundFile) == ms_dictEffectSoundFilesCache.end())
 		{
@@ -18,13 +19,15 @@ namespace Mp3Manager
 
 			// Check if file exists first
 			ossTmp << CHAOS_SOUNDFILES_DIR << szSoundFile;
-			if (DoesFileExist((ossTmp.str() + ".mp3").c_str()))
+			tmpStr = ossTmp.str() + ".mp3";
+			if (DoesFileExist(tmpStr.c_str()))
 			{
 				ms_dictEffectSoundFilesCache.emplace(szSoundFile, std::vector<std::string> { szSoundFile + ".mp3" });
 			}
 
 			// Check if dir also exists
-			if (stat(ossTmp.str().c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
+			tmpStr = ossTmp.str();
+			if (stat(tmpStr.c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
 			{
 				// Cache all of the mp3 files
 				std::vector<std::string> rgSoundFiles;
@@ -57,14 +60,18 @@ namespace Mp3Manager
 		ossTmp.clear();
 
 		ossTmp << "open \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" type mpegvideo";
-		int error = mciSendString(reinterpret_cast<LPCWSTR>(ossTmp.str().c_str()), NULL, 0, NULL);
+		tmpStr               = ossTmp.str();
+		std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
+		int error            = mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		ossTmp.str("");
 		ossTmp.clear();
 
 		if (!error || error == MCIERR_DEVICE_OPEN)
 		{
 			ossTmp << "play \"" << CHAOS_SOUNDFILES_DIR << szChosenSound << "\" from 0";
-			mciSendString(reinterpret_cast<LPCWSTR>(ossTmp.str().c_str()), NULL, 0, NULL);
+			tmpStr  = ossTmp.str();
+			wTmpStr = { tmpStr.begin(), tmpStr.end() };
+			mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		}
 	}
 

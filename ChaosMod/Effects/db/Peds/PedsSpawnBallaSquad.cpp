@@ -31,7 +31,7 @@ static void OnStart()
 	{
 		Hash choosenPropHash = ballaNames.at(g_Random.GetRandomInt(0, ballaNames.size() - 1));
 		Ped ped =
-			CreatePoolPed(4, choosenPropHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+		    CreatePoolPed(4, choosenPropHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 		if (i == 0)
 		{
 			SET_PED_INTO_VEHICLE(ped, veh, -1);
