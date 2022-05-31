@@ -14,6 +14,11 @@ float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOOR
 
 static void OnStart()
 {
+	if (g_Random.GetRandomInt(0,1))
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectName("screen_colorfulworld", "Colourful World");
+	}
+
 	Hooks::OverrideShader(EOverrideShaderType::Snow, ms_szShaderSrc);
 }
 
