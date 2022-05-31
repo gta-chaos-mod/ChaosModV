@@ -185,6 +185,7 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenFreakout.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenPotato.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderHueShift.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderSwappedColors.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
