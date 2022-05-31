@@ -62,4 +62,4 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, nullptr, "_ApplyChangeSetEntryStub", true);
+static RegisterHook registerHook(OnHook, nullptr, "_ApplyChangeSetEntryStub");
