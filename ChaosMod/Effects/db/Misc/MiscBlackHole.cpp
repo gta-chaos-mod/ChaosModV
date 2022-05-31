@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Util/XInput.h"
+
 static Vector3 ms_BlackHolePos;
 static float ms_fCurRadius;
 
@@ -13,8 +15,15 @@ static void OnStart()
 	ms_fCurRadius = 0.f;
 }
 
+static void OnStop()
+{
+	XInput::StopAllControllersRumble();
+}
+
 static void OnTick()
 {
+	XInput::SetAllControllersRumble(40000, 40000);
+
 	if (ms_fCurRadius < 200.f)
 	{
 		ms_fCurRadius += 0.2f + GET_FRAME_TIME();
@@ -74,7 +83,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Black Hole",
 		.Id = "world_blackhole",
