@@ -51,8 +51,6 @@ static void OnStart()
 
 	scaleForm    = 0;
 	currentMode  = FakeDeathState::start;
-	scaleForm    = 0;
-	currentMode  = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
 
