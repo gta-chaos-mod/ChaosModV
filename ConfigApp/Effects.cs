@@ -372,6 +372,7 @@ namespace ConfigApp
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
+            { "misc_frozen", new EffectInfo("Frozen", EffectCategory.Misc, true, true)},
         };
     }
 }
