@@ -34,6 +34,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Random Traffic",
 		.Id = "veh_randtraffic",
-		.IsTimed = true
+		.IsTimed = true,
+		.IsUnstable = true
 	}
 );

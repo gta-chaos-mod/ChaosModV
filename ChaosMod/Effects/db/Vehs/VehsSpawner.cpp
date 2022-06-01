@@ -272,7 +272,8 @@ REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric
+		.IsUnstable = true,
+		.EffectGroupType = EEffectGroupType::SpawnGeneric,
 	}
 );
 // clang-format on

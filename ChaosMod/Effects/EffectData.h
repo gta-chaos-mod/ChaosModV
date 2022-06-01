@@ -9,6 +9,7 @@
 #include <vector>
 
 inline bool g_bEnableGroupWeighting = true;
+inline bool g_bEnableUnstableEffects = false;
 
 struct EffectData
 {

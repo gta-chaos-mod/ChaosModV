@@ -88,6 +88,12 @@ namespace ConfigApp
             effectconf_effect_shortcut_combo.ItemsSource = availableKeys;
             effectconf_effect_shortcut_combo.SelectedItem = selectedKey;
 
+            //Unstable Effect
+            if (effectInfo.IsUnstable)
+            {
+                effectconf_effect_isunstable_value.Content = "Yes";
+            }
+
             CheckEnableConfigurables();
         }
 

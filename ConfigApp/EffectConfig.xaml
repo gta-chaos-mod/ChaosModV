@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Effect Config" Height="400" Width="700" ResizeMode="NoResize">
+        Title="Effect Config" Height="430" Width="700" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="370" />
@@ -17,6 +17,7 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="45" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="30" />
@@ -61,14 +62,18 @@
         <CheckBox x:Name="effectconf_exclude_voting_enable" Grid.Row="5" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center"
                   Click="OnClicked"/>
-        <TextBlock x:Name="effectconf_mp3_label" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" FontSize="10"
+        <TextBlock x:Name="effectconf_mp3_label" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" FontSize="10"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Button Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
+        <Button Content="Save" Height="35" Width="75" Margin="0,0,5,0" Grid.Row="9" Grid.Column="2"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
                 Click="OnSave"/>
         <Label x:Name="effectconf_effect_shortcut_key_title" Content="Shortcut"
             Grid.Row="6" Grid.Column="0" Margin="0,5.667,0,10.333" HorizontalAlignment="Right" Width="360" HorizontalContentAlignment="Right" />
         <ComboBox x:Name="effectconf_effect_shortcut_combo" Width="120" Grid.Row="6" Grid.Column="2"
             HorizontalAlignment="Left" Margin="0,5.667,0,9.333" />
+        <Label x:Name="effectconf_effect_isunstable_title" Content="Effect Is Considered Unstable"
+               Grid.Row="7" Grid.Column="0" Margin="0,5.667,0,10.333" HorizontalAlignment="Right" Width="360" HorizontalContentAlignment="Right" />
+        <Label x:Name="effectconf_effect_isunstable_value" Content="No" 
+               Grid.Row="7" Grid.Column="2" Margin="0,5.667,0,10.333" HorizontalAlignment="Left" Width="100" HorizontalContentAlignment="Left" />
     </Grid>
 </Window>

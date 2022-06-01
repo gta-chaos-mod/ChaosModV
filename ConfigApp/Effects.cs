@@ -6,18 +6,20 @@ namespace ConfigApp
     {
         public struct EffectInfo
         {
-            public EffectInfo(string name, EffectCategory effectCategory, bool isTimed = false, bool isShort = false)
+            public EffectInfo(string name, EffectCategory effectCategory, bool isTimed = false, bool isShort = false, bool isUnstable = false)
             {
                 Name = name;
                 EffectCategory = effectCategory;
                 IsTimed = isTimed;
                 IsShort = isShort;
+                IsUnstable = isUnstable;
             }
 
             public readonly string Name;
             public readonly EffectCategory EffectCategory;
             public readonly bool IsTimed;
             public readonly bool IsShort;
+            public readonly bool IsUnstable;
         }
 
         public enum EffectCategory
@@ -109,7 +111,7 @@ namespace ConfigApp
             { "spawn_ruiner3", new EffectInfo("Spawn Ruined Ruiner", EffectCategory.Vehicle) },
             { "spawn_baletrailer", new EffectInfo("Spawn Bale Trailer", EffectCategory.Vehicle) },
             { "spawn_romero", new EffectInfo("Where's The Funeral?", EffectCategory.Vehicle) },
-            { "spawn_random", new EffectInfo("Spawn Random Vehicle", EffectCategory.Vehicle) },
+            { "spawn_random", new EffectInfo("Spawn Random Vehicle", EffectCategory.Vehicle, false, false, true) },
             { "notraffic", new EffectInfo("No Traffic", EffectCategory.Vehicle, true) },
             { "playerveh_explode", new EffectInfo("Detonate Current Vehicle", EffectCategory.Vehicle) },
             { "peds_ghost", new EffectInfo("Everyone Is A Ghost", EffectCategory.Peds, true) },
@@ -186,8 +188,8 @@ namespace ConfigApp
             { "peds_revive", new EffectInfo("Revive Dead Peds", EffectCategory.Peds) },
             { "world_snow", new EffectInfo("Snow", EffectCategory.Weather, true) },
             { "world_whalerain", new EffectInfo("Whale Rain", EffectCategory.Misc, true) },
-            { "playerveh_maxupgrades", new EffectInfo("Add Max Upgrades To Every Vehicle", EffectCategory.Vehicle) },
-            { "playerveh_randupgrades", new EffectInfo("Add Random Upgrades To Every Vehicle", EffectCategory.Vehicle) },
+            { "playerveh_maxupgrades", new EffectInfo("Add Max Upgrades To Every Vehicle", EffectCategory.Vehicle, false, false, true) },
+            { "playerveh_randupgrades", new EffectInfo("Add Random Upgrades To Every Vehicle", EffectCategory.Vehicle, false, false, true) },
             { "player_arenawarstheme", new EffectInfo("Play Arena Wars Theme", EffectCategory.Misc, true) },
             { "peds_driveby", new EffectInfo("Peds Drive-By Player", EffectCategory.Peds, true, true) },
             { "player_randclothes", new EffectInfo("Randomize Player Clothes", EffectCategory.Player) },
@@ -257,7 +259,7 @@ namespace ConfigApp
             { "player_poof", new EffectInfo("Deadly Aim", EffectCategory.Player, true) },
             { "player_simeonsays", new EffectInfo("Simeon Says", EffectCategory.Player, true, true) },
             { "player_lockcamera", new EffectInfo("Lock Camera", EffectCategory.Player, true) },
-            { "misc_replacevehicle", new EffectInfo("Replace Current Vehicle", EffectCategory.Vehicle) },
+            { "misc_replacevehicle", new EffectInfo("Replace Current Vehicle", EffectCategory.Vehicle, false, false, true) },
             { "player_tired", new EffectInfo("I'm So Tired", EffectCategory.Player, true) },
             { "player_kickflip", new EffectInfo("Kickflip", EffectCategory.Player) },
             { "misc_superstunt", new EffectInfo("Super Stunt", EffectCategory.Misc) },
@@ -268,9 +270,9 @@ namespace ConfigApp
             { "player_rapid_fire", new EffectInfo("Rapid Fire", EffectCategory.Player, true) },
             { "player_on_demand_cartoon", new EffectInfo("On-Demand TV", EffectCategory.Screen, true) },
             { "peds_drive_backwards", new EffectInfo("Peds Drive Backwards", EffectCategory.Peds, true) },
-            { "veh_randtraffic", new EffectInfo("Random Traffic", EffectCategory.Vehicle, true) },
+            { "veh_randtraffic", new EffectInfo("Random Traffic", EffectCategory.Vehicle, true, false, true) },
             { "misc_rampjam", new EffectInfo("Ramp Jam", EffectCategory.Misc, true) },
-            { "misc_vehicle_rain", new EffectInfo("Vehicle Rain", EffectCategory.Misc, true, true) },
+            { "misc_vehicle_rain", new EffectInfo("Vehicle Rain", EffectCategory.Misc, true, true, true) },
             { "misc_fakecrash", new EffectInfo("Fake Crash", EffectCategory.Misc) },
             { "player_gravity", new EffectInfo("Gravity Field", EffectCategory.Player, true, true) },
             { "veh_bouncy", new EffectInfo("Bouncy Vehicles", EffectCategory.Vehicle, true, false) },
