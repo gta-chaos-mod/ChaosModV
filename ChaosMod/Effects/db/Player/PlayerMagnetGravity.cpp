@@ -108,7 +108,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Pulsating Gravity Field",
 		.Id = "player_magnetgravity",
