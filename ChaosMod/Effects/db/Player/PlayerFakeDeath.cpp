@@ -168,8 +168,10 @@ static void OnStart()
 							{
 								if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x, plrCoords.y, plrCoords.z, false) > 1.5)
 								{
-									LOG("Skipping to cleanup");
+									GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath",
+									                                                       fakeEffectId);
 									WAIT(2000);
+
 									currentMode = FakeDeathState::cleanup;
 									goto SKIP_TO_CLEANUP; //eww, a goto statement
 								}
@@ -215,7 +217,7 @@ static void OnStart()
 			SHAKE_GAMEPLAY_CAM("DEATH_FAIL_IN_EFFECT_SHAKE", 1);
 			break;
 		}
-		case FakeDeathState::overlay: // 2 Seconds later, Show Fake Wasted Screen Message
+		case FakeDeathState::overlay: // 2 Seconds later, Show Fake Wasted/Mission Failed Screen Message
 		{
 			scaleForm = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 			while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
@@ -230,16 +232,10 @@ static void OnStart()
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
 			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
 
-			if (GET_MISSION_FLAG())
-			{
-				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~mission failed");
-				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(std::string(GetPlayerName()+" Died. " + ms_rgTextPairs[iChosenIndex]).c_str());
-			}
-			else
-			{
-				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
-				SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
-			}
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(GET_MISSION_FLAG() ? "~r~mission failed" : "~r~wasted");
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(
+			    GET_MISSION_FLAG() ? std::string(GetPlayerName() + " Died. " + ms_rgTextPairs[iChosenIndex]).c_str()
+			                                                                       : ms_rgTextPairs[iChosenIndex]);
 
 			END_SCALEFORM_MOVIE_METHOD();
 			PLAY_SOUND_FRONTEND(soundId, "TextHit", "WastedSounds", true);
