@@ -177,3 +177,17 @@ _NODISCARD inline auto GetAllPropsArray()
 {
 	return GetAllProps().ToArray();
 }
+
+_NODISCARD inline auto GetAllEntitiesArray()
+{
+	auto pedsArray = GetAllPedsArray();
+	auto vehsArray = GetAllVehsArray();
+	auto propsArray = GetAllPropsArray();
+
+	std::vector<Entity> entitiesArray;
+	entitiesArray.insert(entitiesArray.end(), pedsArray.begin(), pedsArray.end());
+	entitiesArray.insert(entitiesArray.end(), vehsArray.begin(),vehsArray.end());
+	entitiesArray.insert(entitiesArray.end(), propsArray.begin(), propsArray.end());
+
+	return entitiesArray;
+}
