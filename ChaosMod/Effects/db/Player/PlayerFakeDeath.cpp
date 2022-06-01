@@ -56,12 +56,11 @@ static void OnStart()
 {	
 	AUDIO::REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", 0, -1);
 	static int soundId = GET_SOUND_ID();
+
 	scaleForm = 0;
 	currentMode = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
-
-
 
 	while (currentMode < FakeDeathState::cleanup)
 	{
@@ -167,8 +166,21 @@ static void OnStart()
 							{
 								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
 							}
-							Vector3 coords = GET_ENTITY_COORDS(veh, false);
-							ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
+							Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
+							Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, false);
+							ADD_EXPLOSION(vehCoords.x, vehCoords.y, vehCoords.z, 7, 999, true, false, 1, true);
+
+							//skip right to the cleanup if the player bailed out of the vehicle and is far enough away.
+							if (!IS_PED_IN_VEHICLE(playerPed, veh, false))
+							{
+								if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x, plrCoords.y, plrCoords.z, false) > 1.5)
+								{
+									LOG("Skipping to cleanup");
+									WAIT(2000);
+									currentMode = FakeDeathState::cleanup;
+									goto SKIP_TO_CLEANUP; //eww, a goto statement
+								}
+							}
 
 							break;
 						}
@@ -241,6 +253,7 @@ static void OnStart()
 			break;
 		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
+SKIP_TO_CLEANUP:
 			Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 			SET_VEHICLE_FIXED(veh);
 			STOP_ANIM_TASK(playerPed, "mp_suicide", "pistol", 3);
