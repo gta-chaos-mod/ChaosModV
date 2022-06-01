@@ -1,5 +1,5 @@
 /*
-    Effect by Last0xygen
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -11,25 +11,26 @@ static void OnTick()
 	Ped player = PLAYER_PED_ID();
 	std::vector<Entity> entities;
 
-	for (Ped ped : GetAllPeds())
+	for (Entity ent : GetAllEntitiesArray())
 	{
-		if (ped != player)
+		if (IS_ENTITY_A_PED(ent))
 		{
-			entities.push_back(ped);
+			if (ent != player)
+			{
+				entities.push_back(ent);
+			}
 		}
-	}
-
-	for (Vehicle veh : GetAllVehs())
-	{
-		if (!IS_PED_IN_VEHICLE(player, veh, false))
+		else if (IS_ENTITY_A_VEHICLE(ent))
 		{
-			entities.push_back(veh);
+			if (!IS_PED_IN_VEHICLE(player, ent, false))
+			{
+				entities.push_back(ent);
+			}
 		}
-	}
-
-	for (Entity prop : GetAllProps())
-	{
-		entities.push_back(prop);
+		else
+		{
+			entities.push_back(ent);
+		}
 	}
 
 	Vector3 playerCoord = GET_ENTITY_COORDS(player, false);
