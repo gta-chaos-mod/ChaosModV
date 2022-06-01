@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh, code mostly repurposed from "Prop Hunt"
+    Effect by Gorakh, code mostly repurposed from "Prop Hunt"
 */
 
 #include <stdafx.h>
@@ -24,13 +24,14 @@ static void RefreshVehiclePropLink(Vehicle veh, Object prop)
 	SET_ENTITY_ALPHA(veh, 0, false);
 
 	Vector3 offset = GetPropOffset(GET_ENTITY_MODEL(prop));
-	ATTACH_ENTITY_TO_ENTITY(prop, veh, GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis"), offset.x, offset.y, offset.z, 0.f, 0.f, 0.f, false, false, false, false, 0, true);
+	ATTACH_ENTITY_TO_ENTITY(prop, veh, GET_ENTITY_BONE_INDEX_BY_NAME(veh, "chassis"), offset.x, offset.y, offset.z, 0.f,
+	                        0.f, 0.f, false, false, false, false, 0, true);
 }
 
 static void OnTick()
 {
 	static int lastModelsUpdateTick = 0;
-	int currentTick = GET_GAME_TIMER();
+	int currentTick                 = GET_GAME_TIMER();
 	if (currentTick - lastModelsUpdateTick > 1000 || availablePropModels.empty())
 	{
 		lastModelsUpdateTick = currentTick;
@@ -59,7 +60,8 @@ static void OnTick()
 		{
 			if (DOES_ENTITY_EXIST(veh) && vehPropsMap.count(veh) == 0)
 			{
-				// Rather than using a predefined list of prop hashes, get a random existing prop and use that as the model
+				// Rather than using a predefined list of prop hashes, get a random existing prop and use that as the
+				// model
 				Hash propModel = availablePropModels[g_Random.GetRandomInt(0, availablePropModels.size() - 1)];
 				LoadModel(propModel);
 
@@ -79,12 +81,12 @@ static void OnTick()
 	}
 
 	static int lastPropVehsCheckTick = 0;
-	currentTick = GET_GAME_TIMER();
+	currentTick                      = GET_GAME_TIMER();
 	if (currentTick - lastPropVehsCheckTick > 500)
 	{
 		lastPropVehsCheckTick = currentTick;
 
-		int count = 20;
+		int count             = 20;
 		for (auto it = vehPropsMap.cbegin(); it != vehPropsMap.cend();)
 		{
 			Vehicle veh = it->first;
@@ -120,7 +122,7 @@ static void OnTick()
 
 static void OnStop()
 {
-	for (auto& it : vehPropsMap)
+	for (auto &it : vehPropsMap)
 	{
 		Vehicle veh = it.first;
 		Object prop = it.second;
@@ -139,11 +141,12 @@ static void OnStop()
 	vehPropsMap.clear();
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_PROP_MODELS, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Prop Cars",
 		.Id = "vehs_prop_models",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_VEHS_INVISIBLE }
+		.IncompatibleWith = { "vehs_ghost" }
 	}
 );

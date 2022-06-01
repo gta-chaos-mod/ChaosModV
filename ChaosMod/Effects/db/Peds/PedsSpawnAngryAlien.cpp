@@ -1,21 +1,21 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
 
 static std::vector<Ped> m_peds;
 
-//based on PedsSpawnAngryJesus.cpp
+// based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {
-	static const Hash alienHash = GET_HASH_KEY("s_m_m_movalien_01");
+	static const Hash alienHash   = GET_HASH_KEY("s_m_m_movalien_01");
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                 = PLAYER_PED_ID();
+	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
+	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
 	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
 
 	Hash relationshipGroup;
@@ -49,17 +49,18 @@ static void OnStart()
 	SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(ped, false);
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
-	
+
 	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAYPISTOL"), 9999, true, true); // give the alien an up n atomizer
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_ALIEN, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Angry Alien",
 		.Id = "peds_angryalien",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

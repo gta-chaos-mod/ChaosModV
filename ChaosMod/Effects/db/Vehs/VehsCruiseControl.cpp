@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -32,13 +32,14 @@ static void OnTick()
 			}
 		}
 	}
-	else 
+	else
 	{
 		currentVel = -1;
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_CRUISE_CONTROL, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Cruise Control",
 		.Id = "vehs_cruise_control",

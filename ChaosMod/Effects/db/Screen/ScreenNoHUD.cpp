@@ -9,11 +9,12 @@ static void OnTick()
 	DISABLE_CONTROL_ACTION(0, 200, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_HUD, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "No HUD",
 		.Id = "no_hud",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_NO_RADAR } 
+		.IncompatibleWith = { "no_radar" } 
 	}
 );

@@ -9,7 +9,7 @@
 #if defined(_MSC_VER)
 	#define NATIVE_DECL __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
-	#define NATIVE_DECL __attribute__((always_inline))
+	#define NATIVE_DECL __attribute__((always_inline)) inline
 #else
 	#define NATIVE_DECL inline
 #endif
@@ -2125,7 +2125,7 @@ namespace ENTITY
 	// 
 	// p6/relative - makes the xyz force not relative to world coords, but to something else
 	// p7/highForce - setting false will make the force really low
-	NATIVE_DECL void APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(Entity entity, int forceType, float x, float y, float z, BOOL p5, BOOL isDirectionRel, BOOL isForceRel, BOOL p8) { invoke<Void>(0x18FF00FC7EFF559E, entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8); } // 0x18FF00FC7EFF559E 0x28924E98 b323
+	//NATIVE_DECL void APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(Entity entity, int forceType, float x, float y, float z, BOOL p5, BOOL isDirectionRel, BOOL isForceRel, BOOL p8) { invoke<Void>(0x18FF00FC7EFF559E, entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8); } // 0x18FF00FC7EFF559E 0x28924E98 b323
 	// Documented here:
 	// gtaforums.com/topic/885669-precisely-define-object-physics/
 	// gtaforums.com/topic/887362-apply-forces-and-momentums-to-entityobject/
@@ -2150,7 +2150,7 @@ namespace ENTITY
 	// isMassRel: if true the force gets multiplied with the objects mass (this is why it was known as highForce) and different objects will have the same acceleration.
 	// 
 	// p8 !!! Whenever I set this !=0, my script stopped.
-	NATIVE_DECL void APPLY_FORCE_TO_ENTITY(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY, float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel, BOOL p12, BOOL p13) { invoke<Void>(0xC5F68BE9613E2D18, entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec, isForceRel, p12, p13); } // 0xC5F68BE9613E2D18 0xC1C0855A b323
+	//NATIVE_DECL void APPLY_FORCE_TO_ENTITY(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY, float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel, BOOL p12, BOOL p13) { invoke<Void>(0xC5F68BE9613E2D18, entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec, isForceRel, p12, p13); } // 0xC5F68BE9613E2D18 0xC1C0855A b323
 	// Attaches entity1 to bone (boneIndex) of entity2.
 	// 
 	// boneIndex - this is different to boneID, use GET_PED_BONE_INDEX to get the index from the ID. use the index for attaching to specific bones. entity1 will be attached to entity2's centre if bone index given doesn't correspond to bone indexes for that entity type.

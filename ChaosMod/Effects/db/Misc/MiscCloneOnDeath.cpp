@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -11,7 +11,7 @@ struct TemporarilyInvincibleEntity
 
 	TemporarilyInvincibleEntity(Entity _entity, int waitTime)
 	{
-		entity = _entity;
+		entity               = _entity;
 		endInvincibilityTick = GET_GAME_TIMER() + waitTime;
 	}
 };
@@ -48,7 +48,8 @@ static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
 	{
-		if (DOES_ENTITY_EXIST(ped) && IS_ENTITY_DEAD(ped, 0) && std::find(excludeEntities.begin(), excludeEntities.end(), ped) == excludeEntities.end())
+		if (DOES_ENTITY_EXIST(ped) && IS_ENTITY_DEAD(ped, 0)
+		    && std::find(excludeEntities.begin(), excludeEntities.end(), ped) == excludeEntities.end())
 		{
 			excludeEntities.push_back(ped);
 			Ped clone = CreatePoolClonePed(ped);
@@ -57,9 +58,9 @@ static void OnTick()
 			{
 				Vehicle pedVehicle = GET_VEHICLE_PED_IS_IN(ped, false);
 
-				int pedSeatIndex = -2;
+				int pedSeatIndex   = -2;
 
-				int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(pedVehicle));
+				int maxSeats       = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(pedVehicle));
 				for (int i = -1; i < maxSeats; i++)
 				{
 					if (!IS_VEHICLE_SEAT_FREE(pedVehicle, i, false) && GET_PED_IN_VEHICLE_SEAT(pedVehicle, i, 0) == ped)
@@ -69,7 +70,9 @@ static void OnTick()
 					}
 				}
 
-				// Best way I could find to free up the seat, the ped is dead so TASK_LEAVE_VEHICLE doesn't work, and setting the ped's coordinates to somewhere else left the seat in some kind of weird half-occipied state
+				// Best way I could find to free up the seat, the ped is dead so TASK_LEAVE_VEHICLE doesn't work, and
+				// setting the ped's coordinates to somewhere else left the seat in some kind of weird half-occipied
+				// state
 				if (!IS_PED_A_PLAYER(ped))
 				{
 					SET_ENTITY_AS_MISSION_ENTITY(ped, true, true);
@@ -83,12 +86,13 @@ static void OnTick()
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (DOES_ENTITY_EXIST(veh) && IS_ENTITY_DEAD(veh, 0) && std::find(excludeEntities.begin(), excludeEntities.end(), veh) == excludeEntities.end())
+		if (DOES_ENTITY_EXIST(veh) && IS_ENTITY_DEAD(veh, 0)
+		    && std::find(excludeEntities.begin(), excludeEntities.end(), veh) == excludeEntities.end())
 		{
 			excludeEntities.push_back(veh);
 			Vehicle cloneVeh = CreatePoolCloneVehicle(veh);
 
-			int maxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+			int maxSeats     = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 			for (int i = -1; i < maxSeats; i++)
 			{
 				if (!IS_VEHICLE_SEAT_FREE(veh, i, false))
@@ -102,13 +106,14 @@ static void OnTick()
 				SET_VEHICLE_ENGINE_ON(cloneVeh, true, true, false);
 			}
 
-			// Prevent vehicle from blowing up instantly on spawn, creating an infinite feedback loop of spawning and exploding vehicles
+			// Prevent vehicle from blowing up instantly on spawn, creating an infinite feedback loop of spawning and
+			// exploding vehicles
 			SET_ENTITY_INVINCIBLE(cloneVeh, true);
 			temporarilyInvincibleEntities.push_back(TemporarilyInvincibleEntity(cloneVeh, 500));
 		}
 	}
 
-	for (auto it = temporarilyInvincibleEntities.begin(); it != temporarilyInvincibleEntities.end(); )
+	for (auto it = temporarilyInvincibleEntities.begin(); it != temporarilyInvincibleEntities.end();)
 	{
 		TemporarilyInvincibleEntity invincibleEntity = *it;
 
@@ -130,7 +135,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_CLONE_ON_DEATH, OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Resurrection Day",
 		.Id = "misc_clone_on_death",

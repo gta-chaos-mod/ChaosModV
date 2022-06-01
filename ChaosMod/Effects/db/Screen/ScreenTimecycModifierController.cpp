@@ -18,14 +18,17 @@ static void OnTickMexico()
 	StartTransitionTimecycle("trevorspliff");
 }
 
-static RegisterEffect registerEffect1(EFFECT_SCREEN_MEXICO, nullptr, OnStop, OnTickMexico, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, EffectInfo
 	{
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnStopBright()
 {
 	OnStop();
@@ -39,7 +42,7 @@ static void OnStopBright()
 static void OnTickBright()
 {
 	StartTransitionTimecycle("mp_x17dlc_int_02");
-  
+
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 1, 255, 255, 255, 5000, 5, 0);
 	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 100, 255, 255, 255, 5000, 10, 0);
@@ -49,48 +52,56 @@ static void OnTickBright()
 
 	for (auto car : GetAllVehs())
 	{
-		SET_VEHICLE_LIGHTS(car, 2); // Vehicles lights always on even if no peds inside
+		SET_VEHICLE_LIGHTS(car, 2);               // Vehicles lights always on even if no peds inside
 		SET_VEHICLE_LIGHT_MULTIPLIER(car, 10000); // Make lights eye hurting
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_SCREEN_BRIGHT, nullptr, OnStopBright, OnTickBright, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, EffectInfo
 	{
 		.Name = "Deep Fried",
 		.Id = "screen_bright",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnTickFog()
 {
 	StartTransitionTimecycle("prologue_ending_fog");
 }
 
-static RegisterEffect registerEffect3(EFFECT_SCREEN_FOG, nullptr, OnStop, OnTickFog, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickFog, EffectInfo
 	{
 		.Name = "Extreme Fog",
 		.Id = "screen_fog",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnTickRenderdist()
 {
 	StartTransitionTimecycle("Mp_apart_mid");
 }
 
-static RegisterEffect registerEffect4(EFFECT_SCREEN_RENDERDIST, nullptr, OnStop, OnTickRenderdist, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, EffectInfo
 	{
 		.Name = "Where Did Everything Go?",
 		.Id = "screen_lowrenderdist",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
 
 static void OnStopLSD()
 {
@@ -121,7 +132,7 @@ static void OnTickLSD()
 
 	REQUEST_CLIP_SET("MOVE_M@DRUNK@VERYDRUNK");
 	SET_PED_MOVEMENT_CLIPSET(playerPed, "MOVE_M@DRUNK@VERYDRUNK", 1.f);
-	
+
 	SET_PED_IS_DRUNK(playerPed, true);
 
 	// Random right / left steering
@@ -133,7 +144,8 @@ static void OnTickLSD()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();;
+		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		;
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -168,14 +180,17 @@ static void OnTickLSD()
 	}
 }
 
-static RegisterEffect registerEffect6(EFFECT_SCREEN_LSD, nullptr, OnStopLSD, OnTickLSD, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, EffectInfo
 	{
 		.Name = "LSD",
 		.Id = "screen_lsd",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnStartFullbright()
 {
 	SET_CLOCK_TIME(0, 0, 0);
@@ -186,14 +201,17 @@ static void OnTickFullbright()
 	StartTransitionTimecycle("int_lesters");
 }
 
-static RegisterEffect registerEffect7(EFFECT_SCREEN_FULLBRIGHT, OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
 	{
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnTickBubbleVision()
 {
 	StartTransitionTimecycle("ufo_deathray");
@@ -201,21 +219,24 @@ static void OnTickBubbleVision()
 	SET_AUDIO_SPECIAL_EFFECT_MODE(1);
 }
 
-static RegisterEffect registerEffect8(EFFECT_SCREEN_BUBBLEVISION, nullptr, OnStop, OnTickBubbleVision, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, EffectInfo
 	{
 		.Name = "Bubble Vision",
 		.Id = "screen_bubblevision",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LS_NOIRE, EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnStartLSNoire()
 {
 	Ped player = PLAYER_PED_ID();
 	switch (GET_ENTITY_MODEL(player)) // Change outfits for every player to a suit to fit the noire setting
 	{
-	case 225514697: // Michael 
+	case 225514697: // Michael
 		SET_PED_COMPONENT_VARIATION(player, 0, 0, 2, 0);
 		SET_PED_COMPONENT_VARIATION(player, 1, 0, 0, 0);
 		SET_PED_COMPONENT_VARIATION(player, 2, 0, 0, 0);
@@ -267,25 +288,29 @@ static void OnTickLSNoire()
 	StartTransitionTimecycle("NG_filmnoir_BW01");
 }
 
-static RegisterEffect registerEffectLsNoire(EFFECT_SCREEN_LS_NOIRE, OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
 	{
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT, EFFECT_SCREEN_BUBBLEVISION }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
+// clang-format on
+
 static void OnTickNeedGlasses()
 {
 	StartTransitionTimecycle("hud_def_blur");
 }
 
-static RegisterEffect registerEffectGlases(EFFECT_SCREEN_NEED_GLASSES, nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.IncompatibleWith = { EFFECT_SCREEN_LSD, EFFECT_SCREEN_RENDERDIST, EFFECT_SCREEN_FOG, EFFECT_SCREEN_BRIGHT, EFFECT_SCREEN_MEXICO, EFFECT_SCREEN_FULLBRIGHT }
+		.EffectCategory = EEffectCategory::Timecycle
 	}
 );

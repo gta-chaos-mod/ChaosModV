@@ -1,9 +1,15 @@
 #pragma once
 
-#include "Memory.h"
-#include "Handle.h"
-#include "Entity.h"
-#include "../Util/Logging.h"
+#include "Memory/Entity.h"
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
+
+#include "Util/Logging.h"
+
+#include <scripthookv/inc/nativeCaller.h>
+#include <scripthookv/inc/types.h>
+
+#include <tuple>
 
 using DWORD64 = unsigned long long;
 
@@ -11,12 +17,12 @@ namespace Memory
 {
 	inline bool DoesEntityHaveCollider(Entity entity)
 	{
-		static auto CEntity_GetColliderNonConst = []() -> void*(*)(DWORD64)
+		static auto CEntity_GetColliderNonConst = []() -> void *(*)(DWORD64)
 		{
 			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D");
 			if (handle.IsValid())
 			{
-				return handle.At(17).Into().Get<void*(DWORD64)>();
+				return handle.At(17).Into().Get<void *(DWORD64)>();
 			}
 
 			LOG("CEntity::GetColliderNonConst not found");
@@ -66,21 +72,31 @@ namespace Memory
 	inline bool IsFreeToActivatePhysics()
 	{
 		const int MIN_FREE_COLLIDER_SLOTS = 50;
-		
+
 		return GetNumFreeColliderSlots() > MIN_FREE_COLLIDER_SLOTS;
 	}
-	
-	// Safe version of APPLY_FORCE_TO_ENTITY with checks for available colliders to ensure the physics engine is not overwhelmed.
-	inline void ApplyForceToEntity(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY, float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel, BOOL p12, BOOL p13)
+
+	// Safe version of APPLY_FORCE_TO_ENTITY with checks for available colliders to ensure the physics engine is not
+	// overwhelmed.
+	inline void ApplyForceToEntity(Entity entity, int forceFlags, float x, float y, float z, float offX, float offY,
+	                               float offZ, int boneIndex, BOOL isDirectionRel, BOOL ignoreUpVec, BOOL isForceRel,
+	                               BOOL p12, BOOL p13)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
-			APPLY_FORCE_TO_ENTITY(entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel, ignoreUpVec, isForceRel, p12, p13);
+		{
+			invoke<Void>(0xC5F68BE9613E2D18, entity, forceFlags, x, y, z, offX, offY, offZ, boneIndex, isDirectionRel,
+			             ignoreUpVec, isForceRel, p12, p13);
+		}
 	}
 
-	// Safe version of APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS with checks for available colliders to ensure the physics engine is not overwhelmed.
-	inline void ApplyForceToEntityCenterOfMass(Entity entity, int forceType, float x, float y, float z, BOOL p5, BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
+	// Safe version of APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS with checks for available colliders to ensure the physics
+	// engine is not overwhelmed.
+	inline void ApplyForceToEntityCenterOfMass(Entity entity, int forceType, float x, float y, float z, BOOL p5,
+	                                           BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
-			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
+		{
+			invoke<Void>(0x18FF00FC7EFF559E, entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
+		}
 	}
 }

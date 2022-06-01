@@ -19,11 +19,12 @@ static void OnTick()
 	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
-static RegisterEffect registerEffect(EFFECT_HIGH_PITCH, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "High Pitch",
 		.Id = "misc_highpitch",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_PEDS_MINIONS, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05 }
+		.EffectCategory = EEffectCategory::Pitch
 	}
 );
