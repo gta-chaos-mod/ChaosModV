@@ -23,6 +23,15 @@ static void OnStart()
 	lastChangeTick = GetTickCount64();
 }
 
+static void OnStop()
+{
+	SET_PLAYER_INVINCIBLE(PLAYER_ID(), false);
+	for (Entity ent : GetAllEntitiesArray())
+	{
+		SET_ENTITY_INVINCIBLE(ent, false);
+	}
+}
+
 static void OnTick()
 {
 	DWORD64 currentTick = GetTickCount64();
@@ -32,17 +41,12 @@ static void OnTick()
 		g_EffectState = (MagnetGravityState)(g_EffectState >= 1 ? -1 : g_EffectState + 1);
 	}
 
-	#pragma region Variables
-	static Ped player    = PLAYER_ID();
 	Ped playerPed = PLAYER_PED_ID();
 	Vector3 playerCoord = GET_ENTITY_COORDS(playerPed, false);
 	
 	int count = 10;
 	std::vector<Entity> entities;
-	#pragma endregion
 	
-	#pragma region Get Entities
-	// get all moveable entities
 	for (Entity ent : GetAllEntitiesArray())
 	{
 		if (IS_ENTITY_A_PED(ent))
@@ -64,10 +68,11 @@ static void OnTick()
 			entities.push_back(ent);
 		}
 	}
-	#pragma endregion
 
 	if (g_EffectState != IDLE)
 	{
+		SET_PLAYER_INVINCIBLE(PLAYER_ID(), true);
+
 		float randomDistance = g_Random.GetRandomFloat(minDistance, maxDistance);
 		for (Entity entity : entities)
 		{
