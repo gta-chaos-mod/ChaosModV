@@ -13,7 +13,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx5, EffectInfo
 		.Id = "player_movementx5",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Control
+		.EffectCategory = EEffectCategory::Movement
 	}
 );
 
@@ -30,7 +30,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx10, EffectInfo
 		.Id = "player_movementx10",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Control
+		.EffectCategory = EEffectCategory::Movement
 	}
 );
 
@@ -47,6 +47,6 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx05, EffectInfo
 		.Id = "player_movementx05",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Control
+		.EffectCategory = EEffectCategory::Movement
 	}
 );
