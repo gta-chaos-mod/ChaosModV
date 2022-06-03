@@ -31,6 +31,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Id = "timecycle_darkworld",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Shader // Could be classified as a shader
+		.EffectCategory = EEffectCategory::Shader
 	}
 );
