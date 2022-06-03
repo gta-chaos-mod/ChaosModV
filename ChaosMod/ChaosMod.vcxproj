@@ -189,6 +189,7 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
+    <ClCompile Include="Effects\db\Screen\Timecycle\ScreenTimecycleRtx.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
