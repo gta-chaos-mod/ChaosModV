@@ -59,14 +59,18 @@ static void OnStop()
 		}
 	}
 	ufoBusy = false;
-	DELETE_OBJECT(&ufo);
+	
+	if (DOES_ENTITY_EXIST(ufo))
+	{
+		SET_OBJECT_AS_NO_LONGER_NEEDED(&ufo);
+	}
 
 	ENABLE_ALIEN_BLOOD_VFX(false);
 }
 
 static void OnTick()
 {
-	static constexpr int MAX_ALIENS = 20;
+	static constexpr int MAX_ALIENS = 10;
 	static constexpr Hash MODEL_HASH = 0x64611296;
 
 	static Hash alienGroupHash      = GET_HASH_KEY("_ALIENS");
