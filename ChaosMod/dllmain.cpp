@@ -1,41 +1,36 @@
 #include <stdafx.h>
 
-static Main m_main;
+#include "Main.h"
 
-static void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
-{
-	m_main.OnKeyboardInput(key, repeats, scanCode, isExtended, isWithAlt, wasDownBefore, isUpNow);
-}
+#include "Memory/Memory.h"
+
+#include "Util/CrashHandler.h"
 
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		__try
-		{
-			Memory::Init();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		Memory::Init();
 
-		scriptRegister(hInstance, []() { m_main.RunLoop(); });
+		scriptRegister(hInstance, Main::OnRun);
 
-		keyboardHandlerRegister(OnKeyboardInput);
+		keyboardHandlerRegister(Main::OnKeyboardInput);
 
 		break;
 	case DLL_PROCESS_DETACH:
+		Main::OnCleanup();
 		Memory::Uninit();
 
 		scriptUnregister(hInstance);
 
-		keyboardHandlerUnregister(OnKeyboardInput);
+		keyboardHandlerUnregister(Main::OnKeyboardInput);
 
 		if (GetConsoleWindow())
 		{
-			g_consoleOut.close();
+			g_ConsoleOut.close();
 
 			FreeConsole();
 		}

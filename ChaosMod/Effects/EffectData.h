@@ -1,35 +1,74 @@
 #pragma once
 
+#include "EEffectAttributes.h"
+#include "EEffectCategory.h"
+#include "EEffectTimedType.h"
 #include "EffectGroups.h"
-#include "EffectTimedType.h"
 
 #include <string>
 #include <vector>
 
-inline bool g_enableGroupWeighting = true;
+inline bool g_bEnableGroupWeighting = true;
 
 struct EffectData
 {
-	EffectTimedType TimedType = EffectTimedType::TIMED_UNK;
-	int CustomTime = -1;
-	int WeightMult = 5;
-	float Weight = WeightMult;
-	bool ExcludedFromVoting = false;
+	std::vector<std::string> IncompatibleIds;
 	std::string Name;
-	bool HasCustomName = false;
+	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
-	std::vector<std::string> IncompatibleIds;
-	bool IsMeta = false;
-	EffectGroupType EffectGroupType = EffectGroupType::NONE;
+	float Weight                   = 5.f;
+	int CustomTime                 = -1;
+	int WeightMult                 = 5;
+	int ShortcutKeycode            = 0;
+	EEffectTimedType TimedType     = EEffectTimedType::Unk;
+	EEffectCategory EffectCategory = EEffectCategory::None;
+	std::string GroupType;
+
+  private:
+	EEffectAttributes Attributes {};
+
+  public:
+	inline void SetAttribute(EEffectAttributes attribute, bool state)
+	{
+		if (state)
+		{
+			Attributes |= attribute;
+		}
+		else
+		{
+			Attributes &= ~attribute;
+		}
+	}
+
+	inline bool ExcludedFromVoting() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting) || IsMeta() || IsUtility();
+	}
+
+	inline bool HasCustomName() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::HasCustomName);
+	}
+
+	inline bool IsMeta() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsMeta);
+	}
+
+	inline bool IsUtility() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsUtility);
+	}
 };
 
-inline float GetEffectWeight(const EffectData& effectData)
+inline float GetEffectWeight(const EffectData &effectData)
 {
-	EffectGroupType effectGroupType = effectData.EffectGroupType;
-	float effectWeight = effectData.Weight;
+	const auto &effectGroup = effectData.GroupType;
+	auto effectWeight       = effectData.Weight;
 
-	return g_enableGroupWeighting && effectGroupType != EffectGroupType::NONE
-		? effectWeight / g_currentEffectGroupMemberCount[effectGroupType] * g_effectGroups.at(effectGroupType).WeightMult
-		: effectWeight;
+	return g_bEnableGroupWeighting && !effectGroup.empty() && !g_dictEffectGroups.at(effectGroup).IsPlaceholder
+	         ? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup)
+	               * g_dictEffectGroups.at(effectGroup).WeightMult
+	         : effectWeight;
 }

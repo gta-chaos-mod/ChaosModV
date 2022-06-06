@@ -15,6 +15,13 @@ static void OnStop()
 
 static void OnTick()
 {
+	Hash playerHash = GET_ENTITY_MODEL(PLAYER_PED_ID());
+	// trevor
+	if (playerHash == 2608926626)
+	{
+		_SET_SPECIAL_ABILITY(PLAYER_ID(), 0, 0);
+	}
+
 	SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER_ID(), .0f);
 
 	for (Ped ped : GetAllPeds())
@@ -27,10 +34,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_OHKO, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "One Hit KO",
 		.Id = "player_ohko",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { "player_bees" }
 	}
 );

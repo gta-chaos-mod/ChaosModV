@@ -1,5 +1,5 @@
 /*
-	Effect By Lucas7yoshi
+    Effect By Lucas7yoshi
 */
 
 #include <stdafx.h>
@@ -23,7 +23,8 @@ static void OnStop()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PHONES, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Whose Phone Is Ringing?",
 		.Id = "peds_phones",

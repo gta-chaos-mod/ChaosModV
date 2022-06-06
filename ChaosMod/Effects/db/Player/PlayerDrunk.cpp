@@ -45,7 +45,7 @@ static void OnTick()
 			return;
 		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
+		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
@@ -64,7 +64,7 @@ static void OnTick()
 			{
 				// Give player back control
 
-				timeUntilSteer += g_random.GetRandomInt(100, 500);
+				timeUntilSteer += g_Random.GetRandomInt(100, 500);
 			}
 			else
 			{
@@ -72,7 +72,7 @@ static void OnTick()
 
 				steering = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
 
-				timeUntilSteer += g_random.GetRandomInt(50, 300);
+				timeUntilSteer += g_Random.GetRandomInt(50, 300);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
@@ -80,7 +80,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_DRUNK, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Drunk",
 		.Id = "player_drunk",

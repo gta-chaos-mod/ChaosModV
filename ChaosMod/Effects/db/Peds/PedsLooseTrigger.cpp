@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -14,7 +14,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	int count = 3;
+	int count     = 3;
 
 	Ped playerPed = PLAYER_PED_ID();
 	for (Ped ped : GetAllPeds())
@@ -27,7 +27,7 @@ static void OnTick()
 			{
 				if (IS_PED_WEAPON_READY_TO_SHOOT(ped))
 				{
-					Entity weapon = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped);
+					Entity weapon        = GET_CURRENT_PED_WEAPON_ENTITY_INDEX(ped, 0);
 					Vector3 targetOffset = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(weapon, 0, 1, 0);
 					SET_PED_SHOOTS_AT_COORD(ped, targetOffset.x, targetOffset.y, targetOffset.z, true);
 
@@ -45,12 +45,13 @@ static void OnTick()
 	if (GET_WEAPON_DAMAGE_TYPE(playerWeapon) != 2) // Allow weapon Change if melee selected
 	{
 		DISABLE_CONTROL_ACTION(0, 37, true); // Disable Weapon Wheel INPUT_SELECT_WEAPON - TAB or LB
-		_SET_CONTROL_NORMAL(0, 69, 1); // INPUT_VEH_ATTACK - Left Click or RB
-		_SET_CONTROL_NORMAL(0, 257, 1); // INPUT_ATTACK2 - Left Click or RT
+		_SET_CONTROL_NORMAL(0, 69, 1);       // INPUT_VEH_ATTACK - Left Click or RB
+		_SET_CONTROL_NORMAL(0, 257, 1);      // INPUT_ATTACK2 - Left Click or RT
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_LOOSE_TRIGGER, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Loose Triggers",
 		.Id = "peds_loosetrigger",

@@ -2,13 +2,13 @@
 
 #include "Memory/Hooks/AudioPitchHook.h"
 
-//Effect by ProfessorBiddle, but the code is pretty much copied and pasted
+// Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
-static int m_targetPitch;
+static int ms_fTargetPitch;
 
 static void OnStart()
 {
-	m_targetPitch = g_random.GetRandomInt(-900, -300);
+	ms_fTargetPitch = g_Random.GetRandomInt(-900, -300);
 }
 
 static void OnStop()
@@ -18,14 +18,15 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(m_targetPitch);
+	Hooks::SetAudioPitch(ms_fTargetPitch);
 }
 
-static RegisterEffect registerEffect(EFFECT_LOW_PITCH, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
-		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectCategory = EEffectCategory::Pitch
 	}
 );

@@ -1,34 +1,16 @@
 #pragma once
 
-#include "DebugMenu.h"
-#include "TwitchVoting.h"
+using DWORD = unsigned long;
+using WORD  = unsigned short;
+using BYTE  = unsigned char;
+using BOOL  = int; // wtf?
 
-#include <Windows.h>
-#include <memory>
-#include <map>
+class IDXGISwapChain;
 
-class Main
+namespace Main
 {
-public:
-	void RunLoop();
-	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
-
-private:
-	std::unique_ptr<DebugMenu> m_debugMenu;
-	std::unique_ptr<TwitchVoting> m_twitchVoting;
-
-	bool m_clearAllEffects = false;
-	bool m_pauseTimer = false;
-	bool m_clearEffectsShortcutEnabled = false;
-	int m_clearEffectsTextTime = 0;
-	bool m_disableDrawTimerBar = false;
-	bool m_disableDrawEffectTexts = false;
-	bool m_toggleModShortcutEnabled = false;
-	bool m_disableMod = false;
-	bool m_enableDebugMenu = false;
-	bool m_enablePauseTimerShortcut = false;
-
-	void Init();
-	void Reset();
-	void Loop();
-};
+	void OnRun();
+	void OnCleanup();
+	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
+	                     BOOL bWasDownBefore, BOOL bIsUpNow);
+}

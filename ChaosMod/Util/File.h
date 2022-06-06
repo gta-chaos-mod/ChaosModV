@@ -1,9 +1,10 @@
 #pragma once
 
 #include <sstream>
+#include <sys/stat.h>
 
-static bool DoesFileExist(const char* const fileName)
+inline bool DoesFileExist(const char *szFileName)
 {
 	struct stat temp;
-	return stat(fileName, &temp) != -1;
+	return stat(szFileName, &temp) == 0;
 }
