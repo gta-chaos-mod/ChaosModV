@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include <chrono>
 #include "Util/Peds.h"
 
 static std::list<Ped> m_aliens;
@@ -16,22 +17,24 @@ static const std::vector<Hash> m_weapons =
 
 #pragma region UFO 
 static const Hash ufoModel = 0xB467C540;
+static const double beamTime  = 1200;
 static Object ufo;
 static bool ufoBusy     = false;
 #pragma endregion
 
 #pragma region PTFX
 static const char *ptfxDict = "scr_rcbarry1";
-static const char *ptfxCreate = "scr_alien_charging";
+static const char *ptfxCreate = "scr_alien_teleport";
 #pragma endregion
 
 static void OnStart()
 {
 	m_aliens.clear();
+	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), true);
 
 	LoadModel(ufoModel);
-	Vector3 pos = GET_ENTITY_COORDS(PLAYER_PED_ID(), true);
-	ufo         = CreatePoolProp(ufoModel, pos.x, pos.y, pos.z + 40, true);
+	ufo = CreatePoolProp(ufoModel, 0.f, -4000.f, playerPos.z + 40, true);
+	SET_ENTITY_AS_MISSION_ENTITY(ufo, false, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(ufoModel);
 
 	REQUEST_NAMED_PTFX_ASSET(ptfxDict);
@@ -47,6 +50,14 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, groupHash, GET_HASH_KEY("CIVFEMALE"));
 
 	ENABLE_ALIEN_BLOOD_VFX(true);
+
+	SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(.1f);
+	SET_AI_WEAPON_DAMAGE_MODIFIER(.1f);
+
+	while (!SLIDE_OBJECT(ufo, playerPos.x, playerPos.y, GET_ENTITY_COORDS(ufo, true).z, 10.f, 10.f, 1.f, false))
+	{
+		WAIT(0);
+	}
 }
 
 static void OnStop()
@@ -55,10 +66,19 @@ static void OnStop()
 	{
 		if (DOES_ENTITY_EXIST(ped))
 		{
-			SET_PED_AS_NO_LONGER_NEEDED(&ped);
+			Vector3 pedPos = GET_ENTITY_COORDS(ped, true);
+			USE_PARTICLE_FX_ASSET(ptfxDict);
+			START_PARTICLE_FX_NON_LOOPED_AT_COORD(ptfxCreate, pedPos.x, pedPos.y, pedPos.z, 0.f, 0.f, 0.f, 1.2f,
+			                                      false, false, false);
+			DELETE_PED(&ped);
 		}
 	}
 	ufoBusy = false;
+
+	while (!SLIDE_OBJECT(ufo, 0.f, -4000.f, GET_ENTITY_COORDS(ufo, true).z, 10.f, 10.f, 1.f, false))
+	{
+		WAIT(0);
+	}
 	
 	if (DOES_ENTITY_EXIST(ufo))
 	{
@@ -66,11 +86,16 @@ static void OnStop()
 	}
 
 	ENABLE_ALIEN_BLOOD_VFX(false);
+
+	RESET_AI_MELEE_WEAPON_DAMAGE_MODIFIER();
+	RESET_AI_WEAPON_DAMAGE_MODIFIER();
 }
 
 static void OnTick()
 {
-	static constexpr int MAX_ALIENS = 10;
+	static DWORD64 lastTick;
+	DWORD64 curTick                  = GetTickCount64();
+	static constexpr int MAX_ALIENS = 5;
 	static constexpr Hash MODEL_HASH = 0x64611296;
 
 	static Hash alienGroupHash      = GET_HASH_KEY("_ALIENS");
@@ -88,6 +113,7 @@ static void OnTick()
 		           < 300.f)
 		{
 			ufoBusy = true;
+
 			while (!SLIDE_OBJECT(ufo, spawnPos.x, spawnPos.y, GET_ENTITY_COORDS(ufo, true).z, 1.f, 1.f, 1.f, false))
 			{
 				WAIT(0);
@@ -115,14 +141,14 @@ static void OnTick()
 			GIVE_WEAPON_TO_PED(alien, m_weapons.at(g_Random.GetRandomInt(0, m_weapons.size()-1)), 9999, false, true);
 
 			TASK_COMBAT_PED(alien, playerPed, 0, 16);
-			SET_PED_FIRING_PATTERN(alien, 0xC6EE6B4C);
+			SET_PED_FIRING_PATTERN(alien, 0x7A845691);
 
 			SET_MODEL_AS_NO_LONGER_NEEDED(MODEL_HASH);
 
+			Vector3 pedPos = GET_ENTITY_COORDS(alien, true);
 			USE_PARTICLE_FX_ASSET(ptfxDict);
-			SET_PARTICLE_FX_SHOOTOUT_BOAT(0);
-			START_PARTICLE_FX_NON_LOOPED_ON_ENTITY(ptfxCreate, alien, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, false, false,
-			                                       false);
+			START_PARTICLE_FX_NON_LOOPED_AT_COORD(ptfxCreate, pedPos.x, pedPos.y, pedPos.z, 0.f, 0.f, 0.f, 1.2f, false,
+			                                      false, false);
 
 			ufoBusy = false;
 		}
@@ -148,6 +174,14 @@ static void OnTick()
 			SET_PED_AS_NO_LONGER_NEEDED(&alien);
 		}
 		it = m_aliens.erase(it);
+	}
+
+	//Slowly rotate the ufo
+	if (lastTick < curTick - 10)
+	{
+		lastTick = curTick;
+
+		SET_ENTITY_ROTATION(ufo, 0.f, 0.f, GET_ENTITY_HEADING(ufo) + 0.1f, 2, true);
 	}
 }
 
