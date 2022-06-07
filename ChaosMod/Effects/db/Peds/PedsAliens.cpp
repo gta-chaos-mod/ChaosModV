@@ -4,7 +4,6 @@
 
 #include <stdafx.h>
 
-#include <chrono>
 #include "Util/Peds.h"
 
 static std::list<Ped> m_aliens;
@@ -17,7 +16,6 @@ static const std::vector<Hash> m_weapons =
 
 #pragma region UFO 
 static const Hash ufoModel = 0xB467C540;
-static const double beamTime  = 1200;
 static Object ufo;
 static bool ufoBusy     = false;
 #pragma endregion
