@@ -1,10 +1,11 @@
 #include <stdafx.h>
 
-static void StartTransitionTimecycle(std::string modifier)
+static void StartTransitionTimecycle(std::string modifier, float strength = 1.f)
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER(modifier.c_str(), 5.f);
+		SET_TIMECYCLE_MODIFIER_STRENGTH(strength);
 	}
 }
 
@@ -312,5 +313,20 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Timecycle
+	}
+);
+// clang-format on
+
+static void OnTickVig()
+{
+	StartTransitionTimecycle("BombCam01", 1.5f);
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickVig, EffectInfo
+	{
+		.Name = "Vignette",
+		.Id = "screen_vignette",
+		.IsTimed = true,
 	}
 );

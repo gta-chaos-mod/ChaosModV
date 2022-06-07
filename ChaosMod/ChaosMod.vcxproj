@@ -172,7 +172,6 @@
     <ClCompile Include="Effects\db\Screen\ScreenSickCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenSpinCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
-    <ClCompile Include="Effects\db\Screen\ScreenVignette.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderArc.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderColorfulWorld.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
