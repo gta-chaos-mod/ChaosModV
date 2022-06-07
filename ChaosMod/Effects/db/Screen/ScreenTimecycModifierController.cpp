@@ -1,10 +1,11 @@
 #include <stdafx.h>
 
-static void StartTransitionTimecycle(std::string modifier)
+static void StartTransitionTimecycle(std::string modifier, float strength = 1.f)
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER(modifier.c_str(), 5.f);
+		SET_TIMECYCLE_MODIFIER_STRENGTH(strength);
 	}
 }
 
@@ -311,6 +312,22 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 		.Id = "screen_needglasses",
 		.IsTimed = true,
 		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Timecycle
+	}
+);
+// clang-format on
+
+static void OnTickRTX()
+{
+	StartTransitionTimecycle("mp_x17dlc_lab", 4.f);
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickRTX, EffectInfo
+	{
+		.Name = "RTX On",
+		.Id = "timecycle_rtx",
+		.IsTimed = true,
 		.EffectCategory = EEffectCategory::Timecycle
 	}
 );
