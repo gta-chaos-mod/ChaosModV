@@ -179,6 +179,7 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFoldedScreen.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderInvertedColors.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLCDDamage.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLocalCoop.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderMirrored.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderRgbLand.cpp" />
