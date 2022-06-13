@@ -179,13 +179,13 @@ namespace Memory
 	inline int GetBoneIndexByFragIndex(Entity entity, int index)
 	{
 		EntityFragment::FragInst *fragInst = EntityFragment::GetFragInst(entity);
-		if (!fragInst || index < 0 || index > GetFragmentGroupCount(fragInst))
+		if (!fragInst || index < 0 || index >= GetFragmentGroupCount(fragInst))
 		{
 			return -1;
 		}
 
-		auto fragPhysicsLOD              = GetFragPhysicsLOD(fragInst);
-		auto crSkeletonData              = GetSkeletonData(fragInst);
+		auto fragPhysicsLOD                              = GetFragPhysicsLOD(fragInst);
+		auto crSkeletonData                              = GetSkeletonData(fragInst);
 
 		EntityFragment::FragTypeChild **fragTypeChildArr = fragPhysicsLOD->fragTypeChildArr;
 
@@ -207,6 +207,11 @@ namespace Memory
 	{
 		EntityFragment::FragInst *fragInst = EntityFragment::GetFragInst(entity);
 		if (!fragInst)
+		{
+			return;
+		}
+
+		if (!IsFreeToActivatePhysics())
 		{
 			return;
 		}
