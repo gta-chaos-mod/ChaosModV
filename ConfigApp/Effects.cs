@@ -372,6 +372,9 @@ namespace ConfigApp
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
+            { "player_3stars", new EffectInfo("3 Wanted Stars", EffectCategory.Player ) },
+            { "player_1star", new EffectInfo("1 Wanted Star", EffectCategory.Player ) },
+            { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
         };
     }
 }
