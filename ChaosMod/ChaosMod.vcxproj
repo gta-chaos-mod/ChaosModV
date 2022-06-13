@@ -94,6 +94,7 @@
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscDeaf.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
@@ -115,6 +116,7 @@
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSuperHearing.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSuperStunt.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWeirdPitch.cpp" />
@@ -357,6 +359,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioVolumeHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
@@ -404,6 +407,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\AudioVolumeHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />

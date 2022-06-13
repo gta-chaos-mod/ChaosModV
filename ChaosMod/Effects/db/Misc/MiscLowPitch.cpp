@@ -27,6 +27,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectGroupType = EEffectGroupType::Audio
 	}
 );

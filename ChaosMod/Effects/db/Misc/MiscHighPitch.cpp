@@ -25,6 +25,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "High Pitch",
 		.Id = "misc_highpitch",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectGroupType = EEffectGroupType::Audio
 	}
 );
