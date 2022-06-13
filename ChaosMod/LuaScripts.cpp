@@ -104,7 +104,7 @@ class LuaScript
 	LuaScript &operator=(const LuaScript &) = delete;
 
 	LuaScript(LuaScript &&script) noexcept
-		: m_szFileName(std::move(script.m_szFileName)), m_Lua(std::move(script.m_Lua))
+	    : m_szFileName(std::move(script.m_szFileName)), m_Lua(std::move(script.m_Lua))
 	{
 	}
 
@@ -292,7 +292,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	lua.open_libraries(sol::lib::bit32);
 
 	lua["ReturnType"] =
-		lua.create_table_with("None", ELuaNativeReturnType::None, "Boolean", ELuaNativeReturnType::Bool, "Integer",
+	    lua.create_table_with("None", ELuaNativeReturnType::None, "Boolean", ELuaNativeReturnType::Bool, "Integer",
 	                          ELuaNativeReturnType::Int, "String", ELuaNativeReturnType::String, "Float",
 	                          ELuaNativeReturnType::Float, "Vector3", ELuaNativeReturnType::Vector3);
 
@@ -316,10 +316,10 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	auto metaModifiersTable     = lua.create_named_table("MetaModifiers");
 	auto metaModifiersMetaTable = lua.create_table_with(
-		"EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier), "TimerSpeedModifier",
-		P(MetaModifiers::m_fTimerSpeedModifier), "AdditionalEffectsToDispatch",
-		P(MetaModifiers::m_ucAdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_bHideChaosUI),
-		"DisableChaos", P(MetaModifiers::m_bDisableChaos), "FlipChaosUI", P(MetaModifiers::m_bFlipChaosUI));
+	    "EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier), "TimerSpeedModifier",
+	    P(MetaModifiers::m_fTimerSpeedModifier), "AdditionalEffectsToDispatch",
+	    P(MetaModifiers::m_ucAdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_bHideChaosUI),
+	    "DisableChaos", P(MetaModifiers::m_bDisableChaos), "FlipChaosUI", P(MetaModifiers::m_bFlipChaosUI));
 	metaModifiersMetaTable[sol::meta_function::new_index] = [] {
 	};
 	metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
@@ -373,12 +373,14 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"] = Hooks::OverrideShader;
-	lua["ResetShader"]    = Hooks::ResetShader;
+	lua["OverrideShader"]   = Hooks::OverrideShader;
+	lua["ResetShader"]      = Hooks::ResetShader;
 
-	lua["SetSnowState"]   = Memory::SetSnow;
+	lua["SetSnowState"]     = Memory::SetSnow;
 
-	const auto &result    = lua.safe_script_file(path.string(), sol::load_mode::text);
+	lua["IsVehicleBraking"] = Memory::IsVehicleBraking;
+
+	const auto &result      = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
 		const sol::error &error = result;
@@ -412,7 +414,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 				if (groupWeightMultOpt)
 				{
 					g_dictEffectGroups[groupName].WeightMult =
-						std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
+					    std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
 				}
 
 				LOG(szFileName << ": Registered effect group \"" << groupName
@@ -456,6 +458,12 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	}
 
 	const auto &szScriptName = trim(*scriptNameOpt);
+
+	if (szScriptId.starts_with('.'))
+	{
+		LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName << "\": Invalid effect id!");
+		return;
+	}
 
 	bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
 	if (!bDoesIdAlreadyExist)

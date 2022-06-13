@@ -330,7 +330,6 @@ namespace ConfigApp
             { "misc_stuffguns", new EffectInfo("Improvised Weaponry", EffectCategory.Misc, true, true) },
             { "misc_random_waypoint", new EffectInfo("Random Waypoint", EffectCategory.Misc) },
             { "peds_eternal_screams", new EffectInfo("Eternal Screams", EffectCategory.Peds, true, true) },
-            { "player_blade_hunger", new EffectInfo("The Blade Hungers", EffectCategory.Player, true) },
             { "spawn_angry_chimp", new EffectInfo("Spawn Angry Chimp", EffectCategory.Peds, true) },
             { "misc_uturn", new EffectInfo("U-Turn", EffectCategory.Misc) },
             { "peds_spawn_quarreling_couple", new EffectInfo("Spawn Quarreling Couple", EffectCategory.Peds) },
@@ -372,6 +371,7 @@ namespace ConfigApp
             { "screen_screenpotato", new EffectInfo("Potato", EffectCategory.Screen, true, true) },
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
+            { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },            
             { "misc_deaf", new EffectInfo("Deaf", EffectCategory.Misc, true) },
             { "misc_super_hearing", new EffectInfo("Super Hearing", EffectCategory.Misc, true) },
         };

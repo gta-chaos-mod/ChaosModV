@@ -53,7 +53,7 @@ class EffectDispatcher : public Component
 			EEffectTimedType eTimedType = g_dictEnabledEffects.at(effectIdentifier).TimedType;
 
 			m_ullThreadId               = EffectThreads::CreateThread(
-							  pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
+			                  pRegisteredEffect, eTimedType != EEffectTimedType::Unk && eTimedType != EEffectTimedType::NotTimed);
 		}
 	};
 
@@ -74,7 +74,7 @@ class EffectDispatcher : public Component
 
 	int m_iMaxRunningEffects             = 0;
 
-	float m_fPercentage                  = 0.f;
+	float m_fTimerPercentage             = 0.f;
 	float m_fEffectsInnerSpacingMax      = .075f;
 	float m_fEffectsInnerSpacingMin      = .030f;
 	float m_fEffectsTopSpacingDefault    = .2f;
@@ -86,9 +86,8 @@ class EffectDispatcher : public Component
 
 	bool m_bEnableNormalEffectDispatch = true;
 
-	DWORD64 m_ullTimerTimer            = 0;
-	WORD m_usTimerTimerRuns            = 0;
 	DWORD64 m_ullEffectsTimer          = 0;
+	DWORD64 m_ullTimerTimer            = 0;
 
 	bool m_bMetaEffectsEnabled         = true;
 	DWORD64 m_ullMetaTimer             = 0;

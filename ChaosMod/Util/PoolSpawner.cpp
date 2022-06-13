@@ -4,7 +4,7 @@
 
 #include "Memory/PedModels.h"
 
-#define ENTITY_POOL_MAX 20
+#define ENTITY_POOL_MAX 60
 
 static std::list<Entity> m_rgEntities;
 
@@ -210,7 +210,7 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 {
 	Vector3 pos = GET_ENTITY_COORDS(vehToClone, false);
 	Vehicle clone =
-		CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
+	    CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
 
 	Vector3 velocity = GET_ENTITY_VELOCITY(vehToClone);
 	SET_ENTITY_VELOCITY(clone, velocity.x, velocity.y, velocity.z);
@@ -247,7 +247,7 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 	return clone;
 }
 
-Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
+Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
 {
 	LoadModel(ulModelHash);
 

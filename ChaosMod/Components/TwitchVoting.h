@@ -26,7 +26,7 @@ class TwitchVoting : public Component
 	struct ChoosableEffect
 	{
 		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &szName, int iMatch)
-			: m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
+		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
 		{
 		}
 

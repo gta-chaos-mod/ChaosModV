@@ -97,7 +97,7 @@ static void OnTick()
 				it = pedPropsMap.erase(it);
 			}
 			else if (IS_PED_A_PLAYER(
-						 ped)) // If player has a prop attached to them (this can happen after switching characters)
+			             ped)) // If player has a prop attached to them (this can happen after switching characters)
 			{
 				SET_ENTITY_VISIBLE(ped, true, 0);
 
