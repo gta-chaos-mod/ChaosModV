@@ -683,7 +683,7 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 
 			if (g_dictEnabledEffects.contains(effectIdentifier))
 			{
-				auto &fakeEffect    = g_dictEnabledEffects.at(effectIdentifier));
+				auto &fakeEffect    = g_dictEnabledEffects.at(effectIdentifier);
 				effect.m_szFakeName = fakeEffect.HasCustomName() ? fakeEffect.CustomName : fakeEffect.Name;
 			}
 			else
