@@ -679,10 +679,20 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 	{
 		if (effect.m_EffectIdentifier.GetEffectId() == effectId)
 		{
-			auto result = g_dictEffectsMap.find(fakeEffectId);
-			if (result != g_dictEffectsMap.end())
+			auto effectIdentifier = EffectIdentifier(std::string(fakeEffectId));
+
+			if (g_dictEnabledEffects.contains(effectIdentifier))
 			{
-				effect.m_szFakeName = result->second.Name;
+				auto &fakeEffect    = g_dictEnabledEffects.at(effectIdentifier));
+				effect.m_szFakeName = fakeEffect.HasCustomName() ? fakeEffect.CustomName : fakeEffect.Name;
+			}
+			else
+			{
+				auto result = g_dictEffectsMap.find(fakeEffectId);
+				if (result != g_dictEffectsMap.end())
+				{
+					effect.m_szFakeName = result->second.Name;
+				}
 			}
 		}
 	}
