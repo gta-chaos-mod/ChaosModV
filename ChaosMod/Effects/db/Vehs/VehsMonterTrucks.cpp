@@ -10,8 +10,6 @@ struct VehicleData
 std::map<Hash, VehicleData> vehiclesMap;
 std::map<Vehicle, Vector3> vehiclesCGMap;
 
-static const float fWheelScale = 1.8f;
-
 static void OnStop()
 {
 	for (auto const &[model, data] : vehiclesMap)
@@ -55,7 +53,7 @@ static void OnTick()
 		if (!vehiclesCGMap.contains(veh))
 		{
 			Vector3 ogCG = GET_CGOFFSET(veh);
-			SET_CGOFFSET(veh, ogCG.x, ogCG.y, ogCG.z - 0.8f);
+			SET_CGOFFSET(veh, ogCG.x, ogCG.y, ogCG.z - 1.2f);
 
 			vehiclesCGMap.emplace(veh, ogCG);
 		}
