@@ -211,4 +211,98 @@ namespace Memory
 		Memory::SetVector3(vehicleMatrixAddress + 0x10, vehicleRightVec * scaleMultiplier);
 		Memory::SetVector3(vehicleMatrixAddress + 0x20, vehicleUpVec * scaleMultiplier);
 	}
+
+	inline void SetVehicleRaise(Vehicle vehicle, float height)
+	{
+		auto vehAddr = getScriptHandleBaseAddress(vehicle);
+		*reinterpret_cast<float *>(*reinterpret_cast<uintptr_t *>(vehAddr + 0x938) + 0xD0) = height;
+	}
+
+	inline void SetVehicleWheelSize(Vehicle vehicle, float size)
+	{
+		auto addr                     = hook::get_pattern<char>("44 0F 2F 43 48 45 8D");
+		auto vehAddr                  = getScriptHandleBaseAddress(vehicle);
+
+		auto drawHandlerPtrOffset     = *(uint8_t *)(addr + 4);
+		auto streamRenderGfxPtrOffset = *hook::get_pattern<uint32_t>("4C 8D 48 ? 80 E1 01", -4);
+
+		auto drawHandler              = *reinterpret_cast<uint64_t *>((uint64_t)vehAddr + drawHandlerPtrOffset);
+		auto streamRenderGfx          = *reinterpret_cast<uint64_t *>(drawHandler + streamRenderGfxPtrOffset);
+
+		if (streamRenderGfx == 0)
+		{
+			return;
+		}
+
+		addr                             = hook::get_pattern<char>("48 89 01 B8 00 00 80 3F 66 44 89 51");
+		auto streamRenderWheelSizeOffset = *(uint8_t *)(addr + 20);
+
+		*reinterpret_cast<float *>(streamRenderGfx + streamRenderWheelSizeOffset) = size;
+	}
+
+	inline float GetVehicleWheelSize(Vehicle vehicle)
+	{
+		auto addr                     = hook::get_pattern<char>("44 0F 2F 43 48 45 8D");
+		auto vehAddr                  = getScriptHandleBaseAddress(vehicle);
+
+		auto drawHandlerPtrOffset     = *(uint8_t *)(addr + 4);
+		auto streamRenderGfxPtrOffset = *hook::get_pattern<uint32_t>("4C 8D 48 ? 80 E1 01", -4);
+
+		auto drawHandler              = *reinterpret_cast<uint64_t *>((uint64_t)vehAddr + drawHandlerPtrOffset);
+		auto streamRenderGfx          = *reinterpret_cast<uint64_t *>(drawHandler + streamRenderGfxPtrOffset);
+
+		if (streamRenderGfx == 0)
+		{
+			return 0.f;
+		}
+
+		addr                             = hook::get_pattern<char>("48 89 01 B8 00 00 80 3F 66 44 89 51");
+		auto streamRenderWheelSizeOffset = *(uint8_t *)(addr + 20);
+
+		return *reinterpret_cast<float *>(streamRenderGfx + streamRenderWheelSizeOffset);
+	}
+
+	inline void SetVehicleWheelWidth(Vehicle vehicle, float width)
+	{
+		auto addr                     = hook::get_pattern<char>("44 0F 2F 43 48 45 8D");
+		auto vehAddr                  = getScriptHandleBaseAddress(vehicle);
+
+		auto drawHandlerPtrOffset     = *(uint8_t *)(addr + 4);
+		auto streamRenderGfxPtrOffset = *hook::get_pattern<uint32_t>("4C 8D 48 ? 80 E1 01", -4);
+
+		auto drawHandler              = *reinterpret_cast<uint64_t *>((uint64_t)vehAddr + drawHandlerPtrOffset);
+		auto streamRenderGfx          = *reinterpret_cast<uint64_t *>(drawHandler + streamRenderGfxPtrOffset);
+
+		if (streamRenderGfx == 0)
+		{
+			return;
+		}
+
+		addr                              = hook::get_pattern<char>("48 89 01 B8 00 00 80 3F 66 44 89 51");
+		auto streamRenderWheelWidthOffset = *(uint32_t *)(addr + 23);
+
+		*reinterpret_cast<float *>(streamRenderGfx + streamRenderWheelWidthOffset) = width;
+	}
+
+	inline float GetVehicleWheelWidth(Vehicle vehicle)
+	{
+		auto addr                     = hook::get_pattern<char>("44 0F 2F 43 48 45 8D");
+		auto vehAddr                  = getScriptHandleBaseAddress(vehicle);
+
+		auto drawHandlerPtrOffset     = *(uint8_t *)(addr + 4);
+		auto streamRenderGfxPtrOffset = *hook::get_pattern<uint32_t>("4C 8D 48 ? 80 E1 01", -4);
+
+		auto drawHandler              = *reinterpret_cast<uint64_t *>((uint64_t)vehAddr + drawHandlerPtrOffset);
+		auto streamRenderGfx          = *reinterpret_cast<uint64_t *>(drawHandler + streamRenderGfxPtrOffset);
+
+		if (streamRenderGfx == 0)
+		{
+			return 0.f;
+		}
+
+		addr                              = hook::get_pattern<char>("48 89 01 B8 00 00 80 3F 66 44 89 51");
+		auto streamRenderWheelWidthOffset = *(uint32_t *)(addr + 23);
+
+		return *reinterpret_cast<float *>(streamRenderGfx + streamRenderWheelWidthOffset);
+	}
 }
