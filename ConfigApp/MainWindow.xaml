@@ -288,6 +288,13 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label x:Name="twitch_permitted_usernames_label" Content="Permitted Twitch usernames (separated by , )"
+                                Grid.Row="3" Grid.Column="2"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,3,9,0" Grid.ColumnSpan="2" />
+                            <TextBox x:Name="twitch_permitted_usernames" Width="268" Height="20" Grid.Row="3" Grid.Column="4"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="10,12,0,13" />
                         </Grid>
 
                         <Grid Grid.Row="2">
