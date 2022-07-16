@@ -494,7 +494,7 @@ namespace ConfigApp
             }
         }
 
-        private void misc_validate_installation_Click(object sender, RoutedEventArgs e)
+        private void user_validate_installation_Click(object sender, RoutedEventArgs e)
         {
             string validationError = ValidateChaosModInstallation();
             if (validationError.Length > 0)
