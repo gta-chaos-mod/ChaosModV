@@ -317,6 +317,23 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 );
 // clang-format on
 
+static void OnTickFuzzy()
+{
+	StartTransitionTimecycle("Broken_camera_fuzz", 0.5f);
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
+	{
+		.Name = "Static",
+		.Id = "timecycle_fuzzy",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Timecycle
+	}
+);
+// clang-format on
+
 static void OnTickDarkWorld()
 {
 	SET_ARTIFICIAL_LIGHTS_STATE(false);
