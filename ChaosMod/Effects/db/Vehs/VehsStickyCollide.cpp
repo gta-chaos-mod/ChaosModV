@@ -18,14 +18,10 @@ static void OnTick()
 {
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (true)
+		if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh))
 		{
-			if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(veh))
-			{
-				LOG("COLLIDED");
-				FREEZE_ENTITY_POSITION(veh, true);
-				vehs.push_back(veh);
-			}
+			FREEZE_ENTITY_POSITION(veh, true);
+			vehs.push_back(veh);
 		}
 	}
 }
