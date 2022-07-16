@@ -16,6 +16,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx5, EffectInfo
 		.EffectCategory = EEffectCategory::Movement
 	}
 );
+// clang-format on
 
 static void OnTickx10()
 {
@@ -33,6 +34,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx10, EffectInfo
 		.EffectCategory = EEffectCategory::Movement
 	}
 );
+// clang-format on
 
 static void OnTickx05()
 {
