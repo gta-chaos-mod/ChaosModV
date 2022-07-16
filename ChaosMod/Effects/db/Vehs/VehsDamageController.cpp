@@ -26,7 +26,7 @@ REGISTER_EFFECT(nullptr, OnStopInvincible, OnTickInvincible, EffectInfo // By po
 	}
 );
 
-static void OnStopx2()
+static void OnStopDamage()
 {
 	for (auto veh : GetAllVehs())
 	{
@@ -42,7 +42,7 @@ static void OnTickx2()
 	}
 }
 
-REGISTER_EFFECT(nullptr, OnStopx2, OnTickx2, EffectInfo // By OnlyRealNubs
+REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx2, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "2x Vehicle Damage",
 		.Id = "vehs_damage_x2",
@@ -50,14 +50,6 @@ REGISTER_EFFECT(nullptr, OnStopx2, OnTickx2, EffectInfo // By OnlyRealNubs
         .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x5", "vehs_damage_x05" }
 	}
 );
-
-static void OnStopx5()
-{
-	for (auto veh : GetAllVehs())
-	{
-		_SET_VEHICLE_DAMAGE_MODIFIER(veh, 1.f);
-	}
-}
 
 static void OnTickx5()
 {
@@ -67,7 +59,7 @@ static void OnTickx5()
 	}
 }
 
-REGISTER_EFFECT(nullptr, OnStopx5, OnTickx5, EffectInfo // By OnlyRealNubs
+REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx5, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "5x Vehicle Damage",
 		.Id = "vehs_damage_x5",
@@ -75,14 +67,6 @@ REGISTER_EFFECT(nullptr, OnStopx5, OnTickx5, EffectInfo // By OnlyRealNubs
         .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x2", "vehs_damage_x05" }
 	}
 );
-
-static void OnStopx05()
-{
-	for (auto veh : GetAllVehs())
-	{
-		_SET_VEHICLE_DAMAGE_MODIFIER(veh, 1.f);
-	}
-}
 
 static void OnTickx05()
 {
@@ -92,7 +76,7 @@ static void OnTickx05()
 	}
 }
 
-REGISTER_EFFECT(nullptr, OnStopx05, OnTickx05, EffectInfo // By OnlyRealNubs
+REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx05, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "0.5x Vehicle Damage",
 		.Id = "vehs_damage_x05",
