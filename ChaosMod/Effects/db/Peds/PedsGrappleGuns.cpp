@@ -89,14 +89,18 @@ static void OnTick()
 				addVelocity = addVelocity / addVelocity.Length(); // Normalize vector
 				addVelocity = addVelocity * 25.f;
 
-				Vector3 newVelocity = entityVelocity + addVelocity;
+				Vector3 newVelocity    = entityVelocity + addVelocity;
+				// Apply Force with flag 3 to break trafficlights and other things from their fixed structure
+				Memory::ApplyForceToEntity(entity, 3, newVelocity.x, newVelocity.y, newVelocity.z, 0, 0, 0, false,
+				                           false, true, true, false, true);
 				SET_ENTITY_VELOCITY(entity, newVelocity.x, newVelocity.y, newVelocity.z);
 			}
 		}
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_GRAPPLE_GUNS, OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Gravity Guns",
 		.Id = "peds_grapple_guns",
