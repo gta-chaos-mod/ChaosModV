@@ -26,6 +26,8 @@ static int scaleForm                  = 0;
 static int currentMode                = FakeDeathState::start;
 static int lastModeTime               = 0;
 static int nextModeTime               = 0;
+static bool skipToEnd                 = false;
+static Vehicle explodedVeh                   = 0;
 static const char *deathAnimationName = "";
 
 static std::string GetPlayerName()
@@ -45,11 +47,13 @@ static std::string GetPlayerName()
 }
 
 static void OnStart()
-{	
+{
 	AUDIO::REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", 0, -1);
 	static int soundId = GET_SOUND_ID();
 
+	skipToEnd    = false;
 	scaleForm    = 0;
+	explodedVeh	 = 0;
 	currentMode  = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
@@ -73,7 +77,14 @@ static void OnStart()
 		{
 			nextModeTime = 999999;
 			lastModeTime = current_time;
-			currentMode++;
+			if (skipToEnd)
+			{
+				currentMode = FakeDeathState::cleanup;
+			}
+			else
+			{
+				currentMode++;
+			}
 		}
 		else
 		{
@@ -170,10 +181,8 @@ static void OnStart()
 								{
 									GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath",
 									                                                       fakeEffectId);
-									WAIT(2000);
-
-									currentMode = FakeDeathState::cleanup;
-									goto SKIP_TO_CLEANUP; //eww, a goto statement
+									WAIT(4000);
+									skipToEnd = true;
 								}
 							}
 
@@ -242,9 +251,7 @@ static void OnStart()
 			break;
 		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
-SKIP_TO_CLEANUP:
-			Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
-			SET_VEHICLE_FIXED(veh);
+			SET_VEHICLE_FIXED(explodedVeh);
 			STOP_ANIM_TASK(playerPed, "mp_suicide", "pistol", 3);
 			ANIMPOSTFX_STOP("DeathFailOut");
 			STOP_AUDIO_SCENE("DEATH_SCENE");
