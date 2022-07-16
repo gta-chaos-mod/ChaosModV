@@ -4,11 +4,12 @@ static void OnTick()
 {
 	for (auto veh : GetAllVehs())
 	{
-		_SOUND_VEHICLE_HORN_THIS_FRAME(veh);
+		SET_HORN_PERMANENTLY_ON(veh);
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEHS_HORN, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "All Vehicles Honk",
 		.Id = "vehs_honkconstant",

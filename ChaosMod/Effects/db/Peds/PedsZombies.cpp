@@ -6,8 +6,8 @@ static void OnStart()
 {
 	m_zombies.clear();
 
-	static const Hash playerGroupHash = GET_HASH_KEY("PLAYER");
-	static const Hash civMaleGroupHash = GET_HASH_KEY("CIVMALE");
+	static const Hash playerGroupHash    = GET_HASH_KEY("PLAYER");
+	static const Hash civMaleGroupHash   = GET_HASH_KEY("CIVMALE");
 	static const Hash civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
 
 	Hash groupHash;
@@ -33,16 +33,19 @@ static void OnTick()
 	static constexpr int MAX_ZOMBIES = 20;
 	static constexpr Hash MODEL_HASH = -1404353274;
 
-	static Hash zombieGroupHash = GET_HASH_KEY("_ZOMBIES");
+	static Hash zombieGroupHash      = GET_HASH_KEY("_ZOMBIES");
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                    = PLAYER_PED_ID();
+	Vector3 playerPos                = GET_ENTITY_COORDS(playerPed, false);
 
 	if (m_zombies.size() <= MAX_ZOMBIES)
 	{
 		Vector3 spawnPos;
-		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + m_zombies.size(), &spawnPos, 0, 0, 0)
-			&& GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z, false) < 300.f)
+		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + m_zombies.size(), &spawnPos, 0, 0,
+		                                 0)
+		    && GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z,
+		                                   false)
+		           < 300.f)
 		{
 			LoadModel(MODEL_HASH);
 
@@ -54,7 +57,7 @@ static void OnTick()
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 46, true);
 
-			//SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
+			// SET_AMBIENT_VOICE_NAME(zombie, "ALIENS");
 			DISABLE_PED_PAIN_AUDIO(zombie, true);
 
 			TASK_COMBAT_PED(zombie, playerPed, 0, 16);
@@ -63,14 +66,16 @@ static void OnTick()
 		}
 	}
 
-	for (std::list<Ped>::iterator it = m_zombies.begin(); it != m_zombies.end(); )
+	for (std::list<Ped>::iterator it = m_zombies.begin(); it != m_zombies.end();)
 	{
 		Ped zombie = *it;
 
 		if (DOES_ENTITY_EXIST(zombie))
 		{
 			Vector3 zombiePos = GET_ENTITY_COORDS(zombie, false);
-			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y, zombiePos.z, false) < 300.f)
+			if (GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, zombiePos.x, zombiePos.y,
+			                                zombiePos.z, false)
+			    < 300.f)
 			{
 				int maxHealth = GET_ENTITY_MAX_HEALTH(zombie);
 
@@ -99,7 +104,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ZOMBIES, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Explosive Zombies",
 		.Id = "zombies",

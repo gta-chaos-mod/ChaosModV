@@ -2,17 +2,94 @@
 
 #include "Natives.h"
 
-#include "../Memory/Memory.h"
+#include "Memory/Memory.h"
+
+#include <vector>
+
+#define _NODISCARD [[nodiscard]]
 
 // Thanks to menyoo for most of these!!
 
-class VehiclePool
+// Pool Interator class to iterate over pools. Has just enough operators defined to be able to be used in a for loop,
+// not suitable for any other iterating.
+template <typename T> class PoolIterator
 {
-public:
-	UINT64* m_pullPoolAddress;
+  public:
+	T *Pool       = nullptr;
+	int32_t Index = 0;
+
+	explicit PoolIterator(T *pool, int32_t index = 0)
+	{
+		this->Pool  = pool;
+		this->Index = index;
+	}
+
+	PoolIterator &operator++()
+	{
+		for (Index++; Index < Pool->m_ulSize; Index++)
+		{
+			if (Pool->IsValid(Index))
+			{
+				return *this;
+			}
+		}
+
+		Index = Pool->m_ulSize;
+		return *this;
+	}
+
+	Entity operator*()
+	{
+		static int (*_addEntityToPoolFunc)(__int64) = []
+		{
+			Handle handle = Memory::FindPattern("48 F7 F9 49 8B 48 08 48 63 D0 C1 E0 08 0F B6 1C 11 03 D8").Addr();
+			return handle.At(-0x68).Get<int(__int64)>();
+		}();
+
+		__int64 ullAddr = Pool->GetAddress(Index);
+		int iHandle     = _addEntityToPoolFunc(ullAddr);
+		return iHandle;
+	}
+
+	bool operator!=(const PoolIterator &other) const
+	{
+		return this->Index != other.Index;
+	}
+};
+
+// Common functions for VehiclePool and GenericPool
+template <typename T> class PoolUtils
+{
+  public:
+	inline auto ToArray()
+	{
+		std::vector<Entity> arr;
+		for (auto entity : *static_cast<T *>(this))
+		{
+			arr.push_back(entity);
+		}
+
+		return arr;
+	}
+
+	auto begin()
+	{
+		return ++PoolIterator<T>(static_cast<T *>(this), -1);
+	}
+
+	auto end()
+	{
+		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->m_ulSize);
+	}
+};
+
+class VehiclePool : public PoolUtils<VehiclePool>
+{
+  public:
+	UINT64 *m_pullPoolAddress;
 	UINT32 m_ulSize;
 	char _Padding2[36];
-	UINT32* m_pulBitArray;
+	UINT32 *m_pulBitArray;
 	char _Padding3[40];
 	UINT32 m_ulItemCount;
 
@@ -27,11 +104,11 @@ public:
 	}
 };
 
-class GenericPool
+class GenericPool : public PoolUtils<GenericPool>
 {
-public:
+  public:
 	UINT64 m_ullPoolStartAddress;
-	BYTE* m_ucByteArray;
+	BYTE *m_ucByteArray;
 	UINT32 m_ulSize;
 	UINT32 m_ulItemSize;
 
@@ -45,7 +122,7 @@ public:
 		return Mask(i) & (m_ullPoolStartAddress + i * m_ulItemSize);
 	}
 
-private:
+  private:
 	inline long long Mask(UINT32 i)
 	{
 		long long num1 = m_ucByteArray[i] & 0x80;
@@ -53,175 +130,50 @@ private:
 	}
 };
 
-
-enum class EReturnedEntityType
+_NODISCARD inline auto &GetAllPeds()
 {
-	Peds,
-	Vehs,
-	Props
-};
-
-inline std::vector<Entity> GetAllOfEntityType(EReturnedEntityType entityType)
-{
-	static GenericPool* pPedPool;
-	static VehiclePool* pVehPool;
-	static GenericPool* pPropPool;
-
-	static int(*_addEntityToPoolFunc)(__int64);
-
-	std::vector<Entity> rgEntities;
-
-	static bool c_bDidInit = false;
-	if (!c_bDidInit)
+	static GenericPool *pPedPool = []
 	{
-		Handle handle;
+		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
+		return handle.At(2).Into().Value<GenericPool *>();
+	}();
 
-		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
-		if (!handle.IsValid())
-		{
-			return rgEntities;
-		}
-
-		pPedPool = handle.At(2).Into().Value<GenericPool*>();
-
-		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
-		if (!handle.IsValid())
-		{
-			return rgEntities;
-		}
-
-		pVehPool = *handle.At(2).Into().Value<VehiclePool**>();
-
-		handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
-		if (!handle.IsValid())
-		{
-			return rgEntities;
-		}
-
-		pPropPool = handle.At(2).Into().Value<GenericPool*>();
-
-		handle = Memory::FindPattern("48 F7 F9 49 8B 48 08 48 63 D0 C1 E0 08 0F B6 1C 11 03 D8").Addr();
-		if (!handle.IsValid())
-		{
-			return rgEntities;
-		}
-
-		_addEntityToPoolFunc = handle.At(-0x68).Get<int(__int64)>();
-
-		c_bDidInit = true;
-	}
-
-	switch (entityType)
-	{
-	case EReturnedEntityType::Peds:
-		for (int i = 0; i < pPedPool->m_ulSize; i++)
-		{
-			if (pPedPool->IsValid(i))
-			{
-				__int64 ullAddr = pPedPool->GetAddress(i);
-
-				if (ullAddr)
-				{
-					int iHandle = _addEntityToPoolFunc(ullAddr);
-
-					if (DOES_ENTITY_EXIST(iHandle))
-					{
-						rgEntities.push_back(iHandle);
-					}
-				}
-			}
-		}
-
-		break;
-	case EReturnedEntityType::Vehs:
-		for (int i = 0; i < pVehPool->m_ulSize; i++)
-		{
-			if (pVehPool->IsValid(i))
-			{
-				__int64 ullAddr = pVehPool->GetAddress(i);
-
-				if (ullAddr)
-				{
-					int iHandle = _addEntityToPoolFunc(ullAddr);
-
-					if (DOES_ENTITY_EXIST(iHandle))
-					{
-						rgEntities.push_back(iHandle);
-					}
-				}
-			}
-		}
-
-		break;
-	case EReturnedEntityType::Props:
-		for (int i = 0; i < pPropPool->m_ulSize; i++)
-		{
-			if (pPropPool->IsValid(i))
-			{
-				__int64 ullAddr = pPropPool->GetAddress(i);
-
-				if (ullAddr)
-				{
-					int iHandle = _addEntityToPoolFunc(ullAddr);
-
-					if (DOES_ENTITY_EXIST(iHandle))
-					{
-						rgEntities.push_back(iHandle);
-					}
-				}
-			}
-		}
-
-		break;
-	}
-
-	return rgEntities;
+	return *pPedPool;
 }
 
-inline const std::vector<Ped>& GetAllPeds()
+_NODISCARD inline auto &GetAllVehs()
 {
-	static std::vector<Ped> c_rgPeds;
-
-	static int c_ilastFrame = 0;
-	int iCurFrame = GET_FRAME_COUNT();
-	if (c_ilastFrame < iCurFrame)
+	static VehiclePool *pVehPool = []
 	{
-		c_ilastFrame = iCurFrame;
+		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
+		return *handle.At(2).Into().Value<VehiclePool **>();
+	}();
 
-		c_rgPeds = GetAllOfEntityType(EReturnedEntityType::Peds);
-	}
-
-	return c_rgPeds;
+	return *pVehPool;
 }
 
-inline const std::vector<Vehicle>& GetAllVehs()
+_NODISCARD inline auto &GetAllProps()
 {
-	static std::vector<Vehicle> rgVehs;
-
-	static int c_iLastFrame = 0;
-	int iCurFrame = GET_FRAME_COUNT();
-	if (c_iLastFrame < iCurFrame)
+	static GenericPool *pPropPool = []
 	{
-		c_iLastFrame = iCurFrame;
+		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
+		return handle.At(2).Into().Value<GenericPool *>();
+	}();
 
-		rgVehs = GetAllOfEntityType(EReturnedEntityType::Vehs);
-	}
-
-	return rgVehs;
+	return *pPropPool;
 }
 
-inline const std::vector<Object>& GetAllProps()
+_NODISCARD inline auto GetAllPedsArray()
 {
-	static std::vector<Object> rgProps;
+	return GetAllPeds().ToArray();
+}
 
-	static int iLastFrame = 0;
-	int iCurFrame = GET_FRAME_COUNT();
-	if (iLastFrame < iCurFrame)
-	{
-		iLastFrame = iCurFrame;
+_NODISCARD inline auto GetAllVehsArray()
+{
+	return GetAllVehs().ToArray();
+}
 
-		rgProps = GetAllOfEntityType(EReturnedEntityType::Props);
-	}
-
-	return rgProps;
+_NODISCARD inline auto GetAllPropsArray()
+{
+	return GetAllProps().ToArray();
 }

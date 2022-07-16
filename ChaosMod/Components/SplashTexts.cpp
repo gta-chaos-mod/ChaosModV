@@ -2,14 +2,16 @@
 
 #include "SplashTexts.h"
 
-void SplashTexts::Run()
+#include "Util/Text.h"
+
+void SplashTexts::OnRun()
 {
 	float fFrameTime = GET_FRAME_TIME();
 
 	if (m_fStartupSplashTime > 0)
 	{
-		DrawScreenText("Chaos Mod v1.9.3\n\nSee credits.txt for list of contributors",
-			{ .2f, .3f }, .65f, { 60, 245, 190 }, true);
+		DrawScreenText("Chaos Mod v1.11.2\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
+		               { 60, 245, 190 }, true);
 #ifdef _DEBUG
 		DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
 #endif

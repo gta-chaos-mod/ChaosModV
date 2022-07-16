@@ -4,7 +4,7 @@ static void OnStart()
 {
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 
-	int count = 3;
+	int count         = 3;
 
 	for (Vehicle veh : GetAllVehs())
 	{
@@ -22,9 +22,11 @@ static void OnStart()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_EXPLODE_VEHS, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Explode All Nearby Vehicles",
-		.Id = "vehs_explode"
+		.Id = "vehs_explode",
+		.IncompatibleWith = { "vehs_invincible" }
 	}
 );

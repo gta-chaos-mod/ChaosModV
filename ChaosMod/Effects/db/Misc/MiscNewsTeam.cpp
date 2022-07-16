@@ -1,9 +1,8 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
-
 
 static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
@@ -15,72 +14,68 @@ static Vector3 GetCoordsAround(Vector3 pos, float radius)
 	return res;
 }
 
-static Vehicle heli = 0;
-static Ped pilot = 0;
-static Camera heliCam = 0;
+static Vehicle heli         = 0;
+static Ped pilot            = 0;
+static Camera heliCam       = 0;
 static int lastPositionGoal = 0;
-static int scaleForm = 0;
+static int scaleForm        = 0;
 static Vector3 targetCoords;
 
-static const char* ms_rgTextPairs[] =
-{
-	"Chaos Mod Player Trying To Survive",
-	"\"He won't survive\", Mod Contributors Say",
+static const char *ms_rgTextPairs[] = { "Chaos Mod Player Trying To Survive",
+	                                    "\"He won't survive\", Mod Contributors Say",
 
-	"Crazy Lunatic Going On A Rampage",
-	"This Report Was Brought To You By eCola",
+	                                    "Crazy Lunatic Going On A Rampage",
+	                                    "This Report Was Brought To You By eCola",
 
-	"The Aftermath Of An Experiment Gone Wrong",
-	"THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!",
+	                                    "The Aftermath Of An Experiment Gone Wrong",
+	                                    "THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!",
 
-	"Wow Look At This",
-	"Crazy Ain't It?",
+	                                    "Wow Look At This",
+	                                    "Crazy Ain't It?",
 
-	"An Example Of Our Average Law-Abiding Citizen",
-	"\"Video Games cause violence\" Officials Say",
+	                                    "An Example Of Our Average Law-Abiding Citizen",
+	                                    "\"Video Games cause violence\" Officials Say",
 
-	"Holy Shit Wow Omg",
-	"LULW WTFFF xDDDDDDDD",
+	                                    "Holy Shit Wow Omg",
+	                                    "LULW WTFFF xDDDDDDDD",
 
-	"What Bad RNG Looks Like",
-	"Researchers Estimate The Chances Being Close To Millions To One",
+	                                    "What Bad RNG Looks Like",
+	                                    "Researchers Estimate The Chances Being Close To Millions To One",
 
-	"A Speedrunner In Action",
-	"Criticizers Claim Mods Might Be At Play",
+	                                    "A Speedrunner In Action",
+	                                    "Criticizers Claim Mods Might Be At Play",
 
-	"An Ongoing Riot All Over San Andreas",
-	"A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"",
+	                                    "An Ongoing Riot All Over San Andreas",
+	                                    "A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"",
 
-	"Hey You're On Camera",
-	"Come On Do Something Cool!",
+	                                    "Hey You're On Camera",
+	                                    "Come On Do Something Cool!",
 
-	"Look Up And Smile",
-	"It's The LSPD",
+	                                    "Look Up And Smile",
+	                                    "It's The LSPD",
 
-	"This Is A Nice Scaleform",
-	"Wow Is This Self-Aware?",
+	                                    "This Is A Nice Scaleform",
+	                                    "Wow Is This Self-Aware?",
 
-	"This Is Why We Can't Have Nice Things",
-	"SMH",
+	                                    "This Is Why We Can't Have Nice Things",
+	                                    "SMH",
 
-	"IS THAT A SUPRA???",
-	":o",
+	                                    "IS THAT A SUPRA???",
+	                                    ":o",
 
-	"Don't Mind Us",
-	"Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2",
+	                                    "Don't Mind Us",
+	                                    "Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2",
 
-	"HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-	"HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+	                                    "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+	                                    "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
 
-	"Just Imagine All The Stuff I Could Put In Here",
-	"Oh Wait..."
-};
+	                                    "Just Imagine All The Stuff I Could Put In Here",
+	                                    "Oh Wait..." };
 
 static void OnStart()
 {
-	Ped player = PLAYER_PED_ID();
-	Vector3 pos = GET_ENTITY_COORDS(player, false);
-
+	Ped player                    = PLAYER_PED_ID();
+	Vector3 pos                   = GET_ENTITY_COORDS(player, false);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 	Hash relationshipGroup;
@@ -94,12 +89,14 @@ static void OnStart()
 	Vector3 aroundCoords;
 	float groundZ;
 	bool isValidCoord = false;
-	do {
+	do
+	{
 		aroundCoords = GetCoordsAround(pos, 70);
-		isValidCoord = GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
+		isValidCoord =
+		    GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
 	} while (!isValidCoord);
-	groundZ = max(groundZ, aroundCoords.z);
-	heli = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);
+	groundZ = std::max(groundZ, aroundCoords.z);
+	heli    = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);
 	SET_VEHICLE_ENGINE_ON(heli, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(heli, 0); // Needed, so the heli doesn't fall down instantly
 	MODIFY_VEHICLE_TOP_SPEED(heli, 100);
@@ -144,19 +141,19 @@ static void OnStop()
 	DELETE_ENTITY(&pilot);
 	SET_ENTITY_AS_MISSION_ENTITY(heli, true, true);
 	DELETE_ENTITY(&heli);
-	pilot = 0;
-	heli = 0;
+	pilot     = 0;
+	heli      = 0;
 	scaleForm = 0;
 }
 
 static void OnTick()
 {
-	Ped player = PLAYER_PED_ID();
+	Ped player       = PLAYER_PED_ID();
 	int current_time = GET_GAME_TIMER();
 	if (current_time - lastPositionGoal > 1000)
 	{
 		lastPositionGoal = current_time;
-		targetCoords = GetCoordsAround(Vector3(), g_Random.GetRandomFloat(20, 30));
+		targetCoords     = GetCoordsAround(Vector3(), g_Random.GetRandomFloat(20, 30));
 		TASK_HELI_CHASE(pilot, player, targetCoords.x, targetCoords.y, targetCoords.z + g_Random.GetRandomFloat(5, 10));
 		SET_PED_KEEP_TASK(pilot, true);
 	}
@@ -166,11 +163,13 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_NEWS_TEAM, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
     {
-        .Name = "News Team",
-        .Id = "misc_news_team",
-	.IsTimed = true,
-	.IsShortDuration = true
+		.Name = "News Team",
+		.Id = "misc_news_team",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Camera
     }
 );

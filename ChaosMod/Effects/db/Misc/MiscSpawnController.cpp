@@ -1,10 +1,10 @@
 #include <stdafx.h>
 
-static void SpawnProp(const char* propName)
+static void SpawnProp(const char *propName)
 {
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	Hash model = GET_HASH_KEY(propName);
+	Hash model        = GET_HASH_KEY(propName);
 	LoadModel(model);
 
 	Object prop = CreatePoolProp(model, playerPos.x, playerPos.y, playerPos.z, true);
@@ -16,22 +16,26 @@ static void OnStartUFO()
 	SpawnProp("p_spinning_anus_s");
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_UFO, OnStartUFO, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartUFO, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn UFO",
 		.Id = "misc_spawnufo",
-		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+		.EffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );
+// clang-format on
+
 static void OnStartFerrisWheel()
 {
 	SpawnProp("prop_ld_ferris_wheel");
 }
 
-static RegisterEffect registerEffect2(EFFECT_SPAWN_FERRISWHEEL, OnStartFerrisWheel, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartFerrisWheel, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Ferris Wheel",
 		.Id = "misc_spawnferriswheel",
-		.EEffectGroupType = EEffectGroupType::SpawnGeneric
+		.EffectGroupType = EEffectGroupType::SpawnGeneric
 	}
 );

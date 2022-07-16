@@ -2,6 +2,8 @@
 
 #include "Memory.h"
 
+#include "Memory/Hooks/Hook.h"
+
 static DWORD64 ms_ullBaseAddr;
 static DWORD64 ms_ullEndAddr;
 
@@ -13,19 +15,20 @@ namespace Memory
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &moduleInfo, sizeof(moduleInfo));
 
 		ms_ullBaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
-		ms_ullEndAddr = ms_ullBaseAddr + moduleInfo.SizeOfImage;
+		ms_ullEndAddr  = ms_ullBaseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
 
 		LOG("Running hooks");
-		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (RegisteredHook *pRegisteredHook = g_pRegisteredHooks; pRegisteredHook;
+		     pRegisteredHook                 = pRegisteredHook->GetNext())
 		{
 			if (!pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
 				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
 		}
-	
+
 		MH_EnableHook(MH_ALL_HOOKS);
 
 		if (DoesFileExist("chaosmod\\.skipintro"))
@@ -60,6 +63,12 @@ namespace Memory
 
 	void Uninit()
 	{
+		LOG("Running hook cleanups");
+		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		{
+			pRegisteredHook->RunCleanup();
+		}
+
 		MH_DisableHook(MH_ALL_HOOKS);
 
 		MH_Uninitialize();
@@ -69,71 +78,45 @@ namespace Memory
 	{
 		LOG("Running late hooks");
 
-		for (RegisteredHook* pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
 		{
 			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
 			{
 				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
 			}
 		}
+
+		MH_EnableHook(MH_ALL_HOOKS);
 	}
 
-	Handle FindPattern(const std::string& szPattern)
+	Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange)
 	{
-		std::vector<short> rgBytes;
-
-		std::string szSub = szPattern;
-		int iOffset = 0;
-		while ((iOffset = szSub.find(' ')) != szSub.npos)
+		if ((scanRange.m_startAddr != 0 || scanRange.m_endAddr != 0) && scanRange.m_startAddr >= scanRange.m_endAddr)
 		{
-			std::string byteStr = szSub.substr(0, iOffset);
-
-			if (byteStr == "?" || byteStr == "??")
-			{
-				rgBytes.push_back(-1);
-			}
-			else
-			{
-				rgBytes.push_back(std::stoi(byteStr, nullptr, 16));
-			}
-
-			szSub = szSub.substr(iOffset + 1);
-		}
-		if ((iOffset = szPattern.rfind(' ')) != szSub.npos)
-		{
-			std::string szByteStr = szPattern.substr(iOffset + 1);
-			rgBytes.push_back(std::stoi(szByteStr, nullptr, 16));
+			LOG("startAddr is equal / bigger than endAddr???");
+			return Handle();
 		}
 
-		if (rgBytes.empty())
+		std::string szCopy = szPattern;
+		for (size_t pos = szCopy.find("??"); pos != std::string::npos; pos = szCopy.find("??", pos + 1))
+		{
+			szCopy.replace(pos, 2, "?");
+		}
+
+		hook::pattern pattern = scanRange.m_startAddr == 0 && scanRange.m_endAddr == 0
+		                          ? hook::pattern(szCopy)
+		                          : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
+		if (!pattern.size())
 		{
 			return Handle();
 		}
 
-		int niCount = 0;
-		for (DWORD64 ullAddr = ms_ullBaseAddr; ullAddr < ms_ullEndAddr; ullAddr++)
-		{
-			if (rgBytes[niCount] == -1 || *reinterpret_cast<BYTE*>(ullAddr) == rgBytes[niCount])
-			{
-				if (++niCount == rgBytes.size())
-				{
-					return Handle(ullAddr - niCount + 1);
-				}
-			}
-			else
-			{
-				niCount = 0;
-			}
-		}
-
-		LOG("Couldn't find pattern \"" << szPattern << "\"");
-
-		return Handle();
+		return Handle(uintptr_t(pattern.get_first()));
 	}
 
-	_NODISCARD MH_STATUS AddHook(void* pTarget, void* pDetour, void* ppOrig)
+	_NODISCARD MH_STATUS AddHook(void *pTarget, void *pDetour, void *ppOrig)
 	{
-		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void**>(ppOrig));
+		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void **>(ppOrig));
 
 		if (result == MH_OK)
 		{
@@ -143,23 +126,23 @@ namespace Memory
 		return result;
 	}
 
-	const char* GetTypeName(__int64 ullVftAddr)
+	const char *GetTypeName(__int64 ullVftAddr)
 	{
 		if (ullVftAddr)
 		{
-			__int64 ullVftable = *reinterpret_cast<__int64*>(ullVftAddr);
+			__int64 ullVftable = *reinterpret_cast<__int64 *>(ullVftAddr);
 			if (ullVftable)
 			{
-				__int64 ullRtti = *reinterpret_cast<__int64*>(ullVftable - 8);
+				__int64 ullRtti = *reinterpret_cast<__int64 *>(ullVftable - 8);
 				if (ullRtti)
 				{
-					__int64 ullRva = *reinterpret_cast<DWORD*>(ullRtti + 12);
+					__int64 ullRva = *reinterpret_cast<DWORD *>(ullRtti + 12);
 					if (ullRva)
 					{
 						__int64 ullTypeDesc = ms_ullBaseAddr + ullRva;
 						if (ullTypeDesc)
 						{
-							return reinterpret_cast<const char*>(ullTypeDesc + 16);
+							return reinterpret_cast<const char *>(ullTypeDesc + 16);
 						}
 					}
 				}

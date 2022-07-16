@@ -19,7 +19,8 @@ static void OnTick()
 	TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 }
 
-static RegisterEffect registerEffect(EFFECT_NO_PHONE, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "No Phone",
 		.Id = "player_nophone",

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChaosMod", "ChaosMod\ChaosMod.vcxproj", "{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}"
 EndProject
@@ -11,11 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchChatVotingProxy", "Tw
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{E8C71724-789E-46CF-82B9-8A9C0D964E91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchOverlayConfig", "TwitchOverlayConfig\TwitchOverlayConfig.csproj", "{387AFFEC-A58C-42BC-A64A-3FC6D5855436}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\Shared.projitems*{387affec-a58c-42bc-a64a-3fc6d5855436}*SharedItemsImports = 4
 		Shared\Shared.projitems*{4765f6e3-b78c-4b76-ba30-aa5362862818}*SharedItemsImports = 4
 		Shared\Shared.projitems*{9fb10f9b-9f3f-4fec-9237-7059e15c8953}*SharedItemsImports = 4
 		Shared\Shared.projitems*{e8c71724-789e-46cf-82b9-8a9c0d964e91}*SharedItemsImports = 13
@@ -37,10 +34,6 @@ Global
 		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Debug|x64.Build.0 = Debug|Any CPU
 		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Release|x64.ActiveCfg = Release|Any CPU
 		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Release|x64.Build.0 = Release|Any CPU
-		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Debug|x64.Build.0 = Debug|Any CPU
-		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Release|x64.ActiveCfg = Release|Any CPU
-		{387AFFEC-A58C-42BC-A64A-3FC6D5855436}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
