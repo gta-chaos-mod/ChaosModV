@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -15,11 +15,13 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_SLIPPERY_PEDS, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Can't Tie My Shoes",
 		.Id = "peds_slippery_peds",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.IncompatibleWith = { "player_noragdoll" }
 	}
 );

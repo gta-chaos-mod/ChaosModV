@@ -1,16 +1,19 @@
 #pragma once
 
-#include "Memory.h"
-#include "Handle.h"
+#include "Memory/Entity.h"
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
 
-#include "../Util/Natives.h"
+#include "Util/Hash.h"
+#include "Util/Natives.h"
 
+#include <unordered_set>
 #include <vector>
 
 using DWORD64 = unsigned long long;
-using WORD = unsigned short;
+using WORD    = unsigned short;
 
-using Hash = unsigned long;
+using Hash    = unsigned long;
 using Vehicle = int;
 
 namespace Memory
@@ -29,29 +32,34 @@ namespace Memory
 				return c_rgVehModels;
 			}
 
-			handle = handle.At(2).Into();
+			handle               = handle.At(2).Into();
 			DWORD64 ullModelList = handle.Value<DWORD64>();
 
-			handle = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
+			handle               = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
 			if (!handle.IsValid())
 			{
 				return c_rgVehModels;
 			}
 
-			handle = handle.At(2).Into();
+			handle           = handle.At(2).Into();
 			WORD usMaxModels = handle.Value<WORD>();
+
+			//  Stub vehicles, thanks R* lol
+			static const std::unordered_set<Hash> blacklistedModels {
+				"arbitergt"_hash, "astron2"_hash, "cyclone2"_hash, "ignus2"_hash, "s95"_hash,
+			};
 
 			for (WORD usIdx = 0; usIdx < usMaxModels; usIdx++)
 			{
-				DWORD64 ullEntry = *reinterpret_cast<DWORD64*>(ullModelList + 8 * usIdx);
+				DWORD64 ullEntry = *reinterpret_cast<DWORD64 *>(ullModelList + 8 * usIdx);
 				if (!ullEntry)
 				{
 					continue;
 				}
 
-				Hash ulModel = *reinterpret_cast<Hash*>(ullEntry);
+				Hash ulModel = *reinterpret_cast<Hash *>(ullEntry);
 
-				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel))
+				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel) && !blacklistedModels.contains(ulModel))
 				{
 					c_rgVehModels.push_back(ulModel);
 				}
@@ -63,7 +71,7 @@ namespace Memory
 
 	inline void SetVehicleOutOfControl(Vehicle vehicle, bool bState)
 	{
-		static __int64(*sub_7FF69C749B98)(int a1);
+		static __int64 (*sub_7FF69C749B98)(int a1);
 
 		static bool bIsSetup = false;
 		if (!bIsSetup)
@@ -78,14 +86,16 @@ namespace Memory
 
 			sub_7FF69C749B98 = handle.Into().Get<__int64(int)>();
 
-			bIsSetup = true;
+			bIsSetup         = true;
 		}
 
-		int iVehClass = GET_VEHICLE_CLASS(vehicle);
-		
+		int iVehClass                   = GET_VEHICLE_CLASS(vehicle);
+
 		static const Hash c_ulBlimpHash = GET_HASH_KEY("BLIMP");
-		Hash ulVehModel = GET_ENTITY_MODEL(vehicle);
-		if (iVehClass == 15 || iVehClass == 16 || ulVehModel == c_ulBlimpHash) // No helis or planes, also make sure to explicitely exclude blimps at all costs as they cause a crash
+		Hash ulVehModel                 = GET_ENTITY_MODEL(vehicle);
+		if (iVehClass == 15 || iVehClass == 16
+		    || ulVehModel == c_ulBlimpHash) // No helis or planes, also make sure to explicitely exclude blimps at all
+		                                    // costs as they cause a crash
 		{
 			return;
 		}
@@ -93,22 +103,17 @@ namespace Memory
 		__int64 v6 = sub_7FF69C749B98(vehicle);
 		if (v6)
 		{
-			v6 = (*reinterpret_cast<__int64(**)(__int64)>(*reinterpret_cast<__int64*>(v6) + 1528))(v6);
-
-			if (v6)
-			{
-				*reinterpret_cast<BYTE*>(v6 + 2373) &= 0xFEu;
-				*reinterpret_cast<BYTE*>(v6 + 2373) |= bState;
-			}
+			*reinterpret_cast<BYTE *>(v6 + 2373) &= 0xFEu;
+			*reinterpret_cast<BYTE *>(v6 + 2373) |= bState;
 		}
 	}
 
 	inline void OverrideVehicleHeadlightColor(int iIdx, bool bOverrideColor, int r, int g, int b)
 	{
-		static DWORD64* qword_7FF69E1E8E88 = nullptr;
+		static DWORD64 *qword_7FF69E1E8E88        = nullptr;
 
-		static const int c_iMaxColors = 13;
-		static DWORD c_ulOrigColors[c_iMaxColors] = { };
+		static const int c_iMaxColors             = 13;
+		static DWORD c_ulOrigColors[c_iMaxColors] = {};
 
 		if (iIdx >= c_iMaxColors)
 		{
@@ -119,7 +124,8 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 33 C0 E8 ? ? ? ? 4C 8D 0D");
+			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 "
+			                     "33 C0 E8 ? ? ? ? 4C 8D 0D");
 			if (!handle.IsValid())
 			{
 				return;
@@ -128,7 +134,7 @@ namespace Memory
 			qword_7FF69E1E8E88 = handle.At(2).Into().Get<DWORD64>();
 		}
 
-		DWORD* pulColors = *reinterpret_cast<DWORD**>(*qword_7FF69E1E8E88 + 328);
+		DWORD *pulColors = *reinterpret_cast<DWORD **>(*qword_7FF69E1E8E88 + 328);
 
 		if (!c_ulOrigColors[0])
 		{
@@ -140,15 +146,15 @@ namespace Memory
 			}
 		}
 
-		DWORD ulNewColor = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
+		DWORD ulNewColor        = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
 
-		pulColors[iIdx * 4] = bOverrideColor ? ulNewColor : c_ulOrigColors[iIdx];
+		pulColors[iIdx * 4]     = bOverrideColor ? ulNewColor : c_ulOrigColors[iIdx];
 		pulColors[iIdx * 4 + 1] = bOverrideColor ? ulNewColor : c_ulOrigColors[iIdx];
 	}
 
 	inline bool IsVehicleBraking(Vehicle vehicle)
 	{
-		static __int64(*sub_7FF788D32A60)(Vehicle vehicle) = nullptr;
+		static __int64 (*sub_7FF788D32A60)(Vehicle vehicle) = nullptr;
 
 		if (!sub_7FF788D32A60)
 		{
@@ -163,6 +169,46 @@ namespace Memory
 
 		__int64 result = sub_7FF788D32A60(vehicle);
 
-		return result ? *reinterpret_cast<float*>(result + 2496) : false;
+		return result ? *reinterpret_cast<float *>(result + 2496) : false;
+	}
+
+	inline Vector3 GetVector3(auto offset)
+	{
+		return Vector3(*reinterpret_cast<float *>(offset), *reinterpret_cast<float *>(offset + 0x4),
+		               *reinterpret_cast<float *>(offset + 0x8));
+	}
+
+	inline void SetVector3(auto offset, Vector3 vec)
+	{
+		*reinterpret_cast<float *>(offset)       = vec.x;
+		*reinterpret_cast<float *>(offset + 0x4) = vec.y;
+		*reinterpret_cast<float *>(offset + 0x8) = vec.z;
+	}
+
+	inline void SetVehicleScale(Vehicle veh, float scaleMultiplier)
+	{
+		auto baseAddr = GetScriptHandleBaseAddress(veh);
+		if (!baseAddr)
+		{
+			return;
+		}
+
+		auto passengerMatrixAddress = baseAddr + 0x60;
+		Vector3 passengerForwardVec = Memory::GetVector3(passengerMatrixAddress + 0x00);
+		Vector3 passengerRightVec   = Memory::GetVector3(passengerMatrixAddress + 0x10);
+		Vector3 passengerUpVec      = Memory::GetVector3(passengerMatrixAddress + 0x20);
+
+		auto vehicleMatrixAddress   = *reinterpret_cast<uintptr_t *>(baseAddr + 0x30) + 0x20;
+		Vector3 vehicleForwardVec   = Memory::GetVector3(vehicleMatrixAddress + 0x00);
+		Vector3 vehicleRightVec     = Memory::GetVector3(vehicleMatrixAddress + 0x10);
+		Vector3 vehicleUpVec        = Memory::GetVector3(vehicleMatrixAddress + 0x20);
+
+		Memory::SetVector3(passengerMatrixAddress + 0x00, passengerForwardVec * scaleMultiplier);
+		Memory::SetVector3(passengerMatrixAddress + 0x10, passengerRightVec * scaleMultiplier);
+		Memory::SetVector3(passengerMatrixAddress + 0x20, passengerUpVec * scaleMultiplier);
+
+		Memory::SetVector3(vehicleMatrixAddress + 0x00, vehicleForwardVec * scaleMultiplier);
+		Memory::SetVector3(vehicleMatrixAddress + 0x10, vehicleRightVec * scaleMultiplier);
+		Memory::SetVector3(vehicleMatrixAddress + 0x20, vehicleUpVec * scaleMultiplier);
 	}
 }

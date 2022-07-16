@@ -1,13 +1,11 @@
 #include <stdafx.h>
 
-static enum
-{
+static enum {
 	STATE_NONE,
 	STATE_COMBAT,
 	STATE_TO_COORDS,
 	STATE_ROAMING
-}
-m_state;
+} m_state;
 
 static Vector3 m_waypointCoords;
 static bool m_foundWaypoint;
@@ -20,12 +18,12 @@ static bool VectorEqualRoughZ(Vector3 vec1, Vector3 vec2)
 
 static void OnStart()
 {
-	m_state = STATE_NONE;
+	m_state            = STATE_NONE;
 
 	m_waypointCoords.x = m_waypointCoords.y = m_waypointCoords.z = .0f;
 
-	m_foundWaypoint = false;
-	m_customWaypoint = false;
+	m_foundWaypoint                                              = false;
+	m_customWaypoint                                             = false;
 }
 
 static void OnStop()
@@ -49,12 +47,12 @@ static void OnStop()
 
 static void OnTick()
 {
-	Player player = PLAYER_ID();
-	Ped playerPed = PLAYER_PED_ID();
+	Player player     = PLAYER_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	bool playerDead = IS_PED_DEAD_OR_DYING(playerPed, false);
+	bool playerDead   = IS_PED_DEAD_OR_DYING(playerPed, false);
 	if (playerDead || IS_PLAYER_CONTROL_ON(player))
 	{
 		m_state = STATE_NONE;
@@ -71,7 +69,8 @@ static void OnTick()
 	// Draw debug go to line
 	if (m_state == STATE_TO_COORDS)
 	{
-		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 0, 255, 0, 255);
+		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 0,
+		          255, 0, 255);
 	}
 #endif
 
@@ -80,7 +79,7 @@ static void OnTick()
 	if (m_state == STATE_COMBAT)
 	{
 		// Required to make player ped actually shoot
-		_0x2208438012482A1A(playerPed, false, false);
+		FORCE_PED_AI_AND_ANIMATION_UPDATE(playerPed, false, false);
 
 		SET_GAMEPLAY_CAM_RELATIVE_HEADING(.0f);
 
@@ -91,28 +90,28 @@ static void OnTick()
 
 	// Run every 300 ms
 	static DWORD64 lastTick = GET_GAME_TIMER();
-	DWORD64 curTick = GET_GAME_TIMER();
+	DWORD64 curTick         = GET_GAME_TIMER();
 	if (lastTick > curTick - 300)
 	{
 		return;
 	}
-	lastTick = curTick;
+	lastTick                   = curTick;
 
 	// Try to fetch waypoint coords (if waypoint exists)
-	m_foundWaypoint = false;
-	Blip targetBlip = 0;
+	m_foundWaypoint            = false;
+	Blip targetBlip            = 0;
 
 	Vector3 lastWaypointCoords = m_waypointCoords;
 
 	if (IS_WAYPOINT_ACTIVE())
 	{
-		m_waypointCoords = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+		m_waypointCoords   = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
 
 		// Player waypoint doesn't have proper z coord, use player z coord instead
 		m_waypointCoords.z = playerPos.z;
 
-		m_foundWaypoint = true;
-		m_customWaypoint = true;
+		m_foundWaypoint    = true;
+		m_customWaypoint   = true;
 
 		if (m_state != STATE_ROAMING && !VectorEqualRoughZ(m_waypointCoords, lastWaypointCoords))
 		{
@@ -131,13 +130,14 @@ static void OnTick()
 				m_foundWaypoint = true;
 
 				Vector3 blipPos = GET_BLIP_COORDS(blip);
-				float blipDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, blipPos.x, blipPos.y, blipPos.z, true);
+				float blipDist  = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, blipPos.x,
+				                                              blipPos.y, blipPos.z, true);
 
 				if (blipDist < closestBlipDist)
 				{
 					m_waypointCoords = blipPos;
-					closestBlipDist = blipDist;
-					targetBlip = blip;
+					closestBlipDist  = blipDist;
+					targetBlip       = blip;
 				}
 			}
 		}
@@ -153,12 +153,14 @@ static void OnTick()
 		}
 	}
 
-	bool isAtDest = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, false) <= 10.f;
+	bool isAtDest = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, m_waypointCoords.x,
+	                                            m_waypointCoords.y, m_waypointCoords.z, false)
+	             <= 10.f;
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		bool vehDrivable = IS_VEHICLE_DRIVEABLE(playerVeh, true);
-		bool vehStuck = IS_VEHICLE_STUCK_TIMER_UP(playerVeh, 0, 5000);
+		bool vehStuck    = IS_VEHICLE_STUCK_TIMER_UP(playerVeh, 0, 5000);
 
 		if (vehDrivable && !vehStuck && !isAtDest)
 		{
@@ -171,11 +173,14 @@ static void OnTick()
 					{
 						float planeHeading = GET_ENTITY_HEADING(playerVeh);
 
-						TASK_PLANE_MISSION(playerPed, playerVeh, 0, 0, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 4, 100.f, .0f, planeHeading, .0f, 200.f, 0);
+						TASK_PLANE_MISSION(playerPed, playerVeh, 0, 0, m_waypointCoords.x, m_waypointCoords.y,
+						                   m_waypointCoords.z, 4, 100.f, .0f, planeHeading, .0f, 200.f, 0);
 					}
 					else
 					{
-						TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, playerVeh, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 9999.f, 262668, .0f);
+						TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(playerPed, playerVeh, m_waypointCoords.x,
+						                                      m_waypointCoords.y, m_waypointCoords.z, 9999.f, 262668,
+						                                      .0f);
 					}
 
 					m_state = STATE_TO_COORDS;
@@ -215,7 +220,7 @@ static void OnTick()
 		// Run to coords through any means
 		// Roam around
 
-		Ped closestEnemyPed = 0;
+		Ped closestEnemyPed    = 0;
 		float closestEnemyDist = 1000.f;
 
 		for (Ped ped : GetAllPeds())
@@ -230,16 +235,18 @@ static void OnTick()
 					continue;
 				}
 
-				int rel = GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, ped);
+				int rel     = GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, ped);
 				int pedType = GET_PED_TYPE(ped);
-				if (IS_PED_IN_COMBAT(ped, playerPed) || rel == 4 || rel == 5 || ((pedType == 6 || pedType == 27 || pedType == 29) && GET_PLAYER_WANTED_LEVEL(player) > 0))
+				if (IS_PED_IN_COMBAT(ped, playerPed) || rel == 4 || rel == 5
+				    || ((pedType == 6 || pedType == 27 || pedType == 29) && GET_PLAYER_WANTED_LEVEL(player) > 0))
 				{
 					Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
-					float pedDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, pedPos.x, pedPos.y, pedPos.z, true);
+					float pedDist  = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, pedPos.x,
+					                                             pedPos.y, pedPos.z, true);
 
 					if (pedDist < closestEnemyDist)
 					{
-						closestEnemyPed = ped;
+						closestEnemyPed  = ped;
 						closestEnemyDist = pedDist;
 					}
 				}
@@ -291,14 +298,15 @@ static void OnTick()
 				{
 					Entity blipEntity = GET_BLIP_INFO_ID_ENTITY_INDEX(targetBlip);
 					if (blipEntity && DOES_ENTITY_EXIST(blipEntity) && GET_ENTITY_TYPE(blipEntity) == 2 /* Vehicle */
-						&& !IS_PED_IN_VEHICLE(playerPed, blipEntity, true) && GET_VEHICLE_PED_IS_ENTERING(playerPed) != blipEntity)
+					    && !IS_PED_IN_VEHICLE(playerPed, blipEntity, true)
+					    && GET_VEHICLE_PED_IS_ENTERING(playerPed) != blipEntity)
 					{
 						isEnteringVehicle = true;
 
 						TASK_ENTER_VEHICLE(playerPed, blipEntity, -1, -1, 2.f, 1, 0);
 					}
 				}
-				
+
 				if (!isEnteringVehicle)
 				{
 					bool isCarNearby = false;
@@ -310,7 +318,8 @@ static void OnTick()
 						if (IS_VEHICLE_DRIVEABLE(veh, true) && doorLock != 2 && doorLock != 3 && doorLock != 10)
 						{
 							Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
-							float vehDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, vehPos.x, vehPos.y, vehPos.z, true);
+							float vehDist = GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, vehPos.x,
+							                                            vehPos.y, vehPos.z, true);
 
 							if (vehDist < 20.f)
 							{
@@ -323,11 +332,13 @@ static void OnTick()
 
 					if (isCarNearby)
 					{
-						TASK_GO_TO_COORD_ANY_MEANS(playerPed, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 2.f, 0, false, 262668, .0f);
+						TASK_GO_TO_COORD_ANY_MEANS(playerPed, m_waypointCoords.x, m_waypointCoords.y,
+						                           m_waypointCoords.z, 2.f, 0, false, 262668, .0f);
 					}
 					else
 					{
-						TASK_FOLLOW_NAV_MESH_TO_COORD(playerPed, m_waypointCoords.x, m_waypointCoords.y, m_waypointCoords.z, 2.f, -1, .0f, true, .0f);
+						TASK_FOLLOW_NAV_MESH_TO_COORD(playerPed, m_waypointCoords.x, m_waypointCoords.y,
+						                              m_waypointCoords.z, 2.f, -1, .0f, true, .0f);
 					}
 				}
 
@@ -343,7 +354,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_AUTOPILOT, OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Autopilot",
 		.Id = "player_break",

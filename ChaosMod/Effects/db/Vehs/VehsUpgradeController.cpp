@@ -19,10 +19,13 @@ static void OnStartMaxUpgrades()
 		SET_VEHICLE_TYRES_CAN_BURST(veh, false);
 		SET_VEHICLE_WINDOW_TINT(veh, 1);
 
-		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
-		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                  g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                    g_Random.GetRandomInt(0, 255));
 
-		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
 		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
@@ -34,12 +37,15 @@ static void OnStartMaxUpgrades()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_VEH_MAX_UPGRADES, OnStartMaxUpgrades, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartMaxUpgrades, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Add Max Upgrades To Every Vehicle",
 		.Id = "playerveh_maxupgrades"
 	}
 );
+// clang-format on
+
 static void OnStartRandomUpgrades()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -62,10 +68,13 @@ static void OnStartRandomUpgrades()
 		SET_VEHICLE_TYRES_CAN_BURST(veh, g_Random.GetRandomInt(0, 1));
 		SET_VEHICLE_WINDOW_TINT(veh, g_Random.GetRandomInt(0, 6));
 
-		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
-		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                  g_Random.GetRandomInt(0, 255));
+		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                    g_Random.GetRandomInt(0, 255));
 
-		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255));
+		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
+		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
 		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
@@ -77,7 +86,8 @@ static void OnStartRandomUpgrades()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_VEH_RANDOM_UPGRADES, OnStartRandomUpgrades, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStartRandomUpgrades, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Add Random Upgrades To Every Vehicle",
 		.Id = "playerveh_randupgrades"
