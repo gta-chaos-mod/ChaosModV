@@ -373,6 +373,8 @@ namespace ConfigApp
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "timecycle_fuzzy", new EffectInfo("Static", EffectCategory.Screen, true, true) },
+            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
+            { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
         };
     }
 }
