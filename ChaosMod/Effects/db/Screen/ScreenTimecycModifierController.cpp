@@ -1,10 +1,11 @@
 #include <stdafx.h>
 
-static void StartTransitionTimecycle(std::string modifier)
+static void StartTransitionTimecycle(std::string modifier, float strength = 1.f)
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
 	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER(modifier.c_str(), 5.f);
+		SET_TIMECYCLE_MODIFIER_STRENGTH(strength);
 	}
 }
 
@@ -309,6 +310,47 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Timecycle
+	}
+);
+// clang-format on
+
+static void OnTickFuzzy()
+{
+	StartTransitionTimecycle("Broken_camera_fuzz", 0.5f);
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
+	{
+		.Name = "Static",
+		.Id = "timecycle_fuzzy",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory = EEffectCategory::Timecycle
+	}
+);
+// clang-format on
+
+static void OnTickDarkWorld()
+{
+	SET_ARTIFICIAL_LIGHTS_STATE(false);
+	StartTransitionTimecycle("dlc_island_vault");
+}
+
+static void OnStopDarkWorld()
+{
+	SET_ARTIFICIAL_LIGHTS_STATE(true);
+	OnStop();
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, EffectInfo
+	{
+		.Name = "A Dark World",
+		.Id = "timecycle_darkworld",
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.EffectCategory = EEffectCategory::Timecycle
