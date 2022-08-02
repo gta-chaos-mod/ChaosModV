@@ -42,6 +42,7 @@ namespace rage
 		DWORD dwSomething2;
 		DWORD m_dwIP;
 		char pad[184];
+		char pad2[4];
 		char m_szName[32];
 		char pad3[100];
 		char chSomething3;
@@ -59,4 +60,4 @@ namespace rage
 	};
 }
 
-static_assert(sizeof(rage::scrThread) == 344);
+static_assert(sizeof(rage::scrThread) == 352);
