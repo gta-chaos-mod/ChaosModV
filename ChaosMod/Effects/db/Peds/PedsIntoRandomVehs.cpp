@@ -30,7 +30,7 @@ static void OnStart()
 		for (Vehicle veh : GetAllVehs())
 		{
 			if (ARE_ANY_VEHICLE_SEATS_FREE(veh) && IS_VEHICLE_DRIVEABLE(veh, true)
-			    && GET_ENTITY_HEIGHT_ABOVE_GROUND(veh) >= 0)
+			    && GET_ENTITY_HEIGHT_ABOVE_GROUND(veh) >= 0 && !IS_THIS_MODEL_A_TRAIN(GET_ENTITY_MODEL(veh)))
 			{
 				vehs.push_back(veh);
 			}

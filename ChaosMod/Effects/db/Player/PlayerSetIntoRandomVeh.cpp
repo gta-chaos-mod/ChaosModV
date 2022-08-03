@@ -13,7 +13,7 @@ static void OnStart()
 	{
 		Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
 		if (veh != playerVeh && GET_GROUND_Z_FOR_3D_COORD(vehPos.x, vehPos.y, vehPos.z, &groundZ, false, false)
-		    && HAS_COLLISION_LOADED_AROUND_ENTITY(veh))
+		    && HAS_COLLISION_LOADED_AROUND_ENTITY(veh) && !IS_THIS_MODEL_A_TRAIN(GET_ENTITY_MODEL(veh)))
 		{
 			vehs.push_back(veh);
 		}

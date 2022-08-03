@@ -11,7 +11,7 @@ static void OnStart()
 	float closestDist  = 9999.f;
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (veh == playerVeh)
+		if (veh == playerVeh || IS_THIS_MODEL_A_TRAIN(GET_ENTITY_MODEL(veh)))
 		{
 			continue;
 		}
