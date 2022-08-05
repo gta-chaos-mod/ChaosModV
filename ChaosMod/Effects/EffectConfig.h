@@ -43,6 +43,12 @@ namespace EffectConfig
 
 		for (auto &[effectId, effectInfo] : g_dictEffectsMap)
 		{
+			//Don't return unstable effects, if unstable effects aren't enabled
+			if (effectInfo.IsUnstable && !g_bEnableUnstableEffects)
+			{
+				continue;
+			}
+
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for
 			// name-override", Shortcut

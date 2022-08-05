@@ -14,6 +14,7 @@ struct EffectInfo
 	const char *Id;
 	bool IsTimed         = false;
 	bool IsShortDuration = false;
+	bool IsUnstable      = false;
 	std::vector<std::string_view> IncompatibleWith;
 	EEffectCategory EffectCategory     = EEffectCategory::None;
 	EEffectGroupType EffectGroupType   = EEffectGroupType::None;

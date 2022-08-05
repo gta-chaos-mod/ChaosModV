@@ -51,6 +51,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 		.Name = "Vehicle Rain",
 		.Id = "misc_vehicle_rain",
 		.IsTimed = true,
-		.IsShortDuration = true
+		.IsShortDuration = true,
+		.IsUnstable = true
 	}
 );

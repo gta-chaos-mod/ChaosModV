@@ -146,6 +146,7 @@ namespace ConfigApp
             misc_user_effects_disable_startup.IsChecked = m_configFile.ReadValueBool("DisableStartup", false);
             misc_user_effects_enable_group_weighting.IsChecked = m_configFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
             misc_user_effects_enable_failsafe.IsChecked = m_configFile.ReadValueBool("EnableFailsafe", true);
+            misc_user_effects_enable_unstable.IsChecked = m_configFile.ReadValueBool("EnableUnstableEffects", false);
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -171,6 +172,7 @@ namespace ConfigApp
             m_configFile.WriteValue("DisableStartup", misc_user_effects_disable_startup.IsChecked.Value);
             m_configFile.WriteValue("EnableGroupWeightingAdjustments", misc_user_effects_enable_group_weighting.IsChecked.Value);
             m_configFile.WriteValue("EnableFailsafe", misc_user_effects_enable_failsafe.IsChecked.Value);
+            m_configFile.WriteValue("EnableUnstableEffects", misc_user_effects_enable_unstable.IsChecked.Value);
             int runningEffects;
             if (int.TryParse(misc_user_effects_max_running_effects.Text, out runningEffects) && runningEffects > 0)
             {

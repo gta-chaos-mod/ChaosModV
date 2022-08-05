@@ -7,10 +7,10 @@
         xmlns:local="clr-namespace:ConfigApp"
         x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
+        Title="ChaosModV Configuration" Height="550" Width="1060" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="400" />
+            <RowDefinition Height="440" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -129,6 +129,7 @@
                             <RowDefinition Height="40" />
                             <RowDefinition Height="40" />
                             <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
@@ -210,6 +211,10 @@
                         <Label Content="Allow prevention of repetitive mission fails (Failsafe)" Grid.Row="8" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
                         <CheckBox x:Name="misc_user_effects_enable_failsafe" Grid.Row="8" Grid.Column="4"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
+                        <Label Content="Enable effects that are considered unstable by contributors" Grid.Row="9" Grid.Column="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
+                        <CheckBox x:Name="misc_user_effects_enable_unstable" Grid.Row="9" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                         <Label Content="Max amount of simultaneously running effects" Grid.Row="4" Grid.Column="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />

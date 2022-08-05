@@ -112,7 +112,6 @@ static void Init()
 	}
 
 	LOG("Parsing config files");
-	ParseEffectsFile();
 
 	g_OptionsManager.Reset();
 
@@ -123,6 +122,14 @@ static void Init()
 	ms_bEnablePauseTimerShortcut =
 	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 
+	g_bEnableUnstableEffects =
+	    g_OptionsManager.GetConfigValue<bool>("EnableUnstableEffects", OPTION_DEFAULT_UNSTABLE_EFFECTS_ENABLED);
+
+	if (g_bEnableUnstableEffects)
+	{
+		LOG("Unstable effects are enabled.");
+	}
+
 	g_bEnableGroupWeighting =
 	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
@@ -132,6 +139,8 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
 	const auto &rgEffectTimerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+
+	ParseEffectsFile();
 
 	LOG("Running custom scripts");
 	LuaScripts::Load();

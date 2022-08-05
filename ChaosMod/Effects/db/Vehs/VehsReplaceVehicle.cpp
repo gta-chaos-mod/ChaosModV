@@ -29,6 +29,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Replace Current Vehicle",
-		.Id = "misc_replacevehicle"
+		.Id = "misc_replacevehicle",
+		.IsUnstable = true
 	}
 );
