@@ -26,6 +26,8 @@ static bool ms_bToggleModShortcutEnabled    = false;
 static bool ms_bDisableMod                  = false;
 static bool ms_bEnablePauseTimerShortcut    = false;
 static bool ms_bHaveLateHooksRan            = false;
+static bool ms_bAntiSoftlockShortcutEnabled = false;
+static bool ms_bRunAntiSoftlock             = false;
 
 _NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
 {
@@ -122,6 +124,8 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 	ms_bEnablePauseTimerShortcut =
 	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	ms_bAntiSoftlockShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
 	g_bEnableGroupWeighting =
 	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
@@ -187,6 +191,17 @@ static void MainRun()
 	while (true)
 	{
 		WAIT(0);
+
+		// This will run regardless if mod is disabled
+		if (ms_bRunAntiSoftlock)
+		{
+			ms_bRunAntiSoftlock = false;
+			if (IS_SCREEN_FADED_OUT())
+			{
+				DO_SCREEN_FADE_IN(0);
+				SET_ENTITY_HEALTH(PLAYER_PED_ID(), 0, 0);
+			}
+		}
 
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
@@ -255,10 +270,15 @@ namespace Main
 	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
 		static bool c_bIsCtrlPressed = false;
+		static bool c_bIsShiftPressed = false;
 
 		if (ulKey == VK_CONTROL)
 		{
 			c_bIsCtrlPressed = !bIsUpNow;
+		}
+		else if (ulKey == VK_SHIFT)
+		{
+			c_bIsShiftPressed = !bIsUpNow;
 		}
 		else if (c_bIsCtrlPressed && !bWasDownBefore)
 		{
@@ -278,6 +298,10 @@ namespace Main
 			else if (ulKey == VK_OEM_COMMA && ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
 			{
 				GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
+			}
+			else if (ulKey == 0x4B && ms_bAntiSoftlockShortcutEnabled && c_bIsShiftPressed) // L
+			{
+				ms_bRunAntiSoftlock = true;
 			}
 			else if (ulKey == 0x4C && ms_bToggleModShortcutEnabled) // L
 			{
