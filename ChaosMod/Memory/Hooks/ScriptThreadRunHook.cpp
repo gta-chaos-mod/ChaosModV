@@ -19,7 +19,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 {
 	// TODO: Make this a bit less of a mess
 
-	if (!strcmp(pThread->m_szName, "shop_controller"))
+	if (!strcmp(pThread->GetName(), "shop_controller"))
 	{
 		if (!ms_iOnlineVehicleMeasureEnableGlobal)
 		{
@@ -59,7 +59,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 		}
 	}
 
-	if (!ms_bSearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(pThread->m_szName, "main"))
+	if (!ms_bSearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(pThread->GetName(), "main"))
 	{
 		auto pProgram = Memory::ScriptThreadToProgram(pThread);
 		if (pProgram->m_pCodeBlocks)
@@ -87,7 +87,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 
 	if (ms_bEnabledHook)
 	{
-		const char *szScriptName = pThread->m_szName;
+		const char *szScriptName = pThread->GetName();
 		// Scripthook (most likely) relies on these to run our script thread
 		// We don't want to block ourselves of course :p
 		if (strcmp(szScriptName, "main") && strcmp(szScriptName, "main_persistent")
