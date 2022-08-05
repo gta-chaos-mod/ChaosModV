@@ -199,7 +199,7 @@
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
                         <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="5" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Enable blackscreen softlock prevention shortcut (CTRL + SHIFT + K)" Grid.Row="6" Grid.Column="2"
+                        <Label Content="Enable black screen softlock prevention shortcut (CTRL + SHIFT + K)" Grid.Row="6" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
                         <CheckBox x:Name="misc_user_anti_softlock_shortcut" Grid.Row="6" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
