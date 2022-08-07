@@ -299,7 +299,7 @@ namespace Main
 			{
 				GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
 			}
-			else if (ulKey == 0x4B && ms_bAntiSoftlockShortcutEnabled && c_bIsShiftPressed) // L
+			else if (ulKey == 0x4B && ms_bAntiSoftlockShortcutEnabled && c_bIsShiftPressed) // K
 			{
 				ms_bRunAntiSoftlock = true;
 			}
