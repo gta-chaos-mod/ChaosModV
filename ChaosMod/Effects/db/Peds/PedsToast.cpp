@@ -61,15 +61,15 @@ static void OnTick()
 
 	// set a new head; adapted from PedsPropHunt.cpp
 	static int lastPropPedsCheckTick = 0;
-	int currentTick                  = GET_GAME_TIMER();
+	int currentTick = GET_GAME_TIMER();
 	if (currentTick - lastPropPedsCheckTick > 500)
 	{
 		lastPropPedsCheckTick = currentTick;
 
-		int count             = 20;
+		int count = 20;
 		for (auto it = pedPropsMap.cbegin(); it != pedPropsMap.cend();)
 		{
-			Ped ped     = it->first;
+			Ped ped = it->first;
 			Object prop = it->second;
 			if (!DOES_ENTITY_EXIST(ped))
 			{
@@ -125,12 +125,12 @@ static void OnStop()
 	}
 }
 
-	// clang-format off
+// clang-format off
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "You're Toast",
 		.Id = "peds_toast",
 		.IsTimed = true,
-		.IncompatibleWith = { }
+		.IncompatibleWith = { "peds_minions" }
 	}
 );
