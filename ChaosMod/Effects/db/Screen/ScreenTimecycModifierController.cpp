@@ -336,13 +336,13 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
 
 static void OnTickDarkWorld()
 {
-	SET_ARTIFICIAL_LIGHTS_STATE(false);
+	SET_ARTIFICIAL_LIGHTS_STATE(true);
 	StartTransitionTimecycle("dlc_island_vault");
 }
 
 static void OnStopDarkWorld()
 {
-	SET_ARTIFICIAL_LIGHTS_STATE(true);
+	SET_ARTIFICIAL_LIGHTS_STATE(false);
 	OnStop();
 }
 
