@@ -376,6 +376,7 @@ namespace ConfigApp
             { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
             { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
             { "timecycle_darkworld", new EffectInfo("A Dark World", EffectCategory.Screen, true, true) },
+            { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player, false) },
         };
     }
 }
