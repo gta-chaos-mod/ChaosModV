@@ -7,6 +7,8 @@
 #include "Util/Player.h"
 #include "Util/Vehicle.h"
 
+#include "PlayerRandomStuntJump.h"
+
 struct Location
 {
 	Vector3 coordinates;
@@ -49,7 +51,7 @@ static std::vector<Location> allPossibleJumps = {
 
 };
 
-static void OnStart()
+void OnStartMakeRandomStuntJump()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh;
@@ -78,7 +80,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMakeRandomStuntJump, nullptr, nullptr, EffectInfo
     {
         .Name = "Make Random Stunt Jump",
         .Id = "player_tp_stunt",
