@@ -136,7 +136,37 @@ static void OnStartBus()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	Vehicle veh = CreatePoolVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+
+	int seats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+
+	std::vector<Ped> pedPool;
+	for (Ped ped : GetAllPeds())
+	{
+		if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
+		{
+			pedPool.push_back(ped);
+		}
+	}
+	for (int i = -1; i < seats; i++)
+	{
+		if (pedPool.empty())
+		{
+			break;
+		}
+		if (i == -1)
+		{
+			Ped driver = GET_PED_IN_VEHICLE_SEAT(veh, -1, 0);
+			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(driver, true);
+			TASK_VEHICLE_MISSION_PED_TARGET(driver, veh, PLAYER_PED_ID(), 13, 9999.f, 4176732, .0f, .0f, false);
+		}
+		if (IS_VEHICLE_SEAT_FREE(veh, i, false))
+		{
+			int randomIndex = g_random.GetRandomInt(0, pedPool.size() - 1);
+			SET_PED_INTO_VEHICLE(pedPool[randomIndex], veh, i);
+			pedPool.erase(pedPool.begin() + randomIndex);
+		}
+	}
 }
 
 // clang-format off
