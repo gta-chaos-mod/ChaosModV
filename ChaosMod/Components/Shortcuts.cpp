@@ -30,12 +30,14 @@ void Shortcuts::OnRun()
 	}
 }
 
-void Shortcuts::HandleInput(DWORD ulKey, bool bOnRepeat)
+void Shortcuts::HandleInput(DWORD ulKey, bool bOnRepeat, bool bIsCtrlPressed, bool bIsShiftPressed, bool bIsAltPressed)
 {
 	if (bOnRepeat)
 	{
 		return;
 	}
+
+	ulKey += (bIsCtrlPressed << 10) + (bIsShiftPressed << 9) + (bIsAltPressed << 8);
 
 	if (m_ugAvailableShortcuts.contains(ulKey))
 	{

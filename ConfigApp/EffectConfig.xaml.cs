@@ -11,11 +11,19 @@ namespace ConfigApp
     {
         private bool m_isTimedEffect;
         private bool m_IsSaved = false;
+        private int m_EffectShortcut; // Win32Key + 2^10 (if CTRL) + 2^9 (if Shift) + 2^8 (if Alt)
         public bool IsSaved
         {
             get
             {
                 return m_IsSaved;
+            }
+        }
+        public int EffectShortcut
+        {
+            get
+            {
+                return m_EffectShortcut;
             }
         }
 
@@ -74,19 +82,16 @@ namespace ConfigApp
             }
 
             // Shortcut
-            List<Key> availableKeys = new List<Key> { Key.None,
-                Key.F1, Key.F2, Key.F3, Key.F4, Key.F5, Key.F6, Key.F7, Key.F8, Key.F9, Key.F10, Key.F11, Key.F12, Key.F13, Key.F14, Key.F15, Key.F16, Key.F17, Key.F18, Key.F19, Key.F20, Key.F21, Key.F22, Key.F23, Key.F24, 
-                Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9,
-                Key.Multiply, Key.Divide, Key.Subtract, Key.Add, Key.Separator
-            };
-            Key selectedKey = Key.None;
             if (int.TryParse(effectData.Shortcut.ToString(), out int savedWin32Key) && savedWin32Key >= 0)
             {
-                selectedKey = KeyInterop.KeyFromVirtualKey(savedWin32Key);
-            }
+                Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
+                var modifiers = ModifierKeys.None;
+                if ((savedWin32Key & (1 << 10)) != 0) modifiers |= ModifierKeys.Control;
+                if ((savedWin32Key & (1 << 9))  != 0) modifiers |= ModifierKeys.Shift;
+                if ((savedWin32Key & (1 << 8))  != 0) modifiers |= ModifierKeys.Alt;
 
-            effectconf_effect_shortcut_combo.ItemsSource = availableKeys;
-            effectconf_effect_shortcut_combo.SelectedItem = selectedKey;
+                SetEffectShortcut(key, modifiers);
+            }
 
             CheckEnableConfigurables();
         }
@@ -94,6 +99,63 @@ namespace ConfigApp
         private void CustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
         {
             effectconf_effect_custom_name.Text = effectconf_effect_custom_name.Text.Replace("\"", "");
+        }
+
+        private void EffectShortcutTextFieldPreviewKeyDown(object sender, KeyEventArgs e)   // PreviewKeyDown so that text editing shortcuts such as "CTRL+C" are possible
+        {
+            e.Handled = true;
+
+            var key = e.Key;
+            var modifiers = Keyboard.Modifiers;
+
+            if (key == Key.Escape || key == Key.Back)
+            {
+                effectconf_effect_shortcut_input.Text = "None";
+                m_EffectShortcut = 0;
+                return;
+            }
+
+            if (key == Key.System)
+            {
+                key = e.SystemKey;
+            }
+
+            if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift 
+                || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt 
+                || key == Key.LWin || key == Key.RWin || key == Key.Apps                                    // Don't want a shortcut with any of these as the main key
+                || (key >= Key.Oem1 && key <= Key.Oem102))                                                  // Labels of these keys cannot be easily found.
+            {
+                return;
+            }
+
+            SetEffectShortcut(key, modifiers);
+        }
+
+        private void SetEffectShortcut(Key key, ModifierKeys modifiers)
+        {
+            m_EffectShortcut = 0;
+            var text = new System.Text.StringBuilder();
+
+            if (modifiers.HasFlag(ModifierKeys.Control))            // CTRL is marked as true even if only the AltGr Key is pressed
+            {
+                text.Append("Ctrl + ");
+                m_EffectShortcut += 1 << 10;
+            }
+            if (modifiers.HasFlag(ModifierKeys.Shift))
+            {
+                text.Append("Shift + ");
+                m_EffectShortcut += 1 << 9;
+            }
+            if (modifiers.HasFlag(ModifierKeys.Alt))
+            {
+                text.Append("Alt + ");
+                m_EffectShortcut += 1 << 8;
+            }
+
+            text.Append(new KeyConverter().ConvertToString(key));
+
+            effectconf_effect_shortcut_input.Text = text.ToString();
+            m_EffectShortcut += KeyInterop.VirtualKeyFromKey(key);
         }
 
         private void CheckEnableConfigurables()

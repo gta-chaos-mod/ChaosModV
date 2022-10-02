@@ -493,8 +493,7 @@ namespace ConfigApp
                     effectData.WeightMult = effectConfig.effectconf_effect_weight_mult.SelectedIndex + 1;
                     effectData.ExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
                     effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
-                    Key shortcut = (Key)effectConfig.effectconf_effect_shortcut_combo.SelectedItem;
-                    effectData.Shortcut = KeyInterop.VirtualKeyFromKey(shortcut);
+                    effectData.Shortcut = effectConfig.EffectShortcut;
                 }
             }
         }
