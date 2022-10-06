@@ -70,6 +70,7 @@ static void OnStart()
 	}
 
 	SleepAllThreads(g_Random.GetRandomInt(3000, 10000));
+	ShowWindow(GetForegroundWindow(), SW_MINIMIZE);
 
 	if (fakeTimer)
 	{
