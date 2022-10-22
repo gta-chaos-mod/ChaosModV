@@ -145,7 +145,8 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 				effect.m_fTimer -= fDeltaTime / MetaModifiers::m_fEffectDurationModifier;
 			}
 		}
-		else if (effectData.TimedType == EEffectTimedType::NotTimed)
+		else if (effectData.TimedType == EEffectTimedType::NotTimed
+		         || effectData.TimedType == EEffectTimedType::Unk)
 		{
 			float t = m_usEffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
 			// ensure effects stay on screen for at least 5 seconds
@@ -154,8 +155,8 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 
 		
 		if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
-		    || effectData.TimedType == EEffectTimedType::NotTimed
-		        && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
+		    || (effectData.TimedType == EEffectTimedType::NotTimed || effectData.TimedType == EEffectTimedType::Unk)
+		           && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
 		{
 			EffectThreads::StopThread(effect.m_ullThreadId);
 			activeEffectsSize--;
