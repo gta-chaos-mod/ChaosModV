@@ -128,8 +128,7 @@ namespace ConfigApp
 
             if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift 
                 || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt 
-                || key == Key.LWin || key == Key.RWin || key == Key.Apps                                    // Don't want a shortcut with any of these as the main key
-                || (key >= Key.Oem1 && key <= Key.Oem102))                                                  // Labels of these keys cannot be easily found.
+                || key == Key.LWin || key == Key.RWin || key == Key.Apps)                                   // Don't want a shortcut with any of these as the main key
             {
                 return;
             }
