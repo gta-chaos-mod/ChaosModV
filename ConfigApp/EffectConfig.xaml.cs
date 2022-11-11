@@ -82,15 +82,21 @@ namespace ConfigApp
             }
 
             // Shortcut
-            if (int.TryParse(effectData.Shortcut.ToString(), out int savedWin32Key) && savedWin32Key >= 0)
+            if (int.TryParse(effectData.Shortcut.ToString(), out int savedWin32Key))
             {
-                Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
-                var modifiers = ModifierKeys.None;
-                if ((savedWin32Key & (1 << 10)) != 0) modifiers |= ModifierKeys.Control;
-                if ((savedWin32Key & (1 << 9))  != 0) modifiers |= ModifierKeys.Shift;
-                if ((savedWin32Key & (1 << 8))  != 0) modifiers |= ModifierKeys.Alt;
+                if (savedWin32Key > 0)
+                {
+                    Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
+                    var modifiers = ModifierKeys.None;
+                    if ((savedWin32Key & (1 << 10)) != 0) modifiers |= ModifierKeys.Control;
+                    if ((savedWin32Key & (1 << 9)) != 0) modifiers |= ModifierKeys.Shift;
+                    if ((savedWin32Key & (1 << 8)) != 0) modifiers |= ModifierKeys.Alt;
 
-                SetEffectShortcut(key, modifiers);
+                    SetEffectShortcut(key, modifiers);
+                } else if (savedWin32Key == 0)
+                {
+                    effectconf_effect_shortcut_input.Text = "None";
+                }
             }
 
             CheckEnableConfigurables();
