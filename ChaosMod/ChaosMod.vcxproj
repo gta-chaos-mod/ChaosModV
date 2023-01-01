@@ -159,6 +159,7 @@
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenBinoculars.cpp" />
@@ -218,7 +219,6 @@
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWalkOnWater.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerWantedController.cpp" />
     <ClCompile Include="Effects\db\Time\TimeSuperhot.cpp" />
@@ -389,6 +389,9 @@
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="Components\Shortcuts.h" />
+    <ClInclude Include="Effects\db\Player\PlayerBlimpStrats.h" />
+    <ClInclude Include="Effects\db\Player\PlayerRandomStuntJump.h" />
+    <ClInclude Include="Effects\db\Player\PlayerTpToRandomStore.h" />
     <ClInclude Include="Effects\EEffectCategory.h" />
     <ClInclude Include="Effects\EffectConfig.h" />
     <ClInclude Include="Effects\EEffectAttributes.h" />

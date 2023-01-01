@@ -6,6 +6,8 @@
 
 #include "Util/Player.h"
 
+#include "PlayerTpToRandomStore.h"
+
 static std::vector<Vector3> allPossibleStores = {
 
 	// Convenience Stores
@@ -36,7 +38,7 @@ static std::vector<Vector3> allPossibleStores = {
 	{ -662.42f, -935.19f, 21.83f },  // Ammunition (Cypress Flats)
 	{ -1305.54f, -394.7f, 36.7f },   // Ammunition (MorningWood)
 	{ 251.97f, -50.19f, 69.94f },    // Ammunition (Hawick)
-	{ 2567.91f, 294.05f, 108.73f },  // Ammunition (MontaÃ±as Tataviam)
+	{ 2567.91f, 294.05f, 108.73f },  // Ammunition (Montañas Tataviam)
 	{ 1693.32f, 3760.19f, 34.70f },  // Ammunition (Sandy Shores)
 	{ -330.61f, 6084.02f, 31.45f },  // Ammunition (Sandy Shores)
 	{ -1118.11f, 2698.71f, 18.55f }, // Ammunition (Sandy Shores)
@@ -59,13 +61,13 @@ static std::vector<Vector3> allPossibleStores = {
 
 };
 
-static void OnStart()
+void OnStartTpRandomStore()
 {
 	TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTpRandomStore, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",

@@ -6,9 +6,15 @@
 
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
-static void OnStart()
+#include "PlayerBlimpStrats.h"
+
+void OnStartBlimpStrats(bool bHandleThreadBlock)
 {
-	Hooks::EnableScriptThreadBlock();
+	if (bHandleThreadBlock)
+	{
+		Hooks::EnableScriptThreadBlock();
+	}
+
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
 	Hash blimpHash       = GET_HASH_KEY("blimp");
@@ -65,8 +71,18 @@ static void OnStart()
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
 
-	Hooks::DisableScriptThreadBlock();
+
+	if (bHandleThreadBlock)
+	{
+		Hooks::DisableScriptThreadBlock();
+	}
+
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
+}
+
+static void OnStart()
+{
+	OnStartBlimpStrats(true);
 }
 
 // clang-format off
