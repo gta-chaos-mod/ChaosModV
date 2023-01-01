@@ -59,3 +59,16 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3* location =
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 	return ped;
 }
+
+inline Ped CreateTempPed(Hash ulModel, float fPosX, float fPosY, float fPosZ, float fHeading)
+{
+	LoadModel(ulModel);
+
+	Ped ped = CREATE_PED(4, ulModel, fPosX, fPosY, fPosZ, fHeading, true, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(ulModel);
+
+	Vehicle dummy = ped;
+	SET_PED_AS_NO_LONGER_NEEDED(&dummy);
+
+	return ped;
+}

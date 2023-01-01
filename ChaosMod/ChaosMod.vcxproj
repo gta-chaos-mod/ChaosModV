@@ -122,6 +122,7 @@
     <ClCompile Include="Effects\db\Misc\MiscVehicleRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWeirdPitch.cpp" />
     <ClCompile Include="Effects\db\Peds\Peds2xAnimationSpeed.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsBlanks.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBloody.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsBusBois.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscCloneOnDeath.cpp" />
@@ -436,6 +437,7 @@
     <ClInclude Include="Memory\UI.h" />
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\ViewMatrix.h" />
+    <ClInclude Include="Memory\Weapon.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
