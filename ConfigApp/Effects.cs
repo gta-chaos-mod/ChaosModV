@@ -401,6 +401,8 @@ namespace ConfigApp
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
             { "vehs_monster_trucks", new EffectInfo("Monster Trucks", EffectCategory.Vehicle, true ) },
             { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player, false) },
+            { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
+            { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) }
         };
     }
 }
