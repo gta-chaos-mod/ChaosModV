@@ -385,6 +385,7 @@ namespace ConfigApp
             { "player_invert_veh_controls", new EffectInfo("Invert Vehicle Controls", EffectCategory.Player, true, true) },
             { "player_sneeze", new EffectInfo("Bless You", EffectCategory.Player, true, true) },
             { "misc_fake_spawn", new EffectInfo("Fake Spawn", EffectCategory.Misc) },
+            { "spawn_mime", new EffectInfo("Spawn Murderous Mime", EffectCategory.Peds) },
         };
     }
 }
