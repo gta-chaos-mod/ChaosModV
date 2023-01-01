@@ -84,6 +84,13 @@ namespace Memory
 			return VectorAt(12);
 		}
 
+		void MultiplyDirectionVectors(float multiplier)
+		{
+			SetRightVector(RightVector() * multiplier);
+			SetForwardVector(ForwardVector() * multiplier);
+			SetUpVector(UpVector() * multiplier);
+		}
+
 		bool IsValid() const
 		{
 			return matrix != nullptr;

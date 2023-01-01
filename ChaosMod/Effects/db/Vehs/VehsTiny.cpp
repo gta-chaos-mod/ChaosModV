@@ -22,19 +22,25 @@ static void OnTick()
 		    && !IS_THIS_MODEL_A_BICYCLE(vehModel)) // Changing the scale of bikes makes them fly up into the air the
 		                                           // moment they touch the ground, making them impossible to drive
 		{
-			Vector3 rightVector, forwardVector, upVector, position;
-			GET_ENTITY_MATRIX(veh, &rightVector, &forwardVector, &upVector, &position);
+			Memory::ViewMatrix vm = Memory::ViewMatrix(veh);
+			Memory::ViewMatrix vm2 = Memory::ViewMatrix::ViewMatrix2(veh);
 
-			Vector3 vehicleSize = Vector3(rightVector.Length(), forwardVector.Length(), upVector.Length());
+			if (!vm.IsValid() || !vm2.IsValid())
+			{
+				continue;
+			}
+
+			Vector3 vehicleSize = Vector3(vm.RightVector().Length(), vm.ForwardVector().Length(), vm.UpVector().Length());
 
 			if (!vehicleDefaultSizes.contains(veh))
 			{
-				vehicleDefaultSizes[veh] = vehicleSize;
+				vehicleDefaultSizes[veh] = vehicleSize * 0.5f;
 			}
 
-			if (VectorEquals(vehicleDefaultSizes[veh], vehicleSize))
+			if (!VectorEquals(vehicleDefaultSizes[veh], vehicleSize))
 			{
-				Memory::SetVehicleScale(veh, 0.5f);
+				vm.MultiplyDirectionVectors(0.5f);
+				vm2.MultiplyDirectionVectors(0.5f);
 			}
 		}
 	}
