@@ -1,5 +1,5 @@
 /*
-    Effect by ProfessorBiddle, modified
+    Effect by ProfessorBiddle, modified x2
 */
 
 #include <stdafx.h>
@@ -16,23 +16,26 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 
 	// get all moveable entities
-	for (Ped ped : GetAllPeds())
+	for (Entity ent : GetAllEntitiesArray())
 	{
-		if (ped != playerPed)
+		if (IS_ENTITY_A_PED(ent))
 		{
-			entities.push_back(ped);
+			if (ent != playerPed)
+			{
+				entities.push_back(ent);
+			}
 		}
-	}
-	for (Vehicle veh : GetAllVehs())
-	{
-		if (!IS_PED_IN_VEHICLE(playerPed, veh, false))
+		else if (IS_ENTITY_A_VEHICLE(ent))
 		{
-			entities.push_back(veh);
+			if (!IS_PED_IN_VEHICLE(playerPed, ent, false))
+			{
+				entities.push_back(ent);
+			}
 		}
-	}
-	for (Entity prop : GetAllProps())
-	{
-		entities.push_back(prop);
+		else
+		{
+			entities.push_back(ent);
+		}
 	}
 
 	Vector3 playerCoord = GET_ENTITY_COORDS(playerPed, false);
@@ -41,8 +44,6 @@ static void OnTick()
 	for (Entity entity : entities)
 	{
 		static float startDistance    = 50;
-		static float maxForceDistance = 1;
-		static float maxForce         = 80;
 
 		Vector3 entityCoord           = GET_ENTITY_COORDS(entity, false);
 
@@ -54,8 +55,6 @@ static void OnTick()
 			{
 				SET_PED_TO_RAGDOLL(entity, 5000, 5000, 0, true, true, false);
 			}
-			float forceDistance = std::min(std::max(0.f, (startDistance - distance)), maxForceDistance);
-			float force         = (forceDistance / maxForceDistance) * maxForce;
 			Memory::ApplyForceToEntity(entity, 3, (entityCoord.x - playerCoord.x) * -1.f,
 			                           (entityCoord.y - playerCoord.y) * -1.f, (entityCoord.z - playerCoord.z) * -1.f,
 			                           0, 0, 0, false, false, true, true, false, true);

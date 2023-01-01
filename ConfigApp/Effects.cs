@@ -390,6 +390,7 @@ namespace ConfigApp
             { "peds_upsidedown", new EffectInfo("Upside Down Peds", EffectCategory.Peds, true)},
             { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
             { "peds_invisible_weps", new EffectInfo("Imaginary Weapons", EffectCategory.Peds, true) },
+            { "player_magnetgravity", new EffectInfo("Pulsating Gravity Field", EffectCategory.Player, true, true) },
         };
     }
 }
