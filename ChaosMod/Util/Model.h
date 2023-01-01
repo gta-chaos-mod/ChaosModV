@@ -15,3 +15,11 @@ inline void LoadModel(Hash ulModel)
 		}
 	}
 }
+
+inline void UnloadModel(Hash ulHash)
+{
+	if (IS_MODEL_VALID(ulHash))
+	{
+		SET_MODEL_AS_NO_LONGER_NEEDED(ulHash);
+	}
+}

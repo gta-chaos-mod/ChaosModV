@@ -384,6 +384,7 @@ namespace ConfigApp
             { "vehs_rolling", new EffectInfo("Rolling Stones", EffectCategory.Vehicle, true, true) },
             { "player_invert_veh_controls", new EffectInfo("Invert Vehicle Controls", EffectCategory.Player, true, true) },
             { "player_sneeze", new EffectInfo("Bless You", EffectCategory.Player, true, true) },
+            { "misc_fake_spawn", new EffectInfo("Fake Spawn", EffectCategory.Misc) },
         };
     }
 }
