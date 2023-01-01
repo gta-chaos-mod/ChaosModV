@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
@@ -378,6 +379,7 @@ namespace ConfigApp
             { "timecycle_darkworld", new EffectInfo("A Dark World", EffectCategory.Screen, true, true) },
             { "screen_leaned_camera", new EffectInfo("Leaned Camera", EffectCategory.Screen, true, true) },
             { "vehs_disappear_on_impact", new EffectInfo("Vehicles Disappear On Impact", EffectCategory.Vehicle, true) },
+            { "player_facecam", new EffectInfo("Facetime", EffectCategory.Player, true, true) },
         };
     }
 }
