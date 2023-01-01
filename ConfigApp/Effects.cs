@@ -399,6 +399,7 @@ namespace ConfigApp
             { "player_3stars", new EffectInfo("3 Wanted Stars", EffectCategory.Player ) },
             { "player_1star", new EffectInfo("1 Wanted Star", EffectCategory.Player ) },
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
+            { "vehs_monster_trucks", new EffectInfo("Monster Trucks", EffectCategory.Vehicle, true ) },
         };
     }
 }
