@@ -98,7 +98,8 @@ static void OnStart()
 	Hooks::DisableScriptThreadBlock();
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Spawn",
 		.Id = "misc_fake_spawn",

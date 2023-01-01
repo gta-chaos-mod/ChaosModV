@@ -2,8 +2,9 @@
     Effect by Reguas
 */
 
-#include "Memory/EntityFragments.h"
 #include <stdafx.h>
+
+#include "Memory/EntityFragments.h"
 
 static void OnStart()
 {

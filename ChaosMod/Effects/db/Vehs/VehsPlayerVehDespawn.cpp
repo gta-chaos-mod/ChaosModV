@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Util/Vehicle.h"
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();

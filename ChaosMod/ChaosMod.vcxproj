@@ -95,7 +95,6 @@
     <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeSpawn.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
@@ -206,6 +205,8 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDetachWheel.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDisassemble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsMonterTrucks.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsDisappearOnImpact.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Entity.h" />
+    <ClInclude Include="Memory\EntityFragments.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />

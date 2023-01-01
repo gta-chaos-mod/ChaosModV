@@ -226,7 +226,6 @@ inline Vehicle ReplaceVehicle(Vehicle veh, bool addToPool)
 	return CreateRandomVehicleWithPeds(veh, vehPeds, addToPool, vehCoords, heading, engineRunning, velocity,
 	                                   forwardSpeed);
 }
-}
 
 inline void DeleteVehicle(Vehicle vehicle)
 {

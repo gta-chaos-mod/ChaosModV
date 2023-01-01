@@ -5,6 +5,7 @@
 #include <stdafx.h>
 
 #include "Memory/Vehicle.h"
+#include "Memory/ViewMatrix.h"
 
 static std::map<Vehicle, Vector3> vehicleDefaultSizes;
 

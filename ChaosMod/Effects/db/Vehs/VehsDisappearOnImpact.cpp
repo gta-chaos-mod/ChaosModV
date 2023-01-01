@@ -1,8 +1,11 @@
-#include <stdafx.h>
-
 /*
 	Effect by juhana
 */
+
+#include <stdafx.h>
+
+#include "Util/Vehicle.h"
+
 
 static void OnTick()
 {
@@ -15,7 +18,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect2(EFFECT_VEHS_DISAPPEAR_ON_IMPACT, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Vehicles Disappear On Impact",
 		.Id = "vehs_disappear_on_impact",

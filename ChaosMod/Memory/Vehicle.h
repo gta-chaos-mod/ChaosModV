@@ -266,4 +266,3 @@ namespace Memory
 		return *reinterpret_cast<float*>(streamRenderGfx + streamRenderWheelWidthOffset);
 	}
 }
-}
