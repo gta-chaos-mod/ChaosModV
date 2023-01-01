@@ -382,6 +382,7 @@ namespace ConfigApp
             { "player_facecam", new EffectInfo("Facetime", EffectCategory.Player, true, true) },
             { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true)},
             { "vehs_rolling", new EffectInfo("Rolling Stones", EffectCategory.Vehicle, true, true) },
+            { "player_invert_veh_controls", new EffectInfo("Invert Vehicle Controls", EffectCategory.Player, true, true) },
         };
     }
 }
