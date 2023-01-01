@@ -391,6 +391,9 @@ namespace ConfigApp
             { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
             { "peds_invisible_weps", new EffectInfo("Imaginary Weapons", EffectCategory.Peds, true) },
             { "player_magnetgravity", new EffectInfo("Pulsating Gravity Field", EffectCategory.Player, true, true) },
+            { "player_movementx10", new EffectInfo("10x Movement Speed", EffectCategory.Player, true, true) },
+            { "player_movementx5", new EffectInfo("5x Movement Speed", EffectCategory.Player, true, true) },
+            { "player_movementx05", new EffectInfo("x0.5 Movement Speed", EffectCategory.Player, true, true) },
         };
     }
 }
