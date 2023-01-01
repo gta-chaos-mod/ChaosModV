@@ -353,7 +353,7 @@ static bool IsValidFakeTpType(int index)
 	}
 }
 
-static void OnStartFakeTp()
+static Vector3 PerformFakeTeleport(std::string_view effectId)
 {
 	std::string_view fakeTpType;
 	int fakeTpIndex;
@@ -361,10 +361,10 @@ static void OnStartFakeTp()
 	do
 	{
 		fakeTpIndex = g_Random.GetRandomInt(0, fakeTpTypes.size() - 1);
-		fakeTpType = fakeTpTypes.at(fakeTpIndex);
+		fakeTpType  = fakeTpTypes.at(fakeTpIndex);
 	} while (!IsValidFakeTpType(fakeTpIndex));
 
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", fakeTpType);
+	GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, fakeTpType);
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -434,6 +434,8 @@ static void OnStartFakeTp()
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
+	Vector3 destinationCoords = GET_ENTITY_COORDS(playerPed, false);
+
 	TeleportPlayer(playerPos);
 
 	WAIT(0);
@@ -446,6 +448,15 @@ static void OnStartFakeTp()
 
 	SET_PLAYER_WANTED_LEVEL(player, oldWantedLevel, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+
+	return destinationCoords;
+}
+
+static void OnStartFakeTp()
+{
+	Hooks::EnableScriptThreadBlock();
+
+	PerformFakeTeleport("tp_fake");
 
 	Hooks::DisableScriptThreadBlock();
 }
@@ -461,58 +472,9 @@ REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
 
 static void OnStartFakeFakeTp()
 {
-	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId                       = selectedLocationInfo.type;
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
-
-	Player player     = PLAYER_ID();
-	Ped playerPed     = PLAYER_PED_ID();
-	Vehicle playerVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : 0;
-
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-
 	Hooks::EnableScriptThreadBlock();
 
-	SET_ENTITY_INVINCIBLE(playerPed, true);
-	Vector3 destinationPos = selectedLocationInfo.playerPos;
-	if (playerVeh)
-	{
-		if (!selectedLocationInfo.vehiclePos.IsDefault())
-		{
-			destinationPos = selectedLocationInfo.vehiclePos;
-		}
-		SET_ENTITY_INVINCIBLE(playerVeh, true);
-	}
-
-	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
-	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
-	if (wanted == 0 || wanted < currentWanted)
-	{
-		wanted = currentWanted;
-	}
-
-	SET_PLAYER_WANTED_LEVEL(player, 0, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
-	SET_MAX_WANTED_LEVEL(0);
-	SET_FAKE_WANTED_LEVEL(wanted);
-	TeleportPlayer(destinationPos);
-
-	WAIT(g_Random.GetRandomInt(3500, 6000));
-
-	TeleportPlayer(playerPos);
-
-	WAIT(0);
-
-	SET_ENTITY_INVINCIBLE(playerPed, false);
-	if (playerVeh)
-	{
-		SET_ENTITY_INVINCIBLE(playerVeh, false);
-	}
-
-	SET_FAKE_WANTED_LEVEL(0);
-	SET_MAX_WANTED_LEVEL(5);
-	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+	Vector3 destinationPos = PerformFakeTeleport("tp_fakex2");
 
 	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
 
