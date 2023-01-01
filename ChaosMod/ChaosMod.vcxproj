@@ -158,6 +158,7 @@
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerInvertControls.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerSneeze.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
