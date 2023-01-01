@@ -143,6 +143,7 @@
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnMime.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAFK.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
