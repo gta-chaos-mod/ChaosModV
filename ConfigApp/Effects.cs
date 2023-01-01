@@ -388,6 +388,7 @@ namespace ConfigApp
             { "spawn_mime", new EffectInfo("Spawn Murderous Mime", EffectCategory.Peds) },
             { "player_afk", new EffectInfo("Afk", EffectCategory.Player, true, true) },
             { "peds_upsidedown", new EffectInfo("Upside Down Peds", EffectCategory.Peds, true)},
+            { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
         };
     }
 }
