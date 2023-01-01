@@ -381,6 +381,7 @@ namespace ConfigApp
             { "vehs_disappear_on_impact", new EffectInfo("Vehicles Disappear On Impact", EffectCategory.Vehicle, true) },
             { "player_facecam", new EffectInfo("Facetime", EffectCategory.Player, true, true) },
             { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true)},
+            { "vehs_rolling", new EffectInfo("Rolling Stones", EffectCategory.Vehicle, true, true) },
         };
     }
 }
