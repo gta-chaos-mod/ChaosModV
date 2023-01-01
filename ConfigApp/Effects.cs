@@ -389,6 +389,7 @@ namespace ConfigApp
             { "player_afk", new EffectInfo("Afk", EffectCategory.Player, true, true) },
             { "peds_upsidedown", new EffectInfo("Upside Down Peds", EffectCategory.Peds, true)},
             { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
+            { "peds_invisible_weps", new EffectInfo("Imaginary Weapons", EffectCategory.Peds, true) },
         };
     }
 }
