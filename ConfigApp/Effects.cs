@@ -400,6 +400,7 @@ namespace ConfigApp
             { "player_1star", new EffectInfo("1 Wanted Star", EffectCategory.Player ) },
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
             { "vehs_monster_trucks", new EffectInfo("Monster Trucks", EffectCategory.Vehicle, true ) },
+            { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player, false) },
         };
     }
 }
