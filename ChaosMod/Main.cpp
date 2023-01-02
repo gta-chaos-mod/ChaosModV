@@ -156,6 +156,10 @@ static void Init()
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
 
+	LOG("Initializing Splash Texts");
+	InitComponent<SplashTexts>();
+	GetComponent<SplashTexts>()->ShowInitSplash();
+
 	LOG("Completed init!");
 
 	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
@@ -178,9 +182,6 @@ static void MainRun()
 	EffectThreads::ClearThreads();
 
 	Reset();
-
-	InitComponent<SplashTexts>();
-	GetComponent<SplashTexts>()->ShowInitSplash();
 
 	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
