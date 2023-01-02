@@ -354,7 +354,6 @@
     <ClCompile Include="Effects\db\Player\PlayerBlimpStrats.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlingPlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerJumpJump.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerFacecam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
