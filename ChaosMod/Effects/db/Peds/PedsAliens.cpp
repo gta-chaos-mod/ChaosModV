@@ -25,13 +25,18 @@ static const char *ptfxDict = "scr_rcbarry1";
 static const char *ptfxCreate = "scr_alien_teleport";
 #pragma endregion
 
+static const int MAX_ALIENS  = 5;
+static const Hash MODEL_HASH = 0x64611296;
+static Vector3 spawnPos      = Vector3();
+
 static void OnStart()
 {
 	m_aliens.clear();
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), true);
 
 	LoadModel(ufoModel);
-	ufo = CreatePoolProp(ufoModel, 0.f, -4000.f, playerPos.z + 40, true);
+	LoadModel(MODEL_HASH);
+	ufo = CreatePoolProp(ufoModel, playerPos.x - 300, playerPos.y, playerPos.z + 40, true);
 	SET_ENTITY_AS_MISSION_ENTITY(ufo, false, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(ufoModel);
 
@@ -51,11 +56,6 @@ static void OnStart()
 
 	SET_AI_MELEE_WEAPON_DAMAGE_MODIFIER(.1f);
 	SET_AI_WEAPON_DAMAGE_MODIFIER(.1f);
-
-	while (!SLIDE_OBJECT(ufo, playerPos.x, playerPos.y, GET_ENTITY_COORDS(ufo, true).z, 10.f, 10.f, 1.f, false))
-	{
-		WAIT(0);
-	}
 }
 
 static void OnStop()
@@ -72,11 +72,6 @@ static void OnStop()
 		}
 	}
 	ufoBusy = false;
-
-	while (!SLIDE_OBJECT(ufo, 0.f, -4000.f, GET_ENTITY_COORDS(ufo, true).z, 10.f, 10.f, 1.f, false))
-	{
-		WAIT(0);
-	}
 	
 	if (DOES_ENTITY_EXIST(ufo))
 	{
@@ -93,8 +88,6 @@ static void OnTick()
 {
 	static DWORD64 lastTick;
 	DWORD64 curTick                  = GetTickCount64();
-	static constexpr int MAX_ALIENS = 5;
-	static constexpr Hash MODEL_HASH = 0x64611296;
 
 	static Hash alienGroupHash      = GET_HASH_KEY("_ALIENS");
 
@@ -103,7 +96,6 @@ static void OnTick()
 
 	if (m_aliens.size() <= MAX_ALIENS && !ufoBusy)
 	{
-		Vector3 spawnPos;
 		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 15 + m_aliens.size(), &spawnPos, 0, 0,
 		                                 0)
 		    && GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z,
@@ -111,14 +103,18 @@ static void OnTick()
 		           < 300.f)
 		{
 			ufoBusy = true;
+		}
+	}
 
-			while (!SLIDE_OBJECT(ufo, spawnPos.x, spawnPos.y, GET_ENTITY_COORDS(ufo, true).z, 1.f, 1.f, 1.f, false))
-			{
-				WAIT(0);
-			}
-
-			LoadModel(MODEL_HASH);
-
+	if (ufoBusy)
+	{
+		if (!SLIDE_OBJECT(ufo, spawnPos.x, spawnPos.y, GET_ENTITY_COORDS(ufo, true).z, 1.f, 1.f, 1.f, false))
+		{
+			auto cs = GET_ENTITY_COORDS(ufo, true);
+			return;
+		}
+		else
+		{
 			Ped alien = CreatePoolPed(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f);
 
 			SET_PED_COMPONENT_VARIATION(alien, 0, 0, 0, 0);
@@ -136,7 +132,7 @@ static void OnTick()
 			SET_AMBIENT_VOICE_NAME(alien, "ALIENS");
 			DISABLE_PED_PAIN_AUDIO(alien, true);
 
-			GIVE_WEAPON_TO_PED(alien, m_weapons.at(g_Random.GetRandomInt(0, m_weapons.size()-1)), 9999, false, true);
+			GIVE_WEAPON_TO_PED(alien, m_weapons.at(g_Random.GetRandomInt(0, m_weapons.size() - 1)), 9999, false, true);
 
 			TASK_COMBAT_PED(alien, playerPed, 0, 16);
 			SET_PED_FIRING_PATTERN(alien, 0x7A845691);
@@ -151,6 +147,7 @@ static void OnTick()
 			ufoBusy = false;
 		}
 	}
+
 
 	for (std::list<Ped>::iterator it = m_aliens.begin(); it != m_aliens.end();)
 	{
