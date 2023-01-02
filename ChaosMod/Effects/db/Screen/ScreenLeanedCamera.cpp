@@ -38,7 +38,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECTEFFECT_LEANED_CAMERA, OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Leaned Camera",
 		.Id = "screen_leaned_camera",

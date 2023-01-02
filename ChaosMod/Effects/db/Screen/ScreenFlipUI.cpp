@@ -90,7 +90,7 @@ static void OnStop()
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Flipped HUD",
-		.Id = "misc_flip_ui",
+		.Id = "screen_flip_ui",
 		.IsTimed = true,
 		.IncompatibleWith = { "no_hud", "screen_maximap"}
 	}

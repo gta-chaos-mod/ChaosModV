@@ -179,6 +179,8 @@
     <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenHeatVision.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenLeanedCamera.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenMaximap.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNightVision.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNoHUD.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNoRadar.cpp" />
