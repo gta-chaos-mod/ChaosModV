@@ -174,7 +174,7 @@ namespace Memory
 
 	inline void SetVehicleRaise(Vehicle vehicle, float height)
 	{
-		auto vehAddr = getScriptHandleBaseAddress(vehicle);
+		auto vehAddr = GetScriptHandleBaseAddress(vehicle);
 		*reinterpret_cast<float*>(*reinterpret_cast<uintptr_t*>(vehAddr + 0x938) + 0xD0) = height;
 	}
 

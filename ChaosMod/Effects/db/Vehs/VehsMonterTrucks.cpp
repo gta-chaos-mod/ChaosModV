@@ -21,7 +21,7 @@ static void OnStop()
 		Memory::SetVehicleRaise(temp, data.fRaise);
 
 		DELETE_ENTITY(&temp);
-		vehiclesMap.erase(model);
+		WAIT(0);
 	}
 
 	for (auto const &[veh, CG] : vehiclesCGMap)
