@@ -422,7 +422,7 @@ static Vector3 PerformFakeTeleport(std::string_view effectId)
 		OnStartMakeRandomStuntJump();
 
 		// Wait for stunt jump to start
-		WAIT(500);
+		WAIT(1000);
 
 		while (IS_STUNT_JUMP_IN_PROGRESS())
 		{
