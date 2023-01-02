@@ -168,7 +168,7 @@ static void OnTickRandom()
 	static DWORD lastTick;
 	DWORD curTick = GetTickCount();
 
-	if (lastTick < curTick - 5000)
+	if (lastTick < curTick - 3000)
 	{
 		lastTick = curTick;
 
@@ -207,6 +207,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
 		.Name = "Random Gravity",
 		.Id = "misc_randomgravity",
 		.IsTimed = true,
+		.IsShortDuration = true,
         .EffectCategory  = EEffectCategory::Gravity
 	}
 );
