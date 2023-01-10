@@ -193,6 +193,8 @@ static void MainRun()
 	{
 		WAIT(0);
 
+		DISABLE_CONTROL_ACTION(0, 0x12, true); // block cutscene skips
+
 		// This will run regardless if mod is disabled
 		if (ms_bRunAntiSoftlock)
 		{
@@ -270,7 +272,7 @@ namespace Main
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
 	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
-		static bool c_bIsCtrlPressed = false;
+		static bool c_bIsCtrlPressed  = false;
 		static bool c_bIsShiftPressed = false;
 
 		if (ulKey == VK_CONTROL)
@@ -280,6 +282,10 @@ namespace Main
 		else if (ulKey == VK_SHIFT)
 		{
 			c_bIsShiftPressed = !bIsUpNow;
+		}
+		else if (ulKey == 0x4B) // K
+		{
+			STOP_CUTSCENE(0);
 		}
 		else if (c_bIsCtrlPressed && !bWasDownBefore)
 		{
