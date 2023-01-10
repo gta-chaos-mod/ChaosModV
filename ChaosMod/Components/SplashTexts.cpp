@@ -8,15 +8,30 @@ void SplashTexts::OnRun()
 {
 	float fFrameTime = GET_FRAME_TIME();
 
+	static std::string text;
+	static bool flag = true;
+
+	
 	if (m_fStartupSplashTime > 0)
 	{
-		DrawScreenText("Chaos Mod v1.11.3 - special build for DarkViperAU\n\nSee credits.txt for a list of contributors", { .25f, .3f }, .65f,
-		               { 60, 245, 190 }, true);
+		if (flag)
+		{
+			text = std::string("Chaos Mod v1.11.3 - special build for ")
+			     + (g_Random.GetRandomInt(0, 10) == 10 ? "Matto" : "DarkViperAU")
+			     + "\n\nSee credits.txt for a list of contributors";
+			flag = false;
+		}
+
+		DrawScreenText(text, { .25f, .3f }, .65f, { 60, 245, 190 }, true);
 #ifdef _DEBUG
 		DrawScreenText("DEBUG BUILD!", { .25f, .5f }, .7f, { 255, 0, 0 }, true);
 #endif
 
 		m_fStartupSplashTime -= fFrameTime;
+	}
+	else
+	{
+		flag = true;
 	}
 
 	if (m_fTwitchVotingSplashTime > 0)
