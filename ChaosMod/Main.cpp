@@ -218,9 +218,6 @@ static void MainRun()
 				{
 					c_bJustReenabled = false;
 
-					// Clear log
-					g_Log            = std::ofstream("chaosmod/chaoslog.txt");
-
 					// Restart the main part of the mod completely
 					Init();
 				}
@@ -269,7 +266,7 @@ namespace Main
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
 	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
-		static bool c_bIsCtrlPressed = false;
+		static bool c_bIsCtrlPressed  = false;
 		static bool c_bIsShiftPressed = false;
 
 		if (ulKey == VK_CONTROL)
