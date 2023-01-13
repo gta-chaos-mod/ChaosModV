@@ -55,7 +55,7 @@ static void Reset()
 	// Check if this isn't the first time this is being run
 	if (ComponentExists<EffectDispatcher>())
 	{
-		LOG("Mod has been disabled using shortcut!");
+		LOG("Mod has been disabled");
 	}
 
 	ClearEntityPool();
@@ -156,7 +156,7 @@ static void Init()
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
 
-	LOG("Completed init!");
+	LOG("Completed init");
 
 	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
 	{
@@ -217,6 +217,8 @@ static void MainRun()
 				if (!ms_bDisableMod)
 				{
 					c_bJustReenabled = false;
+
+					LOG("Mod has been re-enabled");
 
 					// Restart the main part of the mod completely
 					Init();
