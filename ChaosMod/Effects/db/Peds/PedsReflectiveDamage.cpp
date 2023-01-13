@@ -47,7 +47,7 @@ static void OnTick()
 					if (damage <= 0) break;
 
 					APPLY_DAMAGE_TO_PED(attackerPed, damage, false, false);
-					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped) + (damage / 3), 0);
+					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped), 0);
 
 					ReplaceMapValue(ped, GET_ENTITY_HEALTH(ped));
 
@@ -69,7 +69,7 @@ static void OnTick()
 					if (damage <= 0) break;
 
 					APPLY_DAMAGE_TO_PED(attackerPed, damage, false, false);
-					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped) + (damage / 3), 0);
+					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped), 0);
 
 					ReplaceMapValue(ped, GET_ENTITY_HEALTH(ped));
 
@@ -82,6 +82,7 @@ static void OnTick()
 		else
 		{
 			ReplaceMapValue(ped, GET_ENTITY_HEALTH(ped));
+			CLEAR_ENTITY_LAST_DAMAGE_ENTITY(ped);
 		}
 
 		if (IS_ENTITY_DEAD(ped, false))
