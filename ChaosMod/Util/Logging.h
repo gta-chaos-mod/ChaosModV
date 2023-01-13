@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -11,6 +12,8 @@
 inline std::ofstream g_Log("chaosmod/chaoslog.txt");
 
 inline std::ofstream g_ConsoleOut;
+
+inline const auto g_ModStartTime = std::time(nullptr);
 
 #define _OSS std::ostringstream()
 
@@ -44,7 +47,14 @@ inline std::ofstream g_ConsoleOut;
 		}                                                                                                        \
 	} while (0)
 
-#define LOG(_text) COLOR_PREFIX_LOG("[" << __FILENAME__ << "]", _text)
+#define LOG(_text)                                                                                                \
+	do                                                                                                            \
+	{                                                                                                             \
+		auto curTime      = std::time(nullptr);                                                                   \
+		auto diffTime     = static_cast<time_t>(std::difftime(curTime, g_ModStartTime));                          \
+		auto diffTimeTime = *std::gmtime(&diffTime);                                                              \
+		COLOR_PREFIX_LOG("[" << std::put_time(&diffTimeTime, "%H:%M:%S") << "] (" << __FILENAME__ << ")", _text); \
+	} while (0)
 
 #ifdef _DEBUG
 #define DEBUG_LOG(_text) LOG(_text)
