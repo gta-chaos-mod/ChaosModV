@@ -450,6 +450,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />
