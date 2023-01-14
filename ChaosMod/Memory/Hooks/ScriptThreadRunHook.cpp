@@ -44,10 +44,19 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 			auto program = Memory::ScriptThreadToProgram(thread);
 			if (program->m_pCodeBlocks)
 			{
-				// Thanks to drp4lyf
-				// TODO: Broken on b2802!
-				auto handle = FindScriptPattern(
-				    "2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01", program);
+				Handle handle;
+				if (getGameVersion() < VER_1_0_2802_0_STEAM)
+				{
+					// Thanks to drp4lyf
+					handle = FindScriptPattern("2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
+					                           program);
+				}
+				else
+				{
+					// Thanks to LeeC22
+					handle = FindScriptPattern("2D 01 04 00 00 2C 01 01 F8 56 ? ? 71 2E 01 01 62", program);
+				}
+
 				if (!handle.IsValid())
 				{
 					LOG("Error while bypassing online vehicle despawn mechanism; spawned online vehicles will "
