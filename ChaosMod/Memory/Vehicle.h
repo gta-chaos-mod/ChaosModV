@@ -154,22 +154,21 @@ namespace Memory
 
 	inline bool IsVehicleBraking(Vehicle vehicle)
 	{
-		static __int64 (*sub_7FF788D32A60)(Vehicle vehicle) = nullptr;
-
-		if (!sub_7FF788D32A60)
+		static auto brakeStateOffset = []() -> WORD
 		{
-			Handle handle = FindPattern("E8 ? ? ? ? 48 85 FF 74 47");
+			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53");
 			if (!handle.IsValid())
 			{
-				return false;
+				LOG("Vehicle brake state offset not found!");
+				return 0;
 			}
 
-			sub_7FF788D32A60 = handle.Into().Get<__int64(Vehicle)>();
-		}
+			return handle.At(4).Value<WORD>();
+		}();
 
-		__int64 result = sub_7FF788D32A60(vehicle);
+		__int64 result = GetScriptHandleBaseAddress(vehicle);
 
-		return result ? *reinterpret_cast<float *>(result + 2496) : false;
+		return result ? *reinterpret_cast<float *>(result + brakeStateOffset) : false;
 	}
 
 	inline Vector3 GetVector3(auto offset)
