@@ -1,1 +1,1 @@
-#define MOD_VERSION "1.11.3"
+#define MOD_VERSION "1.11.4"
