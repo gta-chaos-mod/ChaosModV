@@ -154,8 +154,6 @@ namespace Memory
 
 	DWORD64 *GetGlobalPtr(int globalId)
 	{
-		static DWORD64 dummyGlobals[128] {};
-
 		static auto globalPtr = []() -> DWORD64 **
 		{
 			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
@@ -167,13 +165,13 @@ namespace Memory
 			return handle.At(2).Into().Get<DWORD64 *>();
 		}();
 
-		static auto isFiveM = []() -> bool
+		static auto fallbackToSHV = []() -> bool
 		{
 			// Check for the presence some arbitrary module specific to FiveM
-			// This should not exist in FiveM sp
-			return GetModuleHandle(L"gta-net-five.dll");
+			// This should not exist in either Vanilla or FiveM sp
+			return !globalPtr || GetModuleHandle(L"gta-net-five.dll");
 		}();
 
-		return isFiveM ? dummyGlobals : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
+		return fallbackToSHV ? getGlobalPtr(globalId) : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
 	}
 }

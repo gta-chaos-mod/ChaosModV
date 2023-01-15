@@ -91,7 +91,7 @@ static void TERMINATE() { scriptWait(MAXDWORD); }
 // Returns pointer to global variable
 // make sure that you check game version before accessing globals because
 // ids may differ between patches
-//IMPORT UINT64 *getGlobalPtr(int globalId);
+IMPORT UINT64 *getGlobalPtr(int globalId);
 
 /* world */
 
