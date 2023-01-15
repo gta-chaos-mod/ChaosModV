@@ -80,7 +80,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 
 		if (ms_iOnlineVehicleMeasureEnableGlobal > 0)
 		{
-			*getGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
+			*Memory::GetGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
 		}
 	}
 

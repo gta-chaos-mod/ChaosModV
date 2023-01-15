@@ -151,4 +151,29 @@ namespace Memory
 
 		return "UNK";
 	}
+
+	DWORD64 *GetGlobalPtr(int globalId)
+	{
+		static DWORD64 dummyGlobals[128] {};
+
+		static auto globalPtr = []() -> DWORD64 **
+		{
+			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
+			if (!handle.IsValid())
+			{
+				return nullptr;
+			}
+
+			return handle.At(2).Into().Get<DWORD64 *>();
+		}();
+
+		static auto isFiveM = []() -> bool
+		{
+			// Check for the presence some arbitrary module specific to FiveM
+			// This should not exist in FiveM sp
+			return GetModuleHandle(L"gta-net-five.dll");
+		}();
+
+		return isFiveM ? dummyGlobals : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
+	}
 }

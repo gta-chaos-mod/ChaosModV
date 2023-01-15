@@ -37,7 +37,7 @@ void Failsafe::OnRun()
 
 	if (!m_piStateGlobal)
 	{
-		m_piStateGlobal = reinterpret_cast<int *>(getGlobalPtr(ms_iStateGlobalIdx));
+		m_piStateGlobal = reinterpret_cast<int *>(Memory::GetGlobalPtr(ms_iStateGlobalIdx));
 	}
 
 	if (!*m_piStateGlobal && m_iLastState)
