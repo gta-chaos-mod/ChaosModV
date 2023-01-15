@@ -14,17 +14,15 @@ assignees: ''
 
 Before continuing, ensure that:
 
-1. You have already searched the repository for Issues and Pull Requests to ensure that someone has not already suggested or implemented the effect you have in mind
-  - Search at the top left of the page, and hit 'In this repository'
+1. You have already searched the "Issues" tab to ensure that someone has not already suggested the effect you have in mind
+  - Search here: https://github.com/gta-chaos-mod/ChaosModV/issues
 2. You have titled the suggestion correctly "[Effect Suggestion] Some Effect Name" (please replace "My Super Cool Effect Idea" with the name of your effect)
 -->
 
 **Name of effect**
 Potential name(s) for the effect
-<!--
-Choose one and replace the corresponding "[ ]" with "[X]", so it looks like a checked checkbox in the "Preview" tab.
--->
-**Duration**
+
+**Duration (choose one and replace the corresponding "[ ]" with "[X]")**
 - [ ] Long
 - [ ] Short
 - [ ] No duration
