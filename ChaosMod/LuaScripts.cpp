@@ -33,12 +33,12 @@ static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "c
 
 _LUAFUNC void LuaPrint(const std::string &szText)
 {
-	COLOR_PREFIX_LOG("[Lua]", szText);
+	COLOR_PREFIX_LOG("(Lua)", szText);
 }
 
 _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 {
-	COLOR_PREFIX_LOG("[" << szName << "]", szText);
+	COLOR_PREFIX_LOG("(" << szName << ")", szText);
 }
 
 _LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS *pException)
@@ -99,7 +99,7 @@ class LuaScript
 	{
 	}
 
-	LuaScript(const LuaScript &) = delete;
+	LuaScript(const LuaScript &)            = delete;
 
 	LuaScript &operator=(const LuaScript &) = delete;
 
