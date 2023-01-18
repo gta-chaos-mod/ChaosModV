@@ -1,5 +1,5 @@
 /*
-    Effect by ubscal, modified from Jesus take the wheel
+    Effect by Lunascape, modified from Jesus take the wheel
 */
 
 #include <stdafx.h>
