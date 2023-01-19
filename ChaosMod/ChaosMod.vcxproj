@@ -76,6 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,6 +109,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
@@ -125,9 +127,11 @@
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGrappleGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHeadless.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsHotCougars.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
@@ -422,6 +426,7 @@
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
+    <ClInclude Include="Util\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
@@ -447,6 +452,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

@@ -328,7 +328,7 @@ namespace ConfigApp
             { "misc_news_team", new EffectInfo("News Team", EffectCategory.Misc, true, true) },
             { "player_fling_player", new EffectInfo("Fling Player", EffectCategory.Player) },
             { "misc_stuffguns", new EffectInfo("Improvised Weaponry", EffectCategory.Misc, true, true) },
-            { "misc_random_waypoint", new EffectInfo("Random Waypoint", EffectCategory.Misc) },
+            { "misc_random_waypoint", new EffectInfo("Set Random Waypoint", EffectCategory.Misc) },
             { "peds_eternal_screams", new EffectInfo("Eternal Screams", EffectCategory.Peds, true, true) },
             { "spawn_angry_chimp", new EffectInfo("Spawn Angry Chimp", EffectCategory.Peds, true) },
             { "misc_uturn", new EffectInfo("U-Turn", EffectCategory.Misc) },
@@ -375,6 +375,11 @@ namespace ConfigApp
             { "player_3stars", new EffectInfo("3 Wanted Stars", EffectCategory.Player ) },
             { "player_1star", new EffectInfo("1 Wanted Star", EffectCategory.Player ) },
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
+            { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
+            { "timecycle_fuzzy", new EffectInfo("Static", EffectCategory.Screen, true, true) },
+            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
+            { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
+            { "timecycle_darkworld", new EffectInfo("A Dark World", EffectCategory.Screen, true, true) },
         };
     }
 }
