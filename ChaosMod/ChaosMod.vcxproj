@@ -109,6 +109,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
