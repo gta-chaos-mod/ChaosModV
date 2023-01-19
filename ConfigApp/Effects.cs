@@ -328,7 +328,7 @@ namespace ConfigApp
             { "misc_news_team", new EffectInfo("News Team", EffectCategory.Misc, true, true) },
             { "player_fling_player", new EffectInfo("Fling Player", EffectCategory.Player) },
             { "misc_stuffguns", new EffectInfo("Improvised Weaponry", EffectCategory.Misc, true, true) },
-            { "misc_random_waypoint", new EffectInfo("Random Waypoint", EffectCategory.Misc) },
+            { "misc_random_waypoint", new EffectInfo("Set Random Waypoint", EffectCategory.Misc) },
             { "peds_eternal_screams", new EffectInfo("Eternal Screams", EffectCategory.Peds, true, true) },
             { "spawn_angry_chimp", new EffectInfo("Spawn Angry Chimp", EffectCategory.Peds, true) },
             { "misc_uturn", new EffectInfo("U-Turn", EffectCategory.Misc) },
