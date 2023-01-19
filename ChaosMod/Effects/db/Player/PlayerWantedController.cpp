@@ -16,7 +16,8 @@ REGISTER_EFFECT(OnStartFive, nullptr, nullptr, EffectInfo
 	{
 		.Name = "5 Wanted Stars",
 		.Id = "player_5stars",
-		.IncompatibleWith = { "player_neverwanted" }
+		.IncompatibleWith = { "player_neverwanted" },
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
 // clang-format on
@@ -34,7 +35,8 @@ REGISTER_EFFECT(OnStartPlusTwo, nullptr, nullptr, EffectInfo
 	{
 		.Name = "+2 Wanted Stars",
 		.Id = "player_plus2stars",
-		.IncompatibleWith = { "player_neverwanted" }
+		.IncompatibleWith = { "player_neverwanted" },
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
 // clang-format on
@@ -50,7 +52,8 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickNeverWanted, EffectInfo
 	{
 		.Name = "Never Wanted",
 		.Id = "player_neverwanted",
-		.IsTimed = true
+		.IsTimed = true,
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
 // clang-format on
@@ -68,7 +71,8 @@ REGISTER_EFFECT(OnStartThree, nullptr, nullptr, EffectInfo
 	{
 		.Name = "3 Wanted Stars",
 		.Id = "player_3stars",
-		.IncompatibleWith = { "player_neverwanted" }
+		.IncompatibleWith = { "player_neverwanted" },
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
 // clang-format on
@@ -86,7 +90,8 @@ REGISTER_EFFECT(OnStartOne, nullptr, nullptr, EffectInfo
 	{
 		.Name = "1 Wanted Star",
 		.Id = "player_1star",
-		.IncompatibleWith = { "player_neverwanted" }
+		.IncompatibleWith = { "player_neverwanted" },
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
 // clang-format on
@@ -157,6 +162,7 @@ REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Wanted Level",
 		.Id = "player_fakestars",
-		.IncompatibleWith = { "player_neverwanted" }
+		.IncompatibleWith = { "player_neverwanted" },
+                .EffectGroupType = EEffectGroupType::WantedLevel
 	}
 );
