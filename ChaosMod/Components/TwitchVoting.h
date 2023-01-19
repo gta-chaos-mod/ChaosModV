@@ -26,7 +26,7 @@ class TwitchVoting : public Component
 	struct ChoosableEffect
 	{
 		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &szName, int iMatch)
-			: m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
+		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
 		{
 		}
 
@@ -70,6 +70,7 @@ class TwitchVoting : public Component
 	std::vector<std::unique_ptr<ChoosableEffect>> m_rgEffectChoices;
 
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
+	std::string GetPipeJson(std::string identifier, std::vector<std::string> params);
 
   protected:
 	TwitchVoting(const std::array<BYTE, 3> &rgTextColor);
@@ -83,7 +84,7 @@ class TwitchVoting : public Component
 
 	bool HandleMsg(const std::string &szMsg);
 
-	void SendToPipe(std::string &&szMsg);
+	void SendToPipe(std::string identifier, std::vector<std::string> params = {});
 
 	void ErrorOutWithMsg(const std::string &&szMsg);
 

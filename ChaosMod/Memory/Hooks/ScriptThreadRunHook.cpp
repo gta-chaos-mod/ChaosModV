@@ -10,39 +10,64 @@
 
 #include "Lib/scrThread.h"
 
+#include <scripthookv/inc/main.h>
+
 static bool ms_bEnabledHook                     = false;
 static int ms_iOnlineVehicleMeasureEnableGlobal = 0;
 static bool ms_bSearchedForMissionStateGlobal   = false;
 
-__int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
-__int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
+static Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
 {
-	// TODO: Make this a bit less of a mess
+	DWORD codeBlocksSize = (program->m_nCodeSize + 0x3FFF) >> 14;
+	for (int i = 0; i < codeBlocksSize; i++)
+	{
+		auto handle = Memory::FindPattern(
+		    pattern,
+		    { program->m_pCodeBlocks[i],
+		      program->m_pCodeBlocks[i] + (i == codeBlocksSize - 1 ? program->m_nCodeSize : program->PAGE_SIZE) });
+		if (handle.IsValid())
+		{
+			return handle;
+		}
+	}
 
-	if (!strcmp(pThread->m_szName, "shop_controller"))
+	return Handle();
+}
+
+__int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
+__int64 HK_rage__scrThread__Run(rage::scrThread *thread)
+{
+	if (!strcmp(thread->GetName(), "shop_controller"))
 	{
 		if (!ms_iOnlineVehicleMeasureEnableGlobal)
 		{
-			auto pProgram = Memory::ScriptThreadToProgram(pThread);
-			if (pProgram->m_pCodeBlocks)
+			auto program = Memory::ScriptThreadToProgram(thread);
+			if (program->m_pCodeBlocks)
 			{
-				auto codeBlocksSize = pProgram->m_nCodeSize + 0x3FFF >> 14;
-				for (int i = 0; i < codeBlocksSize; i++)
+				Handle handle;
+				if (getGameVersion() < VER_1_0_2802_0_STEAM)
 				{
 					// Thanks to drp4lyf
-					Handle handle = Memory::FindPattern(
-						"2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
-						{ pProgram->m_pCodeBlocks[i],
-					      pProgram->m_pCodeBlocks[i]
-					          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
-					if (handle.IsValid())
-					{
-						ms_iOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
-						LOG("SP online vehicle despawn mechanism successfully blocked! Hopefully? ("
-						    << ms_iOnlineVehicleMeasureEnableGlobal << ")");
+					handle = FindScriptPattern("2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
+					                           program);
+				}
+				else
+				{
+					// Thanks to LeeC22
+					handle = FindScriptPattern("2D 01 04 00 00 2C 01 01 F8 56 ? ? 71 2E 01 01 62", program);
+				}
 
-						break;
-					}
+				if (!handle.IsValid())
+				{
+					LOG("Error while bypassing online vehicle despawn mechanism; spawned online vehicles will "
+					    "despawn!");
+				}
+				else
+				{
+					ms_iOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
+
+					LOG("Online vehicle despawn mechanism successfully bypassed (Global: "
+					    << ms_iOnlineVehicleMeasureEnableGlobal << ")");
 				}
 			}
 
@@ -55,49 +80,52 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *pThread)
 
 		if (ms_iOnlineVehicleMeasureEnableGlobal > 0)
 		{
-			*getGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
+			*Memory::GetGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
 		}
 	}
 
-	if (!ms_bSearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(pThread->m_szName, "main"))
+	if (!ms_bSearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(thread->GetName(), "main"))
 	{
-		auto pProgram = Memory::ScriptThreadToProgram(pThread);
-		if (pProgram->m_pCodeBlocks)
+		auto program = Memory::ScriptThreadToProgram(thread);
+		if (program->m_pCodeBlocks)
 		{
 			ms_bSearchedForMissionStateGlobal = true;
 
-			auto codeBlocksSize               = pProgram->m_nCodeSize + 0x3FFF >> 14;
-			for (int i = 0; i < codeBlocksSize; i++)
+			Handle handle;
+			if (getGameVersion() < VER_1_0_2802_0_STEAM)
 			{
-				Handle handle = Memory::FindPattern(
-					"2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E",
-					{ pProgram->m_pCodeBlocks[i],
-				      pProgram->m_pCodeBlocks[i]
-				          + (i == codeBlocksSize - 1 ? pProgram->m_nCodeSize : pProgram->PAGE_SIZE) });
-				if (handle.IsValid())
-				{
-					Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
-					LOG("Found mission state global for Failsafe! (" << Failsafe::GetGlobalIndex() << ")");
+				handle = FindScriptPattern("2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E", program);
+			}
+			else
+			{
+				handle = FindScriptPattern("2D ? ? 00 00 25 0D 63 ? ? ? 70 61", program);
+			}
 
-					break;
-				}
+			if (!handle.IsValid())
+			{
+				LOG("Fail state global not found; Failsafe can not be enabled!");
+			}
+			else
+			{
+				Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
+
+				LOG("Fail state global found (Global: " << Failsafe::GetGlobalIndex() << ")");
 			}
 		}
 	}
 
 	if (ms_bEnabledHook)
 	{
-		const char *szScriptName = pThread->m_szName;
+		auto scriptName = thread->GetName();
 		// Scripthook (most likely) relies on these to run our script thread
 		// We don't want to block ourselves of course :p
-		if (strcmp(szScriptName, "main") && strcmp(szScriptName, "main_persistent")
-		    && strcmp(szScriptName, "control_thread"))
+		if (strcmp(scriptName, "main") && strcmp(scriptName, "main_persistent") && strcmp(scriptName, "control_thread"))
 		{
 			return 0;
 		}
 	}
 
-	return OG_rage__scrThread__Run(pThread);
+	return OG_rage__scrThread__Run(thread);
 }
 
 static bool OnHook()
@@ -105,7 +133,7 @@ static bool OnHook()
 	Handle handle;
 
 	handle = Memory::FindPattern(
-		"48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 D0 00 00 00");
+	    "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 ? 00 00 00");
 	if (!handle.IsValid())
 	{
 		return false;
