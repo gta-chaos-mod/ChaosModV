@@ -2,8 +2,9 @@
     Effect by Reguas
 */
 
-#include "Memory/EntityFragments.h"
 #include <stdafx.h>
+
+#include "Memory/EntityFragments.h"
 
 static void OnStart()
 {
@@ -29,8 +30,8 @@ static void OnStart()
 
 // clang-format off
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
-{
-	.Name = "Disassemble Current Vehicle",
-	.Id = "vehs_disassemble"
-}
+	{
+		.Name = "Disassemble Current Vehicle",
+		.Id = "vehs_disassemble"
+	}
 );
