@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "SplashTexts.h"
 
 #include "Util/Text.h"
@@ -10,7 +11,7 @@ void SplashTexts::OnRun()
 
 	if (m_fStartupSplashTime > 0)
 	{
-		DrawScreenText("Chaos Mod v1.11.2\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
+		DrawScreenText("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
 		               { 60, 245, 190 }, true);
 #ifdef _DEBUG
 		DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
