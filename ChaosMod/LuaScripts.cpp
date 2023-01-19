@@ -380,6 +380,9 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua["IsVehicleBraking"] = Memory::IsVehicleBraking;
 
+	lua["EnableScriptThreadBlock"]              = Hooks::EnableScriptThreadBlock;
+	lua["DisableScriptThreadBlock"]              = Hooks::DisableScriptThreadBlock;
+
 	const auto &result      = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
