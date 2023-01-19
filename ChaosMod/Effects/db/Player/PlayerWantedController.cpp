@@ -91,7 +91,7 @@ REGISTER_EFFECT(OnStartOne, nullptr, nullptr, EffectInfo
 );
 // clang-format on
 
-static enum WantedLevelType
+enum WantedLevelType
 {
 	SET,
 	ADD
