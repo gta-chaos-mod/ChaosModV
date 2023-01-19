@@ -104,7 +104,7 @@ struct FakeWantedInfo
 	int iStars;
 };
 
-std::vector<FakeWantedInfo> m_fakeWantedLevels = 
+static std::vector<FakeWantedInfo> m_fakeWantedLevels = 
 { 
 	{"5 Wanted Stars", SET, 5}, 
 	{"3 Wanted Stars", SET, 3}, 
