@@ -201,6 +201,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
             try
             {
                 pipeWriter.Write($"{message}\0");
+                pipe.WaitForPipeDrain();
             } catch (Exception e)
             {
                 logger.Information(e, "error that ocurred when writing pipe");
