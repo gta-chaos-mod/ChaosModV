@@ -69,42 +69,39 @@ namespace Memory
 		return c_rgVehModels;
 	}
 
-	inline void SetVehicleOutOfControl(Vehicle vehicle, bool bState)
+	inline void SetVehicleOutOfControl(Vehicle vehicle, bool state)
 	{
-		static __int64 (*sub_7FF69C749B98)(int a1);
-
-		static bool bIsSetup = false;
-		if (!bIsSetup)
-		{
-			Handle handle;
-
-			handle = FindPattern("E8 ? ? ? ? 8D 53 01 33 DB");
-			if (!handle.IsValid())
-			{
-				return;
-			}
-
-			sub_7FF69C749B98 = handle.Into().Get<__int64(int)>();
-
-			bIsSetup         = true;
-		}
-
-		int iVehClass                   = GET_VEHICLE_CLASS(vehicle);
-
-		static const Hash c_ulBlimpHash = GET_HASH_KEY("BLIMP");
-		Hash ulVehModel                 = GET_ENTITY_MODEL(vehicle);
-		if (iVehClass == 15 || iVehClass == 16
-		    || ulVehModel == c_ulBlimpHash) // No helis or planes, also make sure to explicitely exclude blimps at all
-		                                    // costs as they cause a crash
+		int vehClass  = GET_VEHICLE_CLASS(vehicle);
+		Hash vehModel = GET_ENTITY_MODEL(vehicle);
+		if (vehClass == 15 || vehClass == 16
+		    || vehModel == "BLIMP"_hash) // No helis or planes, also make sure to explicitely exclude blimps at all
+		                                 // costs as they cause a crash
 		{
 			return;
 		}
 
-		__int64 v6 = sub_7FF69C749B98(vehicle);
-		if (v6)
+		static auto outOfControlStateOffset = []() -> WORD
 		{
-			*reinterpret_cast<BYTE *>(v6 + 2373) &= 0xFEu;
-			*reinterpret_cast<BYTE *>(v6 + 2373) |= bState;
+			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 fE 40 80 E7 01");
+			if (!handle.IsValid())
+			{
+				LOG("Vehicle out of control state offset not found!");
+				return 0;
+			}
+
+			return handle.At(8).Value<WORD>();
+		}();
+
+		if (!outOfControlStateOffset)
+		{
+			return;
+		}
+
+		__int64 result = GetScriptHandleBaseAddress(vehicle);
+		if (result)
+		{
+			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) &= 0xFEu;
+			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) |= state;
 		}
 	}
 
@@ -154,22 +151,21 @@ namespace Memory
 
 	inline bool IsVehicleBraking(Vehicle vehicle)
 	{
-		static __int64 (*sub_7FF788D32A60)(Vehicle vehicle) = nullptr;
-
-		if (!sub_7FF788D32A60)
+		static auto brakeStateOffset = []() -> WORD
 		{
-			Handle handle = FindPattern("E8 ? ? ? ? 48 85 FF 74 47");
+			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53");
 			if (!handle.IsValid())
 			{
-				return false;
+				LOG("Vehicle brake state offset not found!");
+				return 0;
 			}
 
-			sub_7FF788D32A60 = handle.Into().Get<__int64(Vehicle)>();
-		}
+			return handle.At(4).Value<WORD>();
+		}();
 
-		__int64 result = sub_7FF788D32A60(vehicle);
+		__int64 result = GetScriptHandleBaseAddress(vehicle);
 
-		return result ? *reinterpret_cast<float *>(result + 2496) : false;
+		return result ? *reinterpret_cast<float *>(result + brakeStateOffset) : false;
 	}
 
 	inline void SetVehicleRaise(Vehicle vehicle, float height)

@@ -55,7 +55,7 @@ static void Reset()
 	// Check if this isn't the first time this is being run
 	if (ComponentExists<EffectDispatcher>())
 	{
-		LOG("Mod has been disabled using shortcut!");
+		LOG("Mod has been disabled");
 	}
 
 	ClearEntityPool();
@@ -221,8 +221,7 @@ static void MainRun()
 				{
 					c_bJustReenabled = false;
 
-					// Clear log
-					g_Log            = std::ofstream("chaosmod/chaoslog.txt");
+					LOG("Mod has been re-enabled");
 
 					// Restart the main part of the mod completely
 					Init();

@@ -76,6 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -475,6 +476,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />
