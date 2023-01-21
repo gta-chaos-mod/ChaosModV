@@ -36,7 +36,7 @@ Afterwards choose one of the following methods depending on the projects you wan
 
   2. `cd build`
 
-  3. `cmake -GNinja ..`
+  3. `cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..`
 
   4. `ninja`
 	
