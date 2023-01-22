@@ -151,6 +151,10 @@ namespace Hooks
 	void EnableScriptThreadBlock()
 	{
 		ms_bEnabledHook = true;
+
+		//Fix the player switch effects when enabling
+		ANIMPOSTFX_STOP_ALL();
+		SET_TIME_SCALE(1.f);
 	}
 
 	void DisableScriptThreadBlock()
