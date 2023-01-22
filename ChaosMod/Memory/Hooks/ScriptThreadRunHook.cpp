@@ -45,7 +45,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 			if (program->m_pCodeBlocks)
 			{
 				Handle handle;
-				if (getGameVersion() < VER_1_0_2802_0_STEAM)
+				if (getGameVersion() < VER_1_0_2802_0)
 				{
 					// Thanks to drp4lyf
 					handle = FindScriptPattern("2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
@@ -92,7 +92,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 			ms_bSearchedForMissionStateGlobal = true;
 
 			Handle handle;
-			if (getGameVersion() < VER_1_0_2802_0_STEAM)
+			if (getGameVersion() < VER_1_0_2802_0)
 			{
 				handle = FindScriptPattern("2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E", program);
 			}
