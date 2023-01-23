@@ -11,7 +11,8 @@ enum class EEffectCategory
 	Gravity,
 	Pitch,
 	Camera,
-	TrafficColor
+	TrafficColor,
+	Movement
 };
 
 inline const std::unordered_map<std::string_view, EEffectCategory> g_dictNameToEffectCategory {
@@ -22,4 +23,5 @@ inline const std::unordered_map<std::string_view, EEffectCategory> g_dictNameToE
 	{ "Pitch", EEffectCategory::Pitch },
 	{ "Camera", EEffectCategory::Camera },
 	{ "TrafficColor", EEffectCategory::TrafficColor },
+	{ "Movement", EEffectCategory::Movement },
 };

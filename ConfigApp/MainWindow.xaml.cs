@@ -146,6 +146,7 @@ namespace ConfigApp
             misc_user_effects_disable_startup.IsChecked = m_configFile.ReadValueBool("DisableStartup", false);
             misc_user_effects_enable_group_weighting.IsChecked = m_configFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
             misc_user_effects_enable_failsafe.IsChecked = m_configFile.ReadValueBool("EnableFailsafe", true);
+            misc_user_anti_softlock_shortcut.IsChecked = m_configFile.ReadValueBool("EnableAntiSoftlockShortcut", true);
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -176,6 +177,7 @@ namespace ConfigApp
             {
                 m_configFile.WriteValue("MaxParallelRunningEffects", misc_user_effects_max_running_effects.Text);
             }
+            m_configFile.WriteValue("EnableAntiSoftlockShortcut", misc_user_anti_softlock_shortcut.IsChecked.Value);
 
             // Meta Effects
             m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
@@ -198,6 +200,7 @@ namespace ConfigApp
             twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
             twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+            twitch_permitted_usernames.Text = m_twitchFile.ReadValue("TwitchPermittedUsernames");
         }
 
         private void WriteTwitchFile()
@@ -211,6 +214,7 @@ namespace ConfigApp
             m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
             m_twitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
+            m_twitchFile.WriteValue("TwitchPermittedUsernames", twitch_permitted_usernames.Text);
 
             m_twitchFile.WriteFile();
         }
@@ -390,6 +394,8 @@ namespace ConfigApp
             twitch_user_chance_system_retain_chance_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable.IsEnabled = agreed;
             twitch_user_random_voteable_enable_label.IsEnabled = agreed;
+            twitch_permitted_usernames.IsEnabled = agreed;
+            twitch_permitted_usernames_label.IsEnabled = agreed;
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)

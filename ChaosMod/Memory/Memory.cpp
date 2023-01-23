@@ -151,4 +151,61 @@ namespace Memory
 
 		return "UNK";
 	}
+
+	DWORD64 *GetGlobalPtr(int globalId)
+	{
+		static auto globalPtr = []() -> DWORD64 **
+		{
+			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
+			if (!handle.IsValid())
+			{
+				return nullptr;
+			}
+
+			return handle.At(2).Into().Get<DWORD64 *>();
+		}();
+
+		static auto fallbackToSHV = []() -> bool
+		{
+			bool fallbackToSHV = !globalPtr;
+
+			if (fallbackToSHV)
+			{
+				LOG("Warning: _globalPtr not found, falling back to SHV's getGlobalPtr");
+			}
+			// HACK: Check for the presence some arbitrary module specific to FiveM
+			// Also check if player is in a mp session if so to check for FiveM sp
+			else if (GetModuleHandle(L"gta-net-five.dll"))
+			{
+				bool modeDetermined = false;
+
+				auto handle         = FindPattern("48 8B 0D ? ? ? ? E8 ? ? ? ? 84 C0 74 09 48 8D 15");
+				if (handle.IsValid())
+				{
+					auto _networkObj = handle.At(2).Into().Get<DWORD64>();
+					handle           = FindPattern("83 B9 ? ? 00 00 05 0F 85 ? ? ? ? E9");
+					if (handle.IsValid())
+					{
+						fallbackToSHV  = *reinterpret_cast<DWORD *>(*_networkObj + handle.At(2).Value<WORD>()) == 5;
+						modeDetermined = true;
+					}
+				}
+
+				if (!modeDetermined)
+				{
+					LOG("Warning: FiveM detected but could not determine mode, switching to fallback for GetGlobalPtr");
+					fallbackToSHV = true;
+				}
+			}
+
+			if (fallbackToSHV)
+			{
+				LOG("Warning: FiveM (non-sp) detected, features such as Failsafe will not work!");
+			}
+
+			return fallbackToSHV;
+		}();
+
+		return fallbackToSHV ? getGlobalPtr(globalId) : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
+	}
 }

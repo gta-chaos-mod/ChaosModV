@@ -27,6 +27,7 @@ namespace TwitchChatVotingProxy
         private EVotingMode? votingMode;
         private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
+        private string[] permittedUsernames;
 
         public ChaosModController(
             IChaosPipeClient chaosPipe,
@@ -51,6 +52,7 @@ namespace TwitchChatVotingProxy
             votingMode = config.VotingMode;
             overlayMode = config.OverlayMode;
             retainInitialVotes = config.RetainInitalVotes;
+            permittedUsernames = config.PermittedTwitchUsernames;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -220,6 +222,26 @@ namespace TwitchChatVotingProxy
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
             if (!voteRunning) return;
+
+            if (permittedUsernames.Length > 0)
+            {
+                bool found = false;
+
+                foreach (string name in permittedUsernames)
+                {
+                    // both have already been lowered in other methods, so this comparison is always case-insensitive
+                    if (name == e.Username)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return;
+                }
+            }
 
             for (int i = 0; i < activeVoteOptions.Count; i++)
             {

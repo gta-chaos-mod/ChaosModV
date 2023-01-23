@@ -4,7 +4,7 @@
 
 #include "Memory/PedModels.h"
 
-#define ENTITY_POOL_MAX 60
+#define ENTITY_POOL_MAX 40
 
 static std::list<Entity> m_rgEntities;
 

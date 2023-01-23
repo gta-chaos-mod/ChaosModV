@@ -83,7 +83,7 @@ static void OnStop()
 	GET_MOBILE_PHONE_POSITION(&mobilePos);
 	SET_MOBILE_PHONE_POSITION(originalMobilePhoneX, mobilePos.y, mobilePos.z);
 
-	Memory::SetRadarOffsetX(0.f);
+	Memory::ResetRadar();
 }
 
 // clang-format off
@@ -92,6 +92,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",
 		.IsTimed = true,
-		.IncompatibleWith = { "no_hud" }
+		.IncompatibleWith = { "no_hud", "screen_maximap"}
 	}
 );
