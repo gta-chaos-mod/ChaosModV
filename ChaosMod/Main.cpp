@@ -11,12 +11,14 @@
 #include "Memory/Shader.h"
 
 #include "Components/DebugMenu.h"
+#include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
 
+#include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
 
@@ -155,6 +157,14 @@ static void Init()
 
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
+
+#ifdef WITH_DEBUG_PANEL_SUPPORT
+	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
+	{
+		LOG("Initializing Debug Websocket");
+		InitComponent<DebugSocket>();
+	}
+#endif
 
 	LOG("Completed init");
 

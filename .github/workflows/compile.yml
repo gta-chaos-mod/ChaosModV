@@ -31,7 +31,7 @@ jobs:
         cd ChaosMod
         mkdir build
         cd build
-        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" ../
+        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
         ninja
 
     - name: Compile Voting Overlay
