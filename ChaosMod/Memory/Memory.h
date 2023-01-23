@@ -47,4 +47,6 @@ namespace Memory
 	}
 
 	_NODISCARD const char *GetTypeName(__int64 ullVftAddr);
+
+	DWORD64 *GetGlobalPtr(int globalId);
 }

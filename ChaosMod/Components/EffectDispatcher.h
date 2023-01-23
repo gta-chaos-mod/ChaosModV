@@ -86,12 +86,10 @@ class EffectDispatcher : public Component
 
 	bool m_bEnableNormalEffectDispatch = true;
 
-	DWORD64 m_ullEffectsTimer          = 0;
-	DWORD64 m_ullTimerTimer            = 0;
+	DWORD64 m_ullTimer                 = 0;
 
 	bool m_bMetaEffectsEnabled         = true;
-	DWORD64 m_ullMetaTimer             = 0;
-	int m_iMetaEffectTimer             = 0;
+	float m_fMetaEffectTimerPercentage = 0.f;
 
 	bool m_bEnableTwitchVoting;
 	ETwitchOverlayMode m_eTwitchOverlayMode;
@@ -109,11 +107,10 @@ class EffectDispatcher : public Component
 	virtual ~EffectDispatcher() override;
 
   private:
-	void UpdateTimer();
-	void UpdateEffects();
-	void UpdateMetaEffects();
+	void UpdateTimer(int iDeltaTime);
+	void UpdateEffects(int iDeltaTime);
+	void UpdateMetaEffects(int iDeltaTime);
 	float GetEffectTopSpace();
-	bool ShouldRemoveEffectForTimeOut(int timer, int effectCount, int minAmountAdvancedCleaning);
 
   public:
 	virtual void OnModPauseCleanup() override;

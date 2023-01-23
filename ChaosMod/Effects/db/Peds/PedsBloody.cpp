@@ -1,5 +1,5 @@
 /*
-    Effect by ubscal
+    Effect by Lunascape
 */
 
 #include <stdafx.h>
