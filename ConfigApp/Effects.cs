@@ -373,8 +373,8 @@ namespace ConfigApp
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
-            { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) }
-            { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true)},
+            { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) },
+            { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true) },
             { "player_movementx5", new EffectInfo("x5 Movement Speed", EffectCategory.Player, true) },
             { "player_movementx10", new EffectInfo("x10 Movement Speed", EffectCategory.Player, true) },
             { "player_movementx05", new EffectInfo("x0.5 Movement Speed", EffectCategory.Player, true, true) },
