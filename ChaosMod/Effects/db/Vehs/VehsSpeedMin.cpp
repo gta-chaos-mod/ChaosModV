@@ -2,6 +2,7 @@
        Effect by Lucas7yoshi, modified
 */
 
+#include "scripthookv/inc/natives.h"
 #include <cmath>
 #include <stdafx.h>
 #include <string>
@@ -38,9 +39,14 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh   = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	if (m_lastVeh != 0 && veh != m_lastVeh)
+	// GET_VEHICLE_PED_IS_IN seems to always imply includeLastVehicle regardless of what's actually set since either
+	// b2699 or b2802
+	// We use IS_PED_IN_ANY_VEHICLE instead to check if the player is inside any vehicle
+	if (m_lastVeh != 0 && (veh != m_lastVeh || !IS_PED_IN_ANY_VEHICLE(playerPed, false)))
 	{
 		EXPLODE_VEHICLE(m_lastVeh, true, false);
+
+		m_timeReserve = WAIT_TIME;
 	}
 
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false) && IS_PED_IN_ANY_VEHICLE(playerPed, false)
