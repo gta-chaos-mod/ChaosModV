@@ -15,6 +15,6 @@ REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 		.Name = "No HUD",
 		.Id = "no_hud",
 		.IsTimed = true,
-		.IncompatibleWith = { "no_radar" } 
+		.IncompatibleWith = { "no_radar", "misc_flip_ui", "screen_maximap" }
 	}
 );
