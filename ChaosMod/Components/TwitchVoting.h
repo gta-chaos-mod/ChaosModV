@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "EffectDispatcher.h"
+#include "SplashTexts.h"
 
 #include <memory>
 #include <vector>

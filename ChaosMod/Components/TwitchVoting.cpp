@@ -132,9 +132,30 @@ void TwitchVoting::OnRun()
 	{
 		if (m_iNoPingRuns == 5)
 		{
-			ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
+			LOG("Voting proxy: 5 no ping runs")
 
-			return;
+			//ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
+
+			//return;
+		}
+		if (m_iNoPingRuns == 10)
+		{
+			LOG("Voting proxy: 10 no ping runs");
+		}
+		if (m_iNoPingRuns == 15)
+		{
+			LOG("Voting proxy: 15 no ping runs; restarting");
+
+			if (ComponentExists<SplashTexts>())
+			{
+				GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
+			}
+
+			OnModPauseCleanup();
+
+			WAIT(100);
+
+			InitComponent<TwitchVoting>(m_rgTextColor);
 		}
 
 		m_iNoPingRuns++;
@@ -190,7 +211,7 @@ void TwitchVoting::OnRun()
 			}
 		}
 	}
-	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
+	if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
@@ -207,7 +228,7 @@ void TwitchVoting::OnRun()
 		else
 		{
 			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectId().empty())
+			if (!m_pChosenEffectIdentifier || m_pChosenEffectIdentifier->GetEffectId().empty())
 			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}

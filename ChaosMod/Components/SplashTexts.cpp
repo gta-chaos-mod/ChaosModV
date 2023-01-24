@@ -47,6 +47,13 @@ void SplashTexts::OnRun()
 
 		m_fClearEffectsSplashTime -= fFrameTime;
 	}
+
+	if (m_fTwitchVotingRestartSplashTime > 0)
+	{
+		DrawScreenText("Voting proxy has crashed and restarted", { .85f, .93f }, .4f, { 225, 67, 240 }, true);
+
+		m_fTwitchVotingRestartSplashTime -= fFrameTime;
+	}
 }
 
 void SplashTexts::ShowInitSplash()
@@ -62,4 +69,9 @@ void SplashTexts::ShowTwitchVotingSplash()
 void SplashTexts::ShowClearEffectsSplash()
 {
 	m_fClearEffectsSplashTime = SPLASH_TEXT_DUR_SECS;
+}
+
+void SplashTexts::ShowTwitchVotingRestartSplash()
+{
+	m_fTwitchVotingRestartSplashTime = SPLASH_TEXT_DUR_SECS / 2;
 }
