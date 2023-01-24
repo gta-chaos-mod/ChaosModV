@@ -205,8 +205,8 @@ static void OnTickRandom()
 REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
 	{
 		.Name = "Random Gravity",
-		.Id = "randomgravity",
+		.Id = "misc_randomgravity",
 		.IsTimed = true,
-        .EffectCategory  = EEffectCategory::Gravity
+        	.EffectCategory  = EEffectCategory::Gravity
 	}
 );
