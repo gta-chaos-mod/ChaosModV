@@ -226,4 +226,32 @@ namespace Memory
 
 		return fallbackToSHV ? getGlobalPtr(globalId) : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
 	}
+
+	std::string GetGameBuild()
+	{
+		static auto gameBuild = []() -> std::string
+		{
+			auto handle = Memory::FindPattern("33 DB 38 1D ? ? ? ? 89 5C 24 38");
+			if (!handle.IsValid())
+			{
+				return {};
+			}
+
+			std::string buildStr = handle.At(3).Into().Get<char>();
+			if (buildStr.empty())
+			{
+				return {};
+			}
+
+			auto splitIndex = buildStr.find("-dev");
+			if (splitIndex == buildStr.npos)
+			{
+				return {};
+			}
+
+			return buildStr.substr(0, splitIndex);
+		}();
+
+		return gameBuild;
+	}
 }
