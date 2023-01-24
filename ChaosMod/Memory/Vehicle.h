@@ -171,8 +171,10 @@ namespace Memory
 	inline void SetVehicleRaise(Vehicle vehicle, float height)
 	{
 		auto vehAddr = GetScriptHandleBaseAddress(vehicle);
-		*reinterpret_cast<float*>(*reinterpret_cast<uintptr_t*>(vehAddr + 0x938) + 0xD0) = height;
+		*reinterpret_cast<float *>(*reinterpret_cast<uintptr_t *>(vehAddr + 0x918) + 0xD0) = height;
 	}
+
+	// TODO: fix this
 
 	inline void SetVehicleWheelSize(Vehicle vehicle, float size)
 	{
