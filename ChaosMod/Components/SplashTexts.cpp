@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "SplashTexts.h"
 
 #include "Util/Text.h"
@@ -16,7 +17,7 @@ void SplashTexts::OnRun()
 	{
 		if (flag)
 		{
-			text = std::string("Chaos Mod v1.11.3 - special build for ")
+			text = std::string("Chaos Mod v" MOD_VERSION " - special build for ")
 			     + (g_Random.GetRandomInt(0, 10) == 10 ? "Matto" : "DarkViperAU")
 			     + "\n\nSee credits.txt for a list of contributors";
 			flag = false;
