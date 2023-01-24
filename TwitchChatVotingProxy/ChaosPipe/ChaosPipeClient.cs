@@ -140,7 +140,6 @@ namespace TwitchChatVotingProxy.ChaosPipe
             SendMessageToPipe(JsonConvert.SerializeObject(result));
             logger.Debug($"vote result sent to pipe: {e.ChosenOption}");
         }
-        private int n;
         
         /// <summary>
         /// Gets called every pipe tick
@@ -149,10 +148,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         {
             try
             {
-                if (n++ < 150)
-                {
-                    SendHeartBeat();
-                }
+                SendHeartBeat();
                 ReadPipe();
             } catch(Exception exception)
             {
