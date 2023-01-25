@@ -10,4 +10,4 @@
 [submodule "vendor/IXWebSocket"]
 	path = vendor/IXWebSocket
 	url = https://github.com/machinezone/IXWebSocket
-	ignore = dirty
+	Ignore = dirty
