@@ -11,12 +11,14 @@
 #include "Memory/Shader.h"
 
 #include "Components/DebugMenu.h"
+#include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
 
+#include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
 
@@ -55,7 +57,7 @@ static void Reset()
 	// Check if this isn't the first time this is being run
 	if (ComponentExists<EffectDispatcher>())
 	{
-		LOG("Mod has been disabled using shortcut!");
+		LOG("Mod has been disabled");
 	}
 
 	ClearEntityPool();
@@ -72,6 +74,21 @@ static void Reset()
 
 static void Init()
 {
+	// Attempt to print game build number
+	// We're doing it here as the build number isn't available when the mod is attached to the game process
+	static auto printedGameBuild = []()
+	{
+		const auto &gameBuild = Memory::GetGameBuild();
+		if (gameBuild.empty())
+		{
+			return false;
+		}
+
+		LOG("Game Build: " << gameBuild);
+
+		return true;
+	}();
+
 	static std::streambuf *c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
@@ -156,7 +173,15 @@ static void Init()
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
 
-	LOG("Completed init!");
+#ifdef WITH_DEBUG_PANEL_SUPPORT
+	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
+	{
+		LOG("Initializing Debug Websocket");
+		InitComponent<DebugSocket>();
+	}
+#endif
+
+	LOG("Completed init");
 
 	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
 	{
@@ -218,8 +243,7 @@ static void MainRun()
 				{
 					c_bJustReenabled = false;
 
-					// Clear log
-					g_Log            = std::ofstream("chaosmod/chaoslog.txt");
+					LOG("Mod has been re-enabled");
 
 					// Restart the main part of the mod completely
 					Init();
@@ -269,7 +293,7 @@ namespace Main
 	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
 	                     BOOL bWasDownBefore, BOOL bIsUpNow)
 	{
-		static bool c_bIsCtrlPressed = false;
+		static bool c_bIsCtrlPressed  = false;
 		static bool c_bIsShiftPressed = false;
 
 		if (ulKey == VK_CONTROL)

@@ -4,6 +4,8 @@
 #include "Handle.h"
 #include "Memory.h"
 
+#include <scripthookv/inc/main.h>
+
 using DWORD64 = unsigned long long;
 using Entity  = int;
 
@@ -14,15 +16,14 @@ namespace Memory
 	{
 		static auto _getScriptHandleBaseAddress = []() -> DWORD64 (*)(Entity)
 		{
-			Handle handle =
-			    FindPattern("48 83 EC 28 E8 ? ? ? ? 48 85 C0 74 19 8B 0D ? ? ? ? 4C 8B 00 48 8D 54 24 ? 89");
+			auto handle = FindPattern("E8 ? ? ? ? 48 8B D8 48 85 C0 74 3D E8");
 			if (!handle.IsValid())
 			{
-				LOG("Couldn't find _getScriptHandleBaseAddress");
-				return nullptr;
+				LOG("Couldn't find _getScriptHandleBaseAddress, falling back to shv");
+				return reinterpret_cast<DWORD64 (*)(Entity)>(getScriptHandleBaseAddress);
 			}
 
-			return handle.At(4).Into().Get<DWORD64(Entity)>();
+			return handle.Into().Get<DWORD64(Entity)>();
 		}();
 
 		return _getScriptHandleBaseAddress(entity);
