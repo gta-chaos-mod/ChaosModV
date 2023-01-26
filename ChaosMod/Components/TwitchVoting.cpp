@@ -6,6 +6,7 @@
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
+#include "Util/json.hpp"
 
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
@@ -13,7 +14,7 @@
 TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component(), m_rgTextColor(rgTextColor)
 {
 	m_bEnableTwitchVoting =
-		g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	    g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
 	if (!m_bEnableTwitchVoting)
 	{
@@ -40,18 +41,18 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 	}
 
 	m_iTwitchSecsBeforeVoting =
-		g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
 	m_eTwitchOverlayMode = g_OptionsManager.GetTwitchValue<ETwitchOverlayMode>(
-		"TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	    "TwitchVotingOverlayMode", static_cast<ETwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	m_bEnableTwitchChanceSystem =
-		g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
 	m_bEnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>(
-		"TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
 	m_bEnableTwitchRandomEffectVoteable =
-		g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	STARTUPINFO startupInfo      = {};
 	PROCESS_INFORMATION procInfo = {};
@@ -81,7 +82,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 	}
 
 	m_hPipeHandle =
-		CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX,
+	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX,
 	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
 
 	if (m_hPipeHandle == INVALID_HANDLE_VALUE)
@@ -308,8 +309,8 @@ void TwitchVoting::OnRun()
 					pTargetChoice     = std::make_unique<ChoosableEffect>(
                         effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name,
                         !m_bAlternatedVotingRound             ? idx + 1
-							: m_bEnableTwitchRandomEffectVoteable ? idx + 5
-																  : idx + 4);
+					        : m_bEnableTwitchRandomEffectVoteable ? idx + 5
+					                                              : idx + 4);
 					break;
 				}
 			}
@@ -320,13 +321,13 @@ void TwitchVoting::OnRun()
 			dictChoosableEffects.erase(effectIdentifier);
 		}
 
-		std::ostringstream oss;
-		oss << "vote";
+		std::vector<std::string> effectNames;
 		for (const auto &pChoosableEffect : m_rgEffectChoices)
 		{
-			oss << ":" << pChoosableEffect->m_szEffectName;
+			effectNames.push_back(pChoosableEffect->m_szEffectName);
 		}
-		SendToPipe(oss.str());
+		
+		SendToPipe("vote", effectNames);
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
 	}
@@ -365,13 +366,13 @@ void TwitchVoting::OnRun()
 				else
 				{
 					int iChanceVotes =
-						pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
+					    pChoosableEffect->m_iChanceVotes + (m_bEnableVotingChanceSystemRetainChance ? 1 : 0);
 
 					fPercentage =
-						!iChanceVotes
-							? .0f
-							: std::roundf(static_cast<float>(iChanceVotes) / static_cast<float>(iTotalVotes) * 100.f)
-								  / 100.f;
+					    !iChanceVotes
+					        ? .0f
+					        : std::roundf(static_cast<float>(iChanceVotes) / static_cast<float>(iTotalVotes) * 100.f)
+					              / 100.f;
 				}
 
 				oss << " (" << fPercentage * 100.f << "%)";
@@ -425,43 +426,51 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 		return false;
 	}
-	else if (szMsg.starts_with("voteresult"))
+	else
 	{
-		int iResult               = std::stoi(szMsg.substr(szMsg.find(":") + 1));
-
-		m_bHasReceivedResult      = true;
-
-		// If random effect voteable (result == 3) won, dispatch random effect later
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-			iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
-	}
-	else if (szMsg.starts_with("currentvotes"))
-	{
-		std::string szValuesStr = szMsg.substr(szMsg.find(":") + 1);
-
-		int iSplitIndex         = szValuesStr.find(":");
-		for (int i = 0;; i++)
+		nlohmann::json receivedJSON = nlohmann::json::parse(szMsg);
+		if (!receivedJSON.empty())
 		{
-			const std::string &szSplit = szValuesStr.substr(0, iSplitIndex);
-
-			Util::TryParse<int>(szSplit, m_rgEffectChoices[i]->m_iChanceVotes);
-
-			szValuesStr = szValuesStr.substr(iSplitIndex + 1);
-
-			if (iSplitIndex == szValuesStr.npos)
+			std::string identifier = receivedJSON["Identifier"];
+			if (identifier == "voteresult")
 			{
-				break;
-			}
+				int iResult = receivedJSON["SelectedOption"];
 
-			iSplitIndex = szValuesStr.find(":");
+				m_bHasReceivedResult      = true;
+
+				// If random effect voteable (result == 3) won, dispatch random effect later
+				m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
+				    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+			}
+			else if (identifier == "currentvotes")
+			{
+				std::vector<int> options         = receivedJSON["Votes"];
+				if (options.size() == m_rgEffectChoices.size())
+				{
+					for (int idx = 0; idx < options.size(); idx++)
+					{
+						int votes                              = options[idx];
+						m_rgEffectChoices[idx]->m_iChanceVotes = votes;
+					}
+				}
+			}
 		}
 	}
 
 	return true;
 }
 
-void TwitchVoting::SendToPipe(std::string &&szMsg)
+std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::string> params)
 {
+	nlohmann::json finalJSON;
+	finalJSON["Identifier"]  = identifier;
+	finalJSON["Options"]      = params;
+	return finalJSON.dump();
+}
+
+void TwitchVoting::SendToPipe(std::string identifier, std::vector<std::string> params)
+{
+	std::string szMsg = GetPipeJson(identifier, params);
 	szMsg += "\n";
 	WriteFile(m_hPipeHandle, szMsg.c_str(), szMsg.length(), NULL, NULL);
 }

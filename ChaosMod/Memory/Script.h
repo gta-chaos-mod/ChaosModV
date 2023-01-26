@@ -54,6 +54,6 @@ namespace Memory
 			return nullptr;
 		}
 
-		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, pThread->m_dwScriptHash);
+		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, pThread->GetHash());
 	}
 }

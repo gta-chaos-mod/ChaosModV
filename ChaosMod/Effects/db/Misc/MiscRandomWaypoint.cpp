@@ -19,7 +19,7 @@ static void OnStart()
 // clang-format off
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
-		.Name = "Random Waypoint",
+		.Name = "Set Random Waypoint",
 		.Id = "misc_random_waypoint"
 	}
 );

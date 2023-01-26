@@ -13,7 +13,7 @@ const char *ROULETTE_WORDS[] = { "ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG",
 	                             "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY", "ELIAS_GR", "KOLYA_VE", "LU7YOSHI",
 	                             "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH", "$$WASTED",
 	                             "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE",
-	                             "HUGO_ONE", "GATMUN!!", "MOXI____", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
+	                             "HUGO_ONE", "GATMUN!!", "MO_11___", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
 	                             "{RANDOM}", "ROULETTE", "PASS1234", "/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__",
 	                             "LESTER__", "SYNFETIC" };
 
@@ -145,7 +145,7 @@ static void OnStart()
 	{
 		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(10, 100) * 1.0f);
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(40, 90) * 1.0f);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	}
 

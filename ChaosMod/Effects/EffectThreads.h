@@ -42,10 +42,10 @@ struct EffectThreadData
 	bool &m_bHasStopped;
 
 	EffectThreadData(RegisteredEffect *pEffect, bool &bHasOnStartExecuted, bool &bIsRunning, bool &bHasStopped)
-		: m_pEffect(pEffect),
-		  m_bHasOnStartExecuted(bHasOnStartExecuted),
-		  m_bIsRunning(bIsRunning),
-		  m_bHasStopped(bHasStopped)
+	    : m_pEffect(pEffect),
+	      m_bHasOnStartExecuted(bHasOnStartExecuted),
+	      m_bIsRunning(bIsRunning),
+	      m_bHasStopped(bHasStopped)
 	{
 	}
 };
@@ -93,11 +93,11 @@ class EffectThread
 	const DWORD64 m_ullId = 0;
 
 	EffectThread(RegisteredEffect *pEffect, bool bIsTimed)
-		: m_pEffect(pEffect),
-		  m_bIsRunning(bIsTimed),
-		  m_ThreadData(pEffect, m_bHasOnStartExecuted, m_bIsRunning, m_bHasStopped),
-		  m_pThread(CreateFiber(0, EffectThreadFunc, &m_ThreadData)),
-		  m_ullId(ms_ullLastId++)
+	    : m_pEffect(pEffect),
+	      m_bIsRunning(bIsTimed),
+	      m_ThreadData(pEffect, m_bHasOnStartExecuted, m_bIsRunning, m_bHasStopped),
+	      m_pThread(CreateFiber(0, EffectThreadFunc, &m_ThreadData)),
+	      m_ullId(ms_ullLastId++)
 	{
 	}
 

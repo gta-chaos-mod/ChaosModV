@@ -36,6 +36,7 @@ static void OnStart()
 		WAIT(100);
 		waited++;
 	}
+	SET_ENTITY_INVINCIBLE(player, false);
 
 	if (!cutscenePlaying)
 	{
@@ -64,7 +65,6 @@ static void OnStart()
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
 
-	SET_ENTITY_INVINCIBLE(player, false);
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }

@@ -7,3 +7,7 @@
 	path = vendor/shv
 	url = https://github.com/pongo1231/shv_no_msvc
 	ignore = dirty
+[submodule "vendor/IXWebSocket"]
+	path = vendor/IXWebSocket
+	url = https://github.com/machinezone/IXWebSocket
+	Ignore = dirty

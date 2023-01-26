@@ -23,7 +23,7 @@ namespace Memory
 
 	  public:
 		RegisteredHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &szName, bool bIsLateHook)
-			: m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
+		    : m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
 		{
 			if (g_pRegisteredHooks)
 			{
@@ -74,7 +74,7 @@ class RegisterHook
 
   public:
 	RegisterHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &&szName, bool bIsLateHook = false)
-		: m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
+	    : m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
 	{
 	}
 

@@ -19,7 +19,7 @@ static float steeringDirection;
 static void BlackOut(int alpha)
 {
 	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, alpha, false);
-	float progress = alpha / 255;
+	float progress = alpha / 255.f;
 	if (progress > 0)
 	{
 		DRAW_RECT(.5f, progress / 4, 1, progress / 2, 0, 0, 0, 255, false);         // top bar

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <scripthookv/inc/main.h>
+
 using DWORD   = unsigned long;
 using DWORD64 = unsigned long long;
 
@@ -36,12 +38,13 @@ namespace rage
 
 	class scrThread
 	{
-	  public:
+	  private:
 		DWORD m_dwThreadId;
 		DWORD m_dwScriptHash;
 		DWORD dwSomething2;
 		DWORD m_dwIP;
 		char pad[184];
+		char pad_2699[4];
 		char m_szName[32];
 		char pad3[100];
 		char chSomething3;
@@ -56,7 +59,18 @@ namespace rage
 		virtual __int64 Update()                             = 0;
 
 		virtual __int64 Kill()                               = 0;
+
+	public:
+		const char *GetName() const
+		{
+			return getGameVersion() < eGameVersion::VER_1_0_2699_0_STEAM ? pad_2699 : m_szName;
+		}
+
+		DWORD GetHash() const
+		{
+			return m_dwScriptHash;
+		}
 	};
 }
 
-static_assert(sizeof(rage::scrThread) == 344);
+static_assert(sizeof(rage::scrThread) == 352);

@@ -3,6 +3,7 @@
 */
 
 #include <stdafx.h>
+
 #include "Memory/Vehicle.h"
 
 static std::map<Vehicle, Vector3> vehicleDefaultSizes;
