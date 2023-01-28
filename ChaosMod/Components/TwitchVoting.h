@@ -44,8 +44,6 @@ class TwitchVoting : public Component
 
 	int m_iTwitchSecsBeforeVoting;
 
-	bool m_bEnableTwitchPollVoting  = false;
-
 	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
 
 	DWORD64 m_ullLastPing           = GetTickCount64();
@@ -54,7 +52,6 @@ class TwitchVoting : public Component
 	int m_iNoPingRuns               = 0;
 
 	bool m_bIsVotingRoundDone       = true;
-	bool m_bNoVoteRound             = false;
 	bool m_bAlternatedVotingRound   = false;
 
 	ETwitchOverlayMode m_eTwitchOverlayMode;

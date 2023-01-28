@@ -145,7 +145,7 @@ void TwitchVoting::OnRun()
 	{
 		m_ullLastVotesFetchTime = ullCurTick;
 
-		if (m_bIsVotingRunning && m_bEnableTwitchChanceSystem && !m_bEnableTwitchPollVoting
+		if (m_bIsVotingRunning && m_bEnableTwitchChanceSystem
 		    && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
@@ -183,40 +183,22 @@ void TwitchVoting::OnRun()
 		if (m_bIsVotingRunning)
 		{
 			m_bIsVotingRunning = false;
-
-			if (!m_bNoVoteRound)
-			{
-				SendToPipe("getvoteresult");
-			}
 		}
 	}
 	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
-		if (m_bNoVoteRound)
+		// Should be random effect voteable, so just dispatch random effect
+		if (m_pChosenEffectIdentifier->GetEffectId().empty())
 		{
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			GetComponent<EffectDispatcher>()->ResetTimer();
-
-			if (!m_bEnableTwitchPollVoting)
-			{
-				m_bNoVoteRound = false;
-			}
 		}
 		else
 		{
-			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectId().empty())
-			{
-				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-			else
-			{
-				GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
-			}
-			GetComponent<EffectDispatcher>()->ResetTimer();
+			GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
 		}
+		GetComponent<EffectDispatcher>()->ResetTimer();
 
 		if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
 		{
@@ -240,18 +222,6 @@ void TwitchVoting::OnRun()
 		m_bIsVotingRoundDone      = false;
 
 		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
-
-		if (m_bEnableTwitchPollVoting)
-		{
-			m_bNoVoteRound = !m_bNoVoteRound;
-		}
-
-		if (m_bNoVoteRound)
-		{
-			SendToPipe("novoteround");
-
-			return;
-		}
 
 		m_rgEffectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> dictChoosableEffects;
@@ -326,14 +296,13 @@ void TwitchVoting::OnRun()
 		{
 			effectNames.push_back(pChoosableEffect->m_szEffectName);
 		}
-		
+
 		SendToPipe("vote", effectNames);
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
 	}
 
-	if (m_bIsVotingRunning && !m_bNoVoteRound && !m_bEnableTwitchPollVoting
-	    && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
+	if (m_bIsVotingRunning && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 	{
 		// Print voteables on screen
 
@@ -413,13 +382,6 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 		return false;
 	}
-	else if (szMsg == "invalid_poll_dur")
-	{
-		ErrorOutWithMsg("Invalid duration. Duration has to be above 15 and at most 181 seconds to make use of the poll "
-		                "system. Returning to normal mode.");
-
-		return false;
-	}
 	else if (szMsg == "invalid_channel")
 	{
 		ErrorOutWithMsg("Invalid Twitch Channel. Please verify your config. Reverting to normal mode.");
@@ -434,7 +396,7 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 			std::string identifier = receivedJSON["Identifier"];
 			if (identifier == "voteresult")
 			{
-				int iResult = receivedJSON["SelectedOption"];
+				int iResult               = receivedJSON["SelectedOption"];
 
 				m_bHasReceivedResult      = true;
 
@@ -444,7 +406,7 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 			}
 			else if (identifier == "currentvotes")
 			{
-				std::vector<int> options         = receivedJSON["Votes"];
+				std::vector<int> options = receivedJSON["Votes"];
 				if (options.size() == m_rgEffectChoices.size())
 				{
 					for (int idx = 0; idx < options.size(); idx++)
@@ -463,8 +425,8 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::string> params)
 {
 	nlohmann::json finalJSON;
-	finalJSON["Identifier"]  = identifier;
-	finalJSON["Options"]      = params;
+	finalJSON["Identifier"] = identifier;
+	finalJSON["Options"]    = params;
 	return finalJSON.dump();
 }
 
