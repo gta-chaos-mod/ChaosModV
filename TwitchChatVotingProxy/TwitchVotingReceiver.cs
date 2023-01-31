@@ -105,7 +105,6 @@ namespace TwitchChatVotingProxy.VotingReceiver
             var evnt = new OnMessageArgs();
             evnt.Message = chatMessage.Message.Trim();
             evnt.ClientId = chatMessage.UserId;
-            evnt.Username = chatMessage.Username.ToLower(); // lower case the username to allow case-insensitive comparisons
             OnMessage.Invoke(this, evnt);
         }
     }
