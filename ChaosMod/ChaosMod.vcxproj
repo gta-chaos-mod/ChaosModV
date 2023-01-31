@@ -453,7 +453,6 @@
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
-    <ClInclude Include="Util\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />

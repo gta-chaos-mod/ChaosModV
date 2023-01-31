@@ -6,7 +6,6 @@
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
-#include "Util/json.hpp"
 
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
@@ -321,13 +320,13 @@ void TwitchVoting::OnRun()
 			dictChoosableEffects.erase(effectIdentifier);
 		}
 
-		std::vector<std::string> effectNames;
+		std::ostringstream oss;
+		oss << "vote";
 		for (const auto &pChoosableEffect : m_rgEffectChoices)
 		{
-			effectNames.push_back(pChoosableEffect->m_szEffectName);
+			oss << ":" << pChoosableEffect->m_szEffectName;
 		}
-
-		SendToPipe("vote", effectNames);
+		SendToPipe(oss.str());
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
 	}
@@ -418,51 +417,43 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 		return false;
 	}
-	else
+	else if (szMsg.starts_with("voteresult"))
 	{
-		nlohmann::json receivedJSON = nlohmann::json::parse(szMsg);
-		if (!receivedJSON.empty())
+		int iResult               = std::stoi(szMsg.substr(szMsg.find(":") + 1));
+
+		m_bHasReceivedResult      = true;
+
+		// If random effect voteable (result == 3) won, dispatch random effect later
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
+		    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+	}
+	else if (szMsg.starts_with("currentvotes"))
+	{
+		std::string szValuesStr = szMsg.substr(szMsg.find(":") + 1);
+
+		int iSplitIndex         = szValuesStr.find(":");
+		for (int i = 0;; i++)
 		{
-			std::string identifier = receivedJSON["Identifier"];
-			if (identifier == "voteresult")
-			{
-				int iResult               = receivedJSON["SelectedOption"];
+			const std::string &szSplit = szValuesStr.substr(0, iSplitIndex);
 
-				m_bHasReceivedResult      = true;
+			Util::TryParse<int>(szSplit, m_rgEffectChoices[i]->m_iChanceVotes);
 
-				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-				    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
-			}
-			else if (identifier == "currentvotes")
+			szValuesStr = szValuesStr.substr(iSplitIndex + 1);
+
+			if (iSplitIndex == szValuesStr.npos)
 			{
-				std::vector<int> options = receivedJSON["Votes"];
-				if (options.size() == m_rgEffectChoices.size())
-				{
-					for (int idx = 0; idx < options.size(); idx++)
-					{
-						int votes                              = options[idx];
-						m_rgEffectChoices[idx]->m_iChanceVotes = votes;
-					}
-				}
+				break;
 			}
+
+			iSplitIndex = szValuesStr.find(":");
 		}
 	}
 
 	return true;
 }
 
-std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::string> params)
+void TwitchVoting::SendToPipe(std::string &&szMsg)
 {
-	nlohmann::json finalJSON;
-	finalJSON["Identifier"] = identifier;
-	finalJSON["Options"]    = params;
-	return finalJSON.dump();
-}
-
-void TwitchVoting::SendToPipe(std::string identifier, std::vector<std::string> params)
-{
-	std::string szMsg = GetPipeJson(identifier, params);
 	szMsg += "\n";
 	WriteFile(m_hPipeHandle, szMsg.c_str(), szMsg.length(), NULL, NULL);
 }
