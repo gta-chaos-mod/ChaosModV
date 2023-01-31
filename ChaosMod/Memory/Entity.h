@@ -17,14 +17,14 @@ namespace Memory
 		return reinterpret_cast<DWORD64>(getScriptHandleBaseAddress(entity));
 		static auto _getScriptHandleBaseAddress = []() -> DWORD64 (*)(Entity)
 		{
-			auto handle = FindPattern("40 53 48 83 EC 20 E8 ? ? ? ? 48 8B D8 48 85 C0 74 22 48");
+			auto handle = FindPattern("E8 ? ? ? ? 48 8B D8 48 85 C0 74 3D E8");
 			if (!handle.IsValid())
 			{
 				LOG("Couldn't find _getScriptHandleBaseAddress, falling back to shv");
 				return reinterpret_cast<DWORD64 (*)(Entity)>(getScriptHandleBaseAddress);
 			}
 
-			return handle.At(6).Into().Get<DWORD64(Entity)>();
+			return handle.Into().Get<DWORD64(Entity)>();
 		}();
 
 		return _getScriptHandleBaseAddress(entity);

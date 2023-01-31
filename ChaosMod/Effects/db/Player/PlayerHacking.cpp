@@ -15,7 +15,8 @@ const char *ROULETTE_WORDS[] = { "ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG",
 	                             "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE",
 	                             "HUGO_ONE", "GATMUN!!", "MO_11___", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
 	                             "{RANDOM}", "ROULETTE", "PASS1234", "/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__",
-	                             "LESTER__", "SYNFETIC", "_CHATTO_", "_MATTO__", "COUGARS_", "_REGUAS_", "AYAYA!!!" };
+	                             "LESTER__", "SYNFETIC", "_CHATTO_", "_MATTO__", "COUGARS_", "_REGUAS_", "AYAYA!!!",
+                               "RIGGED!!" };
 
 const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 1998.",
 	                             "I swear that was made for a child, by a child.",
@@ -57,7 +58,8 @@ const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 199
 	                             "Hi YouTube!",
 	                             "SOLVING THIS WAS MILLIONS TO ONE",
 	                             "I can clearly see what did you spend 10000 hours on",
-	                             "SHOW US YOUR MOD FOLDER!" };
+	                             "SHOW US YOUR MOD FOLDER!",
+                               "RIGGED!!!" };
 
 enum class TimerAction
 {

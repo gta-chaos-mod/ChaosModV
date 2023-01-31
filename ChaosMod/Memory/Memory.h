@@ -6,8 +6,6 @@
 
 #include <string>
 
-#define _NODISCARD [[nodiscard]]
-
 class Handle;
 
 using DWORD64 = unsigned long long;
@@ -33,7 +31,7 @@ namespace Memory
 		}
 	};
 
-	_NODISCARD Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange = {});
+	Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange = {});
 	MH_STATUS AddHook(void *pTarget, void *pTetour, void *ppOrig);
 
 	template <typename T> inline void Write(T *pAddr, T value, int iCount = 1)
@@ -49,7 +47,9 @@ namespace Memory
 		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
 	}
 
-	_NODISCARD const char *GetTypeName(__int64 ullVftAddr);
+	const char *GetTypeName(__int64 ullVftAddr);
 
 	DWORD64 *GetGlobalPtr(int globalId);
+
+	std::string GetGameBuild();
 }

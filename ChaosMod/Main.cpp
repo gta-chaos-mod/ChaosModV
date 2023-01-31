@@ -11,12 +11,14 @@
 #include "Memory/Shader.h"
 
 #include "Components/DebugMenu.h"
+#include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
 
+#include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
 
@@ -72,6 +74,21 @@ static void Reset()
 
 static void Init()
 {
+	// Attempt to print game build number
+	// We're doing it here as the build number isn't available when the mod is attached to the game process
+	static auto printedGameBuild = []()
+	{
+		const auto &gameBuild = Memory::GetGameBuild();
+		if (gameBuild.empty())
+		{
+			return false;
+		}
+
+		LOG("Game Build: " << gameBuild);
+
+		return true;
+	}();
+
 	static std::streambuf *c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
@@ -159,6 +176,15 @@ static void Init()
 	LOG("Initializing Splash Texts");
 	InitComponent<SplashTexts>();
 	GetComponent<SplashTexts>()->ShowInitSplash();
+
+#ifdef WITH_DEBUG_PANEL_SUPPORT
+	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
+	{
+		LOG("Initializing Debug Websocket");
+		InitComponent<DebugSocket>();
+	}
+#endif
+
 
 	LOG("Completed init!");
 

@@ -32,28 +32,46 @@ namespace Memory
 		{
 			// Splash screen
 			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
-			if (handle.IsValid())
+			if (!handle.IsValid())
+			{
+				LOG("SkipIntro: Failed to patch splash screen!");
+			}
+			else
 			{
 				Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+
+				LOG("SkipIntro: Patched splash screen");
 			}
 
 			// Legal screen
 			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01");
-			if (handle.IsValid())
+			if (!handle.IsValid())
+			{
+				LOG("SkipIntro: Failed to patch legal screen!");
+			}
+			else
 			{
 				handle = handle.Into();
 
 				Write<BYTE>(handle.Get<BYTE>(), 0xC3);
 				Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+
+				LOG("SkipIntro: Patched legal screen");
 			}
 		}
 
 		if (DoesFileExist("chaosmod\\.skipdlcs"))
 		{
-			Handle handle = FindPattern("40 53 48 81 EC ? ? ? ? 48 8D 15");
-			if (handle.IsValid())
+			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01");
+			if (!handle.IsValid())
 			{
-				Write<BYTE>(handle.At(0x8E).Get<BYTE>(), 0x90, 24);
+				LOG("SkipDLCs: Failed to patch DLC loading!");
+			}
+			else
+			{
+				Write<BYTE>(handle.At(24).Get<BYTE>(), 0x90, 24);
+
+				LOG("SkipDLCs: Patched DLC loading");
 			}
 		}
 	}
@@ -204,5 +222,33 @@ namespace Memory
 		}();
 
 		return fallbackToSHV ? getGlobalPtr(globalId) : (&globalPtr[globalId >> 18 & 0x3F][globalId & 0x3FFFF]);
+	}
+
+	std::string GetGameBuild()
+	{
+		static auto gameBuild = []() -> std::string
+		{
+			auto handle = Memory::FindPattern("33 DB 38 1D ? ? ? ? 89 5C 24 38");
+			if (!handle.IsValid())
+			{
+				return {};
+			}
+
+			std::string buildStr = handle.At(3).Into().Get<char>();
+			if (buildStr.empty())
+			{
+				return {};
+			}
+
+			auto splitIndex = buildStr.find("-dev");
+			if (splitIndex == buildStr.npos)
+			{
+				return {};
+			}
+
+			return buildStr.substr(0, splitIndex);
+		}();
+
+		return gameBuild;
 	}
 }
