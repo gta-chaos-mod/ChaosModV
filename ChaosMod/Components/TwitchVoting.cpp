@@ -70,6 +70,9 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 #endif
 	free(str);
 
+	m_hProcess = procInfo.hProcess;
+	m_hThread  = procInfo.hThread;
+
 	if (!bResult)
 	{
 		ErrorOutWithMsg((std::ostringstream()
@@ -110,6 +113,52 @@ void TwitchVoting::OnModPauseCleanup()
 
 		m_hPipeHandle = INVALID_HANDLE_VALUE;
 	}
+
+	DWORD pId = GetProcessId(m_hProcess);
+
+	LOG(pId);
+
+	HANDLE hThreadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+
+	THREADENTRY32 threadEntry;
+	threadEntry.dwSize = sizeof(THREADENTRY32);
+
+	Thread32First(hThreadSnapshot, &threadEntry);
+
+	do
+	{
+		if (threadEntry.th32OwnerProcessID == pId)
+		{
+			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
+
+			ResumeThread(hThread);
+			CloseHandle(hThread);
+		}
+	} while (Thread32Next(hThreadSnapshot, &threadEntry));
+
+	CloseHandle(hThreadSnapshot);
+
+	CloseHandle(m_hProcess);
+	CloseHandle(m_hThread);
+}
+
+void TwitchVoting::RestartVoting()
+{
+	if (ComponentExists<SplashTexts>())
+	{
+		GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
+	}
+
+	OnModPauseCleanup();
+
+	WAIT(100);
+
+	InitComponent<TwitchVoting>(m_rgTextColor);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->ResetTimer();
+	}
 }
 
 void TwitchVoting::OnRun()
@@ -135,17 +184,8 @@ void TwitchVoting::OnRun()
 		if (m_iNoPingRuns == 15)
 		{
 			LOG("Voting proxy: 15 no ping runs; restarting");
-
-			if (ComponentExists<SplashTexts>())
-			{
-				GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
-			}
-
-			OnModPauseCleanup();
-
-			WAIT(100);
-
-			InitComponent<TwitchVoting>(m_rgTextColor);
+			RestartVoting();
+			return;
 		}
 
 		m_ullLastPing = ullCurTick;
@@ -203,22 +243,23 @@ void TwitchVoting::OnRun()
 
 		if (!m_pChosenEffectIdentifier)
 		{
-			LOG("No voting option recieved; restarting");
-
-			if (ComponentExists<SplashTexts>())
+			if (ullCurTick > m_ullLastNoEffectRecieved + 1000)
 			{
-				GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
+				m_iNoEffectRecievedRuns++;
+				m_ullLastNoEffectRecieved = ullCurTick;
+
+				LOG("No voting option recieved: " << m_iNoEffectRecievedRuns << " seconds");
 			}
+			if (m_iNoEffectRecievedRuns >= 5)
+			{
+				LOG("No voting option recieved; restarting");
 
-			OnModPauseCleanup();
-
-			WAIT(100);
-
-			InitComponent<TwitchVoting>(m_rgTextColor);
-
-			GetComponent<EffectDispatcher>()->ResetTimer();
+				RestartVoting();
+			}
 			return;
 		}
+
+		m_iNoEffectRecievedRuns = 0;
 
 		// Should be random effect voteable, so just dispatch random effect
 		if (m_pChosenEffectIdentifier->GetEffectId().empty())

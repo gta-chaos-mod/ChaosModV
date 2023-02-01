@@ -39,6 +39,9 @@ class TwitchVoting : public Component
 
 	bool m_bEnableTwitchVoting;
 
+	HANDLE m_hProcess;
+	HANDLE m_hThread;
+
 	bool m_bReceivedHello     = false;
 	bool m_bReceivedFirstPing = false;
 	bool m_bHasReceivedResult = false;
@@ -47,10 +50,12 @@ class TwitchVoting : public Component
 
 	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
 
-	DWORD64 m_ullLastPing           = GetTickCount64();
-	DWORD64 m_ullLastVotesFetchTime = GetTickCount64();
+	DWORD64 m_ullLastPing            = GetTickCount64();
+	DWORD64 m_ullLastVotesFetchTime  = GetTickCount64();
+	DWORD64 m_ullLastNoEffectRecieved = GetTickCount64();
 
 	int m_iNoPingRuns               = 0;
+	int m_iNoEffectRecievedRuns     = 0;
 
 	bool m_bIsVotingRoundDone       = true;
 	bool m_bAlternatedVotingRound   = false;
@@ -68,6 +73,8 @@ class TwitchVoting : public Component
 	std::vector<std::unique_ptr<ChoosableEffect>> m_rgEffectChoices;
 
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
+
+	void RestartVoting();
 
   protected:
 	TwitchVoting(const std::array<BYTE, 3> &rgTextColor);
