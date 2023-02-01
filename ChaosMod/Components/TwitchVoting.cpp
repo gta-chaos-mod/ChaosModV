@@ -129,18 +129,9 @@ void TwitchVoting::OnRun()
 	DWORD64 ullCurTick = GetTickCount64();
 	if (m_ullLastPing < ullCurTick - 1000)
 	{
-		if (m_iNoPingRuns == 5)
-		{
-			LOG("Voting proxy: 5 no ping runs")
+		m_iNoPingRuns++;
+		LOG("Voting proxy: " << m_iNoPingRuns << " no ping runs");
 
-			//ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
-
-			//return;
-		}
-		if (m_iNoPingRuns == 10)
-		{
-			LOG("Voting proxy: 10 no ping runs");
-		}
 		if (m_iNoPingRuns == 15)
 		{
 			LOG("Voting proxy: 15 no ping runs; restarting");
@@ -157,7 +148,6 @@ void TwitchVoting::OnRun()
 			InitComponent<TwitchVoting>(m_rgTextColor);
 		}
 
-		m_iNoPingRuns++;
 		m_ullLastPing = ullCurTick;
 	}
 
@@ -196,18 +186,39 @@ void TwitchVoting::OnRun()
 		return;
 	}
 
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_bHasReceivedResult)
+	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 2 && !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
 		if (m_bIsVotingRunning)
 		{
 			m_bIsVotingRunning = false;
+
+			SendToPipe("getvoteresult");
 		}
 	}
 	if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
+
+		if (!m_pChosenEffectIdentifier)
+		{
+			LOG("No voting option recieved; restarting");
+
+			if (ComponentExists<SplashTexts>())
+			{
+				GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
+			}
+
+			OnModPauseCleanup();
+
+			WAIT(100);
+
+			InitComponent<TwitchVoting>(m_rgTextColor);
+
+			GetComponent<EffectDispatcher>()->ResetTimer();
+			return;
+		}
 
 		// Should be random effect voteable, so just dispatch random effect
 		if (m_pChosenEffectIdentifier->GetEffectId().empty())
@@ -216,16 +227,7 @@ void TwitchVoting::OnRun()
 		}
 		else
 		{
-			// Should be random effect voteable, so just dispatch random effect
-			if (!m_pChosenEffectIdentifier || m_pChosenEffectIdentifier->GetEffectId().empty())
-			{
-				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-			else
-			{
-				GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
-			}
-			GetComponent<EffectDispatcher>()->ResetTimer();
+			GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
 		}
 		GetComponent<EffectDispatcher>()->ResetTimer();
 
@@ -250,7 +252,7 @@ void TwitchVoting::OnRun()
 		m_bHasReceivedResult      = false;
 		m_bIsVotingRoundDone      = false;
 
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
+		m_pChosenEffectIdentifier = nullptr;
 
 		m_rgEffectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> dictChoosableEffects;
@@ -393,6 +395,11 @@ _NODISCARD bool TwitchVoting::IsEnabled() const
 
 bool TwitchVoting::HandleMsg(const std::string &szMsg)
 {
+	if (szMsg != "ping")
+	{
+		LOG("Recieved message: " << szMsg);
+	}
+
 	if (szMsg == "hello")
 	{
 		m_bReceivedHello = true;
@@ -454,6 +461,8 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 void TwitchVoting::SendToPipe(std::string &&szMsg)
 {
+	LOG("Sending message: " << szMsg);
+
 	szMsg += "\n";
 	WriteFile(m_hPipeHandle, szMsg.c_str(), szMsg.length(), NULL, NULL);
 }

@@ -81,6 +81,8 @@ namespace TwitchChatVotingProxy
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
 
                 while (chaosPipe.IsConnected()) { }
+
+                logger.Debug("Chaos pipe disconnected");
             }
             finally
             {

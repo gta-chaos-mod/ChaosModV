@@ -71,6 +71,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         private void DisconnectFromPipe()
         {
+            logger.Debug("Disconnecting from pipe");
+
             pipeReader.Close();
             pipeWriter.Close();
             pipe.Close();
@@ -138,6 +140,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 // Null the reading task so the next read is dispatched
                 readPipeTask = null;
 
+                logger.Debug($"Recieved message: {message}");
+
                 // Evaluate message
                 if (message.StartsWith("vote:")) StartNewVote(message);
                 else if (message == "getvoteresult") GetVoteResult();
@@ -154,6 +158,11 @@ namespace TwitchChatVotingProxy.ChaosPipe
         {
             try
             {
+                if (message != "ping")
+                {
+                    logger.Debug($"Sending message: {message}");
+                }
+
                 pipeWriter.Write($"{message}\0");
                 pipe.WaitForPipeDrain();
             } catch (Exception e)
