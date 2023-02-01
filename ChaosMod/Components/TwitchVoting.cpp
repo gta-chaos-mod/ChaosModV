@@ -183,6 +183,8 @@ void TwitchVoting::OnRun()
 		if (m_bIsVotingRunning)
 		{
 			m_bIsVotingRunning = false;
+
+			SendToPipe("getvoteresult");
 		}
 	}
 	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
