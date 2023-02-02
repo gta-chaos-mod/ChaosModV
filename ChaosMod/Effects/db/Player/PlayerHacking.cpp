@@ -52,6 +52,11 @@ const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 199
                               "int* hacked = true;",
                               "Matrix reference",
                               "\"I'm in the mainframe\"",
+                              "Aaaand... bingo!",
+                              "Access encoded... Gigabyte o'RAM should do the trick... We're in!",
+                              "Kernel bitrate overclocked!",
+                              "[ Hacking skill raised by 1 ]",
+                              "Ah ah ah, you didn't say the magic word!",
                               "I frequent r/ProgrammerHumor." };
 
 enum class TimerAction
@@ -145,7 +150,7 @@ static void OnStart()
 	{
 		GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_COLUMN_SPEED");
 		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(i);
-		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(10, 100) * 1.0f);
+		GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT(g_Random.GetRandomInt(40, 90) * 1.0f);
 		GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
 	}
 

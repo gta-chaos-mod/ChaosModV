@@ -20,10 +20,14 @@ static void OnStart()
 
 	Ped playerPed = PLAYER_PED_ID();
 
-	Ped ped       = CLONE_PED(playerPed, GET_ENTITY_HEADING(playerPed), true, false);
+	Ped ped       = CreatePoolClonePed(playerPed);
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+	}
+	else
+	{
+		SET_ENTITY_HEADING(ped, GET_ENTITY_HEADING(playerPed));
 	}
 
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);

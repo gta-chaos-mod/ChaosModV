@@ -4,10 +4,9 @@
 
 #include "PoolSpawner.h"
 
-inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)
+inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3* location = 0)
 {
 	Ped playerPed                 = PLAYER_PED_ID();
-	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
 	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
 	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
@@ -19,8 +18,21 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash)
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
-	Ped ped = CreatePoolPed(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
+	Vector3 spawnLocation;
+	bool spawnInVehicleIfNeeded = true;
+	if (location)
+	{
+		spawnLocation = *location;
+		spawnInVehicleIfNeeded = false;
+	} 
+	else
+	{
+		spawnLocation = GET_ENTITY_COORDS(playerPed, false);
+	}
+
+	LoadModel(modelHash);
+	Ped ped = CreatePoolPed(4, modelHash, spawnLocation.x, spawnLocation.y, spawnLocation.z, 0.f);
+	if (spawnInVehicleIfNeeded && IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 	}

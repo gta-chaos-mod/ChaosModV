@@ -20,6 +20,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Super Run & Super Jump",
 		.Id = "player_superrun",
 		.IsTimed = true,
-		.IncompatibleWith = { "player_nosprint" }
+		.EffectCategory = EEffectCategory::Movement
 	}
 );

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "LuaScripts.h"
 
 #include "Effects/Effect.h"
@@ -33,12 +34,12 @@ static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "c
 
 _LUAFUNC void LuaPrint(const std::string &szText)
 {
-	COLOR_PREFIX_LOG("[Lua]", szText);
+	COLOR_PREFIX_LOG("(Lua)", szText);
 }
 
 _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 {
-	COLOR_PREFIX_LOG("[" << szName << "]", szText);
+	COLOR_PREFIX_LOG("(" << szName << ")", szText);
 }
 
 _LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS *pException)
@@ -99,7 +100,7 @@ class LuaScript
 	{
 	}
 
-	LuaScript(const LuaScript &) = delete;
+	LuaScript(const LuaScript &)            = delete;
 
 	LuaScript &operator=(const LuaScript &) = delete;
 
@@ -357,6 +358,8 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
 	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
 
+	lua["LoadModel"]                            = LoadModel;
+
 	lua["GetAllPeds"]                           = GetAllPedsArray;
 	lua["CreatePoolPed"]                        = CreatePoolPed;
 
@@ -373,14 +376,23 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"]   = Hooks::OverrideShader;
-	lua["ResetShader"]      = Hooks::ResetShader;
+	lua["OverrideShader"]           = Hooks::OverrideShader;
+	lua["ResetShader"]              = Hooks::ResetShader;
 
-	lua["SetSnowState"]     = Memory::SetSnow;
+	lua["SetSnowState"]             = Memory::SetSnow;
 
-	lua["IsVehicleBraking"] = Memory::IsVehicleBraking;
+	lua["IsVehicleBraking"]         = Memory::IsVehicleBraking;
 
-	const auto &result      = lua.safe_script_file(path.string(), sol::load_mode::text);
+	lua["EnableScriptThreadBlock"]  = Hooks::EnableScriptThreadBlock;
+	lua["DisableScriptThreadBlock"] = Hooks::DisableScriptThreadBlock;
+
+	lua["GetChaosModVersion"]       = []()
+	{
+		return MOD_VERSION;
+	};
+	lua["GetGameBuild"] = Memory::GetGameBuild;
+
+	const auto &result  = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
 		const sol::error &error = result;

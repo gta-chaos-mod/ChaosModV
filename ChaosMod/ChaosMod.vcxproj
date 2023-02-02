@@ -76,6 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,6 +110,7 @@
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
@@ -126,19 +128,24 @@
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGrappleGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHeadless.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsHotCougars.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsPropHunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsQuarrelingCouple.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSmokeTrails.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryChimp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
@@ -155,6 +162,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerMovementSpeed.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
@@ -191,6 +199,8 @@
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
     <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDetachWheel.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDisassemble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
@@ -423,6 +433,7 @@
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
+    <ClInclude Include="Util\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
@@ -448,6 +459,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

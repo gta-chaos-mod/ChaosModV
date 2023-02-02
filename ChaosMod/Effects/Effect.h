@@ -7,6 +7,7 @@
 #include "Effects/EffectsInfo.h"
 
 #include <string>
+#include <algorithm>
 
 #define _NODISCARD [[nodiscard]]
 
