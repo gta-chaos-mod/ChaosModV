@@ -17,6 +17,7 @@ static void OnTickInvincible()
 	}
 }
 
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStopInvincible, OnTickInvincible, EffectInfo // By pongo1231
 	{
 		.Name = "All Vehicles Are Invulnerable",
@@ -25,6 +26,7 @@ REGISTER_EFFECT(nullptr, OnStopInvincible, OnTickInvincible, EffectInfo // By po
         .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_damage_x2", "vehs_damage_x5", "vehs_damage_x05" }
 	}
 );
+// clang-format on
 
 static void OnStopDamage()
 {
