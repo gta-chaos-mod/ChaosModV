@@ -4,13 +4,13 @@
 
 enum class EOverrideShaderType
 {
-    LensDistortion,
-    Snow
+	LensDistortion,
+	Snow
 };
 
 namespace Hooks
 {
-    void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc);
-    void ResetShader();
-    void OnPresentCallback();
+	void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc);
+	void ResetShader();
+	void OnPresentCallback();
 }

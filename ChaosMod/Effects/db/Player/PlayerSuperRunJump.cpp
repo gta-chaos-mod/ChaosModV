@@ -14,11 +14,12 @@ static void OnTick()
 	SET_SUPER_JUMP_THIS_FRAME(player);
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Super Run & Super Jump",
 		.Id = "player_superrun",
 		.IsTimed = true,
-		.IncompatibleWith = { "player_nosprint" }
+		.EffectCategory = EEffectCategory::Movement
 	}
 );

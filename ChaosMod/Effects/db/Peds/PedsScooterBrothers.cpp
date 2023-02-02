@@ -8,7 +8,8 @@ static void OnStart()
 	SetSurroundingPedsInVehicles(faggioHash, -1);
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Scooter Brothers",
 		.Id = "peds_scooterbrothers",

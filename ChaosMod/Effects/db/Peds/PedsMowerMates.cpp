@@ -1,4 +1,4 @@
-// Effect by ubscal, modified from Bus Bois, modified by Last0xygen
+// Effect by Lunascape, modified from Bus Bois, modified by Last0xygen
 
 #include <stdafx.h>
 
@@ -10,7 +10,8 @@ static void OnStart()
 	SetSurroundingPedsInVehicles(mowerHash, 120);
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Mower Mates",
 		.Id = "peds_mowermates"

@@ -6,25 +6,24 @@
 
 class EffectIdentifier
 {
-private:
+  private:
 	std::string m_szEffectId;
 	bool m_bIsScript = false;
 
-public:
+  public:
 	EffectIdentifier() = default;
 
-	EffectIdentifier(const std::string& szScriptId, bool bIsScript = false)
-		: m_szEffectId(szScriptId), m_bIsScript(bIsScript)
+	EffectIdentifier(const std::string &szScriptId, bool bIsScript = false)
+	    : m_szEffectId(szScriptId), m_bIsScript(bIsScript)
 	{
-
 	}
 
-	inline bool operator==(const EffectIdentifier& other) const
+	inline bool operator==(const EffectIdentifier &other) const
 	{
 		return m_szEffectId == other.GetEffectId();
 	}
 
-	inline bool operator!=(const EffectIdentifier& other) const
+	inline bool operator!=(const EffectIdentifier &other) const
 	{
 		return !(*this == other);
 	}
@@ -34,7 +33,7 @@ public:
 		return m_bIsScript;
 	}
 
-	inline const std::string& GetEffectId() const
+	inline const std::string &GetEffectId() const
 	{
 		return m_szEffectId;
 	}

@@ -13,6 +13,7 @@ namespace TwitchChatVotingProxy.Config
         public static readonly string KEY_TWITCH_OVERLAY_MODE = "TwitchVotingOverlayMode";
         public static readonly string KEY_TWITCH_RETAIN_INITIAL_VOTES = "TwitchVotingChanceSystemRetainChance";
         public static readonly string KEY_TWITCH_VOTING_CHANCE_SYSTEM = "TwitchVotingChanceSystem";
+        public static readonly string KEY_TWITCH_PERMITTED_USERNAMES = "TwitchPermittedUsernames";
 
         public EOverlayMode? OverlayMode { get; set; }
         public int? OverlayServerPort { get; set; }
@@ -21,6 +22,7 @@ namespace TwitchChatVotingProxy.Config
         public string TwitchChannelName { get; set; }
         public string TwitchOAuth { get; set; }
         public string TwitchUserName { get; set; }
+        public string[] PermittedTwitchUsernames { get; set; }
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
@@ -44,6 +46,23 @@ namespace TwitchChatVotingProxy.Config
                 TwitchUserName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_USER_NAME);
                 VotingMode = optionsFile.ReadValueInt(KEY_TWITCH_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
                 OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_TWITCH_OVERLAY_MODE, 0);
+
+                string tmpPermittedUsernames = optionsFile.ReadValue(KEY_TWITCH_PERMITTED_USERNAMES, "").Trim().ToLower();  // lower case the username to allow case-insensitive comparisons
+
+                if (tmpPermittedUsernames.Length > 0)
+                {
+                    PermittedTwitchUsernames = tmpPermittedUsernames.Split(',');
+
+                    for (var i = 0; i < PermittedTwitchUsernames.Length; i++)
+                    {
+                        // remove any potential whitespaces around the usernames
+                        PermittedTwitchUsernames[i] = PermittedTwitchUsernames[i].Trim();
+                    }
+                }
+                else
+                {
+                    PermittedTwitchUsernames = new string[0];
+                }
             }
         }
     }

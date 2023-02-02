@@ -6,7 +6,7 @@ static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	int curTime = GET_GAME_TIMER();
+	int curTime   = GET_GAME_TIMER();
 
 	for (Hash weapon : Memory::GetAllWeapons())
 	{
@@ -28,7 +28,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Player Ragdolls When Shot",
 		.Id = "player_ragdollondmg",

@@ -8,10 +8,11 @@ Effect by Last0xygen
 
 static void OnStart()
 {
-    Ped ped = CreateHostilePed("u_m_y_rsranger_01"_hash, "weapon_raycarbine"_hash);
+	Ped ped = CreateHostilePed("u_m_y_rsranger_01"_hash, "weapon_raycarbine"_hash);
 }
 
-static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Space Ranger",
         .Id = "peds_spawn_space_ranger",
