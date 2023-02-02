@@ -41,7 +41,7 @@ static void OnTick()
 		    continue;
 
 		Hash vehModel = GET_ENTITY_MODEL(veh);
-	    if (!vehiclesMap.contains(vehModel))
+	        if (!vehiclesMap.contains(vehModel))
 		{
 			Memory::SetVehicleRaise(veh, 1.f);		
 
