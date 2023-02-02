@@ -45,6 +45,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Complications",
-		.Id = "misc_complications"
+		.Id = "misc_complications",
+		.EffectGroupType = EEffectGroupType::Teleport,
 	}
 );
