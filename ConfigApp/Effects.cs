@@ -373,6 +373,7 @@ namespace ConfigApp
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "misc_complications", new EffectInfo("Complications", EffectCategory.Misc) },
+            { "misc_solid_props", new EffectInfo("Solid Props", EffectCategory.Misc, true) },
             { "peds_smoketrails", new EffectInfo("Smoke Trails", EffectCategory.Peds, true) },
             { "misc_randomgravity", new EffectInfo("Random Gravity", EffectCategory.Misc, true) },
             { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
@@ -392,6 +393,7 @@ namespace ConfigApp
             { "peds_reflectivedamage", new EffectInfo("Friendly Fire", EffectCategory.Peds, true, true) },
             { "peds_toast", new EffectInfo("You're Toast", EffectCategory.Peds, true) },
             { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player) },
+            { "time_local_time", new EffectInfo("Local Time", EffectCategory.Time) },
         };
     }
 }
