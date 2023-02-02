@@ -60,7 +60,7 @@ static void OnTick()
 	}
 }
 
-//	clang-format off
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{ 
 		.Name = "Monster Trucks",
