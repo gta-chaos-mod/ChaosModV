@@ -7,8 +7,8 @@ struct VehicleData
 	float fRaise;
 };
 
-std::map<Hash, VehicleData> vehiclesMap;
-std::map<Vehicle, Vector3> vehiclesCGMap;
+static std::map<Hash, VehicleData> vehiclesMap;
+static std::map<Vehicle, Vector3> vehiclesCGMap;
 
 static void OnStop()
 {
