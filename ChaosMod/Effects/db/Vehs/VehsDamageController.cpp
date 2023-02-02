@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-// clang-format off
 static void OnStopInvincible()
 {
 	for (auto veh : GetAllVehs())
@@ -44,14 +43,16 @@ static void OnTickx2()
 	}
 }
 
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx2, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "2x Vehicle Damage",
 		.Id = "vehs_damage_x2",
 		.IsTimed = true,
-        .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x5", "vehs_damage_x05" }
+                .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x5", "vehs_damage_x05" }
 	}
 );
+// clang-format on
 
 static void OnTickx5()
 {
@@ -61,14 +62,16 @@ static void OnTickx5()
 	}
 }
 
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx5, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "5x Vehicle Damage",
 		.Id = "vehs_damage_x5",
 		.IsTimed = true,
-        .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x2", "vehs_damage_x05" }
+                .IncompatibleWith = { "vehs_ohko", "veh_speed_goal", "vehs_invincible", "vehs_damage_x2", "vehs_damage_x05" }
 	}
 );
+// clang-format on
 
 static void OnTickx05()
 {
@@ -78,6 +81,7 @@ static void OnTickx05()
 	}
 }
 
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStopDamage, OnTickx05, EffectInfo // By OnlyRealNubs
 	{
 		.Name = "0.5x Vehicle Damage",
