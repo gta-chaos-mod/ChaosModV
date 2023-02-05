@@ -373,7 +373,7 @@ namespace ConfigApp
             { "screen_colorfulworld", new EffectInfo("Colorful World", EffectCategory.Screen, true) },
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
-            { "player_afk", new EffectInfo("Afk", EffectCategory.Player, true, true) },
+            { "player_afk", new EffectInfo("AFK", EffectCategory.Player, true, true) },
         };
     }
 }
