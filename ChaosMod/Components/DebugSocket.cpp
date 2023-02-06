@@ -6,7 +6,8 @@
 #include "Components/EffectDispatcher.h"
 #include "Effects/EnabledEffectsMap.h"
 #include "Util/OptionsFile.h"
-#include "Util/json.hpp"
+
+#include <json.hpp>
 
 #define LISTEN_PORT 31819
 

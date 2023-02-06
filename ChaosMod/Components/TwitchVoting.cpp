@@ -6,7 +6,8 @@
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
-#include "Util/json.hpp"
+
+#include <json.hpp>
 
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
