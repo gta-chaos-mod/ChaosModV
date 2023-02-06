@@ -88,7 +88,7 @@ static void OnStartSystem()
 // clang-format off
 REGISTER_EFFECT(OnStartSystem, nullptr, nullptr, EffectInfo
 	{
-		.Name = "Local Time",
+		.Name = "Set Time To System Time",
 		.Id = "time_local_time",
 		.EffectGroupType = EEffectGroupType::TimeChange
 	}

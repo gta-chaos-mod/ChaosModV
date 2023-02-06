@@ -392,7 +392,7 @@ namespace ConfigApp
             { "peds_reflectivedamage", new EffectInfo("Friendly Fire", EffectCategory.Peds, true, true) },
             { "peds_toast", new EffectInfo("You're Toast", EffectCategory.Peds, true) },
             { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player) },
-            { "time_local_time", new EffectInfo("Local Time", EffectCategory.Time) },
+            { "time_local_time", new EffectInfo("Set Time To System Time", EffectCategory.Time) },
         };
     }
 }
