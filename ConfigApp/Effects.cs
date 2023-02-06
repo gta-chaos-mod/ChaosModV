@@ -374,7 +374,7 @@ namespace ConfigApp
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "misc_solid_props", new EffectInfo("Solid Props", EffectCategory.Misc, true) },
             { "peds_smoketrails", new EffectInfo("Smoke Trails", EffectCategory.Peds, true) },
-            { "misc_randomgravity", new EffectInfo("Random Gravity", EffectCategory.Misc, true) },
+            { "misc_randomgravity", new EffectInfo("Random Gravity", EffectCategory.Misc, true, true) },
             { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
             { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) },
             { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true) },

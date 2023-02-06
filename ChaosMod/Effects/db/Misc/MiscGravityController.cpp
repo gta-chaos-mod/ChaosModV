@@ -172,7 +172,8 @@ static void OnTickRandom()
 	{
 		lastTick = curTick;
 
-		randomGravityForce = Vector3(g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1));
+		randomGravityForce =
+		    Vector3(g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1));
 		randomGravityForce = randomGravityForce / randomGravityForce.Length(); // Normalize the direction
 		randomGravityForce = randomGravityForce * 0.5f;
 	}
@@ -196,17 +197,18 @@ static void OnTickRandom()
 
 	for (auto veh : GetAllVehs())
 	{
-		Memory::ApplyForceToEntityCenterOfMass(veh, 1, randomGravityForce.x, randomGravityForce.y,
-		                                       randomGravityForce.z, false, false, true, false);
+		Memory::ApplyForceToEntityCenterOfMass(veh, 1, randomGravityForce.x, randomGravityForce.y, randomGravityForce.z,
+		                                       false, false, true, false);
 	}
 }
 
-// clang-fromat off
+// clang-format off
 REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
 	{
 		.Name = "Random Gravity",
 		.Id = "misc_randomgravity",
 		.IsTimed = true,
-        	.EffectCategory  = EEffectCategory::Gravity
+		.IsShortDuration = true,
+		.EffectCategory  = EEffectCategory::Gravity
 	}
 );
