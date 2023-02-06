@@ -2,7 +2,7 @@
     Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
+#include <stdafx.h>
 
 static const char *ptfxDict  = "scr_ar_planes";
 static const char *ptfxName  = "scr_ar_trail_smoke";
