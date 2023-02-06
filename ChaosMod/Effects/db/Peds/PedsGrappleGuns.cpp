@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -10,7 +10,7 @@ static void OnStart()
 	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(ped);
 	}
-	
+
 	for (Vehicle veh : GetAllVehs())
 	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(veh);
@@ -29,7 +29,8 @@ static Entity GetLastEntityShotBy(Ped attacker)
 
 	for (Ped ped : GetAllPeds())
 	{
-		if (ped != attacker && HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(ped, attacker, 1) && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(ped, weaponHash, 0))
+		if (ped != attacker && HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(ped, attacker, 1)
+		    && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(ped, weaponHash, 0))
 		{
 			CLEAR_ENTITY_LAST_WEAPON_DAMAGE(ped);
 
@@ -46,7 +47,8 @@ static Entity GetLastEntityShotBy(Ped attacker)
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh, attacker, 1) && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(veh, weaponHash, 0))
+		if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh, attacker, 1)
+		    && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(veh, weaponHash, 0))
 		{
 			CLEAR_ENTITY_LAST_WEAPON_DAMAGE(veh);
 			return veh;
@@ -55,7 +57,8 @@ static Entity GetLastEntityShotBy(Ped attacker)
 
 	for (Entity prop : GetAllProps())
 	{
-		if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(prop, attacker, 1) && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(prop, weaponHash, 0))
+		if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(prop, attacker, 1)
+		    && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(prop, weaponHash, 0))
 		{
 			SET_ENTITY_DYNAMIC(prop, true);
 
@@ -85,9 +88,9 @@ static void OnTick()
 
 				Vector3 entityVelocity = GET_ENTITY_VELOCITY(entity);
 
-				Vector3 addVelocity = (GET_ENTITY_COORDS(ped, true) - impactCoords);
-				addVelocity = addVelocity / addVelocity.Length(); // Normalize vector
-				addVelocity = addVelocity * 25.f;
+				Vector3 addVelocity    = (GET_ENTITY_COORDS(ped, true) - impactCoords);
+				addVelocity            = addVelocity / addVelocity.Length(); // Normalize vector
+				addVelocity            = addVelocity * 25.f;
 
 				Vector3 newVelocity    = entityVelocity + addVelocity;
 				// Apply Force with flag 3 to break trafficlights and other things from their fixed structure

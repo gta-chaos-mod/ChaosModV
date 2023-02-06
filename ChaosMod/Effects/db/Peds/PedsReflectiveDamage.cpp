@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-static std::map<Ped, int> mappedPeds; 
+static std::map<Ped, int> mappedPeds;
 
 static void ReplaceMapValue(Ped key, int value)
 {
@@ -44,7 +44,8 @@ static void OnTick()
 				{
 					int damage = health - GET_ENTITY_HEALTH(ped);
 
-					if (damage <= 0) break;
+					if (damage <= 0)
+						break;
 
 					APPLY_DAMAGE_TO_PED(attackerPed, damage, false, false);
 					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped), 0);
@@ -65,8 +66,9 @@ static void OnTick()
 				{
 					Ped attackerPed = GET_PED_IN_VEHICLE_SEAT(attackerVehicle, -1, false);
 					int damage      = health - GET_ENTITY_HEALTH(ped);
-					
-					if (damage <= 0) break;
+
+					if (damage <= 0)
+						break;
 
 					APPLY_DAMAGE_TO_PED(attackerPed, damage, false, false);
 					SET_ENTITY_HEALTH(ped, GET_ENTITY_HEALTH(ped), 0);

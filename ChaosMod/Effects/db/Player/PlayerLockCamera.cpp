@@ -10,7 +10,7 @@ static void OnTick()
 
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
 	{
-		DISABLE_CONTROL_ACTION(0, 2, true); //Look UD
+		DISABLE_CONTROL_ACTION(0, 2, true); // Look UD
 	}
 
 	if (!IS_PLAYER_FREE_AIMING(PLAYER_ID()))

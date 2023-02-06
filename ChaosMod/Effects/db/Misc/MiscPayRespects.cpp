@@ -1,21 +1,20 @@
 /*
-	Effect By OnlyRealNubs
+    Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
-#include <cmath>
 #include <stdafx.h>
+
+#include <cmath>
 #include <string>
 
-#define WAIT_TIME 10000      // ms
+#define WAIT_TIME 10000 // ms
 
-
-static int m_overlay = 0;
+static int m_overlay              = 0;
 static const int maxPressInterval = 1000;
-static int lastPressTick = 0;
+static int lastPressTick          = 0;
 
 static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick    = 0;
+static DWORD64 m_lastTick = 0;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -96,8 +95,8 @@ static void OnStart()
 	{
 		WAIT(0);
 	}
-	m_lastTick       = GET_GAME_TIMER();
-	m_timeReserve    = WAIT_TIME;
+	m_lastTick    = GET_GAME_TIMER();
+	m_timeReserve = WAIT_TIME;
 }
 
 // clang-format off

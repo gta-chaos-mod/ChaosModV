@@ -1,9 +1,8 @@
 /*
-	Effect by Reguas
+    Effect by Reguas
 */
 
 #include <stdafx.h>
-
 
 static void OnTick()
 {
@@ -20,7 +19,6 @@ static void OnStop()
 		SET_DISABLE_BREAKING(prop, false);
 	}
 }
-
 
 // clang-format off
 REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
