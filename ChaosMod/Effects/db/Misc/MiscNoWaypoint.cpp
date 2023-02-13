@@ -2,7 +2,7 @@
 	Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
+#include <stdafx.h>
 
 static void OnStart()
 {
