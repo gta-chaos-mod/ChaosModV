@@ -261,7 +261,7 @@ Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ,
 }
 
 Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
-                                   float offsetZ, float rotX, float rotY, float rotZ, BOOL softPinning, BOOL collision,
+                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
                                    BOOL fixedRot)
 {
 	Object prop = CreatePoolProp(ulModelHash, 0, 0, 0, false);
