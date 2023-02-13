@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Natives.h"
 
 namespace Util
