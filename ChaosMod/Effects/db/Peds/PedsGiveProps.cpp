@@ -15,7 +15,9 @@ static void OnStart()
 		GET_MODEL_DIMENSIONS(model, &min, &max);
 		float modelSize = (max - min).Length();
 		if (modelSize > 0.3f && modelSize <= 6.f)
+		{
 			models.push_back(model);
+		}
 	}
 
 	for (Ped ped : GetAllPeds())
