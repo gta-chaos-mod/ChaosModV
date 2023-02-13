@@ -23,7 +23,7 @@ namespace Memory
 
 	  public:
 		RegisteredHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &szName, bool bIsLateHook)
-			: m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
+		    : m_pHookFunc(pHookFunc), m_pCleanupFunc(pCleanupFunc), m_szName(szName), m_bIsLateHook(bIsLateHook)
 		{
 			if (g_pRegisteredHooks)
 			{
@@ -33,7 +33,7 @@ namespace Memory
 			g_pRegisteredHooks = this;
 		}
 
-		RegisteredHook(const RegisteredHook &) = delete;
+		RegisteredHook(const RegisteredHook &)            = delete;
 
 		RegisteredHook &operator=(const RegisteredHook &) = delete;
 
@@ -74,15 +74,15 @@ class RegisterHook
 
   public:
 	RegisterHook(bool (*pHookFunc)(), void (*pCleanupFunc)(), const std::string &&szName, bool bIsLateHook = false)
-		: m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
+	    : m_RegisteredHook(pHookFunc, pCleanupFunc, szName, bIsLateHook)
 	{
 	}
 
-	RegisterHook(const RegisterHook &) = delete;
+	RegisterHook(const RegisterHook &)                = delete;
 
-	RegisterHook &operator=(const RegisterHook &) = delete;
+	RegisterHook &operator=(const RegisterHook &)     = delete;
 
-	RegisterHook(RegisterHook &&) noexcept        = delete;
+	RegisterHook(RegisterHook &&) noexcept            = delete;
 
 	RegisterHook &operator=(RegisterHook &&) noexcept = delete;
 };

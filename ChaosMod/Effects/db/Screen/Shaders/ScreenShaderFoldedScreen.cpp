@@ -23,21 +23,21 @@ static void OnStart()
 	{
 	case 0:
 		shaderSrcSuffix = "return HDRSampler.Sample(g_samLinear, float2(lerp(texcoord.x >= 0.5, texcoord.x < 0.5, "
-						  "texcoord.x), texcoord.y));}";
+		                  "texcoord.x), texcoord.y));}";
 		break;
 	case 1:
 		shaderSrcSuffix = "return HDRSampler.Sample(g_samLinear, float2(lerp(texcoord.x < 0.5, texcoord.x >= 0.5, "
-						  "texcoord.x), texcoord.y));}";
+		                  "texcoord.x), texcoord.y));}";
 		break;
 	case 2:
 		shaderSrcSuffix =
-			"return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y >= 0.5, texcoord.y < 0.5, "
-			"texcoord.y)));}";
+		    "return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y >= 0.5, texcoord.y < 0.5, "
+		    "texcoord.y)));}";
 		break;
 	case 3:
 		shaderSrcSuffix =
-			"return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y < 0.5, texcoord.y >= 0.5, "
-			"texcoord.y)));}";
+		    "return HDRSampler.Sample(g_samLinear, float2(texcoord.x, lerp(texcoord.y < 0.5, texcoord.y >= 0.5, "
+		    "texcoord.y)));}";
 		break;
 	}
 

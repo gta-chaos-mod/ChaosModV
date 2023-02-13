@@ -6,6 +6,7 @@
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectsInfo.h"
 
+#include <algorithm>
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
@@ -35,7 +36,7 @@ struct RegisteredEffect
 	}
 
 	RegisteredEffect(const std::string &szScriptId, void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)())
-		: m_EffectIdentifier(szScriptId), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
+	    : m_EffectIdentifier(szScriptId), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
 	{
 	}
 
@@ -150,7 +151,7 @@ class RegisterEffect
 		g_dictEffectsMap[effectInfo.Id] = std::move(effectInfo);
 	}
 
-	RegisterEffect(const RegisterEffect &) = delete;
+	RegisterEffect(const RegisterEffect &)            = delete;
 
 	RegisterEffect &operator=(const RegisterEffect &) = delete;
 };

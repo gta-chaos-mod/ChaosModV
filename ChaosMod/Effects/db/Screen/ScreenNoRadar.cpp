@@ -20,6 +20,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "No Radar",
 		.Id = "no_radar",
 		.IsTimed = true,
-		.IncompatibleWith = { "no_hud" }
+		.IncompatibleWith = { "no_hud", "screen_maximap" }
 	}
 );

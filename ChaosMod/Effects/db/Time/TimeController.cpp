@@ -74,3 +74,22 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickTimelapse, EffectInfo
 		.EffectGroupType = EEffectGroupType::TimeChange
 	}
 );
+// clang-format on
+
+static void OnStartSystem()
+{
+	int year, month, day, hour, minute, second;
+	GET_LOCAL_TIME(&year, &month, &day, &hour, &minute, &second); // Can't pass nullptr or it will crash the game
+
+	SET_CLOCK_TIME(hour, minute, second);
+	SET_CLOCK_DATE(day, month, year);
+}
+
+// clang-format off
+REGISTER_EFFECT(OnStartSystem, nullptr, nullptr, EffectInfo
+	{
+		.Name = "Set Time To System Time",
+		.Id = "time_local_time",
+		.EffectGroupType = EEffectGroupType::TimeChange
+	}
+);
