@@ -34,6 +34,7 @@ static void OnStart()
 	}
 }
 
+// clang-format off
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo 
 	{ 
 		.Name = "Give Everyone A Random Prop",
