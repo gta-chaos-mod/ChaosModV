@@ -33,7 +33,7 @@ namespace Memory
 			g_pRegisteredHooks = this;
 		}
 
-		RegisteredHook(const RegisteredHook &) = delete;
+		RegisteredHook(const RegisteredHook &)            = delete;
 
 		RegisteredHook &operator=(const RegisteredHook &) = delete;
 
@@ -78,11 +78,11 @@ class RegisterHook
 	{
 	}
 
-	RegisterHook(const RegisterHook &) = delete;
+	RegisterHook(const RegisterHook &)                = delete;
 
-	RegisterHook &operator=(const RegisterHook &) = delete;
+	RegisterHook &operator=(const RegisterHook &)     = delete;
 
-	RegisterHook(RegisterHook &&) noexcept        = delete;
+	RegisterHook(RegisterHook &&) noexcept            = delete;
 
 	RegisterHook &operator=(RegisterHook &&) noexcept = delete;
 };

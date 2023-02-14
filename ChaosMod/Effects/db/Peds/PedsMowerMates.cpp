@@ -1,4 +1,4 @@
-// Effect by ubscal, modified from Bus Bois, modified by Last0xygen
+// Effect by Lunascape, modified from Bus Bois, modified by Last0xygen
 
 #include <stdafx.h>
 

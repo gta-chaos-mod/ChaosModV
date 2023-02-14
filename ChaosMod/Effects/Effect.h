@@ -6,6 +6,7 @@
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectsInfo.h"
 
+#include <algorithm>
 #include <string>
 
 #define _NODISCARD [[nodiscard]]
@@ -150,7 +151,7 @@ class RegisterEffect
 		g_dictEffectsMap[effectInfo.Id] = std::move(effectInfo);
 	}
 
-	RegisterEffect(const RegisterEffect &) = delete;
+	RegisterEffect(const RegisterEffect &)            = delete;
 
 	RegisterEffect &operator=(const RegisterEffect &) = delete;
 };

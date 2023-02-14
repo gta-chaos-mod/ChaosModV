@@ -80,7 +80,7 @@ class Component
 	}
 
   public:
-	Component(const Component &) = delete;
+	Component(const Component &)            = delete;
 
 	Component &operator=(const Component &) = delete;
 

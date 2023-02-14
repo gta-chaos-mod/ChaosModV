@@ -199,9 +199,9 @@
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
                         <CheckBox x:Name="misc_user_effects_timer_pause_shortcut_enable" Grid.Row="5" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
-                        <Label Content="Disable mod on startup by default" Grid.Row="6" Grid.Column="2"
+                        <Label Content="Enable black screen softlock prevention shortcut (CTRL + SHIFT + K)" Grid.Row="6" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                        <CheckBox x:Name="misc_user_effects_disable_startup" Grid.Row="6" Grid.Column="4"
+                        <CheckBox x:Name="misc_user_anti_softlock_shortcut" Grid.Row="6" Grid.Column="4"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                         <Label Content="Enable effect group weighting (Recommended)" Grid.Row="7" Grid.Column="2"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
@@ -218,6 +218,10 @@
                             MaxLength="2" PreviewTextInput="OnlyNumbersPreviewTextInput"
                             CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                             Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" Margin="0,10" />
+                        <Label Content="Disable mod on startup by default" Grid.Row="8" Grid.Column="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
+                        <CheckBox x:Name="misc_user_effects_disable_startup" Grid.Row="8" Grid.Column="2"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                     </Grid>
                 </TabItem>
 
@@ -288,6 +292,13 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                            <Label x:Name="twitch_permitted_usernames_label" Content="Permitted Twitch usernames (separated by , )"
+                                Grid.Row="3" Grid.Column="2"
+                                HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBox x:Name="twitch_permitted_usernames" Width="200" Height="20" Grid.Row="3" Grid.Column="4"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
                         </Grid>
 
                         <Grid Grid.Row="2">
