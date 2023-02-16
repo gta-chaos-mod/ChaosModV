@@ -80,7 +80,10 @@ namespace TwitchChatVotingProxy
                 // Start the chaos mod controller
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
 
-                while (chaosPipe.IsConnected()) { }
+                while (chaosPipe.IsConnected()) 
+                {
+                    Thread.Sleep(100);
+                }
             }
             finally
             {
