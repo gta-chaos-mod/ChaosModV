@@ -1,5 +1,5 @@
 /*
-	Effect by Moxi
+    Effect by Moxi, modified
 */
 
 #include <stdafx.h>
@@ -85,6 +85,7 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 133, true);
 		DISABLE_CONTROL_ACTION(0, 152, true);
 		DISABLE_CONTROL_ACTION(0, 278, true);
+		DISABLE_CONTROL_ACTION(0, 106, true);
 	}
 	else // Disable Right
 	{
@@ -108,10 +109,12 @@ static void OnTick()
 		DISABLE_CONTROL_ACTION(0, 134, true);
 		DISABLE_CONTROL_ACTION(0, 153, true);
 		DISABLE_CONTROL_ACTION(0, 279, true);
+		DISABLE_CONTROL_ACTION(0, 106, true);
 	}
 }
 
-static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Disable Random Direction",
 		.Id = "player_no_random_movement",

@@ -7,9 +7,9 @@
 static std::list<std::unique_ptr<EffectThread>> m_rgThreads;
 static DWORD64 m_ullLastTimestamp;
 
-static EffectThread* ThreadIdToThread(DWORD64 ullThreadId)
+static EffectThread *ThreadIdToThread(DWORD64 ullThreadId)
 {
-	const auto& result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
+	const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
 
 	if (result != m_rgThreads.end())
 	{
@@ -21,11 +21,11 @@ static EffectThread* ThreadIdToThread(DWORD64 ullThreadId)
 
 namespace EffectThreads
 {
-	DWORD64 CreateThread(RegisteredEffect* pEffect, bool bIsTimed)
+	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed)
 	{
 		std::unique_ptr<EffectThread> pThread = std::make_unique<EffectThread>(pEffect, bIsTimed);
 
-		DWORD64 threadId = pThread->m_ullId;
+		DWORD64 threadId                      = pThread->m_ullId;
 
 		m_rgThreads.push_back(std::move(pThread));
 
@@ -34,7 +34,7 @@ namespace EffectThreads
 
 	void StopThread(DWORD64 ullThreadId)
 	{
-		const auto& result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
 
 		if (result != m_rgThreads.end())
 		{
@@ -44,7 +44,7 @@ namespace EffectThreads
 
 	void StopThreads()
 	{
-		for (std::unique_ptr<EffectThread>& pThread : m_rgThreads)
+		for (std::unique_ptr<EffectThread> &pThread : m_rgThreads)
 		{
 			pThread->Stop();
 		}
@@ -52,9 +52,9 @@ namespace EffectThreads
 
 	void PutThreadOnPause(DWORD ulTimeMs)
 	{
-		PVOID fiber = GetCurrentFiber();
+		PVOID fiber          = GetCurrentFiber();
 
-		const auto& ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
+		const auto &ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
 
 		if (ppResult != m_rgThreads.end())
 		{
@@ -65,20 +65,20 @@ namespace EffectThreads
 	void RunThreads()
 	{
 		static int c_iLastFrame = GET_FRAME_COUNT();
-		int iCurFrame = GET_FRAME_COUNT();
+		int iCurFrame           = GET_FRAME_COUNT();
 
 		if (c_iLastFrame == iCurFrame)
 		{
 			return;
 		}
 
-		c_iLastFrame = iCurFrame;
+		c_iLastFrame            = iCurFrame;
 
 		DWORD64 ullCurTimestamp = GetTickCount64();
 
-		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end(); )
+		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end();)
 		{
-			std::unique_ptr<EffectThread>& pThread = *it;
+			std::unique_ptr<EffectThread> &pThread = *it;
 
 			if (pThread->HasStopped())
 			{
@@ -110,14 +110,14 @@ namespace EffectThreads
 
 	bool HasThreadOnStartExecuted(DWORD64 threadId)
 	{
-		EffectThread* pThread = ThreadIdToThread(threadId);
+		EffectThread *pThread = ThreadIdToThread(threadId);
 
 		return pThread ? pThread->HasOnStartExecuted() : false;
 	}
 
 	bool IsAnyThreadRunningOnStart()
 	{
-		for (const std::unique_ptr<EffectThread>& pThread : m_rgThreads)
+		for (const std::unique_ptr<EffectThread> &pThread : m_rgThreads)
 		{
 			if (!pThread->HasOnStartExecuted())
 			{
@@ -130,7 +130,7 @@ namespace EffectThreads
 
 	bool IsAnyThreadRunning()
 	{
-		for (const std::unique_ptr<EffectThread>& pThread : m_rgThreads)
+		for (const std::unique_ptr<EffectThread> &pThread : m_rgThreads)
 		{
 			if (!pThread->HasStopped())
 			{

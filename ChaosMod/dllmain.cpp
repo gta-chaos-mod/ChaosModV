@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "Main.h"
 
 #include "Memory/Memory.h"
@@ -13,24 +14,22 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	case DLL_PROCESS_ATTACH:
 		SetUnhandledExceptionFilter(CrashHandler);
 
+		RAW_LOG("Chaos Mod v" MOD_VERSION "\n\n");
+
 		Memory::Init();
 
 		scriptRegister(hInstance, Main::OnRun);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
-		presentCallbackRegister((PresentCallback)Main::OnPresent);
-
 		break;
 	case DLL_PROCESS_DETACH:
-		Memory::Uninit();
 		Main::OnCleanup();
+		Memory::Uninit();
 
 		scriptUnregister(hInstance);
 
 		keyboardHandlerUnregister(Main::OnKeyboardInput);
-
-		presentCallbackUnregister((PresentCallback)Main::OnPresent);
 
 		if (GetConsoleWindow())
 		{

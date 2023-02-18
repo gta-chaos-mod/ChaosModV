@@ -1,5 +1,5 @@
 /*
-	Effect by Gorakh
+    Effect by Gorakh
 */
 
 #include <stdafx.h>
@@ -35,7 +35,7 @@ static void OnStop()
 {
 	for (auto propData : propDataMap)
 	{
-		Object prop = propData.first;
+		Object prop   = propData.first;
 		PropData data = propData.second;
 
 		if (prop && DOES_ENTITY_EXIST(prop))
@@ -48,7 +48,8 @@ static void OnStop()
 	propDataMap.clear();
 }
 
-static RegisterEffect registerEffect(nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Jumpy Props",
 		.Id = "misc_jumpy_props",

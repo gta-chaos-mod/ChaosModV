@@ -56,7 +56,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -74,8 +74,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,13 +95,12 @@
     <ClCompile Include="Effects\db\Meta\MetaEffectDuration.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaReInvoke.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBoostVelocity.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscFlipUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaHideChaosUI.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaNoChaos.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaTimerSpeed.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscBlackHole.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGhostWorld.cpp" />
@@ -109,20 +109,14 @@
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderDimWarp.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderFckAutorotate.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderFourthDimension.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderInvertedColors.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderLocalCoop.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderRgbLand.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderShatteredScreen.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderTnPanel.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscShaderWarpedCam.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSolidProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
@@ -136,20 +130,25 @@
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGrappleGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHeadless.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsKillerClowns.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsHotCougars.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsJamesBond.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsLooseTrigger.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsPropHunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsQuarrelingCouple.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSmokeTrails.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryChimp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBladeHunger.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerAFK.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
@@ -160,21 +159,51 @@
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscHeatVision.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLag.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMercenaries.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerMovementSpeed.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerSpinCam.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerSickCam.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenBinoculars.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenDVDScreensaver.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenHeatVision.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenNightVision.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenNoHUD.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenNoRadar.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenOnDemandCartoon.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenQuakeFOV.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenSickCam.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenSpinCam.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenTimecycModifierController.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderArc.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderColorfulWorld.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderDimWarp.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFckAutorotate.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFoldedScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderFourthDimension.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderInvertedColors.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderLocalCoop.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderMirrored.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderRgbLand.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenFreakout.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderScreenPotato.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderShatteredScreen.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderSwappedColors.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTextureless.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderTnPanel.cpp" />
+    <ClCompile Include="Effects\db\Screen\Shaders\ScreenShaderWarpedCam.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsCrumble.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDetachWheel.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsDisassemble.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPropModels.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsReplaceVehicle.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGunsmoke.cpp" />
@@ -184,26 +213,20 @@
     <ClCompile Include="Effects\db\Misc\MiscMeteorRain.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMidasTouch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMoneyRain.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscNightVision.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscNoHUD.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoPhone.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscNoRadar.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNothing.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscOneShot.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRainbowWeps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRollCredits.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsIntoRandomVehs.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerForcefield.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHasGravity.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHeavyRecoil.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerImTired.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKeepRunning.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerKickflip.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscOnDemandCartoon.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPacifist.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerPoof.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerQuakeFOV.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRapidFire.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSimeonSays.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToRandomStore.cpp" />
@@ -221,7 +244,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsWeapons.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherSnow.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpawnController.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscTimecycModifierController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscTotalChaos.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscWitnessProtection.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscQuickSprunkStop.cpp" />
@@ -322,7 +344,6 @@
     <ClCompile Include="Effects\db\Vehs\VehsPlayerVehDespawn.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRepossession.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAimbot.cpp" />
-    <ClCompile Include="Effects\db\Player\PlayerBinoculars.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerBlimpStrats.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerFlingPlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerJumpJump.cpp" />
@@ -350,6 +371,8 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
+    <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
@@ -413,6 +436,7 @@
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
+    <ClInclude Include="..\vendor\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
@@ -438,6 +462,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

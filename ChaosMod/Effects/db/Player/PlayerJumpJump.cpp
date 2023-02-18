@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen
+    Effect by Last0xygen
 */
 
 #include <stdafx.h>
@@ -11,7 +11,7 @@ static int lastCheck = 0;
 static void OnTick()
 {
 	Ped player = PLAYER_PED_ID();
-	if (lastCheck + 500 < GET_GAME_TIMER() &&  !IS_PED_JUMPING(player))
+	if (lastCheck + 500 < GET_GAME_TIMER() && !IS_PED_JUMPING(player))
 	{
 		if (IS_PED_IN_ANY_VEHICLE(player, false))
 		{
@@ -21,7 +21,7 @@ static void OnTick()
 				Memory::ApplyForceToEntityCenterOfMass(veh, 0, .0f, .0f, 200.f, true, false, true, true);
 				lastCheck = GET_GAME_TIMER();
 			}
-		} 
+		}
 		else
 		{
 			TASK_CLIMB(player, false);
@@ -30,7 +30,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Jump! Jump!",
 		.Id = "player_jump_jump",

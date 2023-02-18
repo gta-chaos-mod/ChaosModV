@@ -9,10 +9,11 @@
 static void OnStart()
 {
 	static const float maxDistance = 120.f;
-    SetSurroundingPedsInVehicles("rhino"_hash, maxDistance);
+	SetSurroundingPedsInVehicles("rhino"_hash, maxDistance);
 }
 
-static RegisterEffect registerEffect(OnStart, nullptr, nullptr, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Tanks A Lot",
         .Id = "peds_tank_bois",

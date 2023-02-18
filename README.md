@@ -12,6 +12,8 @@ Also make sure to check the [Wiki](https://github.com/gta-chaos-mod/ChaosModV/wi
 
 ## Building
 
+### Preparation
+
 1. Clone the repo `git clone https://github.com/gta-chaos-mod/ChaosModV.git`
 
 2. `cd ChaosModV`
@@ -23,14 +25,55 @@ git submodule init
 git submodule update --recursive
 ```
 
-4. Open `vendor/minhook/build/VC16/MinHookVC16.sln` in Visual Studio
+Afterwards choose one of the following methods depending on the projects you want to build:
 
-5. Compile libMinHook as x64 Release build
+### ASI only
 
-6. Open `ChaosMod.sln` in the root folder in Visual Studio
+<details>
+  <summary>CMake (CLI)</summary>
+	
+  1. `mkdir build`
 
-7. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
+  2. `cd build`
 
+  3. `cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..`
+
+  4. `ninja`
+	
+</details>
+
+<details>
+  <summary>CMake (Visual Studio)</summary>
+
+  Make sure the `C++ CMake tools for Windows` component is installed through the Visual Studio Installer.
+
+  1. Click on the `Switch between solutions and available views` button in the Solution Explorer (next to the home icon)
+
+  2. Click on `CMake Targets View`
+
+  3. Build the `ChaosMod Project` target
+
+  The .asi should be located inside the `out/build/<Configuration>` folder.
+	
+</details>
+
+### All projects
+
+<details>
+  <summary>MSBuild (Visual Studio)</summary>
+
+  NOTE: The methods above are preferred over this one for the ASI (the ChaosMod project). There may be components of the ASI only available to CMake due to complications with third-party libraries.
+
+  1. Open `vendor/minhook/build/VC16/MinHookVC16.sln` in Visual Studio
+
+  2. Compile libMinHook as x64 Release build
+
+  3. Open `ChaosMod.sln` in the root folder in Visual Studio
+
+  4. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
+	
+</details>
+	
 ## Adding new effects
 
 You can easily add and share your own effects using the integrated Lua scripting engine. See [here](https://github.com/gta-chaos-mod/ChaosModV/wiki/Lua-Scripting) for more information.
@@ -63,8 +106,8 @@ static void OnTick()
 	
 }
 
-// Any of these functions can be omitted and either replaced with a `nullptr` or completely left out (default parameter values) in the `RegisterEffect` declaration
-static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		// These are always required, you may have to add more designators depending on your effect
 		.Name = "Generic Effect",
@@ -72,5 +115,7 @@ static RegisterEffect registerEffect(OnStart, OnStop, OnTick, EffectInfo
 	}
 );
 ```
+
+The project makes use of clang-format which will mess up the formatting of the list-initialization, thus it's necessary to exempt it using `// clang-format off`.
 
 2. Add the same info to `ConfigApp/Effects.cs`

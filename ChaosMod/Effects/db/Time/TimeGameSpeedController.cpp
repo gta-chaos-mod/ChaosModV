@@ -22,7 +22,8 @@ static void OnTickX02()
 	SET_TIME_SCALE(.2f);
 }
 
-static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX02, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickX02, EffectInfo
 	{
 		.Name = "x0.2 Gamespeed",
 		.Id = "time_x02",
@@ -32,6 +33,8 @@ static RegisterEffect registerEffect1(nullptr, OnStop, OnTickX02, EffectInfo
 		.EffectCategory = EEffectCategory::Pitch
 	}
 );
+// clang-format on
+
 static void OnTickX05()
 {
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
@@ -42,7 +45,8 @@ static void OnTickX05()
 	SET_TIME_SCALE(.5f);
 }
 
-static RegisterEffect registerEffect2(nullptr, OnStop, OnTickX05, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickX05, EffectInfo
 	{
 		.Name = "x0.5 Gamespeed",
 		.Id = "time_x05",
