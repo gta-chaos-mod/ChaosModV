@@ -12,6 +12,6 @@ REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 		.Name = "No Sprint & No Jump",
 		.Id = "player_nosprint",
 		.IsTimed = true,
-		.IncompatibleWith = { "player_superrun" }
+		.EffectCategory = EEffectCategory::Movement
 	}
 );

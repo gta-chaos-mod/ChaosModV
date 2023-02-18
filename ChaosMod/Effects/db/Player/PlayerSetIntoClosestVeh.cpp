@@ -18,7 +18,7 @@ static void OnStart()
 
 		Vector3 coords = GET_ENTITY_COORDS(veh, false);
 		float dist =
-			GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
+		    GET_DISTANCE_BETWEEN_COORDS(coords.x, coords.y, coords.z, playerPos.x, playerPos.y, playerPos.z, true);
 		if (dist < closestDist)
 		{
 			closestVeh  = veh;

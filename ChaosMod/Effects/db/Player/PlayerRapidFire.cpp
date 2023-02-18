@@ -20,9 +20,13 @@ static void OnTick()
 		return;
 	}
 	DISABLE_CONTROL_ACTION(0, 24, true);
+	DISABLE_CONTROL_ACTION(0, 68, true);
+	DISABLE_CONTROL_ACTION(0, 69, true);
 	DISABLE_CONTROL_ACTION(2, 257, true);
 
-	if (IS_DISABLED_CONTROL_PRESSED(0, 24) || IS_DISABLED_CONTROL_PRESSED(2, 257))
+	if (IS_PED_IN_ANY_VEHICLE(playerPed, false)
+	        ? (IS_DISABLED_CONTROL_PRESSED(0, 68) && IS_DISABLED_CONTROL_PRESSED(0, 69))
+	        : (IS_DISABLED_CONTROL_PRESSED(0, 24) || IS_DISABLED_CONTROL_PRESSED(2, 257)))
 	{
 		Player playerPed  = PLAYER_PED_ID();
 		Vector3 launchPos = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(0, 0, 0));

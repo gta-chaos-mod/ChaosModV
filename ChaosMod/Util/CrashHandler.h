@@ -7,8 +7,6 @@
 
 #include <dbghelp.h>
 
-#include <codecvt>
-#include <locale>
 #include <string>
 
 inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
@@ -20,11 +18,12 @@ inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 
 	std::ostringstream fileName;
 	fileName << "chaosmod\\crashes\\" << systemTime.wYear << "-" << systemTime.wMonth << "-" << systemTime.wDay << "-"
-			 << systemTime.wHour << "-" << systemTime.wMinute << ".dmp";
+	         << systemTime.wHour << "-" << systemTime.wMinute << ".dmp";
 
-	auto wFileNameStr = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(fileName.str());
-	HANDLE file       = CreateFile(wFileNameStr.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
-	                               FILE_ATTRIBUTE_NORMAL, NULL);
+	auto fileNameStr          = fileName.str();
+	std::wstring wFileNameStr = { fileNameStr.begin(), fileNameStr.end() };
+	HANDLE file               = CreateFile(wFileNameStr.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
+	                                       FILE_ATTRIBUTE_NORMAL, NULL);
 
 	_MINIDUMP_EXCEPTION_INFORMATION exInfo;
 	exInfo.ThreadId          = GetCurrentThreadId();

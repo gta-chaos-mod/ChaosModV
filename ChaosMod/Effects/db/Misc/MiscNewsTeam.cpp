@@ -93,7 +93,7 @@ static void OnStart()
 	{
 		aroundCoords = GetCoordsAround(pos, 70);
 		isValidCoord =
-			GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
+		    GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
 	} while (!isValidCoord);
 	groundZ = std::max(groundZ, aroundCoords.z);
 	heli    = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);

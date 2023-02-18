@@ -19,7 +19,7 @@ static void giveNailgun(const Ped ped)
 	int bone = GET_PED_BONE_INDEX(ped, 0xDEAD); // (kolyaventuri): Right Hand
 
 	Entity nailgun =
-		CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
+	    CREATE_OBJECT(1854391800, 0, 0, 0, false, false, false); // (kolyaventuri): 1854391800 == nailgun hash
 	ATTACH_ENTITY_TO_ENTITY(nailgun, ped, bone, 0.15f, 0.05f, 0.01f, 70.0f, 0.0f, 180.f, true, true, false, false, 2,
 	                        true);
 	pedGuns[ped] = nailgun;
