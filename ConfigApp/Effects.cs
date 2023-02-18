@@ -396,6 +396,7 @@ namespace ConfigApp
             { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player) },
             { "time_local_time", new EffectInfo("Set Time To System Time", EffectCategory.Time) },
             { "player_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Player, true) },
+            { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
         };
     }
 }
