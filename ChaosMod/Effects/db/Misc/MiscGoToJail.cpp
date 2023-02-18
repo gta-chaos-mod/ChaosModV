@@ -24,7 +24,8 @@ static void OnStart()
 	SET_ENTITY_AS_NO_LONGER_NEEDED(&car);
 }
 
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail"
