@@ -12,7 +12,7 @@ static void OnStart()
 	Vector3 pos = GET_ENTITY_COORDS(plr, false);
 
 	Vehicle car = CreatePoolVehicle(GET_HASH_KEY("POLICE2"), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(plr));
-	Ped cop = CreatePoolPedInsideVehicle(car, 4, GET_HASH_KEY("S_M_Y_Cop_01"), -1);
+	Ped cop = CreatePoolPedInsideVehicle(car, 4, "S_M_Y_Cop_01"_hash, -1);
 
 	SET_PED_INTO_VEHICLE(plr, car, 1);
 	SET_VEHICLE_SIREN(car, 1);
