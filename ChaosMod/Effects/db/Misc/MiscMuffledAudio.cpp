@@ -1,4 +1,5 @@
-#include "stdafx.h"
+#include <stdafx.h>
+
 #include "Memory/Hooks/AudioClearnessHook.h"
 
 static void OnStart()
