@@ -10,12 +10,12 @@ namespace XInput
 	inline void SetControllerRumble(DWORD controllerId, int leftMotorSpeed, int rightMotorSpeed)
 	{
 		XINPUT_VIBRATION vibration;
-		ZeroMemory( &vibration, sizeof(XINPUT_VIBRATION) );
+		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 
 		vibration.wLeftMotorSpeed = leftMotorSpeed;
 		vibration.wRightMotorSpeed = rightMotorSpeed;
 
-		XInputSetState( controllerId, &vibration );
+		XInputSetState(controllerId, &vibration);
 	}
 	
 	//Make sure you call stop, or it will rumble until the application closes.
@@ -30,12 +30,12 @@ namespace XInput
 	inline void StopControllerRumble(DWORD controllerId)
 	{
 		XINPUT_VIBRATION vibration;
-		ZeroMemory( &vibration, sizeof(XINPUT_VIBRATION) );
+		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 
 		vibration.wLeftMotorSpeed = 0;
 		vibration.wRightMotorSpeed = 0;
 
-		XInputSetState( controllerId, &vibration );
+		XInputSetState(controllerId, &vibration);
 	}
 
 	inline void StopAllControllersRumble()
