@@ -51,7 +51,7 @@ static void OnStart()
 REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Not Menendez!",
-		.Id = "player_not_menendez",
+		.Id = "peds_not_menendez",
 		.IsTimed = true
 	}
 );
