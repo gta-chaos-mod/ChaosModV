@@ -2,7 +2,7 @@
 
 #include <stdafx.h>
 
-#include <Xinput.h>
+#include <xinput.h>
 
 namespace XInput
 {
