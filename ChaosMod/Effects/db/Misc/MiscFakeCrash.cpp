@@ -53,9 +53,13 @@ static void OnStart()
 	if (fakeTimer)
 	{
 		GetComponent<EffectDispatcher>()->m_fFakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
-	}
 
-	WAIT(0);
+		WAIT(0);
+	}
+	else if (g_Random.GetRandomInt(0, 1))
+	{
+		WAIT(g_Random.GetRandomInt(0, 2000));
+	}
 
 	if (g_Random.GetRandomInt(0, 1))
 	{

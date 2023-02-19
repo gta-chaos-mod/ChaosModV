@@ -110,8 +110,8 @@ namespace EffectConfig
 			else
 			{
 				effectData.TimedType = static_cast<EEffectTimedType>(
-					static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration
-																						: rgValues[1]);
+				    static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration
+				                                                                        : rgValues[1]);
 			}
 
 			effectData.WeightMult = rgValues[3];
@@ -136,7 +136,7 @@ namespace EffectConfig
 			if (effectInfo.EffectGroupType != EEffectGroupType::None)
 			{
 				effectData.GroupType =
-					g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
+				    g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
 				g_dictEffectGroupMemberCount[effectData.GroupType]++;
 			}
 

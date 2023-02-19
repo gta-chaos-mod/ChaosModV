@@ -26,12 +26,12 @@ struct ComponentHolder
 		void operator=(auto &&args)
 		{
 			std::apply(
-				[&](auto &&...args)
-				{
-					m_Ptr.reset();
-					m_Ptr = std::unique_ptr<T, Deleter>(new T(args...));
-				},
-				args);
+			    [&](auto &&...args)
+			    {
+				    m_Ptr.reset();
+				    m_Ptr = std::unique_ptr<T, Deleter>(new T(args...));
+			    },
+			    args);
 		}
 
 		T *operator()() const
@@ -80,7 +80,7 @@ class Component
 	}
 
   public:
-	Component(const Component &) = delete;
+	Component(const Component &)            = delete;
 
 	Component &operator=(const Component &) = delete;
 

@@ -14,7 +14,7 @@ class EffectIdentifier
 	EffectIdentifier() = default;
 
 	EffectIdentifier(const std::string &szScriptId, bool bIsScript = false)
-		: m_szEffectId(szScriptId), m_bIsScript(bIsScript)
+	    : m_szEffectId(szScriptId), m_bIsScript(bIsScript)
 	{
 	}
 

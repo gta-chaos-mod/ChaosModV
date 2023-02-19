@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
-static enum {
+static enum
+{
 	STATE_NONE,
 	STATE_COMBAT,
 	STATE_TO_COORDS,

@@ -24,7 +24,7 @@ static void OnTick()
 	for (Vehicle veh : GetAllVehs())
 	{
 		bool doBeyblade =
-			IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
+		    IS_VEHICLE_SEAT_FREE(veh, -1, false) ? true : !IS_PED_A_PLAYER(GET_PED_IN_VEHICLE_SEAT(veh, -1, false));
 
 		if (doBeyblade)
 		{
