@@ -49,7 +49,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
 
                 logger.Information("successfully connected to chaos mod pipe");
 
-                pipeTick.Enabled = true;
+                pipeTick.Start();
             } catch (Exception e)
             {
                 logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
@@ -71,10 +71,14 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         private void DisconnectFromPipe()
         {
-            logger.Debug("Disconnecting from pipe");
-
-            pipeReader.Close();
-            pipeWriter.Close();
+            pipeTick.Stop();
+            pipeTick.Close();
+            try
+            {
+                pipeReader.Close();
+                pipeWriter.Close();
+            }
+            catch (ObjectDisposedException) {}
             pipe.Close();
         }
         
@@ -119,9 +123,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
             {
                 SendHeartBeat();
                 ReadPipe();
-            } catch(Exception exception)
+            } catch(IOException exception)
             {
-                logger.Fatal(exception, "chaos mod pipe tick failed, disconnecting");
+                logger.Information("Pipe disconnected: " + exception.Message);
                 DisconnectFromPipe();
             }
         }
@@ -156,20 +160,12 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// <param name="message">Message to be sent</param>
         private void SendMessageToPipe(string message)
         {
-            try
+            if (message != "ping")
             {
-                if (message != "ping")
-                {
-                    logger.Debug($"Sending message: {message}");
-                }
-
-                pipeWriter.Write($"{message}\0");
-                pipe.WaitForPipeDrain();
-            } catch (Exception e)
-            {
-                logger.Information(e, "error that ocurred when writing pipe");
-                DisconnectFromPipe();
+                logger.Debug($"Sending message: {message}");
             }
+            pipeWriter.Write($"{message}\0");
+            pipe.WaitForPipeDrain();
         }
         /// <summary>
         /// Is called when the chaos mod starts a new vote

@@ -60,7 +60,7 @@ namespace rage
 
 		virtual __int64 Kill()                               = 0;
 
-	public:
+	  public:
 		const char *GetName() const
 		{
 			return getGameVersion() < eGameVersion::VER_1_0_2699_0_STEAM ? pad_2699 : m_szName;

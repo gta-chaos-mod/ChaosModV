@@ -4,7 +4,7 @@
 
 #include "PoolSpawner.h"
 
-inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3* location = 0)
+inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3 *location = 0)
 {
 	Ped playerPed                 = PLAYER_PED_ID();
 
@@ -22,9 +22,9 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3* location =
 	bool spawnInVehicleIfNeeded = true;
 	if (location)
 	{
-		spawnLocation = *location;
+		spawnLocation          = *location;
 		spawnInVehicleIfNeeded = false;
-	} 
+	}
 	else
 	{
 		spawnLocation = GET_ENTITY_COORDS(playerPed, false);

@@ -1,5 +1,5 @@
 /*
-	Effect by Reguas
+    Effect by Reguas
 */
 
 #include <stdafx.h>

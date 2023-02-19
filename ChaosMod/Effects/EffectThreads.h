@@ -106,7 +106,7 @@ class EffectThread
 		DeleteFiber(m_pThread);
 	}
 
-	EffectThread(const EffectThread &) = delete;
+	EffectThread(const EffectThread &)            = delete;
 
 	EffectThread &operator=(const EffectThread &) = delete;
 

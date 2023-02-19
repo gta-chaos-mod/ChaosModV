@@ -15,3 +15,6 @@ Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPos
 Vehicle CreatePoolCloneVehicle(Vehicle vehToClone);
 
 Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);
+Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
+                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
+                                   bool fixedRot);

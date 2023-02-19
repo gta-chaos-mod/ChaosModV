@@ -364,6 +364,7 @@ namespace ConfigApp
             { "screen_invertedcolors", new EffectInfo("Inverted Colors", EffectCategory.Screen, true) },
             { "screen_fourthdimension", new EffectInfo("Fourth Dimension", EffectCategory.Screen, true, true) },
             { "screen_rgbland", new EffectInfo("RGB Land", EffectCategory.Screen, true) },
+            { "peds_give_props", new EffectInfo("Give Everyone A Random Prop", EffectCategory.Peds) },
             { "screen_textureless", new EffectInfo("Textureless", EffectCategory.Screen, true) },
             { "screen_mirrored", new EffectInfo("Mirrored Screen", EffectCategory.Screen, true) },
             { "screen_foldedscreen", new EffectInfo("Folded Screen", EffectCategory.Screen, true) },
@@ -374,6 +375,7 @@ namespace ConfigApp
             { "screen_arc", new EffectInfo("Arced Screen", EffectCategory.Screen, true, true) },
             { "world_blackhole", new EffectInfo("Black Hole", EffectCategory.Misc, true, true) },
             { "peds_smoketrails", new EffectInfo("Smoke Trails", EffectCategory.Peds, true) },
+            { "misc_nowaypoint", new EffectInfo("Remove Waypoint", EffectCategory.Misc) },
             { "timecycle_fuzzy", new EffectInfo("Static", EffectCategory.Screen, true, true) },
             { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
             { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
@@ -405,6 +407,9 @@ namespace ConfigApp
             { "tp_fakex2", new EffectInfo("Fake Fake Teleport", EffectCategory.Player, false) },
             { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
             { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) }
+            { "time_local_time", new EffectInfo("Set Time To System Time", EffectCategory.Time) },
+            { "peds_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Peds, true) },
+            { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
         };
     }
 }

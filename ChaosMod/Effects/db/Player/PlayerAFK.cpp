@@ -2,7 +2,7 @@
 	Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
+#include <stdafx.h>
 
 static void OnTick()
 {
@@ -17,7 +17,7 @@ static void OnStop()
 // clang-format off
 REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
-		.Name = "Afk",
+		.Name = "AFK",
 		.Id = "player_afk",
 		.IsTimed = true,
 		.IsShortDuration = true,
