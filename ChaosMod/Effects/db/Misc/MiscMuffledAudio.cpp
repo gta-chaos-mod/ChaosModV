@@ -12,6 +12,7 @@ static void OnStop()
 	Hooks::ResetAudioClearness();
 }
 
+// clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Muffled Audio",
