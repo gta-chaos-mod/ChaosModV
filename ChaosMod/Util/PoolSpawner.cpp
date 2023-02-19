@@ -262,7 +262,7 @@ Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, b
 
 Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
                                    float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
-                                   BOOL fixedRot)
+                                   bool fixedRot)
 {
 	Object prop = CreatePoolProp(ulModelHash, 0, 0, 0, false);
 	ATTACH_ENTITY_TO_ENTITY(prop, ped, boneIndex, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, false, softPinning,
