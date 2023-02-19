@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Util/Logging.h"
 #include "Handle.h"
 #include "Memory.h"
+#include "Util/Logging.h"
 #include "Util/Natives.h"
 
 #include <scripthookv/inc/main.h>
