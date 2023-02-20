@@ -185,7 +185,8 @@ void EffectDispatcher::UpdateMetaEffects(int iDeltaTime)
 		float totalWeight = 0.f;
 		for (auto &[effectId, effectData] : g_dictEnabledEffects)
 		{
-			if (effectData.IsMeta() && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility())
+			if (effectData.IsMeta() && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility()
+			    && !effectData.IsHidden())
 			{
 				totalWeight += GetEffectWeight(effectData);
 
