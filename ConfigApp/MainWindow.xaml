@@ -226,7 +226,7 @@
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                             <Label Content="Enable gamepad rumble for certain effects" Grid.Row="9" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
-                            <CheckBox x:Name="misc_user_effects_disable_gamepad_rumble" Grid.Row="9" Grid.Column="2"
+                            <CheckBox x:Name="misc_user_effects_enable_gamepad_rumble" Grid.Row="9" Grid.Column="2"
                                   HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                         </Grid>
                     </ScrollViewer>

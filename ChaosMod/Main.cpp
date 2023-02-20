@@ -21,6 +21,7 @@
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
+#include "Util/XInput.h"
 
 static bool ms_bClearAllEffects             = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
@@ -172,6 +173,9 @@ static void Init()
 
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
+
+	LOG("Initializing XInput");
+	XInput::Init();
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
