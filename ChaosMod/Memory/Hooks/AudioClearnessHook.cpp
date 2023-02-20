@@ -5,10 +5,10 @@
 static bool ms_bEnabledHook = false;
 static int ms_fValue = 0;
 
-__int64(*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 pitch);
-__int64 _HK_rage__audRequestedSettings__SetClearness(__int64 _this, __int64 pitch)
+__int64(*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 clearness);
+__int64 _HK_rage__audRequestedSettings__SetClearness(__int64 _this, __int64 clearness)
 {
-	return _OG_rage__audRequestedSettings__SetClearness(_this, ms_bEnabledHook ? ms_fValue : pitch);
+	return _OG_rage__audRequestedSettings__SetClearness(_this, ms_bEnabledHook ? ms_fValue : clearness);
 }
 
 static bool OnHook()
