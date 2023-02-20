@@ -108,6 +108,7 @@
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMuffledAudio.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
@@ -373,6 +374,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
@@ -421,6 +423,7 @@
     <ClInclude Include="Memory\Audio.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\AudioClearnessHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
