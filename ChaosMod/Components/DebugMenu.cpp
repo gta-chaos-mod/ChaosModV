@@ -20,7 +20,7 @@ DebugMenu::DebugMenu() : Component()
 	{
 		const auto &[effectIdentifier, effectData] = pair;
 
-		if (effectData.TimedType != EEffectTimedType::Permanent)
+		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsHidden())
 		{
 			m_rgEffects.emplace_back(effectIdentifier,
 			                         effectData.HasCustomName() ? effectData.CustomName : effectData.Name);

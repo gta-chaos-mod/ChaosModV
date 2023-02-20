@@ -61,7 +61,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib;XInput.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -108,6 +108,7 @@
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscMuffledAudio.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGiveProps.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGrappleGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHeadless.cpp" />
@@ -166,6 +168,7 @@
     <ClCompile Include="Effects\db\Misc\MiscOilLeaks.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerIllegalInnocence.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerMovementSpeed.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNotMenendez.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerLagCamera.cpp" />
@@ -371,6 +374,7 @@
     <ClCompile Include="Components\Failsafe.cpp" />
     <ClCompile Include="LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
@@ -416,8 +420,10 @@
     <ClInclude Include="Lib\scrThread.h" />
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Audio.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\Gravity.h" />
+    <ClInclude Include="Memory\Hooks\AudioClearnessHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
@@ -462,6 +468,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>

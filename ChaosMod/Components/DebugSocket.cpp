@@ -13,7 +13,7 @@
 
 using nlohmann::json;
 
-static void PushDelegate(DebugSocket *debugSocket, std::function<void()> delegate)
+static void QueueDelegate(DebugSocket *debugSocket, std::function<void()> delegate)
 {
 	std::lock_guard lock(debugSocket->m_DelegateQueueMutex);
 	debugSocket->m_DelegateQueue.push(delegate);
@@ -25,6 +25,11 @@ static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::Connect
 	json effectsJson;
 	for (const auto &[effectId, effectData] : g_dictEnabledEffects)
 	{
+		if (effectData.TimedType == EEffectTimedType::Permanent || effectData.IsHidden())
+		{
+			continue;
+		}
+
 		json effectInfoJson;
 		effectInfoJson["id"]   = effectId.GetEffectId();
 		effectInfoJson["name"] = effectData.Name;
@@ -53,8 +58,36 @@ static void OnTriggerEffect(DebugSocket *debugSocket, std::shared_ptr<ix::Connec
 	auto result         = g_dictEnabledEffects.find(targetEffectId);
 	if (result != g_dictEnabledEffects.end())
 	{
-		PushDelegate(debugSocket, [result]() { GetComponent<EffectDispatcher>()->DispatchEffect(result->first); });
+		QueueDelegate(debugSocket, [result]() { GetComponent<EffectDispatcher>()->DispatchEffect(result->first); });
 	}
+}
+
+static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
+                         ix::WebSocket &webSocket, const json &payloadJson)
+{
+	if (!ComponentExists<EffectDispatcher>())
+	{
+		return;
+	}
+
+	if (!payloadJson.contains("script_raw") || !payloadJson["script_raw"].is_string())
+	{
+		return;
+	}
+
+	QueueDelegate(debugSocket,
+	              [payloadJson]()
+	              {
+		              // Generate random hex value for script name
+		              std::string scriptName;
+		              scriptName.resize(8);
+		              for (int i = 0; i < 8; i++)
+		              {
+			              sprintf(scriptName.data() + i, "%x", g_Random.GetRandomInt(0, 16));
+		              }
+
+		              LuaScripts::RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]);
+	              });
 }
 
 static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
@@ -90,6 +123,7 @@ static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionSt
 
 	SET_HANDLER("fetch_effects", OnFetchEffects);
 	SET_HANDLER("trigger_effect", OnTriggerEffect);
+	SET_HANDLER("exec_script", OnExecScript);
 
 #undef HANDLER
 }
