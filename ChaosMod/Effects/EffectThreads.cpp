@@ -35,10 +35,23 @@ namespace EffectThreads
 	void StopThread(DWORD64 ullThreadId)
 	{
 		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
-
 		if (result != m_rgThreads.end())
 		{
-			result->get()->Stop();
+			(*result)->Stop();
+		}
+	}
+
+	void StopThreadBlocking(DWORD64 ullThreadId)
+	{
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
+		if (result != m_rgThreads.end())
+		{
+			(*result)->Stop();
+			while (!(*result)->HasStopped())
+			{
+				WAIT(0);
+				(*result)->OnRun();
+			}
 		}
 	}
 
@@ -53,9 +66,7 @@ namespace EffectThreads
 	void PutThreadOnPause(DWORD ulTimeMs)
 	{
 		PVOID fiber          = GetCurrentFiber();
-
 		const auto &ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
-
 		if (ppResult != m_rgThreads.end())
 		{
 			(*ppResult)->m_iPauseTime = ulTimeMs;

@@ -546,7 +546,7 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 		return;
 	}
 
-	EffectThreads::StopThread(result->m_ullThreadId);
+	EffectThreads::StopThreadBlocking(result->m_ullThreadId);
 	m_rgActiveEffects.erase(result);
 }
 

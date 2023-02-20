@@ -18,6 +18,7 @@ namespace EffectThreads
 	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed);
 
 	void StopThread(DWORD64 ullThreadId);
+	void StopThreadBlocking(DWORD64 ullThreadId);
 	void StopThreads();
 
 	void PutThreadOnPause(DWORD ulTimeMs);
