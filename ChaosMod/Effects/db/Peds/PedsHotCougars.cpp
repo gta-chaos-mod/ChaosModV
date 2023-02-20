@@ -2,9 +2,10 @@
     Effect by Moxi based on "Killer Clowns" by Last0xygen
 */
 
+#include <stdafx.h>
+
 #include <Util/Peds.h>
 #include <Util/Types.h>
-#include <stdafx.h>
 
 static std::list<Ped> cougarEnemies;
 static int spawnTimer = -1;

@@ -56,7 +56,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\DebugMenu.cpp" />
+    <ClCompile Include="Components\DebugSocket.cpp" />
     <ClCompile Include="Components\Shortcuts.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Components\EffectDispatcher.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenHeatVision.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenMaximap.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNightVision.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNoHUD.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNoRadar.cpp" />
@@ -402,6 +404,7 @@
   <ItemGroup>
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\DebugMenu.h" />
+    <ClInclude Include="Components\DebugSocket.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="Components\Shortcuts.h" />
     <ClInclude Include="Effects\EEffectCategory.h" />
@@ -422,6 +425,7 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Audio.h" />
     <ClInclude Include="Memory\Entity.h" />
+    <ClInclude Include="Memory\EntityFragments.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Hooks\AudioClearnessHook.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
