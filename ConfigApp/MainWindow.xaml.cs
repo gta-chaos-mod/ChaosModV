@@ -147,6 +147,7 @@ namespace ConfigApp
             misc_user_effects_enable_group_weighting.IsChecked = m_configFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
             misc_user_effects_enable_failsafe.IsChecked = m_configFile.ReadValueBool("EnableFailsafe", true);
             misc_user_anti_softlock_shortcut.IsChecked = m_configFile.ReadValueBool("EnableAntiSoftlockShortcut", true);
+            misc_user_effects_disable_gamepad_rumble.IsChecked = m_configFile.ReadValueBool("DisableGamepadRumble", true);
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_configFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -178,6 +179,7 @@ namespace ConfigApp
                 m_configFile.WriteValue("MaxParallelRunningEffects", misc_user_effects_max_running_effects.Text);
             }
             m_configFile.WriteValue("EnableAntiSoftlockShortcut", misc_user_anti_softlock_shortcut.IsChecked.Value);
+            m_configFile.WriteValue("DisableGamepadRumble", misc_user_effects_disable_gamepad_rumble.IsChecked.Value);
 
             // Meta Effects
             m_configFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
