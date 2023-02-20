@@ -7,7 +7,8 @@ enum class EEffectAttributes
 	ExcludedFromVoting = (1 << 0),
 	HasCustomName      = (1 << 1),
 	IsMeta             = (1 << 2),
-	IsUtility          = (1 << 3)
+	IsUtility          = (1 << 3),
+	IsTemporary        = (1 << 4)
 };
 
 inline EEffectAttributes operator|(EEffectAttributes lhs, EEffectAttributes rhs)

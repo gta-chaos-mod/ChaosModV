@@ -3,6 +3,8 @@
 #include "Info.h"
 #include "LuaScripts.h"
 
+#include "Components/EffectDispatcher.h"
+
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
@@ -20,12 +22,28 @@
 #include "Util/Script.h"
 #include "Util/Vehicle.h"
 
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 #define _LUAFUNC static __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
 #define _LUAFUNC __attribute__((always_inline)) static inline
 #else
 #define _LUAFUNC static inline
+#endif
+
+// MinGW doesn't have SEH :(
+#ifdef _MSC_VER
+#define MAGIC_CATCH_BEGIN \
+	__try                 \
+	{
+#define MAGIC_CATCH_END(x)               \
+	}                                    \
+	__except (EXCEPTION_EXECUTE_HANDLER) \
+	{                                    \
+		x;                               \
+	}
+#else
+#define MAGIC_CATCH_BEGIN {
+#define MAGIC_CATCH_END(x) }
 #endif
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
@@ -42,44 +60,36 @@ _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 	COLOR_PREFIX_LOG("(" << szName << ")", szText);
 }
 
-_LUAFUNC LONG WINAPI _TryParseExHandler(_EXCEPTION_POINTERS *pException)
-{
-	return pException->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION ? EXCEPTION_EXECUTE_HANDLER
-	                                                                                : EXCEPTION_CONTINUE_SEARCH;
-}
-
 _LUAFUNC char *_TryParseString(void *pStr)
 {
-	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
-
 	char *pcString = reinterpret_cast<char *>(pStr);
 
-	// Access string to try to trigger a segfault
+	MAGIC_CATCH_BEGIN
+	// Access string to try to trigger an access violation
 	for (char *c = pcString; *c; c++)
 	{
 	}
-
-	RemoveVectoredContinueHandler(exHandler);
+	MAGIC_CATCH_END(return nullptr)
 
 	return pcString;
 }
 
 _LUAFUNC bool _TryParseVector3(void **pVector, float &fX, float &fY, float &fZ)
 {
-	auto exHandler = AddVectoredExceptionHandler(1, _TryParseExHandler);
-
-	fX             = *reinterpret_cast<float *>(pVector);
-	fY             = *reinterpret_cast<float *>(pVector + 1);
-	fZ             = *reinterpret_cast<float *>(pVector + 2);
-
-	RemoveVectoredContinueHandler(exHandler);
+	MAGIC_CATCH_BEGIN
+	fX = *reinterpret_cast<float *>(pVector);
+	fY = *reinterpret_cast<float *>(pVector + 1);
+	fZ = *reinterpret_cast<float *>(pVector + 2);
+	MAGIC_CATCH_END(return false)
 
 	return true;
 }
 
 _LUAFUNC bool _CallNative(void ***ppResult)
 {
+	MAGIC_CATCH_BEGIN
 	*ppResult = reinterpret_cast<void **>(nativeCall());
+	MAGIC_CATCH_END(return false)
 
 	return true;
 }
@@ -92,11 +102,13 @@ template <typename T, typename... A> _LUAFUNC T Generate(const A &...args)
 class LuaScript
 {
   private:
-	std::string m_szFileName;
+	std::string m_ScriptName;
 	sol::state m_Lua;
+	bool m_bTemporary;
 
   public:
-	LuaScript(const std::string &fileName, sol::state &lua) : m_szFileName(fileName), m_Lua(std::move(lua))
+	LuaScript(const std::string &fileName, sol::state &lua, bool temporary)
+	    : m_ScriptName(fileName), m_Lua(std::move(lua)), m_bTemporary(temporary)
 	{
 	}
 
@@ -105,19 +117,34 @@ class LuaScript
 	LuaScript &operator=(const LuaScript &) = delete;
 
 	LuaScript(LuaScript &&script) noexcept
-	    : m_szFileName(std::move(script.m_szFileName)), m_Lua(std::move(script.m_Lua))
+	    : m_ScriptName(std::move(script.m_ScriptName)),
+	      m_Lua(std::move(script.m_Lua)),
+	      m_bTemporary(script.m_bTemporary)
 	{
 	}
 
 	LuaScript &operator=(LuaScript &&script) noexcept
 	{
-		m_szFileName = std::move(script.m_szFileName);
+		m_ScriptName = std::move(script.m_ScriptName);
 		m_Lua        = std::move(script.m_Lua);
+		m_bTemporary = script.m_bTemporary;
+
+		return *this;
 	}
 
-	void Execute(const char *szFuncName) const
+	const std::string &GetScriptName() const
 	{
-		const sol::protected_function &func = m_Lua[szFuncName];
+		return m_ScriptName;
+	}
+
+	bool IsTemporary() const
+	{
+		return m_bTemporary;
+	}
+
+	void Execute(const char *funcName) const
+	{
+		const sol::protected_function &func = m_Lua[funcName];
 		if (!func.valid())
 		{
 			return;
@@ -128,7 +155,7 @@ class LuaScript
 		{
 			const sol::error &error = result;
 
-			LuaPrint(m_szFileName, error.what());
+			LuaPrint(m_ScriptName, error.what());
 		}
 	}
 };
@@ -182,7 +209,7 @@ class LuaHolder
 		return *reinterpret_cast<T *>(&m_pData);
 	}
 
-	_NODISCARD __forceinline bool IsValid() const
+	__forceinline bool IsValid() const
 	{
 		return m_pData || m_Obj.valid();
 	}
@@ -198,9 +225,9 @@ enum class ELuaNativeReturnType
 	Vector3
 };
 
-static std::unordered_map<std::string, LuaScript> ms_dictRegisteredScripts;
+static std::unordered_map<std::string, LuaScript> ms_dictRegisteredEffects;
 
-_LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_state &lua, DWORD64 ullNativeHash,
+_LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 ullNativeHash,
                                ELuaNativeReturnType eReturnType, const sol::variadic_args &args)
 {
 	nativeInit(ullNativeHash);
@@ -243,7 +270,7 @@ _LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_st
 	void **pReturned;
 	if (!_CallNative(&pReturned))
 	{
-		LuaPrint(szFileName, (std::ostringstream()
+		LuaPrint(scriptName, (std::ostringstream()
 		                      << "Error while invoking native 0x" << std::uppercase << std::hex << ullNativeHash)
 		                         .str());
 	}
@@ -277,14 +304,25 @@ _LUAFUNC sol::object LuaInvoke(const std::string &szFileName, const sol::this_st
 	return sol::make_object(lua, sol::lua_nil);
 }
 
-static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
+static void RemoveScriptEntry(const std::string &effectId)
 {
-	const auto &path       = entry.path();
-	const auto &szFileName = path.filename().string();
+	ms_dictRegisteredEffects.erase(effectId);
+	g_dictEnabledEffects.erase(effectId);
 
-	const auto &szPathStr  = path.string();
-	LOG("Running script " << szPathStr.substr(szPathStr.find_last_of("\\") + 1));
+	auto result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectId);
+	if (result != g_RegisteredEffects.end())
+	{
+		g_RegisteredEffects.erase(result);
+	}
+}
 
+enum ParseScriptFlags
+{
+	// Immediately dispatch effect (if script registers one) and remove it OnStop
+	ParseScript_IsTemporary = (1 << 0),
+};
+static void ParseScriptRaw(std::string scriptName, std::string_view script, ParseScriptFlags flags = {})
+{
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
 	lua.open_libraries(sol::lib::math);
@@ -333,9 +371,9 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		lua.unsafe_script_file(LUA_NATIVESDEF);
 	}
 
-	lua["print"] = [szFileName](const std::string &szText)
+	lua["print"] = [scriptName](const std::string &szText)
 	{
-		LuaPrint(szFileName, szText);
+		LuaPrint(scriptName, szText);
 	};
 	lua["GetTickCount"] = GetTickCount64;
 	lua["GET_HASH_KEY"] = GET_HASH_KEY;
@@ -348,10 +386,10 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::m_fX, "y", &LuaVector3::m_fY, "z", &LuaVector3::m_fZ);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
-	lua["_invoke"] = [szFileName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
+	lua["_invoke"] = [scriptName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
 	                              const sol::variadic_args &args)
 	{
-		return LuaInvoke(szFileName, lua, ullHash, eReturnType, args);
+		return LuaInvoke(scriptName, lua, ullHash, eReturnType, args);
 	};
 	lua["WAIT"]                                 = WAIT;
 	// Replace those natives with our own safe versions
@@ -392,11 +430,11 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	};
 	lua["GetGameBuild"] = Memory::GetGameBuild;
 
-	const auto &result  = lua.safe_script_file(path.string(), sol::load_mode::text);
+	const auto &result  = lua.safe_script(script);
 	if (!result.valid())
 	{
 		const sol::error &error = result;
-		LuaPrint(szFileName, error.what());
+		LuaPrint(scriptName, error.what());
 
 		return;
 	}
@@ -410,44 +448,62 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		if (groupNameOpt)
 		{
 			const auto &groupName = *groupNameOpt;
-			const auto &result    = g_dictEffectGroups.find(groupName);
-			if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
-			{
-				LOG(szFileName << ": WARNING: Could not register effect group \"" << groupName
-				               << "\": Already registered!");
-			}
-			else
-			{
-				g_dictEffectGroups[groupName].IsPlaceholder         = false;
-				g_dictEffectGroups[groupName].WasRegisteredByScript = true;
-				g_dictEffectGroupMemberCount[groupName];
 
-				const sol::optional<int> &groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
-				if (groupWeightMultOpt)
+			if (!(flags & ParseScript_IsTemporary))
+			{
+				const auto &result = g_dictEffectGroups.find(groupName);
+				if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 				{
-					g_dictEffectGroups[groupName].WeightMult =
-					    std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
+					LOG(scriptName << ": WARNING: Could not register effect group \"" << groupName
+					               << "\": Already registered!");
 				}
+				else
+				{
+					g_dictEffectGroups[groupName].IsPlaceholder         = false;
+					g_dictEffectGroups[groupName].WasRegisteredByScript = true;
+					g_dictEffectGroupMemberCount[groupName];
 
-				LOG(szFileName << ": Registered effect group \"" << groupName
-				               << "\" with weight multiplier: " << g_dictEffectGroups[groupName].WeightMult);
+					const sol::optional<int> &groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
+					if (groupWeightMultOpt)
+					{
+						g_dictEffectGroups[groupName].WeightMult =
+						    std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
+					}
+
+					LOG(scriptName << ": Registered effect group \"" << groupName
+					               << "\" with weight multiplier: " << g_dictEffectGroups[groupName].WeightMult);
+				}
 			}
 		}
 	}
 
-	const sol::optional<sol::table> &scriptInfoOpt = lua["ScriptInfo"];
-	if (!scriptInfoOpt)
+	sol::optional<sol::table> effectInfoOpt = lua["EffectInfo"];
+	if (!effectInfoOpt)
+	{
+		// Backwards compatibility
+		effectInfoOpt = lua["ScriptInfo"].get<sol::table>();
+		if (!effectInfoOpt)
+		{
+			return;
+		}
+	}
+
+	const auto &effectInfo                          = *effectInfoOpt;
+
+	const sol::optional<std::string> &effectNameOpt = effectInfo["Name"];
+	if (!effectNameOpt)
 	{
 		return;
 	}
-
-	const auto &scriptInfo                          = *scriptInfoOpt;
-
-	const sol::optional<std::string> &scriptNameOpt = scriptInfo["Name"];
-	const sol::optional<std::string> &scriptIdOpt   = scriptInfo["ScriptId"];
-	if (!scriptNameOpt || !scriptIdOpt)
+	sol::optional<std::string> effectIdOpt = effectInfo["EffectId"];
+	if (!effectIdOpt)
 	{
-		return;
+		// Also backwards compat
+		effectIdOpt = effectInfo["ScriptId"].get<std::string>();
+		if (!effectIdOpt)
+		{
+			return;
+		}
 	}
 
 	auto trim = [](std::string str) -> std::string
@@ -462,47 +518,66 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		return str;
 	};
 
-	const auto &szScriptId = trim(*scriptIdOpt);
-	if (szScriptId.empty())
+	const auto &effectId = trim(*effectIdOpt);
+	if (effectId.empty())
 	{
 		// Id is empty
 		return;
 	}
 
-	const auto &szScriptName = trim(*scriptNameOpt);
+	const auto &effectName = trim(*effectNameOpt);
 
-	if (szScriptId.starts_with('.'))
+	if (effectId.starts_with('.'))
 	{
-		LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName << "\": Invalid effect id!");
+		LOG(scriptName << ": ERROR: Could not register effect \"" << effectName << "\": Invalid effect id!");
 		return;
 	}
 
-	bool bDoesIdAlreadyExist = ms_dictRegisteredScripts.find(szScriptId) != ms_dictRegisteredScripts.end();
-	if (!bDoesIdAlreadyExist)
 	{
-		for (const auto &pair : g_dictEffectsMap)
+		auto result              = ms_dictRegisteredEffects.find(effectId);
+		bool bDoesIdAlreadyExist = result != ms_dictRegisteredEffects.end();
+		if (bDoesIdAlreadyExist)
 		{
-			if (pair.second.Id == szScriptId)
+			if (result->second.IsTemporary())
 			{
-				bDoesIdAlreadyExist = true;
+				/* Replace existing temporary effect with this one */
 
-				break;
+				if (ComponentExists<EffectDispatcher>())
+				{
+					GetComponent<EffectDispatcher>()->ClearEffect(effectId);
+				}
+
+				RemoveScriptEntry(effectId);
+
+				bDoesIdAlreadyExist = false;
 			}
 		}
-	}
-	if (bDoesIdAlreadyExist)
-	{
-		LOG(szFileName << ": ERROR: Could not register effect \"" << szScriptName << "\": Id \"" << szScriptId
-		               << "\" already registered!");
+		else
+		{
+			for (const auto &effect : g_dictEffectsMap)
+			{
+				if (effect.second.Id == effectId)
+				{
+					bDoesIdAlreadyExist = true;
 
-		return;
+					break;
+				}
+			}
+		}
+		if (bDoesIdAlreadyExist)
+		{
+			LOG(scriptName << ": ERROR: Could not register effect \"" << effectName << "\": Id \"" << effectId
+			               << "\" already registered!");
+
+			return;
+		}
 	}
 
 	EffectData effectData;
-	effectData.Name                                    = szScriptName;
-	effectData.Id                                      = *scriptIdOpt;
+	effectData.Name                                    = effectName;
+	effectData.Id                                      = *effectIdOpt;
 
-	const sol::optional<std::string> &timedTypeTextOpt = scriptInfo["TimedType"];
+	const sol::optional<std::string> &timedTypeTextOpt = effectInfo["TimedType"];
 	if (timedTypeTextOpt)
 	{
 		const auto &szTimedTypeText = *timedTypeTextOpt;
@@ -525,7 +600,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		}
 		else if (szTimedTypeText == "Custom")
 		{
-			const sol::optional<int> &durationOpt = scriptInfo["CustomTime"];
+			const sol::optional<int> &durationOpt = effectInfo["CustomTime"];
 			if (durationOpt)
 			{
 				effectData.TimedType  = EEffectTimedType::Custom;
@@ -534,32 +609,32 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		}
 	}
 
-	const sol::optional<int> &weightMultOpt = scriptInfo["WeightMultiplier"];
+	const sol::optional<int> &weightMultOpt = effectInfo["WeightMultiplier"];
 	if (weightMultOpt)
 	{
 		effectData.WeightMult = (std::max)(1, *weightMultOpt);
 		effectData.Weight     = effectData.WeightMult;
 	}
 
-	const sol::optional<bool> &isMetaOpt = scriptInfo["IsMeta"];
+	const sol::optional<bool> &isMetaOpt = effectInfo["IsMeta"];
 	if (isMetaOpt)
 	{
 		effectData.SetAttribute(EEffectAttributes::IsMeta, *isMetaOpt);
 	}
 
-	const sol::optional<bool> &excludeFromVotingOpt = scriptInfo["ExcludeFromVoting"];
+	const sol::optional<bool> &excludeFromVotingOpt = effectInfo["ExcludeFromVoting"];
 	if (excludeFromVotingOpt)
 	{
 		effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
 	}
 
-	const sol::optional<bool> &isUtilityOpt = scriptInfo["IsUtility"];
+	const sol::optional<bool> &isUtilityOpt = effectInfo["IsUtility"];
 	if (isUtilityOpt)
 	{
 		effectData.SetAttribute(EEffectAttributes::IsUtility, *isUtilityOpt);
 	}
 
-	const sol::optional<sol::table> &incompatibleIdsOpt = scriptInfo["IncompatibleIds"];
+	const sol::optional<sol::table> &incompatibleIdsOpt = effectInfo["IncompatibleIds"];
 	if (incompatibleIdsOpt)
 	{
 		const auto &rgIncompatibleIds = *incompatibleIdsOpt;
@@ -572,7 +647,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		}
 	}
 
-	const sol::optional<std::string> &effectCategoryOpt = scriptInfo["EffectCategory"];
+	const sol::optional<std::string> &effectCategoryOpt = effectInfo["EffectCategory"];
 	if (effectCategoryOpt)
 	{
 		const auto &effectCategoryStr = *effectCategoryOpt;
@@ -583,7 +658,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		}
 	}
 
-	const sol::optional<std::string> &effectGroupOpt = scriptInfo["EffectGroup"];
+	const sol::optional<std::string> &effectGroupOpt = effectInfo["EffectGroup"];
 	if (effectGroupOpt)
 	{
 		const auto &effectGroup = *effectGroupOpt;
@@ -597,7 +672,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		g_dictEffectGroupMemberCount[effectGroup]++;
 	}
 
-	const sol::optional<int> &shortcutKeycodeOpt = scriptInfo["ShortcutKeycode"];
+	const sol::optional<int> &shortcutKeycodeOpt = effectInfo["ShortcutKeycode"];
 	if (shortcutKeycodeOpt)
 	{
 		int shortcutKeycode = *shortcutKeycodeOpt;
@@ -607,18 +682,49 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 		}
 	}
 
-	ms_dictRegisteredScripts.emplace(szScriptId, LuaScript(szFileName, lua));
-	g_dictEnabledEffects.emplace(szScriptId, effectData);
-	g_RegisteredEffects.emplace_back(szScriptId);
+	// Exclude temporary effects from choices pool
+	effectData.SetAttribute(EEffectAttributes::IsTemporary, flags & ParseScript_IsTemporary);
 
-	LOG(szFileName << ": Registered effect \"" << szScriptName << "\" with id \"" << szScriptId << "\"");
+	ms_dictRegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScript_IsTemporary));
+	g_dictEnabledEffects.emplace(effectId, effectData);
+	g_RegisteredEffects.emplace_back(effectId);
+
+	if (flags & ParseScript_IsTemporary)
+	{
+		LOG(scriptName << ": Running temporary effect \"" << effectName << "\" with id \"" << effectId << "\"");
+
+		// Immediately dispatch it too
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->DispatchEffect(effectId);
+		}
+	}
+	else
+	{
+		LOG(scriptName << ": Registered effect \"" << effectName << "\" with id \"" << effectId << "\"");
+	}
+}
+
+static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
+{
+	const auto &path     = entry.path();
+	const auto &fileName = path.filename().string();
+
+	const auto &pathStr  = path.string();
+	LOG("Running script " << pathStr.substr(pathStr.find_last_of("\\") + 1));
+
+	std::ifstream fileStream(path.c_str());
+	std::stringstream buffer;
+	buffer << fileStream.rdbuf();
+
+	ParseScriptRaw(fileName, buffer.str());
 }
 
 namespace LuaScripts
 {
 	void Load()
 	{
-		ms_dictRegisteredScripts.clear();
+		ms_dictRegisteredEffects.clear();
 
 		ClearRegisteredScriptEffects();
 
@@ -658,22 +764,45 @@ namespace LuaScripts
 		}
 	}
 
-	_NODISCARD std::vector<std::string> GetScriptIds()
+	std::vector<std::string> GetEffectIds()
 	{
-		std::vector<std::string> rgScriptIds;
+		std::vector<std::string> effectIds;
 
-		for (const auto &pair : ms_dictRegisteredScripts)
+		for (const auto &pair : ms_dictRegisteredEffects)
 		{
-			rgScriptIds.push_back(pair.first);
+			effectIds.push_back(pair.first);
 		}
 
-		return rgScriptIds;
+		return effectIds;
 	}
 
-	void Execute(const std::string &szScriptId, const char *szFuncName)
+	void Execute(const std::string &effectId, ExecuteFuncType funcType)
 	{
-		const LuaScript &script = ms_dictRegisteredScripts.at(szScriptId);
+		const auto &script = ms_dictRegisteredEffects.at(effectId);
 
-		script.Execute(szFuncName);
+		switch (funcType)
+		{
+		case ExecuteFuncType::Start:
+			script.Execute("OnStart");
+			break;
+		case ExecuteFuncType::Stop:
+			script.Execute("OnStop");
+
+			// Yes, OnStop also gets called on non-timed effects
+			if (script.IsTemporary())
+			{
+				RemoveScriptEntry(effectId);
+			}
+
+			break;
+		case ExecuteFuncType::Tick:
+			script.Execute("OnTick");
+			break;
+		}
+	}
+
+	void RegisterScriptRawTemporary(std::string scriptName, std::string script)
+	{
+		ParseScriptRaw(scriptName, script, ParseScript_IsTemporary);
 	}
 }

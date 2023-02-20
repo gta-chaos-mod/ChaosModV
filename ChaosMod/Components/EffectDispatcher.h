@@ -127,6 +127,7 @@ class EffectDispatcher : public Component
 	                    bool bAddToLog = true);
 	void DispatchRandomEffect(const char *szSuffix = nullptr);
 
+	void ClearEffect(const EffectIdentifier &effectId);
 	void ClearEffects(bool bIncludePermanent = true);
 	void ClearActiveEffects(const EffectIdentifier &exclude = EffectIdentifier());
 	void ClearMostRecentEffect();

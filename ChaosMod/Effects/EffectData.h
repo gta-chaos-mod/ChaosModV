@@ -41,9 +41,15 @@ struct EffectData
 		}
 	}
 
-	inline bool ExcludedFromVoting() const
+	inline bool IsExcludedFromVoting() const
 	{
-		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting) || IsMeta() || IsUtility();
+		return static_cast<bool>(Attributes & EEffectAttributes::ExcludedFromVoting) || IsMeta() || IsUtility()
+		    || IsTemporary();
+	}
+
+	inline bool IsHidden() const
+	{
+		return IsTemporary();
 	}
 
 	inline bool HasCustomName() const
@@ -59,6 +65,11 @@ struct EffectData
 	inline bool IsUtility() const
 	{
 		return static_cast<bool>(Attributes & EEffectAttributes::IsUtility);
+	}
+
+	inline bool IsTemporary() const
+	{
+		return static_cast<bool>(Attributes & EEffectAttributes::IsTemporary);
 	}
 };
 

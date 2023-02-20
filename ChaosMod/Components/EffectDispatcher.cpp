@@ -464,7 +464,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 			                               effectTime);
 
 			// There might be a reason to include meta effects in the future, for now we will just exclude them
-			if (bAddToLog && !effectData.IsMeta())
+			if (bAddToLog && !effectData.IsMeta() && !effectData.IsHidden() && !effectData.IsUtility())
 			{
 				if (m_rgDispatchedEffectsLog.size() >= 100)
 				{
@@ -487,7 +487,8 @@ void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto &[effectIdentifier, effectData] : g_dictEnabledEffects)
 	{
-		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta() && !effectData.IsUtility())
+		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta() && !effectData.IsUtility()
+		    && !effectData.IsHidden())
 		{
 			choosableEffects.emplace(effectIdentifier, effectData);
 		}
@@ -520,6 +521,19 @@ void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
 	{
 		DispatchEffect(*pTargetEffectIdentifier, szSuffix);
 	}
+}
+
+void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
+{
+	auto result = std::find_if(m_rgActiveEffects.begin(), m_rgActiveEffects.end(),
+	                           [effectId](auto &activeEffect) { return activeEffect.m_EffectIdentifier == effectId; });
+	if (result == m_rgActiveEffects.end())
+	{
+		return;
+	}
+
+	EffectThreads::StopThread(result->m_ullThreadId);
+	m_rgActiveEffects.erase(result);
 }
 
 void EffectDispatcher::ClearEffects(bool bIncludePermanent)
