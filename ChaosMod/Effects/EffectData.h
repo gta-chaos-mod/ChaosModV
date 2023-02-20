@@ -49,7 +49,7 @@ struct EffectData
 
 	inline bool IsHidden() const
 	{
-		return IsTemporary();
+		return IsTemporary() || TimedType == EEffectTimedType::Permanent;
 	}
 
 	inline bool HasCustomName() const

@@ -9,8 +9,6 @@ namespace LuaScripts
 	void Load();
 	void Unload();
 
-	std::vector<std::string> GetEffectIds();
-
 	enum class ExecuteFuncType
 	{
 		Start,

@@ -3,6 +3,7 @@
 #include "Info.h"
 #include "LuaScripts.h"
 
+#include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 
 #include "Effects/Effect.h"
@@ -21,6 +22,8 @@
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
 #include "Util/Vehicle.h"
+
+#define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
 #ifdef _MSC_VER
 #define _LUAFUNC static __forceinline
@@ -46,7 +49,16 @@
 #define MAGIC_CATCH_END(x) }
 #endif
 
-#define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
+#define LUA_LOG(text)                                   \
+	do                                                  \
+	{                                                   \
+		LuaPrint((std::ostringstream() << text).str()); \
+	} while (0);
+#define LUA_SCRIPT_LOG(scriptName, text)                            \
+	do                                                              \
+	{                                                               \
+		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
+	} while (0);
 
 static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\custom_scripts" };
 
@@ -58,6 +70,11 @@ _LUAFUNC void LuaPrint(const std::string &szText)
 _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 {
 	COLOR_PREFIX_LOG("(" << szName << ")", szText);
+
+	if (ComponentExists<DebugSocket>())
+	{
+		GetComponent<DebugSocket>()->ScriptLog(szName, szText);
+	}
 }
 
 _LUAFUNC char *_TryParseString(void *pStr)
@@ -107,8 +124,8 @@ class LuaScript
 	bool m_bTemporary;
 
   public:
-	LuaScript(const std::string &fileName, sol::state &lua, bool temporary)
-	    : m_ScriptName(fileName), m_Lua(std::move(lua)), m_bTemporary(temporary)
+	LuaScript(const std::string &scriptName, sol::state &lua, bool temporary)
+	    : m_ScriptName(scriptName), m_Lua(std::move(lua)), m_bTemporary(temporary)
 	{
 	}
 
@@ -439,23 +456,39 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		return;
 	}
 
+	auto trim = [](std::string str) -> std::string
+	{
+		if (str.find_first_not_of(' ') == str.npos)
+		{
+			return "";
+		}
+
+		str = str.substr(str.find_first_not_of(' '));
+		str = str.substr(0, str.find_last_not_of(' ') == str.npos ? str.npos : str.find_last_not_of(' ') + 1);
+		return str;
+	};
+
 	const sol::optional<sol::table> &effectGroupInfoOpt = lua["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
 		const auto &effectGroupInfo                    = *effectGroupInfoOpt;
 
 		const sol::optional<std::string> &groupNameOpt = effectGroupInfo["Name"];
-		if (groupNameOpt)
+		if (!groupNameOpt)
 		{
-			const auto &groupName = *groupNameOpt;
+			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect group: Missing Name!");
+		}
+		else
+		{
+			const auto &groupName = trim(*groupNameOpt);
 
 			if (!(flags & ParseScript_IsTemporary))
 			{
 				const auto &result = g_dictEffectGroups.find(groupName);
 				if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 				{
-					LOG(scriptName << ": WARNING: Could not register effect group \"" << groupName
-					               << "\": Already registered!");
+					LUA_SCRIPT_LOG(scriptName, "WARNING: Could not register effect group \""
+					                               << groupName << "\": Already registered!");
 				}
 				else
 				{
@@ -470,18 +503,18 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 						    std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
 					}
 
-					LOG(scriptName << ": Registered effect group \"" << groupName
-					               << "\" with weight multiplier: " << g_dictEffectGroups[groupName].WeightMult);
+					LUA_SCRIPT_LOG(scriptName, "Registered effect group \""
+					                               << groupName << "\" with weight multiplier: "
+					                               << g_dictEffectGroups[groupName].WeightMult);
 				}
 			}
 		}
 	}
-
 	sol::optional<sol::table> effectInfoOpt = lua["EffectInfo"];
 	if (!effectInfoOpt)
 	{
 		// Backwards compatibility
-		effectInfoOpt = lua["ScriptInfo"].get<sol::table>();
+		effectInfoOpt = lua["ScriptInfo"].get<sol::optional<sol::table>>();
 		if (!effectInfoOpt)
 		{
 			return;
@@ -493,43 +526,31 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	const sol::optional<std::string> &effectNameOpt = effectInfo["Name"];
 	if (!effectNameOpt)
 	{
+		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Missing Name!");
 		return;
 	}
+	const auto &effectName = trim(*effectNameOpt);
+	if (effectName.empty())
+	{
+		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Invalid Name!");
+		return;
+	}
+
 	sol::optional<std::string> effectIdOpt = effectInfo["EffectId"];
 	if (!effectIdOpt)
 	{
 		// Also backwards compat
-		effectIdOpt = effectInfo["ScriptId"].get<std::string>();
+		effectIdOpt = effectInfo["ScriptId"].get<sol::optional<std::string>>();
 		if (!effectIdOpt)
 		{
+			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": Missing EffectId!");
 			return;
 		}
 	}
-
-	auto trim = [](std::string str) -> std::string
-	{
-		if (str.find_first_not_of(' ') == str.npos)
-		{
-			return "";
-		}
-
-		str = str.substr(str.find_first_not_of(' '));
-		str = str.substr(0, str.find_last_not_of(' ') == str.npos ? str.npos : str.find_last_not_of(' ') + 1);
-		return str;
-	};
-
 	const auto &effectId = trim(*effectIdOpt);
-	if (effectId.empty())
+	if (effectId.empty() || effectId.starts_with('.'))
 	{
-		// Id is empty
-		return;
-	}
-
-	const auto &effectName = trim(*effectNameOpt);
-
-	if (effectId.starts_with('.'))
-	{
-		LOG(scriptName << ": ERROR: Could not register effect \"" << effectName << "\": Invalid effect id!");
+		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": Invalid EffectId!");
 		return;
 	}
 
@@ -566,8 +587,8 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		}
 		if (bDoesIdAlreadyExist)
 		{
-			LOG(scriptName << ": ERROR: Could not register effect \"" << effectName << "\": Id \"" << effectId
-			               << "\" already registered!");
+			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": EffectId \""
+			                                                                 << effectId << "\" already exists!");
 
 			return;
 		}
@@ -601,7 +622,14 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		else if (szTimedTypeText == "Custom")
 		{
 			const sol::optional<int> &durationOpt = effectInfo["CustomTime"];
-			if (durationOpt)
+			if (!durationOpt)
+			{
+				LUA_SCRIPT_LOG(scriptName, "WARNING: TimedType \"custom\" for effect \""
+				                               << effectName
+				                               << " but no CustomTime defined? Falling back to \"Normal\" TimedType!");
+				effectData.TimedType = EEffectTimedType::Normal;
+			}
+			else
 			{
 				effectData.TimedType  = EEffectTimedType::Custom;
 				effectData.CustomTime = (std::max)(1, *durationOpt);
@@ -691,17 +719,15 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	if (flags & ParseScript_IsTemporary)
 	{
-		LOG(scriptName << ": Running temporary effect \"" << effectName << "\" with id \"" << effectId << "\"");
-
 		// Immediately dispatch it too
 		if (ComponentExists<EffectDispatcher>())
 		{
-			GetComponent<EffectDispatcher>()->DispatchEffect(effectId);
+			GetComponent<EffectDispatcher>()->DispatchEffect(effectId, nullptr, false);
 		}
 	}
 	else
 	{
-		LOG(scriptName << ": Registered effect \"" << effectName << "\" with id \"" << effectId << "\"");
+		LUA_SCRIPT_LOG(scriptName, "Registered effect \"" << effectName << "\" with id \"" << effectId << "\"");
 	}
 }
 
@@ -711,7 +737,7 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	const auto &fileName = path.filename().string();
 
 	const auto &pathStr  = path.string();
-	LOG("Running script " << pathStr.substr(pathStr.find_last_of("\\") + 1));
+	LUA_LOG("Running script " << pathStr.substr(pathStr.find_last_of("\\") + 1));
 
 	std::ifstream fileStream(path.c_str());
 	std::stringstream buffer;
@@ -762,18 +788,6 @@ namespace LuaScripts
 				it++;
 			}
 		}
-	}
-
-	std::vector<std::string> GetEffectIds()
-	{
-		std::vector<std::string> effectIds;
-
-		for (const auto &pair : ms_dictRegisteredEffects)
-		{
-			effectIds.push_back(pair.first);
-		}
-
-		return effectIds;
 	}
 
 	void Execute(const std::string &effectId, ExecuteFuncType funcType)

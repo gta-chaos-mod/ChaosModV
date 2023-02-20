@@ -40,7 +40,7 @@ inline const auto g_ModStartTime = std::time(nullptr);
 		_LOG("[" << std::put_time(&diffTimeTime, "%H:%M:%S") << "] " << _prefix << " " << _text << std::endl, g_Log); \
 		if (GetConsoleWindow())                                                                                       \
 		{                                                                                                             \
-			_LOG("\033[" << 90 + (std::hash<std::string> {}((std::stringstream() << _prefix).str()) % 6) << "m"       \
+			_LOG("\033[" << 90 + (std::hash<std::string> {}((std::ostringstream() << _prefix).str()) % 6) << "m"      \
 			             << _prefix << "\033[0m " << _text << std::endl,                                              \
 			     std::cout);                                                                                          \
 		}                                                                                                             \

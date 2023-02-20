@@ -22,7 +22,10 @@ static void QueueDelegate(DebugSocket *debugSocket, std::function<void()> delega
 static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
                            ix::WebSocket &webSocket, const json &payloadJson)
 {
+	// TODO: This isn't thread safe currently!
+
 	json effectsJson;
+	effectsJson["command"] = "result_fetch_effects";
 	for (const auto &[effectId, effectData] : g_dictEnabledEffects)
 	{
 		if (effectData.TimedType == EEffectTimedType::Permanent || effectData.IsHidden())
@@ -54,12 +57,20 @@ static void OnTriggerEffect(DebugSocket *debugSocket, std::shared_ptr<ix::Connec
 	}
 
 	auto targetEffectId = payloadJson["effect_id"].get<std::string>();
-
-	auto result         = g_dictEnabledEffects.find(targetEffectId);
-	if (result != g_dictEnabledEffects.end())
+	if (targetEffectId.empty())
 	{
-		QueueDelegate(debugSocket, [result]() { GetComponent<EffectDispatcher>()->DispatchEffect(result->first); });
+		return;
 	}
+
+	QueueDelegate(debugSocket,
+	              [targetEffectId]()
+	              {
+		              auto result = g_dictEnabledEffects.find(targetEffectId);
+		              if (result != g_dictEnabledEffects.end())
+		              {
+			              GetComponent<EffectDispatcher>()->DispatchEffect(result->first);
+		              }
+	              });
 }
 
 static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
@@ -75,19 +86,27 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
 		return;
 	}
 
-	QueueDelegate(debugSocket,
-	              [payloadJson]()
-	              {
-		              // Generate random hex value for script name
-		              std::string scriptName;
-		              scriptName.resize(8);
-		              for (int i = 0; i < 8; i++)
-		              {
-			              sprintf(scriptName.data() + i, "%x", g_Random.GetRandomInt(0, 16));
-		              }
+	auto script = payloadJson["script_raw"].get<std::string>();
+	if (script.empty())
+	{
+		return;
+	}
 
-		              LuaScripts::RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]);
-	              });
+	// Generate random hex value for script name
+	std::string scriptName;
+	scriptName.resize(8);
+	for (int i = 0; i < 8; i++)
+	{
+		sprintf(scriptName.data() + i, "%x", g_Random.GetRandomInt(0, 16));
+	}
+
+	json json;
+	json["command"]     = "result_exec_script";
+	json["script_name"] = scriptName;
+	webSocket.send(json.dump());
+
+	QueueDelegate(debugSocket, [payloadJson, scriptName]()
+	              { LuaScripts::RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]); });
 }
 
 static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
@@ -152,6 +171,24 @@ DebugSocket::~DebugSocket()
 void DebugSocket::Close()
 {
 	m_Server->stop();
+}
+
+void DebugSocket::ScriptLog(std::string_view scriptName, std::string_view text)
+{
+	if (!m_Server)
+	{
+		return;
+	}
+
+	json json;
+	json["command"]     = "script_log";
+	json["script_name"] = scriptName;
+	json["text"]        = text;
+
+	for (auto client : m_Server->getClients())
+	{
+		client->send(json.dump());
+	}
 }
 
 void DebugSocket::OnModPauseCleanup()
