@@ -3,6 +3,11 @@
 #include "Info.h"
 #include "SplashTexts.h"
 
+void SplashTexts::OnModPauseCleanup()
+{
+	m_activeSplashes.clear();
+}
+
 void SplashTexts::OnRun()
 {
 	float fFrameTime = GET_FRAME_TIME();

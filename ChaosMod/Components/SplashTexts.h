@@ -29,6 +29,7 @@ class SplashTexts : public Component
 
   public:
 	virtual void OnRun() override;
+	virtual void OnModPauseCleanup() override;
 
 	void ShowSplash(const std::string &szText, const ScreenTextVector &textPos, float fScale, ScreenTextColor textColor,
 	                float fTime);
