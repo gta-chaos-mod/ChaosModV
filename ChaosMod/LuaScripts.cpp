@@ -618,13 +618,20 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		else if (szTimedTypeText == "Permanent")
 		{
 			effectData.TimedType = EEffectTimedType::Permanent;
+
+			if (flags & ParseScript_IsTemporary)
+			{
+				LUA_SCRIPT_LOG(scriptName, "ERROR: TimedType \"Permanent\" for effect \""
+				                               << effectName
+				                               << " is invalid for temporary effects, please use another TimedType!");
+			}
 		}
 		else if (szTimedTypeText == "Custom")
 		{
 			const sol::optional<int> &durationOpt = effectInfo["CustomTime"];
 			if (!durationOpt)
 			{
-				LUA_SCRIPT_LOG(scriptName, "WARNING: TimedType \"custom\" for effect \""
+				LUA_SCRIPT_LOG(scriptName, "WARNING: TimedType \"Custom\" for effect \""
 				                               << effectName
 				                               << " but no CustomTime defined? Falling back to \"Normal\" TimedType!");
 				effectData.TimedType = EEffectTimedType::Normal;
