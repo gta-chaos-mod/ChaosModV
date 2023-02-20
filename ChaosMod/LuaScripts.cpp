@@ -71,10 +71,12 @@ _LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
 {
 	COLOR_PREFIX_LOG("(" << szName << ")", szText);
 
+#ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (ComponentExists<DebugSocket>())
 	{
 		GetComponent<DebugSocket>()->ScriptLog(szName, szText);
 	}
+#endif
 }
 
 _LUAFUNC char *_TryParseString(void *pStr)
