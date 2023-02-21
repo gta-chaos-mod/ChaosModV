@@ -15,7 +15,7 @@ struct EffectInfo
 	bool IsTimed         = false;
 	bool IsShortDuration = false;
 #ifdef _DEBUG
-	int DebugShortcutKeycode;
+	int DebugShortcutKeycode = 0;
 #endif
 	std::vector<std::string_view> IncompatibleWith;
 	EEffectCategory EffectCategory     = EEffectCategory::None;
