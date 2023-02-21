@@ -644,6 +644,11 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 				effectData.CustomTime = (std::max)(1, *durationOpt);
 			}
 		}
+		else
+		{
+			LUA_SCRIPT_LOG(scriptName, "WARNING: Unknown TimedType \""
+			                               << szTimedTypeText << "\" specified for effect \"" << effectName << "\"!");
+		}
 	}
 
 	const sol::optional<int> &weightMultOpt = effectInfo["WeightMultiplier"];
