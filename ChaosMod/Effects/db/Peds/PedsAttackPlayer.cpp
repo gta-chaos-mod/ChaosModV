@@ -8,8 +8,8 @@ static void OnStart()
 
 static void OnTick()
 {
-	static const Hash enemyGroupHash  = GET_HASH_KEY("_ATTACK_PLAYER");
-	static const Hash playerGroupHash = GET_HASH_KEY("PLAYER");
+	static const Hash enemyGroupHash  = "_ATTACK_PLAYER"_hash;
+	static const Hash playerGroupHash = "PLAYER"_hash;
 
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, enemyGroupHash, playerGroupHash);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroupHash, enemyGroupHash);

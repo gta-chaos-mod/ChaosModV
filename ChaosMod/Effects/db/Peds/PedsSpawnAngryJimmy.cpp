@@ -11,9 +11,9 @@ static void OnStart()
 	Ped playerPed                   = PLAYER_PED_ID();
 	Vector3 playerPos               = GET_ENTITY_COORDS(playerPed, false);
 
-	static const Hash playerGroup   = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup      = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup   = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroup   = "PLAYER"_hash;
+	static const Hash civGroup      = "CIVMALE"_hash;
+	static const Hash femCivGroup   = "CIVFEMALE"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_JIMMY", &relationshipGroup);
@@ -40,7 +40,7 @@ static void OnStart()
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_COMBATMG"), 9999, true, true);
+	GIVE_WEAPON_TO_PED(ped, "WEAPON_COMBATMG"_hash, 9999, true, true);
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);

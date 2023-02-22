@@ -15,8 +15,8 @@ static void OnStop()
 
 static void OnTick()
 {
-	static const Hash riotGroupHash   = GET_HASH_KEY("_RIOT");
-	static const Hash playerGroupHash = GET_HASH_KEY("PLAYER");
+	static const Hash riotGroupHash   = "_RIOT"_hash;
+	static const Hash playerGroupHash = "PLAYER"_hash;
 
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, riotGroupHash);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, riotGroupHash, playerGroupHash);

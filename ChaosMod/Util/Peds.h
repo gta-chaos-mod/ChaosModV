@@ -8,9 +8,9 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3 *location =
 {
 	Ped playerPed                 = PLAYER_PED_ID();
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroup = "PLAYER"_hash;
+	static const Hash civGroup    = "CIVMALE"_hash;
+	static const Hash femCivGroup = "CIVFEMALE"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_PED", &relationshipGroup);

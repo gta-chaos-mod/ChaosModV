@@ -86,7 +86,7 @@ static void OnStart()
 						{
 							WAIT(0);
 						}
-						Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
+						Hash pistolHash = "WEAPON_PISTOL"_hash;
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
 						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150.f, 1, 0.f, false, false,
 						               false);

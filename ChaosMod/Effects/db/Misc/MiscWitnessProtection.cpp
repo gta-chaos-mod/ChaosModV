@@ -27,7 +27,7 @@ static void OnTick()
 	// Create new bodyguards if non available
 	if (orbitingPeds.empty())
 	{
-		static Hash pedHash = GET_HASH_KEY("MP_M_FIBSec_01");
+		static Hash pedHash = "MP_M_FIBSec_01"_hash;
 		LoadModel(pedHash);
 		for (int i = 0; i < pedCount; i++)
 		{
