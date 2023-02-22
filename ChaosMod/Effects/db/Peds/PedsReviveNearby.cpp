@@ -6,7 +6,7 @@ static void OnStart()
 {
 	static const Hash playerGroup = "PLAYER"_hash;
 	static const Hash civGroup    = "CIVMALE"_hash;
-	static const Hash femCivGroup = "CIVFEMALE "_hash;
+	static const Hash femCivGroup = "CIVFEMALE"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_REVIVED", &relationshipGroup);
