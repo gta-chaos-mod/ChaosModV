@@ -11,7 +11,7 @@ static void OnStart()
 	// Set time to night
 	SET_CLOCK_TIME(0, 0, 0);
 
-	Hash weaponHash = GET_HASH_KEY("weapon_firework");
+	Hash weaponHash = "weapon_firework"_hash;
 	for (Ped pd : GetAllPeds())
 	{
 		GIVE_WEAPON_TO_PED(pd, weaponHash, 9999, true, true);

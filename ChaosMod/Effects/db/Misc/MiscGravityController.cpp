@@ -76,7 +76,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
 
 static void OnStartInvert()
 {
-	GIVE_WEAPON_TO_PED(PLAYER_PED_ID(), GET_HASH_KEY("WEAPON_PARACHUTE"), 9999, true, true);
+	GIVE_WEAPON_TO_PED(PLAYER_PED_ID(), "WEAPON_PARACHUTE"_hash, 9999, true, true);
 }
 
 static void OnTickInvert()

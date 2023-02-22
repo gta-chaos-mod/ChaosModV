@@ -4,7 +4,7 @@
 
 static void OnStartRPG()
 {
-	static const Hash rpgHash = GET_HASH_KEY("WEAPON_RPG");
+	static const Hash rpgHash = "WEAPON_RPG"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -25,7 +25,7 @@ REGISTER_EFFECT(OnStartRPG, nullptr, nullptr, EffectInfo
 
 static void OnStartTazer()
 {
-	static const Hash tazerHash = GET_HASH_KEY("WEAPON_STUNGUN");
+	static const Hash tazerHash = "WEAPON_STUNGUN"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -46,7 +46,7 @@ REGISTER_EFFECT(OnStartTazer, nullptr, nullptr, EffectInfo
 
 static void OnStartMinigun()
 {
-	static const Hash minigunHash = GET_HASH_KEY("WEAPON_MINIGUN");
+	static const Hash minigunHash = "WEAPON_MINIGUN"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -67,7 +67,7 @@ REGISTER_EFFECT(OnStartMinigun, nullptr, nullptr, EffectInfo
 
 static void OnStartUpNAtomizer()
 {
-	static const Hash raypistolHash = GET_HASH_KEY("WEAPON_RAYPISTOL");
+	static const Hash raypistolHash = "WEAPON_RAYPISTOL"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -111,7 +111,7 @@ REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 
 static void OnStartRailgun()
 {
-	static const Hash railgunHash = GET_HASH_KEY("WEAPON_RAILGUN");
+	static const Hash railgunHash = "WEAPON_RAILGUN"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -132,7 +132,7 @@ REGISTER_EFFECT(OnStartRailgun, nullptr, nullptr, EffectInfo
 
 static void OnStartBattleAxe()
 {
-	static const Hash axeHash = GET_HASH_KEY("WEAPON_BATTLEAXE");
+	static const Hash axeHash = "WEAPON_BATTLEAXE"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
