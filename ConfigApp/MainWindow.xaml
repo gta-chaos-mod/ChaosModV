@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:local="clr-namespace:ConfigApp"
-        x:Class="ConfigApp.MainWindow"
+        xmlns:local="clr-namespace:ConfigApp" d:DataContext="{d:DesignInstance Type=local:TreeMenuItem}"
+    x:Class="ConfigApp.MainWindow"
         mc:Ignorable="d"
         Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
     <Grid>
@@ -338,6 +338,58 @@
                                           HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                             </Grid>
                         </Grid>
+                    </Grid>
+                </TabItem>
+
+                <TabItem x:Name="workshop_tab" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <TabItem.Header>
+                        <Label Content="Workshop" MouseLeftButtonDown="tab_workshop_Click" HorizontalAlignment="Stretch"/>
+                    </TabItem.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="300" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Label Content="NOTE: This is still experimental!"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ItemsControl x:Name="workshop_submission_items_datagrid">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Top" Width="{Binding ElementName=MainGrid, Path=ActualWidth}"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30" />
+                                                <RowDefinition Height="90" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40" />
+                                                <ColumnDefinition Width="360" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Image Grid.Row="0" Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" Source="{Binding SubmissionIcon}" />
+                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
+                                            <Label Grid.Row="1" Grid.Column="0" Content="{Binding Version}" />
+                                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Description}" />
+                                            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Width="70" Height="40" Margin="0,0,10,0" Content="{Binding InstallButtonText}"
+                                                IsEnabled="{Binding InstallButtonEnabled}" Command="{Binding InstallButtonCommand}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
 
