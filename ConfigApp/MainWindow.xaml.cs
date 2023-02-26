@@ -588,6 +588,8 @@ namespace ConfigApp
                 }
             }
 
+            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(m_WorkshopSubmissionItems.OrderBy(item => item.InstallState).ThenBy(item => item.Name));
+
             workshop_submission_items_datagrid.ItemsSource = m_WorkshopSubmissionItems;
         }
 

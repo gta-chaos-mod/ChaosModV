@@ -22,12 +22,13 @@ namespace ConfigApp
         public string Sha256 { get; set; }
         public BitmapSource SubmissionIcon { get; set; }
 
+        // In order for sorting
         public enum SubmissionInstallState
         {
-            NotInstalled,
-            Installed,
-            Installing,
             UpdateAvailable,
+            Installed,
+            NotInstalled,
+            Installing,
             Removing
         }
         private SubmissionInstallState m_InstallState = SubmissionInstallState.NotInstalled;
