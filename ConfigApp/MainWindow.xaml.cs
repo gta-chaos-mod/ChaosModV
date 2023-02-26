@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -26,7 +29,8 @@ namespace ConfigApp
 
         private Dictionary<string, TreeMenuItem> m_TreeMenuItemsMap;
         private Dictionary<string, EffectData> m_EffectDataMap;
-        private List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new List<WorkshopSubmissionItem>();
+
+        private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>();
 
         public MainWindow()
         {
@@ -561,7 +565,7 @@ namespace ConfigApp
                         var lastUpdated = (int)json["lastupdated"];
                         var sha256 = (string)json["sha256"];
 
-                        var foundSubmissionItem = m_WorkshopSubmissionItems.Find((submissionItem) => { return submissionItem.Id == id; });
+                        var foundSubmissionItem = m_WorkshopSubmissionItems.First((submissionItem) => { return submissionItem.Id == id; });
                         if (foundSubmissionItem == null)
                         {
                             MessageBox.Show($"Local submission \"{id}\" does not exist remotely.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);

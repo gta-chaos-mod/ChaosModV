@@ -377,15 +377,15 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="40" />
+                                                <ColumnDefinition Width="50" />
                                                 <ColumnDefinition Width="360" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
 
                                             <Image Grid.Row="0" Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" Source="{Binding SubmissionIcon}" />
-                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Name}" />
-                                            <Label Grid.Row="1" Grid.Column="0" Content="{Binding Version}" />
-                                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding Description}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Name}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="{Binding Version}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Description}" />
                                             <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Width="70" Height="40" Margin="0,0,10,0" Content="{Binding InstallButtonText}"
                                                 IsEnabled="{Binding InstallButtonEnabled}" Command="{Binding InstallButtonCommand}" />
                                         </Grid>
