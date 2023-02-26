@@ -607,7 +607,7 @@ namespace ConfigApp
             DisplayWorkshopFetchContentFailure();
         }
 
-        private void workshop_tab_Click(object sender, MouseButtonEventArgs e)
+        private async void workshop_tab_Click(object sender, MouseButtonEventArgs e)
         {
             // Only fetch them once
             if (m_WorkshopSubmissionItems.Count > 0)
@@ -635,7 +635,7 @@ namespace ConfigApp
             }
             else
             {
-                ForceRefreshWorkshopContentFromRemote();
+                await ForceRefreshWorkshopContentFromRemote();
             }
         }
 

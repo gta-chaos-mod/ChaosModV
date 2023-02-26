@@ -27,7 +27,8 @@ namespace ConfigApp
             NotInstalled,
             Installed,
             Installing,
-            UpdateAvailable
+            UpdateAvailable,
+            Removing
         }
         private SubmissionInstallState m_InstallState = SubmissionInstallState.NotInstalled;
 
@@ -46,8 +47,8 @@ namespace ConfigApp
                         InstallButtonEnabled = true;
                         break;
                     case SubmissionInstallState.Installed:
-                        InstallButtonText = "Installed";
-                        InstallButtonEnabled = false;
+                        InstallButtonText = "Remove";
+                        InstallButtonEnabled = true;
                         break;
                     case SubmissionInstallState.Installing:
                         InstallButtonText = "Installing";
@@ -56,6 +57,10 @@ namespace ConfigApp
                     case SubmissionInstallState.UpdateAvailable:
                         InstallButtonText = "Update";
                         InstallButtonEnabled = true;
+                        break;
+                    case SubmissionInstallState.Removing:
+                        InstallButtonText = "Removing";
+                        InstallButtonEnabled = false;
                         break;
                 }
 

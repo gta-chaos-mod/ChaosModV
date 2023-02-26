@@ -25,8 +25,8 @@ namespace ConfigApp
 
         public bool CanExecute(object parameter)
         {
-            return m_SubmissionItem.InstallState == WorkshopSubmissionItem.SubmissionInstallState.NotInstalled
-                || m_SubmissionItem.InstallState == WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
+            return m_SubmissionItem.InstallState != WorkshopSubmissionItem.SubmissionInstallState.Installing
+                && m_SubmissionItem.InstallState != WorkshopSubmissionItem.SubmissionInstallState.Removing;
         }
 
         public async void Execute(object parameter)
@@ -41,6 +41,32 @@ namespace ConfigApp
             {
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
             });
+
+            var targetDirName = $"scripts/workshop/{m_SubmissionItem.Id}";
+
+            if (m_SubmissionItem.InstallState == WorkshopSubmissionItem.SubmissionInstallState.Installed)
+            {
+                // Remove submission
+                m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Removing;
+
+                try
+                {
+                    Directory.Delete(targetDirName, true);
+                }
+                catch (DirectoryNotFoundException)
+                {
+
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    fatalCleanup();
+                    return;
+                }
+
+                m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
+                return;
+            }
 
             m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installing;
 
@@ -72,8 +98,6 @@ namespace ConfigApp
                     fatalCleanup();
                     return;
                 }
-
-                var targetDirName = $"scripts/workshop/{m_SubmissionItem.Id}";
 
                 using (ZipArchive archive = new ZipArchive(fileStream))
                 {
