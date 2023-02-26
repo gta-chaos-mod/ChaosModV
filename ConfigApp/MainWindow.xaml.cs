@@ -9,13 +9,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Shared; 
-
+using Shared;
+using Xceed.Wpf.Toolkit;
 using static ConfigApp.Effects;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ConfigApp
 {
@@ -102,12 +104,12 @@ namespace ConfigApp
                 }
                 else
                 {
-                    update_available_label.Content = "You are on the newest version of the mod!";
+                    update_available_label.Text = "You are on the newest version of the mod!";
                 }
             }
             catch (HttpRequestException)
             {
-                update_available_label.Content = "Unable to check for new updates!";
+                update_available_label.Text = "Unable to check for new updates!";
             }
         }
 
@@ -512,6 +514,13 @@ namespace ConfigApp
             MessageBox.Show("Error occured while trying to fetch submissions from server! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        private void HandleWorkshopSubmissionsSearchFilter()
+        {
+            var transformedText = workshop_search.Text.Trim().ToLower();
+            var view = CollectionViewSource.GetDefaultView(m_WorkshopSubmissionItems);
+            view.Filter = submissionItem => ((WorkshopSubmissionItem)submissionItem).Name.ToLower().Contains(transformedText);
+        }
+
         private void ParseWorkshopSubmissionsFile(string fileContent)
         {
             m_WorkshopSubmissionItems.Clear();
@@ -591,6 +600,8 @@ namespace ConfigApp
             m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(m_WorkshopSubmissionItems.OrderBy(item => item.InstallState).ThenBy(item => item.Name));
 
             workshop_submission_items_datagrid.ItemsSource = m_WorkshopSubmissionItems;
+
+            HandleWorkshopSubmissionsSearchFilter();
         }
 
         private async Task ForceRefreshWorkshopContentFromRemote()
@@ -652,6 +663,11 @@ namespace ConfigApp
             button.IsEnabled = false;
             await ForceRefreshWorkshopContentFromRemote();
             button.IsEnabled = true;
+        }
+
+        private void workshop_search_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HandleWorkshopSubmissionsSearchFilter();
         }
 
         private void contribute_modpage_Click(object sender, RoutedEventArgs e)
