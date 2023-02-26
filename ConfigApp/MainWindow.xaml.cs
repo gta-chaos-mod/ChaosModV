@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -458,7 +459,7 @@ namespace ConfigApp
             }
         }
 
-        private void twitch_user_agreed_Clicked(object sender, RoutedEventArgs e)
+        private void twitch_user_agreed_Click(object sender, RoutedEventArgs e)
         {
             TwitchTabHandleAgreed();
         }
@@ -502,68 +503,46 @@ namespace ConfigApp
             }
         }
 
-        private async void tab_workshop_Click(object sender, MouseButtonEventArgs e)
+        private void DisplayWorkshopFetchContentFailure()
         {
-            if (m_WorkshopSubmissionItems.Count > 0)
-            {
-                return;
-            };
+            MessageBox.Show("Error occured while trying to fetch submissions from server! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
-            var addFailureDummyItem = new Action(() =>
-            {
-                var submissionItem = new WorkshopSubmissionItem();
-                submissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                submissionItem.Name = "Error :(";
-                submissionItem.Description = "No connection to server.\n(Browsing local submissions will be implemented soon)";
-                m_WorkshopSubmissionItems.Add(submissionItem);
+        private void ParseWorkshopSubmissionsFile(string fileContent)
+        {
+            m_WorkshopSubmissionItems.Clear();
 
-                workshop_submission_items_datagrid.ItemsSource = m_WorkshopSubmissionItems;
-            });
-
-            HttpClient httpClient = new HttpClient();
             try
             {
-                var result = await httpClient.GetAsync("http://chaos.gopong.dev/workshop/fetch_submissions");
-                if (!result.IsSuccessStatusCode)
+                var json = JObject.Parse(fileContent);
+                foreach (var submissionJson in json["submissions"])
                 {
-                    addFailureDummyItem();
-                    return;
-                }
-
-                try
-                {
-                    var json = JObject.Parse(await result.Content?.ReadAsStringAsync());
-                    foreach (var submissionJson in json["submissions"])
+                    WorkshopSubmissionItem submission = new WorkshopSubmissionItem();
+                    if (submissionJson["name"] == null || submissionJson["id"] == null)
                     {
-                        WorkshopSubmissionItem submission = new WorkshopSubmissionItem();
-                        if (submissionJson["name"] == null || submissionJson["id"] == null)
-                        {
-                            continue;
-                        }
-                        submission.Name = (string)submissionJson["name"];
-                        submission.Id = (string)submissionJson["id"];
-                        submission.Version = $"v{(string)submissionJson["version"]}";
-                        submission.Description = (string)submissionJson["description"];
-                        submission.LastUpdated = (int)submissionJson["lastupdated"];
-                        submission.Sha256 = (string)submissionJson["sha256"];
-
-                        m_WorkshopSubmissionItems.Add(submission);
+                        continue;
                     }
-                }
-                catch (JsonReaderException)
-                {
-                    addFailureDummyItem();
-                    return;
+                    submission.Name = (string)submissionJson["name"];
+                    submission.Id = (string)submissionJson["id"];
+                    submission.Version = $"v{(string)submissionJson["version"]}";
+                    submission.Description = (string)submissionJson["description"];
+                    submission.LastUpdated = (int)submissionJson["lastupdated"];
+                    submission.Sha256 = (string)submissionJson["sha256"];
+
+                    m_WorkshopSubmissionItems.Add(submission);
                 }
             }
-            catch (HttpRequestException)
+            catch (JsonReaderException)
             {
-                addFailureDummyItem();
+                DisplayWorkshopFetchContentFailure();
                 return;
             }
 
-            if (Directory.Exists("scripts/workshop/"))
+            if (Directory.Exists("scripts/"))
             {
+                // Cache submissions
+                File.WriteAllText("scripts/workshop/submissions_cached.json", fileContent);
+
                 foreach (var directory in Directory.GetDirectories("scripts/workshop/"))
                 {
                     var id = directory.Split('/')[2];
@@ -590,7 +569,7 @@ namespace ConfigApp
                         }
                         else if (foundSubmissionItem.Version != version || foundSubmissionItem.LastUpdated != lastUpdated || foundSubmissionItem.Sha256 != sha256)
                         {
-                            foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;                   
+                            foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
                         }
                         else
                         {
@@ -608,22 +587,83 @@ namespace ConfigApp
             workshop_submission_items_datagrid.ItemsSource = m_WorkshopSubmissionItems;
         }
 
-        private void contribute_modpage_click(object sender, RoutedEventArgs e)
+        private async Task ForceRefreshWorkshopContentFromRemote()
+        {
+            HttpClient httpClient = new HttpClient();
+            try
+            {
+                var result = await httpClient.GetAsync("http://chaos.gopong.dev/workshop/fetch_submissions");
+                if (result.IsSuccessStatusCode)
+                {
+                    ParseWorkshopSubmissionsFile(await result.Content?.ReadAsStringAsync());
+                    return;
+                }
+            }
+            catch (HttpRequestException)
+            {
+
+            }
+
+            DisplayWorkshopFetchContentFailure();
+        }
+
+        private void workshop_tab_Click(object sender, MouseButtonEventArgs e)
+        {
+            // Only fetch them once
+            if (m_WorkshopSubmissionItems.Count > 0)
+            {
+                return;
+            };
+
+            string fileContent = null;
+            // Use cached content if existing (and accessible), otherwise fall back to server request
+            if (File.Exists("scripts/workshop/submissions_cached.json"))
+            {
+                try
+                {
+                    fileContent = File.ReadAllText("scripts/workshop/submissions_cached.json");
+                }
+                catch (IOException)
+                {
+
+                }
+            }
+
+            if (fileContent != null)
+            {
+                ParseWorkshopSubmissionsFile(fileContent);
+            }
+            else
+            {
+                ForceRefreshWorkshopContentFromRemote();
+            }
+        }
+
+        private async void workshop_refresh_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+
+            button.IsEnabled = false;
+            await ForceRefreshWorkshopContentFromRemote();
+            button.IsEnabled = true;
+        }
+
+        private void contribute_modpage_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
         }
 
-        private void contribute_github_click(object sender, RoutedEventArgs e)
+        private void contribute_github_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/gta-chaos-mod/ChaosModV");
         }
 
-        private void contribute_donate_click(object sender, RoutedEventArgs e)
+        private void contribute_donate_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://paypal.me/EmrCue");
         }
 
-        private void contribute_discord_click(object sender, RoutedEventArgs e)
+        private void contribute_discord_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
         }

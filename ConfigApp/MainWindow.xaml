@@ -245,7 +245,7 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <CheckBox x:Name="twitch_user_agreed" Content="Enable Twitch Voting" Grid.Row="1"
                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Click="twitch_user_agreed_Clicked" />
+                                      Click="twitch_user_agreed_Click" />
                         </Grid>
 
                         <Grid Grid.Row="1">
@@ -343,7 +343,7 @@
 
                 <TabItem x:Name="workshop_tab" Background="#FFF0F0F0" BorderBrush="LightGray">
                     <TabItem.Header>
-                        <Label Content="Workshop" MouseLeftButtonDown="tab_workshop_Click" HorizontalAlignment="Stretch"/>
+                        <Label Content="Workshop" MouseLeftButtonDown="workshop_tab_Click" HorizontalAlignment="Stretch"/>
                     </TabItem.Header>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -356,6 +356,9 @@
                         <Grid>
                             <Label Content="NOTE: This is still experimental!"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Button HorizontalAlignment="Right" Width="25" ToolTip="Refresh" Click="workshop_refresh_Click">
+                                <TextBlock Text="⟳" FontSize="19" Margin="0,-4,0,0"/>
+                            </Button>
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -412,22 +415,22 @@
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="GTA5-Mods" Width="75" Grid.Row="0" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
-                                Click="contribute_modpage_click" />
+                                Click="contribute_modpage_Click" />
                         <Label Content="Enjoying the mod? Buy me a coffee! :)" Grid.Row="1" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="PayPal" Width="75" Grid.Row="1" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
-                                Click="contribute_donate_click" />
+                                Click="contribute_donate_Click" />
                         <Label Content="Want to contribute to the mod? It's open source!" Grid.Row="2" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="GitHub" Width="75" Grid.Row="2" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
-                                Click="contribute_github_click" />
+                                Click="contribute_github_Click" />
                         <Label Content="Join our Discord for announcements, support and more!" Grid.Row="3" Grid.Column="0"
                                HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <Button Content="Discord" Width="75" Grid.Row="3" Grid.Column="2"
                                 HorizontalAlignment="Left" VerticalAlignment="Center"
-                                Click="contribute_discord_click"/>
+                                Click="contribute_discord_Click"/>
                     </Grid>
                 </TabItem>
             </TabControl>
@@ -447,7 +450,7 @@
                    HorizontalAlignment="Right" VerticalAlignment="Center" />
             <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Visibility="Hidden" Click="contribute_modpage_click" />
+                    Visibility="Hidden" Click="contribute_modpage_Click" />
             <Button x:Name="user_reset" Content="Reset" Height="40" Grid.Column="3"
                     VerticalAlignment="Center"
                     Click="user_reset_Click" />
