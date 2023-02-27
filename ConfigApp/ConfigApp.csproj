@@ -241,6 +241,7 @@
     <Compile Include="EffectsTreeMenuItem.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="WorkshopInfoHandler.cs" />
     <Compile Include="WorkshopInstallHandler.cs" />
     <Compile Include="WorkshopSubmissionItem.cs" />
     <Page Include="MainWindow.xaml">

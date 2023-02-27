@@ -3,8 +3,6 @@ using System.Net.Http;
 using System.Windows.Input;
 using System.Windows;
 using System.IO;
-using System.Windows.Controls;
-using System.Collections.Generic;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using Newtonsoft.Json.Linq;

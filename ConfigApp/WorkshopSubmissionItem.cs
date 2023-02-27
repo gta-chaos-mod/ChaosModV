@@ -80,6 +80,14 @@ namespace ConfigApp
         public string InstallButtonText { get; private set; } = "Install";
         public bool InstallButtonEnabled { get; private set; } = true;
 
+        public ICommand InfoButtonCommand
+        {
+            get
+            {
+                return new WorkshopInfoHandler(this);
+            }
+        }
+
         public WorkshopSubmissionItem()
         {
             if (ms_DefaultIcon == null)

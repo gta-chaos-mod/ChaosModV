@@ -523,11 +523,12 @@ namespace ConfigApp
 
         private void ParseWorkshopSubmissionsFile(string fileContent)
         {
-            m_WorkshopSubmissionItems.Clear();
-
-            try
             {
                 var json = JObject.Parse(fileContent);
+
+                // Only clear after trying to parse
+                m_WorkshopSubmissionItems.Clear();
+
                 foreach (var submissionObject in json["submissions"].ToObject<Dictionary<string, dynamic>>())
                 {
                     var submissionId = submissionObject.Key;
@@ -544,11 +545,6 @@ namespace ConfigApp
 
                     m_WorkshopSubmissionItems.Add(submission);
                 }
-            }
-            catch (JsonReaderException)
-            {
-                DisplayWorkshopFetchContentFailure();
-                return;
             }
 
             if (Directory.Exists("scripts/"))
@@ -618,10 +614,12 @@ namespace ConfigApp
             }
             catch (HttpRequestException)
             {
-
+                DisplayWorkshopFetchContentFailure();
             }
-
-            DisplayWorkshopFetchContentFailure();
+            catch (JsonException)
+            {
+                MessageBox.Show($"Remote provided a malformed master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async void workshop_tab_Click(object sender, MouseButtonEventArgs e)

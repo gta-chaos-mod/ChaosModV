@@ -375,21 +375,24 @@
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="30" />
-                                                <RowDefinition Height="90" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="40" />
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="50" />
-                                                <ColumnDefinition Width="360" />
+                                                <ColumnDefinition Width="340" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
 
                                             <Image Grid.Row="0" Grid.Column="0" Width="20" Height="20" HorizontalAlignment="Left" Source="{Binding SubmissionIcon}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Name}" />
                                             <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="{Binding Version}" />
-                                            <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Description}" />
-                                            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Width="70" Height="40" Margin="0,0,10,0" Content="{Binding InstallButtonText}"
-                                                IsEnabled="{Binding InstallButtonEnabled}" Command="{Binding InstallButtonCommand}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" MinHeight="70" MaxHeight="150" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Description}" />
+                                            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,80,0" Content="i" FontFamily="Webdings"
+                                                    Command="{Binding InfoButtonCommand}" />
+                                            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="60" Height="30" Margin="0,0,10,0" Content="{Binding InstallButtonText}"
+                                                    IsEnabled="{Binding InstallButtonEnabled}" Command="{Binding InstallButtonCommand}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
