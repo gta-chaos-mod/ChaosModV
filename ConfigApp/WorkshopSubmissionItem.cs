@@ -14,10 +14,11 @@ namespace ConfigApp
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Name { get; set; }
         public string Id { get; set; }
-        public string Version { get; set; }
+        public string Name { get; set; }
+        public string Author { get; set; }
         public string Description { get; set; }
+        public string Version { get; set; }
         public int LastUpdated { get; set; }
         public string Sha256 { get; set; }
         public BitmapSource SubmissionIcon { get; set; }

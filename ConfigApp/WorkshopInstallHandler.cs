@@ -122,6 +122,7 @@ namespace ConfigApp
 
                 JObject metadataJson = new JObject();
                 metadataJson["name"] = m_SubmissionItem.Name;
+                metadataJson["author"] = m_SubmissionItem.Author;
                 metadataJson["description"] = m_SubmissionItem.Description;
                 metadataJson["version"] = m_SubmissionItem.Version;
                 metadataJson["lastupdated"] = m_SubmissionItem.LastUpdated;

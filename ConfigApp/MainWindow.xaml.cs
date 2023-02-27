@@ -528,19 +528,19 @@ namespace ConfigApp
             try
             {
                 var json = JObject.Parse(fileContent);
-                foreach (var submissionJson in json["submissions"])
+                foreach (var submissionObject in json["submissions"].ToObject<Dictionary<string, dynamic>>())
                 {
+                    var submissionId = submissionObject.Key;
+                    var submissionData = submissionObject.Value;
+
                     WorkshopSubmissionItem submission = new WorkshopSubmissionItem();
-                    if (submissionJson["name"] == null || submissionJson["id"] == null)
-                    {
-                        continue;
-                    }
-                    submission.Name = (string)submissionJson["name"];
-                    submission.Id = (string)submissionJson["id"];
-                    submission.Version = $"v{(string)submissionJson["version"]}";
-                    submission.Description = (string)submissionJson["description"];
-                    submission.LastUpdated = (int)submissionJson["lastupdated"];
-                    submission.Sha256 = (string)submissionJson["sha256"];
+                    submission.Id = submissionId;
+                    submission.Name = submissionData.name;
+                    submission.Author = submissionData.author;
+                    submission.Description = submissionData.description;
+                    submission.Version = $"v{submissionData.version}";
+                    submission.LastUpdated = submissionData.lastupdated;
+                    submission.Sha256 = submissionData.sha256;
 
                     m_WorkshopSubmissionItems.Add(submission);
                 }
@@ -574,7 +574,7 @@ namespace ConfigApp
                         var lastUpdated = (int)json["lastupdated"];
                         var sha256 = (string)json["sha256"];
 
-                        var foundSubmissionItem = m_WorkshopSubmissionItems.First((submissionItem) => { return submissionItem.Id == id; });
+                        var foundSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
                         if (foundSubmissionItem == null)
                         {
                             MessageBox.Show($"Local submission \"{id}\" does not exist remotely.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -589,7 +589,7 @@ namespace ConfigApp
                             foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
                         }
                     }
-                    catch (Exception)
+                    catch (JsonException)
                     {
                         MessageBox.Show($"Local submission \"{id}\" has a corrupt metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
                         continue;
@@ -648,7 +648,15 @@ namespace ConfigApp
 
             if (fileContent != null)
             {
-                ParseWorkshopSubmissionsFile(fileContent);
+                try
+                {
+                    ParseWorkshopSubmissionsFile(fileContent);
+                }
+                catch (JsonReaderException)
+                {
+                    // Cached file is corrupt, force reload
+                    await ForceRefreshWorkshopContentFromRemote();
+                }
             }
             else
             {
