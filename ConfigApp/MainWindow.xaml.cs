@@ -547,49 +547,46 @@ namespace ConfigApp
                 }
             }
 
-            if (Directory.Exists("scripts/"))
+            // Cache submissions
+            File.WriteAllText("workshop/submissions_cached.json", fileContent);
+
+            foreach (var directory in Directory.GetDirectories("workshop/"))
             {
-                // Cache submissions
-                File.WriteAllText("scripts/workshop/submissions_cached.json", fileContent);
+                var id = directory.Split('/')[2];
 
-                foreach (var directory in Directory.GetDirectories("scripts/workshop/"))
+                if (!File.Exists($"{directory}/metadata.json"))
                 {
-                    var id = directory.Split('/')[2];
+                    MessageBox.Show($"Local submission \"{id}\" is missing a metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    continue;
+                }
 
-                    if (!File.Exists($"{directory}/metadata.json"))
+                try
+                {
+                    var json = JObject.Parse(File.ReadAllText($"{directory}/metadata.json"));
+
+                    var version = (string)json["version"];
+                    var lastUpdated = (int)json["lastupdated"];
+                    var sha256 = (string)json["sha256"];
+
+                    var foundSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
+                    if (foundSubmissionItem == null)
                     {
-                        MessageBox.Show($"Local submission \"{id}\" is missing a metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show($"Local submission \"{id}\" does not exist remotely.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
                         continue;
                     }
-
-                    try
+                    else if (foundSubmissionItem.Version != version || foundSubmissionItem.LastUpdated != lastUpdated || foundSubmissionItem.Sha256 != sha256)
                     {
-                        var json = JObject.Parse(File.ReadAllText($"{directory}/metadata.json"));
-
-                        var version = (string)json["version"];
-                        var lastUpdated = (int)json["lastupdated"];
-                        var sha256 = (string)json["sha256"];
-
-                        var foundSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
-                        if (foundSubmissionItem == null)
-                        {
-                            MessageBox.Show($"Local submission \"{id}\" does not exist remotely.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            continue;
-                        }
-                        else if (foundSubmissionItem.Version != version || foundSubmissionItem.LastUpdated != lastUpdated || foundSubmissionItem.Sha256 != sha256)
-                        {
-                            foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                        }
-                        else
-                        {
-                            foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                        }
+                        foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
                     }
-                    catch (JsonException)
+                    else
                     {
-                        MessageBox.Show($"Local submission \"{id}\" has a corrupt metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        continue;
+                        foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
                     }
+                }
+                catch (JsonException)
+                {
+                    MessageBox.Show($"Local submission \"{id}\" has a corrupt metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    continue;
                 }
             }
 
@@ -632,11 +629,11 @@ namespace ConfigApp
 
             string fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
-            if (File.Exists("scripts/workshop/submissions_cached.json"))
+            if (File.Exists("workshop/submissions_cached.json"))
             {
                 try
                 {
-                    fileContent = File.ReadAllText("scripts/workshop/submissions_cached.json");
+                    fileContent = File.ReadAllText("workshop/submissions_cached.json");
                 }
                 catch (IOException)
                 {

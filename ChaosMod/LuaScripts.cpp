@@ -60,7 +60,7 @@
 		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
 	} while (0);
 
-static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\custom_scripts" };
+static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop", "chaosmod\\custom_scripts" };
 
 _LUAFUNC void LuaPrint(const std::string &szText)
 {

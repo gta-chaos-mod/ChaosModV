@@ -30,12 +30,6 @@ namespace ConfigApp
 
         public async void Execute(object parameter)
         {
-            if (!Directory.Exists("scripts/"))
-            {
-                MessageBox.Show("\"scripts\" folder not found, is this the chaosmod directory? Otherwise create the folder and try again.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             var fatalCleanup = new Action(() =>
             {
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
@@ -48,7 +42,7 @@ namespace ConfigApp
                 return;
             }
 
-            var targetDirName = $"scripts/workshop/{m_SubmissionItem.Id}";
+            var targetDirName = $"workshop/{m_SubmissionItem.Id}";
 
             if (m_SubmissionItem.InstallState == WorkshopSubmissionItem.SubmissionInstallState.Installed)
             {
