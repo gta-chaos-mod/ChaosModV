@@ -34,8 +34,7 @@ Version: {m_SubmissionItem.Version}
 Id: {m_SubmissionItem.Id}
 SHA256: {m_SubmissionItem.Sha256}
 
-Description: {m_SubmissionItem.Description}
-", "Submission Info", MessageBoxButton.OK, MessageBoxImage.None);
+Description: {m_SubmissionItem.Description}", "Submission Info", MessageBoxButton.OK, MessageBoxImage.None);
         }
     }
 }
