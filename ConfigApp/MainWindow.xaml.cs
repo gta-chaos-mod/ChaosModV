@@ -652,7 +652,7 @@ namespace ConfigApp
                 {
                     ParseWorkshopSubmissionsFile(fileContent);
                 }
-                catch (JsonReaderException)
+                catch (JsonException)
                 {
                     // Cached file is corrupt, force reload
                     await ForceRefreshWorkshopContentFromRemote();
