@@ -99,25 +99,58 @@ namespace ConfigApp
                     return;
                 }
 
-                using (ZipArchive archive = new ZipArchive(fileStream))
+                try
                 {
-                    // Try deleting the directory first if it exists, otherwise extraction might fail if it hits a duplicate file
-                    try
+                    using (ZipArchive archive = new ZipArchive(fileStream))
                     {
-                        Directory.Delete(targetDirName, true);
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
+                        if (archive.Entries.Count == 0)
+                        {
+                            MessageBox.Show("Submission contains no data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                            fatalCleanup();
+                            return;
+                        }
 
-                    }
-                    catch (IOException)
-                    {
-                        MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                        fatalCleanup();
-                        return;
-                    }
+                        StringBuilder sb = new StringBuilder();
+                        foreach (var entry in archive.Entries)
+                        {
+                            var trimmedName = entry.Name.Trim();
+                            if (trimmedName.Length > 0)
+                            {
+                                sb.Append(trimmedName + "   ");
+                            }
+                        }
+                        var msgBoxResult = MessageBox.Show($"This submission contains the following entries:\n\n{sb}\n\nInstall?", "ChaosModV",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (msgBoxResult == MessageBoxResult.No)
+                        {
+                            fatalCleanup();
+                            return;
+                        }
 
-                    archive.ExtractToDirectory(targetDirName);
+                        // Try deleting the directory first if it exists, otherwise extraction might fail if it hits a duplicate file
+                        try
+                        {
+                            Directory.Delete(targetDirName, true);
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                            fatalCleanup();
+                            return;
+                        }
+
+                        archive.ExtractToDirectory(targetDirName);
+                    }
+                }
+                catch (Exception exception) when (exception is IOException || exception is InvalidDataException)
+                {
+                    MessageBox.Show("Submission contains invalid data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    fatalCleanup();
+                    return;
                 }
 
                 JObject metadataJson = new JObject();
