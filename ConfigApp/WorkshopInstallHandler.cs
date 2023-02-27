@@ -35,12 +35,14 @@ namespace ConfigApp
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
             });
 
-            if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && char.IsLower(c) ))
+            if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c)) ))
             {
                 MessageBox.Show($"Invalid submission id! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                 fatalCleanup();
                 return;
             }
+
+            Directory.CreateDirectory("workshop");
 
             var targetDirName = $"workshop/{m_SubmissionItem.Id}";
 

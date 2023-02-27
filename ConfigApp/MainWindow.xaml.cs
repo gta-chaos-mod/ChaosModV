@@ -547,12 +547,14 @@ namespace ConfigApp
                 }
             }
 
+            Directory.CreateDirectory("workshop");
+
             // Cache submissions
             File.WriteAllText("workshop/submissions_cached.json", fileContent);
 
             foreach (var directory in Directory.GetDirectories("workshop/"))
             {
-                var id = directory.Split('/')[2];
+                var id = directory.Split('/')[1];
 
                 if (!File.Exists($"{directory}/metadata.json"))
                 {
