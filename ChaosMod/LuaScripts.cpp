@@ -769,7 +769,7 @@ namespace LuaScripts
 
 		ClearRegisteredScriptEffects();
 
-		for (auto &dir : ms_rgScriptDirs)
+		for (auto dir : ms_rgScriptDirs)
 		{
 			if (!DoesFileExist(dir))
 			{

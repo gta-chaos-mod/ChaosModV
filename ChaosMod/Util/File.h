@@ -1,10 +1,12 @@
 #pragma once
 
-#include <sstream>
 #include <sys/stat.h>
 
-inline bool DoesFileExist(const char *szFileName)
+#include <sstream>
+#include <string_view>
+
+inline bool DoesFileExist(std::string_view fileName)
 {
 	struct stat temp;
-	return stat(szFileName, &temp) == 0;
+	return stat(fileName.data(), &temp) == 0;
 }
