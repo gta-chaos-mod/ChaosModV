@@ -545,6 +545,10 @@ namespace ConfigApp
                     submission.Name = submissionData.name;
                     submission.Author = submissionData.author;
                     submission.Description = submissionData.description;
+                    if (submission.Description.Length == 0)
+                    {
+                        submission.Description = "No Description";
+                    }
                     submission.Version = $"v{submissionData.version}";
                     submission.LastUpdated = submissionData.lastupdated;
                     submission.Sha256 = submissionData.sha256;
