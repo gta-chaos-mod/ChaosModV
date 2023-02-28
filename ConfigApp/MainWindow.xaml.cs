@@ -565,9 +565,6 @@ namespace ConfigApp
 
             Directory.CreateDirectory("workshop");
 
-            // Cache submissions
-            File.WriteAllBytes("workshop/submissions_cached.json.zst", compressedFileContent);
-
             foreach (var directory in Directory.GetDirectories("workshop/"))
             {
                 var id = directory.Split('/')[1];
@@ -623,8 +620,12 @@ namespace ConfigApp
                 var result = await httpClient.GetAsync("https://chaos.gopong.dev/workshop/fetch_submissions");
                 if (result.IsSuccessStatusCode)
                 {
-                    ParseWorkshopSubmissionsFile(await result.Content?.ReadAsByteArrayAsync());
-                    return;
+                    var compressedResult = await result.Content?.ReadAsByteArrayAsync();
+
+                    ParseWorkshopSubmissionsFile(compressedResult);
+
+                    // Cache submissions
+                    File.WriteAllBytes("workshop/submissions_cached.json.zst", compressedResult);
                 }
             }
             catch (HttpRequestException)
