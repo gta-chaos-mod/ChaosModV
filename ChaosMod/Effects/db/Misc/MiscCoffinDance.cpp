@@ -76,8 +76,8 @@ static void OnStart()
 		SET_PED_CAN_RAGDOLL(ped, false);
 	}
 }
-
-static RegisterEffect registerEffect(OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Coffin Dance",
 		.Id = "misc_coffin_dance"
