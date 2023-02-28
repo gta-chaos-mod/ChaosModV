@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,8 +15,10 @@ using System.Windows.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shared;
-using Xceed.Wpf.Toolkit;
+using ZstdSharp;
+
 using static ConfigApp.Effects;
+
 using MessageBox = System.Windows.MessageBox;
 
 namespace ConfigApp
@@ -521,9 +523,13 @@ namespace ConfigApp
             view.Filter = submissionItem => ((WorkshopSubmissionItem)submissionItem).Name.ToLower().Contains(transformedText);
         }
 
-        private void ParseWorkshopSubmissionsFile(string fileContent)
+        private void ParseWorkshopSubmissionsFile(byte[] compressedFileContent)
         {
             {
+                var decompressor = new Decompressor();
+                var decompressed = decompressor.Unwrap(compressedFileContent);
+                string fileContent = Encoding.UTF8.GetString(decompressed.ToArray());
+
                 var json = JObject.Parse(fileContent);
 
                 // Only clear after trying to parse
@@ -560,7 +566,7 @@ namespace ConfigApp
             Directory.CreateDirectory("workshop");
 
             // Cache submissions
-            File.WriteAllText("workshop/submissions_cached.json", fileContent);
+            File.WriteAllBytes("workshop/submissions_cached.json.zst", compressedFileContent);
 
             foreach (var directory in Directory.GetDirectories("workshop/"))
             {
@@ -595,7 +601,7 @@ namespace ConfigApp
                         foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
                     }
                 }
-                catch (JsonException)
+                catch (Exception exception) when (exception is JsonException || exception is ZstdException)
                 {
                     MessageBox.Show($"Local submission \"{id}\" has a corrupt metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
                     continue;
@@ -617,7 +623,7 @@ namespace ConfigApp
                 var result = await httpClient.GetAsync("https://chaos.gopong.dev/workshop/fetch_submissions");
                 if (result.IsSuccessStatusCode)
                 {
-                    ParseWorkshopSubmissionsFile(await result.Content?.ReadAsStringAsync());
+                    ParseWorkshopSubmissionsFile(await result.Content?.ReadAsByteArrayAsync());
                     return;
                 }
             }
@@ -625,7 +631,7 @@ namespace ConfigApp
             {
                 DisplayWorkshopFetchContentFailure();
             }
-            catch (JsonException)
+            catch (Exception exception) when (exception is JsonException || exception is ZstdException)
             {
                 MessageBox.Show($"Remote provided a malformed master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -639,13 +645,13 @@ namespace ConfigApp
                 return;
             };
 
-            string fileContent = null;
+            byte[] fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
             if (File.Exists("workshop/submissions_cached.json"))
             {
                 try
                 {
-                    fileContent = File.ReadAllText("workshop/submissions_cached.json");
+                    fileContent = File.ReadAllBytes("workshop/submissions_cached.json.zst");
                 }
                 catch (IOException)
                 {
