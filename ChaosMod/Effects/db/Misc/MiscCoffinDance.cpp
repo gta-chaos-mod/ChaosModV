@@ -2,7 +2,7 @@
 	Effect By OnlyRealNubs
 */
 
-#include "stdafx.h"
+#include <stdafx.h>
 
 static const Hash coffinH = GET_HASH_KEY("prop_coffin_01");
 static const Hash dancerH = GET_HASH_KEY("ig_fbisuit_01");
