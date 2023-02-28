@@ -604,7 +604,7 @@ namespace ConfigApp
             HttpClient httpClient = new HttpClient();
             try
             {
-                var result = await httpClient.GetAsync("http://chaos.gopong.dev/workshop/fetch_submissions");
+                var result = await httpClient.GetAsync("https://chaos.gopong.dev/workshop/fetch_submissions");
                 if (result.IsSuccessStatusCode)
                 {
                     ParseWorkshopSubmissionsFile(await result.Content?.ReadAsStringAsync());
