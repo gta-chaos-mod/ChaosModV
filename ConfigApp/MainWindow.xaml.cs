@@ -534,6 +534,12 @@ namespace ConfigApp
                     var submissionId = submissionObject.Key;
                     var submissionData = submissionObject.Value;
 
+                    // Submission has no data
+                    if (submissionData.lastupdated == 0)
+                    {
+                        continue;
+                    }
+
                     WorkshopSubmissionItem submission = new WorkshopSubmissionItem();
                     submission.Id = submissionId;
                     submission.Name = submissionData.name;
