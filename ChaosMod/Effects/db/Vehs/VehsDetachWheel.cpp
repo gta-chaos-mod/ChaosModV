@@ -35,8 +35,8 @@ static void OnStart()
 
 // clang-format off
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
-{
-.Name = "Detach Random Wheel",
-.Id = "vehs_detach_wheel"
-}
+	{
+		.Name = "Detach Random Wheel",
+		.Id = "vehs_detach_wheel"
+	}
 );

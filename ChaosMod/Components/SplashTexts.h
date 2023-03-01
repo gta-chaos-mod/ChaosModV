@@ -10,6 +10,7 @@ class SplashTexts : public Component
 	float m_fStartupSplashTime      = 0.f;
 	float m_fTwitchVotingSplashTime = 0.f;
 	float m_fClearEffectsSplashTime = 0.f;
+	float m_fTwitchVotingRestartSplashTime = 0.f;
 
   public:
 	virtual void OnRun() override;
@@ -17,6 +18,7 @@ class SplashTexts : public Component
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
 	void ShowClearEffectsSplash();
+	void ShowTwitchVotingRestartSplash();
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

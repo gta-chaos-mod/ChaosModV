@@ -8,7 +8,7 @@ struct ChangeSetEntry
 	struct DataFile
 	{
 		char name[128];
-	} * dataFile;
+	} *dataFile;
 
 	int type;
 	// ...

@@ -6,7 +6,6 @@
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
-#include "Util/json.hpp"
 
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
@@ -71,6 +70,9 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 #endif
 	free(str);
 
+	m_hProcess = procInfo.hProcess;
+	m_hThread  = procInfo.hThread;
+
 	if (!bResult)
 	{
 		ErrorOutWithMsg((std::ostringstream()
@@ -111,6 +113,52 @@ void TwitchVoting::OnModPauseCleanup()
 
 		m_hPipeHandle = INVALID_HANDLE_VALUE;
 	}
+
+	DWORD pId = GetProcessId(m_hProcess);
+
+	LOG(pId);
+
+	HANDLE hThreadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+
+	THREADENTRY32 threadEntry;
+	threadEntry.dwSize = sizeof(THREADENTRY32);
+
+	Thread32First(hThreadSnapshot, &threadEntry);
+
+	do
+	{
+		if (threadEntry.th32OwnerProcessID == pId)
+		{
+			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
+
+			ResumeThread(hThread);
+			CloseHandle(hThread);
+		}
+	} while (Thread32Next(hThreadSnapshot, &threadEntry));
+
+	CloseHandle(hThreadSnapshot);
+
+	CloseHandle(m_hProcess);
+	CloseHandle(m_hThread);
+}
+
+void TwitchVoting::RestartVoting()
+{
+	if (ComponentExists<SplashTexts>())
+	{
+		GetComponent<SplashTexts>()->ShowTwitchVotingRestartSplash();
+	}
+
+	OnModPauseCleanup();
+
+	WAIT(100);
+
+	InitComponent<TwitchVoting>(m_rgTextColor);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->ResetTimer();
+	}
 }
 
 void TwitchVoting::OnRun()
@@ -130,14 +178,16 @@ void TwitchVoting::OnRun()
 	DWORD64 ullCurTick = GetTickCount64();
 	if (m_ullLastPing < ullCurTick - 1000)
 	{
-		if (m_iNoPingRuns == 5)
-		{
-			ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
+		m_iNoPingRuns++;
+		LOG("Voting proxy: " << m_iNoPingRuns << " no ping runs");
 
+		if (m_iNoPingRuns == 15)
+		{
+			LOG("Voting proxy: 15 no ping runs; restarting");
+			RestartVoting();
 			return;
 		}
 
-		m_iNoPingRuns++;
 		m_ullLastPing = ullCurTick;
 	}
 
@@ -145,7 +195,7 @@ void TwitchVoting::OnRun()
 	{
 		m_ullLastVotesFetchTime = ullCurTick;
 
-		if (m_bIsVotingRunning && m_bEnableTwitchChanceSystem && !m_bEnableTwitchPollVoting
+		if (m_bIsVotingRunning && m_bEnableTwitchChanceSystem
 		    && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
@@ -176,7 +226,7 @@ void TwitchVoting::OnRun()
 		return;
 	}
 
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_bHasReceivedResult)
+	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 2 && !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -184,39 +234,43 @@ void TwitchVoting::OnRun()
 		{
 			m_bIsVotingRunning = false;
 
-			if (!m_bNoVoteRound)
-			{
-				SendToPipe("getvoteresult");
-			}
+			SendToPipe("getvoteresult");
 		}
 	}
-	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
+	if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
-		if (m_bNoVoteRound)
+		if (!m_pChosenEffectIdentifier)
+		{
+			if (ullCurTick > m_ullLastNoEffectRecieved + 1000)
+			{
+				m_iNoEffectRecievedRuns++;
+				m_ullLastNoEffectRecieved = ullCurTick;
+
+				LOG("No voting option recieved: " << m_iNoEffectRecievedRuns << " seconds");
+			}
+			if (m_iNoEffectRecievedRuns >= 5)
+			{
+				LOG("No voting option recieved; restarting");
+
+				RestartVoting();
+			}
+			return;
+		}
+
+		m_iNoEffectRecievedRuns = 0;
+
+		// Should be random effect voteable, so just dispatch random effect
+		if (m_pChosenEffectIdentifier->GetEffectId().empty())
 		{
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			GetComponent<EffectDispatcher>()->ResetTimer();
-
-			if (!m_bEnableTwitchPollVoting)
-			{
-				m_bNoVoteRound = false;
-			}
 		}
 		else
 		{
-			// Should be random effect voteable, so just dispatch random effect
-			if (m_pChosenEffectIdentifier->GetEffectId().empty())
-			{
-				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-			else
-			{
-				GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
-			}
-			GetComponent<EffectDispatcher>()->ResetTimer();
+			GetComponent<EffectDispatcher>()->DispatchEffect(*m_pChosenEffectIdentifier);
 		}
+		GetComponent<EffectDispatcher>()->ResetTimer();
 
 		if (MetaModifiers::m_ucAdditionalEffectsToDispatch > 0)
 		{
@@ -239,19 +293,7 @@ void TwitchVoting::OnRun()
 		m_bHasReceivedResult      = false;
 		m_bIsVotingRoundDone      = false;
 
-		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
-
-		if (m_bEnableTwitchPollVoting)
-		{
-			m_bNoVoteRound = !m_bNoVoteRound;
-		}
-
-		if (m_bNoVoteRound)
-		{
-			SendToPipe("novoteround");
-
-			return;
-		}
+		m_pChosenEffectIdentifier = nullptr;
 
 		m_rgEffectChoices.clear();
 		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> dictChoosableEffects;
@@ -321,19 +363,18 @@ void TwitchVoting::OnRun()
 			dictChoosableEffects.erase(effectIdentifier);
 		}
 
-		std::vector<std::string> effectNames;
+		std::ostringstream oss;
+		oss << "vote";
 		for (const auto &pChoosableEffect : m_rgEffectChoices)
 		{
-			effectNames.push_back(pChoosableEffect->m_szEffectName);
+			oss << ":" << pChoosableEffect->m_szEffectName;
 		}
-		
-		SendToPipe("vote", effectNames);
+		SendToPipe(oss.str());
 
 		m_bAlternatedVotingRound = !m_bAlternatedVotingRound;
 	}
 
-	if (m_bIsVotingRunning && !m_bNoVoteRound && !m_bEnableTwitchPollVoting
-	    && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
+	if (m_bIsVotingRunning && m_eTwitchOverlayMode == ETwitchOverlayMode::OverlayIngame)
 	{
 		// Print voteables on screen
 
@@ -395,6 +436,11 @@ _NODISCARD bool TwitchVoting::IsEnabled() const
 
 bool TwitchVoting::HandleMsg(const std::string &szMsg)
 {
+	if (szMsg != "ping")
+	{
+		LOG("Recieved message: " << szMsg);
+	}
+
 	if (szMsg == "hello")
 	{
 		m_bReceivedHello = true;
@@ -413,64 +459,51 @@ bool TwitchVoting::HandleMsg(const std::string &szMsg)
 
 		return false;
 	}
-	else if (szMsg == "invalid_poll_dur")
-	{
-		ErrorOutWithMsg("Invalid duration. Duration has to be above 15 and at most 181 seconds to make use of the poll "
-		                "system. Returning to normal mode.");
-
-		return false;
-	}
 	else if (szMsg == "invalid_channel")
 	{
 		ErrorOutWithMsg("Invalid Twitch Channel. Please verify your config. Reverting to normal mode.");
 
 		return false;
 	}
-	else
+	else if (szMsg.starts_with("voteresult"))
 	{
-		nlohmann::json receivedJSON = nlohmann::json::parse(szMsg);
-		if (!receivedJSON.empty())
+		int iResult               = std::stoi(szMsg.substr(szMsg.find(":") + 1));
+
+		m_bHasReceivedResult      = true;
+
+		// If random effect voteable (result == 3) won, dispatch random effect later
+		m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
+		    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
+	}
+	else if (szMsg.starts_with("currentvotes"))
+	{
+		std::string szValuesStr = szMsg.substr(szMsg.find(":") + 1);
+
+		int iSplitIndex         = szValuesStr.find(":");
+		for (int i = 0;; i++)
 		{
-			std::string identifier = receivedJSON["Identifier"];
-			if (identifier == "voteresult")
-			{
-				int iResult = receivedJSON["SelectedOption"];
+			const std::string &szSplit = szValuesStr.substr(0, iSplitIndex);
 
-				m_bHasReceivedResult      = true;
+			Util::TryParse<int>(szSplit, m_rgEffectChoices[i]->m_iChanceVotes);
 
-				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_pChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-				    iResult == 3 ? EffectIdentifier() : m_rgEffectChoices[iResult]->m_EffectIdentifier);
-			}
-			else if (identifier == "currentvotes")
+			szValuesStr = szValuesStr.substr(iSplitIndex + 1);
+
+			if (iSplitIndex == szValuesStr.npos)
 			{
-				std::vector<int> options         = receivedJSON["Votes"];
-				if (options.size() == m_rgEffectChoices.size())
-				{
-					for (int idx = 0; idx < options.size(); idx++)
-					{
-						int votes                              = options[idx];
-						m_rgEffectChoices[idx]->m_iChanceVotes = votes;
-					}
-				}
+				break;
 			}
+
+			iSplitIndex = szValuesStr.find(":");
 		}
 	}
 
 	return true;
 }
 
-std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::string> params)
+void TwitchVoting::SendToPipe(std::string &&szMsg)
 {
-	nlohmann::json finalJSON;
-	finalJSON["Identifier"]  = identifier;
-	finalJSON["Options"]      = params;
-	return finalJSON.dump();
-}
+	LOG("Sending message: " << szMsg);
 
-void TwitchVoting::SendToPipe(std::string identifier, std::vector<std::string> params)
-{
-	std::string szMsg = GetPipeJson(identifier, params);
 	szMsg += "\n";
 	WriteFile(m_hPipeHandle, szMsg.c_str(), szMsg.length(), NULL, NULL);
 }

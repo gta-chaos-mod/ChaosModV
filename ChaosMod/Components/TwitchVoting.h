@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "EffectDispatcher.h"
+#include "SplashTexts.h"
 
 #include <memory>
 #include <vector>
@@ -38,23 +39,25 @@ class TwitchVoting : public Component
 
 	bool m_bEnableTwitchVoting;
 
+	HANDLE m_hProcess;
+	HANDLE m_hThread;
+
 	bool m_bReceivedHello     = false;
 	bool m_bReceivedFirstPing = false;
 	bool m_bHasReceivedResult = false;
 
 	int m_iTwitchSecsBeforeVoting;
 
-	bool m_bEnableTwitchPollVoting  = false;
-
 	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
 
-	DWORD64 m_ullLastPing           = GetTickCount64();
-	DWORD64 m_ullLastVotesFetchTime = GetTickCount64();
+	DWORD64 m_ullLastPing            = GetTickCount64();
+	DWORD64 m_ullLastVotesFetchTime  = GetTickCount64();
+	DWORD64 m_ullLastNoEffectRecieved = GetTickCount64();
 
 	int m_iNoPingRuns               = 0;
+	int m_iNoEffectRecievedRuns     = 0;
 
 	bool m_bIsVotingRoundDone       = true;
-	bool m_bNoVoteRound             = false;
 	bool m_bAlternatedVotingRound   = false;
 
 	ETwitchOverlayMode m_eTwitchOverlayMode;
@@ -70,7 +73,8 @@ class TwitchVoting : public Component
 	std::vector<std::unique_ptr<ChoosableEffect>> m_rgEffectChoices;
 
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
-	std::string GetPipeJson(std::string identifier, std::vector<std::string> params);
+
+	void RestartVoting();
 
   protected:
 	TwitchVoting(const std::array<BYTE, 3> &rgTextColor);
@@ -84,7 +88,7 @@ class TwitchVoting : public Component
 
 	bool HandleMsg(const std::string &szMsg);
 
-	void SendToPipe(std::string identifier, std::vector<std::string> params = {});
+	void SendToPipe(std::string &&szMsg);
 
 	void ErrorOutWithMsg(const std::string &&szMsg);
 

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "LuaScripts.h"
 
 #include "Effects/Effect.h"
@@ -357,6 +358,8 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
 	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
 
+	lua["LoadModel"]                            = LoadModel;
+
 	lua["GetAllPeds"]                           = GetAllPedsArray;
 	lua["CreatePoolPed"]                        = CreatePoolPed;
 
@@ -373,17 +376,23 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"]   = Hooks::OverrideShader;
-	lua["ResetShader"]      = Hooks::ResetShader;
+	lua["OverrideShader"]           = Hooks::OverrideShader;
+	lua["ResetShader"]              = Hooks::ResetShader;
 
-	lua["SetSnowState"]     = Memory::SetSnow;
+	lua["SetSnowState"]             = Memory::SetSnow;
 
-	lua["IsVehicleBraking"] = Memory::IsVehicleBraking;
+	lua["IsVehicleBraking"]         = Memory::IsVehicleBraking;
 
-	lua["EnableScriptThreadBlock"]              = Hooks::EnableScriptThreadBlock;
-	lua["DisableScriptThreadBlock"]              = Hooks::DisableScriptThreadBlock;
+	lua["EnableScriptThreadBlock"]  = Hooks::EnableScriptThreadBlock;
+	lua["DisableScriptThreadBlock"] = Hooks::DisableScriptThreadBlock;
 
-	const auto &result      = lua.safe_script_file(path.string(), sol::load_mode::text);
+	lua["GetChaosModVersion"]       = []()
+	{
+		return MOD_VERSION;
+	};
+	lua["GetGameBuild"] = Memory::GetGameBuild;
+
+	const auto &result  = lua.safe_script_file(path.string(), sol::load_mode::text);
 	if (!result.valid())
 	{
 		const sol::error &error = result;

@@ -133,7 +133,7 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 	{
 		ActiveEffect &effect   = *it;
 		EffectData &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
-		
+
 		if (effect.m_fMaxTime > 0)
 		{
 			if (effectData.IsMeta())
@@ -145,15 +145,13 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 				effect.m_fTimer -= fDeltaTime / MetaModifiers::m_fEffectDurationModifier;
 			}
 		}
-		else if (effectData.TimedType == EEffectTimedType::NotTimed
-		         || effectData.TimedType == EEffectTimedType::Unk)
+		else if (effectData.TimedType == EEffectTimedType::NotTimed || effectData.TimedType == EEffectTimedType::Unk)
 		{
 			float t = m_usEffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
 			// ensure effects stay on screen for at least 5 seconds
 			effect.m_fTimer += fDeltaTime / t * (1.f + (t / 5 - 1) * std::max(0.f, activeEffectsSize - n) / (m - n));
 		}
 
-		
 		if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
 		    || (effectData.TimedType == EEffectTimedType::NotTimed || effectData.TimedType == EEffectTimedType::Unk)
 		           && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
@@ -222,8 +220,8 @@ void EffectDispatcher::UpdateMetaEffects(int iDeltaTime)
 		}
 		else
 		{
-			m_bMetaEffectsEnabled = false;
-			m_fMetaEffectTimerPercentage    = 0.f;
+			m_bMetaEffectsEnabled        = false;
+			m_fMetaEffectTimerPercentage = 0.f;
 		}
 	}
 }
@@ -266,8 +264,8 @@ void EffectDispatcher::DrawEffectTexts()
 
 	if (m_rgActiveEffects.size() > 0)
 	{
-		effectSpacing = std::min(m_fEffectsInnerSpacingMax, 
-			std::max(m_fEffectsInnerSpacingMin, (1.0f - fPosY) / m_rgActiveEffects.size()));
+		effectSpacing = std::min(m_fEffectsInnerSpacingMax,
+		                         std::max(m_fEffectsInnerSpacingMin, (1.0f - fPosY) / m_rgActiveEffects.size()));
 	}
 
 	for (const ActiveEffect &effect : m_rgActiveEffects)

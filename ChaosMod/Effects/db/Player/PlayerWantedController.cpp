@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
-#include "Memory/Hooks/ScriptThreadRunHook.h"
 #include "Components/EffectDispatcher.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStartFive()
 {
@@ -109,25 +109,24 @@ struct FakeWantedInfo
 	int iStars;
 };
 
-static std::vector<FakeWantedInfo> m_fakeWantedLevels = 
-{ 
-	{"5 Wanted Stars", SET, 5}, 
-	{"3 Wanted Stars", SET, 3}, 
-	{"1 Wanted Star", SET, 1}, 
-	{"+2 Wanted Stars", ADD, 2}, 
+static std::vector<FakeWantedInfo> m_fakeWantedLevels = {
+	{ "5 Wanted Stars", SET, 5 },
+	{ "3 Wanted Stars", SET, 3 },
+	{ "1 Wanted Star", SET, 1 },
+	{ "+2 Wanted Stars", ADD, 2 },
 };
 
 static void OnStartFake()
 {
-	FakeWantedInfo selectedInfo = m_fakeWantedLevels.at(g_Random.GetRandomInt(0, m_fakeWantedLevels.size()-1));
+	FakeWantedInfo selectedInfo  = m_fakeWantedLevels.at(g_Random.GetRandomInt(0, m_fakeWantedLevels.size() - 1));
 	WantedLevelType selectedType = selectedInfo.eWantedType;
 
 	Hooks::EnableScriptThreadBlock();
 
 	GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.szName);
 
-	Player player = PLAYER_ID();
-	int lastLevel = GET_PLAYER_WANTED_LEVEL(player);
+	Player player  = PLAYER_ID();
+	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);
 	int lastLevelf = GET_FAKE_WANTED_LEVEL();
 
 	switch (selectedType)
@@ -141,9 +140,9 @@ static void OnStartFake()
 	{
 		int wl = [&]()
 		{
-
 			int l = selectedInfo.iStars + (lastLevelf == 0 ? lastLevel : lastLevelf);
-			if (l > 5) l = 5;
+			if (l > 5)
+				l = 5;
 			return l;
 		}();
 		SET_FAKE_WANTED_LEVEL(wl);

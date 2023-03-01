@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Memory/Physics.h"
+#include "Util/XInput.h"
 
 static DWORD64 m_anchorTick;
 
@@ -13,6 +14,8 @@ static void OnStart()
 
 static void OnStop()
 {
+	XInput::StopAllControllersRumble();
+
 	CLEAR_WEATHER_TYPE_PERSIST();
 
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
@@ -20,6 +23,8 @@ static void OnStop()
 
 static void OnTick()
 {
+	XInput::SetAllControllersRumble(40000, 40000);
+
 	Ped playerPed     = PLAYER_PED_ID();
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 

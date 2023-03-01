@@ -61,7 +61,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);winmm.lib;dbghelp.lib;d3dcompiler.lib;XInput.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -105,16 +105,19 @@
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGhostWorld.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscGoToJail.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoWater.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscNoWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFakeCrash.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscSolidProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscSpinningProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRandomWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscStuffGuns.cpp" />
@@ -130,6 +133,7 @@
     <ClCompile Include="Effects\db\Peds\PedsDriveBackwards.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsEternalScreams.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsFlipAll.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsGiveProps.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsGrappleGuns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHandsUp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsHeadless.cpp" />
@@ -141,14 +145,17 @@
     <ClCompile Include="Effects\db\Peds\PedsNailguns.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsPropHunt.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsQuarrelingCouple.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsSmokeTrails.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryChimp.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnBallaSquad.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnMime.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAFK.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsUpsideDown.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
@@ -168,6 +175,7 @@
     <ClCompile Include="Effects\db\Player\PlayerInvertControls.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerMagnetGravity.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerMovementSpeed.cpp" />
+    <ClCompile Include="Effects\db\Peds\PedsNotMenendez.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomStuntJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerSneeze.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerTpToEverything.cpp" />
@@ -427,6 +435,7 @@
     <ClInclude Include="Lib\scrThread.h" />
     <ClInclude Include="LuaScripts.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Memory\Audio.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\EntityFragments.h" />
     <ClInclude Include="Memory\Gravity.h" />
@@ -450,7 +459,6 @@
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
     <ClInclude Include="Util\Hash.h" />
-    <ClInclude Include="Util\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
@@ -476,6 +484,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
   </ItemGroup>
   <ItemGroup>

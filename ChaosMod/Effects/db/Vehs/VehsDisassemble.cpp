@@ -30,8 +30,8 @@ static void OnStart()
 
 // clang-format off
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
-{
-	.Name = "Disassemble Current Vehicle",
-	.Id = "vehs_disassemble"
-}
+	{
+		.Name = "Disassemble Current Vehicle",
+		.Id = "vehs_disassemble"
+	}
 );

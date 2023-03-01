@@ -208,6 +208,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
 		.Id = "misc_randomgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-        .EffectCategory  = EEffectCategory::Gravity
+		.EffectCategory  = EEffectCategory::Gravity
 	}
 );
