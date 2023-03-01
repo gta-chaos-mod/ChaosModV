@@ -31,7 +31,7 @@ endif()
 
 target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor ${PROJECT_SOURCE_DIR}/../vendor/websocketpp)
 
-set(link_libs shv minhook lua54 winmm d3dcompiler xinput)
+set(link_libs shv minhook lua54 winmm d3dcompiler)
 
 if (WITH_DEBUG_PANEL_SUPPORT)
     set(link_libs ${link_libs} ixwebsocket wsock32 ws2_32)
