@@ -648,7 +648,7 @@ namespace ConfigApp
 
             byte[] fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
-            if (File.Exists("workshop/submissions_cached.json"))
+            if (File.Exists("workshop/submissions_cached.json.zst"))
             {
                 try
                 {
