@@ -75,15 +75,6 @@ static void OnStart()
 	{
 		GetComponent<EffectDispatcher>()->m_fFakeTimerBarPercentage = 0.f;
 	}
-	if (g_Random.GetRandomInt(0, 1) == 0)
-	{
-		HWND hWnd = FindWindowA(0, "Grand Theft Auto V");
-		if (hWnd)
-		{
-			_SET_CONTROL_NORMAL(0, 199, 1.f);
-			PostMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
-		}
-	}
 }
 
 // clang-format off
