@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Linq;
+using ZstdSharp;
 
 namespace ConfigApp
 {
@@ -99,6 +100,23 @@ namespace ConfigApp
                     MessageBox.Show("SHA256 mismatch! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                     fatalCleanup();
                     return;
+                }
+
+                try
+                {
+                    if (result.Headers.Contains("compressed") && result.Headers.GetValues("Compressed").Contains("yes"))
+                    {
+                        var fileContent = await result.Content.ReadAsByteArrayAsync();
+
+                        var decompressor = new Decompressor();
+                        var decompressed = decompressor.Unwrap(fileContent).ToArray();
+                        fileStream = new MemoryStream(decompressed.ToArray());
+                    }
+                }
+                catch (ZstdException)
+                {
+                    // File content is not (zstd) compressed even though compressed = yes?
+                    // Skip decompression
                 }
 
                 try
