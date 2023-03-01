@@ -411,6 +411,7 @@ namespace ConfigApp
             { "peds_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Peds, true) },
             { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
+            { "vehs_spawn_piano", new EffectInfo("Makin' My Way Downtown", EffectCategory.Vehicle) },
             { "peds_screamonshot", new EffectInfo("Drama Queen", EffectCategory.Peds, true) },
         };
     }
