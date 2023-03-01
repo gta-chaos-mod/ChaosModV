@@ -203,28 +203,28 @@ namespace ConfigApp
         {
             m_TwitchFile.ReadFile();
 
-            twitch_user_agreed.IsChecked = m_twitchFile.ReadValueBool("EnableTwitchVoting", false);
-            twitch_user_channel_name.Text = m_twitchFile.ReadValue("TwitchChannelName");
-            twitch_user_user_name.Text = m_twitchFile.ReadValue("TwitchUserName");
-            twitch_user_channel_oauth.Password = m_twitchFile.ReadValue("TwitchChannelOAuth");
-            twitch_user_effects_secs_before_chat_voting.Text = m_twitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
-            twitch_user_overlay_mode.SelectedIndex = m_twitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
-            twitch_user_chance_system_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
-            twitch_user_chance_system_retain_chance_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
-            twitch_user_random_voteable_enable.IsChecked = m_twitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+            twitch_user_agreed.IsChecked = m_TwitchFile.ReadValueBool("EnableTwitchVoting", false);
+            twitch_user_channel_name.Text = m_TwitchFile.ReadValue("TwitchChannelName");
+            twitch_user_user_name.Text = m_TwitchFile.ReadValue("TwitchUserName");
+            twitch_user_channel_oauth.Password = m_TwitchFile.ReadValue("TwitchChannelOAuth");
+            twitch_user_effects_secs_before_chat_voting.Text = m_TwitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
+            twitch_user_overlay_mode.SelectedIndex = m_TwitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
+            twitch_user_chance_system_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
+            twitch_user_chance_system_retain_chance_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
+            twitch_user_random_voteable_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
         }
 
         private void WriteTwitchFile()
         {
-            m_twitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
-            m_twitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
-            m_twitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
-            m_twitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
-            m_twitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
-            m_twitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
-            m_twitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
+            m_TwitchFile.WriteValue("EnableTwitchVoting", twitch_user_agreed.IsChecked.Value);
+            m_TwitchFile.WriteValue("TwitchChannelName", twitch_user_channel_name.Text);
+            m_TwitchFile.WriteValue("TwitchUserName", twitch_user_user_name.Text);
+            m_TwitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
+            m_TwitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
+            m_TwitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
+            m_TwitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
+            m_TwitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
+            m_TwitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
 
             m_TwitchFile.WriteFile();
         }
