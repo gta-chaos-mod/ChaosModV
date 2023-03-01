@@ -62,7 +62,7 @@ struct RegisteredEffect
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnStart");
+				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Start);
 			}
 			else if (m_pOnStart)
 			{
@@ -79,7 +79,7 @@ struct RegisteredEffect
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnStop");
+				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Stop);
 			}
 			else if (m_pOnStop)
 			{
@@ -94,7 +94,7 @@ struct RegisteredEffect
 		{
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnTick");
+				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Tick);
 			}
 			else if (m_pOnTick)
 			{

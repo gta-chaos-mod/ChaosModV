@@ -6,11 +6,11 @@ Effect by Last0xygen
 
 static void OnStart()
 {
-	static const Hash tonyaHash    = GET_HASH_KEY("ig_tonya");
-	static const Hash towTruckHash = GET_HASH_KEY("towtruck");
+	static const Hash tonyaHash    = "ig_tonya"_hash;
+	static const Hash towTruckHash = "towtruck"_hash;
 	static Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_TOW_TRUCK_TONYA", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
 	LoadModel(tonyaHash);
 	LoadModel(towTruckHash);
 

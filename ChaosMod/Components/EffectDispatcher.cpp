@@ -131,12 +131,22 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 	std::vector<ActiveEffect>::iterator it;
 	for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end();)
 	{
-		ActiveEffect &effect   = *it;
-		EffectData &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
+		ActiveEffect &effect = *it;
+
+		bool isTimed         = false;
+		bool isMeta          = false;
+		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
+		if (g_dictEnabledEffects.contains(effect.m_EffectIdentifier))
+		{
+			EffectData &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
+			isTimed =
+			    effectData.TimedType != EEffectTimedType::NotTimed && effectData.TimedType != EEffectTimedType::Unk;
+			isMeta = effectData.IsMeta();
+		}
 
 		if (effect.m_fMaxTime > 0)
 		{
-			if (effectData.IsMeta())
+			if (isMeta)
 			{
 				effect.m_fTimer -= fDeltaTime;
 			}
@@ -145,7 +155,7 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 				effect.m_fTimer -= fDeltaTime / MetaModifiers::m_fEffectDurationModifier;
 			}
 		}
-		else if (effectData.TimedType == EEffectTimedType::NotTimed || effectData.TimedType == EEffectTimedType::Unk)
+		else if (!isTimed)
 		{
 			float t = m_usEffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
 			// ensure effects stay on screen for at least 5 seconds
@@ -153,8 +163,7 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 		}
 
 		if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
-		    || (effectData.TimedType == EEffectTimedType::NotTimed || effectData.TimedType == EEffectTimedType::Unk)
-		           && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
+		    || (!isTimed) && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
 		{
 			EffectThreads::StopThread(effect.m_ullThreadId);
 			activeEffectsSize--;
@@ -185,7 +194,7 @@ void EffectDispatcher::UpdateMetaEffects(int iDeltaTime)
 		float totalWeight = 0.f;
 		for (auto &[effectId, effectData] : g_dictEnabledEffects)
 		{
-			if (effectData.IsMeta() && effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsUtility())
+			if (effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
 			{
 				totalWeight += GetEffectWeight(effectData);
 
@@ -271,13 +280,20 @@ void EffectDispatcher::DrawEffectTexts()
 	for (const ActiveEffect &effect : m_rgActiveEffects)
 	{
 		const bool bHasFake = !effect.m_szFakeName.empty();
-		auto &effectData    = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
 
-		if ((effect.m_bHideText && !bHasFake)
-		    || (MetaModifiers::m_bHideChaosUI && !effectData.IsMeta() && !effectData.IsUtility())
-		    || (MetaModifiers::m_bDisableChaos && !effectData.IsMeta() && !effectData.IsUtility()))
+		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
+		if (g_dictEnabledEffects.contains(effect.m_EffectIdentifier))
 		{
-			continue;
+			auto &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
+
+			if ((effect.m_bHideText && !bHasFake)
+			    || (MetaModifiers::m_bHideChaosUI && !effectData.IsMeta() && !effectData.IsUtility()
+			        && !effectData.IsTemporary())
+			    || (MetaModifiers::m_bDisableChaos && !effectData.IsMeta() && !effectData.IsUtility()
+			        && !effectData.IsTemporary()))
+			{
+				continue;
+			}
 		}
 
 		std::string name = effect.m_szFakeName;
@@ -362,7 +378,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 		}
 	}
 
-	LOG("Dispatched effect \"" << effectData.Name << "\"");
+	LOG("Dispatching effect \"" << effectData.Name << "\"");
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -435,9 +451,8 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 			if (!MetaModifiers::m_bHideChaosUI)
 			{
 				// Play global sound (if one exists)
-				// Workaround: Force no global sound for "Fake Crash" and "Fake Death"
-				if (effectIdentifier.GetEffectId() != "misc_fakecrash"
-				    && effectIdentifier.GetEffectId() != "player_fakedeath")
+				// HACK: Force no global sound for "Fake Crash"
+				if (effectIdentifier.GetEffectId() != "misc_fakecrash")
 				{
 					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
 				}
@@ -464,7 +479,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 			                               effectTime);
 
 			// There might be a reason to include meta effects in the future, for now we will just exclude them
-			if (bAddToLog && !effectData.IsMeta())
+			if (bAddToLog && !effectData.IsMeta() && !effectData.IsTemporary() && !effectData.IsUtility())
 			{
 				if (m_rgDispatchedEffectsLog.size() >= 100)
 				{
@@ -487,7 +502,7 @@ void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto &[effectIdentifier, effectData] : g_dictEnabledEffects)
 	{
-		if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta() && !effectData.IsUtility())
+		if (!effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
 		{
 			choosableEffects.emplace(effectIdentifier, effectData);
 		}
@@ -520,6 +535,19 @@ void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
 	{
 		DispatchEffect(*pTargetEffectIdentifier, szSuffix);
 	}
+}
+
+void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
+{
+	auto result = std::find_if(m_rgActiveEffects.begin(), m_rgActiveEffects.end(),
+	                           [effectId](auto &activeEffect) { return activeEffect.m_EffectIdentifier == effectId; });
+	if (result == m_rgActiveEffects.end())
+	{
+		return;
+	}
+
+	EffectThreads::StopThreadBlocking(result->m_ullThreadId);
+	m_rgActiveEffects.erase(result);
 }
 
 void EffectDispatcher::ClearEffects(bool bIncludePermanent)

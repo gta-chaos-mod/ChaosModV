@@ -5,7 +5,7 @@
 
 static void OnTick()
 {
-	static const Hash blimpHash = GET_HASH_KEY("BLIMP");
+	static const Hash blimpHash = "BLIMP"_hash;
 
 	for (Vehicle veh : GetAllVehs())
 	{

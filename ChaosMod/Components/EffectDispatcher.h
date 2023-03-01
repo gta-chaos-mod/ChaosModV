@@ -28,7 +28,6 @@ class EffectDispatcher : public Component
 	struct ActiveEffect
 	{
 		EffectIdentifier m_EffectIdentifier;
-		RegisteredEffect *m_pRegisteredEffect;
 
 		DWORD64 m_ullThreadId = 0;
 
@@ -44,7 +43,6 @@ class EffectDispatcher : public Component
 		             const std::string &szName, const std::string &szFakeName, float fTimer)
 		{
 			m_EffectIdentifier          = effectIdentifier;
-			m_pRegisteredEffect         = pRegisteredEffect;
 			m_szName                    = szName;
 			m_szFakeName                = szFakeName;
 			m_fTimer                    = fTimer;
@@ -127,6 +125,7 @@ class EffectDispatcher : public Component
 	                    bool bAddToLog = true);
 	void DispatchRandomEffect(const char *szSuffix = nullptr);
 
+	void ClearEffect(const EffectIdentifier &effectId);
 	void ClearEffects(bool bIncludePermanent = true);
 	void ClearActiveEffects(const EffectIdentifier &exclude = EffectIdentifier());
 	void ClearMostRecentEffect();

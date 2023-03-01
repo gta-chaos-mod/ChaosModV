@@ -9,7 +9,7 @@
 static void OnStart()
 {
 	Ped playerPed                   = PLAYER_PED_ID();
-	static const Hash parachuteHash = GET_HASH_KEY("GADGET_PARACHUTE");
+	static const Hash parachuteHash = "GADGET_PARACHUTE"_hash;
 
 	CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
 	SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);

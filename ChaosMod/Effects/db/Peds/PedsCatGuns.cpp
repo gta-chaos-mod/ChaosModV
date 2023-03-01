@@ -7,7 +7,7 @@
 
 static void OnTick()
 {
-	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
+	static const Hash catHash = "a_c_cat_01"_hash;
 	LoadModel(catHash);
 
 	for (Ped ped : GetAllPeds())

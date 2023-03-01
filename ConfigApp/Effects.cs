@@ -410,6 +410,7 @@ namespace ConfigApp
             { "time_local_time", new EffectInfo("Set Time To System Time", EffectCategory.Time) },
             { "peds_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Peds, true) },
             { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
+            { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
         };
     }
 }

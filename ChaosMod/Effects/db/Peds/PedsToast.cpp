@@ -8,8 +8,9 @@
 static std::map<Ped, Object> pedPropsMap;
 static const int TOAST_MODEL_COUNT = 6;
 static Hash availablePropModels[TOAST_MODEL_COUNT];
-static const char *toastModelKeys[TOAST_MODEL_COUNT] = { "v_res_fa_bread01", "v_res_fa_bread02", "v_res_fa_bread03",
-	                                                     "v_ret_247_bread1", "prop_toaster_01",  "prop_toaster_02" };
+static Hash toastModels[TOAST_MODEL_COUNT] = { "v_res_fa_bread01"_hash, "v_res_fa_bread02"_hash,
+	                                           "v_res_fa_bread03"_hash, "v_ret_247_bread1"_hash,
+	                                           "prop_toaster_01"_hash,  "prop_toaster_02"_hash };
 
 // removes peds' heads; from PedsHeadless.cpp
 static void RemoveHead()
@@ -24,7 +25,7 @@ static void OnStart()
 {
 	for (int i = 0; i < TOAST_MODEL_COUNT; ++i)
 	{
-		Hash toastModel        = GET_HASH_KEY(toastModelKeys[i]);
+		Hash toastModel        = toastModels[i];
 		availablePropModels[i] = toastModel;
 	}
 }

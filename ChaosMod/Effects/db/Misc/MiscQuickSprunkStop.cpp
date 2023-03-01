@@ -6,7 +6,7 @@
 
 static void OnStart()
 {
-	static Hash objectHash = GET_HASH_KEY("prop_vend_soda_02");
+	static Hash objectHash = "prop_vend_soda_02"_hash;
 	Ped player             = PLAYER_PED_ID();
 	Vector3 pos            = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 5, 0);
 	Object obj             = CreatePoolProp(objectHash, pos.x, pos.y, pos.z, false);

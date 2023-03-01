@@ -21,7 +21,7 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &rgTextColor) : Component()
 	}
 
 	if (std::count_if(g_dictEnabledEffects.begin(), g_dictEnabledEffects.end(),
-	                  [](const auto &pair) { return !pair.second.ExcludedFromVoting(); })
+	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
 	    < 3)
 	{
 		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable Twitch "
@@ -301,8 +301,8 @@ void TwitchVoting::OnRun()
 		{
 			auto &[effectIdentifier, effectData] = pair;
 
-			if (effectData.TimedType != EEffectTimedType::Permanent && !effectData.IsMeta()
-			    && !effectData.ExcludedFromVoting() && !effectData.IsUtility())
+			if (!effectData.IsMeta() && !effectData.IsExcludedFromVoting() && !effectData.IsUtility()
+			    && !effectData.IsHidden())
 			{
 				dictChoosableEffects.emplace(effectIdentifier, effectData);
 			}

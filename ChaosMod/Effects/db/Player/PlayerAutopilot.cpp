@@ -260,7 +260,7 @@ static void OnTick()
 			{
 				if (closestEnemyDist > 200.f)
 				{
-					static const Hash sniperHash = GET_HASH_KEY("WEAPON_SNIPERRIFLE");
+					static const Hash sniperHash = "WEAPON_SNIPERRIFLE"_hash;
 
 					// Sniper time
 					GIVE_WEAPON_TO_PED(playerPed, sniperHash, 9999, false, true);
@@ -273,7 +273,7 @@ static void OnTick()
 					// If player has no gun, just give a pistol
 					if (GET_WEAPON_DAMAGE_TYPE(bestWep) == 2)
 					{
-						static const Hash pistolHash = GET_HASH_KEY("WEAPON_PISTOL");
+						static const Hash pistolHash = "WEAPON_PISTOL"_hash;
 
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 9999, false, true);
 						SET_CURRENT_PED_WEAPON(playerPed, pistolHash, true);

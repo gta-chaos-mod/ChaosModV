@@ -9,7 +9,7 @@ static Hash displayHash = 0;
 
 static void OnStart()
 {
-	displayHash = GET_HASH_KEY("prop_huge_display_01");
+	displayHash = "prop_huge_display_01"_hash;
 }
 
 static void OnTick()

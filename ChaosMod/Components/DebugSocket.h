@@ -9,6 +9,7 @@
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <string_view>
 
 class DebugSocket : public Component
 {
@@ -27,6 +28,8 @@ class DebugSocket : public Component
 
   public:
 	void Close();
+
+	void ScriptLog(std::string_view scriptName, std::string_view text);
 
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;

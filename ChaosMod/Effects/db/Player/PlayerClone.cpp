@@ -8,14 +8,14 @@ static void OnStart()
 	if (friendly)
 	{
 		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_FRIENDLY", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
 	}
 	else
 	{
 		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_HOSTILE", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, GET_HASH_KEY("PLAYER"), relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, "PLAYER"_hash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, "PLAYER"_hash, relationshipGroup);
 	}
 
 	Ped playerPed = PLAYER_PED_ID();

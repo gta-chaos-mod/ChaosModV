@@ -17,8 +17,8 @@ void OnStartBlimpStrats(bool bHandleThreadBlock)
 
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
-	Hash blimpHash       = GET_HASH_KEY("blimp");
-	Hash daveHash        = GET_HASH_KEY("ig_davenorton");
+	Hash blimpHash       = "blimp"_hash;
+	Hash daveHash        = "ig_davenorton"_hash;
 
 	LoadModel(blimpHash);
 
