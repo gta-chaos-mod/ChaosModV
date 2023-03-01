@@ -60,7 +60,8 @@
 		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
 	} while (0);
 
-static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop", "chaosmod\\custom_scripts" };
+static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop",
+	                                                     "chaosmod\\custom_scripts" };
 
 _LUAFUNC void LuaPrint(const std::string &szText)
 {
@@ -249,6 +250,13 @@ static std::unordered_map<std::string, LuaScript> ms_dictRegisteredEffects;
 _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 ullNativeHash,
                                ELuaNativeReturnType eReturnType, const sol::variadic_args &args)
 {
+	if (ullNativeHash == 0x213AEB2B90CBA7AC || ullNativeHash == 0x5A5F40FE637EB584
+	    || ullNativeHash == 0x933D6A9EEC1BACD0 || ullNativeHash == 0xE80492A9AC099A93
+	    || ullNativeHash == 0x8EF07E15701D61ED)
+	{
+		return sol::make_object(lua, sol::lua_nil);
+	}
+
 	nativeInit(ullNativeHash);
 
 	for (const sol::stack_proxy &arg : args)
