@@ -759,8 +759,8 @@ static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
 	const auto &fileName = path.filename().string();
 	const auto &pathStr  = path.string();
 
-	// Don't print first two directories (e.g. chaosmod\scripts\)
-	LUA_LOG("Running script " << pathStr.substr(pathStr.find("\\", 9) + 1));
+	// Don't include chaosmod directory
+	LUA_LOG("Running script " << pathStr.substr(pathStr.find("\\") + 1));
 
 	std::ifstream fileStream(path.c_str());
 	std::stringstream buffer;
