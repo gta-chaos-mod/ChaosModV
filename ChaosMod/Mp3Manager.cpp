@@ -2,8 +2,8 @@
 
 #include "Mp3Manager.h"
 
-#define CHAOS_SOUNDFILES_USER_DIR ".\\chaosmod\\sounds\\"
-#define CHAOS_SOUNDFILES_WORKSHOP_DIR ".\\chaosmod\\workshop\\"
+#define CHAOS_SOUNDFILES_USER_DIR ".\\chaosmod\\sounds"
+#define CHAOS_SOUNDFILES_WORKSHOP_DIR ".\\chaosmod\\workshop"
 
 static std::unordered_map<std::string, std::vector<std::string>> ms_dictEffectSoundFilesCache;
 
@@ -12,12 +12,14 @@ static void HandleDirectory(const std::string &dir, const std::string &soundName
 	std::ostringstream ossTmp;
 	std::string tmpStr;
 
+	auto &soundFiles = ms_dictEffectSoundFilesCache[soundName];
+
 	// Check if file exists first
-	ossTmp << dir << soundName;
+	ossTmp << dir << "\\" << soundName;
 	tmpStr = ossTmp.str() + ".mp3";
-	if (DoesFileExist(tmpStr.c_str()))
+	if (DoesFileExist(tmpStr))
 	{
-		ms_dictEffectSoundFilesCache.emplace(soundName, std::vector<std::string> { dir + soundName + ".mp3" });
+		soundFiles.push_back(tmpStr);
 	}
 
 	// Check if dir also exists
@@ -26,18 +28,14 @@ static void HandleDirectory(const std::string &dir, const std::string &soundName
 	if (stat(tmpStr.c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
 	{
 		// Cache all of the mp3 files
-		std::vector<std::string> rgSoundFiles;
-
 		for (const auto &entry : std::filesystem::directory_iterator(ossTmp.str()))
 		{
 			if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".mp3"
 			    && entry.file_size() > 0)
 			{
-				rgSoundFiles.push_back(dir + soundName + "\\" + entry.path().filename().string());
+				soundFiles.push_back(tmpStr + "\\" + entry.path().filename().string());
 			}
 		}
-
-		ms_dictEffectSoundFilesCache.emplace(soundName, rgSoundFiles);
 	}
 }
 
@@ -79,9 +77,9 @@ namespace Mp3Manager
 			ossTmp << "open \"" << szChosenSound << "\" type mpegvideo";
 			tmpStr               = ossTmp.str();
 			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
-			error            = mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
+			error                = mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		}
-		
+
 		{
 			std::ostringstream ossTmp;
 			std::string tmpStr;
