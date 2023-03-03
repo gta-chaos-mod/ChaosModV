@@ -59,7 +59,7 @@ namespace Mp3Manager
 			}
 		}
 
-		auto rgCachedSoundFiles = ms_dictEffectSoundFilesCache[soundFileName];
+		const auto &rgCachedSoundFiles = ms_dictEffectSoundFilesCache[soundFileName];
 
 		if (rgCachedSoundFiles.empty())
 		{
