@@ -4,13 +4,15 @@
 
 #include "../vendor/scripthookv/inc/main.h"
 
-using DWORD               = unsigned long;
+using DWORD                           = unsigned long;
 
-inline void *g_MainThread = nullptr;
+inline void *g_MainThread             = nullptr;
+inline void *g_EffectDispatcherThread = nullptr;
 
 inline void WAIT(DWORD ulTimeMs)
 {
-	if (!g_MainThread || GetCurrentFiber() == g_MainThread)
+	auto currentFiber = GetCurrentFiber();
+	if (currentFiber == g_MainThread || currentFiber == g_EffectDispatcherThread)
 	{
 		scriptWait(ulTimeMs);
 	}
@@ -18,6 +20,6 @@ inline void WAIT(DWORD ulTimeMs)
 	{
 		EffectThreads::PutThreadOnPause(ulTimeMs);
 
-		EffectThreads::SwitchToMainThread();
+		EffectThreads::SwitchToEffectDispatcherThread();
 	}
 }

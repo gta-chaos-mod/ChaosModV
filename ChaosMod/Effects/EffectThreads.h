@@ -24,7 +24,7 @@ namespace EffectThreads
 
 	void RunThreads();
 
-	void SwitchToMainThread();
+	void SwitchToEffectDispatcherThread();
 
 	bool DoesThreadExist(DWORD64 threadId);
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
@@ -75,7 +75,7 @@ inline void EffectThreadFunc(LPVOID pData)
 
 	threadData.m_bHasStopped = true;
 
-	EffectThreads::SwitchToMainThread();
+	EffectThreads::SwitchToEffectDispatcherThread();
 }
 
 class EffectThread
