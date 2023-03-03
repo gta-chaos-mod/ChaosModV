@@ -133,7 +133,7 @@ namespace ConfigApp
                         StringBuilder sb = new StringBuilder();
                         foreach (var entry in archive.Entries)
                         {
-                            var trimmedName = entry.Name.Trim();
+                            var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                             if (trimmedName.Length > 0)
                             {
                                 sb.Append(trimmedName + "   ");
