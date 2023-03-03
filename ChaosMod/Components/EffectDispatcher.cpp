@@ -72,11 +72,10 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, cons
 
 	Reset();
 
-	if (g_EffectDispatcherThread)
+	if (!g_EffectDispatcherThread)
 	{
-		DeleteFiber(g_EffectDispatcherThread);
+		g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 	}
-	g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -86,13 +85,13 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::OnModPauseCleanup()
 {
-	ClearEffects();
-
 	if (g_EffectDispatcherThread)
 	{
 		DeleteFiber(g_EffectDispatcherThread);
 	}
 	g_EffectDispatcherThread = nullptr;
+
+	ClearEffects();
 }
 
 void EffectDispatcher::OnRun()

@@ -24,8 +24,6 @@ namespace EffectThreads
 
 	void RunThreads();
 
-	void SwitchToEffectDispatcherThread();
-
 	bool DoesThreadExist(DWORD64 threadId);
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
 	bool HasThreadStopped(DWORD64 threadId);
@@ -43,6 +41,8 @@ struct EffectThreadData
 	bool &m_bIsRunning;
 	bool &m_bHasStopped;
 
+	void *m_CallerFiber = nullptr;
+
 	EffectThreadData(RegisteredEffect *pEffect, bool &bHasOnStartExecuted, bool &bIsRunning, bool &bHasStopped)
 	    : m_pEffect(pEffect),
 	      m_bHasOnStartExecuted(bHasOnStartExecuted),
@@ -56,7 +56,7 @@ inline void EffectThreadFunc(LPVOID pData)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	extern void WAIT(DWORD ulTimeMs);
+	extern void WAIT(DWORD ulTimeMs, void *callerFiber);
 
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(pData);
 
@@ -68,14 +68,14 @@ inline void EffectThreadFunc(LPVOID pData)
 	{
 		threadData.m_pEffect->Tick();
 
-		WAIT(0);
+		WAIT(0, threadData.m_CallerFiber);
 	}
 
 	threadData.m_pEffect->Stop();
 
 	threadData.m_bHasStopped = true;
 
-	EffectThreads::SwitchToEffectDispatcherThread();
+	SwitchToFiber(threadData.m_CallerFiber);
 }
 
 class EffectThread
@@ -122,8 +122,9 @@ class EffectThread
 		return pThisThread->m_pThread == pThread;
 	}
 
-	inline void OnRun() const
+	inline void OnRun()
 	{
+		m_ThreadData.m_CallerFiber = GetCurrentFiber();
 		SwitchToFiber(m_pThread);
 	}
 

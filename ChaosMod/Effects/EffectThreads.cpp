@@ -134,12 +134,6 @@ namespace EffectThreads
 		m_ullLastTimestamp = ullCurTimestamp;
 	}
 
-	void SwitchToEffectDispatcherThread()
-	{
-		if (g_EffectDispatcherThread)
-			SwitchToFiber(g_EffectDispatcherThread);
-	}
-
 	bool DoesThreadExist(DWORD64 threadId)
 	{
 		EffectThread *pThread = ThreadIdToThread(threadId);
