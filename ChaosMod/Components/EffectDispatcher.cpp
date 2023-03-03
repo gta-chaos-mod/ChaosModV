@@ -339,12 +339,12 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 }
 
-_NODISCARD bool EffectDispatcher::ShouldDispatchEffectNow() const
+bool EffectDispatcher::ShouldDispatchEffectNow() const
 {
 	return GetRemainingTimerTime() <= 0;
 }
 
-_NODISCARD int EffectDispatcher::GetRemainingTimerTime() const
+int EffectDispatcher::GetRemainingTimerTime() const
 {
 	return std::ceil(m_usEffectSpawnTime / MetaModifiers::m_fTimerSpeedModifier * (1 - m_fTimerPercentage));
 }

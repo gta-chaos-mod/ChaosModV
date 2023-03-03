@@ -133,7 +133,7 @@ void DebugMenu::OnRun()
 	}
 }
 
-_NODISCARD bool DebugMenu::IsEnabled() const
+bool DebugMenu::IsEnabled() const
 {
 	return m_bIsEnabled;
 }
@@ -248,7 +248,7 @@ void DebugMenu::SetVisible(bool bState)
 	m_bVisible = bState;
 }
 
-_NODISCARD bool DebugMenu::IsVisible() const
+bool DebugMenu::IsVisible() const
 {
 	return m_bVisible;
 }

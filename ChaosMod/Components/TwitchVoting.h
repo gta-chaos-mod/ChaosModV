@@ -6,8 +6,6 @@
 #include <memory>
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD64 = unsigned long long;
 using BYTE    = unsigned char;
 
@@ -77,7 +75,7 @@ class TwitchVoting : public Component
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
 
-	_NODISCARD bool IsEnabled() const;
+	bool IsEnabled() const;
 
 	bool HandleMsg(const std::string &szMsg);
 

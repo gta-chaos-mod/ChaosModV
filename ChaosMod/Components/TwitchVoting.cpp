@@ -360,7 +360,7 @@ void TwitchVoting::OnRun()
 	}
 }
 
-_NODISCARD bool TwitchVoting::IsEnabled() const
+bool TwitchVoting::IsEnabled() const
 {
 	return m_bEnableTwitchVoting;
 }

@@ -6,8 +6,6 @@
 
 #include <memory>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD   = unsigned long;
 using DWORD64 = unsigned long long;
 
@@ -139,17 +137,17 @@ class EffectThread
 		}
 	}
 
-	_NODISCARD inline bool HasStopped() const
+	inline bool HasStopped() const
 	{
 		return m_bHasStopped;
 	}
 
-	_NODISCARD inline bool HasOnStartExecuted() const
+	inline bool HasOnStartExecuted() const
 	{
 		return m_bHasOnStartExecuted;
 	}
 
-	_NODISCARD inline bool IsStopping() const
+	inline bool IsStopping() const
 	{
 		return !m_bIsRunning;
 	}

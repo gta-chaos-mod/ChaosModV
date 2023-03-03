@@ -31,7 +31,7 @@ static bool ms_bHaveLateHooksRan            = false;
 static bool ms_bAntiSoftlockShortcutEnabled = false;
 static bool ms_bRunAntiSoftlock             = false;
 
-_NODISCARD static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
+static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
 {
 	// Format: #ARGB
 	std::array<BYTE, 3> rgColors;

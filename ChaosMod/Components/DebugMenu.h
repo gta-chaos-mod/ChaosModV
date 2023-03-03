@@ -5,8 +5,6 @@
 
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD = unsigned long;
 
 class DebugMenu : public Component
@@ -39,12 +37,12 @@ class DebugMenu : public Component
   public:
 	virtual void OnRun() override;
 
-	_NODISCARD bool IsEnabled() const;
+	bool IsEnabled() const;
 
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 
 	void SetVisible(bool bState);
-	_NODISCARD bool IsVisible() const;
+	bool IsVisible() const;
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

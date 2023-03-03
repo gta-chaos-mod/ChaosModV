@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <string>
 
-#define _NODISCARD [[nodiscard]]
-
 #define _EFFECT_CONCAT(a, b) a##b
 #define EFFECT_CONCAT(a, b) _EFFECT_CONCAT(a, b)
 #define REGISTER_EFFECT(OnStart, OnStop, OnTick, ...)                                         \
@@ -103,12 +101,12 @@ struct RegisteredEffect
 		}
 	}
 
-	_NODISCARD inline bool IsRunning() const
+	inline bool IsRunning() const
 	{
 		return m_bIsRunning;
 	}
 
-	_NODISCARD inline bool IsScript() const
+	inline bool IsScript() const
 	{
 		return m_EffectIdentifier.IsScript();
 	}
@@ -116,7 +114,7 @@ struct RegisteredEffect
 
 inline std::vector<RegisteredEffect> g_RegisteredEffects;
 
-_NODISCARD inline RegisteredEffect *GetRegisteredEffect(const EffectIdentifier &effectIdentifier)
+inline RegisteredEffect *GetRegisteredEffect(const EffectIdentifier &effectIdentifier)
 {
 	const auto &result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectIdentifier);
 

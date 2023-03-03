@@ -132,7 +132,7 @@ namespace Memory
 		return Handle(uintptr_t(pattern.get_first()));
 	}
 
-	_NODISCARD MH_STATUS AddHook(void *pTarget, void *pDetour, void *ppOrig)
+	MH_STATUS AddHook(void *pTarget, void *pDetour, void *ppOrig)
 	{
 		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void **>(ppOrig));
 

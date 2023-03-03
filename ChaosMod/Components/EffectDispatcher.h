@@ -14,8 +14,6 @@
 #include <string_view>
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD64 = unsigned long long;
 using WORD    = unsigned short;
 using BYTE    = unsigned char;
@@ -118,9 +116,9 @@ class EffectDispatcher : public Component
 	void DrawTimerBar();
 	void DrawEffectTexts();
 
-	_NODISCARD bool ShouldDispatchEffectNow() const;
+	bool ShouldDispatchEffectNow() const;
 
-	_NODISCARD int GetRemainingTimerTime() const;
+	int GetRemainingTimerTime() const;
 
 	void DispatchEffect(const EffectIdentifier &effectIdentifier, const char *szSuffix = nullptr,
 	                    bool bAddToLog = true);
