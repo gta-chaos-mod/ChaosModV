@@ -263,6 +263,9 @@
     <Compile Include="Info.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WorkshopInfoHandler.cs" />
+    <Compile Include="WorkshopInstallDialog.xaml.cs">
+      <DependentUpon>WorkshopInstallDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WorkshopInstallHandler.cs" />
     <Compile Include="WorkshopSubmissionItem.cs" />
     <Page Include="MainWindow.xaml">
@@ -282,6 +285,10 @@
     <Page Include="EffectConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WorkshopInstallDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

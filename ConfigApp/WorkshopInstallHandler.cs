@@ -9,6 +9,8 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Linq;
 using ZstdSharp;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace ConfigApp
 {
@@ -130,18 +132,17 @@ namespace ConfigApp
                             return;
                         }
 
-                        StringBuilder sb = new StringBuilder();
+                        List<string> fl = new List<string>();
                         foreach (var entry in archive.Entries)
                         {
                             var trimmedName = entry.Name.Trim();
                             if (trimmedName.Length > 0)
                             {
-                                sb.Append(trimmedName + "   ");
+                                fl.Add(trimmedName);
                             }
                         }
-                        var msgBoxResult = MessageBox.Show($"This submission contains the following entries:\n\n{sb}\n\nInstall?", "ChaosModV",
-                            MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (msgBoxResult == MessageBoxResult.No)
+                        var installConfirmationWindow = new WorkshopInstallDialog(fl);
+                        if (!(bool)installConfirmationWindow.ShowDialog())
                         {
                             fatalCleanup();
                             return;
