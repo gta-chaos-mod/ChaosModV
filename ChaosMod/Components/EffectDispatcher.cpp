@@ -114,14 +114,6 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 		return;
 	}
 
-	for (ActiveEffect &effect : m_rgActiveEffects)
-	{
-		if (effect.m_bHideText && EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId))
-		{
-			effect.m_bHideText = false;
-		}
-	}
-
 	float fDeltaTime               = (float)iDeltaTime / 1000;
 
 	int activeEffectsSize          = m_rgActiveEffects.size();
@@ -133,8 +125,13 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 	{
 		ActiveEffect &effect = *it;
 
-		bool isTimed         = false;
-		bool isMeta          = false;
+		if (effect.m_bHideText && EffectThreads::HasThreadOnStartExecuted(effect.m_ullThreadId))
+		{
+			effect.m_bHideText = false;
+		}
+
+		bool isTimed = false;
+		bool isMeta  = false;
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
 		if (g_dictEnabledEffects.contains(effect.m_EffectIdentifier))
 		{
@@ -165,9 +162,17 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 		if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
 		    || (!isTimed) && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
 		{
-			EffectThreads::StopThread(effect.m_ullThreadId);
-			activeEffectsSize--;
-			it = m_rgActiveEffects.erase(it);
+			if (!effect.m_bIsStopping)
+			{
+				EffectThreads::StopThread(effect.m_ullThreadId);
+				effect.m_bIsStopping = true;
+			}
+			else if (!EffectThreads::DoesThreadExist(effect.m_ullThreadId)
+			         || EffectThreads::HasThreadStopped(effect.m_ullThreadId))
+			{
+				activeEffectsSize--;
+				it = m_rgActiveEffects.erase(it);
+			}
 		}
 		else
 		{
@@ -391,11 +396,16 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 		ActiveEffect &activeEffect = *it;
 		auto &activeEffectData     = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier);
 
-		if (activeEffect.m_EffectIdentifier == effectIdentifier && effectData.TimedType != EEffectTimedType::Unk
-		    && effectData.TimedType != EEffectTimedType::NotTimed)
+		if (activeEffect.m_EffectIdentifier == effectIdentifier)
 		{
-			bAlreadyExists        = true;
-			activeEffect.m_fTimer = activeEffect.m_fMaxTime;
+			EffectThreads::StopThreadImmediately(activeEffect.m_ullThreadId);
+			it = m_rgActiveEffects.erase(it);
+
+			if (effectData.TimedType != EEffectTimedType::Unk && effectData.TimedType != EEffectTimedType::NotTimed)
+			{
+				bAlreadyExists        = true;
+				activeEffect.m_fTimer = activeEffect.m_fMaxTime;
+			}
 
 			break;
 		}
@@ -422,8 +432,7 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 
 		if (bFound)
 		{
-			EffectThreads::StopThread(activeEffect.m_ullThreadId);
-
+			EffectThreads::StopThreadImmediately(activeEffect.m_ullThreadId);
 			it = m_rgActiveEffects.erase(it);
 		}
 		else
@@ -546,13 +555,13 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 		return;
 	}
 
-	EffectThreads::StopThreadBlocking(result->m_ullThreadId);
+	EffectThreads::StopThreadImmediately(result->m_ullThreadId);
 	m_rgActiveEffects.erase(result);
 }
 
 void EffectDispatcher::ClearEffects(bool bIncludePermanent)
 {
-	EffectThreads::StopThreads();
+	EffectThreads::StopThreadsImmediately();
 
 	if (bIncludePermanent)
 	{
@@ -567,13 +576,12 @@ void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
 {
 	for (auto it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end();)
 	{
-		const ActiveEffect &effect = *it;
+		ActiveEffect &effect = *it;
 
 		if (effect.m_EffectIdentifier != exclude)
 		{
 			EffectThreads::StopThread(effect.m_ullThreadId);
-
-			it = m_rgActiveEffects.erase(it);
+			effect.m_bIsStopping = true;
 		}
 		else
 		{
@@ -586,13 +594,12 @@ void EffectDispatcher::ClearMostRecentEffect()
 {
 	if (!m_rgActiveEffects.empty())
 	{
-		const ActiveEffect &mostRecentEffect = m_rgActiveEffects[m_rgActiveEffects.size() - 1];
+		ActiveEffect &mostRecentEffect = m_rgActiveEffects[m_rgActiveEffects.size() - 1];
 
 		if (mostRecentEffect.m_fTimer > 0)
 		{
 			EffectThreads::StopThread(mostRecentEffect.m_ullThreadId);
-
-			m_rgActiveEffects.erase(m_rgActiveEffects.end() - 1);
+			mostRecentEffect.m_bIsStopping = true;
 		}
 	}
 }

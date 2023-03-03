@@ -32,26 +32,29 @@ namespace EffectThreads
 		return threadId;
 	}
 
-	void StopThread(DWORD64 ullThreadId)
+	void StopThread(DWORD64 threadId)
 	{
-		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
 		if (result != m_rgThreads.end())
 		{
 			(*result)->Stop();
 		}
 	}
 
-	void StopThreadBlocking(DWORD64 ullThreadId)
+	void StopThreadImmediately(DWORD64 threadId)
 	{
-		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
 		if (result != m_rgThreads.end())
 		{
+			// Give thread a chance to stop gracefully
 			(*result)->Stop();
-			while (!(*result)->HasStopped())
+			if (!(*result)->HasStopped())
 			{
 				WAIT(0);
 				(*result)->OnRun();
 			}
+
+			m_rgThreads.erase(result);
 		}
 	}
 
@@ -60,6 +63,24 @@ namespace EffectThreads
 		for (std::unique_ptr<EffectThread> &pThread : m_rgThreads)
 		{
 			pThread->Stop();
+		}
+	}
+
+	void StopThreadsImmediately()
+	{
+		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end();)
+		{
+			auto &thread = *it;
+
+			// Give thread a chance to stop gracefully
+			thread->Stop();
+			if (!thread->HasStopped())
+			{
+				WAIT(0);
+				thread->OnRun();
+			}
+
+			it = m_rgThreads.erase(it);
 		}
 	}
 
@@ -119,11 +140,25 @@ namespace EffectThreads
 		SwitchToFiber(g_MainThread);
 	}
 
+	bool DoesThreadExist(DWORD64 threadId)
+	{
+		EffectThread *pThread = ThreadIdToThread(threadId);
+
+		return pThread;
+	}
+
 	bool HasThreadOnStartExecuted(DWORD64 threadId)
 	{
 		EffectThread *pThread = ThreadIdToThread(threadId);
 
 		return pThread ? pThread->HasOnStartExecuted() : false;
+	}
+
+	bool HasThreadStopped(DWORD64 threadId)
+	{
+		EffectThread *pThread = ThreadIdToThread(threadId);
+
+		return pThread ? pThread->HasStopped() : true;
 	}
 
 	bool IsAnyThreadRunningOnStart()

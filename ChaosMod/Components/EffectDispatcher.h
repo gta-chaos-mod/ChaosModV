@@ -34,10 +34,11 @@ class EffectDispatcher : public Component
 		std::string m_szName;
 		std::string m_szFakeName;
 
-		float m_fTimer   = 0.f;
-		float m_fMaxTime = 0.f;
+		float m_fTimer     = 0.f;
+		float m_fMaxTime   = 0.f;
 
-		bool m_bHideText = true;
+		bool m_bHideText   = true;
+		bool m_bIsStopping = false;
 
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *pRegisteredEffect,
 		             const std::string &szName, const std::string &szFakeName, float fTimer)

@@ -17,9 +17,10 @@ namespace EffectThreads
 {
 	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed);
 
-	void StopThread(DWORD64 ullThreadId);
-	void StopThreadBlocking(DWORD64 ullThreadId);
+	void StopThread(DWORD64 threadId);
+	void StopThreadImmediately(DWORD64 threadId);
 	void StopThreads();
+	void StopThreadsImmediately();
 
 	void PutThreadOnPause(DWORD ulTimeMs);
 
@@ -27,7 +28,9 @@ namespace EffectThreads
 
 	void SwitchToMainThread();
 
-	bool HasThreadOnStartExecuted(DWORD64 ullThreadId);
+	bool DoesThreadExist(DWORD64 threadId);
+	bool HasThreadOnStartExecuted(DWORD64 threadId);
+	bool HasThreadStopped(DWORD64 threadId);
 
 	bool IsAnyThreadRunningOnStart();
 	bool IsAnyThreadRunning();
@@ -144,5 +147,10 @@ class EffectThread
 	_NODISCARD inline bool HasOnStartExecuted() const
 	{
 		return m_bHasOnStartExecuted;
+	}
+
+	_NODISCARD inline bool IsStopping() const
+	{
+		return !m_bIsRunning;
 	}
 };
