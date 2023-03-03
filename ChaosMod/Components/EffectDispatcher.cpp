@@ -98,7 +98,6 @@ void EffectDispatcher::OnRun()
 {
 	DWORD64 ullCurrentUpdateTime = GetTickCount64();
 	int iDeltaTime               = ullCurrentUpdateTime - m_ullTimer;
-	m_ullTimer                   = ullCurrentUpdateTime;
 
 	// the game was paused
 	if (iDeltaTime > 1000)
@@ -116,6 +115,8 @@ void EffectDispatcher::OnRun()
 	SwitchToFiber(g_EffectDispatcherThread);
 
 	DrawEffectTexts();
+
+	m_ullTimer = ullCurrentUpdateTime;
 }
 
 void EffectDispatcher::UpdateTimer(int iDeltaTime)
