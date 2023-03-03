@@ -83,8 +83,6 @@ class EffectDispatcher : public Component
 
 	bool m_bEnableNormalEffectDispatch = true;
 
-	DWORD64 m_ullTimer                 = 0;
-
 	bool m_bMetaEffectsEnabled         = true;
 	float m_fMetaEffectTimerPercentage = 0.f;
 
@@ -92,6 +90,8 @@ class EffectDispatcher : public Component
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 
   public:
+	DWORD64 m_ullTimer              = 0;
+
 	bool m_bPauseTimer              = false;
 
 	bool m_bDispatchEffectsOnTimer  = true;
@@ -104,9 +104,6 @@ class EffectDispatcher : public Component
 	virtual ~EffectDispatcher() override;
 
   private:
-	void UpdateTimer(int iDeltaTime);
-	void UpdateEffects(int iDeltaTime);
-	void UpdateMetaEffects(int iDeltaTime);
 	float GetEffectTopSpace();
 
   public:
@@ -123,6 +120,10 @@ class EffectDispatcher : public Component
 	void DispatchEffect(const EffectIdentifier &effectIdentifier, const char *szSuffix = nullptr,
 	                    bool bAddToLog = true);
 	void DispatchRandomEffect(const char *szSuffix = nullptr);
+
+	void UpdateTimer(int iDeltaTime);
+	void UpdateEffects(int iDeltaTime);
+	void UpdateMetaEffects(int iDeltaTime);
 
 	void ClearEffect(const EffectIdentifier &effectId);
 	void ClearEffects(bool bIncludePermanent = true);

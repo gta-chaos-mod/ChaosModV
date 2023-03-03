@@ -12,6 +12,31 @@
 #include "Util/Random.h"
 #include "Util/Text.h"
 
+static void _OnRunEffects(LPVOID data)
+{
+	auto effectDispatcher = reinterpret_cast<EffectDispatcher *>(data);
+	while (true)
+	{
+		DWORD64 ullCurrentUpdateTime = GetTickCount64();
+		int iDeltaTime               = ullCurrentUpdateTime - effectDispatcher->m_ullTimer;
+
+		// the game was paused
+		if (iDeltaTime > 1000)
+		{
+			iDeltaTime = 0;
+		}
+
+		effectDispatcher->UpdateEffects(iDeltaTime);
+
+		if (!effectDispatcher->m_bPauseTimer)
+		{
+			effectDispatcher->UpdateMetaEffects(iDeltaTime);
+		}
+
+		SwitchToFiber(g_MainThread);
+	}
+}
+
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, const std::array<BYTE, 3> &rgTextColor,
                                    const std::array<BYTE, 3> &rgEffectTimerColor)
     : Component()
@@ -46,6 +71,11 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, cons
 	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingOverlayMode", OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	Reset();
+
+	if (!g_EffectDispatcherThread)
+	{
+		g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
+	}
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -55,6 +85,12 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::OnModPauseCleanup()
 {
+	if (g_EffectDispatcherThread)
+	{
+		DeleteFiber(g_EffectDispatcherThread);
+	}
+	g_EffectDispatcherThread = nullptr;
+
 	ClearEffects();
 }
 
@@ -70,15 +106,15 @@ void EffectDispatcher::OnRun()
 		iDeltaTime = 0;
 	}
 
-	UpdateEffects(iDeltaTime);
-
 	if (!m_bPauseTimer)
 	{
-		UpdateMetaEffects(iDeltaTime);
 		UpdateTimer(iDeltaTime);
 	}
 
 	DrawTimerBar();
+
+	SwitchToFiber(g_EffectDispatcherThread);
+
 	DrawEffectTexts();
 }
 
@@ -114,11 +150,10 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 		return;
 	}
 
-	float fDeltaTime               = (float)iDeltaTime / 1000;
+	float fDeltaTime = (float)iDeltaTime / 1000;
 
-	int activeEffectsSize          = m_rgActiveEffects.size();
-	int maxEffects                 = (int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1);
-	maxEffects                     = std::min(maxEffects, m_iMaxRunningEffects);
+	int maxEffects =
+	    std::min((int)(floor((1.0f - GetEffectTopSpace()) / m_fEffectsInnerSpacingMin) - 1), m_iMaxRunningEffects);
 	int effectCountToCheckCleaning = 3;
 	std::vector<ActiveEffect>::iterator it;
 	for (it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end();)
@@ -156,26 +191,25 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 		{
 			float t = m_usEffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
 			// ensure effects stay on screen for at least 5 seconds
-			effect.m_fTimer += fDeltaTime / t * (1.f + (t / 5 - 1) * std::max(0.f, activeEffectsSize - n) / (m - n));
+			effect.m_fTimer +=
+			    fDeltaTime / t * (1.f + (t / 5 - 1) * std::max(0.f, m_rgActiveEffects.size() - n) / (m - n));
 		}
 
-		if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
-		    || (!isTimed) && (activeEffectsSize > maxEffects || effect.m_fTimer >= 0.f))
+		if (effect.m_bIsStopping)
 		{
-			if (!effect.m_bIsStopping)
+			EffectThreads::StopThreadImmediately(effect.m_ullThreadId);
+			it = m_rgActiveEffects.erase(it);
+		}
+		else
+		{
+			if (effect.m_fMaxTime > 0 && effect.m_fTimer <= 0
+			    || !isTimed && (m_rgActiveEffects.size() > maxEffects || effect.m_fTimer >= 0.f)
+			           && !effect.m_bIsStopping)
 			{
 				EffectThreads::StopThread(effect.m_ullThreadId);
 				effect.m_bIsStopping = true;
 			}
-			else if (!EffectThreads::DoesThreadExist(effect.m_ullThreadId)
-			         || EffectThreads::HasThreadStopped(effect.m_ullThreadId))
-			{
-				activeEffectsSize--;
-				it = m_rgActiveEffects.erase(it);
-			}
-		}
-		else
-		{
+
 			it++;
 		}
 	}
@@ -398,8 +432,8 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 
 		if (activeEffect.m_EffectIdentifier == effectIdentifier)
 		{
-			EffectThreads::StopThreadImmediately(activeEffect.m_ullThreadId);
-			it = m_rgActiveEffects.erase(it);
+			EffectThreads::StopThread(activeEffect.m_ullThreadId);
+			activeEffect.m_bIsStopping = true;
 
 			if (effectData.TimedType != EEffectTimedType::Unk && effectData.TimedType != EEffectTimedType::NotTimed)
 			{
@@ -432,13 +466,11 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 
 		if (bFound)
 		{
-			EffectThreads::StopThreadImmediately(activeEffect.m_ullThreadId);
-			it = m_rgActiveEffects.erase(it);
+			EffectThreads::StopThread(activeEffect.m_ullThreadId);
+			activeEffect.m_bIsStopping = true;
 		}
-		else
-		{
-			it++;
-		}
+
+		it++;
 	}
 
 	if (!bAlreadyExists)
