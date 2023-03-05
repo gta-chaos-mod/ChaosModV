@@ -11,17 +11,24 @@
 #include "Effects/EnabledEffectsMap.h"
 #include "Effects/MetaModifiers.h"
 
+#include "Memory/Hooks/AudioClearnessHook.h"
+#include "Memory/Hooks/AudioPitchHook.h"
 #include "Memory/Hooks/ShaderHook.h"
 #include "Memory/PedModels.h"
 #include "Memory/Snow.h"
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
 
+#include "Util/Camera.h"
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
+#include "Util/Peds.h"
+#include "Util/Player.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
+#include "Util/Types.h"
 #include "Util/Vehicle.h"
+#include "Util/Weapon.h"
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -431,6 +438,9 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["GetAllVehicles"]                       = GetAllVehsArray;
 	lua["CreatePoolVehicle"]                    = CreatePoolVehicle;
 	lua["CreateTempVehicle"]                    = CreateTempVehicle;
+	lua["CreateTempVehicleOnPlayerPos"]         = CreateTempVehicleOnPlayerPos;
+	lua["SetSurroundingPedsInVehicles"]         = SetSurroundingPedsInVehicles;
+	lua["ReplaceVehicle"]                       = ReplaceVehicle;
 
 	lua["GetAllProps"]                          = GetAllPropsArray;
 	lua["CreatePoolProp"]                       = CreatePoolProp;
@@ -450,6 +460,20 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	lua["EnableScriptThreadBlock"]  = Hooks::EnableScriptThreadBlock;
 	lua["DisableScriptThreadBlock"] = Hooks::DisableScriptThreadBlock;
+
+	lua["SetAudioPitch"]                           = Hooks::SetAudioPitch;
+	lua["ResetAudioPitch"]                         = Hooks::ResetAudioPitch;
+	lua["SetAudioClearness"]                       = Hooks::SetAudioClearness;
+	lua["ResetAudioClearness"]                     = Hooks::ResetAudioClearness;
+
+	lua["GetGameplayCamOffsetInWorldCoords"] = Util::GetGameplayCamOffsetInWorldCoords;
+	lua["GetCoordsFromGameplayCam"]          = Util::GetCoordsFromGameplayCam;
+
+	lua["CreateHostilePed"]                  = CreateHostilePed;
+
+	lua["GetCoordAround"]                    = GetCoordAround;
+
+	lua["IsWeaponShotgun"]                   = Util::IsWeaponShotgun;
 
 	lua["GetChaosModVersion"]       = []()
 	{
