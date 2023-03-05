@@ -446,13 +446,15 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 
 		if (activeEffect.m_EffectIdentifier == effectIdentifier)
 		{
-			EffectThreads::StopThread(activeEffect.m_ullThreadId);
-			activeEffect.m_bIsStopping = true;
-
 			if (effectData.TimedType != EEffectTimedType::Unk && effectData.TimedType != EEffectTimedType::NotTimed)
 			{
 				bAlreadyExists        = true;
 				activeEffect.m_fTimer = activeEffect.m_fMaxTime;
+			}
+			else
+			{
+				EffectThreads::StopThread(activeEffect.m_ullThreadId);
+				activeEffect.m_bIsStopping = true;
 			}
 
 			break;
