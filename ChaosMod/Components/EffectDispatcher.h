@@ -89,6 +89,13 @@ class EffectDispatcher : public Component
 	bool m_bEnableTwitchVoting;
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 
+	enum class ClearEffectsState
+	{
+		None,
+		NonPermanent,
+		IncludePermanent
+	} m_ClearEffects = ClearEffectsState::None;
+
   public:
 	DWORD64 m_ullTimer              = 0;
 
@@ -137,6 +144,8 @@ class EffectDispatcher : public Component
 
 	void OverrideEffectName(std::string_view effectId, const std::string &szOverrideName);
 	void OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId);
+
+	bool IsClearingEffects() const;
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

@@ -57,6 +57,13 @@ static void Reset()
 	// Check if this isn't the first time this is being run
 	if (ComponentExists<EffectDispatcher>())
 	{
+		GetComponent<EffectDispatcher>()->Reset();
+		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+		{
+			GetComponent<EffectDispatcher>()->OnRun();
+			WAIT(0);
+		}
+
 		LOG("Mod has been disabled");
 	}
 
@@ -255,7 +262,14 @@ static void MainRun()
 			if (ms_bClearAllEffects)
 			{
 				ms_bClearAllEffects = false;
+
 				GetComponent<EffectDispatcher>()->Reset();
+				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+				{
+					GetComponent<EffectDispatcher>()->OnRun();
+					WAIT(0);
+				}
+
 				ClearEntityPool();
 			}
 		}

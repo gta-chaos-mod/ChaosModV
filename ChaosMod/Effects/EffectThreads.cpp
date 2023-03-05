@@ -29,7 +29,7 @@ static auto _StopThreadImmediately(auto it)
 	int count = 0;
 	while (!thread->HasStopped() && count++ < 20)
 	{
-		WAIT(0);
+		SwitchToFiber(g_MainThread);
 		thread->OnRun();
 	}
 

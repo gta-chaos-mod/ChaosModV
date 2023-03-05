@@ -72,10 +72,11 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, cons
 
 	Reset();
 
-	if (!g_EffectDispatcherThread)
+	if (g_EffectDispatcherThread)
 	{
-		g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
+		DeleteFiber(g_EffectDispatcherThread);
 	}
+	g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 }
 
 EffectDispatcher::~EffectDispatcher()
@@ -85,12 +86,6 @@ EffectDispatcher::~EffectDispatcher()
 
 void EffectDispatcher::OnModPauseCleanup()
 {
-	if (g_EffectDispatcherThread)
-	{
-		DeleteFiber(g_EffectDispatcherThread);
-	}
-	g_EffectDispatcherThread = nullptr;
-
 	ClearEffects();
 }
 
@@ -112,7 +107,10 @@ void EffectDispatcher::OnRun()
 
 	DrawTimerBar();
 
-	SwitchToFiber(g_EffectDispatcherThread);
+	if (g_EffectDispatcherThread)
+	{
+		SwitchToFiber(g_EffectDispatcherThread);
+	}
 
 	DrawEffectTexts();
 
@@ -144,6 +142,21 @@ void EffectDispatcher::UpdateTimer(int iDeltaTime)
 void EffectDispatcher::UpdateEffects(int iDeltaTime)
 {
 	EffectThreads::RunThreads();
+
+	if (m_ClearEffects != ClearEffectsState::None)
+	{
+		if (m_ClearEffects == ClearEffectsState::IncludePermanent)
+		{
+			m_rgPermanentEffects.clear();
+		}
+
+		m_rgActiveEffects.clear();
+		m_rgDispatchedEffectsLog.clear();
+
+		EffectThreads::StopThreadsImmediately();
+
+		m_ClearEffects = ClearEffectsState::None;
+	}
 
 	// Don't continue if there are no enabled effects
 	if (g_dictEnabledEffects.empty())
@@ -588,21 +601,13 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 		return;
 	}
 
-	EffectThreads::StopThreadImmediately(result->m_ullThreadId);
-	m_rgActiveEffects.erase(result);
+	EffectThreads::StopThread(result->m_ullThreadId);
+	result->m_bIsStopping = true;
 }
 
 void EffectDispatcher::ClearEffects(bool bIncludePermanent)
 {
-	EffectThreads::StopThreadsImmediately();
-
-	if (bIncludePermanent)
-	{
-		m_rgPermanentEffects.clear();
-	}
-
-	m_rgActiveEffects.clear();
-	m_rgDispatchedEffectsLog.clear();
+	m_ClearEffects = bIncludePermanent ? ClearEffectsState::IncludePermanent : ClearEffectsState::NonPermanent;
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
@@ -741,4 +746,9 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 			}
 		}
 	}
+}
+
+bool EffectDispatcher::IsClearingEffects() const
+{
+	return m_ClearEffects != ClearEffectsState::None;
 }
