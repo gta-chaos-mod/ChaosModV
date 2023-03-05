@@ -11,6 +11,7 @@
 #include <array>
 #include <list>
 #include <memory>
+#include <queue>
 #include <string_view>
 #include <vector>
 
@@ -58,17 +59,19 @@ class EffectDispatcher : public Component
 	std::array<BYTE, 3> m_rgTextColor;
 	std::array<BYTE, 3> m_rgEffectTimerColor;
 
-	bool m_bDisableDrawTimerBar          = false;
-	bool m_bDisableDrawEffectTexts       = false;
+	bool m_bDisableDrawTimerBar    = false;
+	bool m_bDisableDrawEffectTexts = false;
 
-	WORD m_usEffectSpawnTime             = 0;
-	WORD m_usEffectTimedDur              = 0;
-	WORD m_usEffectTimedShortDur         = 0;
+  public:
+	WORD m_usEffectSpawnTime     = 0;
+	WORD m_usEffectTimedDur      = 0;
+	WORD m_usEffectTimedShortDur = 0;
 
-	WORD m_usMetaEffectSpawnTime         = 0;
-	WORD m_usMetaEffectTimedDur          = 0;
-	WORD m_usMetaEffectShortDur          = 0;
+	WORD m_usMetaEffectSpawnTime = 0;
+	WORD m_usMetaEffectTimedDur  = 0;
+	WORD m_usMetaEffectShortDur  = 0;
 
+  private:
 	int m_iMaxRunningEffects             = 0;
 
 	float m_fTimerPercentage             = 0.f;
@@ -77,10 +80,13 @@ class EffectDispatcher : public Component
 	float m_fEffectsTopSpacingDefault    = .2f;
 	float m_fEffectsTopSpacingWithVoting = .35f;
 
+  public:
 	std::vector<ActiveEffect> m_rgActiveEffects;
+
 	std::vector<RegisteredEffect *> m_rgPermanentEffects;
 	std::list<RegisteredEffect *> m_rgDispatchedEffectsLog;
 
+  private:
 	bool m_bEnableNormalEffectDispatch = true;
 
 	bool m_bMetaEffectsEnabled         = true;
@@ -104,6 +110,14 @@ class EffectDispatcher : public Component
 	bool m_bDispatchEffectsOnTimer  = true;
 
 	float m_fFakeTimerBarPercentage = 0.f;
+
+	struct EffectDispatchEntry
+	{
+		EffectIdentifier Identifier;
+		const char *Suffix;
+		bool AddToLog;
+	};
+	std::queue<EffectDispatchEntry> m_EffectDispatchQueue;
 
   protected:
 	EffectDispatcher(const std::array<BYTE, 3> &rgTimerColor, const std::array<BYTE, 3> &rgTextColor,

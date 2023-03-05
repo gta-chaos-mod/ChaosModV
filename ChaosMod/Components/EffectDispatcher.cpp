@@ -12,6 +12,161 @@
 #include "Util/Random.h"
 #include "Util/Text.h"
 
+static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDispatcher::EffectDispatchEntry &entry)
+{
+	EffectData &effectData = g_dictEnabledEffects.at(entry.Identifier);
+	if (effectData.TimedType == EEffectTimedType::Permanent)
+	{
+		return;
+	}
+
+	// Increase weight for all effects first
+	for (auto &[effectId, effectData] : g_dictEnabledEffects)
+	{
+		if (!effectData.IsMeta())
+		{
+			effectData.Weight += effectData.WeightMult;
+		}
+	}
+
+	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
+	// times in a row
+	if (effectData.GroupType.empty())
+	{
+		effectData.Weight = effectData.WeightMult;
+	}
+	else
+	{
+		for (auto &[effectId, effectData] : g_dictEnabledEffects)
+		{
+			if (effectData.GroupType == effectData.GroupType)
+			{
+				effectData.Weight = effectData.WeightMult;
+			}
+		}
+	}
+
+	LOG("Dispatching effect \"" << effectData.Name << "\"");
+
+	// Check if timed effect already is active, reset timer if so
+	// Also check for incompatible effects
+	bool bAlreadyExists           = false;
+
+	const auto &rgIncompatibleIds = effectData.IncompatibleIds;
+
+	for (auto it = effectDispatcher->m_rgActiveEffects.begin(); it != effectDispatcher->m_rgActiveEffects.end();)
+	{
+		auto &activeEffect     = *it;
+		auto &activeEffectData = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier);
+
+		if (activeEffect.m_EffectIdentifier == entry.Identifier)
+		{
+			if (effectData.TimedType != EEffectTimedType::Unk && effectData.TimedType != EEffectTimedType::NotTimed)
+			{
+				bAlreadyExists        = true;
+				activeEffect.m_fTimer = activeEffect.m_fMaxTime;
+			}
+			else
+			{
+				EffectThreads::StopThreadImmediately(activeEffect.m_ullThreadId);
+				it = effectDispatcher->m_rgActiveEffects.erase(it);
+			}
+
+			break;
+		}
+
+		bool bFound = false;
+		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), activeEffectData.Id)
+		    != rgIncompatibleIds.end())
+		{
+			bFound = true;
+		}
+
+		// Check if current effect is either the same effect category or marked as incompatible in active effect
+		if (!bFound)
+		{
+			const auto &rgActiveIncompatibleIds = activeEffectData.IncompatibleIds;
+			if ((effectData.EffectCategory != EEffectCategory::None
+			     && effectData.EffectCategory == activeEffectData.EffectCategory)
+			    || std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id)
+			           != rgActiveIncompatibleIds.end())
+			{
+				bFound = true;
+			}
+		}
+
+		if (bFound)
+		{
+			EffectThreads::StopThread(activeEffect.m_ullThreadId);
+			activeEffect.m_bIsStopping = true;
+		}
+
+		it++;
+	}
+
+	if (!bAlreadyExists)
+	{
+		RegisteredEffect *registeredEffect = GetRegisteredEffect(entry.Identifier);
+
+		if (registeredEffect)
+		{
+			std::ostringstream ossEffectName;
+			ossEffectName << (effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
+
+			if (entry.Suffix && strlen(entry.Suffix) > 0)
+			{
+				ossEffectName << " " << entry.Suffix;
+			}
+
+			ossEffectName << std::endl;
+
+			if (!MetaModifiers::m_bHideChaosUI)
+			{
+				// Play global sound (if one exists)
+				// HACK: Force no global sound for "Fake Crash"
+				if (entry.Identifier.GetEffectId() != "misc_fakecrash")
+				{
+					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+				}
+
+				// Play a sound if corresponding .mp3 file exists
+				Mp3Manager::PlayChaosSoundFile(effectData.Id);
+			}
+
+			int effectTime = -1;
+			switch (effectData.TimedType)
+			{
+			case EEffectTimedType::Normal:
+				effectTime = effectData.IsMeta() ? effectDispatcher->m_usMetaEffectTimedDur
+				                                 : effectDispatcher->m_usEffectTimedDur;
+				break;
+			case EEffectTimedType::Short:
+				effectTime = effectData.IsMeta() ? effectDispatcher->m_usMetaEffectShortDur
+				                                 : effectDispatcher->m_usEffectTimedShortDur;
+				break;
+			case EEffectTimedType::Custom:
+				effectTime = effectData.CustomTime;
+				break;
+			}
+
+			effectDispatcher->m_rgActiveEffects.emplace_back(entry.Identifier, registeredEffect, ossEffectName.str(),
+			                                                 effectData.FakeName, effectTime);
+
+			// There might be a reason to include meta effects in the future, for now we will just exclude them
+			if (entry.AddToLog && !effectData.IsMeta() && !effectData.IsTemporary() && !effectData.IsUtility())
+			{
+				if (effectDispatcher->m_rgDispatchedEffectsLog.size() >= 100)
+				{
+					effectDispatcher->m_rgDispatchedEffectsLog.erase(
+					    effectDispatcher->m_rgDispatchedEffectsLog.begin());
+				}
+
+				effectDispatcher->m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
+			}
+		}
+	}
+}
+
 static void _OnRunEffects(LPVOID data)
 {
 	auto effectDispatcher = reinterpret_cast<EffectDispatcher *>(data);
@@ -24,6 +179,12 @@ static void _OnRunEffects(LPVOID data)
 		if (iDeltaTime > 1000)
 		{
 			iDeltaTime = 0;
+		}
+
+		while (!effectDispatcher->m_EffectDispatchQueue.empty())
+		{
+			_DispatchEffect(effectDispatcher, effectDispatcher->m_EffectDispatchQueue.front());
+			effectDispatcher->m_EffectDispatchQueue.pop();
 		}
 
 		effectDispatcher->UpdateEffects(iDeltaTime);
@@ -399,154 +560,7 @@ int EffectDispatcher::GetRemainingTimerTime() const
 
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, const char *szSuffix, bool bAddToLog)
 {
-	EffectData &effectData = g_dictEnabledEffects.at(effectIdentifier);
-	if (effectData.TimedType == EEffectTimedType::Permanent)
-	{
-		return;
-	}
-
-	// Increase weight for all effects first
-	for (auto &[effectId, effectData] : g_dictEnabledEffects)
-	{
-		if (!effectData.IsMeta())
-		{
-			effectData.Weight += effectData.WeightMult;
-		}
-	}
-
-	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
-	// times in a row
-	if (effectData.GroupType.empty())
-	{
-		effectData.Weight = effectData.WeightMult;
-	}
-	else
-	{
-		for (auto &[effectId, effectData] : g_dictEnabledEffects)
-		{
-			if (effectData.GroupType == effectData.GroupType)
-			{
-				effectData.Weight = effectData.WeightMult;
-			}
-		}
-	}
-
-	LOG("Dispatching effect \"" << effectData.Name << "\"");
-
-	// Check if timed effect already is active, reset timer if so
-	// Also check for incompatible effects
-	bool bAlreadyExists           = false;
-
-	const auto &rgIncompatibleIds = effectData.IncompatibleIds;
-
-	for (auto it = m_rgActiveEffects.begin(); it != m_rgActiveEffects.end();)
-	{
-		ActiveEffect &activeEffect = *it;
-		auto &activeEffectData     = g_dictEnabledEffects.at(activeEffect.m_EffectIdentifier);
-
-		if (activeEffect.m_EffectIdentifier == effectIdentifier)
-		{
-			if (effectData.TimedType != EEffectTimedType::Unk && effectData.TimedType != EEffectTimedType::NotTimed)
-			{
-				bAlreadyExists        = true;
-				activeEffect.m_fTimer = activeEffect.m_fMaxTime;
-			}
-			else
-			{
-				EffectThreads::StopThread(activeEffect.m_ullThreadId);
-				activeEffect.m_bIsStopping = true;
-			}
-
-			break;
-		}
-
-		bool bFound = false;
-		if (std::find(rgIncompatibleIds.begin(), rgIncompatibleIds.end(), activeEffectData.Id)
-		    != rgIncompatibleIds.end())
-		{
-			bFound = true;
-		}
-
-		// Check if current effect is either the same effect category or marked as incompatible in active effect
-		if (!bFound)
-		{
-			const auto &rgActiveIncompatibleIds = activeEffectData.IncompatibleIds;
-			if ((effectData.EffectCategory != EEffectCategory::None
-			     && effectData.EffectCategory == activeEffectData.EffectCategory)
-			    || std::find(rgActiveIncompatibleIds.begin(), rgActiveIncompatibleIds.end(), effectData.Id)
-			           != rgActiveIncompatibleIds.end())
-			{
-				bFound = true;
-			}
-		}
-
-		if (bFound)
-		{
-			EffectThreads::StopThread(activeEffect.m_ullThreadId);
-			activeEffect.m_bIsStopping = true;
-		}
-
-		it++;
-	}
-
-	if (!bAlreadyExists)
-	{
-		RegisteredEffect *registeredEffect = GetRegisteredEffect(effectIdentifier);
-
-		if (registeredEffect)
-		{
-			std::ostringstream ossEffectName;
-			ossEffectName << (effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
-
-			if (szSuffix && strlen(szSuffix) > 0)
-			{
-				ossEffectName << " " << szSuffix;
-			}
-
-			ossEffectName << std::endl;
-
-			if (!MetaModifiers::m_bHideChaosUI)
-			{
-				// Play global sound (if one exists)
-				// HACK: Force no global sound for "Fake Crash"
-				if (effectIdentifier.GetEffectId() != "misc_fakecrash")
-				{
-					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
-				}
-
-				// Play a sound if corresponding .mp3 file exists
-				Mp3Manager::PlayChaosSoundFile(effectData.Id);
-			}
-
-			int effectTime = -1;
-			switch (effectData.TimedType)
-			{
-			case EEffectTimedType::Normal:
-				effectTime = effectData.IsMeta() ? m_usMetaEffectTimedDur : m_usEffectTimedDur;
-				break;
-			case EEffectTimedType::Short:
-				effectTime = effectData.IsMeta() ? m_usMetaEffectShortDur : m_usEffectTimedShortDur;
-				break;
-			case EEffectTimedType::Custom:
-				effectTime = effectData.CustomTime;
-				break;
-			}
-
-			m_rgActiveEffects.emplace_back(effectIdentifier, registeredEffect, ossEffectName.str(), effectData.FakeName,
-			                               effectTime);
-
-			// There might be a reason to include meta effects in the future, for now we will just exclude them
-			if (bAddToLog && !effectData.IsMeta() && !effectData.IsTemporary() && !effectData.IsUtility())
-			{
-				if (m_rgDispatchedEffectsLog.size() >= 100)
-				{
-					m_rgDispatchedEffectsLog.erase(m_rgDispatchedEffectsLog.begin());
-				}
-
-				m_rgDispatchedEffectsLog.emplace_back(registeredEffect);
-			}
-		}
-	}
+	m_EffectDispatchQueue.push({ .Identifier = effectIdentifier, .Suffix = szSuffix, .AddToLog = bAddToLog });
 }
 
 void EffectDispatcher::DispatchRandomEffect(const char *szSuffix)
