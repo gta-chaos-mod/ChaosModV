@@ -93,7 +93,12 @@ class EffectDispatcher : public Component
 	bool m_bEnableTwitchVoting;
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 
-	bool m_bClearEffects = false;
+	enum class ClearEffectsState
+	{
+		None,
+		All,
+		AllRestartPermanent
+	} m_ClearEffectsState = ClearEffectsState::None;
 
   public:
 	DWORD64 m_ullTimer              = 0;
@@ -142,13 +147,13 @@ class EffectDispatcher : public Component
 	void UpdateMetaEffects(int iDeltaTime);
 
 	void ClearEffect(const EffectIdentifier &effectId);
-	void ClearEffects();
+	void ClearEffects(bool bRestartPermanentEffects = true);
 	void ClearActiveEffects(const EffectIdentifier &exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 
 	std::vector<RegisteredEffect *> GetRecentEffects(int distance, std::string_view ignoreEffect = {}) const;
 
-	void Reset();
+	void Reset(bool bRestartPermanentEffects = true);
 	void ResetTimer();
 
 	void OverrideEffectName(std::string_view effectId, const std::string &szOverrideName);

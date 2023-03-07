@@ -302,19 +302,22 @@ void EffectDispatcher::UpdateTimer(int iDeltaTime)
 
 void EffectDispatcher::UpdateEffects(int iDeltaTime)
 {
-	EffectThreads::RunThreads();
-
-	if (m_bClearEffects)
+	if (m_ClearEffectsState != ClearEffectsState::None)
 	{
 		m_rgActiveEffects.clear();
 		m_rgDispatchedEffectsLog.clear();
 
 		EffectThreads::StopThreadsImmediately();
 
-		RegisterPermanentEffects();
+		if (m_ClearEffectsState == ClearEffectsState::AllRestartPermanent)
+		{
+			RegisterPermanentEffects();
+		}
 
-		m_bClearEffects = false;
+		m_ClearEffectsState = ClearEffectsState::None;
 	}
+
+	EffectThreads::RunThreads();
 
 	// Don't continue if there are no enabled effects
 	if (g_dictEnabledEffects.empty())
@@ -617,9 +620,9 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 	result->m_bIsStopping = true;
 }
 
-void EffectDispatcher::ClearEffects()
+void EffectDispatcher::ClearEffects(bool bRestartPermanentEffects)
 {
-	m_bClearEffects = true;
+	m_ClearEffectsState = bRestartPermanentEffects ? ClearEffectsState::AllRestartPermanent : ClearEffectsState::All;
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
@@ -674,16 +677,14 @@ std::vector<RegisteredEffect *> EffectDispatcher::GetRecentEffects(int distance,
 	return effects;
 }
 
-void EffectDispatcher::Reset()
+void EffectDispatcher::Reset(bool bRestartPermanentEffects)
 {
-	ClearEffects();
+	ClearEffects(bRestartPermanentEffects);
 	ResetTimer();
 
 	m_bEnableNormalEffectDispatch = false;
 	m_bMetaEffectsEnabled         = true;
 	m_fMetaEffectTimerPercentage  = 0.f;
-
-	RegisterPermanentEffects();
 }
 
 void EffectDispatcher::ResetTimer()
@@ -764,5 +765,5 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 
 bool EffectDispatcher::IsClearingEffects() const
 {
-	return m_bClearEffects;
+	return m_ClearEffectsState != ClearEffectsState::None;
 }

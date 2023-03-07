@@ -59,20 +59,17 @@ inline void EffectThreadFunc(LPVOID pData)
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(pData);
 
 	threadData.m_pEffect->Start();
-
 	threadData.m_bHasOnStartExecuted = true;
 
 	while (threadData.m_bIsRunning)
 	{
-		threadData.m_pEffect->Tick();
-
 		SwitchToFiber(threadData.m_CallerFiber);
+		threadData.m_pEffect->Tick();
 	}
 
 	threadData.m_pEffect->Stop();
 
 	threadData.m_bHasStopped = true;
-
 	SwitchToFiber(threadData.m_CallerFiber);
 }
 

@@ -263,7 +263,7 @@ static void MainRun()
 			{
 				ms_bClearAllEffects = false;
 
-				GetComponent<EffectDispatcher>()->Reset();
+				GetComponent<EffectDispatcher>()->Reset(false);
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
 					GetComponent<EffectDispatcher>()->OnRun();
