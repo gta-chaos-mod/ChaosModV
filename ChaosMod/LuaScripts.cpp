@@ -70,6 +70,8 @@
 static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop",
 	                                                     "chaosmod\\custom_scripts" };
 
+static std::string ms_NativesDefCache;
+
 _LUAFUNC void LuaPrint(const std::string &szText)
 {
 	COLOR_PREFIX_LOG("(Lua)", szText);
@@ -400,9 +402,9 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 #undef P
 
-	if (DoesFileExist(LUA_NATIVESDEF))
+	if (!ms_NativesDefCache.empty())
 	{
-		lua.unsafe_script_file(LUA_NATIVESDEF);
+		lua.unsafe_script(ms_NativesDefCache);
 	}
 
 	lua["print"] = [scriptName](const std::string &szText)
@@ -825,6 +827,15 @@ namespace LuaScripts
 		ms_dictRegisteredEffects.clear();
 
 		ClearRegisteredScriptEffects();
+
+		ms_NativesDefCache.clear();
+		if (DoesFileExist(LUA_NATIVESDEF))
+		{
+			std::ifstream inStream(LUA_NATIVESDEF);
+			std::ostringstream ossBuffer;
+			ossBuffer << inStream.rdbuf();
+			ms_NativesDefCache = ossBuffer.str();
+		}
 
 		for (auto dir : ms_rgScriptDirs)
 		{
