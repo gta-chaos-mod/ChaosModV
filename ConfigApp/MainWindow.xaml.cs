@@ -586,7 +586,18 @@ namespace ConfigApp
                     var foundSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
                     if (foundSubmissionItem == null)
                     {
-                        MessageBox.Show($"Local submission \"{id}\" does not exist remotely.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        var result = MessageBox.Show($"Local submission \"{id}\" does not exist remotely. Remove submission?", "ChaosModV", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                Directory.Delete(directory, true);
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show($"Couldn't access \"{directory}\". Try deleting it manually!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
                         continue;
                     }
                     else if (foundSubmissionItem.Version != version || foundSubmissionItem.LastUpdated != lastUpdated || foundSubmissionItem.Sha256 != sha256)
