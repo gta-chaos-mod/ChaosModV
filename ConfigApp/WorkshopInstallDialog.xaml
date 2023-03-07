@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ConfigApp"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Workshop Install Confirmation" Height="400" Width="500"
+        Title="Submission Install Confirmation" Height="400" Width="500"
         Closed="OnWindowClosed">
     <Grid>
         <Grid.RowDefinitions>

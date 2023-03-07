@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace ConfigApp
 {
@@ -18,8 +16,8 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            TreeMenuItem luaParentItem = new TreeMenuItem("Lua Scripts");
-            TreeMenuItem mp3ParentItem = new TreeMenuItem("Effect Sounds");
+            TreeMenuItem luaParentItem = new TreeMenuItem("Scripts");
+            TreeMenuItem mp3ParentItem = new TreeMenuItem("Sounds");
             TreeMenuItem txtParentItem = new TreeMenuItem("Text Files");
 
             Trace.WriteLine(entries.Count);
