@@ -56,8 +56,6 @@ inline void EffectThreadFunc(LPVOID pData)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	extern void WAIT(DWORD ulTimeMs, void *callerFiber);
-
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(pData);
 
 	threadData.m_pEffect->Start();
