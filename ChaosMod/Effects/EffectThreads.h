@@ -68,7 +68,7 @@ inline void EffectThreadFunc(LPVOID pData)
 	{
 		threadData.m_pEffect->Tick();
 
-		WAIT(0, threadData.m_CallerFiber);
+		SwitchToFiber(threadData.m_CallerFiber);
 	}
 
 	threadData.m_pEffect->Stop();
