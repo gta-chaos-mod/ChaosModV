@@ -472,8 +472,6 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["GetGameplayCamOffsetInWorldCoords"] = Util::GetGameplayCamOffsetInWorldCoords;
 	lua["GetCoordsFromGameplayCam"]          = Util::GetCoordsFromGameplayCam;
 
-	lua["CreateHostilePed"]                  = CreateHostilePed;
-
 	lua["GetCoordAround"]                    = GetCoordAround;
 
 	lua["IsWeaponShotgun"]                   = Util::IsWeaponShotgun;
