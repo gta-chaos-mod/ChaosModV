@@ -425,9 +425,11 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		return LuaInvoke(scriptName, lua, ullHash, eReturnType, args);
 	};
+	// Use scriptWait (which pauses the entire mod) for the script parsing phase and replace it with the proper WAIT
+	// call afterwards
 	lua["WAIT"] = [](const sol::this_state &lua, DWORD time)
 	{
-		WAIT(time);
+		scriptWait(time);
 	};
 	// Replace those natives with our own safe versions
 	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
@@ -762,6 +764,10 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	// Stuff that depends on the effect id
 
+	lua["WAIT"] = [](const sol::this_state &lua, DWORD time)
+	{
+		WAIT(time);
+	};
 	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
 	{
 		if (ComponentExists<EffectDispatcher>())
