@@ -418,7 +418,10 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		return LuaInvoke(scriptName, lua, ullHash, eReturnType, args);
 	};
-	lua["WAIT"]                                 = WAIT;
+	lua["WAIT"] = [](const sol::this_state &lua, DWORD time)
+	{
+		WAIT(time);
+	};
 	// Replace those natives with our own safe versions
 	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
 	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
