@@ -99,7 +99,7 @@ namespace ConfigApp
                 }
                 if (sha256StrBuilder.ToString() != m_SubmissionItem.Sha256)
                 {
-                    MessageBox.Show("SHA256 mismatch! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("SHA256 mismatch! Please refresh submissions and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                     fatalCleanup();
                     return;
                 }
@@ -187,7 +187,7 @@ namespace ConfigApp
             }
             catch (HttpRequestException)
             {
-                MessageBox.Show("Error while fetching submission. Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error while fetching submission. Submission might have been removed by remote. Please refresh and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                 fatalCleanup();
                 return;
             }
