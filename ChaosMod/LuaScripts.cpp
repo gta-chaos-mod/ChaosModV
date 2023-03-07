@@ -454,20 +454,20 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"]           = Hooks::OverrideShader;
-	lua["ResetShader"]              = Hooks::ResetShader;
+	lua["OverrideShader"]                    = Hooks::OverrideShader;
+	lua["ResetShader"]                       = Hooks::ResetShader;
 
-	lua["SetSnowState"]             = Memory::SetSnow;
+	lua["SetSnowState"]                      = Memory::SetSnow;
 
-	lua["IsVehicleBraking"]         = Memory::IsVehicleBraking;
+	lua["IsVehicleBraking"]                  = Memory::IsVehicleBraking;
 
-	lua["EnableScriptThreadBlock"]  = Hooks::EnableScriptThreadBlock;
-	lua["DisableScriptThreadBlock"] = Hooks::DisableScriptThreadBlock;
+	lua["EnableScriptThreadBlock"]           = Hooks::EnableScriptThreadBlock;
+	lua["DisableScriptThreadBlock"]          = Hooks::DisableScriptThreadBlock;
 
-	lua["SetAudioPitch"]                           = Hooks::SetAudioPitch;
-	lua["ResetAudioPitch"]                         = Hooks::ResetAudioPitch;
-	lua["SetAudioClearness"]                       = Hooks::SetAudioClearness;
-	lua["ResetAudioClearness"]                     = Hooks::ResetAudioClearness;
+	lua["SetAudioPitch"]                     = Hooks::SetAudioPitch;
+	lua["ResetAudioPitch"]                   = Hooks::ResetAudioPitch;
+	lua["SetAudioClearness"]                 = Hooks::SetAudioClearness;
+	lua["ResetAudioClearness"]               = Hooks::ResetAudioClearness;
 
 	lua["GetGameplayCamOffsetInWorldCoords"] = Util::GetGameplayCamOffsetInWorldCoords;
 	lua["GetCoordsFromGameplayCam"]          = Util::GetCoordsFromGameplayCam;
@@ -478,7 +478,7 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	lua["IsWeaponShotgun"]                   = Util::IsWeaponShotgun;
 
-	lua["GetChaosModVersion"]       = []()
+	lua["GetChaosModVersion"]                = []()
 	{
 		return MOD_VERSION;
 	};
@@ -761,6 +761,23 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	// Exclude temporary effects from choices pool
 	effectData.SetAttribute(EEffectAttributes::IsTemporary, flags & ParseScript_IsTemporary);
+
+	// Stuff that depends on the effect id
+
+	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
+	{
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->OverrideEffectName(effectId, name);
+		}
+	};
+	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
+	{
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, overrideId);
+		}
+	};
 
 	ms_dictRegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScript_IsTemporary));
 	g_dictEnabledEffects.emplace(effectId, effectData);

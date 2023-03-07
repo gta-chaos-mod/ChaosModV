@@ -510,11 +510,10 @@ void EffectDispatcher::DrawEffectTexts()
 			}
 		}
 
-		std::string name = effect.m_szFakeName;
-
-		if (!effect.m_bHideText || !bHasFake)
+		std::string name = effect.m_szName;
+		if (effect.m_bHideText && bHasFake)
 		{
-			name = effect.m_szName;
+			name = effect.m_szFakeName;
 		}
 
 		if (MetaModifiers::m_bFlipChaosUI)
