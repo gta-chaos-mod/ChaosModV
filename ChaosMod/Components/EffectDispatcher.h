@@ -82,8 +82,6 @@ class EffectDispatcher : public Component
 
   public:
 	std::vector<ActiveEffect> m_rgActiveEffects;
-
-	std::vector<RegisteredEffect *> m_rgPermanentEffects;
 	std::list<RegisteredEffect *> m_rgDispatchedEffectsLog;
 
   private:
@@ -95,12 +93,7 @@ class EffectDispatcher : public Component
 	bool m_bEnableTwitchVoting;
 	ETwitchOverlayMode m_eTwitchOverlayMode;
 
-	enum class ClearEffectsState
-	{
-		None,
-		NonPermanent,
-		IncludePermanent
-	} m_ClearEffects = ClearEffectsState::None;
+	bool m_bClearEffects = false;
 
   public:
 	DWORD64 m_ullTimer              = 0;
@@ -127,6 +120,8 @@ class EffectDispatcher : public Component
   private:
 	float GetEffectTopSpace();
 
+	void RegisterPermanentEffects();
+
   public:
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
@@ -147,7 +142,7 @@ class EffectDispatcher : public Component
 	void UpdateMetaEffects(int iDeltaTime);
 
 	void ClearEffect(const EffectIdentifier &effectId);
-	void ClearEffects(bool bIncludePermanent = true);
+	void ClearEffects();
 	void ClearActiveEffects(const EffectIdentifier &exclude = EffectIdentifier());
 	void ClearMostRecentEffect();
 

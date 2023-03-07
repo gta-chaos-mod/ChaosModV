@@ -67,7 +67,7 @@ void Failsafe::OnRun()
 		case 5:
 			LOG("[5 Fails] Clear all effects and spawned entities");
 
-			GetComponent<EffectDispatcher>()->ClearEffects(false);
+			GetComponent<EffectDispatcher>()->ClearEffects();
 			ClearEntityPool();
 
 			m_cFailCounts = 0;

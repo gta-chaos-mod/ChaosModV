@@ -304,19 +304,16 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 {
 	EffectThreads::RunThreads();
 
-	if (m_ClearEffects != ClearEffectsState::None)
+	if (m_bClearEffects)
 	{
-		if (m_ClearEffects == ClearEffectsState::IncludePermanent)
-		{
-			m_rgPermanentEffects.clear();
-		}
-
 		m_rgActiveEffects.clear();
 		m_rgDispatchedEffectsLog.clear();
 
 		EffectThreads::StopThreadsImmediately();
 
-		m_ClearEffects = ClearEffectsState::None;
+		RegisterPermanentEffects();
+
+		m_bClearEffects = false;
 	}
 
 	// Don't continue if there are no enabled effects
@@ -620,9 +617,9 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 	result->m_bIsStopping = true;
 }
 
-void EffectDispatcher::ClearEffects(bool bIncludePermanent)
+void EffectDispatcher::ClearEffects()
 {
-	m_ClearEffects = bIncludePermanent ? ClearEffectsState::IncludePermanent : ClearEffectsState::NonPermanent;
+	m_bClearEffects = true;
 }
 
 void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
@@ -686,26 +683,7 @@ void EffectDispatcher::Reset()
 	m_bMetaEffectsEnabled         = true;
 	m_fMetaEffectTimerPercentage  = 0.f;
 
-	for (const auto &[effectIdentifier, effectData] : g_dictEnabledEffects)
-	{
-		if (effectData.TimedType == EEffectTimedType::Permanent)
-		{
-			// Always run permanent timed effects in background
-			RegisteredEffect *pRegisteredEffect = GetRegisteredEffect(effectIdentifier);
-
-			if (pRegisteredEffect)
-			{
-				m_rgPermanentEffects.push_back(pRegisteredEffect);
-
-				EffectThreads::CreateThread(pRegisteredEffect, true);
-			}
-		}
-		else if (!effectData.IsMeta() && !effectData.IsUtility())
-		{
-			// There's at least 1 enabled non-permanent effect, enable timer
-			m_bEnableNormalEffectDispatch = true;
-		}
-	}
+	RegisterPermanentEffects();
 }
 
 void EffectDispatcher::ResetTimer()
@@ -723,6 +701,27 @@ float EffectDispatcher::GetEffectTopSpace()
 		return m_fEffectsTopSpacingWithVoting;
 	}
 	return m_fEffectsTopSpacingDefault;
+}
+
+void EffectDispatcher::RegisterPermanentEffects()
+{
+	for (const auto &[effectIdentifier, effectData] : g_dictEnabledEffects)
+	{
+		if (effectData.TimedType == EEffectTimedType::Permanent)
+		{
+			// Always run permanent timed effects in background
+			RegisteredEffect *pRegisteredEffect = GetRegisteredEffect(effectIdentifier);
+			if (pRegisteredEffect)
+			{
+				EffectThreads::CreateThread(pRegisteredEffect, true);
+			}
+		}
+		else if (!effectData.IsMeta() && !effectData.IsUtility())
+		{
+			// There's at least 1 enabled non-permanent effect, enable timer
+			m_bEnableNormalEffectDispatch = true;
+		}
+	}
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using any given string
@@ -765,5 +764,5 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 
 bool EffectDispatcher::IsClearingEffects() const
 {
-	return m_ClearEffects != ClearEffectsState::None;
+	return m_bClearEffects;
 }
