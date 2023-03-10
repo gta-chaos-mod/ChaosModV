@@ -226,7 +226,7 @@ void TwitchVoting::OnRun()
 		return;
 	}
 
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 2 && !m_bHasReceivedResult)
+	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
