@@ -423,6 +423,9 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["GetAllVehicles"]                       = GetAllVehsArray;
 	lua["CreatePoolVehicle"]                    = CreatePoolVehicle;
 	lua["CreateTempVehicle"]                    = CreateTempVehicle;
+	lua["CreateTempVehicleOnPlayerPos"]         = CreateTempVehicleOnPlayerPos;
+	lua["SetSurroundingPedsInVehicles"]         = SetSurroundingPedsInVehicles;
+	lua["ReplaceVehicle"]                       = ReplaceVehicle;
 
 	lua["GetAllProps"]                          = GetAllPropsArray;
 	lua["CreatePoolProp"]                       = CreatePoolProp;
