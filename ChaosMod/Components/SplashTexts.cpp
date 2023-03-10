@@ -36,8 +36,10 @@ void SplashTexts::ShowSplash(const std::string &szText, const ScreenTextVector &
 
 void SplashTexts::ShowInitSplash()
 {
-	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
-	           { 60, 245, 190 });
+	ShowSplash(std::string("Chaos Mod v" MOD_VERSION " - special build for ")
+	               + (g_Random.GetRandomInt(0, 4) == 4 ? "Matto" : "DarkViperAU")
+	               + "\n\nSee credits.txt for a list of contributors",
+	           { .25f, .3f }, .65f, { 60, 245, 190 });
 #ifdef _DEBUG
 	ShowSplash("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 });
 #endif
