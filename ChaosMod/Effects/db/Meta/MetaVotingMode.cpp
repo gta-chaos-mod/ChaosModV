@@ -1,5 +1,5 @@
 /*
-    Effect by Last0xygen
+    Effects by Reguas
 */
 
 #include <stdafx.h>
