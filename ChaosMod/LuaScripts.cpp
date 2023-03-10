@@ -473,10 +473,23 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["SetAudioClearness"]                 = Hooks::SetAudioClearness;
 	lua["ResetAudioClearness"]               = Hooks::ResetAudioClearness;
 
-	lua["GetGameplayCamOffsetInWorldCoords"] = Util::GetGameplayCamOffsetInWorldCoords;
-	lua["GetCoordsFromGameplayCam"]          = Util::GetCoordsFromGameplayCam;
+	lua["GetGameplayCamOffsetInWorldCoords"] = [](LuaVector3 vOffset)
+	{
+		Vector3 vReturn =
+		    Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(vOffset.m_fX, vOffset.m_fY, vOffset.m_fZ));
+		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+	};
+	lua["GetCoordsFromGameplayCam"] = [](float fDistance)
+	{
+		Vector3 vReturn = Util::GetCoordsFromGameplayCam(fDistance);
+		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+	};
 
-	lua["GetCoordAround"]                    = GetCoordAround;
+	lua["GetCoordAround"] = [](Entity iEntity, float fAngle, float fRadius, float fZOffset, bool bRelative)
+	{
+		Vector3 vReturn = GetCoordAround(iEntity, fAngle, fRadius, fZOffset, bRelative);
+		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+	};
 
 	lua["IsWeaponShotgun"]                   = Util::IsWeaponShotgun;
 
