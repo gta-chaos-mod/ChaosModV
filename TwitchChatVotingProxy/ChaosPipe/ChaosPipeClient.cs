@@ -5,6 +5,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Xml.Serialization;
 
 namespace TwitchChatVotingProxy.ChaosPipe
 {
@@ -18,6 +19,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         public event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
         public event EventHandler<OnNewVoteArgs> OnNewVote;
+        public event EventHandler<OnSetVotingModeArgs> OnSetVotingMode;
         public event EventHandler OnNoVotingRound;
 
         private ILogger logger = Log.Logger.ForContext<ChaosPipeClient>();
@@ -148,6 +150,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
 
                 // Evaluate message
                 if (message.StartsWith("vote:")) StartNewVote(message);
+                else if (message.StartsWith("votingmode:")) ChangeVotingMode(message);
                 else if (message == "getvoteresult") GetVoteResult();
                 else if (message == "novoteround") StartNoVotingRound();
                 else if (message == "getcurrentvotes") GetCurrentVotes();
@@ -194,6 +197,30 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void SendHeartBeat()
         {
             SendMessageToPipe("ping");
+        }
+
+        private void ChangeVotingMode(string message)
+        {
+            string modeName = message.Split(':')[1];
+            EVotingMode votingMode = EVotingMode.PERCENTAGE;
+
+            switch (modeName)
+            {
+                case "majority":
+                    logger.Information("Set voting mode to majority");
+                    votingMode = EVotingMode.MAJORITY;
+                    break;
+                case "percentage":
+                    logger.Information("Set voting mode to percentage");
+                    votingMode = EVotingMode.PERCENTAGE;
+                    break;
+                case "antimajority":
+                    logger.Information("Set voting mode to antimajority");
+                    votingMode = EVotingMode.ANTIMAJORITY;
+                    break;
+            }
+
+            OnSetVotingMode.Invoke(this, new OnSetVotingModeArgs(votingMode));
         }
     }
 }

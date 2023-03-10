@@ -250,6 +250,7 @@
     <Compile Include="ChaosPipe\IChaosPipeClient.cs" />
     <Compile Include="ChaosPipe\OnGetCurrentVotesArgs.cs" />
     <Compile Include="ChaosPipe\OnGetResultArgs.cs" />
+    <Compile Include="ChaosPipe\OnSetVotingModeArgs.cs" />
     <Compile Include="ChaosPipe\OnNewVoteArgs.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\IConfig.cs" />

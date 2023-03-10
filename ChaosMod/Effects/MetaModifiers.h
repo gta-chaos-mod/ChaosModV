@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 using BYTE = unsigned char;
 
@@ -10,4 +11,5 @@ namespace MetaModifiers
 	inline bool m_bHideChaosUI                  = false;
 	inline bool m_bDisableChaos                 = false;
 	inline bool m_bFlipChaosUI                  = false;
+	inline std::string m_sCurrentVotingMode     = "";
 };

@@ -226,6 +226,12 @@ void TwitchVoting::OnRun()
 		return;
 	}
 
+	if (MetaModifiers::m_sCurrentVotingMode != "")
+	{
+		SendToPipe("votingmode:" + MetaModifiers::m_sCurrentVotingMode);
+		MetaModifiers::m_sCurrentVotingMode = "";
+	}
+
 	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_bHasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch

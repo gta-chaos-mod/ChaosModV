@@ -10,6 +10,7 @@ namespace TwitchChatVotingProxy
     {
         MAJORITY,
         PERCENTAGE,
+        ANTIMAJORITY
     }
 
     // TODO: instead of doing this (literal) fuckery, we could just use Enum.ToString() and parse

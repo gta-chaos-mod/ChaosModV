@@ -28,6 +28,11 @@ namespace TwitchChatVotingProxy
         private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
 
+        public void OnSetVotingMode(object sender, OnSetVotingModeArgs onSetVotingModeArgs)
+        {
+            votingMode = onSetVotingModeArgs.VotingMode;
+        }
+
         public ChaosModController(
             IChaosPipeClient chaosPipe,
             IOverlayServer overlayServer,
@@ -43,6 +48,7 @@ namespace TwitchChatVotingProxy
             this.chaosPipe.OnGetVoteResult += OnGetVoteResult;
             this.chaosPipe.OnNewVote += OnNewVote;
             this.chaosPipe.OnNoVotingRound += OnNoVotingRound;
+            this.chaosPipe.OnSetVotingMode += OnSetVotingMode;
 
             // Setup receiver listeners
             this.votingReceiver.OnMessage += OnVoteReceiverMessage;
@@ -86,6 +92,7 @@ namespace TwitchChatVotingProxy
         /// <summary>
         /// Calculate the voting result by assigning them a percentage based on votes,
         /// and choosing a random option based on that percentage.
+        /// </summary>
         private int GetVoteResultByPercentage()
         {
             // Get total votes
@@ -111,6 +118,25 @@ namespace TwitchChatVotingProxy
 
             // Return the selected vote range/option
             return selectedOption;
+        }
+        /// <summary>
+        /// Calculate the voting result by the option with the lowest votes
+        /// </summary>
+        private int GetVoteResultByAntiMajority()
+        {
+            var lowestVoteCount = activeVoteOptions.Min(_ => _.Votes);
+            var choosenOptions = activeVoteOptions.FindAll(_ => _.Votes == lowestVoteCount);
+            IVoteOption chosenOption;
+            if (choosenOptions.Count == 1)
+            {
+                chosenOption = choosenOptions[0];
+            }
+            else
+            {
+                chosenOption = choosenOptions[random.Next(0, choosenOptions.Count)];
+            }
+
+            return activeVoteOptions.IndexOf(chosenOption);
         }
         /// <summary>
         /// Is called when the chaos mod pipe requests the current votes (callback)
@@ -142,6 +168,9 @@ namespace TwitchChatVotingProxy
                     break;
                 case EVotingMode.PERCENTAGE:
                     e.ChosenOption = GetVoteResultByPercentage();
+                    break;
+                case EVotingMode.ANTIMAJORITY:
+                    e.ChosenOption = GetVoteResultByAntiMajority();
                     break;
             }
 
