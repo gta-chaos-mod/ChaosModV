@@ -4,14 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:local="clr-namespace:ConfigApp" d:DataContext="{d:DesignInstance Type=local:TreeMenuItem}"
-    x:Class="ConfigApp.MainWindow"
-        mc:Ignorable="d"
-        Title="ChaosModV Configuration" Height="510" Width="1060" ResizeMode="NoResize">
+        xmlns:local="clr-namespace:ConfigApp" d:DataContext="{d:DesignInstance Type=local:TreeMenuItem}" x:Class="ConfigApp.MainWindow"
+        mc:Ignorable="d" Title="ChaosModV Configuration" MinHeight="510" Height="510" MinWidth="1060" Width="1060">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="400" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="75" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -231,7 +229,7 @@
                             <RowDefinition Height="120" />
                             <RowDefinition Height="180" />
                             <RowDefinition Height="30" />
-                            <RowDefinition />
+                            <RowDefinition Height="40" />
                         </Grid.RowDefinitions>
 
                         <Grid>
@@ -451,8 +449,8 @@
                 <ColumnDefinition Width="5*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="105" />
+                <ColumnDefinition Width="105" />
                 <ColumnDefinition Width="10" />
             </Grid.ColumnDefinitions>
 
@@ -461,10 +459,10 @@
             <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
                     HorizontalAlignment="Left" VerticalAlignment="Center"
                     Visibility="Hidden" Click="contribute_modpage_Click" />
-            <Button x:Name="user_reset" Content="Reset" Height="40" Grid.Column="3"
+            <Button x:Name="user_reset" Content="Reset" Width="100" Height="40" Grid.Column="3"
                     VerticalAlignment="Center"
                     Click="user_reset_Click" />
-            <Button x:Name="user_save" Content="Save" Height="40" Grid.Column="4"
+            <Button x:Name="user_save" Content="Save" Width="100" Height="40" Grid.Column="4"
                     VerticalAlignment="Center"
                     Click="user_save_Click" />
         </Grid>
