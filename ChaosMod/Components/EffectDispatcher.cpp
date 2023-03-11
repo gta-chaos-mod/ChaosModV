@@ -438,7 +438,7 @@ void EffectDispatcher::UpdateMetaEffects(int iDeltaTime)
 
 			if (targetEffectIdentifier)
 			{
-				DispatchEffect(*targetEffectIdentifier, "(Meta)", false);
+				_DispatchEffect(this, { .Identifier = *targetEffectIdentifier, .Suffix = "(Meta)", .AddToLog = false });
 			}
 		}
 		else
