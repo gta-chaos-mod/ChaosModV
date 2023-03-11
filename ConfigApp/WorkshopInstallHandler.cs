@@ -132,16 +132,17 @@ namespace ConfigApp
                             return;
                         }
 
-                        List<string> fl = new List<string>();
+                        List<string> filesList = new List<string>();
                         foreach (var entry in archive.Entries)
                         {
                             var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                             if (trimmedName.Length > 0)
                             {
-                                fl.Add(trimmedName);
+                                filesList.Add(trimmedName);
                             }
                         }
-                        var installConfirmationWindow = new WorkshopInstallDialog(fl);
+                        filesList.Sort();
+                        var installConfirmationWindow = new WorkshopInstallDialog(filesList);
                         if (!(bool)installConfirmationWindow.ShowDialog())
                         {
                             fatalCleanup();
