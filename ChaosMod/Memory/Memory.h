@@ -11,10 +11,13 @@ class Handle;
 using DWORD64 = unsigned long long;
 
 namespace Memory
-{
+{	
 	void Init();
 	void Uninit();
-	void RunLateHooks();
+	void RunLateHooks();	
+
+	inline DWORD64 ms_ullBaseAddr;
+	inline DWORD64 ms_ullEndAddr;
 
 	struct PatternScanRange
 	{
