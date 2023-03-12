@@ -29,7 +29,7 @@ static void OnTick()
 			SET_PED_TO_RAGDOLL(ped, 4000, 5000, 1, 1, 1, 0);
 			CREATE_NM_MESSAGE(true, 0);
 			GIVE_PED_NM_MESSAGE(ped);
-			CREATE_NM_MESSAGE(true, 1151);
+			CREATE_NM_MESSAGE(true, 526);
 			GIVE_PED_NM_MESSAGE(ped);
 
 			pedPainMap.emplace(ped, GET_GAME_TIMER());
