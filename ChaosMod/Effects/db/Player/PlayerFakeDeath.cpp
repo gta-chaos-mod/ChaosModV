@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 #include "Components/EffectDispatcher.h"
 
 static const char *ms_rgTextPairs[] = { "Just kidding, keep playing",
@@ -27,14 +28,27 @@ static int scaleForm                  = 0;
 static int currentMode                = FakeDeathState::start;
 static int lastModeTime               = 0;
 static int nextModeTime               = 0;
+static int soundId                    = 0; //Using a Sound Id fixes some of the audio issues
+static bool isOnMission               = false;
 static const char *deathAnimationName = "";
+static const char *playerDeathName    = "";
 
 static void OnStart()
 {
+	soundId        = GET_SOUND_ID();
+	bool cancelledDeathAnim = false;
+
 	scaleForm    = 0;
 	currentMode  = FakeDeathState::start;
 	lastModeTime = 0;
 	nextModeTime = 0;
+	isOnMission  = GET_MISSION_FLAG();
+
+	REQUEST_SCRIPT_AUDIO_BANK("WastedSounds", false, -1);
+	REQUEST_SCRIPT_AUDIO_BANK("MissionFailedSounds", false, -1);
+	REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", false, -1);
+
+	Hooks::EnableScriptThreadBlock();
 
 	while (currentMode < FakeDeathState::cleanup)
 	{
@@ -74,6 +88,7 @@ static void OnStart()
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
+
 			if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
@@ -141,8 +156,17 @@ static void OnStart()
 							{
 								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
 							}
-							Vector3 coords = GET_ENTITY_COORDS(veh, false);
-							ADD_EXPLOSION(coords.x, coords.y, coords.z, 7, 999, true, false, 1, true);
+							Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
+							Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, false);
+							if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x,
+							                                plrCoords.y, plrCoords.z, true) < 2.5f)
+							{
+								ADD_EXPLOSION(vehCoords.x, vehCoords.y, vehCoords.z, 7, 999, true, false, 1, true);
+							}
+							else
+							{
+								cancelledDeathAnim = true;
+							}
 
 							break;
 						}
@@ -154,8 +178,14 @@ static void OnStart()
 
 			// Set the fake name accordingly
 			GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
-
 			nextModeTime = 0;
+
+			if (cancelledDeathAnim)
+			{
+				nextModeTime = 4000;
+				currentMode = FakeDeathState::overlay;
+			}
+
 			break;
 		case FakeDeathState::soundStart: // Apply Screen Effect
 			lastModeTime = GetTickCount64();
@@ -164,22 +194,27 @@ static void OnStart()
 			{
 			case 225514697: // Michael
 				deathAnimationName = "DeathFailMichaelIn";
+				playerDeathName    = "Micheal Died";
 				break;
 			case 2602752943: // Franklin
 				deathAnimationName = "DeathFailFranklinIn";
+				playerDeathName    = "Franklin Died";
 				break;
 			case 2608926626: // Trevor
 				deathAnimationName = "DeathFailTrevorIn";
+				playerDeathName    = "Trever Died";
 				break;
 			default: // default
 				deathAnimationName = "DeathFailNeutralIn";
+				playerDeathName    = "You Died";
 				break;
 			}
-			START_AUDIO_SCENE("DEATH_SCENE");
+			START_AUDIO_SCENE(isOnMission ? "MISSION_FAILED_SCENE" : "DEATH_SCENE");
 			ANIMPOSTFX_PLAY(deathAnimationName, 0, false);
-			PLAY_SOUND_FRONTEND(-1, "ScreenFlash", "WastedSounds", true);
 
-			PLAY_SOUND_FRONTEND(-1, "Bed", "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "ScreenFlash", isOnMission ? "MissionFailedSounds" : "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "Bed", "WastedSounds", true);
+
 			SET_TIME_SCALE(0.1f);
 			SHAKE_GAMEPLAY_CAM("DEATH_FAIL_IN_EFFECT_SHAKE", 1);
 			break;
@@ -197,12 +232,13 @@ static void OnStart()
 			ANIMPOSTFX_PLAY("DeathFailOut", 0, false);
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
 
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("~r~wasted");
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(isOnMission ? "~r~mission failed" : "~r~wasted");
 			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
-			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_rgTextPairs[iChosenIndex]);
+			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(isOnMission ? playerDeathName
+			                                                                : ms_rgTextPairs[iChosenIndex]);
 
 			END_SCALEFORM_MOVIE_METHOD();
-			PLAY_SOUND_FRONTEND(-1, "TextHit", "WastedSounds", true);
+			PLAY_SOUND_FRONTEND(soundId, "TextHit", "WastedSounds", true);
 			break;
 		}
 		case FakeDeathState::cleanup: // Remove all Effects, so you dont have to see this for the rest of the duration
@@ -219,6 +255,8 @@ static void OnStart()
 			break;
 		}
 	}
+
+	Hooks::DisableScriptThreadBlock();
 }
 
 // clang-format off
