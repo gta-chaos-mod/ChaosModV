@@ -35,7 +35,6 @@ static const char *playerDeathName    = "";
 
 static void OnStart()
 {
-	soundId        = GET_SOUND_ID();
 	bool cancelledDeathAnim = false;
 
 	scaleForm    = 0;
@@ -43,6 +42,7 @@ static void OnStart()
 	lastModeTime = 0;
 	nextModeTime = 0;
 	isOnMission  = GET_MISSION_FLAG();
+	soundId      = GET_SOUND_ID();
 
 	REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", false, -1);
 
