@@ -86,7 +86,6 @@ static void OnStart()
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
-
 			if (g_Random.GetRandomInt(0, 1) % 2 == 0)
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
@@ -176,6 +175,7 @@ static void OnStart()
 
 			// Set the fake name accordingly
 			GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
+
 			nextModeTime = 0;
 
 			if (cancelledDeathAnim)
