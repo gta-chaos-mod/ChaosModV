@@ -44,8 +44,6 @@ static void OnStart()
 	nextModeTime = 0;
 	isOnMission  = GET_MISSION_FLAG();
 
-	REQUEST_SCRIPT_AUDIO_BANK("WastedSounds", false, -1);
-	REQUEST_SCRIPT_AUDIO_BANK("MissionFailedSounds", false, -1);
 	REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", false, -1);
 
 	Hooks::EnableScriptThreadBlock();
