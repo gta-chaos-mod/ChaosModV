@@ -5,7 +5,7 @@
 
 namespace Util
 {
-	inline void Draw2DBox(float x, float y, float width, float height, RBA colour, float lineThickness)
+	inline void Draw2DBox(float x, float y, float width, float height, RGBA colour, float lineThickness)
 	{
 		float rx = x + (width / 2);
 		float lx = x - (width / 2);

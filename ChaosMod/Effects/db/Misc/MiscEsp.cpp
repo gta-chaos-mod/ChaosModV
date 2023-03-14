@@ -25,13 +25,14 @@ static void OnStart()
 
 static void OnTick()
 {
+	Ped playerPed = PLAYER_PED_ID();
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) && !IS_PED_A_PLAYER(ped) && WithinDistance(playerPed, ped))
 		{
 			Vector3 coords = GET_PED_BONE_COORDS(ped, 0x796E, 0.f, 0.f, 0.f); // Head
 			SET_DRAW_ORIGIN(coords.x, coords.y, coords.z, 0);
-			Util::DRAW_2D_BOX(0, 0, 0.032, 0.073, boxColour, 0.001);
+			Util::Draw2DBox(0, 0, 0.032, 0.073, boxColour, 0.001);
 			CLEAR_DRAW_ORIGIN();
 		}
 	}

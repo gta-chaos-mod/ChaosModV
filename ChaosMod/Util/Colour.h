@@ -10,11 +10,13 @@ struct RGBA
 // Returns a random RGBA value without a random alpha: 255 or max.
 inline RGBA GetRandomColourRGB(unsigned int min = 0, unsigned int max = 255)
 {
-	return { (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), max };
+	return { (unsigned int)g_Random.GetRandomInt(min, max), (unsigned int)g_Random.GetRandomInt(min, max),
+		     (unsigned int)g_Random.GetRandomInt(min, max), 255 };
 }
 
 // Returns a random RGBA value with a random alpha.
 inline RGBA GetRandomColourRGBA(unsigned int min = 0, unsigned int max = 255)
 {
-	return { (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max), (unsigned int)GetRandomInt(min, max) };
+	return { (unsigned int)g_Random.GetRandomInt(min, max), (unsigned int)g_Random.GetRandomInt(min, max),
+		     (unsigned int)g_Random.GetRandomInt(min, max), (unsigned int)g_Random.GetRandomInt(min, max) };
 }
