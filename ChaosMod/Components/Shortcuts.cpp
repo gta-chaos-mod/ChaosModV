@@ -8,7 +8,7 @@ Shortcuts::Shortcuts() : Component()
 {
 	for (const auto &[effectId, effectData] : g_dictEnabledEffects)
 	{
-		if (effectData.ShortcutKeycode > 0)
+		if (effectData.ShortcutKeycode > 0 && !effectData.IsHidden())
 		{
 			m_ugAvailableShortcuts[effectData.ShortcutKeycode].push_back(effectId);
 		}

@@ -110,8 +110,8 @@ namespace EffectConfig
 			else
 			{
 				effectData.TimedType = static_cast<EEffectTimedType>(
-					static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration
-																						: rgValues[1]);
+				    static_cast<EEffectTimedType>(rgValues[1]) == EEffectTimedType::Unk ? effectInfo.IsShortDuration
+				                                                                        : rgValues[1]);
 			}
 
 			effectData.WeightMult = rgValues[3];
@@ -119,7 +119,11 @@ namespace EffectConfig
 			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
 			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
 			effectData.Name            = effectInfo.Name;
+#ifdef _DEBUG
+			effectData.ShortcutKeycode = effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : rgValues[7];
+#else
 			effectData.ShortcutKeycode = rgValues[7];
+#endif
 			if (!szValueEffectName.empty())
 			{
 				effectData.SetAttribute(EEffectAttributes::HasCustomName, true);
@@ -136,7 +140,7 @@ namespace EffectConfig
 			if (effectInfo.EffectGroupType != EEffectGroupType::None)
 			{
 				effectData.GroupType =
-					g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
+				    g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
 				g_dictEffectGroupMemberCount[effectData.GroupType]++;
 			}
 

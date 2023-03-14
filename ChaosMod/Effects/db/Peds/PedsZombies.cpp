@@ -6,9 +6,9 @@ static void OnStart()
 {
 	m_zombies.clear();
 
-	static const Hash playerGroupHash    = GET_HASH_KEY("PLAYER");
-	static const Hash civMaleGroupHash   = GET_HASH_KEY("CIVMALE");
-	static const Hash civFemaleGroupHash = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroupHash    = "PLAYER"_hash;
+	static const Hash civMaleGroupHash   = "CIVMALE"_hash;
+	static const Hash civFemaleGroupHash = "CIVFEMALE"_hash;
 
 	Hash groupHash;
 	ADD_RELATIONSHIP_GROUP("_ZOMBIES", &groupHash);
@@ -33,7 +33,7 @@ static void OnTick()
 	static constexpr int MAX_ZOMBIES = 20;
 	static constexpr Hash MODEL_HASH = -1404353274;
 
-	static Hash zombieGroupHash      = GET_HASH_KEY("_ZOMBIES");
+	static Hash zombieGroupHash      = "_ZOMBIES"_hash;
 
 	Ped playerPed                    = PLAYER_PED_ID();
 	Vector3 playerPos                = GET_ENTITY_COORDS(playerPed, false);

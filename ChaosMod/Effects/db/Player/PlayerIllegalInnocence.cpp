@@ -52,7 +52,7 @@ static void OnTick()
 
 	int allPlayerKills = 0;
 	int curKills       = 0;
-	for (Hash hash : { GET_HASH_KEY("SP0_KILLS"), GET_HASH_KEY("SP1_KILLS"), GET_HASH_KEY("SP2_KILLS") })
+	for (Hash hash : { "SP0_KILLS"_hash, "SP1_KILLS"_hash, "SP2_KILLS"_hash })
 	{
 		STAT_GET_INT(hash, &curKills, -1);
 		allPlayerKills += curKills;

@@ -8,19 +8,19 @@ static Ped lamarPed;
 
 static void OnStart()
 {
-	static const Hash lamarModel = GET_HASH_KEY("ig_lamardavis");
+	static const Hash lamarModel = "ig_lamardavis"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_ROASTING_LAMAR", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
 
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	LoadModel(lamarModel);
 	lamarPed =
-		CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
+	    CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(lamarModel);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))

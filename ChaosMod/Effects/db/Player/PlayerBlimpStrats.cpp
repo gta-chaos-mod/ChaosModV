@@ -11,8 +11,8 @@ static void OnStart()
 	Hooks::EnableScriptThreadBlock();
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
-	Hash blimpHash       = GET_HASH_KEY("blimp");
-	Hash daveHash        = GET_HASH_KEY("ig_davenorton");
+	Hash blimpHash       = "blimp"_hash;
+	Hash daveHash        = "ig_davenorton"_hash;
 
 	LoadModel(blimpHash);
 
@@ -36,6 +36,7 @@ static void OnStart()
 		WAIT(100);
 		waited++;
 	}
+	SET_ENTITY_INVINCIBLE(player, false);
 
 	if (!cutscenePlaying)
 	{
@@ -64,7 +65,6 @@ static void OnStart()
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
 
-	SET_ENTITY_INVINCIBLE(player, false);
 	Hooks::DisableScriptThreadBlock();
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }

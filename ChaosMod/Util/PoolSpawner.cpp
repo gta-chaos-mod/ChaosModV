@@ -4,7 +4,7 @@
 
 #include "Memory/PedModels.h"
 
-#define ENTITY_POOL_MAX 20
+#define ENTITY_POOL_MAX 40
 
 static std::list<Entity> m_rgEntities;
 
@@ -210,7 +210,7 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 {
 	Vector3 pos = GET_ENTITY_COORDS(vehToClone, false);
 	Vehicle clone =
-		CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
+	    CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
 
 	Vector3 velocity = GET_ENTITY_VELOCITY(vehToClone);
 	SET_ENTITY_VELOCITY(clone, velocity.x, velocity.y, velocity.z);
@@ -247,7 +247,7 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 	return clone;
 }
 
-Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
+Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
 {
 	LoadModel(ulModelHash);
 
@@ -257,5 +257,15 @@ Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ,
 
 	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
 
+	return prop;
+}
+
+Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
+                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
+                                   bool fixedRot)
+{
+	Object prop = CreatePoolProp(ulModelHash, 0, 0, 0, false);
+	ATTACH_ENTITY_TO_ENTITY(prop, ped, boneIndex, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, false, softPinning,
+	                        collision, true, 0, fixedRot);
 	return prop;
 }

@@ -19,6 +19,23 @@ static EffectThread *ThreadIdToThread(DWORD64 ullThreadId)
 	return nullptr;
 }
 
+static auto _StopThreadImmediately(auto it)
+{
+	auto &thread = *it;
+
+	// Give thread a chance to stop gracefully
+	// OK so maybe not really immediately but it's still blocking
+	thread->Stop();
+	int count = 0;
+	while (!thread->HasStopped() && count++ < 20)
+	{
+		SwitchToFiber(g_MainThread);
+		thread->OnRun();
+	}
+
+	return m_rgThreads.erase(it);
+}
+
 namespace EffectThreads
 {
 	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed)
@@ -32,13 +49,21 @@ namespace EffectThreads
 		return threadId;
 	}
 
-	void StopThread(DWORD64 ullThreadId)
+	void StopThread(DWORD64 threadId)
 	{
-		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
-
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
 		if (result != m_rgThreads.end())
 		{
-			result->get()->Stop();
+			(*result)->Stop();
+		}
+	}
+
+	void StopThreadImmediately(DWORD64 threadId)
+	{
+		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
+		if (result != m_rgThreads.end())
+		{
+			_StopThreadImmediately(result);
 		}
 	}
 
@@ -50,12 +75,18 @@ namespace EffectThreads
 		}
 	}
 
+	void StopThreadsImmediately()
+	{
+		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end();)
+		{
+			it = _StopThreadImmediately(it);
+		}
+	}
+
 	void PutThreadOnPause(DWORD ulTimeMs)
 	{
 		PVOID fiber          = GetCurrentFiber();
-
 		const auto &ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
-
 		if (ppResult != m_rgThreads.end())
 		{
 			(*ppResult)->m_iPauseTime = ulTimeMs;
@@ -103,16 +134,25 @@ namespace EffectThreads
 		m_ullLastTimestamp = ullCurTimestamp;
 	}
 
-	void SwitchToMainThread()
+	bool DoesThreadExist(DWORD64 threadId)
 	{
-		SwitchToFiber(g_MainThread);
+		EffectThread *pThread = ThreadIdToThread(threadId);
+
+		return pThread;
 	}
 
 	bool HasThreadOnStartExecuted(DWORD64 threadId)
 	{
 		EffectThread *pThread = ThreadIdToThread(threadId);
 
-		return pThread ? pThread->HasOnStartExecuted() : false;
+		return pThread ? pThread->HasOnStartExecuted() : true;
+	}
+
+	bool HasThreadStopped(DWORD64 threadId)
+	{
+		EffectThread *pThread = ThreadIdToThread(threadId);
+
+		return pThread ? pThread->HasStopped() : true;
 	}
 
 	bool IsAnyThreadRunningOnStart()

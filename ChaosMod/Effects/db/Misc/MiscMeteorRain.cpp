@@ -5,8 +5,9 @@
 static void OnTick()
 {
 	// Thanks to menyoo for the prop names
-	static const char *propNames[]     = { "prop_asteroid_01", "prop_test_boulder_01", "prop_test_boulder_02",
-                                       "prop_test_boulder_03", "prop_test_boulder_04" };
+	static const Hash propHashes[]     = { "prop_asteroid_01"_hash, "prop_test_boulder_01"_hash,
+		                                   "prop_test_boulder_02"_hash, "prop_test_boulder_03"_hash,
+		                                   "prop_test_boulder_04"_hash };
 	static constexpr int MAX_METEORS   = 20;
 
 	static Object meteors[MAX_METEORS] = {};
@@ -23,12 +24,12 @@ static void OnTick()
 		lastTick = curTick;
 
 		Vector3 spawnPos =
-			Vector3::Init(playerPos.x + g_Random.GetRandomInt(-100, 100),
+		    Vector3::Init(playerPos.x + g_Random.GetRandomInt(-100, 100),
 		                  playerPos.y + g_Random.GetRandomInt(-100, 100), playerPos.z + g_Random.GetRandomInt(25, 50));
-		Hash choosenPropHash = GET_HASH_KEY(propNames[g_Random.GetRandomInt(0, 4)]);
+		Hash choosenPropHash = propHashes[g_Random.GetRandomInt(0, 4)];
 		LoadModel(choosenPropHash);
 
-		Object meteor = CREATE_OBJECT(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true, false, true);
+		Object meteor = CreatePoolProp(choosenPropHash, spawnPos.x, spawnPos.y, spawnPos.z, true);
 		meteorsAmount++;
 
 		for (int i = 0; i < MAX_METEORS; i++)

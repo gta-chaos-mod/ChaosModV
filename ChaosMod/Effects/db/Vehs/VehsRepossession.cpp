@@ -1,5 +1,5 @@
 /*
-    Effect by ubscal, modified from Jesus take the wheel
+    Effect by Lunascape, modified from Jesus take the wheel
 */
 
 #include <stdafx.h>
@@ -15,7 +15,7 @@ static void OnStart()
 
 		Hash relationshipGroup;
 		ADD_RELATIONSHIP_GROUP("_WHEEL_FRANKLIN", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
 
 		Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -2);
@@ -40,7 +40,7 @@ static void OnStart()
 
 		Vector3 playerPos          = GET_ENTITY_COORDS(playerPed, false);
 		float heading              = GET_ENTITY_HEADING(playerPed);
-		static const Hash carModel = GET_HASH_KEY("BJXL");
+		static const Hash carModel = "BJXL"_hash;
 		Vehicle veh                = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z, heading);
 		SET_VEHICLE_COLOURS(veh, 88, 0);
 		SET_VEHICLE_ENGINE_ON(veh, true, true, false);
@@ -49,7 +49,7 @@ static void OnStart()
 
 		Hash relationshipGroup;
 		ADD_RELATIONSHIP_GROUP("_WHEEL_FRANKLIN", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -2);
 
 		Ped FranklinDrive = CREATE_PED_INSIDE_VEHICLE(veh, 4, modelHash, -1, true, false);

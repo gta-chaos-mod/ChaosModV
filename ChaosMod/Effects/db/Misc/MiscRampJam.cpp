@@ -15,7 +15,7 @@ static void OnTick()
 		{
 			Memory::ApplyForceToEntity(veh, 0, .0f, 850.f, .0f, .0f, .0f, .0f, 0, true, true, true, false, true);
 
-			Hash rampHash     = GET_HASH_KEY("prop_mp_ramp_02");
+			Hash rampHash     = "prop_mp_ramp_02"_hash;
 			Vector3 playerPos = GET_ENTITY_COORDS(player, false);
 			Vector3 rampPos   = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 4, 0);
 

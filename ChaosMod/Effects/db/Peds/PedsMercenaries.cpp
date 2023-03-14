@@ -72,7 +72,7 @@ static void spawnBuzzard()
 {
 	Ped playerPed      = PLAYER_PED_ID();
 	Vector3 playerPos  = GET_ENTITY_COORDS(playerPed, false);
-	Hash buzzardHash   = GET_HASH_KEY("BUZZARD");
+	Hash buzzardHash   = "BUZZARD"_hash;
 	Vector3 spawnPoint = getRandomOffsetCoord(playerPos, 200, 250);
 	float xDiff        = playerPos.x - spawnPoint.x;
 	float yDiff        = playerPos.y - spawnPoint.y;
@@ -80,7 +80,7 @@ static void spawnBuzzard()
 	helicopterGroup    = EnemyGroup();
 	LoadModel(buzzardHash);
 	helicopterGroup.vehicle =
-		CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
+	    CREATE_VEHICLE(buzzardHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 50, heading, true, false, false);
 	SET_VEHICLE_COLOURS(helicopterGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(helicopterGroup.vehicle, true, true, true);
 	SET_VEHICLE_FORWARD_SPEED(helicopterGroup.vehicle, 0);        // Needed, so the heli doesn't fall down instantly
@@ -108,11 +108,11 @@ static void spawnMesa()
 	float xDiff   = playerPos.x - spawnPoint.x;
 	float yDiff   = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
-	Hash mesaHash = GET_HASH_KEY("Mesa3");
+	Hash mesaHash = "Mesa3"_hash;
 	mesaGroup     = EnemyGroup();
 	LoadModel(mesaHash);
 	mesaGroup.vehicle =
-		CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
+	    CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
 	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
 	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
 	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
@@ -125,10 +125,10 @@ static void OnStart()
 	Ped playerPed                 = PLAYER_PED_ID();
 	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
-	model                         = GET_HASH_KEY("csb_mweather");
-	microSmgHash                  = GET_HASH_KEY("WEAPON_MICROSMG");
+	model                         = "csb_mweather"_hash;
+	microSmgHash                  = "WEAPON_MICROSMG"_hash;
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_MERRYWEATHER", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);

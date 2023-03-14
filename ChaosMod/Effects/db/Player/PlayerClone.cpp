@@ -8,22 +8,26 @@ static void OnStart()
 	if (friendly)
 	{
 		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_FRIENDLY", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
 	}
 	else
 	{
 		ADD_RELATIONSHIP_GROUP("_COMPANION_CLONE_HOSTILE", &relationshipGroup);
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, GET_HASH_KEY("PLAYER"));
-		SET_RELATIONSHIP_BETWEEN_GROUPS(5, GET_HASH_KEY("PLAYER"), relationshipGroup);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, "PLAYER"_hash);
+		SET_RELATIONSHIP_BETWEEN_GROUPS(5, "PLAYER"_hash, relationshipGroup);
 	}
 
 	Ped playerPed = PLAYER_PED_ID();
 
-	Ped ped       = CLONE_PED(playerPed, GET_ENTITY_HEADING(playerPed), true, false);
+	Ped ped       = CreatePoolClonePed(playerPed);
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
+	}
+	else
+	{
+		SET_ENTITY_HEADING(ped, GET_ENTITY_HEADING(playerPed));
 	}
 
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);

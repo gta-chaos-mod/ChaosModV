@@ -14,4 +14,7 @@ Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, 
 Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
 Vehicle CreatePoolCloneVehicle(Vehicle vehToClone);
 
-Object CreatePoolProp(Object ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);
+Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);
+Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
+                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
+                                   bool fixedRot);

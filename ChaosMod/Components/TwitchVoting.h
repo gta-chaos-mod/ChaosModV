@@ -6,8 +6,6 @@
 #include <memory>
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD64 = unsigned long long;
 using BYTE    = unsigned char;
 
@@ -26,7 +24,7 @@ class TwitchVoting : public Component
 	struct ChoosableEffect
 	{
 		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &szName, int iMatch)
-			: m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
+		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
 		{
 		}
 
@@ -44,8 +42,6 @@ class TwitchVoting : public Component
 
 	int m_iTwitchSecsBeforeVoting;
 
-	bool m_bEnableTwitchPollVoting  = false;
-
 	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
 
 	DWORD64 m_ullLastPing           = GetTickCount64();
@@ -54,7 +50,6 @@ class TwitchVoting : public Component
 	int m_iNoPingRuns               = 0;
 
 	bool m_bIsVotingRoundDone       = true;
-	bool m_bNoVoteRound             = false;
 	bool m_bAlternatedVotingRound   = false;
 
 	ETwitchOverlayMode m_eTwitchOverlayMode;
@@ -70,6 +65,7 @@ class TwitchVoting : public Component
 	std::vector<std::unique_ptr<ChoosableEffect>> m_rgEffectChoices;
 
 	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
+	std::string GetPipeJson(std::string identifier, std::vector<std::string> params);
 
   protected:
 	TwitchVoting(const std::array<BYTE, 3> &rgTextColor);
@@ -79,11 +75,11 @@ class TwitchVoting : public Component
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
 
-	_NODISCARD bool IsEnabled() const;
+	bool IsEnabled() const;
 
 	bool HandleMsg(const std::string &szMsg);
 
-	void SendToPipe(std::string &&szMsg);
+	void SendToPipe(std::string identifier, std::vector<std::string> params = {});
 
 	void ErrorOutWithMsg(const std::string &&szMsg);
 

@@ -77,14 +77,14 @@ static void OnStart()
 	Ped player                    = PLAYER_PED_ID();
 	Vector3 pos                   = GET_ENTITY_COORDS(player, false);
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_NEWS_TEAM", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(2, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(2, playerGroup, relationshipGroup);
 
 	// Spawn Helicopter
-	Hash heliHash = GET_HASH_KEY("frogger");
+	Hash heliHash = "frogger"_hash;
 	LoadModel(heliHash);
 	Vector3 aroundCoords;
 	float groundZ;
@@ -93,7 +93,7 @@ static void OnStart()
 	{
 		aroundCoords = GetCoordsAround(pos, 70);
 		isValidCoord =
-			GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
+		    GET_GROUND_Z_FOR_3D_COORD(aroundCoords.x, aroundCoords.y, aroundCoords.z, &groundZ, false, false);
 	} while (!isValidCoord);
 	groundZ = std::max(groundZ, aroundCoords.z);
 	heli    = CREATE_VEHICLE(heliHash, aroundCoords.x, aroundCoords.y, groundZ, 0, true, false, false);
@@ -103,7 +103,7 @@ static void OnStart()
 	SET_HELI_BLADES_SPEED(heli, 1);
 	WAIT(0);
 	// Spawn Pilot
-	Hash pilotModel = GET_HASH_KEY("csb_reporter");
+	Hash pilotModel = "csb_reporter"_hash;
 	LoadModel(pilotModel);
 	pilot = CREATE_PED_INSIDE_VEHICLE(heli, 26, pilotModel, -1, true, true);
 	SET_PED_RELATIONSHIP_GROUP_HASH(pilot, relationshipGroup);

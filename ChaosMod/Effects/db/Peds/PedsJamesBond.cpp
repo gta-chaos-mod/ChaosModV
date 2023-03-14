@@ -11,9 +11,9 @@ static void OnStart()
 {
 	Ped playerPed                 = PLAYER_PED_ID();
 
-	static const Hash model       = GET_HASH_KEY("cs_milton");
+	static const Hash model       = "cs_milton"_hash;
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_BOND", &relationshipGroup);
@@ -28,7 +28,7 @@ static void OnStart()
 	float y_pos   = cos((360 - heading) * PI / 180) * 10;
 
 	Vehicle veh =
-		CreatePoolVehicle(GET_HASH_KEY("JB700"), playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
+	    CreatePoolVehicle("JB700"_hash, playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
 	Vector3 vel = GET_ENTITY_VELOCITY(playerPed);
@@ -48,9 +48,9 @@ static void OnStart()
 
 	SET_PED_SUFFERS_CRITICAL_HITS(bond, false);
 
-	GIVE_WEAPON_TO_PED(bond, GET_HASH_KEY("WEAPON_SWITCHBLADE"), 9999, true, true);
-	GIVE_WEAPON_TO_PED(bond, GET_HASH_KEY("WEAPON_VINTAGEPISTOL"), 9999, true, true);
-	GIVE_WEAPON_COMPONENT_TO_PED(bond, GET_HASH_KEY("WEAPON_VINTAGEPISTOL"), GET_HASH_KEY("COMPONENT_AT_PI_SUPP"));
+	GIVE_WEAPON_TO_PED(bond, "WEAPON_SWITCHBLADE"_hash, 9999, true, true);
+	GIVE_WEAPON_TO_PED(bond, "WEAPON_VINTAGEPISTOL"_hash, 9999, true, true);
+	GIVE_WEAPON_COMPONENT_TO_PED(bond, "WEAPON_VINTAGEPISTOL"_hash, "COMPONENT_AT_PI_SUPP"_hash);
 	SET_PED_ACCURACY(bond, 100);
 	TASK_COMBAT_PED(bond, playerPed, 0, 16);
 }

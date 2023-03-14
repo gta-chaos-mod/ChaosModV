@@ -4,8 +4,6 @@
 
 #include <scripthookv/inc/natives.h>
 
-#define _NODISCARD [[nodiscard]]
-
 using namespace PLAYER;
 using namespace ENTITY;
 using namespace PED;
@@ -45,18 +43,18 @@ using namespace SYSTEM;
 using namespace DECORATOR;
 using namespace SOCIALCLUB;
 
-_NODISCARD constexpr inline int _strlen(const char *str)
+constexpr inline int _strlen(const char *str)
 {
 	return *str ? 1 + _strlen(str + 1) : 0;
 }
 
-_NODISCARD constexpr inline char __tolower(const char c)
+constexpr inline char __tolower(const char c)
 {
 	return c >= 'A' && c <= 'Z' ? c + 'a' - 'A' : c;
 }
 
 // Thanks to menyoo!
-_NODISCARD constexpr inline Hash GET_HASH_KEY(const char *str)
+constexpr inline Hash GET_HASH_KEY(const char *str)
 {
 	int length = _strlen(str);
 

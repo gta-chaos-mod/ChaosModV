@@ -84,8 +84,8 @@ namespace Memory
 					        _bittest(&v6, v5 & 0x1F)))
 					{
 						v2 = *reinterpret_cast<__int64 *>(
-							qword_7FF69DB37ED0
-							+ qword_7FF69DB37EE8 * *reinterpret_cast<WORD *>(reinterpret_cast<__int64>(pModel) + 4));
+						    qword_7FF69DB37ED0
+						    + qword_7FF69DB37EE8 * *reinterpret_cast<WORD *>(reinterpret_cast<__int64>(pModel) + 4));
 					}
 
 					if (v2 && (*reinterpret_cast<BYTE *>(v2 + 157) & 31) == 6) // is a ped model
