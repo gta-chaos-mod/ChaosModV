@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Natives.h"
-#inlcude "Colour.h"
+#include "Colour.h"
 
 namespace Util
 {
