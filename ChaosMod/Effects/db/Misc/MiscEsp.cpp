@@ -13,9 +13,8 @@ static bool WithinDistance(Ped from, Ped to)
 	Vector3 fc = GET_ENTITY_COORDS(from, true);
 	Vector3 tc = GET_ENTITY_COORDS(to, true);
 
-	bool x = tc.x - fc.x < maxDistance || fc.x - tc.x > -maxDistance;
-	bool y = tc.y - fc.y < maxDistance || fc.y - tc.y > -maxDistance;
-	return x && y;
+	float dist = fc.DistanceTo(tc);
+	return dist <= maxDistance && dist >= -maxDistance;
 }
 
 static void OnStart()
