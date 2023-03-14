@@ -41,7 +41,6 @@ static RegisterEffect registerEffect(OnStart, nullptr, OnTick, EffectInfo
 		.Name = "ESP",
 		.Id = "misc_esp",
 		.IsTimed = true,
-		.IsShortDuration = true,
 		.EffectGroupType = EEffectGroupType::Weapons
 	}
 );
