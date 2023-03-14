@@ -1,9 +1,11 @@
 #pragma once
+
 #include "Natives.h"
+#inlcude "Colour.h"
 
 namespace Util
 {
-	inline void Draw2DBox(float x, float y, float width, float height, CRGBA colour, float lineThickness)
+	inline void Draw2DBox(float x, float y, float width, float height, RBA colour, float lineThickness)
 	{
 		float rx = x + (width / 2);
 		float lx = x - (width / 2);
