@@ -28,7 +28,7 @@ static int scaleForm                  = 0;
 static int currentMode                = FakeDeathState::start;
 static int lastModeTime               = 0;
 static int nextModeTime               = 0;
-static int soundId                    = 0; //Using a Sound Id fixes some of the audio issues
+static int soundId                    = 0;
 static bool isOnMission               = false;
 static const char *deathAnimationName = "";
 static const char *playerDeathName    = "";
@@ -244,7 +244,7 @@ static void OnStart()
 			SET_VEHICLE_FIXED(veh);
 			STOP_ANIM_TASK(playerPed, "mp_suicide", "pistol", 3);
 			ANIMPOSTFX_STOP("DeathFailOut");
-			STOP_AUDIO_SCENE("DEATH_SCENE");
+			STOP_AUDIO_SCENE(isOnMission ? "MISSION_FAILED_SCENE" : "DEATH_SCENE");
 			SET_TIME_SCALE(1);
 			STOP_GAMEPLAY_CAM_SHAKING(true);
 			REMOVE_ANIM_DICT("mp_suicide");
@@ -254,6 +254,8 @@ static void OnStart()
 		}
 	}
 
+	RELEASE_SOUND_ID(soundId);
+	RELEASE_NAMED_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED");
 	Hooks::DisableScriptThreadBlock();
 }
 
