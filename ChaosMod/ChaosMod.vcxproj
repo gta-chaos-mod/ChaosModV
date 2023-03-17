@@ -109,6 +109,7 @@
     <ClCompile Include="Effects\db\Misc\MiscGhostWorld.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGoToJail.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscHighPitch.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscInsultGuns.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscJumpyProps.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscLowPitch.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscMuffledAudio.cpp" />
@@ -469,6 +470,7 @@
     <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
+    <ClInclude Include="Util\PedVoices.h" />
     <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Effects\EffectThreads.h" />

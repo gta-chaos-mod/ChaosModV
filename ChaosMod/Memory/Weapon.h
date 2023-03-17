@@ -16,10 +16,9 @@ namespace Memory
 	{
 		REQUEST_WEAPON_ASSET(ulHash, 31, 26);
 		Ped temp      = CreateTempPed(0x705E61F2, 0, 0, 0, 0);
-
+		FREEZE_ENTITY_POSITION(temp, true);
 		GIVE_WEAPON_TO_PED(temp, ulHash, 9999, false, true);
 		SET_CURRENT_PED_WEAPON(temp, ulHash, true);
-		
 		auto baseAddr = GetScriptHandleBaseAddress(temp);
 		return *reinterpret_cast<uintptr_t *>(*reinterpret_cast<uintptr_t *>(baseAddr + 0x10B8) + 0x20);
 	}
@@ -114,6 +113,18 @@ namespace Memory
 	{
 		auto infoAddr = GetWeaponInfo(ulHash);
 		return *reinterpret_cast<float*>(infoAddr + 0x00D8);
+	}
+
+	inline void SetWeaponAudio(Hash ulHash, uint32_t iAudio)
+	{
+		auto infoAddr = GetWeaponInfo(ulHash);
+		*reinterpret_cast<uint32_t *>(infoAddr + 0x18) = iAudio;
+	}
+
+	inline uint32_t GetWeaponAudio(Hash ulHash)
+	{
+		auto infoAddr = GetWeaponInfo(ulHash);
+		return *reinterpret_cast<uint32_t*>(infoAddr + 0x18);
 	}
 
 	inline bool IsWeaponShotgun(Hash ulHash)

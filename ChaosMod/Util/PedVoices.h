@@ -1,0 +1,66 @@
+#include <stdafx.h>
+
+namespace Util
+{
+	inline std::vector<const char *> sz_VoiceNames = {
+		"a_m_m_afriamer_01_black_full_01",    "a_m_m_beach_01_latino_full_01",
+		"a_m_m_beach_01_white_full_01",       "a_m_m_beach_02_black_full_01",
+		"a_m_m_beach_02_white_full_01",       "a_m_m_bevhills_01_black_full_01",
+		"a_m_m_bevhills_01_white_full_01",    "a_m_m_bevhills_02_black_full_01",
+		"a_m_m_bevhills_02_white_full_01",    "a_m_m_business_01_black_full_01",
+		"a_m_m_business_01_white_full_01",    "a_m_m_eastsa_01_latino_full_01",
+		"a_m_m_eastsa_02_latino_full_01",     "a_m_m_fatlatin_01_latino_full_01",
+		"a_m_m_genfat_01_latino_full_01",     "a_m_m_golfer_01_black_full_01",
+		"a_m_m_golfer_01_white_full_01",      "a_m_m_ktown_01_korean_full_01",
+		"a_m_m_malibu_01_black_full_01",      "a_m_m_malibu_01_latino_full_01",
+		"a_m_m_malibu_01_white_full_01",      "a_m_m_polynesian_01_polynesian_full_01",
+		"a_m_m_salton_01_white_full_01",      "a_m_m_salton_02_white_full_01",
+		"a_m_m_skater_01_black_full_01",      "a_m_m_skater_01_white_full_01",
+		"a_m_m_skidrow_01_black_full_01",     "a_m_m_socenlat_01_latino_full_01",
+		"a_m_m_soucent_01_black_full_01",     "a_m_m_soucent_02_black_full_01",
+		"a_m_m_soucent_03_black_full_01",     "a_m_m_soucent_04_black_full_01",
+		"a_m_m_stlat_02_latino_full_01",      "a_m_m_trampbeac_01_black_full_01",
+		"a_m_m_tramp_01_black_full_01",       "a_m_m_tranvest_02_latino_full_01",
+		"a_m_o_beach_01_white_full_01",       "a_m_o_genstreet_01_white_full_01",
+		"a_m_o_salton_01_white_full_01",      "a_m_o_soucent_01_black_full_01",
+		"a_m_o_soucent_02_black_full_01",     "a_m_o_soucent_03_black_full_01",
+		"a_m_o_tramp_01_black_full_01",       "a_m_y_beachvesp_01_chinese_full_01",
+		"a_m_y_beachvesp_01_white_full_01",   "a_m_y_beachvesp_02_white_full_01",
+		"a_m_y_beach_01_chinese_full_01",     "a_m_y_beach_01_white_full_01",
+		"a_m_y_beach_02_latino_full_01",      "a_m_y_beach_02_white_full_01",
+		"a_m_y_beach_03_black_full_01",       "a_m_y_beach_03_white_full_01",
+		"a_m_y_bevhills_01_black_full_01",    "a_m_y_bevhills_01_white_full_01",
+		"a_m_y_bevhills_02_black_full_01",    "a_m_y_bevhills_02_white_full_01",
+		"a_m_y_business_01_black_full_01",    "a_m_y_business_01_chinese_full_01",
+		"a_m_y_business_01_white_full_01",    "a_m_y_business_02_black_full_01",
+		"a_m_y_business_02_white_full_01",    "a_m_y_business_03_black_full_01",
+		"a_m_y_downtown_01_black_full_01",    "a_m_y_eastsa_01_latino_full_01",
+		"a_m_y_eastsa_02_latino_full_01",     "a_m_y_epsilon_01_black_full_01",
+		"a_m_y_epsilon_01_korean_full_01",    "a_m_y_epsilon_01_white_full_01",
+		"a_m_y_gay_01_black_full_01",         "a_m_y_gay_01_latino_full_01",
+		"a_m_y_genstreet_01_chinese_full_01", "a_m_y_genstreet_01_white_full_01",
+		"a_m_y_genstreet_02_black_full_01",   "a_m_y_genstreet_02_latino_full_01",
+		"a_m_y_golfer_01_white_full_01",      "a_m_y_hippy_01_white_full_01",
+		"a_m_y_hipster_01_black_full_01",     "a_m_y_hipster_01_white_full_01",
+		"a_m_y_hipster_02_white_full_01",     "a_m_y_hipster_03_white_full_01",
+		"a_m_y_ktown_01_korean_full_01",      "a_m_y_ktown_02_korean_full_01",
+		"a_m_y_mexthug_01_latino_full_01",    "a_m_y_musclbeac_01_black_full_01",
+		"a_m_y_musclbeac_01_white_full_01",   "a_m_y_musclbeac_02_chinese_full_01",
+		"a_m_y_musclbeac_02_latino_full_01",  "a_m_y_polynesian_01_polynesian_full_01",
+		"a_m_y_runner_01_white_full_01",      "a_m_y_skater_01_white_full_01",
+		"a_m_y_skater_02_black_full_01",      "a_m_y_soucent_01_black_full_01",
+		"a_m_y_soucent_02_black_full_01",     "a_m_y_soucent_03_black_full_01",
+		"a_m_y_soucent_04_black_full_01",     "a_m_y_stbla_01_black_full_01",
+		"a_m_y_stbla_02_black_full_01",       "a_m_y_stlat_01_latino_full_01",
+		"a_m_y_stwhi_01_white_full_01",       "a_m_y_stwhi_02_white_full_01",
+		"a_m_y_sunbathe_01_black_full_01",    "a_m_y_sunbathe_01_white_full_01",
+		"a_m_y_vinewood_01_black_full_01",    "a_m_y_vinewood_02_white_full_01",
+		"a_m_y_vinewood_03_latino_full_01",   "a_m_y_vinewood_03_white_full_01",
+		"a_m_y_vinewood_04_white_full_01",
+	};
+
+	inline const char *GetRandomPedVoiceName()
+	{
+		return sz_VoiceNames[g_Random.GetRandomFloat(0, sz_VoiceNames.size() - 1)];
+	}
+}

@@ -415,6 +415,7 @@ namespace ConfigApp
             { "vehs_spawn_piano", new EffectInfo("Makin' My Way Downtown", EffectCategory.Vehicle) },
             { "peds_screamonshot", new EffectInfo("Drama Queen", EffectCategory.Peds, true) },
             { "peds_blanks", new EffectInfo("Blanks", EffectCategory.Peds, true, true) },
+            { "misc_insultguns", new EffectInfo("These Bullets Mean", EffectCategory.Misc, true) },
         };
     }
 }
