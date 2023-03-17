@@ -16,9 +16,10 @@ namespace Memory
 	{
 		REQUEST_WEAPON_ASSET(ulHash, 31, 26);
 		Ped temp      = CreateTempPed(0x705E61F2, 0, 0, 0, 0);
-		FREEZE_ENTITY_POSITION(temp, true);
+
 		GIVE_WEAPON_TO_PED(temp, ulHash, 9999, false, true);
 		SET_CURRENT_PED_WEAPON(temp, ulHash, true);
+		
 		auto baseAddr = GetScriptHandleBaseAddress(temp);
 		return *reinterpret_cast<uintptr_t *>(*reinterpret_cast<uintptr_t *>(baseAddr + 0x10B8) + 0x20);
 	}
