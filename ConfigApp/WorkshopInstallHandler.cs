@@ -9,7 +9,6 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Linq;
 using ZstdSharp;
-using System.Windows.Documents;
 using System.Collections.Generic;
 
 namespace ConfigApp
@@ -33,18 +32,6 @@ namespace ConfigApp
 
         public async void Execute(object parameter)
         {
-            var fatalCleanup = new Action(() =>
-            {
-                m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
-            });
-
-            if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c)) ))
-            {
-                MessageBox.Show($"Invalid submission id! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                fatalCleanup();
-                return;
-            }
-
             Directory.CreateDirectory("workshop");
 
             var targetDirName = $"workshop/{m_SubmissionItem.Id}";
@@ -53,6 +40,12 @@ namespace ConfigApp
             {
                 // Remove submission
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Removing;
+
+                if (MessageBox.Show("Are you sure you want to remove this submission?", "ChaosModV", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                {
+                    m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                    return;
+                }
 
                 try
                 {
@@ -65,11 +58,23 @@ namespace ConfigApp
                 catch (IOException)
                 {
                     MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                    fatalCleanup();
+                    m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
                     return;
                 }
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
+                return;
+            }
+
+            void fatalCleanup()
+            {
+                m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
+            }
+
+            if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c))))
+            {
+                MessageBox.Show($"Invalid submission id! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                fatalCleanup();
                 return;
             }
 
