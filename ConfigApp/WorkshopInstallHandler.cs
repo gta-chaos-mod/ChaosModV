@@ -10,6 +10,7 @@ using System.Text;
 using System.Linq;
 using ZstdSharp;
 using System.Collections.Generic;
+using System.Media;
 
 namespace ConfigApp
 {
@@ -63,6 +64,9 @@ namespace ConfigApp
                 }
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
+
+                SystemSounds.Beep.Play();
+
                 return;
             }
 
@@ -190,6 +194,8 @@ namespace ConfigApp
                 File.WriteAllText($"{targetDirName}/metadata.json", metadataJson.ToString());
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+
+                SystemSounds.Beep.Play();
             }
             catch (HttpRequestException)
             {
