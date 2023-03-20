@@ -499,12 +499,9 @@ void EffectDispatcher::DrawEffectTexts()
 		if (g_dictEnabledEffects.contains(effect.m_EffectIdentifier))
 		{
 			auto &effectData = g_dictEnabledEffects.at(effect.m_EffectIdentifier);
-
 			if ((effect.m_bHideText && !bHasFake)
-			    || (MetaModifiers::m_bHideChaosUI && !effectData.IsMeta() && !effectData.IsUtility()
-			        && !effectData.IsTemporary())
-			    || (MetaModifiers::m_bDisableChaos && !effectData.IsMeta() && !effectData.IsUtility()
-			        && !effectData.IsTemporary()))
+			    || ((MetaModifiers::m_bHideChaosUI || MetaModifiers::m_bDisableChaos) && !effectData.IsMeta()
+			        && !effectData.IsUtility() && !effectData.IsTemporary()))
 			{
 				continue;
 			}
@@ -636,10 +633,8 @@ void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
 			EffectThreads::StopThread(effect.m_ullThreadId);
 			effect.m_bIsStopping = true;
 		}
-		else
-		{
-			it++;
-		}
+
+		it++;
 	}
 }
 
