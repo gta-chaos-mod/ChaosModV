@@ -392,7 +392,9 @@
                                             </TextBlock>
                                             <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="{Binding Version}" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" MinHeight="70" MaxHeight="150" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Description}" />
-                                            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,80,0" Content="i" FontFamily="Webdings"
+                                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,50,0" Content="]" FontFamily="Wingdings"
+                                                    Visibility="{Binding SettingsButtonVisibility}" Command="{Binding SettingsButtonCommand}" />
+                                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0" Content="i" FontFamily="Webdings"
                                                     Command="{Binding InfoButtonCommand}" />
                                             <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="60" Height="30" Margin="0,0,10,0" Content="{Binding InstallButtonText}"
                                                     IsEnabled="{Binding InstallButtonEnabled}" Command="{Binding InstallButtonCommand}" />

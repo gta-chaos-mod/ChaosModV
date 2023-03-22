@@ -378,7 +378,6 @@ namespace ConfigApp
 
             meta_effects_tree_view.Items.Clear();
             meta_effects_tree_view.Items.Add(metaParentItem);
-            
         }
 
         void InitTwitchTab()

@@ -29,6 +29,7 @@
 #include "Util/Types.h"
 #include "Util/Vehicle.h"
 #include "Util/Weapon.h"
+#include "Util/Workshop.h"
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -491,9 +492,9 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
 	};
 
-	lua["IsWeaponShotgun"]                   = Util::IsWeaponShotgun;
+	lua["IsWeaponShotgun"]    = Util::IsWeaponShotgun;
 
-	lua["GetChaosModVersion"]                = []()
+	lua["GetChaosModVersion"] = []()
 	{
 		return MOD_VERSION;
 	};
@@ -857,10 +858,22 @@ namespace LuaScripts
 				continue;
 			}
 
-			for (const auto &entry : std::filesystem::recursive_directory_iterator(dir))
+			if (!strcmp(dir, "chaosmod\\workshop"))
 			{
-				if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".lua"
-				    && entry.file_size() > 0)
+				for (const auto &entry : std::filesystem::directory_iterator(dir))
+				{
+					if (entry.is_directory())
+					{
+						for (const auto &entry : GetWorkshopFiles(entry.path().string(), WorkshopFileType::Script))
+						{
+							ParseScriptEntry(entry);
+						}
+					}
+				}
+			}
+			else
+			{
+				for (const auto &entry : GetFiles(dir, ".lua", true))
 				{
 					ParseScriptEntry(entry);
 				}

@@ -262,9 +262,10 @@
     <Compile Include="EffectsTreeMenuItem.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="WorkshopSettingsHandler.cs" />
     <Compile Include="WorkshopInfoHandler.cs" />
-    <Compile Include="WorkshopInstallDialog.xaml.cs">
-      <DependentUpon>WorkshopInstallDialog.xaml</DependentUpon>
+    <Compile Include="WorkshopEditDialog.xaml.cs">
+      <DependentUpon>WorkshopEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="WorkshopInstallHandler.cs" />
     <Compile Include="WorkshopSubmissionItem.cs" />
@@ -286,7 +287,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WorkshopInstallDialog.xaml">
+    <Page Include="WorkshopEditDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

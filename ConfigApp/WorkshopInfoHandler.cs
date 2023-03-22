@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Net.Http;
 using System.Windows.Input;
 using System.Windows;
-using System.IO;
-using System.IO.Compression;
-using System.Security.Cryptography;
-using Newtonsoft.Json.Linq;
-using System.Text;
 
 namespace ConfigApp
 {

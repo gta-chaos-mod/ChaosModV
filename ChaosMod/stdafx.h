@@ -3,7 +3,6 @@
 #include "Effects/Effect.h"
 
 #include "Util/EntityIterator.h"
-#include "Util/File.h"
 #include "Util/Hash.h"
 #include "Util/Logging.h"
 #include "Util/Model.h"

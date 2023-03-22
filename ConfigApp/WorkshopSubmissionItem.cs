@@ -47,10 +47,12 @@ namespace ConfigApp
                     case SubmissionInstallState.NotInstalled:
                         InstallButtonText = "Install";
                         InstallButtonEnabled = true;
+                        SettingsButtonVisibility = Visibility.Hidden;
                         break;
                     case SubmissionInstallState.Installed:
                         InstallButtonText = "Remove";
                         InstallButtonEnabled = true;
+                        SettingsButtonVisibility = Visibility.Visible;
                         break;
                     case SubmissionInstallState.Installing:
                         InstallButtonText = "Installing";
@@ -59,6 +61,7 @@ namespace ConfigApp
                     case SubmissionInstallState.UpdateAvailable:
                         InstallButtonText = "Update";
                         InstallButtonEnabled = true;
+                        SettingsButtonVisibility = Visibility.Visible;
                         break;
                     case SubmissionInstallState.Removing:
                         InstallButtonText = "Removing";
@@ -68,6 +71,8 @@ namespace ConfigApp
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonText)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonEnabled)));
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SettingsButtonVisibility)));
             }
         }
 
@@ -87,6 +92,15 @@ namespace ConfigApp
                 return new WorkshopInfoHandler(this);
             }
         }
+
+        public ICommand SettingsButtonCommand
+        {
+            get
+            {
+                return new WorkshopSettingsHandler(this);
+            }
+        }
+        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Hidden;
 
         public WorkshopSubmissionItem()
         {

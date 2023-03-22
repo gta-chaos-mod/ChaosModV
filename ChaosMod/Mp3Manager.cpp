@@ -2,8 +2,10 @@
 
 #include "Mp3Manager.h"
 
-#define CHAOS_SOUNDFILES_USER_DIR ".\\chaosmod\\sounds"
-#define CHAOS_SOUNDFILES_WORKSHOP_DIR ".\\chaosmod\\workshop"
+#include "Util/Workshop.h"
+
+#define CHAOS_SOUNDFILES_USER_DIR "chaosmod"
+#define CHAOS_SOUNDFILES_WORKSHOP_DIR "chaosmod\\workshop"
 
 static std::unordered_map<std::string, std::vector<std::string>> ms_dictEffectSoundFilesCache;
 
@@ -15,7 +17,7 @@ static void HandleDirectory(const std::string &dir, const std::string &soundName
 	auto &soundFiles = ms_dictEffectSoundFilesCache[soundName];
 
 	// Check if file exists first
-	ossTmp << dir << "\\" << soundName;
+	ossTmp << dir << "\\sounds\\" << soundName;
 	tmpStr = ossTmp.str() + ".mp3";
 	if (DoesFileExist(tmpStr))
 	{
@@ -27,14 +29,13 @@ static void HandleDirectory(const std::string &dir, const std::string &soundName
 	struct stat temp;
 	if (stat(tmpStr.c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
 	{
+		const auto &entries = dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR)
+		                        ? GetWorkshopFiles(dir, WorkshopFileType::Audio, "sounds")
+		                        : GetFiles(ossTmp.str(), ".mp3", false);
 		// Cache all of the mp3 files
-		for (const auto &entry : std::filesystem::directory_iterator(ossTmp.str()))
+		for (const auto &entry : entries)
 		{
-			if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".mp3"
-			    && entry.file_size() > 0)
-			{
-				soundFiles.push_back(tmpStr + "\\" + entry.path().filename().string());
-			}
+			soundFiles.push_back(tmpStr + "\\" + entry.path().filename().string());
 		}
 	}
 }
@@ -53,7 +54,7 @@ namespace Mp3Manager
 				{
 					if (entry.is_directory() && DoesFileExist(entry.path().string() + "\\sounds"))
 					{
-						HandleDirectory(entry.path().string() + "\\sounds", soundFileName);
+						HandleDirectory(entry.path().string(), soundFileName);
 					}
 				}
 			}

@@ -51,8 +51,13 @@ namespace ConfigApp
                 try
                 {
                     Directory.Delete(targetDirName, true);
+                    File.Delete($"{targetDirName}.json");
                 }
                 catch (DirectoryNotFoundException)
+                {
+
+                }
+                catch (FileNotFoundException)
                 {
 
                 }
@@ -141,17 +146,17 @@ namespace ConfigApp
                             return;
                         }
 
-                        List<string> filesList = new List<string>();
+                        var files = new List<WorkshopSubmissionFile>();
                         foreach (var entry in archive.Entries)
                         {
                             var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                             if (trimmedName.Length > 0)
                             {
-                                filesList.Add(trimmedName);
+                                files.Add(new WorkshopSubmissionFile(trimmedName));
                             }
                         }
-                        filesList.Sort();
-                        var installConfirmationWindow = new WorkshopInstallDialog(filesList);
+                        files.Sort();
+                        var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
                         if (!(bool)installConfirmationWindow.ShowDialog())
                         {
                             fatalCleanup();
