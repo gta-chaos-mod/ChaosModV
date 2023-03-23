@@ -10,8 +10,9 @@ namespace ConfigApp
         public bool Permanent;
         public bool ExcludedFromVoting;
         public string CustomName;
+        public int Shortcut;
 
-        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName)
+        public EffectData(EffectTimedType timedType, int customTime, int weightMult, bool permanent, bool excludedFromVoting, string customName, int shortcut)
         {
             TimedType = timedType;
             CustomTime = customTime;
@@ -19,6 +20,7 @@ namespace ConfigApp
             Permanent = permanent;
             ExcludedFromVoting = excludedFromVoting;
             CustomName = customName;
+            Shortcut = shortcut;
         }
     }
 }

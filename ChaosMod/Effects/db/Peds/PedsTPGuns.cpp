@@ -26,7 +26,8 @@ static void OnTick()
 			bool alreadyTeleported = false;
 			for (Vehicle veh : GetAllVehs())
 			{
-				if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh, ped, true) && ARE_ANY_VEHICLE_SEATS_FREE(veh) && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(veh, wepHash, 0))
+				if (HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(veh, ped, true) && ARE_ANY_VEHICLE_SEATS_FREE(veh)
+				    && HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON(veh, wepHash, 0))
 				{
 					int seat = -2;
 					if (IS_PED_A_PLAYER(ped))
@@ -66,7 +67,7 @@ static void OnTick()
 				}
 
 				float heading = GET_ENTITY_HEADING(toTeleport);
-				Vector3 vel = GET_ENTITY_VELOCITY(toTeleport);
+				Vector3 vel   = GET_ENTITY_VELOCITY(toTeleport);
 				float forward = GET_ENTITY_SPEED(toTeleport);
 
 				SET_ENTITY_COORDS(toTeleport, impactCoords.x, impactCoords.y, impactCoords.z, true, true, true, false);
@@ -81,7 +82,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_PORTAL_GUN, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Portal Guns",
 		.Id = "peds_portal_gun",

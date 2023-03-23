@@ -1,37 +1,39 @@
 /*
-	Effect by Slothersbee, modified
+    Effect by Slothersbee, modified
 */
 
 #include <stdafx.h>
 
+// clang-format off
 static std::vector<std::string> actions = {
-	"move forwards",
-	"move backwards",
-	"move left",
-	"move right",
-	"move",
-	"look behind (c)"
+	"hold forwards",
+	"hold backwards",
+	"hold left",
+	"hold right",
+	"hold any movement key",
+	"hold look behind (c)"
 };
 
 static std::map<std::string, std::vector<int>> actionKeys = {
-	{"move forwards", {32, 71, 77, 87, 129, 136, 150, 232}},
-	{"move backwards", {33, 72, 78, 88, 130, 139, 151, 233}},
-	{"move left", {34, 63, 89, 133, 147, 234}},
-	{"move right", {35, 64, 90, 134, 148, 235}},
-	{"move", {
+	{"hold forwards", {32, 71, 77, 87, 129, 136, 150, 232}},
+	{"hold backwards", {33, 72, 78, 88, 130, 139, 151, 233}},
+	{"hold left", {34, 63, 89, 133, 147, 234}},
+	{"hold right", {35, 64, 90, 134, 148, 235}},
+	{"hold any movement key", {
 		32, 71, 77, 87, 129, 136, 150, 232,
 		33, 72, 78, 88, 130, 139, 151, 233,
 		34, 63, 89, 133, 147, 234,
 		35, 64, 90, 134, 148, 235,
 		44, 23, 102, 55,
 	}},
-	{"look behind (c)", {26, 79}}
+	{"hold look behind (c)", {26, 79}}
 };
+// clang-format on
 
 static int scaleForm = 0;
-static int lastTime = 0;
-static int waitTime = 2000;
-static bool dead = false;
+static int lastTime  = 0;
+static int waitTime  = 2000;
+static bool dead     = false;
 
 static std::string action;
 
@@ -51,7 +53,7 @@ static void ShowPopup()
 		{
 			message = "";
 		}
-	} 
+	}
 	else
 	{
 		if (g_Random.GetRandomInt(0, 1) == 0)
@@ -88,8 +90,8 @@ static void ShowPopup()
 
 static void OnStart()
 {
-	action = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
-	
+	action       = actions[g_Random.GetRandomInt(0, actions.size() - 1)];
+
 	int rand_int = g_Random.GetRandomInt(0, 1);
 
 	if (rand_int == 0)
@@ -102,7 +104,7 @@ static void OnStart()
 	}
 
 	lastTime = 0;
-	dead = false;
+	dead     = false;
 
 	ShowPopup();
 }
@@ -111,7 +113,7 @@ static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
-	bool kill = false;
+	bool kill     = false;
 	if (!opposite)
 	{
 		if (_IS_PLAYER_CAM_CONTROL_DISABLED())
@@ -119,7 +121,7 @@ static void OnTick()
 			return;
 		}
 		kill = true;
-		
+
 		for (int key : actionKeys[action])
 		{
 			if (IS_CONTROL_PRESSED(0, key) || IS_CONTROL_JUST_PRESSED(0, key))
@@ -157,7 +159,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_SIMEONSAYS, OnStart, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Simeon Says",
 		.Id = "player_simeonsays",

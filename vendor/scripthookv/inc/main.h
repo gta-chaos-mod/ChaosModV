@@ -8,7 +8,7 @@
 
 #include <windows.h>
 
-#define IMPORT __declspec(dllimport)
+#define IMPORT
 
 /* textures */
 
@@ -216,6 +216,25 @@ enum eGameVersion : int
 
 	VER_1_0_2245_0_STEAM,
 	VER_1_0_2245_0_NOSTEAM,
+
+	VER_1_0_2372_0_STEAM,
+	VER_1_0_2372_0_NOSTEAM,
+
+	VER_1_0_2545_0_STEAM,
+	VER_1_0_2545_0_NOSTEAM,
+
+	VER_1_0_2612_1_STEAM,
+	VER_1_0_2612_1_NOSTEAM,
+
+	VER_1_0_2628_2_STEAM,
+	VER_1_0_2628_2_NOSTEAM,
+
+	VER_1_0_2699_0_STEAM,
+	VER_1_0_2699_0_NOSTEAM,
+
+	VER_1_0_2699_16,
+
+	VER_1_0_2802_0,
 
 	VER_SIZE,
 	VER_UNK = -1

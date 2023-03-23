@@ -1,23 +1,37 @@
 #include <stdafx.h>
 
 #include "Main.h"
+#include "Mp3Manager.h"
 
-static std::unique_ptr<DebugMenu> ms_pDebugMenu;
-static std::unique_ptr<TwitchVoting> ms_pTwitchVoting;
-static std::unique_ptr<Failsafe> ms_pFailsafe;
-static std::unique_ptr<SplashTexts> ms_pSplashTexts;
+#include "Effects/EffectConfig.h"
 
-static bool ms_bClearAllEffects = false;
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Hooks/ShaderHook.h"
+#include "Memory/Misc.h"
+#include "Memory/Shader.h"
 
+#include "Components/DebugMenu.h"
+#include "Components/DebugSocket.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/Failsafe.h"
+#include "Components/Shortcuts.h"
+#include "Components/SplashTexts.h"
+#include "Components/TwitchVoting.h"
+
+#include "Util/File.h"
+#include "Util/OptionsManager.h"
+#include "Util/PoolSpawner.h"
+
+static bool ms_bClearAllEffects             = false;
 static bool ms_bClearEffectsShortcutEnabled = false;
+static bool ms_bToggleModShortcutEnabled    = false;
+static bool ms_bDisableMod                  = false;
+static bool ms_bEnablePauseTimerShortcut    = false;
+static bool ms_bHaveLateHooksRan            = false;
+static bool ms_bAntiSoftlockShortcutEnabled = false;
+static bool ms_bRunAntiSoftlock             = false;
 
-static bool ms_bToggleModShortcutEnabled = false;
-
-static bool ms_bDisableMod = false;
-
-static bool ms_bEnablePauseTimerShortcut = false;
-
-static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& szColorText)
+static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
 {
 	// Format: #ARGB
 	std::array<BYTE, 3> rgColors;
@@ -25,7 +39,7 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		 Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
+		Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
 	}
 
 	return rgColors;
@@ -33,34 +47,56 @@ static _NODISCARD std::array<BYTE, 3> ParseConfigColorString(const std::string& 
 
 static void ParseEffectsFile()
 {
-	g_EnabledEffects.clear();
-	g_dictCurrentEffectGroupMemberCount = g_dictAllEffectGroupMemberCount;
+	g_dictEnabledEffects.clear();
 
-	EffectConfig::ReadConfig("chaosmod/effects.ini", g_EnabledEffects);
+	EffectConfig::ReadConfig("chaosmod/effects.ini", g_dictEnabledEffects);
 }
 
 static void Reset()
 {
 	// Check if this isn't the first time this is being run
-	if (g_pEffectDispatcher)
+	if (ComponentExists<EffectDispatcher>())
 	{
-		LOG("Mod has been disabled using shortcut!");
+		GetComponent<EffectDispatcher>()->Reset();
+		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+		{
+			GetComponent<EffectDispatcher>()->OnRun();
+			WAIT(0);
+		}
+
+		LOG("Mod has been disabled");
 	}
 
-	g_pEffectDispatcher.reset();
-
-	ms_pDebugMenu.reset();
-
-	ms_pTwitchVoting.reset();
-
-	ms_pFailsafe.reset();
-
 	ClearEntityPool();
+
+	Mp3Manager::ResetCache();
+
+	LuaScripts::Unload();
+
+	for (auto pComponent : g_rgComponents)
+	{
+		pComponent->OnModPauseCleanup();
+	}
 }
 
 static void Init()
 {
-	static std::streambuf* c_pOldStreamBuf;
+	// Attempt to print game build number
+	// We're doing it here as the build number isn't available when the mod is attached to the game process
+	static auto printedGameBuild = []()
+	{
+		auto gameBuild = Memory::GetGameBuild();
+		if (gameBuild.empty())
+		{
+			gameBuild = "Unknown";
+		}
+
+		LOG("Game Build: " << gameBuild);
+
+		return true;
+	}();
+
+	static std::streambuf *c_pOldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
 		if (GetConsoleWindow())
@@ -73,12 +109,12 @@ static void Init()
 
 			AllocConsole();
 
-			SetConsoleTitle("Chaos Mod");
+			SetConsoleTitle(L"ChaosModV");
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
 			c_pOldStreamBuf = std::cout.rdbuf();
 
-			g_ConsoleOut = std::ofstream("CONOUT$");
+			g_ConsoleOut    = std::ofstream("CONOUT$");
 			std::cout.rdbuf(g_ConsoleOut.rdbuf());
 
 			std::cout.clear();
@@ -106,15 +142,24 @@ static void Init()
 
 	g_OptionsManager.Reset();
 
-	ms_bClearEffectsShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
-	ms_bToggleModShortcutEnabled = g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
-	ms_bEnablePauseTimerShortcut = g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	ms_bClearEffectsShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	ms_bToggleModShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	ms_bEnablePauseTimerShortcut =
+	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	ms_bAntiSoftlockShortcutEnabled =
+	    g_OptionsManager.GetConfigValue<bool>("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
-	g_bEnableGroupWeighting = g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	g_bEnableGroupWeighting =
+	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
-	const auto& rgTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
-	const auto& rgTextColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
-	const auto& rgEffectTimerColor = ParseConfigColorString(g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+	const auto &rgTimerColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	const auto &rgTextColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	const auto &rgEffectTimerColor = ParseConfigColorString(
+	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
 	LOG("Running custom scripts");
 	LuaScripts::Load();
@@ -122,130 +167,156 @@ static void Init()
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
 	LOG("Initializing effects dispatcher");
-	g_pEffectDispatcher = std::make_unique<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
+	InitComponent<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
 
-	ms_pDebugMenu = std::make_unique<DebugMenu>();
+	InitComponent<DebugMenu>();
+
+	LOG("Initializing shortcuts");
+	InitComponent<Shortcuts>();
 
 	LOG("Initializing Twitch voting");
-	ms_pTwitchVoting = std::make_unique<TwitchVoting>(rgTextColor);
+	InitComponent<TwitchVoting>(rgTextColor);
 
 	LOG("Initializing Failsafe");
-	ms_pFailsafe = std::make_unique<Failsafe>();
+	InitComponent<Failsafe>();
 
-	LOG("Completed Init!");
-
-	if (ms_pTwitchVoting->IsEnabled())
+#ifdef WITH_DEBUG_PANEL_SUPPORT
+	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
 	{
-		ms_pSplashTexts->ShowTwitchVotingSplash();
+		LOG("Initializing Debug Websocket");
+		InitComponent<DebugSocket>();
+	}
+#endif
+
+	LOG("Completed init");
+
+	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
+	{
+		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
 	}
 }
 
 static void MainRun()
 {
+	if (!ms_bHaveLateHooksRan)
+	{
+		ms_bHaveLateHooksRan = true;
+
+		Memory::RunLateHooks();
+	}
+
 	g_MainThread = GetCurrentFiber();
 
 	EffectThreads::ClearThreads();
 
 	Reset();
 
-	ms_pSplashTexts = std::make_unique<SplashTexts>();
-	ms_pSplashTexts->ShowInitSplash();
+	InitComponent<SplashTexts>();
+	GetComponent<SplashTexts>()->ShowInitSplash();
 
 	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 
+	bool c_bJustReenabled = false;
+
 	while (true)
 	{
 		WAIT(0);
 
+		// This will run regardless if mod is disabled
+		if (ms_bRunAntiSoftlock)
+		{
+			ms_bRunAntiSoftlock = false;
+			if (IS_SCREEN_FADED_OUT())
+			{
+				DO_SCREEN_FADE_IN(0);
+				SET_ENTITY_HEALTH(PLAYER_PED_ID(), 0, 0);
+			}
+		}
+
 		if (!EffectThreads::IsAnyThreadRunningOnStart())
 		{
-			static bool c_bJustReenabled = false;
 			if (ms_bDisableMod && !c_bJustReenabled)
 			{
-				if (!c_bJustReenabled)
-				{
-					c_bJustReenabled = true;
-
-					Reset();
-				}
+				c_bJustReenabled = true;
+				Reset();
 
 				continue;
 			}
-			else
+			else if (c_bJustReenabled)
 			{
-				if (c_bJustReenabled)
+				if (!ms_bDisableMod)
 				{
-					if (EffectThreads::IsAnyThreadRunning())
-					{
-						EffectThreads::RunThreads();
+					c_bJustReenabled = false;
 
-						continue;
-					}
-					else if (!ms_bDisableMod)
-					{
-						c_bJustReenabled = false;
+					LOG("Mod has been re-enabled");
 
-						// Clear log
-						g_Log = std::ofstream("chaosmod/chaoslog.txt");
-
-						// Restart the main part of the mod completely
-						Init();
-					}
-					else
-					{
-						continue;
-					}
+					// Restart the main part of the mod completely
+					Init();
 				}
+
+				continue;
 			}
 
 			if (ms_bClearAllEffects)
 			{
 				ms_bClearAllEffects = false;
 
-				g_pEffectDispatcher->Reset();
+				GetComponent<EffectDispatcher>()->Reset(false);
+				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+				{
+					GetComponent<EffectDispatcher>()->OnRun();
+					WAIT(0);
+				}
 
 				ClearEntityPool();
 			}
 		}
 		else if (IS_SCREEN_FADED_OUT())
 		{
-			SET_TIME_SCALE(1.f); // Prevent potential softlock for certain effects
-
+			// Prevent potential softlock for certain effects
+			SET_TIME_SCALE(1.f);
+			Hooks::DisableScriptThreadBlock();
 			WAIT(100);
 
 			continue;
 		}
 
-		for (Component* pComponent : g_rgComponents)
+		for (auto pComponent : g_rgComponents)
 		{
-			pComponent->Run();
+			pComponent->OnRun();
 		}
 	}
 }
 
 namespace Main
 {
-	void Run()
+	void OnRun()
 	{
-		__try
-		{
-			MainRun();
-		}
-		__except (CrashHandler(GetExceptionInformation()))
-		{
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		}
+		MainRun();
 	}
 
-	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt, BOOL bWasDownBefore, BOOL bIsUpNow)
+	void OnCleanup()
 	{
-		static bool c_bIsCtrlPressed = false;
+		LuaScripts::Unload();
+	}
+
+	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
+	                     BOOL bWasDownBefore, BOOL bIsUpNow)
+	{
+		static bool c_bIsCtrlPressed  = false;
+		static bool c_bIsShiftPressed = false;
 
 		if (ulKey == VK_CONTROL)
 		{
 			c_bIsCtrlPressed = !bIsUpNow;
+		}
+		else if (ulKey == VK_SHIFT)
+		{
+			c_bIsShiftPressed = !bIsUpNow;
 		}
 		else if (c_bIsCtrlPressed && !bWasDownBefore)
 		{
@@ -253,18 +324,22 @@ namespace Main
 			{
 				ms_bClearAllEffects = true;
 
-				if (ms_pSplashTexts)
+				if (ComponentExists<SplashTexts>())
 				{
-					ms_pSplashTexts->ShowClearEffectsSplash();
+					GetComponent<SplashTexts>()->ShowClearEffectsSplash();
 				}
 			}
-			else if (ulKey == VK_OEM_PERIOD && ms_bEnablePauseTimerShortcut && g_pEffectDispatcher)
+			else if (ulKey == VK_OEM_PERIOD && ms_bEnablePauseTimerShortcut && ComponentExists<EffectDispatcher>())
 			{
-				g_pEffectDispatcher->m_bPauseTimer = !g_pEffectDispatcher->m_bPauseTimer;
+				GetComponent<EffectDispatcher>()->m_bPauseTimer = !GetComponent<EffectDispatcher>()->m_bPauseTimer;
 			}
-			else if (ulKey == VK_OEM_COMMA && ms_pDebugMenu && ms_pDebugMenu->IsEnabled())
+			else if (ulKey == VK_OEM_COMMA && ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
 			{
-				ms_pDebugMenu->SetVisible(!ms_pDebugMenu->IsVisible());
+				GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
+			}
+			else if (ulKey == 0x4B && ms_bAntiSoftlockShortcutEnabled && c_bIsShiftPressed) // K
+			{
+				ms_bRunAntiSoftlock = true;
 			}
 			else if (ulKey == 0x4C && ms_bToggleModShortcutEnabled) // L
 			{
@@ -272,9 +347,14 @@ namespace Main
 			}
 		}
 
-		if (ms_pDebugMenu)
+		if (ComponentExists<DebugMenu>())
 		{
-			ms_pDebugMenu->HandleInput(ulKey, bWasDownBefore);
+			GetComponent<DebugMenu>()->HandleInput(ulKey, bWasDownBefore);
+		}
+
+		if (ComponentExists<Shortcuts>())
+		{
+			GetComponent<Shortcuts>()->HandleInput(ulKey, bWasDownBefore);
 		}
 	}
 }

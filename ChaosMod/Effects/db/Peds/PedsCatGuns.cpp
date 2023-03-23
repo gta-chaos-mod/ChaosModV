@@ -2,10 +2,14 @@
 
 static int MAX_CATS_COUNT = 20;
 static std::vector<Ped> currentCats;
+#include "Memory/Physics.h"
+
+#include "Util/Camera.h"
+#include "Util/Weapon.h"
 
 static void OnTick()
 {
-	static const Hash catHash = GET_HASH_KEY("a_c_cat_01");
+	static const Hash catHash = "a_c_cat_01"_hash;
 	LoadModel(catHash);
 
 	for (Ped ped : GetAllPeds())
@@ -17,22 +21,23 @@ static void OnTick()
 
 			if (IS_PED_A_PLAYER(ped))
 			{
-				Vector3 camCoords = GET_GAMEPLAY_CAM_COORD();
-				Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
+				Vector3 camCoords  = GET_GAMEPLAY_CAM_COORD();
+				Vector3 pedPos     = GET_ENTITY_COORDS(ped, false);
 
-				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y, camCoords.z, true);
+				float distCamToPed = GET_DISTANCE_BETWEEN_COORDS(pedPos.x, pedPos.y, pedPos.z, camCoords.x, camCoords.y,
+				                                                 camCoords.z, true);
 
-				spawnBasePos = Util::GetCoordsFromGameplayCam(distCamToPed + .5f);
-				spawnRot = GET_GAMEPLAY_CAM_ROT(2);
+				spawnBasePos       = Util::GetCoordsFromGameplayCam(distCamToPed + .5f);
+				spawnRot           = GET_GAMEPLAY_CAM_ROT(2);
 			}
 			else
 			{
 				spawnBasePos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ped, .0f, 1.f, .0f);
-				spawnRot = GET_ENTITY_ROTATION(ped, 2);
+				spawnRot     = GET_ENTITY_ROTATION(ped, 2);
 			}
 
 			bool isShotgun = Util::IsWeaponShotgun(GET_SELECTED_PED_WEAPON(ped));
-			int catCount = isShotgun ? 3 : 1;
+			int catCount   = isShotgun ? 3 : 1;
 			for (int i = 0; i < catCount; i++)
 			{
 				if (i > 0)
@@ -51,7 +56,7 @@ static void OnTick()
 
 				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
-				APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				Memory::ApplyForceToEntityCenterOfMass(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
 				currentCats.insert(currentCats.begin(), cat);
 
 				SET_PED_AS_NO_LONGER_NEEDED(&cat);
@@ -81,8 +86,8 @@ static void OnStop()
 		currentCats.pop_back();
 	}
 }
-
-static RegisterEffect registerEffect(EFFECT_PEDS_CAT_GUNS, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Catto Guns",
 		.Id = "peds_catguns",

@@ -2,8 +2,8 @@
 
 static void OnTick()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	Hash weaponHash = GET_HASH_KEY("WEAPON_MACHINEPISTOL");
+	Ped playerPed   = PLAYER_PED_ID();
+	Hash weaponHash = "WEAPON_MACHINEPISTOL"_hash;
 
 	for (Ped ped : GetAllPeds())
 	{
@@ -17,7 +17,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_DRIVEBY, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Peds Drive-By Player",
 		.Id = "peds_driveby",

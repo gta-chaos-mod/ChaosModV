@@ -2,14 +2,14 @@
 
 static void OnStart()
 {
-	static const Hash modelHash = GET_HASH_KEY("a_c_chimp");
+	static const Hash modelHash = "a_c_chimp"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_COMPANION_CHIMP", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
 
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
@@ -31,14 +31,15 @@ static void OnStart()
 	SET_PED_ACCURACY(ped, 100);
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_PISTOL"), 9999, false, true);
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_CARBINERIFLE"), 9999, false, true);
+	GIVE_WEAPON_TO_PED(ped, "WEAPON_PISTOL"_hash, 9999, false, true);
+	GIVE_WEAPON_TO_PED(ped, "WEAPON_CARBINERIFLE"_hash, 9999, false, true);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_COMPANION_CHIMP, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Companion Chimp",
 		.Id = "spawn_chimp",
-		.EEffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EEffectGroupType::SpawnCompanion
 	}
 );
