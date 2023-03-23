@@ -450,7 +450,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="105" />
                 <ColumnDefinition Width="105" />
                 <ColumnDefinition Width="105" />
                 <ColumnDefinition Width="10" />
@@ -461,10 +462,15 @@
             <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
                     HorizontalAlignment="Left" VerticalAlignment="Center"
                     Visibility="Hidden" Click="contribute_modpage_Click" />
-            <Button x:Name="user_reset" Content="Reset" Width="100" Height="40" Grid.Column="3"
+            <Button x:Name="user_validate" Height="40" Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Click="user_validate_installation_Click">
+                <TextBlock Text="Validate Installation" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Button>
+            <Button x:Name="user_reset" Content="Reset" Width="100" Height="40" Grid.Column="4"
                     VerticalAlignment="Center"
                     Click="user_reset_Click" />
-            <Button x:Name="user_save" Content="Save" Width="100" Height="40" Grid.Column="4"
+            <Button x:Name="user_save" Content="Save" Width="100" Height="40" Grid.Column="5"
                     VerticalAlignment="Center"
                     Click="user_save_Click" />
         </Grid>

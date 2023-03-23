@@ -747,7 +747,7 @@ namespace ConfigApp
             HandleWorkshopSubmissionsSearchFilter();
         }
 
-        private void contribute_modpage_click(object sender, RoutedEventArgs e)
+        private void contribute_modpage_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
         }
