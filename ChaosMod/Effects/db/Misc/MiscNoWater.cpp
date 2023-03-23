@@ -42,7 +42,7 @@ static void OnStart()
 		for (int i = 0; i < 821; i++) // 821 = Max Water Items
 		{
 			WaterHeights.push_back(WaterQuads[i].Height); // Save Water Heights
-			WaterQuads[i].Height = -1000.0f; // Remove Water
+			WaterQuads[i].Height = -1000.0f;              // Remove Water
 		}
 	}
 }
