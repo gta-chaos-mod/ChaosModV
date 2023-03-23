@@ -1,8 +1,9 @@
 /*
-	Effect by Moxi based on "Killer Clowns" by Last0xygen
+    Effect by Moxi based on "Killer Clowns" by Last0xygen
 */
 
 #include <stdafx.h>
+
 #include <Util/Peds.h>
 #include <Util/Types.h>
 
@@ -23,7 +24,6 @@ static void OnStop()
 	cougarEnemies.clear();
 }
 
-
 static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
@@ -32,26 +32,27 @@ static void OnTick()
 		WAIT(0);
 	}
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-	int current_time = GET_GAME_TIMER();
+	Ped playerPed           = PLAYER_PED_ID();
+	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
+	int current_time        = GET_GAME_TIMER();
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
 
 	if (lastTick < current_time - 100)
 	{
-		lastTick  = current_time;
+		lastTick = current_time;
 
-		for (std::list<Ped>::iterator it = cougarEnemies.begin(); it != cougarEnemies.end(); )
+		for (std::list<Ped>::iterator it = cougarEnemies.begin(); it != cougarEnemies.end();)
 		{
-			Ped cougar = *it;
+			Ped cougar        = *it;
 			Vector3 cougarPos = GET_ENTITY_COORDS(cougar, false);
 			if (IS_PED_DEAD_OR_DYING(cougar, false) || IS_PED_INJURED(cougar)
 			    || playerPos.DistanceTo(cougarPos) > 100.f)
 			{
 				SET_ENTITY_HEALTH(cougar, 0, 0);
 				USE_PARTICLE_FX_ASSET("core");
-				START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", cougarPos.x, cougarPos.y, cougarPos.z, 0, 0, 0, 3, false, false, false);
+				START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", cougarPos.x, cougarPos.y, cougarPos.z, 0, 0, 0,
+				                                      3, false, false, false);
 				SET_ENTITY_ALPHA(cougar, 0, true);
 				SET_PED_AS_NO_LONGER_NEEDED(&cougar);
 				DELETE_PED(&cougar);
@@ -77,10 +78,11 @@ static void OnTick()
 
 	if (cougarEnemies.size() < maxCougarsToSpawn && current_time > spawnTimer + 2000)
 	{
-		spawnTimer = current_time;
+		spawnTimer       = current_time;
 		Vector3 spawnPos = GetCoordAround(playerPed, g_Random.GetRandomInt(0, 360), 10, 0, true);
 		USE_PARTICLE_FX_ASSET("core");
-		START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", spawnPos.x, spawnPos.y, spawnPos.z, 0, 0, 0, 2, true, true, true);
+		START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", spawnPos.x, spawnPos.y, spawnPos.z, 0, 0, 0, 2, true,
+		                                      true, true);
 		WAIT(300);
 		Ped ped = CreateHostilePed("a_c_mtlion"_hash, 0, &spawnPos);
 		SET_PED_COMBAT_ATTRIBUTES(ped, 1, true);
@@ -89,7 +91,8 @@ static void OnTick()
 		SET_PED_FLEE_ATTRIBUTES(ped, 2, true);
 
 		USE_PARTICLE_FX_ASSET("des_trailerpark");
-		START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_ray_trailerpark_fires", ped, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, .5f, false, false, false);
+		START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_ray_trailerpark_fires", ped, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, .5f, false,
+		                                   false, false);
 		cougarEnemies.push_back(ped);
 	}
 }

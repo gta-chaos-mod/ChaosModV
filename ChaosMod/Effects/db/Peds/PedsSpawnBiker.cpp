@@ -10,9 +10,9 @@
 
 static void OnStart()
 {
-	static const Hash bikerHash  = GET_HASH_KEY("G_M_Y_Lost_03");
-	static const Hash weaponHash = GET_HASH_KEY("weapon_dbshotgun");
-	static const Hash vehHash    = GET_HASH_KEY("DAEMON");
+	static const Hash bikerHash  = "G_M_Y_Lost_03"_hash;
+	static const Hash weaponHash = "weapon_dbshotgun"_hash;
+	static const Hash vehHash    = "DAEMON"_hash;
 
 	Ped playerPed                = PLAYER_PED_ID();
 

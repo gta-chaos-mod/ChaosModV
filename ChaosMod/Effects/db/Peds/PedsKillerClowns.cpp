@@ -56,7 +56,7 @@ static void OnStop()
 
 static void OnStart()
 {
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_KILLER_CLOWNS", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);
@@ -109,8 +109,8 @@ static void OnTick()
 		START_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_clown_appears", spawnPos.x, spawnPos.y, spawnPos.z, 0, 0, 0, 2, true,
 		                                      true, true);
 		WAIT(300);
-		Hash clownHash  = GET_HASH_KEY("s_m_y_clown_01");
-		Hash weaponHash = GET_HASH_KEY("WEAPON_MICROSMG");
+		Hash clownHash  = "s_m_y_clown_01"_hash;
+		Hash weaponHash = "WEAPON_MICROSMG"_hash;
 		LoadModel(clownHash);
 		Ped ped = CREATE_PED(-1, clownHash, spawnPos.x, spawnPos.y, spawnPos.z, 0, true, false);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);

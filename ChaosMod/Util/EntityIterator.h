@@ -6,8 +6,6 @@
 
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 // Thanks to menyoo for most of these!!
 
 // Pool Interator class to iterate over pools. Has just enough operators defined to be able to be used in a for loop,
@@ -130,7 +128,7 @@ class GenericPool : public PoolUtils<GenericPool>
 	}
 };
 
-_NODISCARD inline auto &GetAllPeds()
+inline auto &GetAllPeds()
 {
 	static GenericPool *pPedPool = []
 	{
@@ -141,7 +139,7 @@ _NODISCARD inline auto &GetAllPeds()
 	return *pPedPool;
 }
 
-_NODISCARD inline auto &GetAllVehs()
+inline auto &GetAllVehs()
 {
 	static VehiclePool *pVehPool = []
 	{
@@ -152,7 +150,7 @@ _NODISCARD inline auto &GetAllVehs()
 	return *pVehPool;
 }
 
-_NODISCARD inline auto &GetAllProps()
+inline auto &GetAllProps()
 {
 	static GenericPool *pPropPool = []
 	{
@@ -163,17 +161,17 @@ _NODISCARD inline auto &GetAllProps()
 	return *pPropPool;
 }
 
-_NODISCARD inline auto GetAllPedsArray()
+inline auto GetAllPedsArray()
 {
 	return GetAllPeds().ToArray();
 }
 
-_NODISCARD inline auto GetAllVehsArray()
+inline auto GetAllVehsArray()
 {
 	return GetAllVehs().ToArray();
 }
 
-_NODISCARD inline auto GetAllPropsArray()
+inline auto GetAllPropsArray()
 {
 	return GetAllProps().ToArray();
 }

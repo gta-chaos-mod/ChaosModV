@@ -1,4 +1,4 @@
-// Effect by ubscal, modified from Bus Bois, modified by Last0xygen
+// Effect by Lunascape, modified from Bus Bois, modified by Last0xygen
 
 #include <stdafx.h>
 
@@ -6,7 +6,7 @@
 
 static void OnStart()
 {
-	static const Hash mowerHash = GET_HASH_KEY("MOWER");
+	static const Hash mowerHash = "MOWER"_hash;
 	SetSurroundingPedsInVehicles(mowerHash, 120);
 }
 

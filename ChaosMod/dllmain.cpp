@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "Main.h"
 
 #include "Memory/Memory.h"
@@ -12,6 +13,8 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		SetUnhandledExceptionFilter(CrashHandler);
+
+		RAW_LOG("Chaos Mod v" MOD_VERSION "\n\n");
 
 		Memory::Init();
 

@@ -9,7 +9,7 @@ static Hash airstrikeHash;
 
 static void OnStart()
 {
-	airstrikeHash = GET_HASH_KEY("WEAPON_AIRSTRIKE_ROCKET");
+	airstrikeHash = "WEAPON_AIRSTRIKE_ROCKET"_hash;
 }
 
 static void OnStop()

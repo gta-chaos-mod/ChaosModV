@@ -6,8 +6,6 @@
 
 #include <memory>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD   = unsigned long;
 using DWORD64 = unsigned long long;
 
@@ -17,16 +15,18 @@ namespace EffectThreads
 {
 	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed);
 
-	void StopThread(DWORD64 ullThreadId);
+	void StopThread(DWORD64 threadId);
+	void StopThreadImmediately(DWORD64 threadId);
 	void StopThreads();
+	void StopThreadsImmediately();
 
 	void PutThreadOnPause(DWORD ulTimeMs);
 
 	void RunThreads();
 
-	void SwitchToMainThread();
-
-	bool HasThreadOnStartExecuted(DWORD64 ullThreadId);
+	bool DoesThreadExist(DWORD64 threadId);
+	bool HasThreadOnStartExecuted(DWORD64 threadId);
+	bool HasThreadStopped(DWORD64 threadId);
 
 	bool IsAnyThreadRunningOnStart();
 	bool IsAnyThreadRunning();
@@ -41,6 +41,8 @@ struct EffectThreadData
 	bool &m_bIsRunning;
 	bool &m_bHasStopped;
 
+	void *m_CallerFiber = nullptr;
+
 	EffectThreadData(RegisteredEffect *pEffect, bool &bHasOnStartExecuted, bool &bIsRunning, bool &bHasStopped)
 	    : m_pEffect(pEffect),
 	      m_bHasOnStartExecuted(bHasOnStartExecuted),
@@ -54,26 +56,21 @@ inline void EffectThreadFunc(LPVOID pData)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	extern void WAIT(DWORD ulTimeMs);
-
 	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(pData);
 
 	threadData.m_pEffect->Start();
-
 	threadData.m_bHasOnStartExecuted = true;
 
 	while (threadData.m_bIsRunning)
 	{
+		SwitchToFiber(threadData.m_CallerFiber);
 		threadData.m_pEffect->Tick();
-
-		WAIT(0);
 	}
 
 	threadData.m_pEffect->Stop();
 
 	threadData.m_bHasStopped = true;
-
-	EffectThreads::SwitchToMainThread();
+	SwitchToFiber(threadData.m_CallerFiber);
 }
 
 class EffectThread
@@ -106,7 +103,7 @@ class EffectThread
 		DeleteFiber(m_pThread);
 	}
 
-	EffectThread(const EffectThread &) = delete;
+	EffectThread(const EffectThread &)            = delete;
 
 	EffectThread &operator=(const EffectThread &) = delete;
 
@@ -120,8 +117,9 @@ class EffectThread
 		return pThisThread->m_pThread == pThread;
 	}
 
-	inline void OnRun() const
+	inline void OnRun()
 	{
+		m_ThreadData.m_CallerFiber = GetCurrentFiber();
 		SwitchToFiber(m_pThread);
 	}
 
@@ -135,13 +133,18 @@ class EffectThread
 		}
 	}
 
-	_NODISCARD inline bool HasStopped() const
+	inline bool HasStopped() const
 	{
 		return m_bHasStopped;
 	}
 
-	_NODISCARD inline bool HasOnStartExecuted() const
+	inline bool HasOnStartExecuted() const
 	{
 		return m_bHasOnStartExecuted;
+	}
+
+	inline bool IsStopping() const
+	{
+		return !m_bIsRunning;
 	}
 };

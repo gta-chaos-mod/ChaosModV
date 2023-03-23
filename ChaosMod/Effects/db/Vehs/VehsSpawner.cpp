@@ -13,7 +13,7 @@ static void OnStartRhino()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("RHINO"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("RHINO"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -31,7 +31,7 @@ static void OnStartAdder()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("ADDER"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("ADDER"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -49,7 +49,7 @@ static void OnStartDump()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("DUMP"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("DUMP"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -66,7 +66,7 @@ static void OnStartMonster()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("MONSTER"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("MONSTER"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -84,7 +84,7 @@ static void OnStartBMX()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BMX"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("BMX"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -101,7 +101,7 @@ static void OnStartTug()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("TUG"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("TUG"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -118,7 +118,7 @@ static void OnStartCargoplane()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("CARGOPLANE"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("CARGOPLANE"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -136,7 +136,7 @@ static void OnStartBus()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BUS"), playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("BUS"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -153,7 +153,7 @@ static void OnStartBlimp()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BLIMP"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("BLIMP"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -171,7 +171,7 @@ static void OnStartBuzzard()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BUZZARD"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("BUZZARD"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -189,7 +189,7 @@ static void OnStartFaggio()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("FAGGIO"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("FAGGIO"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -207,7 +207,7 @@ static void OnStartRuiner3()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("RUINER3"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("RUINER3"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -281,7 +281,7 @@ static void OnStartBaletrailer()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("BALETRAILER"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("BALETRAILER"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -299,7 +299,7 @@ static void OnStartRomero()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle(GET_HASH_KEY("ROMERO"), playerPos.x, playerPos.y, playerPos.z,
+	CreatePoolVehicle("ROMERO"_hash, playerPos.x, playerPos.y, playerPos.z,
 	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
@@ -315,8 +315,8 @@ REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, EffectInfo
 
 static void OnStartWizardBroom()
 {
-	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
-	static const Hash broomHash     = GET_HASH_KEY("prop_tool_broom");
+	static const Hash oppressorHash = "OPPRESSOR2"_hash;
+	static const Hash broomHash     = "prop_tool_broom"_hash;
 	LoadModel(oppressorHash);
 	LoadModel(broomHash);
 

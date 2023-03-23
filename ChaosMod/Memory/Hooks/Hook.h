@@ -4,8 +4,6 @@
 
 #include <string>
 
-#define _NODISCARD [[nodiscard]]
-
 namespace Memory
 {
 	class RegisteredHook;
@@ -33,11 +31,11 @@ namespace Memory
 			g_pRegisteredHooks = this;
 		}
 
-		RegisteredHook(const RegisteredHook &) = delete;
+		RegisteredHook(const RegisteredHook &)            = delete;
 
 		RegisteredHook &operator=(const RegisteredHook &) = delete;
 
-		_NODISCARD inline bool RunHook()
+		inline bool RunHook()
 		{
 			return m_pHookFunc ? m_pHookFunc() : true;
 		}
@@ -50,17 +48,17 @@ namespace Memory
 			}
 		}
 
-		_NODISCARD inline const std::string &GetName() const
+		inline const std::string &GetName() const
 		{
 			return m_szName;
 		}
 
-		_NODISCARD inline RegisteredHook *GetNext() const
+		inline RegisteredHook *GetNext() const
 		{
 			return m_pNext;
 		}
 
-		_NODISCARD inline bool IsLateHook() const
+		inline bool IsLateHook() const
 		{
 			return m_bIsLateHook;
 		}
@@ -78,11 +76,11 @@ class RegisterHook
 	{
 	}
 
-	RegisterHook(const RegisterHook &) = delete;
+	RegisterHook(const RegisterHook &)                = delete;
 
-	RegisterHook &operator=(const RegisterHook &) = delete;
+	RegisterHook &operator=(const RegisterHook &)     = delete;
 
-	RegisterHook(RegisterHook &&) noexcept        = delete;
+	RegisterHook(RegisterHook &&) noexcept            = delete;
 
 	RegisterHook &operator=(RegisterHook &&) noexcept = delete;
 };

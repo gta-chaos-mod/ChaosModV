@@ -4,7 +4,7 @@
 
 #include "Memory/PedModels.h"
 
-#define ENTITY_POOL_MAX 60
+#define ENTITY_POOL_MAX 40
 
 static std::list<Entity> m_rgEntities;
 
@@ -257,5 +257,15 @@ Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, b
 
 	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
 
+	return prop;
+}
+
+Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
+                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
+                                   bool fixedRot)
+{
+	Object prop = CreatePoolProp(ulModelHash, 0, 0, 0, false);
+	ATTACH_ENTITY_TO_ENTITY(prop, ped, boneIndex, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, false, softPinning,
+	                        collision, true, 0, fixedRot);
 	return prop;
 }
