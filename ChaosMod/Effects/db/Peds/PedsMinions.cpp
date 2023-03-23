@@ -1,5 +1,5 @@
 /*
-	Effect by Last0xygen, modified
+    Effect by Last0xygen, modified
 */
 
 #include <stdafx.h>
@@ -32,11 +32,12 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_MINIONS, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Minions",
 		.Id = "peds_minions",
 		.IsTimed = true,
-		.IncompatibleWith = { EFFECT_HIGH_PITCH, EFFECT_LOW_PITCH, EFFECT_WEIRD_PITCH, EFFECT_GAMESPEED_X02, EFFECT_GAMESPEED_X05, EFFECT_PEDS_HEADLESS }
+		.EffectCategory = EEffectCategory::Pitch
 	}
 );

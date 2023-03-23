@@ -1,13 +1,21 @@
 #pragma once
 
-#include <vector>
 #include <string>
-
-#define _NODISCARD [[nodiscard]]
+#include <string_view>
+#include <vector>
 
 namespace LuaScripts
 {
 	void Load();
-	_NODISCARD std::vector<std::string> GetScriptIds();
-	void Execute(const std::string& szScriptId, const char* szFuncName);
+	void Unload();
+
+	enum class ExecuteFuncType
+	{
+		Start,
+		Stop,
+		Tick,
+	};
+	void Execute(const std::string &effectId, ExecuteFuncType funcType);
+
+	void RegisterScriptRawTemporary(std::string scriptName, std::string script);
 }

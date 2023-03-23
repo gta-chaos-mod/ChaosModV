@@ -2,20 +2,21 @@
 
 static void OnStart()
 {
-	Ped playerPed = PLAYER_PED_ID();
-	float playerHeading = GET_ENTITY_HEADING(playerPed);
+	Ped playerPed                 = PLAYER_PED_ID();
+	float playerHeading           = GET_ENTITY_HEADING(playerPed);
 
-	static const Hash sultanModel = GET_HASH_KEY("SULTANRS");
+	static const Hash sultanModel = "SULTANRS"_hash;
 
-	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
+	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
+	                                                                           : playerPed);
 
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
-	Vehicle veh = CreatePoolVehicle(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading);
+	Vehicle veh       = CreatePoolVehicle(sultanModel, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_COLOURS(veh, 64, 64);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_IESULTAN", &relationshipGroup);
@@ -23,11 +24,11 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, relationshipGroup);
 
-	static const Hash model = GET_HASH_KEY("g_m_m_armboss_01");
+	static const Hash model        = "g_m_m_armboss_01"_hash;
 
-	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
+	static const Hash microSmgHash = "WEAPON_MICROSMG"_hash;
 
-	Ped ped = CreatePoolPedInsideVehicle(veh, 4, model, -1);
+	Ped ped                        = CreatePoolPedInsideVehicle(veh, 4, model, -1);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 
@@ -56,10 +57,11 @@ static void OnStart()
 	WAIT(0);
 }
 
-static RegisterEffect registerEffect(EFFECT_SPAWN_IE_SULTAN, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Blue Sultan",
 		.Id = "spawn_bluesultan",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

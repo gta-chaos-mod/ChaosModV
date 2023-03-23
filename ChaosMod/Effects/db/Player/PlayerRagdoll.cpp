@@ -9,10 +9,11 @@ static void OnStart()
 	SET_PED_TO_RAGDOLL(playerPed, 10000, 10000, 0, true, true, false);
 }
 
-static RegisterEffect registerEffect(EFFECT_PLAYER_RAGDOLL, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Ragdoll",
 		.Id = "player_ragdoll",
-		.IncompatibleWith = { EFFECT_NO_RAGDOLL }
+		.IncompatibleWith = { "player_noragdoll" }
 	}
 );

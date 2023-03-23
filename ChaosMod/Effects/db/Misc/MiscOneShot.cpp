@@ -1,5 +1,5 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
@@ -24,7 +24,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_ONE_BULLET_WEP, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "One Bullet Mags",
 		.Id = "misc_onebullet",

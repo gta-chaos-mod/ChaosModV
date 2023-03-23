@@ -11,7 +11,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_SLIDY_PEDS, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Slidy Peds",
 		.Id = "peds_slidy",

@@ -1,18 +1,26 @@
 /*
-	Effect by Lucas7yoshi, modified
+    Effect by Lucas7yoshi, modified
 */
 
 #include <stdafx.h>
 
+#include "Memory/Physics.h"
+#include "Util/XInput.h"
+
 static void OnStop()
 {
+	XInput::StopAllControllersRumble();
+
 	CAM::STOP_GAMEPLAY_CAM_SHAKING(true);
 }
 
 static void OnTick()
 {
+	XInput::SetAllControllersRumble(40000, 40000);
+
 	CAM::SHAKE_GAMEPLAY_CAM("LARGE_EXPLOSION_SHAKE", 0.05f);
-	float shook = GET_RANDOM_FLOAT_IN_RANGE(-9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
+	float shook = GET_RANDOM_FLOAT_IN_RANGE(
+	    -9.f, 7.f); // low slightly lower than oppisite of upper to decrease chances of stuff going into space.
 
 	std::vector<Entity> entities;
 	for (Vehicle veh : GetAllVehs())
@@ -41,7 +49,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_MISC_EARTHQUAKE, nullptr, OnStop, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Earthquake",
 		.Id = "misc_earthquake",

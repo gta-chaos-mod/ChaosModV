@@ -4,15 +4,16 @@ static void OnStart()
 {
 	static constexpr Hash modelHash = -835930287;
 
-	Ped playerPed = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed                   = PLAYER_PED_ID();
+	Vector3 playerPos               = GET_ENTITY_COORDS(playerPed, false);
 
-	static const Hash oppressorHash = GET_HASH_KEY("OPPRESSOR2");
+	static const Hash oppressorHash = "OPPRESSOR2"_hash;
 	LoadModel(oppressorHash);
 
-	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : playerPed);
+	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
+	                                                                           : playerPed);
 
-	Vehicle veh = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading);
+	Vehicle veh   = CreatePoolVehicle(oppressorHash, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 	SET_VEHICLE_MOD_KIT(veh, 0);
 
@@ -25,9 +26,9 @@ static void OnStart()
 	SET_ENTITY_PROOFS(veh, false, true, true, false, false, false, false, false);
 	SET_MODEL_AS_NO_LONGER_NEEDED(oppressorHash);
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroup = "PLAYER"_hash;
+	static const Hash civGroup    = "CIVMALE"_hash;
+	static const Hash femCivGroup = "CIVFEMALE"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_JESUS2", &relationshipGroup);
@@ -51,16 +52,17 @@ static void OnStart()
 	SET_RAGDOLL_BLOCKING_FLAGS(ped, 5);
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	GIVE_WEAPON_TO_PED(ped, GET_HASH_KEY("WEAPON_RAILGUN"), 9999, true, true);
+	GIVE_WEAPON_TO_PED(ped, "WEAPON_RAILGUN"_hash, 9999, true, true);
 	TASK_COMBAT_PED(ped, playerPed, 0, 16);
 
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 }
 
-static RegisterEffect registerEffect(EFFECT_ANGRY_JESUS2, OnStart, EffectInfo
+// clang-format off
+REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Extreme Griefer Jesus",
 		.Id = "spawn_grieferjesus2",
-		.EEffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
 	}
 );

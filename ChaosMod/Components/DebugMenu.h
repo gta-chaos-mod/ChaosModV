@@ -5,18 +5,16 @@
 
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 using DWORD = unsigned long;
 
 class DebugMenu : public Component
 {
-private:
+  private:
 	struct DebugEffect
 	{
-		DebugEffect(const EffectIdentifier& effectIdentifier, const std::string& szEffectName) : m_EffectIdentifier(effectIdentifier), m_szEffectName(szEffectName)
+		DebugEffect(const EffectIdentifier &effectIdentifier, const std::string &szEffectName)
+		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szEffectName)
 		{
-
 		}
 
 		EffectIdentifier m_EffectIdentifier;
@@ -27,21 +25,26 @@ private:
 
 	bool m_bIsEnabled;
 
-	int m_iSelectedIdx = 0;
-	bool m_bVisible = false;
+	int m_iSelectedIdx     = 0;
+	bool m_bVisible        = false;
 
-	DWORD m_ulRepeatTime = 0;
+	DWORD m_ulRepeatTime   = 0;
 	bool m_bDispatchEffect = false;
 
-public:
+  protected:
 	DebugMenu();
 
-	virtual void Run() override;
+  public:
+	virtual void OnRun() override;
 
-	_NODISCARD bool IsEnabled() const;
+	bool IsEnabled() const;
 
 	void HandleInput(DWORD ulKey, bool bOnRepeat);
 
 	void SetVisible(bool bState);
-	_NODISCARD bool IsVisible() const;
+	bool IsVisible() const;
+
+	template <class T>
+	requires std::is_base_of_v<Component, T>
+	friend struct ComponentHolder;
 };

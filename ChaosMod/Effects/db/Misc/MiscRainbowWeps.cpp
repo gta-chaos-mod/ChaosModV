@@ -3,7 +3,7 @@
 static void OnTick()
 {
 	static auto lastTick = GET_GAME_TIMER();
-	auto curTick = GET_GAME_TIMER();
+	auto curTick         = GET_GAME_TIMER();
 
 	if (lastTick < curTick - 100)
 	{
@@ -26,7 +26,8 @@ static void OnTick()
 	}
 }
 
-static RegisterEffect registerEffect(EFFECT_PEDS_RAINBOWWEPS, nullptr, nullptr, OnTick, EffectInfo
+// clang-format off
+REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Rainbow Weapons",
 		.Id = "peds_rainbowweps",
