@@ -211,8 +211,6 @@ static void MainRun()
 
 	g_MainThread = GetCurrentFiber();
 
-	EffectThreads::ClearThreads();
-
 	Reset();
 
 	InitComponent<SplashTexts>();
@@ -239,51 +237,63 @@ static void MainRun()
 			}
 		}
 
-		if (!EffectThreads::IsAnyThreadRunningOnStart())
+		if (ms_bDisableMod && !c_bJustReenabled)
 		{
-			if (ms_bDisableMod && !c_bJustReenabled)
+			c_bJustReenabled = true;
+
+			if (ComponentExists<EffectDispatcher>())
 			{
-				c_bJustReenabled = true;
-				Reset();
-
-				continue;
-			}
-			else if (c_bJustReenabled)
-			{
-				if (!ms_bDisableMod)
-				{
-					c_bJustReenabled = false;
-
-					LOG("Mod has been re-enabled");
-
-					if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
-					{
-						// Clear log
-						g_Log = std::ofstream(CHAOS_LOG_FILE);
-					}
-
-					// Restart the main part of the mod completely
-					Init();
-				}
-
-				continue;
-			}
-
-			if (ms_bClearAllEffects)
-			{
-				ms_bClearAllEffects = false;
-
 				GetComponent<EffectDispatcher>()->Reset(false);
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
 					GetComponent<EffectDispatcher>()->OnRun();
 					WAIT(0);
 				}
-
-				ClearEntityPool();
 			}
+
+			Reset();
+
+			continue;
 		}
-		else if (IS_SCREEN_FADED_OUT())
+		else if (c_bJustReenabled)
+		{
+			if (!ms_bDisableMod)
+			{
+				c_bJustReenabled = false;
+
+				LOG("Mod has been re-enabled");
+
+				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+				{
+					// Clear log
+					g_Log = std::ofstream(CHAOS_LOG_FILE);
+				}
+
+				// Restart the main part of the mod completely
+				Init();
+			}
+
+			continue;
+		}
+
+		if (ms_bClearAllEffects)
+		{
+			ms_bClearAllEffects = false;
+
+			if (ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->Reset(false);
+				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+				{
+					GetComponent<EffectDispatcher>()->OnRun();
+					WAIT(0);
+				}
+			}
+
+			ClearEntityPool();
+		}
+
+		if (IS_SCREEN_FADED_OUT())
 		{
 			// Prevent potential softlock for certain effects
 			SET_TIME_SCALE(1.f);

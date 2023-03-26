@@ -309,6 +309,9 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 
 		EffectThreads::StopThreadsImmediately();
 
+		// Ensure player control isn't stuck in disabled state
+		SET_PLAYER_CONTROL(PLAYER_ID(), true, 0);
+
 		if (m_ClearEffectsState == ClearEffectsState::AllRestartPermanent)
 		{
 			RegisterPermanentEffects();

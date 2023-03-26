@@ -26,12 +26,6 @@ namespace EffectThreads
 
 	bool DoesThreadExist(DWORD64 threadId);
 	bool HasThreadOnStartExecuted(DWORD64 threadId);
-	bool HasThreadStopped(DWORD64 threadId);
-
-	bool IsAnyThreadRunningOnStart();
-	bool IsAnyThreadRunning();
-
-	void ClearThreads();
 };
 
 struct EffectThreadData

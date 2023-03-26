@@ -147,42 +147,4 @@ namespace EffectThreads
 
 		return pThread ? pThread->HasOnStartExecuted() : true;
 	}
-
-	bool HasThreadStopped(DWORD64 threadId)
-	{
-		EffectThread *pThread = ThreadIdToThread(threadId);
-
-		return pThread ? pThread->HasStopped() : true;
-	}
-
-	bool IsAnyThreadRunningOnStart()
-	{
-		for (const std::unique_ptr<EffectThread> &pThread : m_rgThreads)
-		{
-			if (!pThread->HasOnStartExecuted())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	bool IsAnyThreadRunning()
-	{
-		for (const std::unique_ptr<EffectThread> &pThread : m_rgThreads)
-		{
-			if (!pThread->HasStopped())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	void ClearThreads()
-	{
-		m_rgThreads.clear();
-	}
 }
