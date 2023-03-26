@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+using DWORD = unsigned long;
+
 class Component;
 
 inline std::vector<Component *> g_rgComponents;
@@ -87,7 +89,14 @@ class Component
 	virtual void OnModPauseCleanup()
 	{
 	}
-	virtual void OnRun() = 0;
+
+	virtual void OnRun()
+	{
+	}
+
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+	{
+	}
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

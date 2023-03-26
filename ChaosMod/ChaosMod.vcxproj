@@ -395,6 +395,7 @@
     <ClCompile Include="Components\TwitchVoting.cpp" />
     <ClCompile Include="Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
+    <ClCompile Include="Components\KeyStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -475,6 +476,7 @@
     <ClInclude Include="Util\Workshop.h" />
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="Components\KeyStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

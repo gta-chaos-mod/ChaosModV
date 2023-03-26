@@ -30,17 +30,17 @@ void Shortcuts::OnRun()
 	}
 }
 
-void Shortcuts::HandleInput(DWORD ulKey, bool bOnRepeat)
+void Shortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
 {
-	if (bOnRepeat)
+	if (repeated)
 	{
 		return;
 	}
 
-	if (m_ugAvailableShortcuts.contains(ulKey))
+	if (m_ugAvailableShortcuts.contains(key))
 	{
 		std::lock_guard lock(m_effectQueueMtx);
-		for (auto &effectId : m_ugAvailableShortcuts.at(ulKey))
+		for (auto &effectId : m_ugAvailableShortcuts.at(key))
 		{
 			m_effectQueue.push(effectId);
 		}

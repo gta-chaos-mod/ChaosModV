@@ -138,18 +138,18 @@ bool DebugMenu::IsEnabled() const
 	return m_bIsEnabled;
 }
 
-void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
+void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
 {
 	if (!m_bIsEnabled || !m_bVisible)
 	{
 		return;
 	}
 
-	if (bOnRepeat)
+	if (repeated)
 	{
 		DWORD ulCurTime = GetTickCount64();
 
-		if (ulKey == VK_RETURN || m_ulRepeatTime > ulCurTime - 250)
+		if (key == VK_RETURN || m_ulRepeatTime > ulCurTime - 250)
 		{
 			return;
 		}
@@ -159,7 +159,7 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		m_ulRepeatTime = GetTickCount64();
 	}
 
-	switch (ulKey)
+	switch (key)
 	{
 	case VK_UP:
 		if (--m_iSelectedIdx < 0)

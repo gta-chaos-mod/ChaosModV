@@ -37,9 +37,9 @@ class DebugMenu : public Component
   public:
 	virtual void OnRun() override;
 
-	bool IsEnabled() const;
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow) override;
 
-	void HandleInput(DWORD ulKey, bool bOnRepeat);
+	bool IsEnabled() const;
 
 	void SetVisible(bool bState);
 	bool IsVisible() const;

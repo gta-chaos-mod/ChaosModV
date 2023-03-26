@@ -14,6 +14,7 @@
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
+#include "Components/KeyStates.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
@@ -171,8 +172,11 @@ static void Init()
 
 	InitComponent<DebugMenu>();
 
-	LOG("Initializing shortcuts");
+	LOG("Initializing shortcuts handler");
 	InitComponent<Shortcuts>();
+
+	LOG("Initializing key state handler");
+	InitComponent<KeyStates>();
 
 	LOG("Initializing Twitch voting");
 	InitComponent<TwitchVoting>(rgTextColor);
@@ -347,14 +351,9 @@ namespace Main
 			}
 		}
 
-		if (ComponentExists<DebugMenu>())
+		for (const auto &component : g_rgComponents)
 		{
-			GetComponent<DebugMenu>()->HandleInput(ulKey, bWasDownBefore);
-		}
-
-		if (ComponentExists<Shortcuts>())
-		{
-			GetComponent<Shortcuts>()->HandleInput(ulKey, bWasDownBefore);
+			component->OnKeyInput(ulKey, bWasDownBefore, bIsUpNow);
 		}
 	}
 }

@@ -5,6 +5,7 @@
 
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
+#include "Components/KeyStates.h"
 
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
@@ -428,12 +429,33 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		return LuaInvoke(scriptName, lua, ullHash, eReturnType, args);
 	};
+
 	// Use scriptWait (which pauses the entire mod) for the script parsing phase and replace it with the proper WAIT
 	// call afterwards
-	lua["WAIT"] = [](const sol::this_state &lua, DWORD time)
+	lua["WAIT"] = [](DWORD time)
 	{
 		scriptWait(time);
 	};
+
+	lua["IsKeyPressed"] = [](unsigned char key)
+	{
+		if (ComponentExists<KeyStates>())
+		{
+			return GetComponent<KeyStates>()->IsKeyPressed(key);
+		}
+
+		return false;
+	};
+	lua["IsKeyJustPressed"] = [](unsigned char key)
+	{
+		if (ComponentExists<KeyStates>())
+		{
+			return GetComponent<KeyStates>()->IsKeyJustPressed(key);
+		}
+
+		return false;
+	};
+
 	// Replace those natives with our own safe versions
 	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
 	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
