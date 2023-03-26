@@ -472,6 +472,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Util\Workshop.h" />
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
   </ItemGroup>
