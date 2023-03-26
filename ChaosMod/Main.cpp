@@ -256,6 +256,12 @@ static void MainRun()
 
 					LOG("Mod has been re-enabled");
 
+					if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+					{
+						// Clear log
+						g_Log = std::ofstream(CHAOS_LOG_FILE);
+					}
+
 					// Restart the main part of the mod completely
 					Init();
 				}
