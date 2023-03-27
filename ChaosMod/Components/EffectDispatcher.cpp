@@ -311,6 +311,9 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 
 		// Ensure player control isn't stuck in disabled state
 		SET_PLAYER_CONTROL(PLAYER_ID(), true, 0);
+		// Clear screen effects as well
+		ANIMPOSTFX_STOP_ALL();
+		POP_TIMECYCLE_MODIFIER();
 
 		if (m_ClearEffectsState == ClearEffectsState::AllRestartPermanent)
 		{
