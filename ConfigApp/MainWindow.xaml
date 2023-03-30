@@ -285,10 +285,17 @@
                             <TextBlock x:Name="twitch_user_overlay_mode_label" Text="Voting Overlay Mode" Grid.Row="0" Grid.Column="2"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                             <ComboBox x:Name="twitch_user_overlay_mode" Width="120" Height="25" Grid.Row="0" Grid.Column="4"
-                                      HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <TextBlock x:Name="twitch_user_random_voteable_enable_label" Text="Enable &quot;Random Effect&quot; voteable option" Grid.Row="1" Grid.Column="2"
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="twitch_user_overlay_mode_changed" />
+                            <TextBlock x:Name="twitch_user_overlay_bar_color_label" Text="Voting Overlay Bar Progression" Grid.Row="1" Grid.Column="2"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="1" Grid.Column="4"
+                            <xctk:ColorPicker Name="twitch_user_overlay_bar_color" Width="60" Height="25" Grid.Row="1" Grid.Column="4"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center"
+                                          SelectedColor="#238BEB" ShowStandardColors="False" UsingAlphaChannel="False" Margin="0,8,0,7" IsEnabled="False" />
+                            <Button x:Name="twitch_user_overlay_bar_color_reset_button" Content="Reset" Width="60" Height="25" Grid.Row="1" Grid.Column="4"
+                                          HorizontalAlignment="Left" VerticalAlignment="Center" Margin="70,8,0,7" IsEnabled="False" Click="twitch_user_overlay_bar_color_reset_Click"/>
+                            <TextBlock x:Name="twitch_user_random_voteable_enable_label" Text="Enable &quot;Random Effect&quot; voteable option" Grid.Row="2" Grid.Column="2"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <CheckBox x:Name="twitch_user_random_voteable_enable" Width="60" Height="20" Grid.Row="2" Grid.Column="4"
                                       HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                             <TextBlock x:Name="twitch_permitted_usernames_label" Text="Permitted Twitch usernames (separated by , )"
                                 Grid.Row="3" Grid.Column="2"
