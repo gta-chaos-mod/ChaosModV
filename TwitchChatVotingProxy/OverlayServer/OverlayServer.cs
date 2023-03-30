@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 // TODO: fix voting mode
 namespace TwitchChatVotingProxy.OverlayServer
@@ -37,12 +38,12 @@ namespace TwitchChatVotingProxy.OverlayServer
 
         public void SendSetBarColorMessage()
         {
-            if (config.OverlayVotingBarColor != null)
+            if (config.OverlayVotingBarColor.HasValue)
             {
                 var clrMsg = new OverlayColorMessage();
-                clrMsg.colorR = config.OverlayVotingBarColor.R;
-                clrMsg.colorG = config.OverlayVotingBarColor.G;
-                clrMsg.colorB = config.OverlayVotingBarColor.B;
+                clrMsg.colorR = ((Color)config.OverlayVotingBarColor).R;
+                clrMsg.colorG = ((Color)config.OverlayVotingBarColor).G;
+                clrMsg.colorB = ((Color)config.OverlayVotingBarColor).B;
 
                 Broadcast(eMessageType.SET_COLOR, JsonConvert.SerializeObject(clrMsg));
             }

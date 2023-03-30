@@ -10,9 +10,9 @@ namespace TwitchChatVotingProxy.OverlayServer
         public bool RetainInitialVotes { get; set; }
         public EVotingMode VotingMode { get; set; }
         public int Port { get; set; }
-        public Color OverlayVotingBarColor { get; set; }
+        public Color? OverlayVotingBarColor { get; set; }
 
-        public OverlayServerConfig(EVotingMode votingMode, bool retainInitialVotes, int? port, Color overlayVotingBarColor)
+        public OverlayServerConfig(EVotingMode votingMode, bool retainInitialVotes, int? port, Color? overlayVotingBarColor)
         {
             RetainInitialVotes = retainInitialVotes;
             VotingMode = votingMode;
