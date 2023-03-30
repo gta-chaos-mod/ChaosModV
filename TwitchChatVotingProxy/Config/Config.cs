@@ -1,12 +1,14 @@
 ﻿using Serilog;
 using Shared;
 using System.IO;
+using System.Windows.Media;
 
 namespace TwitchChatVotingProxy.Config
 {
     class Config : IConfig
     {
         public static readonly string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
+        public static readonly string KEY_OVERLAY_VOTING_BAR_COLOR = "TwitchVotingOverlayBarColor";
         public static readonly string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName"; 
         public static readonly string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
         public static readonly string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
@@ -17,6 +19,7 @@ namespace TwitchChatVotingProxy.Config
 
         public EOverlayMode? OverlayMode { get; set; }
         public int? OverlayServerPort { get; set; }
+        public Color? OverlayVotingBarColor { get; set; }
         public bool RetainInitalVotes { get; set; }
         public EVotingMode? VotingMode { get; set; }
         public string TwitchChannelName { get; set; }
@@ -40,6 +43,11 @@ namespace TwitchChatVotingProxy.Config
 
                 OverlayServerPort = optionsFile.ReadValueInt(KEY_OVERLAY_SERVER_PORT, -1);
                 if (OverlayServerPort == -1) OverlayServerPort = null;
+                if (optionsFile.HasKey("OverlayVotingBarColor"))
+                {
+                    OverlayVotingBarColor = (Color)ColorConverter.ConvertFromString(optionsFile.ReadValue(KEY_OVERLAY_VOTING_BAR_COLOR));
+                }
+                else { OverlayVotingBarColor = null; }
                 RetainInitalVotes = optionsFile.ReadValueBool(KEY_TWITCH_RETAIN_INITIAL_VOTES, false);
                 TwitchChannelName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_NAME);
                 TwitchOAuth = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_OAUTH);
@@ -63,6 +71,8 @@ namespace TwitchChatVotingProxy.Config
                 {
                     PermittedTwitchUsernames = new string[0];
                 }
+
+                logger.Information("auccesfully read twitch voting config");
             }
         }
     }

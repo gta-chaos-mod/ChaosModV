@@ -10,7 +10,7 @@ namespace TwitchChatVotingProxy.OverlayServer
     class OverlayServer : IOverlayServer
     {
         private OverlayServerConfig config;
-        private List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
+        private List<IWebSocketConnection> connections = new List<IWebSocketConnection>();
         private ILogger logger = Log.Logger.ForContext<OverlayServer>();
 
         public OverlayServer(OverlayServerConfig config)
@@ -19,16 +19,32 @@ namespace TwitchChatVotingProxy.OverlayServer
 
             try
             {
-                var WSS = new Fleck.WebSocketServer($"ws://0.0.0.0:{config.Port}");
+                var WSS = new WebSocketServer($"ws://0.0.0.0:{config.Port}");
                 // Set the websocket listeners
                 WSS.Start(connection =>
                 {
                     connection.OnOpen += () => OnWsConnectionOpen(connection);
                     connection.OnClose += () => OnWSConnectionClose(connection);
                 });
+
+                //Set voting bar color
+                SendSetBarColorMessage();
             } catch (Exception e)
             {
-                logger.Fatal(e, "failed so start websocket server");
+                logger.Fatal(e, "failed to start websocket server");
+            }
+        }
+
+        public void SendSetBarColorMessage()
+        {
+            if (config.OverlayVotingBarColor != null)
+            {
+                var clrMsg = new OverlayColorMessage();
+                clrMsg.colorR = config.OverlayVotingBarColor.R;
+                clrMsg.colorG = config.OverlayVotingBarColor.G;
+                clrMsg.colorB = config.OverlayVotingBarColor.B;
+
+                Broadcast(eMessageType.SET_COLOR, JsonConvert.SerializeObject(clrMsg));
             }
         }
 
@@ -52,14 +68,20 @@ namespace TwitchChatVotingProxy.OverlayServer
         /// <summary>
         /// Broadcasts a message to all socket clients
         /// </summary>
+        /// <param name="messageType">Type of message which should be broadcast</param>
         /// <param name="message">Message which should be broadcast</param>
-        private void Broadcast(string message)
+        private void Broadcast(eMessageType messageType, string message)
         {
+            OverlayBaseMessage baseMsg = new OverlayBaseMessage();
+            baseMsg.type = Enum.GetName(typeof(eMessageType), messageType);
+            baseMsg.messageData = message;
+            string msg = JsonConvert.SerializeObject(baseMsg);
+
             connections.ForEach(connection =>
             {
                 // If the connection is not available for some reason, we just close it
                 if (!connection.IsAvailable) connection.Close();
-                else connection.Send(message);
+                else connection.Send(msg);
             });
         }
         /// <summary>
@@ -99,7 +121,7 @@ namespace TwitchChatVotingProxy.OverlayServer
         /// <param name="voteOptions">Vote options that should be sent</param>
         private void Request(string request, List<IVoteOption> voteOptions)
         {
-            var msg = new OverlayMessage();
+            var msg = new OverlayVotingMessage();
             msg.request = request;
             msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
             msg.retainInitialVotes = config.RetainInitialVotes;
@@ -116,9 +138,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             msg.totalVotes = 0;
             voteOptions.ForEach(_ => msg.totalVotes += _.Votes);
             // Send the message to all clients
-            Broadcast(JsonConvert.SerializeObject(msg));
+            Broadcast(eMessageType.SET_VOTES, JsonConvert.SerializeObject(msg));
         }
     }
 }
-
-
