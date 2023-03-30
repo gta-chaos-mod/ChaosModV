@@ -1,5 +1,5 @@
 import { IChaosOverlayClient } from './chaosOverlayClient/iClient';
-import { IChaosOverlayClientMessage } from './chaosOverlayClient/iMessage';
+import { IChaosOverlayVotingClientMessage } from './chaosOverlayClient/iMessage';
 
 const ANIMATION_DELAY_DELTA = 100;
 const ANIMATION_LENGTH = 600;
@@ -115,7 +115,7 @@ export class BarOverlay {
 	private onEndVote(): void {
 		this.bars.forEach(bar => (bar.isDisabled = true));
 	}
-	private onUpdateVote(message: IChaosOverlayClientMessage): void {
+	private onUpdateVote(message: IChaosOverlayVotingClientMessage): void {
 		const { retainInitialVotes, voteOptions, votingMode } = message;
 		let { totalVotes } = message;
 
