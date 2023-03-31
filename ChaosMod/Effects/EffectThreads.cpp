@@ -4,24 +4,11 @@
 
 #include "Util/Script.h"
 
-static std::list<std::unique_ptr<EffectThread>> m_rgThreads;
-static DWORD64 m_ullLastTimestamp;
-
-static EffectThread *ThreadIdToThread(DWORD64 ullThreadId)
-{
-	const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), ullThreadId);
-
-	if (result != m_rgThreads.end())
-	{
-		return result->get();
-	}
-
-	return nullptr;
-}
+static std::unordered_map<LPVOID, std::unique_ptr<EffectThread>> m_Threads;
 
 static auto _StopThreadImmediately(auto it)
 {
-	auto &thread = *it;
+	auto &[threadId, thread] = *it;
 
 	// Give thread a chance to stop gracefully
 	// OK so maybe not really immediately but it's still blocking
@@ -33,118 +20,119 @@ static auto _StopThreadImmediately(auto it)
 		thread->OnRun();
 	}
 
-	return m_rgThreads.erase(it);
+	return m_Threads.erase(it);
 }
 
 namespace EffectThreads
 {
-	DWORD64 CreateThread(RegisteredEffect *pEffect, bool bIsTimed)
+	LPVOID CreateThread(RegisteredEffect *pEffect, bool bIsTimed)
 	{
-		std::unique_ptr<EffectThread> pThread = std::make_unique<EffectThread>(pEffect, bIsTimed);
-
-		DWORD64 threadId                      = pThread->m_ullId;
-
-		m_rgThreads.push_back(std::move(pThread));
+		auto thread         = std::make_unique<EffectThread>(pEffect, bIsTimed);
+		auto threadId       = thread->m_Thread;
+		m_Threads[threadId] = std::move(thread);
 
 		return threadId;
 	}
 
-	void StopThread(DWORD64 threadId)
+	void StopThread(LPVOID threadId)
 	{
-		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
-		if (result != m_rgThreads.end())
+		if (m_Threads.contains(threadId))
 		{
-			(*result)->Stop();
+			m_Threads.at(threadId)->Stop();
 		}
 	}
 
-	void StopThreadImmediately(DWORD64 threadId)
+	void StopThreadImmediately(LPVOID threadId)
 	{
-		const auto &result = std::find(m_rgThreads.begin(), m_rgThreads.end(), threadId);
-		if (result != m_rgThreads.end())
+		if (m_Threads.contains(threadId))
 		{
-			_StopThreadImmediately(result);
+			_StopThreadImmediately(m_Threads.find(threadId));
 		}
 	}
 
 	void StopThreads()
 	{
-		for (std::unique_ptr<EffectThread> &pThread : m_rgThreads)
+		for (auto &[threadId, thread] : m_Threads)
 		{
-			pThread->Stop();
+			thread->Stop();
 		}
 	}
 
 	void StopThreadsImmediately()
 	{
-		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end();)
+		for (auto it = m_Threads.begin(); it != m_Threads.end();)
 		{
 			it = _StopThreadImmediately(it);
 		}
 	}
 
-	void PutThreadOnPause(DWORD ulTimeMs)
+	void PauseThisThread(DWORD ulTimeMs)
 	{
-		PVOID fiber          = GetCurrentFiber();
-		const auto &ppResult = std::find(m_rgThreads.begin(), m_rgThreads.end(), fiber);
-		if (ppResult != m_rgThreads.end())
+		auto fiber = GetCurrentFiber();
+		if (m_Threads.contains(fiber))
 		{
-			(*ppResult)->m_iPauseTime = ulTimeMs;
+			m_Threads.at(fiber)->m_PauseTimestamp = GetTickCount64() + ulTimeMs;
 		}
+	}
+
+	bool IsThreadPaused(LPVOID threadId)
+	{
+		if (!m_Threads.contains(threadId))
+		{
+			return true;
+		}
+
+		return m_Threads.at(threadId)->m_PauseTimestamp >= GetTickCount64();
+	}
+
+	void _RunThread(auto &it, DWORD64 curTimestamp)
+	{
+		auto &[threadId, thread] = *it;
+
+		if (thread->HasStopped())
+		{
+			it = m_Threads.erase(it);
+			return;
+		}
+
+		if (GetTickCount64() > thread->m_PauseTimestamp)
+		{
+			thread->OnRun();
+		}
+
+		it++;
 	}
 
 	void RunThreads()
 	{
-		static int c_iLastFrame = GET_FRAME_COUNT();
-		int iCurFrame           = GET_FRAME_COUNT();
-
-		if (c_iLastFrame == iCurFrame)
+		auto curTimestamp = GetTickCount64();
+		for (auto it = m_Threads.begin(); it != m_Threads.end();)
 		{
-			return;
+			_RunThread(it, curTimestamp);
 		}
-
-		c_iLastFrame            = iCurFrame;
-
-		DWORD64 ullCurTimestamp = GetTickCount64();
-
-		for (auto it = m_rgThreads.begin(); it != m_rgThreads.end();)
-		{
-			std::unique_ptr<EffectThread> &pThread = *it;
-
-			if (pThread->HasStopped())
-			{
-				it = m_rgThreads.erase(it);
-
-				continue;
-			}
-
-			if (pThread->m_iPauseTime > 0 && m_ullLastTimestamp)
-			{
-				pThread->m_iPauseTime -= ullCurTimestamp - m_ullLastTimestamp;
-			}
-
-			if (pThread->m_iPauseTime <= 0)
-			{
-				pThread->OnRun();
-			}
-
-			it++;
-		}
-
-		m_ullLastTimestamp = ullCurTimestamp;
 	}
 
-	bool DoesThreadExist(DWORD64 threadId)
+	void RunThread(LPVOID threadId)
 	{
-		EffectThread *pThread = ThreadIdToThread(threadId);
-
-		return pThread;
+		auto result = m_Threads.find(threadId);
+		if (result != m_Threads.end())
+		{
+			_RunThread(result, GetTickCount64());
+		}
 	}
 
-	bool HasThreadOnStartExecuted(DWORD64 threadId)
+	bool DoesThreadExist(LPVOID threadId)
 	{
-		EffectThread *pThread = ThreadIdToThread(threadId);
+		return m_Threads.contains(threadId);
+	}
 
-		return pThread ? pThread->HasOnStartExecuted() : true;
+	bool HasThreadOnStartExecuted(LPVOID threadId)
+	{
+		if (!m_Threads.contains(threadId))
+		{
+			return true;
+		}
+
+		return m_Threads.at(threadId)->HasOnStartExecuted();
 	}
 }

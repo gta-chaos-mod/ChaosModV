@@ -18,7 +18,7 @@ inline void WAIT(DWORD ulTimeMs, void *callerFiber = nullptr)
 	}
 	else
 	{
-		EffectThreads::PutThreadOnPause(ulTimeMs);
+		EffectThreads::PauseThisThread(ulTimeMs);
 
 		if (callerFiber)
 		{
