@@ -7,35 +7,29 @@
 #define CHAOS_SOUNDFILES_USER_DIR "chaosmod"
 #define CHAOS_SOUNDFILES_WORKSHOP_DIR "chaosmod\\workshop"
 
-static std::unordered_map<std::string, std::vector<std::string>> ms_dictEffectSoundFilesCache;
+static std::unordered_map<std::string, std::vector<std::string>> ms_EffectSoundFilesCache;
 
 static void HandleDirectory(const std::string &dir, const std::string &soundName)
 {
-	std::ostringstream ossTmp;
-	std::string tmpStr;
+	auto soundRootDirName = dir + "\\sounds\\";
+	auto soundDirName     = soundRootDirName + soundName;
+	auto soundFileName    = soundDirName + ".mp3";
 
-	auto &soundFiles = ms_dictEffectSoundFilesCache[soundName];
-
-	// Check if file exists first
-	ossTmp << dir << "\\sounds\\" << soundName;
-	tmpStr = ossTmp.str() + ".mp3";
-	if (DoesFileExist(tmpStr))
+	std::vector<std::string> blacklistedFiles;
+	if (dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR))
 	{
-		soundFiles.push_back(tmpStr);
+		blacklistedFiles = GetWorkshopSubmissionBlacklistedFiles(dir);
 	}
 
-	// Check if dir also exists
-	tmpStr = ossTmp.str();
-	struct stat temp;
-	if (stat(tmpStr.c_str(), &temp) != -1 && (temp.st_mode & S_IFDIR))
+	auto &soundFiles    = ms_EffectSoundFilesCache[soundName];
+
+	const auto &entries = GetFiles(soundRootDirName, ".mp3", true, blacklistedFiles);
+	for (const auto &entry : entries)
 	{
-		const auto &entries = dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR)
-		                        ? GetWorkshopFiles(dir, WorkshopFileType::Audio, "sounds")
-		                        : GetFiles(ossTmp.str(), ".mp3", false);
-		// Cache all of the mp3 files
-		for (const auto &entry : entries)
+		const auto &pathName = entry.path().string();
+		if (pathName == soundFileName || pathName.starts_with(soundName + "\\"))
 		{
-			soundFiles.push_back(tmpStr + "\\" + entry.path().filename().string());
+			soundFiles.push_back(pathName);
 		}
 	}
 }
@@ -44,7 +38,7 @@ namespace Mp3Manager
 {
 	void PlayChaosSoundFile(const std::string &soundFileName)
 	{
-		if (ms_dictEffectSoundFilesCache.find(soundFileName) == ms_dictEffectSoundFilesCache.end())
+		if (ms_EffectSoundFilesCache.find(soundFileName) == ms_EffectSoundFilesCache.end())
 		{
 			HandleDirectory(CHAOS_SOUNDFILES_USER_DIR, soundFileName);
 
@@ -60,7 +54,7 @@ namespace Mp3Manager
 			}
 		}
 
-		const auto &rgCachedSoundFiles = ms_dictEffectSoundFilesCache[soundFileName];
+		const auto &rgCachedSoundFiles = ms_EffectSoundFilesCache[soundFileName];
 
 		if (rgCachedSoundFiles.empty())
 		{
@@ -96,7 +90,7 @@ namespace Mp3Manager
 
 	void ResetCache()
 	{
-		for (const auto &[szEffectName, rgSoundFileNames] : ms_dictEffectSoundFilesCache)
+		for (const auto &[szEffectName, rgSoundFileNames] : ms_EffectSoundFilesCache)
 		{
 			for (const auto &szSoundFilePath : rgSoundFileNames)
 			{
@@ -106,6 +100,6 @@ namespace Mp3Manager
 			}
 		}
 
-		ms_dictEffectSoundFilesCache.clear();
+		ms_EffectSoundFilesCache.clear();
 	}
 }

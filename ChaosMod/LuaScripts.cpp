@@ -886,7 +886,8 @@ namespace LuaScripts
 				{
 					if (entry.is_directory())
 					{
-						for (const auto &entry : GetWorkshopFiles(entry.path().string(), WorkshopFileType::Script))
+						for (const auto &entry :
+						     GetWorkshopSubmissionFiles(entry.path().string(), WorkshopFileType::Script))
 						{
 							ParseScriptEntry(entry);
 						}
