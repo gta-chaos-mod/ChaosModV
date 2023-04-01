@@ -41,7 +41,7 @@ template <typename... Args> class ChaosCancellableEvent
 		m_Listeners.push_back(listener);
 	}
 
-	void RemoveListener(std::function<void(Args...)> listener)
+	void RemoveListener(std::function<bool(Args...)> listener)
 	{
 		auto it = std::find(m_Listeners.begin(), m_Listeners.end(), listener);
 		if (it != m_Listeners.end())
@@ -62,22 +62,5 @@ template <typename... Args> class ChaosCancellableEvent
 		}
 
 		return result;
-	}
-};
-
-template <typename T> class ChaosEventListener
-{
-	T m_Listener;
-
-  public:
-	ChaosEventListener(auto &event, T listener)
-	{
-		m_Listener = listener;
-		event.AddListener(listener);
-	}
-
-	~ChaosEventListener()
-	{
-		m_Listener.RemoveListener(m_Listener);
 	}
 };
