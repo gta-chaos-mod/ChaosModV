@@ -84,7 +84,7 @@ namespace TwitchChatVotingProxy
 
                 if (chaosPipe.IsConnected())
                 {
-                    logger.Information("succesfully setup twitch chat voting proxy");
+                    logger.Information("successfully set up twitch chat voting proxy");
 
                     while (chaosPipe.IsConnected())
                     {
