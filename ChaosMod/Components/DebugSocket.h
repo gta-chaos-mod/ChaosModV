@@ -40,7 +40,7 @@ class DebugSocket : public Component
 
   public:
 	DebugSocket();
-	~DebugSocket();
+	virtual ~DebugSocket() override;
 
   private:
 	void Connect();
