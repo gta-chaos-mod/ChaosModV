@@ -72,7 +72,7 @@ namespace TwitchChatVotingProxy.Config
                     PermittedTwitchUsernames = new string[0];
                 }
 
-                logger.Information("auccesfully read twitch voting config");
+                logger.Information("succesfully read twitch voting config");
             }
         }
     }
