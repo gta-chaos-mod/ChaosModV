@@ -54,7 +54,7 @@ namespace ConfigApp
             var files = new List<WorkshopSubmissionFile>();
             foreach (var file in Directory.EnumerateFiles(submissionDir, "*", SearchOption.AllDirectories))
             {
-                var pathName = file.Replace($"{submissionDir}sounds\\", "").Replace(submissionDir, "");
+                var pathName = file.Replace(submissionDir, "");
                 files.Add(new WorkshopSubmissionFile(pathName, !disabledFiles.Contains(pathName)));
             }
 

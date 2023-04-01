@@ -88,7 +88,7 @@ namespace ConfigApp
                     continue;
                 }
 
-                var pathFragments = pathName.Split('\\');
+                var pathFragments = (pathName.StartsWith("sounds\\") ? pathName.Substring(7) : pathName).Split('\\');
 
                 TreeMenuItem targetItem;
                 switch (pathName.Substring(pathName.Length - 4))
