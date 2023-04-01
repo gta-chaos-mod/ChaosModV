@@ -74,7 +74,7 @@ static void Reset()
 
 	LuaScripts::Unload();
 
-	for (auto pComponent : g_rgComponents)
+	for (auto pComponent : g_Components)
 	{
 		pComponent->OnModPauseCleanup();
 	}
@@ -303,7 +303,7 @@ static void MainRun()
 			continue;
 		}
 
-		for (auto pComponent : g_rgComponents)
+		for (auto pComponent : g_Components)
 		{
 			pComponent->OnRun();
 		}
@@ -367,7 +367,7 @@ namespace Main
 			}
 		}
 
-		for (const auto &component : g_rgComponents)
+		for (const auto &component : g_Components)
 		{
 			component->OnKeyInput(ulKey, bWasDownBefore, bIsUpNow);
 		}
