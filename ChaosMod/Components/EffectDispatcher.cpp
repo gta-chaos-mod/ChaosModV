@@ -20,6 +20,13 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 		return;
 	}
 
+	if (!effectDispatcher->OnPreDispatchEffect.Fire(entry.Identifier))
+	{
+		return;
+	}
+
+	LOG("Dispatching effect \"" << effectData.Name << "\"");
+
 	// Increase weight for all effects first
 	for (auto &[effectId, effectData] : g_dictEnabledEffects)
 	{
@@ -45,8 +52,6 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			}
 		}
 	}
-
-	LOG("Dispatching effect \"" << effectData.Name << "\"");
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
@@ -165,6 +170,8 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			}
 		}
 	}
+
+	effectDispatcher->OnPostDispatchEffect.Fire(entry.Identifier);
 }
 
 static void _OnRunEffects(LPVOID data)
@@ -340,7 +347,9 @@ void EffectDispatcher::UpdateEffects(int iDeltaTime)
 
 		if (EffectThreads::DoesThreadExist(effect.m_ThreadId) && !EffectThreads::IsThreadPaused(effect.m_ThreadId))
 		{
+			OnPreRunEffect.Fire(effect.m_EffectIdentifier);
 			EffectThreads::RunThread(effect.m_ThreadId);
+			OnPostRunEffect.Fire(effect.m_EffectIdentifier);
 		}
 
 		if (effect.m_HideText && EffectThreads::HasThreadOnStartExecuted(effect.m_ThreadId))

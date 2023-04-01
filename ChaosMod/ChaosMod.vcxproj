@@ -477,6 +477,7 @@
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Components\KeyStates.h" />
+    <ClInclude Include="Util\Events.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

@@ -8,6 +8,8 @@
 #include "Effects/EffectThreads.h"
 #include "Effects/EnabledEffectsMap.h"
 
+#include "Util/Events.h"
+
 #include <array>
 #include <list>
 #include <memory>
@@ -23,6 +25,14 @@ enum class ETwitchOverlayMode;
 
 class EffectDispatcher : public Component
 {
+  public:
+	ChaosCancellableEvent<const EffectIdentifier &> OnPreDispatchEffect;
+	ChaosEvent<const EffectIdentifier &> OnPostDispatchEffect;
+
+	ChaosEvent<const EffectIdentifier &> OnPreRunEffect;
+	ChaosEvent<const EffectIdentifier &> OnPostRunEffect;
+
+  private:
 	struct ActiveEffect
 	{
 		EffectIdentifier m_EffectIdentifier;
