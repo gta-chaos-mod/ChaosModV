@@ -1,5 +1,5 @@
 /*
-	Effect By OnlyRealNubs
+    Effect By OnlyRealNubs
 */
 
 #include <stdafx.h>

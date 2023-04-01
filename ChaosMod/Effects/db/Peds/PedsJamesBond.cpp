@@ -27,8 +27,7 @@ static void OnStart()
 	float x_pos   = sin((360 - heading) * PI / 180) * 10;
 	float y_pos   = cos((360 - heading) * PI / 180) * 10;
 
-	Vehicle veh =
-	    CreatePoolVehicle("JB700"_hash, playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
+	Vehicle veh   = CreatePoolVehicle("JB700"_hash, playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
 	Vector3 vel = GET_ENTITY_VELOCITY(playerPed);

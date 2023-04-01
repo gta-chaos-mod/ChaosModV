@@ -3,9 +3,9 @@
 #include "Hook.h"
 
 static bool ms_bEnabledHook = false;
-static int ms_fValue = 0;
+static int ms_fValue        = 0;
 
-__int64(*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 clearness);
+__int64 (*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 clearness);
 __int64 _HK_rage__audRequestedSettings__SetClearness(__int64 _this, __int64 clearness)
 {
 	return _OG_rage__audRequestedSettings__SetClearness(_this, ms_bEnabledHook ? ms_fValue : clearness);
@@ -19,7 +19,8 @@ static bool OnHook()
 		return false;
 	}
 
-	Memory::AddHook(handle.Into().Get<void>(), _HK_rage__audRequestedSettings__SetClearness, &_OG_rage__audRequestedSettings__SetClearness);
+	Memory::AddHook(handle.Into().Get<void>(), _HK_rage__audRequestedSettings__SetClearness,
+	                &_OG_rage__audRequestedSettings__SetClearness);
 
 	return true;
 }
@@ -31,7 +32,7 @@ namespace Hooks
 	void SetAudioClearness(int iValue)
 	{
 		ms_bEnabledHook = true;
-		ms_fValue = iValue;
+		ms_fValue       = iValue;
 	}
 
 	void ResetAudioClearness()

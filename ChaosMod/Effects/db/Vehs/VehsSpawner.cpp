@@ -13,8 +13,7 @@ static void OnStartRhino()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("RHINO"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("RHINO"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -31,8 +30,7 @@ static void OnStartAdder()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("ADDER"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("ADDER"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -66,8 +64,7 @@ static void OnStartMonster()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("MONSTER"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("MONSTER"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -118,8 +115,7 @@ static void OnStartCargoplane()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("CARGOPLANE"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("CARGOPLANE"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -153,8 +149,7 @@ static void OnStartBlimp()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("BLIMP"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("BLIMP"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -171,8 +166,7 @@ static void OnStartBuzzard()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("BUZZARD"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("BUZZARD"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -189,8 +183,7 @@ static void OnStartFaggio()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("FAGGIO"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("FAGGIO"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -207,8 +200,7 @@ static void OnStartRuiner3()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("RUINER3"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("RUINER3"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -281,8 +273,7 @@ static void OnStartBaletrailer()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("BALETRAILER"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("BALETRAILER"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off
@@ -299,8 +290,7 @@ static void OnStartRomero()
 {
 	Vector3 playerPos = GetPlayerPos();
 
-	CreatePoolVehicle("ROMERO"_hash, playerPos.x, playerPos.y, playerPos.z,
-	                  GET_ENTITY_HEADING(PLAYER_PED_ID()));
+	CreatePoolVehicle("ROMERO"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 }
 
 // clang-format off

@@ -25,7 +25,7 @@ void SplashTexts::OnRun()
 		{
 			it++;
 		}
-	} 
+	}
 }
 
 void SplashTexts::ShowSplash(const std::string &szText, const ScreenTextVector &textPos, float fScale,

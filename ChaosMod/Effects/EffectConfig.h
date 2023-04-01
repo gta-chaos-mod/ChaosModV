@@ -118,9 +118,10 @@ namespace EffectConfig
 			effectData.Weight     = effectData.WeightMult; // Set initial effect weight to WeightMult
 			effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, rgValues[5]);
 			effectData.SetAttribute(EEffectAttributes::IsMeta, effectInfo.ExecutionType == EEffectExecutionType::Meta);
-			effectData.Name            = effectInfo.Name;
+			effectData.Name = effectInfo.Name;
 #ifdef _DEBUG
-			effectData.ShortcutKeycode = effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : rgValues[7];
+			effectData.ShortcutKeycode =
+			    effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : rgValues[7];
 #else
 			effectData.ShortcutKeycode = rgValues[7];
 #endif
