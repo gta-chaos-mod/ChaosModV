@@ -78,8 +78,7 @@ inline float GetEffectWeight(const EffectData &effectData)
 	const auto &effectGroup = effectData.GroupType;
 	auto effectWeight       = effectData.Weight;
 
-	return g_bEnableGroupWeighting && !effectGroup.empty() && !g_dictEffectGroups.at(effectGroup).IsPlaceholder
-	         ? effectWeight / g_dictEffectGroupMemberCount.at(effectGroup)
-	               * g_dictEffectGroups.at(effectGroup).WeightMult
+	return g_bEnableGroupWeighting && !effectGroup.empty() && !g_EffectGroups.at(effectGroup).IsPlaceholder
+	         ? effectWeight / g_EffectGroups.at(effectGroup).MemberCount * g_EffectGroups.at(effectGroup).WeightMult
 	         : effectWeight;
 }

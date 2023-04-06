@@ -623,28 +623,27 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 			{
 				std::lock_guard lock(effectGroupMutex);
 
-				const auto &result = g_dictEffectGroups.find(groupName);
-				if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
+				const auto &result = g_EffectGroups.find(groupName);
+				if (result != g_EffectGroups.end() && !result->second.IsPlaceholder)
 				{
 					LUA_SCRIPT_LOG(scriptName, "WARNING: Could not register effect group \""
 					                               << groupName << "\": Already registered!");
 				}
 				else
 				{
-					g_dictEffectGroups[groupName].IsPlaceholder         = false;
-					g_dictEffectGroups[groupName].WasRegisteredByScript = true;
-					g_dictEffectGroupMemberCount[groupName];
+					g_EffectGroups[groupName].IsPlaceholder         = false;
+					g_EffectGroups[groupName].WasRegisteredByScript = true;
 
-					const sol::optional<int> &groupWeightMultOpt = effectGroupInfo["WeightMultiplier"];
+					const sol::optional<int> &groupWeightMultOpt    = effectGroupInfo["WeightMultiplier"];
 					if (groupWeightMultOpt)
 					{
-						g_dictEffectGroups[groupName].WeightMult =
+						g_EffectGroups[groupName].WeightMult =
 						    std::clamp(*groupWeightMultOpt, 1, (int)(std::numeric_limits<unsigned short>::max)());
 					}
 
-					LUA_SCRIPT_LOG(scriptName, "Registered effect group \""
-					                               << groupName << "\" with weight multiplier: "
-					                               << g_dictEffectGroups[groupName].WeightMult);
+					LUA_SCRIPT_LOG(scriptName, "Registered effect group \"" << groupName
+					                                                        << "\" with weight multiplier: "
+					                                                        << g_EffectGroups[groupName].WeightMult);
 				}
 			}
 		}
@@ -869,12 +868,12 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 
 		std::lock_guard lock(effectGroupMutex);
 
-		if (!g_dictEffectGroups.contains(effectGroup))
+		if (!g_EffectGroups.contains(effectGroup))
 		{
-			g_dictEffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
+			g_EffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
 		}
 
-		g_dictEffectGroupMemberCount[effectGroup]++;
+		g_EffectGroups[effectGroup].MemberCount++;
 	}
 
 	const sol::optional<int> &shortcutKeycodeOpt = effectInfo["ShortcutKeycode"];
@@ -1083,13 +1082,12 @@ namespace LuaScripts
 	void Unload()
 	{
 		// Clean up all effect groups registered by scripts
-		for (auto it = g_dictEffectGroups.begin(); it != g_dictEffectGroups.end();)
+		for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
 		{
 			const auto &[groupName, groupData] = *it;
 			if (groupData.WasRegisteredByScript)
 			{
-				it = g_dictEffectGroups.erase(it);
-				g_dictEffectGroupMemberCount.erase(groupName);
+				it = g_EffectGroups.erase(it);
 			}
 			else
 			{

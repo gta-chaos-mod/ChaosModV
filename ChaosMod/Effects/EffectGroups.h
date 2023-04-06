@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 
@@ -23,12 +24,13 @@ enum class EEffectGroupType
 
 struct EffectGroupData
 {
-	unsigned short WeightMult  = 1;
+	std::uint16_t MemberCount  = 0;
+	std::uint16_t WeightMult   = 1;
 	bool IsPlaceholder         = false;
 	bool WasRegisteredByScript = false;
 };
 
-inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups {
+inline std::unordered_map<std::string, EffectGroupData> g_EffectGroups {
 	{ "_group_teleport", { .WeightMult = 2 } },          { "_group_spawngeneric", { .WeightMult = 5 } },
 	{ "_group_spawnenemyspecial", { .WeightMult = 5 } }, { "_group_spawnenemy", { .WeightMult = 4 } },
 	{ "_group_spawncompanion", { .WeightMult = 5 } },    { "_group_weapons", { .WeightMult = 4 } },
@@ -38,7 +40,7 @@ inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups {
 	{ "_group_wantedlevel", { .WeightMult = 2 } },
 };
 
-inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeToGroup {
+inline const std::unordered_map<EEffectGroupType, std::string> g_EffectTypeToGroup {
 	{ EEffectGroupType::Teleport, "_group_teleport" },
 	{ EEffectGroupType::SpawnGeneric, "_group_spawngeneric" },
 	{ EEffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial" },
@@ -53,5 +55,3 @@ inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeT
 	{ EEffectGroupType::Shader, "_group_shader" },
 	{ EEffectGroupType::WantedLevel, "_group_wantedlevel" },
 };
-
-inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;

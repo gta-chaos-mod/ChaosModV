@@ -140,9 +140,8 @@ namespace EffectConfig
 
 			if (effectInfo.EffectGroupType != EEffectGroupType::None)
 			{
-				effectData.GroupType =
-				    g_dictEffectGroups.find(g_dictEffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
-				g_dictEffectGroupMemberCount[effectData.GroupType]++;
+				effectData.GroupType = g_EffectGroups.find(g_EffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
+				g_EffectGroups[effectData.GroupType].MemberCount++;
 			}
 
 			out.emplace(EffectIdentifier(std::string(effectId)), effectData);
