@@ -51,6 +51,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Jealous Jimmy",
 		.Id = "peds_angryjimmy",
-		.EffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EffectGroupType::SpawnEnemy
 	}
 );

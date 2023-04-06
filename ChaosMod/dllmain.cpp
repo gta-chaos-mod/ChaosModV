@@ -7,7 +7,7 @@
 
 #include "Util/CrashHandler.h"
 
-BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE instance, DWORD reason, LPVOID reserved)
 {
 	switch (reason)
 	{
@@ -18,7 +18,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 
 		Memory::Init();
 
-		scriptRegister(hInstance, Main::OnRun);
+		scriptRegister(instance, Main::OnRun);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
@@ -27,7 +27,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 		Main::OnCleanup();
 		Memory::Uninit();
 
-		scriptUnregister(hInstance);
+		scriptUnregister(instance);
 
 		keyboardHandlerUnregister(Main::OnKeyboardInput);
 

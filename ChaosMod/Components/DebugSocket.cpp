@@ -28,9 +28,9 @@ static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::Connect
 
 	json effectsJson;
 	effectsJson["command"] = "result_fetch_effects";
-	for (const auto &[effectId, effectData] : g_dictEnabledEffects)
+	for (const auto &[effectId, effectData] : g_EnabledEffects)
 	{
-		if (effectData.TimedType == EEffectTimedType::Permanent || effectData.IsHidden())
+		if (effectData.TimedType == EffectTimedType::Permanent || effectData.IsHidden())
 		{
 			continue;
 		}
@@ -67,8 +67,8 @@ static void OnTriggerEffect(DebugSocket *debugSocket, std::shared_ptr<ix::Connec
 	QueueDelegate(debugSocket,
 	              [targetEffectId]()
 	              {
-		              auto result = g_dictEnabledEffects.find(targetEffectId);
-		              if (result != g_dictEnabledEffects.end())
+		              auto result = g_EnabledEffects.find(targetEffectId);
+		              if (result != g_EnabledEffects.end())
 		              {
 			              GetComponent<EffectDispatcher>()->DispatchEffect(result->first);
 		              }

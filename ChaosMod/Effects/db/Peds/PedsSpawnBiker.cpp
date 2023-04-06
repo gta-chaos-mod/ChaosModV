@@ -40,6 +40,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Biker",
         .Id = "peds_spawn_biker",
-        .EffectGroupType = EEffectGroupType::SpawnEnemy
+        .EffectGroupType = EffectGroupType::SpawnEnemy
     }
 );

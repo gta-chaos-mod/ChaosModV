@@ -63,6 +63,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Extreme Griefer Jesus",
 		.Id = "spawn_grieferjesus2",
-		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
 	}
 );

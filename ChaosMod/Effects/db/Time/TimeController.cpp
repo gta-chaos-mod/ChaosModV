@@ -10,7 +10,7 @@ REGISTER_EFFECT(OnStartMorning, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Morning",
 		.Id = "time_morning",
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );
 // clang-format on
@@ -25,7 +25,7 @@ REGISTER_EFFECT(OnStartDay, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Daytime",
 		.Id = "time_day",
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );
 // clang-format on
@@ -40,7 +40,7 @@ REGISTER_EFFECT(OnStartEvening, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Evening",
 		.Id = "time_evening",
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );
 // clang-format on
@@ -55,7 +55,7 @@ REGISTER_EFFECT(OnStartNight, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To Night",
 		.Id = "time_night",
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );
 // clang-format on
@@ -71,7 +71,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickTimelapse, EffectInfo
 		.Name = "Timelapse",
 		.Id = "time_quickday",
 		.IsTimed = true,
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );
 // clang-format on
@@ -90,6 +90,6 @@ REGISTER_EFFECT(OnStartSystem, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Set Time To System Time",
 		.Id = "time_local_time",
-		.EffectGroupType = EEffectGroupType::TimeChange
+		.EffectGroupType = EffectGroupType::TimeChange
 	}
 );

@@ -13,14 +13,14 @@ using LPVOID  = void *;
 
 namespace EffectThreads
 {
-	LPVOID CreateThread(RegisteredEffect *pEffect, bool bIsTimed);
+	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed);
 
 	void StopThread(LPVOID threadId);
 	void StopThreadImmediately(LPVOID threadId);
 	void StopThreads();
 	void StopThreadsImmediately();
 
-	void PauseThisThread(DWORD ulTimeMs);
+	void PauseThisThread(DWORD timeMs);
 	bool IsThreadPaused(LPVOID threadId);
 
 	void RunThreads();
@@ -39,11 +39,8 @@ struct EffectThreadData
 
 	void *m_CallerFiber        = nullptr;
 
-	EffectThreadData(RegisteredEffect *pEffect, bool *bHasOnStartExecuted, bool *bIsRunning, bool *bHasStopped)
-	    : m_Effect(pEffect),
-	      m_HasOnStartExecuted(bHasOnStartExecuted),
-	      m_IsRunning(bIsRunning),
-	      m_HasStopped(bHasStopped)
+	EffectThreadData(RegisteredEffect *effect, bool *hasOnStartExecuted, bool *isRunning, bool *hasStopped)
+	    : m_Effect(effect), m_HasOnStartExecuted(hasOnStartExecuted), m_IsRunning(isRunning), m_HasStopped(hasStopped)
 	{
 	}
 };
@@ -82,10 +79,10 @@ class EffectThread
 	DWORD64 m_PauseTimestamp = 0;
 	LPVOID m_Thread          = nullptr;
 
-	EffectThread(RegisteredEffect *pEffect, bool bIsTimed)
-	    : m_Effect(pEffect),
-	      m_IsRunning(bIsTimed),
-	      m_ThreadData(pEffect, &m_HasOnStartExecuted, &m_IsRunning, &m_HasStopped),
+	EffectThread(RegisteredEffect *effect, bool isTimed)
+	    : m_Effect(effect),
+	      m_IsRunning(isTimed),
+	      m_ThreadData(effect, &m_HasOnStartExecuted, &m_IsRunning, &m_HasStopped),
 	      m_Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
 	{
 	}

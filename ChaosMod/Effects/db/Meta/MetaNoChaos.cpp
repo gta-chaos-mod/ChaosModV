@@ -13,12 +13,12 @@ static void OnStart()
 
 static void OnStop()
 {
-	MetaModifiers::m_bDisableChaos = false;
+	MetaModifiers::m_DisableChaos = false;
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_bDisableChaos = true;
+	MetaModifiers::m_DisableChaos = true;
 }
 
 // clang-format off
@@ -28,6 +28,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Id = "meta_nochaos",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_hide_chaos_ui" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

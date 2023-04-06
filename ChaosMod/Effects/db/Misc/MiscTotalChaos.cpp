@@ -3,11 +3,11 @@
 #include "Memory/Physics.h"
 #include "Util/XInput.h"
 
-static DWORD64 m_anchorTick;
+static DWORD64 ms_AnchorTick;
 
 static void OnStart()
 {
-	m_anchorTick = GET_GAME_TIMER();
+	ms_AnchorTick = GET_GAME_TIMER();
 
 	SET_WEATHER_TYPE_OVERTIME_PERSIST("THUNDER", 2.f);
 }
@@ -52,7 +52,7 @@ static void OnTick()
 	}
 
 	// Make sure weather is always set to thunder after the transition
-	if (m_anchorTick < curTick - 2000)
+	if (ms_AnchorTick < curTick - 2000)
 	{
 		SET_WEATHER_TYPE_NOW("THUNDER");
 	}

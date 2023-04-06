@@ -8,12 +8,12 @@
 
 static void OnStop()
 {
-	MetaModifiers::m_bHideChaosUI = false;
+	MetaModifiers::m_HideChaosUI = false;
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_bHideChaosUI = true;
+	MetaModifiers::m_HideChaosUI = true;
 }
 
 // clang-format off
@@ -22,6 +22,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",
 		.IsTimed = true,
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

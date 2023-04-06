@@ -4,22 +4,22 @@
 
 namespace Util
 {
-	inline Vector3 GetGameplayCamOffsetInWorldCoords(const Vector3 &vOffset)
+	inline Vector3 GetGameplayCamOffsetInWorldCoords(const Vector3 &offset)
 	{
 		// Thanks to scripthookvdotnet!
-		Vector3 vRot               = GET_GAMEPLAY_CAM_ROT(2);
-		Vector3 vForward           = vRot.GetDirectionForRotation();
+		auto rot                = GET_GAMEPLAY_CAM_ROT(2);
+		auto forward            = rot.GetDirectionForRotation();
 
-		static const double c_dD2R = 0.01745329251994329576923690768489;
+		static const double d2R = 0.01745329251994329576923690768489;
 
-		float fNum1                = cos(vRot.y * c_dD2R);
-		float fX                   = fNum1 * cos(-vRot.z * c_dD2R);
-		float fY                   = fNum1 * sin(vRot.z * c_dD2R);
-		float fZ                   = sin(-vRot.y * c_dD2R);
+		float num1              = cos(rot.y * d2R);
+		float x                 = num1 * cos(-rot.z * d2R);
+		float y                 = num1 * sin(rot.z * d2R);
+		float z                 = sin(-rot.y * d2R);
 
-		Vector3 vRight             = Vector3::Init(fX, fY, fZ);
-		Vector3 vUp                = Vector3::Cross(vRight, vForward);
-		return GET_GAMEPLAY_CAM_COORD() + (vRight * vOffset.x) + (vForward * vOffset.y) + (vUp * vOffset.z);
+		auto right              = Vector3::Init(x, y, z);
+		auto up                 = Vector3::Cross(right, forward);
+		return GET_GAMEPLAY_CAM_COORD() + (right * offset.x) + (forward * offset.y) + (up * offset.z);
 	}
 
 	inline Vector3 DegToRadian(const Vector3 &angles)
@@ -28,16 +28,16 @@ namespace Util
 		                     angles.z * .0174532925199433F);
 	}
 
-	inline Vector3 GetCoordsFromGameplayCam(float fDistance)
+	inline Vector3 GetCoordsFromGameplayCam(float distance)
 	{
-		Vector3 vRot    = DegToRadian(GET_GAMEPLAY_CAM_ROT(2));
-		Vector3 vCoords = GET_GAMEPLAY_CAM_COORD();
+		auto rot    = DegToRadian(GET_GAMEPLAY_CAM_ROT(2));
+		auto coords = GET_GAMEPLAY_CAM_COORD();
 
-		vRot.y          = fDistance * cos(vRot.x);
-		vCoords.x       = vCoords.x + vRot.y * std::sin(vRot.z * -1.f);
-		vCoords.y       = vCoords.y + vRot.y * std::cos(vRot.z * -1.f);
-		vCoords.z       = vCoords.z + fDistance * sin(vRot.x);
+		rot.y       = distance * cos(rot.x);
+		coords.x    = coords.x + rot.y * std::sin(rot.z * -1.f);
+		coords.y    = coords.y + rot.y * std::cos(rot.z * -1.f);
+		coords.z    = coords.z + distance * sin(rot.x);
 
-		return vCoords;
+		return coords;
 	}
 }

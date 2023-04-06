@@ -72,57 +72,57 @@ static std::mutex ms_PrintMutex;
 		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
 	} while (0)
 
-static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop",
-	                                                     "chaosmod\\custom_scripts" };
+static const std::vector<const char *> ms_ScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop",
+	                                                   "chaosmod\\custom_scripts" };
 
 static std::string ms_NativesDefCache;
 
-_LUAFUNC void LuaPrint(const std::string &szText)
+_LUAFUNC void LuaPrint(const std::string &text)
 {
-	COLOR_PREFIX_LOG("(Lua)", szText);
+	COLOR_PREFIX_LOG("(Lua)", text);
 }
 
-_LUAFUNC void LuaPrint(const std::string &szName, const std::string &szText)
+_LUAFUNC void LuaPrint(const std::string &name, const std::string &text)
 {
-	COLOR_PREFIX_LOG("(" << szName << ")", szText);
+	COLOR_PREFIX_LOG("(" << name << ")", text);
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (ComponentExists<DebugSocket>())
 	{
-		GetComponent<DebugSocket>()->ScriptLog(szName, szText);
+		GetComponent<DebugSocket>()->ScriptLog(name, text);
 	}
 #endif
 }
 
-_LUAFUNC char *_TryParseString(void *pStr)
+_LUAFUNC char *_TryParseString(void *str)
 {
-	char *pcString = reinterpret_cast<char *>(pStr);
+	auto string = reinterpret_cast<char *>(str);
 
 	MAGIC_CATCH_BEGIN
 	// Access string to try to trigger an access violation
-	for (char *c = pcString; *c; c++)
+	for (char *c = string; *c; c++)
 	{
 	}
 	MAGIC_CATCH_END(return nullptr)
 
-	return pcString;
+	return string;
 }
 
-_LUAFUNC bool _TryParseVector3(void **pVector, float &fX, float &fY, float &fZ)
+_LUAFUNC bool _TryParseVector3(void **vector, float &x, float &y, float &z)
 {
 	MAGIC_CATCH_BEGIN
-	fX = *reinterpret_cast<float *>(pVector);
-	fY = *reinterpret_cast<float *>(pVector + 1);
-	fZ = *reinterpret_cast<float *>(pVector + 2);
+	x = *reinterpret_cast<float *>(vector);
+	y = *reinterpret_cast<float *>(vector + 1);
+	z = *reinterpret_cast<float *>(vector + 2);
 	MAGIC_CATCH_END(return false)
 
 	return true;
 }
 
-_LUAFUNC bool _CallNative(void ***ppResult)
+_LUAFUNC bool _CallNative(void ***result)
 {
 	MAGIC_CATCH_BEGIN
-	*ppResult = reinterpret_cast<void **>(nativeCall());
+	*result = reinterpret_cast<void **>(nativeCall());
 	MAGIC_CATCH_END(return false)
 
 	return true;
@@ -138,11 +138,11 @@ class LuaScript
   private:
 	std::string m_ScriptName;
 	sol::state m_Lua;
-	bool m_bTemporary;
+	bool m_IsTemporary;
 
   public:
-	LuaScript(const std::string &scriptName, sol::state &lua, bool temporary)
-	    : m_ScriptName(scriptName), m_Lua(std::move(lua)), m_bTemporary(temporary)
+	LuaScript(const std::string &scriptName, sol::state &lua, bool isTemporary)
+	    : m_ScriptName(scriptName), m_Lua(std::move(lua)), m_IsTemporary(isTemporary)
 	{
 	}
 
@@ -153,15 +153,15 @@ class LuaScript
 	LuaScript(LuaScript &&script) noexcept
 	    : m_ScriptName(std::move(script.m_ScriptName)),
 	      m_Lua(std::move(script.m_Lua)),
-	      m_bTemporary(script.m_bTemporary)
+	      m_IsTemporary(script.m_IsTemporary)
 	{
 	}
 
 	LuaScript &operator=(LuaScript &&script) noexcept
 	{
-		m_ScriptName = std::move(script.m_ScriptName);
-		m_Lua        = std::move(script.m_Lua);
-		m_bTemporary = script.m_bTemporary;
+		m_ScriptName  = std::move(script.m_ScriptName);
+		m_Lua         = std::move(script.m_Lua);
+		m_IsTemporary = script.m_IsTemporary;
 
 		return *this;
 	}
@@ -173,7 +173,7 @@ class LuaScript
 
 	bool IsTemporary() const
 	{
-		return m_bTemporary;
+		return m_IsTemporary;
 	}
 
 	void Execute(const char *funcName) const
@@ -196,13 +196,13 @@ class LuaScript
 
 struct LuaVector3
 {
-	alignas(8) float m_fX = 0.f;
-	alignas(8) float m_fY = 0.f;
-	alignas(8) float m_fZ = 0.f;
+	alignas(8) float X = 0.f;
+	alignas(8) float Y = 0.f;
+	alignas(8) float Z = 0.f;
 
-	LuaVector3()          = default;
+	LuaVector3()       = default;
 
-	LuaVector3(float fX, float fY, float fZ) : m_fX(fX), m_fY(fY), m_fZ(fZ)
+	LuaVector3(float x, float y, float z) : X(x), Y(y), Z(z)
 	{
 	}
 };
@@ -210,7 +210,7 @@ struct LuaVector3
 class LuaHolder
 {
   public:
-	void *m_pData = nullptr;
+	void *m_Data = nullptr;
 	sol::object m_Obj;
 
 	LuaHolder() = default;
@@ -231,25 +231,25 @@ class LuaHolder
 	{
 		if constexpr (std::is_same<T, char *>())
 		{
-			return _TryParseString(m_pData);
+			return _TryParseString(m_Data);
 		}
 		else if constexpr (std::is_same<T, LuaVector3>())
 		{
-			float fX, fY, fZ;
+			float x, y, z;
 
-			return _TryParseVector3(&m_pData, fX, fY, fZ) ? LuaVector3(fX, fY, fZ) : LuaVector3();
+			return _TryParseVector3(&m_Data, x, y, z) ? LuaVector3(x, y, z) : LuaVector3();
 		}
 
-		return *reinterpret_cast<T *>(&m_pData);
+		return *reinterpret_cast<T *>(&m_Data);
 	}
 
 	__forceinline bool IsValid() const
 	{
-		return m_pData || m_Obj.valid();
+		return m_Data || m_Obj.valid();
 	}
 };
 
-enum class ELuaNativeReturnType
+enum class LuaNativeReturnType
 {
 	None,
 	Bool,
@@ -259,19 +259,18 @@ enum class ELuaNativeReturnType
 	Vector3
 };
 
-static std::unordered_map<std::string, LuaScript> ms_dictRegisteredEffects;
+static std::unordered_map<std::string, LuaScript> ms_RegisteredEffects;
 
-_LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 ullNativeHash,
-                               ELuaNativeReturnType eReturnType, const sol::variadic_args &args)
+_LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 nativeHash,
+                               LuaNativeReturnType returnType, const sol::variadic_args &args)
 {
-	if (ullNativeHash == 0x213AEB2B90CBA7AC || ullNativeHash == 0x5A5F40FE637EB584
-	    || ullNativeHash == 0x933D6A9EEC1BACD0 || ullNativeHash == 0xE80492A9AC099A93
-	    || ullNativeHash == 0x8EF07E15701D61ED)
+	if (nativeHash == 0x213AEB2B90CBA7AC || nativeHash == 0x5A5F40FE637EB584 || nativeHash == 0x933D6A9EEC1BACD0
+	    || nativeHash == 0xE80492A9AC099A93 || nativeHash == 0x8EF07E15701D61ED)
 	{
 		return sol::make_object(lua, sol::lua_nil);
 	}
 
-	nativeInit(ullNativeHash);
+	nativeInit(nativeHash);
 
 	for (const sol::stack_proxy &arg : args)
 	{
@@ -303,42 +302,41 @@ _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_st
 			}
 			else
 			{
-				nativePush(&holder.m_pData);
+				nativePush(&holder.m_Data);
 			}
 		}
 	}
 
-	void **pReturned;
-	if (!_CallNative(&pReturned))
+	void **returned;
+	if (!_CallNative(&returned))
 	{
-		LuaPrint(scriptName, (std::ostringstream()
-		                      << "Error while invoking native 0x" << std::uppercase << std::hex << ullNativeHash)
-		                         .str());
+		LuaPrint(scriptName,
+		         (std::ostringstream() << "Error while invoking native 0x" << std::uppercase << std::hex << nativeHash)
+		             .str());
 	}
-	else if (pReturned)
+	else if (returned)
 	{
-		void *returned = *pReturned;
-
-		switch (eReturnType)
+		switch (returnType)
 		{
-		case ELuaNativeReturnType::Bool:
-			return sol::make_object(lua, reinterpret_cast<bool>(returned));
-		case ELuaNativeReturnType::Int:
-			return sol::make_object(lua, reinterpret_cast<int>(returned));
-		case ELuaNativeReturnType::Float:
-			return sol::make_object(lua, *reinterpret_cast<float *>(&returned));
-		case ELuaNativeReturnType::String:
-			return sol::make_object(lua, _TryParseString(returned));
-		case ELuaNativeReturnType::Vector3:
+		case LuaNativeReturnType::Bool:
+			return sol::make_object(lua, reinterpret_cast<bool>(*returned));
+		case LuaNativeReturnType::Int:
+			return sol::make_object(lua, reinterpret_cast<int>(*returned));
+		case LuaNativeReturnType::Float:
+			return sol::make_object(lua, *reinterpret_cast<float *>(returned));
+		case LuaNativeReturnType::String:
+			return sol::make_object(lua, _TryParseString(*returned));
+		case LuaNativeReturnType::Vector3:
 		{
 			LuaVector3 vector3;
-			if (_TryParseVector3(pReturned, vector3.m_fX, vector3.m_fY, vector3.m_fZ))
+			if (_TryParseVector3(returned, vector3.X, vector3.Y, vector3.Z))
 			{
 				return sol::make_object(lua, vector3);
 			}
 		}
-
 		break;
+		default:
+			break;
 		}
 	}
 
@@ -347,8 +345,8 @@ _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_st
 
 static void RemoveScriptEntry(const std::string &effectId)
 {
-	ms_dictRegisteredEffects.erase(effectId);
-	g_dictEnabledEffects.erase(effectId);
+	ms_RegisteredEffects.erase(effectId);
+	g_EnabledEffects.erase(effectId);
 
 	auto result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectId);
 	if (result != g_RegisteredEffects.end())
@@ -359,13 +357,13 @@ static void RemoveScriptEntry(const std::string &effectId)
 
 enum ParseScriptFlags
 {
-	ParseScript_None,
+	ParseScriptFlag_None,
 	// Immediately dispatch effect (if script registers one) and remove it OnStop
 	// Assumes this is only being called from the main thread!
-	ParseScript_IsTemporary   = (1 << 0),
+	ParseScriptFlag_IsTemporary   = (1 << 0),
 	// Whether this is called from an alien thread, aborts and returns ParseScriptReturnReason::Error_ThreadUnsafe if
 	// thread-unsafe function was called
-	ParseScript_IsAlienThread = (1 << 1),
+	ParseScriptFlag_IsAlienThread = (1 << 1),
 };
 enum class ParseScriptReturnReason
 {
@@ -374,7 +372,7 @@ enum class ParseScriptReturnReason
 	Error_ThreadUnsafe
 };
 static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
-                                              ParseScriptFlags flags = ParseScript_None)
+                                              ParseScriptFlags flags = ParseScriptFlag_None)
 {
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
@@ -384,9 +382,9 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	lua.open_libraries(sol::lib::bit32);
 
 	lua["ReturnType"] =
-	    lua.create_table_with("None", ELuaNativeReturnType::None, "Boolean", ELuaNativeReturnType::Bool, "Integer",
-	                          ELuaNativeReturnType::Int, "String", ELuaNativeReturnType::String, "Float",
-	                          ELuaNativeReturnType::Float, "Vector3", ELuaNativeReturnType::Vector3);
+	    lua.create_table_with("None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool, "Integer",
+	                          LuaNativeReturnType::Int, "String", LuaNativeReturnType::String, "Float",
+	                          LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
 	auto getMetaModFactory = []<typename T>(T &modifier)
 	{
@@ -407,10 +405,10 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	auto metaModifiersTable = lua.create_named_table("MetaModifiers");
 #define P(x) sol::property(getMetaModFactory(x), setMetaModFactory(x))
 	auto metaModifiersMetaTable = lua.create_table_with(
-	    "EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier), "TimerSpeedModifier",
-	    P(MetaModifiers::m_fTimerSpeedModifier), "AdditionalEffectsToDispatch",
-	    P(MetaModifiers::m_ucAdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_bHideChaosUI),
-	    "DisableChaos", P(MetaModifiers::m_bDisableChaos), "FlipChaosUI", P(MetaModifiers::m_bFlipChaosUI));
+	    "EffectDurationModifier", P(MetaModifiers::m_EffectDurationModifier), "TimerSpeedModifier",
+	    P(MetaModifiers::m_TimerSpeedModifier), "AdditionalEffectsToDispatch",
+	    P(MetaModifiers::m_AdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_HideChaosUI), "DisableChaos",
+	    P(MetaModifiers::m_DisableChaos), "FlipChaosUI", P(MetaModifiers::m_FlipChaosUI));
 #undef P
 	metaModifiersMetaTable[sol::meta_function::new_index] = [] {
 	};
@@ -430,7 +428,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	                            &LuaHolder::As<char *>, "AsVector3", &LuaHolder::As<LuaVector3>);
 	lua["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object &>);
 
-	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::m_fX, "y", &LuaVector3::m_fY, "z", &LuaVector3::m_fZ);
+	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::X, "y", &LuaVector3::Y, "z", &LuaVector3::Z);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
 #define E(x, y)                 \
@@ -456,11 +454,11 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		}
 	};
 	static const std::vector<ExposableFunc> exposables {
-		E("print", [scriptName](const std::string &szText) { LuaPrint(scriptName, szText); }),
+		E("print", [scriptName](const std::string &text) { LuaPrint(scriptName, text); }),
 
-		E("_invoke", [scriptName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
-		                          const sol::variadic_args &args)
-		  { return LuaInvoke(scriptName, lua, ullHash, eReturnType, args); }),
+		E("_invoke",
+		  [scriptName](const sol::this_state &lua, DWORD64 hash, LuaNativeReturnType returnType,
+		               const sol::variadic_args &args) { return LuaInvoke(scriptName, lua, hash, returnType, args); }),
 
 		E("WAIT", scriptWait),
 
@@ -523,24 +521,23 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		E("ResetAudioClearness", Hooks::ResetAudioClearness),
 
 		E("GetGameplayCamOffsetInWorldCoords",
-		  [](LuaVector3 vOffset)
+		  [](LuaVector3 offset)
 		  {
-		      Vector3 vReturn =
-		          Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(vOffset.m_fX, vOffset.m_fY, vOffset.m_fZ));
-		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		      const auto &result = Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(offset.X, offset.Y, offset.Z));
+		      return LuaVector3(result.x, result.y, result.z);
 		  }),
 		E("GetCoordsFromGameplayCam",
-		  [](float fDistance)
+		  [](float distance)
 		  {
-		      Vector3 vReturn = Util::GetCoordsFromGameplayCam(fDistance);
-		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		      const auto &result = Util::GetCoordsFromGameplayCam(distance);
+		      return LuaVector3(result.x, result.y, result.z);
 		  }),
 
 		E("GetCoordAround",
-		  [](Entity iEntity, float fAngle, float fRadius, float fZOffset, bool bRelative)
+		  [](Entity entity, float angle, float radius, float zOffset, bool relative)
 		  {
-		      Vector3 vReturn = GetCoordAround(iEntity, fAngle, fRadius, fZOffset, bRelative);
-		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		      const auto &result = GetCoordAround(entity, angle, radius, zOffset, relative);
+		      return LuaVector3(result.x, result.y, result.z);
 		  }),
 
 		E("IsWeaponShotgun", Util::IsWeaponShotgun),
@@ -554,7 +551,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 
 	for (const auto &exposable : exposables)
 	{
-		if (flags & ParseScript_IsAlienThread)
+		if (flags & ParseScriptFlag_IsAlienThread)
 		{
 			lua[exposable.Name] = [&](const sol::variadic_args &args)
 			{
@@ -567,8 +564,8 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		}
 	}
 
-	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
-	             EOverrideShaderType::Snow);
+	lua.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
+	             OverrideShaderType::Snow);
 
 	const auto &result = lua.safe_script(script);
 	if (!result.valid())
@@ -584,7 +581,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		return ParseScriptReturnReason::Error_ThreadUnsafe;
 	}
 
-	if (flags & ParseScript_IsAlienThread)
+	if (flags & ParseScriptFlag_IsAlienThread)
 	{
 		for (auto exposable : exposables)
 		{
@@ -619,7 +616,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		{
 			const auto &groupName = trim(*groupNameOpt);
 
-			if (!(flags & ParseScript_IsTemporary))
+			if (!(flags & ParseScriptFlag_IsTemporary))
 			{
 				std::lock_guard lock(effectGroupMutex);
 
@@ -695,8 +692,8 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	static std::mutex effectsMutex;
 	{
 		std::unique_lock lock(effectsMutex);
-		auto result             = ms_dictRegisteredEffects.find(effectId);
-		bool doesIdAlreadyExist = result != ms_dictRegisteredEffects.end();
+		auto result             = ms_RegisteredEffects.find(effectId);
+		bool doesIdAlreadyExist = result != ms_RegisteredEffects.end();
 
 		if (doesIdAlreadyExist)
 		{
@@ -716,7 +713,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 		}
 		else
 		{
-			for (const auto &effect : g_dictEffectsMap)
+			for (const auto &effect : g_EffectsMap)
 			{
 				if (effect.second.Id == effectId)
 				{
@@ -762,32 +759,32 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	const sol::optional<std::string> &timedTypeTextOpt = effectInfo["TimedType"];
 	if (timedTypeTextOpt)
 	{
-		const auto &szTimedTypeText = *timedTypeTextOpt;
+		const auto &timedTypeText = *timedTypeTextOpt;
 
-		if (szTimedTypeText == "None")
+		if (timedTypeText == "None")
 		{
-			effectData.TimedType = EEffectTimedType::NotTimed;
+			effectData.TimedType = EffectTimedType::NotTimed;
 		}
-		else if (szTimedTypeText == "Normal")
+		else if (timedTypeText == "Normal")
 		{
-			effectData.TimedType = EEffectTimedType::Normal;
+			effectData.TimedType = EffectTimedType::Normal;
 		}
-		else if (szTimedTypeText == "Short")
+		else if (timedTypeText == "Short")
 		{
-			effectData.TimedType = EEffectTimedType::Short;
+			effectData.TimedType = EffectTimedType::Short;
 		}
-		else if (szTimedTypeText == "Permanent")
+		else if (timedTypeText == "Permanent")
 		{
-			effectData.TimedType = EEffectTimedType::Permanent;
+			effectData.TimedType = EffectTimedType::Permanent;
 
-			if (flags & ParseScript_IsTemporary)
+			if (flags & ParseScriptFlag_IsTemporary)
 			{
 				LUA_SCRIPT_LOG(scriptName, "ERROR: TimedType \"Permanent\" for effect \""
 				                               << effectName
 				                               << "\" is invalid for temporary effects, please use another TimedType!");
 			}
 		}
-		else if (szTimedTypeText == "Custom")
+		else if (timedTypeText == "Custom")
 		{
 			const sol::optional<int> &durationOpt = effectInfo["CustomTime"];
 			if (!durationOpt)
@@ -796,18 +793,18 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 				               "WARNING: TimedType \"Custom\" for effect \""
 				                   << effectName
 				                   << "\" but no CustomTime defined? Falling back to \"Normal\" TimedType!");
-				effectData.TimedType = EEffectTimedType::Normal;
+				effectData.TimedType = EffectTimedType::Normal;
 			}
 			else
 			{
-				effectData.TimedType  = EEffectTimedType::Custom;
+				effectData.TimedType  = EffectTimedType::Custom;
 				effectData.CustomTime = (std::max)(1, *durationOpt);
 			}
 		}
 		else
 		{
-			LUA_SCRIPT_LOG(scriptName, "WARNING: Unknown TimedType \""
-			                               << szTimedTypeText << "\" specified for effect \"" << effectName << "\"!");
+			LUA_SCRIPT_LOG(scriptName, "WARNING: Unknown TimedType \"" << timedTypeText << "\" specified for effect \""
+			                                                           << effectName << "\"!");
 		}
 	}
 
@@ -821,19 +818,19 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	const sol::optional<bool> &isMetaOpt = effectInfo["IsMeta"];
 	if (isMetaOpt)
 	{
-		effectData.SetAttribute(EEffectAttributes::IsMeta, *isMetaOpt);
+		effectData.SetAttribute(EffectAttributes::IsMeta, *isMetaOpt);
 	}
 
 	const sol::optional<bool> &excludeFromVotingOpt = effectInfo["ExcludeFromVoting"];
 	if (excludeFromVotingOpt)
 	{
-		effectData.SetAttribute(EEffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
+		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
 	}
 
 	const sol::optional<bool> &isUtilityOpt = effectInfo["IsUtility"];
 	if (isUtilityOpt)
 	{
-		effectData.SetAttribute(EEffectAttributes::IsUtility, *isUtilityOpt);
+		effectData.SetAttribute(EffectAttributes::IsUtility, *isUtilityOpt);
 	}
 
 	const sol::optional<sol::table> &incompatibleIdsOpt = effectInfo["IncompatibleIds"];
@@ -853,8 +850,8 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	if (effectCategoryOpt)
 	{
 		const auto &effectCategoryStr = *effectCategoryOpt;
-		auto effectCategoryIt         = g_dictNameToEffectCategory.find(effectCategoryStr);
-		if (effectCategoryIt != g_dictNameToEffectCategory.end())
+		auto effectCategoryIt         = g_NameToEffectCategory.find(effectCategoryStr);
+		if (effectCategoryIt != g_NameToEffectCategory.end())
 		{
 			effectData.EffectCategory = effectCategoryIt->second;
 		}
@@ -887,21 +884,21 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	}
 
 	// Exclude temporary effects from choices pool
-	effectData.SetAttribute(EEffectAttributes::IsTemporary, flags & ParseScript_IsTemporary);
+	effectData.SetAttribute(EffectAttributes::IsTemporary, flags & ParseScriptFlag_IsTemporary);
 
 	{
 		std::lock_guard lock(effectsMutex);
-		ms_dictRegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScript_IsTemporary));
-		g_dictEnabledEffects.emplace(effectId, effectData);
+		ms_RegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScriptFlag_IsTemporary));
+		g_EnabledEffects.emplace(effectId, effectData);
 		g_RegisteredEffects.emplace_back(effectId);
 	}
 
-	if (flags & ParseScript_IsTemporary)
+	if (flags & ParseScriptFlag_IsTemporary)
 	{
 		// Immediately dispatch it too
 		if (ComponentExists<EffectDispatcher>())
 		{
-			GetComponent<EffectDispatcher>()->DispatchEffect(effectId, nullptr, false);
+			GetComponent<EffectDispatcher>()->DispatchEffect(effectId, EffectDispatcher::DispatchEffectFlag_NoAddToLog);
 		}
 	}
 	else
@@ -916,7 +913,7 @@ namespace LuaScripts
 {
 	void Load()
 	{
-		ms_dictRegisteredEffects.clear();
+		ms_RegisteredEffects.clear();
 
 		ClearRegisteredScriptEffects();
 
@@ -969,7 +966,7 @@ namespace LuaScripts
 
 			auto currentThread = std::this_thread::get_id();
 			if (ParseScriptRaw(fileName, buffer.str(),
-			                   currentThread == mainThread ? ParseScript_None : ParseScript_IsAlienThread)
+			                   currentThread == mainThread ? ParseScriptFlag_None : ParseScriptFlag_IsAlienThread)
 			    == ParseScriptReturnReason::Error_ThreadUnsafe)
 			{
 				std::lock_guard lock(threadUnsafeEntryQueueMutex);
@@ -1031,7 +1028,7 @@ namespace LuaScripts
 			}
 		};
 
-		for (auto dir : ms_rgScriptDirs)
+		for (auto dir : ms_ScriptDirs)
 		{
 			if (!DoesFileExist(dir))
 			{
@@ -1098,7 +1095,7 @@ namespace LuaScripts
 
 	void Execute(const std::string &effectId, ExecuteFuncType funcType)
 	{
-		const auto &script = ms_dictRegisteredEffects.at(effectId);
+		const auto &script = ms_RegisteredEffects.at(effectId);
 
 		switch (funcType)
 		{
@@ -1123,6 +1120,6 @@ namespace LuaScripts
 
 	void RegisterScriptRawTemporary(std::string scriptName, std::string script)
 	{
-		ParseScriptRaw(scriptName, script, ParseScript_IsTemporary);
+		ParseScriptRaw(scriptName, script, ParseScriptFlag_IsTemporary);
 	}
 }

@@ -37,6 +37,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Companion Brad",
 		.Id = "spawn_compbrad",
-		.EffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );

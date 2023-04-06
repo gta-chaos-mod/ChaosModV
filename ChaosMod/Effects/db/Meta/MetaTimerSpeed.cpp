@@ -8,12 +8,12 @@
 
 static void OnStop()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 1;
+	MetaModifiers::m_TimerSpeedModifier = 1;
 }
 
 static void OnTick_0_5x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 0.5;
+	MetaModifiers::m_TimerSpeedModifier = 0.5;
 }
 
 // clang-format off
@@ -23,14 +23,14 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 		.Id = "meta_timerspeed_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_timerspeed_2x", "meta_timerspeed_5x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );
 // clang-format on
 
 static void OnTick_2x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 2;
+	MetaModifiers::m_TimerSpeedModifier = 2;
 }
 
 // clang-format off
@@ -40,14 +40,14 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 		.Id = "meta_timerspeed_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_timerspeed_0_5x", "meta_timerspeed_5x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );
 // clang-format on
 
 static void OnTick_5x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 5;
+	MetaModifiers::m_TimerSpeedModifier = 5;
 }
 
 // clang-format off
@@ -58,6 +58,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_5x, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { "meta_timerspeed_0_5x", "meta_timerspeed_2x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

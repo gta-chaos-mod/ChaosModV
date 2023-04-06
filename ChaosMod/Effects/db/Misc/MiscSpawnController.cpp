@@ -20,7 +20,7 @@ REGISTER_EFFECT(OnStartUFO, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn UFO",
 		.Id = "misc_spawnufo",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric
+		.EffectGroupType = EffectGroupType::SpawnGeneric
 	}
 );
 // clang-format on
@@ -35,6 +35,6 @@ REGISTER_EFFECT(OnStartFerrisWheel, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Ferris Wheel",
 		.Id = "misc_spawnferriswheel",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric
+		.EffectGroupType = EffectGroupType::SpawnGeneric
 	}
 );

@@ -4,8 +4,6 @@
 
 #include <stdafx.h>
 
-static std::vector<Ped> m_peds;
-
 // based on PedsSpawnAngryJesus.cpp
 static void OnStart()
 {
@@ -61,6 +59,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Angry Alien",
 		.Id = "peds_angryalien",
-		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
 	}
 );

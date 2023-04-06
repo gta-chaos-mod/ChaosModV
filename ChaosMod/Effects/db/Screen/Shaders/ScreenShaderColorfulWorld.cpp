@@ -3,7 +3,7 @@
 #include "Memory/Hooks/ShaderHook.h"
 #include "Memory/Snow.h"
 
-static const char *ms_szShaderSrc = R"SRC(
+static const char *ms_ShaderSrc = R"SRC(
 float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOORD1) : SV_Target0
 {
     discard;
@@ -14,7 +14,7 @@ float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOOR
 
 static void OnStart()
 {
-	Hooks::OverrideShader(EOverrideShaderType::Snow, ms_szShaderSrc);
+	Hooks::OverrideShader(OverrideShaderType::Snow, ms_ShaderSrc);
 }
 
 static void OnStop()
@@ -34,7 +34,7 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Colorful World",
 		.Id = "screen_colorfulworld",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Shader,
-		.EffectGroupType = EEffectGroupType::Shader
+		.EffectCategory = EffectCategory::Shader,
+		.EffectGroupType = EffectGroupType::Shader
 	}
 );

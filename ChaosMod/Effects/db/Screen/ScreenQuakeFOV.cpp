@@ -39,6 +39,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Quake FOV",
 		.Id = "player_quake_fov",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Camera
+		.EffectCategory = EffectCategory::Camera
 	}
 );

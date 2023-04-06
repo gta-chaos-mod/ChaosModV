@@ -38,6 +38,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Minions",
 		.Id = "peds_minions",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectCategory = EffectCategory::Pitch
 	}
 );

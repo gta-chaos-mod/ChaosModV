@@ -4,17 +4,16 @@ using Ped     = int;
 using Vehicle = int;
 using Hash    = unsigned long;
 
-void ClearEntityPool(int iDistance = 0);
+void ClearEntityPool(int distance = 0);
 
 Ped CreatePoolClonePed(Ped pedToClone);
-Ped CreatePoolPed(int iPedType, Hash ulHodelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
-Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading);
-Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, int iSeatIdx);
+Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading);
+Ped CreateRandomPoolPed(float x, float y, float z, float heading);
+Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seatIdx);
 
-Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading);
+Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading);
 Vehicle CreatePoolCloneVehicle(Vehicle vehToClone);
 
-Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic);
-Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
-                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
-                                   bool fixedRot);
+Object CreatePoolProp(Hash modelHash, float x, float y, float z, bool dynamic);
+Object CreatePoolPropAttachedToPed(Hash modelHash, Ped ped, int boneIndex, float offsetX, float offsetY, float offsetZ,
+                                   float rotX, float rotY, float rotZ, bool softPinning, bool collision, bool fixedRot);

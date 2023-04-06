@@ -20,53 +20,53 @@ namespace Memory
 {
 	inline std::vector<Hash> GetAllVehModels()
 	{
-		static std::vector<Hash> c_rgVehModels;
+		static std::vector<Hash> vehModels;
 
-		if (c_rgVehModels.empty())
+		if (vehModels.empty())
 		{
 			Handle handle;
 
 			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
 			if (!handle.IsValid())
 			{
-				return c_rgVehModels;
+				return vehModels;
 			}
 
-			handle               = handle.At(2).Into();
-			DWORD64 ullModelList = handle.Value<DWORD64>();
+			handle         = handle.At(2).Into();
+			auto modelList = handle.Value<DWORD64>();
 
-			handle               = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
+			handle         = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
 			if (!handle.IsValid())
 			{
-				return c_rgVehModels;
+				return vehModels;
 			}
 
-			handle           = handle.At(2).Into();
-			WORD usMaxModels = handle.Value<WORD>();
+			handle         = handle.At(2).Into();
+			auto maxModels = handle.Value<WORD>();
 
 			//  Stub vehicles, thanks R* lol
 			static const std::unordered_set<Hash> blacklistedModels {
 				"arbitergt"_hash, "astron2"_hash, "cyclone2"_hash, "ignus2"_hash, "s95"_hash,
 			};
 
-			for (WORD usIdx = 0; usIdx < usMaxModels; usIdx++)
+			for (WORD i = 0; i < maxModels; i++)
 			{
-				DWORD64 ullEntry = *reinterpret_cast<DWORD64 *>(ullModelList + 8 * usIdx);
-				if (!ullEntry)
+				auto entry = *reinterpret_cast<DWORD64 *>(modelList + 8 * i);
+				if (!entry)
 				{
 					continue;
 				}
 
-				Hash ulModel = *reinterpret_cast<Hash *>(ullEntry);
+				auto model = *reinterpret_cast<Hash *>(entry);
 
-				if (IS_MODEL_VALID(ulModel) && IS_MODEL_A_VEHICLE(ulModel) && !blacklistedModels.contains(ulModel))
+				if (IS_MODEL_VALID(model) && IS_MODEL_A_VEHICLE(model) && !blacklistedModels.contains(model))
 				{
-					c_rgVehModels.push_back(ulModel);
+					vehModels.push_back(model);
 				}
 			}
 		}
 
-		return c_rgVehModels;
+		return vehModels;
 	}
 
 	inline void SetVehicleOutOfControl(Vehicle vehicle, bool state)
@@ -97,7 +97,7 @@ namespace Memory
 			return;
 		}
 
-		__int64 result = GetScriptHandleBaseAddress(vehicle);
+		auto result = GetScriptHandleBaseAddress(vehicle);
 		if (result)
 		{
 			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) &= 0xFEu;
@@ -105,14 +105,14 @@ namespace Memory
 		}
 	}
 
-	inline void OverrideVehicleHeadlightColor(int iIdx, bool bOverrideColor, int r, int g, int b)
+	inline void OverrideVehicleHeadlightColor(int idx, bool overrideColor, int r, int g, int b)
 	{
-		static DWORD64 *qword_7FF69E1E8E88        = nullptr;
+		static DWORD64 *qword_7FF69E1E8E88 = nullptr;
 
-		static const int c_iMaxColors             = 13;
-		static DWORD c_ulOrigColors[c_iMaxColors] = {};
+		static const int maxColors         = 13;
+		static DWORD origColors[maxColors] = {};
 
-		if (iIdx >= c_iMaxColors)
+		if (idx >= maxColors)
 		{
 			return;
 		}
@@ -131,22 +131,22 @@ namespace Memory
 			qword_7FF69E1E8E88 = handle.At(2).Into().Get<DWORD64>();
 		}
 
-		DWORD *pulColors = *reinterpret_cast<DWORD **>(*qword_7FF69E1E8E88 + 328);
+		auto colors = *reinterpret_cast<DWORD **>(*qword_7FF69E1E8E88 + 328);
 
-		if (!c_ulOrigColors[0])
+		if (!origColors[0])
 		{
 			// Orig colors not backed up yet, do it now
 
-			for (int i = 0; i < c_iMaxColors; i++)
+			for (int i = 0; i < maxColors; i++)
 			{
-				c_ulOrigColors[i] = pulColors[i * 4];
+				origColors[i] = colors[i * 4];
 			}
 		}
 
-		DWORD ulNewColor        = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
+		DWORD newColor      = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
 
-		pulColors[iIdx * 4]     = bOverrideColor ? ulNewColor : c_ulOrigColors[iIdx];
-		pulColors[iIdx * 4 + 1] = bOverrideColor ? ulNewColor : c_ulOrigColors[iIdx];
+		colors[idx * 4]     = overrideColor ? newColor : origColors[idx];
+		colors[idx * 4 + 1] = overrideColor ? newColor : origColors[idx];
 	}
 
 	inline bool IsVehicleBraking(Vehicle vehicle)
@@ -163,7 +163,7 @@ namespace Memory
 			return handle.At(4).Value<WORD>();
 		}();
 
-		__int64 result = GetScriptHandleBaseAddress(vehicle);
+		auto result = GetScriptHandleBaseAddress(vehicle);
 
 		return result ? *reinterpret_cast<float *>(result + brakeStateOffset) : false;
 	}
@@ -174,7 +174,7 @@ namespace Memory
 		               *reinterpret_cast<float *>(offset + 0x8));
 	}
 
-	inline void SetVector3(auto offset, Vector3 vec)
+	inline void SetVector3(auto offset, const Vector3 &vec)
 	{
 		*reinterpret_cast<float *>(offset)       = vec.x;
 		*reinterpret_cast<float *>(offset + 0x4) = vec.y;

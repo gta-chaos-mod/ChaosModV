@@ -4,12 +4,10 @@
 
 static void OnStartRPG()
 {
-	static const Hash rpgHash = "WEAPON_RPG"_hash;
-
 	for (Ped ped : GetAllPeds())
 	{
-		GIVE_WEAPON_TO_PED(ped, rpgHash, 9999, true, true);
-		SET_CURRENT_PED_WEAPON(ped, rpgHash, true);
+		GIVE_WEAPON_TO_PED(ped, "WEAPON_RPG"_hash, 9999, true, true);
+		SET_CURRENT_PED_WEAPON(ped, "WEAPON_RPG"_hash, true);
 	}
 }
 
@@ -18,19 +16,17 @@ REGISTER_EFFECT(OnStartRPG, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone An RPG",
 		.Id = "peds_giverpg",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
 
 static void OnStartTazer()
 {
-	static const Hash tazerHash = "WEAPON_STUNGUN"_hash;
-
 	for (Ped ped : GetAllPeds())
 	{
-		GIVE_WEAPON_TO_PED(ped, tazerHash, 9999, true, true);
-		SET_CURRENT_PED_WEAPON(ped, tazerHash, true);
+		GIVE_WEAPON_TO_PED(ped, "WEAPON_STUNGUN"_hash, 9999, true, true);
+		SET_CURRENT_PED_WEAPON(ped, "WEAPON_STUNGUN"_hash, true);
 	}
 }
 
@@ -39,19 +35,17 @@ REGISTER_EFFECT(OnStartTazer, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Stun Gun",
 		.Id = "peds_stungun",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
 
 static void OnStartMinigun()
 {
-	static const Hash minigunHash = "WEAPON_MINIGUN"_hash;
-
 	for (Ped ped : GetAllPeds())
 	{
-		GIVE_WEAPON_TO_PED(ped, minigunHash, 9999, true, true);
-		SET_CURRENT_PED_WEAPON(ped, minigunHash, true);
+		GIVE_WEAPON_TO_PED(ped, "WEAPON_MINIGUN"_hash, 9999, true, true);
+		SET_CURRENT_PED_WEAPON(ped, "WEAPON_MINIGUN"_hash, true);
 	}
 }
 
@@ -60,19 +54,17 @@ REGISTER_EFFECT(OnStartMinigun, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Minigun",
 		.Id = "peds_minigun",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
 
 static void OnStartUpNAtomizer()
 {
-	static const Hash raypistolHash = "WEAPON_RAYPISTOL"_hash;
-
 	for (Ped ped : GetAllPeds())
 	{
-		GIVE_WEAPON_TO_PED(ped, raypistolHash, 9999, true, true);
-		SET_CURRENT_PED_WEAPON(ped, raypistolHash, true);
+		GIVE_WEAPON_TO_PED(ped, "WEAPON_RAYPISTOL"_hash, 9999, true, true);
+		SET_CURRENT_PED_WEAPON(ped, "WEAPON_RAYPISTOL"_hash, true);
 	}
 }
 
@@ -81,18 +73,17 @@ REGISTER_EFFECT(OnStartUpNAtomizer, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
 		.Id = "peds_upnatomizer",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
 
 static void OnStartRandom()
 {
-	static const std::vector<Hash> &weps = Memory::GetAllWeapons();
-
+	const auto &weapons = Memory::GetAllWeapons();
 	for (Ped ped : GetAllPeds())
 	{
-		Hash wep = weps[g_Random.GetRandomInt(0, weps.size() - 1)];
+		Hash wep = weapons[g_Random.GetRandomInt(0, weapons.size() - 1)];
 
 		GIVE_WEAPON_TO_PED(ped, wep, 9999, true, true);
 		SET_CURRENT_PED_WEAPON(ped, wep, true);
@@ -104,7 +95,7 @@ REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Random Weapon",
 		.Id = "peds_randomwep",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
@@ -125,7 +116,7 @@ REGISTER_EFFECT(OnStartRailgun, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Railgun",
 		.Id = "peds_railgun",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );
 // clang-format on
@@ -146,6 +137,6 @@ REGISTER_EFFECT(OnStartBattleAxe, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give Everyone A Battle Axe",
 		.Id = "peds_battleaxe",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );

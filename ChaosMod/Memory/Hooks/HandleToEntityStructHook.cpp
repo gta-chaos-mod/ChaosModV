@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/Hook.h"
 
-static std::unordered_map<Entity, Entity> ms_dictVehicleMap;
+static std::unordered_map<Entity, Entity> ms_VehicleMap;
 
 __int64 (*_OG_HandleToEntityStruct)(Entity entity);
 __int64 _HK_HandleToEntityStruct(Entity entity)
@@ -12,9 +12,9 @@ __int64 _HK_HandleToEntityStruct(Entity entity)
 		return 0;
 	}
 	Entity vehToContinue = entity;
-	while (ms_dictVehicleMap.count(vehToContinue) > 0)
+	while (ms_VehicleMap.count(vehToContinue) > 0)
 	{
-		vehToContinue = ms_dictVehicleMap[vehToContinue];
+		vehToContinue = ms_VehicleMap[vehToContinue];
 		if (vehToContinue <= 0)
 		{
 			return 0;
@@ -42,18 +42,17 @@ namespace Hooks
 {
 	void ProxyEntityHandle(Entity origHandle, Entity newHandle)
 	{
-		ms_dictVehicleMap.emplace(origHandle, newHandle);
+		ms_VehicleMap.emplace(origHandle, newHandle);
 		// CleanUp
 		bool found = false;
 		do
 		{
 			found = false;
-			for (std::unordered_map<Entity, Entity>::iterator it = ms_dictVehicleMap.begin();
-			     it != ms_dictVehicleMap.end();)
+			for (std::unordered_map<Entity, Entity>::iterator it = ms_VehicleMap.begin(); it != ms_VehicleMap.end();)
 			{
 				if (!DOES_ENTITY_EXIST(it->second))
 				{
-					it    = ms_dictVehicleMap.erase(it);
+					it    = ms_VehicleMap.erase(it);
 					found = true;
 				}
 				else

@@ -74,6 +74,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Repossession",
 		.Id = "veh_repossession",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric,
+		.EffectGroupType = EffectGroupType::SpawnGeneric,
 	}
 );

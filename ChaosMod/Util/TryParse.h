@@ -6,7 +6,7 @@
 
 namespace Util
 {
-	template <typename T> inline bool TryParse(std::string_view szText, T &result, int iRadix = 10)
+	template <typename T> inline bool TryParse(std::string_view text, T &result, int radix = 10)
 	{
 		char *cEnd;
 
@@ -14,19 +14,19 @@ namespace Util
 
 		if constexpr (std::is_same<T, float>())
 		{
-			lParseResult = std::strtof(szText.data(), &cEnd);
+			lParseResult = std::strtof(text.data(), &cEnd);
 		}
 		else
 		{
-			lParseResult = std::strtol(szText.data(), &cEnd, iRadix);
+			lParseResult = std::strtol(text.data(), &cEnd, radix);
 		}
 
-		bool bParsed = *cEnd == '\0';
-		if (bParsed)
+		bool parsed = *cEnd == '\0';
+		if (parsed)
 		{
 			result = static_cast<T>(lParseResult);
 		}
 
-		return bParsed;
+		return parsed;
 	}
 }

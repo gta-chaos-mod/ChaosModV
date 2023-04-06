@@ -25,9 +25,9 @@ static auto _StopThreadImmediately(auto it)
 
 namespace EffectThreads
 {
-	LPVOID CreateThread(RegisteredEffect *pEffect, bool bIsTimed)
+	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed)
 	{
-		auto thread         = std::make_unique<EffectThread>(pEffect, bIsTimed);
+		auto thread         = std::make_unique<EffectThread>(effect, isTimed);
 		auto threadId       = thread->m_Thread;
 		m_Threads[threadId] = std::move(thread);
 
@@ -66,12 +66,12 @@ namespace EffectThreads
 		}
 	}
 
-	void PauseThisThread(DWORD ulTimeMs)
+	void PauseThisThread(DWORD timeMs)
 	{
 		auto fiber = GetCurrentFiber();
 		if (m_Threads.contains(fiber))
 		{
-			m_Threads.at(fiber)->m_PauseTimestamp = GetTickCount64() + ulTimeMs;
+			m_Threads.at(fiber)->m_PauseTimestamp = GetTickCount64() + timeMs;
 		}
 	}
 

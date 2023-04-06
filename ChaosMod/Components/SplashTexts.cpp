@@ -5,21 +5,21 @@
 
 void SplashTexts::OnModPauseCleanup()
 {
-	m_activeSplashes.clear();
+	m_ActiveSplashes.clear();
 }
 
 void SplashTexts::OnRun()
 {
-	float fFrameTime = GET_FRAME_TIME();
+	float frameTime = GET_FRAME_TIME();
 
-	for (std::list<SplashText>::iterator it = m_activeSplashes.begin(); it != m_activeSplashes.end();)
+	for (std::list<SplashText>::iterator it = m_ActiveSplashes.begin(); it != m_ActiveSplashes.end();)
 	{
-		DrawScreenText(it->m_szText, it->m_textPos, it->m_fScale, it->m_textColor, true);
-		it->m_fTime -= fFrameTime;
+		DrawScreenText(it->Text, it->TextPos, it->Scale, it->TextColor, true);
+		it->Time -= frameTime;
 
-		if (it->m_fTime <= 0)
+		if (it->Time <= 0)
 		{
-			it = m_activeSplashes.erase(it);
+			it = m_ActiveSplashes.erase(it);
 		}
 		else
 		{
@@ -28,10 +28,10 @@ void SplashTexts::OnRun()
 	}
 }
 
-void SplashTexts::ShowSplash(const std::string &szText, const ScreenTextVector &textPos, float fScale,
-                             ScreenTextColor textColor, float fTime = SPLASH_TEXT_DUR_SECS)
+void SplashTexts::ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale,
+                             ScreenTextColor textColor, float time = SPLASH_TEXT_DUR_SECS)
 {
-	m_activeSplashes.emplace_back(szText, textPos, fScale, textColor, fTime);
+	m_ActiveSplashes.emplace_back(text, textPos, scale, textColor, time);
 }
 
 void SplashTexts::ShowInitSplash()

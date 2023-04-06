@@ -4,20 +4,20 @@
 
 // Work around crash related to SET_PED_SHOOTS_AT_COORD
 // Thanks to Rainbomizer!
-void (*OG_crSkeleton_GetGlobalMtx)(__int64 skeleton, unsigned int ulId, void *matrix);
-void HK_crSkeleton_GetGlobalMtx(__int64 skeleton, unsigned int ulId, void *matrix)
+void (*OG_crSkeleton_GetGlobalMtx)(__int64, unsigned int, void *);
+void HK_crSkeleton_GetGlobalMtx(__int64 skeleton, unsigned int id, void *matrix)
 {
 	if (!skeleton)
 	{
 		return;
 	}
 
-	if (ulId == -1)
+	if (id == -1)
 	{
-		ulId = 0;
+		id = 0;
 	}
 
-	OG_crSkeleton_GetGlobalMtx(skeleton, ulId, matrix);
+	OG_crSkeleton_GetGlobalMtx(skeleton, id, matrix);
 }
 
 static bool OnHook()

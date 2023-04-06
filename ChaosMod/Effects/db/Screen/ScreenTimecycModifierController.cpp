@@ -25,7 +25,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, EffectInfo
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -65,7 +65,7 @@ REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, EffectInfo
 		.Id = "screen_bright",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -82,7 +82,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickFog, EffectInfo
 		.Id = "screen_fog",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -99,7 +99,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, EffectInfo
 		.Id = "screen_lowrenderdist",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -187,7 +187,7 @@ REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, EffectInfo
 		.Name = "LSD",
 		.Id = "screen_lsd",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -208,7 +208,7 @@ REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -227,7 +227,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, EffectInfo
 		.Id = "screen_bubblevision",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -295,7 +295,7 @@ REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -312,7 +312,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
 		.Id = "screen_needglasses",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -329,7 +329,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
 		.Id = "timecycle_fuzzy",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );
 // clang-format on
@@ -353,6 +353,6 @@ REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, EffectInfo
 		.Id = "timecycle_darkworld",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Timecycle
+		.EffectCategory = EffectCategory::Timecycle
 	}
 );

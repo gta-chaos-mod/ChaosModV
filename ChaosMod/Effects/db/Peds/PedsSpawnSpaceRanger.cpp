@@ -16,6 +16,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Space Ranger",
         .Id = "peds_spawn_space_ranger",
-        .EffectGroupType = EEffectGroupType::SpawnEnemy
+        .EffectGroupType = EffectGroupType::SpawnEnemy
     }
 );

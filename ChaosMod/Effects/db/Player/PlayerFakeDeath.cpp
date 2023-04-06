@@ -4,16 +4,16 @@
 
 #include <stdafx.h>
 
-#include "Memory/Hooks/ScriptThreadRunHook.h"
 #include "Components/EffectDispatcher.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
 
-static const char *ms_rgTextPairs[] = { "Just kidding, keep playing",
-	                                    "lol u suck",
-	                                    "Did you really fall for that?",
-	                                    "~g~(No you're fine)",
-	                                    "Did this scare you?",
-	                                    "~r~FISSION MAILED",
-	                                    "ded" };
+static const char *ms_TextPairs[] = { "Just kidding, keep playing",
+	                                  "lol u suck",
+	                                  "Did you really fall for that?",
+	                                  "~g~(No you're fine)",
+	                                  "Did this scare you?",
+	                                  "~r~FISSION MAILED",
+	                                  "ded" };
 
 enum FakeDeathState
 {
@@ -37,12 +37,12 @@ static void OnStart()
 {
 	bool cancelledDeathAnim = false;
 
-	scaleForm    = 0;
-	currentMode  = FakeDeathState::start;
-	lastModeTime = 0;
-	nextModeTime = 0;
-	isOnMission  = GET_MISSION_FLAG();
-	soundId      = GET_SOUND_ID();
+	scaleForm               = 0;
+	currentMode             = FakeDeathState::start;
+	lastModeTime            = 0;
+	nextModeTime            = 0;
+	isOnMission             = GET_MISSION_FLAG();
+	soundId                 = GET_SOUND_ID();
 
 	REQUEST_SCRIPT_AUDIO_BANK("OFFMISSION_WASTED", false, -1);
 
@@ -156,7 +156,8 @@ static void OnStart()
 							Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
 							Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, false);
 							if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x,
-							                                plrCoords.y, plrCoords.z, true) < 2.5f)
+							                                plrCoords.y, plrCoords.z, true)
+							    < 2.5f)
 							{
 								ADD_EXPLOSION(vehCoords.x, vehCoords.y, vehCoords.z, 7, 999, true, false, 1, true);
 							}
@@ -181,7 +182,7 @@ static void OnStart()
 			if (cancelledDeathAnim)
 			{
 				nextModeTime = 4000;
-				currentMode = FakeDeathState::overlay;
+				currentMode  = FakeDeathState::overlay;
 			}
 
 			break;
@@ -231,9 +232,9 @@ static void OnStart()
 			BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SHOW_SHARD_WASTED_MP_MESSAGE");
 
 			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(isOnMission ? "~r~mission failed" : "~r~wasted");
-			int iChosenIndex = g_Random.GetRandomInt(0, sizeof(ms_rgTextPairs) / sizeof(ms_rgTextPairs[0]) - 1);
+			int chosenIndex = g_Random.GetRandomInt(0, sizeof(ms_TextPairs) / sizeof(ms_TextPairs[0]) - 1);
 			SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(isOnMission ? playerDeathName
-			                                                                : ms_rgTextPairs[iChosenIndex]);
+			                                                                : ms_TextPairs[chosenIndex]);
 
 			END_SCALEFORM_MOVIE_METHOD();
 			PLAY_SOUND_FRONTEND(soundId, "TextHit", "WastedSounds", true);

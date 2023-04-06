@@ -33,6 +33,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Orange Ball",
         .Id = "misc_spawn_orange_ball",
-        .EffectGroupType = EEffectGroupType::SpawnGeneric
+        .EffectGroupType = EffectGroupType::SpawnGeneric
     }
 );

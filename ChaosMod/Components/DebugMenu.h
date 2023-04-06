@@ -12,24 +12,24 @@ class DebugMenu : public Component
   private:
 	struct DebugEffect
 	{
-		DebugEffect(const EffectIdentifier &effectIdentifier, const std::string &szEffectName)
-		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szEffectName)
+		EffectIdentifier Identifier;
+		std::string EffectName;
+
+		DebugEffect(const EffectIdentifier &effectIdentifier, const std::string &effectName)
+		    : Identifier(effectIdentifier), EffectName(effectName)
 		{
 		}
-
-		EffectIdentifier m_EffectIdentifier;
-		std::string m_szEffectName;
 	};
 
-	std::vector<DebugEffect> m_rgEffects;
+	std::vector<DebugEffect> m_Effects;
 
-	bool m_bIsEnabled;
+	bool m_IsEnabled;
 
-	int m_iSelectedIdx     = 0;
-	bool m_bVisible        = false;
+	int m_SelectedIdx     = 0;
+	bool m_Visible        = false;
 
-	DWORD m_ulRepeatTime   = 0;
-	bool m_bDispatchEffect = false;
+	DWORD m_RepeatTime    = 0;
+	bool m_DispatchEffect = false;
 
   protected:
 	DebugMenu();
@@ -41,7 +41,7 @@ class DebugMenu : public Component
 
 	bool IsEnabled() const;
 
-	void SetVisible(bool bState);
+	void SetVisible(bool state);
 	bool IsVisible() const;
 
 	template <class T>

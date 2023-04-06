@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-enum class EEffectGroupType
+enum class EffectGroupType
 {
 	None,
 	Teleport,          // Effects which teleport the player potentially far away without (explicitly) being helpful
@@ -40,18 +40,18 @@ inline std::unordered_map<std::string, EffectGroupData> g_EffectGroups {
 	{ "_group_wantedlevel", { .WeightMult = 2 } },
 };
 
-inline const std::unordered_map<EEffectGroupType, std::string> g_EffectTypeToGroup {
-	{ EEffectGroupType::Teleport, "_group_teleport" },
-	{ EEffectGroupType::SpawnGeneric, "_group_spawngeneric" },
-	{ EEffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial" },
-	{ EEffectGroupType::SpawnEnemy, "_group_spawnenemy" },
-	{ EEffectGroupType::SpawnCompanion, "_group_spawncompanion" },
-	{ EEffectGroupType::Weapons, "_group_weapons" },
-	{ EEffectGroupType::PlayerKill, "_group_playerkill" },
-	{ EEffectGroupType::TrafficSpawner, "_group_trafficspawner" },
-	{ EEffectGroupType::TrafficColor, "_group_trafficcolor" },
-	{ EEffectGroupType::TimeChange, "_group_timechange" },
-	{ EEffectGroupType::WeatherChange, "_group_weatherchange" },
-	{ EEffectGroupType::Shader, "_group_shader" },
-	{ EEffectGroupType::WantedLevel, "_group_wantedlevel" },
+inline const std::unordered_map<EffectGroupType, std::string> g_EffectTypeToGroup {
+	{ EffectGroupType::Teleport, "_group_teleport" },
+	{ EffectGroupType::SpawnGeneric, "_group_spawngeneric" },
+	{ EffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial" },
+	{ EffectGroupType::SpawnEnemy, "_group_spawnenemy" },
+	{ EffectGroupType::SpawnCompanion, "_group_spawncompanion" },
+	{ EffectGroupType::Weapons, "_group_weapons" },
+	{ EffectGroupType::PlayerKill, "_group_playerkill" },
+	{ EffectGroupType::TrafficSpawner, "_group_trafficspawner" },
+	{ EffectGroupType::TrafficColor, "_group_trafficcolor" },
+	{ EffectGroupType::TimeChange, "_group_timechange" },
+	{ EffectGroupType::WeatherChange, "_group_weatherchange" },
+	{ EffectGroupType::Shader, "_group_shader" },
+	{ EffectGroupType::WantedLevel, "_group_wantedlevel" },
 };

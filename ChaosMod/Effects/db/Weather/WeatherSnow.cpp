@@ -22,6 +22,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Snow",
 		.Id = "world_snow",
 		.IsTimed = true,
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );

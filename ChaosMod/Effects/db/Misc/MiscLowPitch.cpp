@@ -4,11 +4,11 @@
 
 // Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
-static int ms_fTargetPitch;
+static int ms_TargetPitch;
 
 static void OnStart()
 {
-	ms_fTargetPitch = g_Random.GetRandomInt(-900, -300);
+	ms_TargetPitch = g_Random.GetRandomInt(-900, -300);
 }
 
 static void OnStop()
@@ -18,7 +18,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(ms_fTargetPitch);
+	Hooks::SetAudioPitch(ms_TargetPitch);
 }
 
 // clang-format off
@@ -27,6 +27,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectCategory = EffectCategory::Pitch
 	}
 );

@@ -21,6 +21,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Id = "player_afk",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Camera
+		.EffectCategory = EffectCategory::Camera
 	}
 );

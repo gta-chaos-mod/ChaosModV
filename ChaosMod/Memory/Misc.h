@@ -13,11 +13,11 @@ using Hash    = unsigned long;
 
 namespace Memory
 {
-	inline void SetSkyDisabled(bool bState)
+	inline void SetSkyDisabled(bool state)
 	{
-		static BYTE *c_pucPatchByte = nullptr;
+		static BYTE *patchByte = nullptr;
 
-		if (!c_pucPatchByte)
+		if (!patchByte)
 		{
 			Handle handle = FindPattern("E8 ? ? ? ? C6 05 ? ? ? ? ? 48 83 C4 58");
 			if (!handle.IsValid())
@@ -25,9 +25,9 @@ namespace Memory
 				return;
 			}
 
-			c_pucPatchByte = handle.Into().Get<BYTE>();
+			patchByte = handle.Into().Get<BYTE>();
 		}
 
-		Write<BYTE>(c_pucPatchByte, bState ? 0xC3 : 0x48);
+		Write<BYTE>(patchByte, state ? 0xC3 : 0x48);
 	}
 }

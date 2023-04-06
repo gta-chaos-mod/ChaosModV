@@ -1,10 +1,10 @@
 #include <stdafx.h>
 
-static Vehicle m_savedPlayerVeh;
+static Vehicle ms_SavedPlayerVeh;
 
 static void OnStart()
 {
-	m_savedPlayerVeh = 0;
+	ms_SavedPlayerVeh = 0;
 }
 
 static void OnStop()
@@ -26,7 +26,7 @@ static void OnTick()
 
 	if (isPlayerInAnyVeh)
 	{
-		m_savedPlayerVeh = playerVeh;
+		ms_SavedPlayerVeh = playerVeh;
 	}
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
@@ -47,17 +47,17 @@ static void OnTick()
 				Vehicle pedVeh            = GET_VEHICLE_PED_IS_IN(ped, false);
 				Vehicle pedTargetVeh      = GET_VEHICLE_PED_IS_ENTERING(ped);
 
-				if (isPlayerInAnyVeh && (!isPedInAnyVeh || pedVeh != m_savedPlayerVeh)
-				    && (!isPedGettingInAnyVeh || pedTargetVeh != m_savedPlayerVeh))
+				if (isPlayerInAnyVeh && (!isPedInAnyVeh || pedVeh != ms_SavedPlayerVeh)
+				    && (!isPedGettingInAnyVeh || pedTargetVeh != ms_SavedPlayerVeh))
 				{
-					TASK_ENTER_VEHICLE(ped, m_savedPlayerVeh, -1, -2, 2.f, 1, 0);
+					TASK_ENTER_VEHICLE(ped, ms_SavedPlayerVeh, -1, -2, 2.f, 1, 0);
 				}
-				else if ((isPedInAnyVeh && pedVeh == m_savedPlayerVeh)
-				         || (isPedGettingInAnyVeh && pedTargetVeh == m_savedPlayerVeh))
+				else if ((isPedInAnyVeh && pedVeh == ms_SavedPlayerVeh)
+				         || (isPedGettingInAnyVeh && pedTargetVeh == ms_SavedPlayerVeh))
 				{
-					if (GET_PED_IN_VEHICLE_SEAT(m_savedPlayerVeh, -1, 0) == ped)
+					if (GET_PED_IN_VEHICLE_SEAT(ms_SavedPlayerVeh, -1, 0) == ped)
 					{
-						TASK_VEHICLE_DRIVE_WANDER(ped, m_savedPlayerVeh, 9999.f, 10);
+						TASK_VEHICLE_DRIVE_WANDER(ped, ms_SavedPlayerVeh, 9999.f, 10);
 					}
 				}
 				else

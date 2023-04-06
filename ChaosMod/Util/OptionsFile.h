@@ -10,56 +10,56 @@
 class OptionsFile
 {
   private:
-	const char *m_szFileName;
-	std::unordered_map<std::string, std::string> m_dictOptions;
+	const char *m_FileName;
+	std::unordered_map<std::string, std::string> m_Options;
 
   public:
-	OptionsFile(const char *szFileName) : m_szFileName(szFileName)
+	OptionsFile(const char *fileName) : m_FileName(fileName)
 	{
 		Reset();
 	}
 
 	void Reset()
 	{
-		m_dictOptions.clear();
+		m_Options.clear();
 
-		bool bExists = true;
+		bool exists = true;
 
-		std::ifstream file(m_szFileName);
+		std::ifstream file(m_FileName);
 		if (file.fail())
 		{
-			LOG("Config file " << m_szFileName << " not found!");
+			LOG("Config file " << m_FileName << " not found!");
 
 			return;
 		}
 
-		char cBuffer[256];
-		while (file.getline(cBuffer, 256))
+		char buffer[256];
+		while (file.getline(buffer, 256))
 		{
-			std::string szLine(cBuffer);
-			std::string szKey = szLine.substr(0, szLine.find("="));
+			std::string line(buffer);
+			const auto &key = line.substr(0, line.find("="));
 
 			// Ignore line if there's no "="
-			if (szLine == szKey)
+			if (line == key)
 			{
 				continue;
 			}
 
-			std::string szValue =
-			    szLine.substr(szLine.find("=") + 1).substr(0, szLine.find('\n')); // Also do trimming of newline
+			const auto &value =
+			    line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
 
-			m_dictOptions.emplace(szKey, szValue);
+			m_Options.emplace(key, value);
 		}
 	}
 
-	template <typename T> inline T ReadValue(const std::string &szKey, T defaultValue) const
+	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
 	{
-		const auto &szValue = ReadValueString(szKey);
+		const auto &value = ReadValueString(key);
 
-		if (!szValue.empty())
+		if (!value.empty())
 		{
 			T result;
-			if (Util::TryParse<T>(szValue, result))
+			if (Util::TryParse<T>(value, result))
 			{
 				return result;
 			}
@@ -68,17 +68,17 @@ class OptionsFile
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::string &szKey, const std::string &szDefaultValue = {}) const
+	inline std::string ReadValueString(const std::string &key, const std::string &defaultValue = {}) const
 	{
-		const auto &result = m_dictOptions.find(szKey);
+		const auto &result = m_Options.find(key);
 
-		if (result != m_dictOptions.end())
+		if (result != m_Options.end())
 		{
 			return result->second;
 		}
 		else
 		{
-			return szDefaultValue;
+			return defaultValue;
 		}
 	}
 };

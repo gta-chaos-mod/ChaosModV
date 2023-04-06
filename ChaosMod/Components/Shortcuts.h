@@ -12,10 +12,10 @@ using DWORD = unsigned long;
 class Shortcuts : public Component
 {
   private:
-	std::unordered_map<int, std::vector<EffectIdentifier>> m_ugAvailableShortcuts;
+	std::unordered_map<int, std::vector<EffectIdentifier>> m_AvailableShortcuts;
 
-	std::queue<EffectIdentifier> m_effectQueue;
-	std::mutex m_effectQueueMtx;
+	std::queue<EffectIdentifier> m_EffectQueue;
+	std::mutex m_EffectQueueMtx;
 
   protected:
 	Shortcuts();

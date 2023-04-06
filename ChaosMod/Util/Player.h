@@ -2,37 +2,30 @@
 
 #include "Natives.h"
 
-inline void TeleportPlayer(float fPosX, float fPosY, float fPosZ, bool bNoOffset = false)
+inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 {
-	Ped playerPed      = PLAYER_PED_ID();
-
+	auto playerPed     = PLAYER_PED_ID();
 	bool isInVeh       = IS_PED_IN_ANY_VEHICLE(playerPed, false);
-
 	bool isInFlyingVeh = IS_PED_IN_FLYING_VEHICLE(playerPed);
-
-	Vehicle playerVeh  = GET_VEHICLE_PED_IS_IN(playerPed, false);
-
-	Vector3 vel        = GET_ENTITY_VELOCITY(isInVeh ? playerVeh : playerPed);
-
+	auto playerVeh     = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	auto vel           = GET_ENTITY_VELOCITY(isInVeh ? playerVeh : playerPed);
 	float heading      = GET_ENTITY_HEADING(isInVeh ? playerVeh : playerPed);
-
 	float groundHeight = GET_ENTITY_HEIGHT_ABOVE_GROUND(playerVeh);
-
 	float forwardSpeed;
 	if (isInVeh)
 	{
 		forwardSpeed = GET_ENTITY_SPEED(playerVeh);
 	}
 
-	if (bNoOffset)
+	if (noOffset)
 	{
-		SET_ENTITY_COORDS_NO_OFFSET(isInVeh ? playerVeh : playerPed, fPosX, fPosY,
-		                            isInFlyingVeh ? fPosZ + groundHeight : fPosZ, false, false, false);
+		SET_ENTITY_COORDS_NO_OFFSET(isInVeh ? playerVeh : playerPed, x, y, isInFlyingVeh ? z + groundHeight : z, false,
+		                            false, false);
 	}
 	else
 	{
-		SET_ENTITY_COORDS(isInVeh ? playerVeh : playerPed, fPosX, fPosY, isInFlyingVeh ? fPosZ + groundHeight : fPosZ,
-		                  false, false, false, false);
+		SET_ENTITY_COORDS(isInVeh ? playerVeh : playerPed, x, y, isInFlyingVeh ? z + groundHeight : z, false, false,
+		                  false, false);
 	}
 
 	SET_ENTITY_HEADING(isInVeh ? playerVeh : playerPed, heading);
@@ -44,7 +37,7 @@ inline void TeleportPlayer(float fPosX, float fPosY, float fPosZ, bool bNoOffset
 	}
 }
 
-inline void TeleportPlayer(const Vector3 &coords, bool bNoOffset = false)
+inline void TeleportPlayer(const Vector3 &coords, bool noOffset = false)
 {
-	TeleportPlayer(coords.x, coords.y, coords.z, bNoOffset);
+	TeleportPlayer(coords.x, coords.y, coords.z, noOffset);
 }

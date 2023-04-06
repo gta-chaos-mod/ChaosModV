@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-enum class EOverrideShaderType
+enum class OverrideShaderType
 {
 	LensDistortion,
 	Snow
@@ -10,7 +10,7 @@ enum class EOverrideShaderType
 
 namespace Hooks
 {
-	void OverrideShader(EOverrideShaderType shaderType, std::string_view szShaderSrc);
+	void OverrideShader(OverrideShaderType shaderType, std::string_view shaderSrc);
 	void ResetShader();
 	void OnPresentCallback();
 }

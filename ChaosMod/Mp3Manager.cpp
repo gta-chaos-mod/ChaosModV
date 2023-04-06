@@ -54,23 +54,23 @@ namespace Mp3Manager
 			}
 		}
 
-		const auto &rgCachedSoundFiles = ms_EffectSoundFilesCache[soundFileName];
+		const auto &cachedSoundFiles = ms_EffectSoundFilesCache[soundFileName];
 
-		if (rgCachedSoundFiles.empty())
+		if (cachedSoundFiles.empty())
 		{
 			// Nothing found :(
 			return;
 		}
 
-		auto size          = rgCachedSoundFiles.size();
-		auto szChosenSound = size > 1 ? rgCachedSoundFiles[g_Random.GetRandomInt(0, size - 1)] : rgCachedSoundFiles[0];
+		auto size        = cachedSoundFiles.size();
+		auto chosenSound = size > 1 ? cachedSoundFiles[g_Random.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
 
 		int error;
 		{
-			std::ostringstream ossTmp;
+			std::ostringstream tmp;
 			std::string tmpStr;
-			ossTmp << "open \"" << szChosenSound << "\" type mpegvideo";
-			tmpStr               = ossTmp.str();
+			tmp << "open \"" << chosenSound << "\" type mpegvideo";
+			tmpStr               = tmp.str();
 			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
 			error                = mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		}
@@ -80,7 +80,7 @@ namespace Mp3Manager
 			std::string tmpStr;
 			if (!error || error == MCIERR_DEVICE_OPEN)
 			{
-				ossTmp << "play \"" << szChosenSound << "\" from 0";
+				ossTmp << "play \"" << chosenSound << "\" from 0";
 				tmpStr               = ossTmp.str();
 				std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
 				mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
@@ -90,12 +90,12 @@ namespace Mp3Manager
 
 	void ResetCache()
 	{
-		for (const auto &[szEffectName, rgSoundFileNames] : ms_EffectSoundFilesCache)
+		for (const auto &[effectName, soundFileNames] : ms_EffectSoundFilesCache)
 		{
-			for (const auto &szSoundFilePath : rgSoundFileNames)
+			for (const auto &soundFilePath : soundFileNames)
 			{
 				std::ostringstream oss;
-				oss << "close \"" << szSoundFilePath << "\"";
+				oss << "close \"" << soundFilePath << "\"";
 				mciSendString(reinterpret_cast<LPCWSTR>(oss.str().c_str()), NULL, 0, NULL);
 			}
 		}

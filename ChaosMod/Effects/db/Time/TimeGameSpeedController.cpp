@@ -30,7 +30,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickX02, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { "time_x05", "player_dead_eye", "time_superhot" },
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectCategory = EffectCategory::Pitch
 	}
 );
 // clang-format on
@@ -53,6 +53,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickX05, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { "time_x02", "player_dead_eye", "time_superhot" },
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectCategory = EffectCategory::Pitch
 	}
 );

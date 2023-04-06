@@ -8,12 +8,12 @@
 
 static void OnStop()
 {
-	MetaModifiers::m_fEffectDurationModifier = 1;
+	MetaModifiers::m_EffectDurationModifier = 1;
 }
 
 static void OnTick_0_5x()
 {
-	MetaModifiers::m_fEffectDurationModifier = 0.5;
+	MetaModifiers::m_EffectDurationModifier = 0.5;
 }
 
 // clang-format off
@@ -23,14 +23,14 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 		.Id = "meta_effect_duration_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_effect_duration_2x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );
 // clang-format on
 
 static void OnTick_2x()
 {
-	MetaModifiers::m_fEffectDurationModifier = 2;
+	MetaModifiers::m_EffectDurationModifier = 2;
 }
 
 // clang-format off
@@ -40,6 +40,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 		.Id = "meta_effect_duration_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_effect_duration_0_5x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

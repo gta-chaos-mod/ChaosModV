@@ -6,26 +6,26 @@
 
 Shortcuts::Shortcuts() : Component()
 {
-	for (const auto &[effectId, effectData] : g_dictEnabledEffects)
+	for (const auto &[effectId, effectData] : g_EnabledEffects)
 	{
 		if (effectData.ShortcutKeycode > 0 && !effectData.IsHidden())
 		{
-			m_ugAvailableShortcuts[effectData.ShortcutKeycode].push_back(effectId);
+			m_AvailableShortcuts[effectData.ShortcutKeycode].push_back(effectId);
 		}
 	}
 }
 
 void Shortcuts::OnRun()
 {
-	if (!m_effectQueue.empty())
+	if (!m_EffectQueue.empty())
 	{
-		std::lock_guard lock(m_effectQueueMtx);
-		while (!m_effectQueue.empty())
+		std::lock_guard lock(m_EffectQueueMtx);
+		while (!m_EffectQueue.empty())
 		{
-			auto &identifier = m_effectQueue.front();
+			auto &identifier = m_EffectQueue.front();
 			GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
 
-			m_effectQueue.pop();
+			m_EffectQueue.pop();
 		}
 	}
 }
@@ -37,12 +37,12 @@ void Shortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
 		return;
 	}
 
-	if (m_ugAvailableShortcuts.contains(key))
+	if (m_AvailableShortcuts.contains(key))
 	{
-		std::lock_guard lock(m_effectQueueMtx);
-		for (auto &effectId : m_ugAvailableShortcuts.at(key))
+		std::lock_guard lock(m_EffectQueueMtx);
+		for (auto &effectId : m_AvailableShortcuts.at(key))
 		{
-			m_effectQueue.push(effectId);
+			m_EffectQueue.push(effectId);
 		}
 	}
 }

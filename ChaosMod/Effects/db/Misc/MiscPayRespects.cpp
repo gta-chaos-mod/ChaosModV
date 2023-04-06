@@ -9,12 +9,12 @@
 
 #define WAIT_TIME 10000 // ms
 
-static int m_overlay              = 0;
-static const int maxPressInterval = 1000;
-static int lastPressTick          = 0;
+static int ms_Overlay                = 0;
+static const int ms_MaxPressInterval = 1000;
+static int ms_LastPressTick          = 0;
 
-static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick = 0;
+static DWORD64 ms_TimeReserve;
+static DWORD64 ms_LastTick = 0;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -29,53 +29,53 @@ static void OnTick()
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false))
 	{
 		DWORD64 currentTick = GET_GAME_TIMER();
-		DWORD64 tickDelta   = currentTick - m_lastTick;
+		DWORD64 tickDelta   = currentTick - ms_LastTick;
 		int overlaycolor    = 0;
 
 		if (IS_CONTROL_JUST_PRESSED(0, 23))
 		{
-			lastPressTick = currentTick;
+			ms_LastPressTick = currentTick;
 		}
 
-		if (lastPressTick < currentTick - maxPressInterval)
+		if (ms_LastPressTick < currentTick - ms_MaxPressInterval)
 		{
 			overlaycolor = 75;
-			if (m_timeReserve < tickDelta)
+			if (ms_TimeReserve < tickDelta)
 			{
 				ADD_EXPLOSION(pos.x, pos.y, pos.z, 5, 100, true, false, true, false);
-				m_timeReserve = WAIT_TIME;
+				ms_TimeReserve = WAIT_TIME;
 				return;
 			}
 
-			if (Beepable(m_timeReserve - tickDelta) && !Beepable(m_timeReserve))
+			if (Beepable(ms_TimeReserve - tickDelta) && !Beepable(ms_TimeReserve))
 			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
 			}
 
-			m_timeReserve -= tickDelta;
+			ms_TimeReserve -= tickDelta;
 		}
 		else
 		{
 			overlaycolor = 25;
-			m_timeReserve += tickDelta / 2; // slows down regaining time
-			if (m_timeReserve > WAIT_TIME)
+			ms_TimeReserve += tickDelta / 2; // slows down regaining time
+			if (ms_TimeReserve > WAIT_TIME)
 			{
-				m_timeReserve = WAIT_TIME;
+				ms_TimeReserve = WAIT_TIME;
 			}
 		}
 
-		m_lastTick = currentTick;
+		ms_LastTick = currentTick;
 
-		BEGIN_SCALEFORM_MOVIE_METHOD(m_overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
+		BEGIN_SCALEFORM_MOVIE_METHOD(ms_Overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("PAY RESPECTS");
 		char charBuf[64];
-		if (m_timeReserve != WAIT_TIME && lastPressTick < currentTick - maxPressInterval)
+		if (ms_TimeReserve != WAIT_TIME && ms_LastPressTick < currentTick - ms_MaxPressInterval)
 		{
-			sprintf_s(charBuf, "Press F\nFailure In: %.1fs", float(m_timeReserve) / 1000);
+			sprintf_s(charBuf, "Press F\nFailure In: %.1fs", float(ms_TimeReserve) / 1000);
 		}
-		else if (m_timeReserve != WAIT_TIME && lastPressTick >= currentTick - maxPressInterval)
+		else if (ms_TimeReserve != WAIT_TIME && ms_LastPressTick >= currentTick - ms_MaxPressInterval)
 		{
-			sprintf_s(charBuf, "Press F\nFailure In: %.1fs (Recovering)", float(m_timeReserve) / 1000);
+			sprintf_s(charBuf, "Press F\nFailure In: %.1fs (Recovering)", float(ms_TimeReserve) / 1000);
 		}
 		else
 		{
@@ -84,19 +84,19 @@ static void OnTick()
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(overlaycolor);
 		END_SCALEFORM_MOVIE_METHOD();
-		DRAW_SCALEFORM_MOVIE_FULLSCREEN(m_overlay, 255, 255, 255, 255, 0);
+		DRAW_SCALEFORM_MOVIE_FULLSCREEN(ms_Overlay, 255, 255, 255, 255, 0);
 	}
 }
 
 static void OnStart()
 {
-	m_overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
-	while (!HAS_SCALEFORM_MOVIE_LOADED(m_overlay))
+	ms_Overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
+	while (!HAS_SCALEFORM_MOVIE_LOADED(ms_Overlay))
 	{
 		WAIT(0);
 	}
-	m_lastTick    = GET_GAME_TIMER();
-	m_timeReserve = WAIT_TIME;
+	ms_LastTick    = GET_GAME_TIMER();
+	ms_TimeReserve = WAIT_TIME;
 }
 
 // clang-format off

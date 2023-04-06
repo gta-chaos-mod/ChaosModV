@@ -18,6 +18,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Weird Pitch",
 		.Id = "misc_weirdpitch",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Pitch
+		.EffectCategory = EffectCategory::Pitch
 	}
 );

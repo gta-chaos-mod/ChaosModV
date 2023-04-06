@@ -47,7 +47,7 @@ static void OnStart()
 
 static void OnTick()
 {
-	MetaModifiers::m_bFlipChaosUI = true;
+	MetaModifiers::m_FlipChaosUI = true;
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -69,7 +69,7 @@ static void OnTick()
 
 static void OnStop()
 {
-	MetaModifiers::m_bFlipChaosUI = false;
+	MetaModifiers::m_FlipChaosUI = false;
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{

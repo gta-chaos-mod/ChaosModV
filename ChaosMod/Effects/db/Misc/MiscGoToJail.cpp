@@ -29,6 +29,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric,
+		.EffectGroupType = EffectGroupType::SpawnGeneric,
 	}
 );
