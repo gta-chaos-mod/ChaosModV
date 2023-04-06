@@ -61,13 +61,16 @@
 #define LUA_LOG(text)                                   \
 	do                                                  \
 	{                                                   \
+		std::lock_guard lock(ms_PrintMutex);            \
 		LuaPrint((std::ostringstream() << text).str()); \
-	} while (0);
+	} while (0)
+static std::mutex ms_PrintMutex;
 #define LUA_SCRIPT_LOG(scriptName, text)                            \
 	do                                                              \
 	{                                                               \
+		std::lock_guard lock(ms_PrintMutex);                        \
 		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
-	} while (0);
+	} while (0)
 
 static const std::vector<const char *> ms_rgScriptDirs { "chaosmod\\scripts", "chaosmod\\workshop",
 	                                                     "chaosmod\\custom_scripts" };
@@ -356,10 +359,22 @@ static void RemoveScriptEntry(const std::string &effectId)
 
 enum ParseScriptFlags
 {
+	ParseScript_None,
 	// Immediately dispatch effect (if script registers one) and remove it OnStop
-	ParseScript_IsTemporary = (1 << 0),
+	// Assumes this is only being called from the main thread!
+	ParseScript_IsTemporary   = (1 << 0),
+	// Whether this is called from an alien thread, aborts and returns ParseScriptReturnReason::Error_ThreadUnsafe if
+	// thread-unsafe function was called
+	ParseScript_IsAlienThread = (1 << 1),
 };
-static void ParseScriptRaw(std::string scriptName, std::string_view script, ParseScriptFlags flags = {})
+enum class ParseScriptReturnReason
+{
+	Success,
+	Error,
+	Error_ThreadUnsafe
+};
+static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
+                                              ParseScriptFlags flags = ParseScript_None)
 {
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
@@ -389,30 +404,24 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		};
 	};
 
+	auto metaModifiersTable = lua.create_named_table("MetaModifiers");
 #define P(x) sol::property(getMetaModFactory(x), setMetaModFactory(x))
-
-	auto metaModifiersTable     = lua.create_named_table("MetaModifiers");
 	auto metaModifiersMetaTable = lua.create_table_with(
 	    "EffectDurationModifier", P(MetaModifiers::m_fEffectDurationModifier), "TimerSpeedModifier",
 	    P(MetaModifiers::m_fTimerSpeedModifier), "AdditionalEffectsToDispatch",
 	    P(MetaModifiers::m_ucAdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_bHideChaosUI),
 	    "DisableChaos", P(MetaModifiers::m_bDisableChaos), "FlipChaosUI", P(MetaModifiers::m_bFlipChaosUI));
+#undef P
 	metaModifiersMetaTable[sol::meta_function::new_index] = [] {
 	};
 	metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
 	metaModifiersTable[sol::metatable_key]            = metaModifiersMetaTable;
-
-#undef P
 
 	if (!ms_NativesDefCache.empty())
 	{
 		lua.unsafe_script(ms_NativesDefCache);
 	}
 
-	lua["print"] = [scriptName](const std::string &szText)
-	{
-		LuaPrint(scriptName, szText);
-	};
 	lua["GetTickCount"] = GetTickCount64;
 	lua["GET_HASH_KEY"] = GET_HASH_KEY;
 
@@ -424,111 +433,163 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::m_fX, "y", &LuaVector3::m_fY, "z", &LuaVector3::m_fZ);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
-	lua["_invoke"] = [scriptName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
-	                              const sol::variadic_args &args)
+#define E(x, y)                 \
+	{                           \
+		x, [=](sol::state &lua) \
+		{                       \
+			lua[x] = y;         \
+		}                       \
+	}
+	struct ExposableFunc
 	{
-		return LuaInvoke(scriptName, lua, ullHash, eReturnType, args);
-	};
+		const char *Name;
+		const std::function<void(sol::state &)> ExposeFunc;
 
-	// Use scriptWait (which pauses the entire mod) for the script parsing phase and replace it with the proper WAIT
-	// call afterwards
-	lua["WAIT"] = [](DWORD time)
-	{
-		scriptWait(time);
-	};
-
-	lua["IsKeyPressed"] = [](unsigned char key)
-	{
-		if (ComponentExists<KeyStates>())
+		ExposableFunc(const char *name, std::function<void(sol::state &)> exposeFunc)
+		    : Name(name), ExposeFunc(exposeFunc)
 		{
-			return GetComponent<KeyStates>()->IsKeyPressed(key);
 		}
 
-		return false;
-	};
-	lua["IsKeyJustPressed"] = [](unsigned char key)
-	{
-		if (ComponentExists<KeyStates>())
+		void operator()(sol::state &lua) const
 		{
-			return GetComponent<KeyStates>()->IsKeyJustPressed(key);
+			ExposeFunc(lua);
 		}
-
-		return false;
 	};
+	static const std::vector<ExposableFunc> exposables {
+		E("print", [scriptName](const std::string &szText) { LuaPrint(scriptName, szText); }),
 
-	// Replace those natives with our own safe versions
-	lua["APPLY_FORCE_TO_ENTITY"]                = APPLY_FORCE_TO_ENTITY;
-	lua["APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS"] = APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS;
+		E("_invoke", [scriptName](const sol::this_state &lua, DWORD64 ullHash, ELuaNativeReturnType eReturnType,
+		                          const sol::variadic_args &args)
+		  { return LuaInvoke(scriptName, lua, ullHash, eReturnType, args); }),
 
-	lua["LoadModel"]                            = LoadModel;
+		E("WAIT", scriptWait),
 
-	lua["GetAllPeds"]                           = GetAllPedsArray;
-	lua["CreatePoolPed"]                        = CreatePoolPed;
+		E("IsKeyPressed",
+		  [](unsigned char key)
+		  {
+		      if (ComponentExists<KeyStates>())
+		      {
+			      return GetComponent<KeyStates>()->IsKeyPressed(key);
+		      }
 
-	lua["GetAllVehicles"]                       = GetAllVehsArray;
-	lua["CreatePoolVehicle"]                    = CreatePoolVehicle;
-	lua["CreateTempVehicle"]                    = CreateTempVehicle;
-	lua["CreateTempVehicleOnPlayerPos"]         = CreateTempVehicleOnPlayerPos;
-	lua["SetSurroundingPedsInVehicles"]         = SetSurroundingPedsInVehicles;
-	lua["ReplaceVehicle"]                       = ReplaceVehicle;
+		      return false;
+		  }),
+		E("IsKeyJustPressed",
+		  [](unsigned char key)
+		  {
+		      if (ComponentExists<KeyStates>())
+		      {
+			      return GetComponent<KeyStates>()->IsKeyJustPressed(key);
+		      }
 
-	lua["GetAllProps"]                          = GetAllPropsArray;
-	lua["CreatePoolProp"]                       = CreatePoolProp;
+		      return false;
+		  }),
 
-	lua["GetAllWeapons"]                        = Memory::GetAllWeapons;
-	lua["GetAllPedModels"]                      = Memory::GetAllPedModels;
-	lua["GetAllVehicleModels"]                  = Memory::GetAllVehModels;
+		E("APPLY_FORCE_TO_ENTITY", APPLY_FORCE_TO_ENTITY),
+		E("APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS", APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS),
+
+		E("LoadModel", LoadModel),
+
+		E("GetAllPeds", GetAllPedsArray),
+		E("CreatePoolPed", CreatePoolPed),
+
+		E("GetAllVehicles", GetAllVehsArray),
+		E("CreatePoolVehicle", CreatePoolVehicle),
+		E("CreateTempVehicle", CreateTempVehicle),
+		E("CreateTempVehicleOnPlayerPos", CreateTempVehicleOnPlayerPos),
+		E("SetSurroundingPedsInVehicles", SetSurroundingPedsInVehicles),
+		E("ReplaceVehicle", ReplaceVehicle),
+
+		E("GetAllProps", GetAllProps),
+		E("CreatePoolProp", CreatePoolProp),
+
+		E("GetAllWeapons", Memory::GetAllWeapons),
+		E("GetAllPedModels", Memory::GetAllPedModels),
+		E("GetAllVehicleModels", Memory::GetAllVehModels),
+
+		E("OverrideShader", Hooks::OverrideShader),
+		E("ResetShader", Hooks::ResetShader),
+
+		E("SetSnowState", Memory::SetSnow),
+
+		E("IsVehicleBraking", Memory::IsVehicleBraking),
+
+		E("EnableScriptThreadBlock", Hooks::EnableScriptThreadBlock),
+		E("DisableScriptThreadBlock", Hooks::DisableScriptThreadBlock),
+
+		E("SetAudioPitch", Hooks::SetAudioPitch),
+		E("ResetAudioPitch", Hooks::ResetAudioPitch),
+		E("SetAudioClearness", Hooks::SetAudioClearness),
+		E("ResetAudioClearness", Hooks::ResetAudioClearness),
+
+		E("GetGameplayCamOffsetInWorldCoords",
+		  [](LuaVector3 vOffset)
+		  {
+		      Vector3 vReturn =
+		          Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(vOffset.m_fX, vOffset.m_fY, vOffset.m_fZ));
+		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		  }),
+		E("GetCoordsFromGameplayCam",
+		  [](float fDistance)
+		  {
+		      Vector3 vReturn = Util::GetCoordsFromGameplayCam(fDistance);
+		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		  }),
+
+		E("GetCoordAround",
+		  [](Entity iEntity, float fAngle, float fRadius, float fZOffset, bool bRelative)
+		  {
+		      Vector3 vReturn = GetCoordAround(iEntity, fAngle, fRadius, fZOffset, bRelative);
+		      return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
+		  }),
+
+		E("IsWeaponShotgun", Util::IsWeaponShotgun),
+
+		E("GetChaosModVersion", []() { return MOD_VERSION; }),
+		E("GetGameBuild", Memory::GetGameBuild),
+	};
+#undef E
+
+	bool threadUnsafeFuncCalled = false;
+
+	for (const auto &exposable : exposables)
+	{
+		if (flags & ParseScript_IsAlienThread)
+		{
+			lua[exposable.Name] = [&](const sol::variadic_args &args)
+			{
+				threadUnsafeFuncCalled = true;
+			};
+		}
+		else
+		{
+			exposable(lua);
+		}
+	}
 
 	lua.new_enum("EOverrideShaderType", "LensDistortion", EOverrideShaderType::LensDistortion, "Snow",
 	             EOverrideShaderType::Snow);
-	lua["OverrideShader"]                    = Hooks::OverrideShader;
-	lua["ResetShader"]                       = Hooks::ResetShader;
 
-	lua["SetSnowState"]                      = Memory::SetSnow;
-
-	lua["IsVehicleBraking"]                  = Memory::IsVehicleBraking;
-
-	lua["EnableScriptThreadBlock"]           = Hooks::EnableScriptThreadBlock;
-	lua["DisableScriptThreadBlock"]          = Hooks::DisableScriptThreadBlock;
-
-	lua["SetAudioPitch"]                     = Hooks::SetAudioPitch;
-	lua["ResetAudioPitch"]                   = Hooks::ResetAudioPitch;
-	lua["SetAudioClearness"]                 = Hooks::SetAudioClearness;
-	lua["ResetAudioClearness"]               = Hooks::ResetAudioClearness;
-
-	lua["GetGameplayCamOffsetInWorldCoords"] = [](LuaVector3 vOffset)
-	{
-		Vector3 vReturn =
-		    Util::GetGameplayCamOffsetInWorldCoords(Vector3::Init(vOffset.m_fX, vOffset.m_fY, vOffset.m_fZ));
-		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
-	};
-	lua["GetCoordsFromGameplayCam"] = [](float fDistance)
-	{
-		Vector3 vReturn = Util::GetCoordsFromGameplayCam(fDistance);
-		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
-	};
-
-	lua["GetCoordAround"] = [](Entity iEntity, float fAngle, float fRadius, float fZOffset, bool bRelative)
-	{
-		Vector3 vReturn = GetCoordAround(iEntity, fAngle, fRadius, fZOffset, bRelative);
-		return LuaVector3(vReturn.x, vReturn.y, vReturn.z);
-	};
-
-	lua["IsWeaponShotgun"]    = Util::IsWeaponShotgun;
-
-	lua["GetChaosModVersion"] = []()
-	{
-		return MOD_VERSION;
-	};
-	lua["GetGameBuild"] = Memory::GetGameBuild;
-
-	const auto &result  = lua.safe_script(script);
+	const auto &result = lua.safe_script(script);
 	if (!result.valid())
 	{
 		const sol::error &error = result;
-		LuaPrint(scriptName, error.what());
+		LUA_SCRIPT_LOG(scriptName, error.what());
 
-		return;
+		return ParseScriptReturnReason::Error;
+	}
+
+	if (threadUnsafeFuncCalled)
+	{
+		return ParseScriptReturnReason::Error_ThreadUnsafe;
+	}
+
+	if (flags & ParseScript_IsAlienThread)
+	{
+		for (auto exposable : exposables)
+		{
+			exposable(lua);
+		}
 	}
 
 	auto trim = [](std::string str) -> std::string
@@ -543,6 +604,7 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		return str;
 	};
 
+	static std::mutex effectGroupMutex;
 	const sol::optional<sol::table> &effectGroupInfoOpt = lua["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
@@ -559,6 +621,8 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 			if (!(flags & ParseScript_IsTemporary))
 			{
+				std::lock_guard lock(effectGroupMutex);
+
 				const auto &result = g_dictEffectGroups.find(groupName);
 				if (result != g_dictEffectGroups.end() && !result->second.IsPlaceholder)
 				{
@@ -592,7 +656,7 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		effectInfoOpt = lua["ScriptInfo"].get<sol::optional<sol::table>>();
 		if (!effectInfoOpt)
 		{
-			return;
+			return ParseScriptReturnReason::Error;
 		}
 	}
 
@@ -602,13 +666,13 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	if (!effectNameOpt)
 	{
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Missing Name!");
-		return;
+		return ParseScriptReturnReason::Error;
 	}
 	const auto &effectName = trim(*effectNameOpt);
 	if (effectName.empty())
 	{
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Invalid Name!");
-		return;
+		return ParseScriptReturnReason::Error;
 	}
 
 	sol::optional<std::string> effectIdOpt = effectInfo["EffectId"];
@@ -619,20 +683,23 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		if (!effectIdOpt)
 		{
 			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": Missing EffectId!");
-			return;
+			return ParseScriptReturnReason::Error;
 		}
 	}
 	const auto &effectId = trim(*effectIdOpt);
 	if (effectId.empty() || effectId.starts_with('.'))
 	{
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": Invalid EffectId!");
-		return;
+		return ParseScriptReturnReason::Error;
 	}
 
+	static std::mutex effectsMutex;
 	{
-		auto result              = ms_dictRegisteredEffects.find(effectId);
-		bool bDoesIdAlreadyExist = result != ms_dictRegisteredEffects.end();
-		if (bDoesIdAlreadyExist)
+		std::unique_lock lock(effectsMutex);
+		auto result             = ms_dictRegisteredEffects.find(effectId);
+		bool doesIdAlreadyExist = result != ms_dictRegisteredEffects.end();
+
+		if (doesIdAlreadyExist)
 		{
 			if (result->second.IsTemporary())
 			{
@@ -645,7 +712,7 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 				RemoveScriptEntry(effectId);
 
-				bDoesIdAlreadyExist = false;
+				doesIdAlreadyExist = false;
 			}
 		}
 		else
@@ -654,24 +721,44 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 			{
 				if (effect.second.Id == effectId)
 				{
-					bDoesIdAlreadyExist = true;
-
+					doesIdAlreadyExist = true;
 					break;
 				}
 			}
 		}
-		if (bDoesIdAlreadyExist)
+		lock.unlock();
+
+		if (doesIdAlreadyExist)
 		{
 			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": EffectId \""
 			                                                                 << effectId << "\" already exists!");
-
-			return;
+			return ParseScriptReturnReason::Error;
 		}
 	}
 
+	lua["WAIT"] = [](DWORD time)
+	{
+		WAIT(time);
+	};
+
+	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
+	{
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->OverrideEffectName(effectId, name);
+		}
+	};
+	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
+	{
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, overrideId);
+		}
+	};
+
 	EffectData effectData;
 	effectData.Name                                    = effectName;
-	effectData.Id                                      = *effectIdOpt;
+	effectData.Id                                      = effectId;
 
 	const sol::optional<std::string> &timedTypeTextOpt = effectInfo["TimedType"];
 	if (timedTypeTextOpt)
@@ -753,8 +840,8 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	const sol::optional<sol::table> &incompatibleIdsOpt = effectInfo["IncompatibleIds"];
 	if (incompatibleIdsOpt)
 	{
-		const auto &rgIncompatibleIds = *incompatibleIdsOpt;
-		for (const auto &entry : rgIncompatibleIds)
+		const auto &incompatibleIds = *incompatibleIdsOpt;
+		for (const auto &entry : incompatibleIds)
 		{
 			if (entry.second.valid() && entry.second.is<std::string>())
 			{
@@ -780,7 +867,9 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		const auto &effectGroup = *effectGroupOpt;
 		effectData.GroupType    = effectGroup;
 
-		if (g_dictEffectGroups.find(effectGroup) == g_dictEffectGroups.end())
+		std::lock_guard lock(effectGroupMutex);
+
+		if (!g_dictEffectGroups.contains(effectGroup))
 		{
 			g_dictEffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
 		}
@@ -801,30 +890,12 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	// Exclude temporary effects from choices pool
 	effectData.SetAttribute(EEffectAttributes::IsTemporary, flags & ParseScript_IsTemporary);
 
-	// Stuff that depends on the effect id
-
-	lua["WAIT"] = [](const sol::this_state &lua, DWORD time)
 	{
-		WAIT(time);
-	};
-	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
-	{
-		if (ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->OverrideEffectName(effectId, name);
-		}
-	};
-	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
-	{
-		if (ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, overrideId);
-		}
-	};
-
-	ms_dictRegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScript_IsTemporary));
-	g_dictEnabledEffects.emplace(effectId, effectData);
-	g_RegisteredEffects.emplace_back(effectId);
+		std::lock_guard lock(effectsMutex);
+		ms_dictRegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScript_IsTemporary));
+		g_dictEnabledEffects.emplace(effectId, effectData);
+		g_RegisteredEffects.emplace_back(effectId);
+	}
 
 	if (flags & ParseScript_IsTemporary)
 	{
@@ -838,22 +909,8 @@ static void ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		LUA_SCRIPT_LOG(scriptName, "Registered effect \"" << effectName << "\" with id \"" << effectId << "\"");
 	}
-}
 
-static void ParseScriptEntry(const std::filesystem::directory_entry &entry)
-{
-	const auto &path     = entry.path();
-	const auto &fileName = path.filename().string();
-	const auto &pathStr  = path.string();
-
-	// Don't include chaosmod directory
-	LUA_LOG("Running script " << pathStr.substr(pathStr.find("\\") + 1));
-
-	std::ifstream fileStream(path.c_str());
-	std::stringstream buffer;
-	buffer << fileStream.rdbuf();
-
-	ParseScriptRaw(fileName, buffer.str());
+	return ParseScriptReturnReason::Success;
 }
 
 namespace LuaScripts
@@ -873,6 +930,108 @@ namespace LuaScripts
 			ms_NativesDefCache = ossBuffer.str();
 		}
 
+		SYSTEM_INFO systemInfo {};
+		GetSystemInfo(&systemInfo);
+
+		struct WorkerThread
+		{
+			std::thread Thread;
+		};
+		std::vector<std::unique_ptr<WorkerThread>> workerThreadPool;
+		workerThreadPool.resize(systemInfo.dwNumberOfProcessors - 1);
+
+		std::queue<std::filesystem::directory_entry> entryQueue;
+		std::mutex entryQueueMutex;
+
+		std::queue<std::filesystem::directory_entry> threadUnsafeEntryQueue;
+		std::mutex threadUnsafeEntryQueueMutex;
+
+		auto mainThread  = std::this_thread::get_id();
+
+		bool isDone      = false;
+
+		auto parseScript = [mainThread, &threadUnsafeEntryQueue, &threadUnsafeEntryQueueMutex](
+		                       const std::filesystem::directory_entry &entry, bool printRunningLog = true)
+		{
+			const auto &path     = entry.path();
+			const auto &fileName = path.filename().string();
+			const auto &pathStr  = path.string();
+			auto scriptName      = pathStr.substr(pathStr.find("\\") + 1);
+
+			std::ifstream fileStream(path.c_str());
+			std::stringstream buffer;
+			buffer << fileStream.rdbuf();
+
+			if (printRunningLog)
+			{
+				// Don't include chaosmod directory
+				LUA_LOG("Running script " << scriptName);
+			}
+
+			auto currentThread = std::this_thread::get_id();
+			if (ParseScriptRaw(fileName, buffer.str(),
+			                   currentThread == mainThread ? ParseScript_None : ParseScript_IsAlienThread)
+			    == ParseScriptReturnReason::Error_ThreadUnsafe)
+			{
+				std::lock_guard lock(threadUnsafeEntryQueueMutex);
+				threadUnsafeEntryQueue.push(entry);
+			}
+		};
+
+		auto parseScriptThreaded = [&](const std::filesystem::directory_entry &entry)
+		{
+			// For our 1c/1t users out here we'll do evaluation immediately in the main thread
+			if (workerThreadPool.empty())
+			{
+				parseScript(entry);
+				return;
+			}
+
+			bool foundNewThread = false;
+			for (auto &workerThread : workerThreadPool)
+			{
+				if (workerThread)
+				{
+					continue;
+				}
+
+				workerThread         = std::make_unique<WorkerThread>();
+				workerThread->Thread = std::thread(
+				    [entry, parseScript, &entryQueue, &entryQueueMutex, &isDone]()
+				    {
+					    parseScript(entry);
+
+					    while (!isDone || !entryQueue.empty())
+					    {
+						    if (entryQueue.empty())
+						    {
+							    continue;
+						    }
+						    std::unique_lock lock(entryQueueMutex);
+						    if (entryQueue.empty())
+						    {
+							    continue;
+						    }
+
+						    auto entry = entryQueue.front();
+						    entryQueue.pop();
+
+						    lock.unlock();
+
+						    parseScript(entry);
+					    }
+				    });
+
+				foundNewThread = true;
+				break;
+			}
+
+			if (!foundNewThread)
+			{
+				entryQueue.push(entry);
+			}
+		};
+
 		for (auto dir : ms_rgScriptDirs)
 		{
 			if (!DoesFileExist(dir))
@@ -889,7 +1048,7 @@ namespace LuaScripts
 						for (const auto &entry :
 						     GetWorkshopSubmissionFiles(entry.path().string(), WorkshopFileType::Script))
 						{
-							ParseScriptEntry(entry);
+							parseScriptThreaded(entry);
 						}
 					}
 				}
@@ -898,9 +1057,26 @@ namespace LuaScripts
 			{
 				for (const auto &entry : GetFiles(dir, ".lua", true))
 				{
-					ParseScriptEntry(entry);
+					parseScriptThreaded(entry);
 				}
 			}
+		}
+
+		isDone = true;
+
+		for (auto &workerThread : workerThreadPool)
+		{
+			if (workerThread && workerThread->Thread.joinable())
+			{
+				workerThread->Thread.join();
+			}
+		}
+
+		while (!threadUnsafeEntryQueue.empty())
+		{
+			auto &entry = threadUnsafeEntryQueue.front();
+			parseScript(entry, false);
+			threadUnsafeEntryQueue.pop();
 		}
 	}
 
