@@ -3,10 +3,10 @@
 #include "EffectDispatcher.h"
 #include "Mp3Manager.h"
 
+#include "Components/MetaModifiers.h"
 #include "Components/TwitchVoting.h"
 
 #include "Effects/EffectCategory.h"
-#include "Effects/MetaModifiers.h"
 
 #include "Util/OptionsManager.h"
 #include "Util/Random.h"
@@ -122,7 +122,8 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectName << " " << entry.Suffix;
 			}
 
-			if (!MetaModifiers::m_HideChaosUI && ComponentExists<Mp3Manager>())
+			if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+			    && ComponentExists<Mp3Manager>())
 			{
 				// Play global sound (if one exists)
 				// HACK: Force no global sound for "Fake Crash"
@@ -283,20 +284,26 @@ void EffectDispatcher::OnRun()
 
 void EffectDispatcher::UpdateTimer(int deltaTime)
 {
-	if (!m_EnableNormalEffectDispatch || MetaModifiers::m_DisableChaos)
+	if (!m_EnableNormalEffectDispatch
+	    || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
 	{
 		return;
 	}
 
-	m_TimerPercentage += deltaTime * MetaModifiers::m_TimerSpeedModifier / m_EffectSpawnTime / 1000;
+	m_TimerPercentage += deltaTime
+	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
+	                   / m_EffectSpawnTime / 1000;
 
 	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
-		for (BYTE ucIdx = 0; ucIdx < MetaModifiers::m_AdditionalEffectsToDispatch; ucIdx++)
+		if (ComponentExists<MetaModifiers>())
 		{
-			DispatchRandomEffect();
+			for (BYTE ucIdx = 0; ucIdx < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; ucIdx++)
+			{
+				DispatchRandomEffect();
+			}
 		}
 
 		m_TimerPercentage = 0.f;
@@ -371,7 +378,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			}
 			else
 			{
-				effect.Timer -= adjustedDeltaTime / MetaModifiers::m_EffectDurationModifier;
+				effect.Timer -=
+				    adjustedDeltaTime
+				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
 			}
 		}
 		else if (!isTimed)
@@ -464,8 +473,9 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 
 void EffectDispatcher::DrawTimerBar()
 {
-	if (!m_EnableNormalEffectDispatch || m_DisableDrawTimerBar || MetaModifiers::m_HideChaosUI
-	    || MetaModifiers::m_DisableChaos)
+	if (!m_EnableNormalEffectDispatch || m_DisableDrawTimerBar
+	    || (ComponentExists<MetaModifiers>()
+	        && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos)))
 	{
 		return;
 	}
@@ -476,7 +486,7 @@ void EffectDispatcher::DrawTimerBar()
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
 
-	if (MetaModifiers::m_FlipChaosUI)
+	if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 	{
 		DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2],
 		          255, false);
@@ -513,8 +523,9 @@ void EffectDispatcher::DrawEffectTexts()
 		{
 			auto &effectData = g_EnabledEffects.at(effect.Identifier);
 			if ((effect.HideText && !hasFake)
-			    || ((MetaModifiers::m_HideChaosUI || MetaModifiers::m_DisableChaos) && !effectData.IsMeta()
-			        && !effectData.IsUtility() && !effectData.IsTemporary()))
+			    || ((ComponentExists<MetaModifiers>()
+			         && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos))
+			        && !effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsTemporary()))
 			{
 				continue;
 			}
@@ -526,7 +537,7 @@ void EffectDispatcher::DrawEffectTexts()
 			name = effect.FakeName;
 		}
 
-		if (MetaModifiers::m_FlipChaosUI)
+		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 		{
 			DrawScreenText(name, { .085f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
 			               ScreenTextAdjust::Left, { .0f, .915f });
@@ -539,7 +550,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 		if (effect.MaxTime > 0)
 		{
-			if (MetaModifiers::m_FlipChaosUI)
+			if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 			{
 				DRAW_RECT(.04f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
 				DRAW_RECT(.04f, y + .0185f, .048f * (1.f - (effect.Timer / effect.MaxTime)), .017f,
@@ -564,7 +575,9 @@ bool EffectDispatcher::ShouldDispatchEffectNow() const
 
 int EffectDispatcher::GetRemainingTimerTime() const
 {
-	return std::ceil(m_EffectSpawnTime / MetaModifiers::m_TimerSpeedModifier * (1 - m_TimerPercentage));
+	return std::ceil(m_EffectSpawnTime
+	                 / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
+	                 * (1 - m_TimerPercentage));
 }
 
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, DispatchEffectFlags dispatchEffectFlags,

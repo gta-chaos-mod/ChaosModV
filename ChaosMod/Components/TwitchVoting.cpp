@@ -2,7 +2,7 @@
 
 #include "TwitchVoting.h"
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
@@ -202,9 +202,9 @@ void TwitchVoting::OnRun()
 		}
 		GetComponent<EffectDispatcher>()->ResetTimer();
 
-		if (MetaModifiers::m_AdditionalEffectsToDispatch > 0)
+		if (ComponentExists<MetaModifiers>())
 		{
-			for (int i = 0; i < MetaModifiers::m_AdditionalEffectsToDispatch; i++)
+			for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
 			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 			}

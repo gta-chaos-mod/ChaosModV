@@ -6,11 +6,11 @@
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/KeyStates.h"
+#include "Components/MetaModifiers.h"
 
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
-#include "Effects/MetaModifiers.h"
 
 #include "Memory/Hooks/AudioClearnessHook.h"
 #include "Memory/Hooks/AudioPitchHook.h"
@@ -486,34 +486,38 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 	                          LuaNativeReturnType::Int, "String", LuaNativeReturnType::String, "Float",
 	                          LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
-	auto getMetaModFactory = []<typename T>(T &modifier)
+	if (ComponentExists<MetaModifiers>())
 	{
-		return [&]()
+		auto getMetaModFactory = []<typename T>(T &modifier)
 		{
-			return modifier;
+			return [&]()
+			{
+				return modifier;
+			};
 		};
-	};
 
-	auto setMetaModFactory = []<typename T>(T &modifier)
-	{
-		return [&](T value)
+		auto setMetaModFactory = []<typename T>(T &modifier)
 		{
-			modifier = value;
+			return [&](T value)
+			{
+				modifier = value;
+			};
 		};
-	};
 
-	auto metaModifiersTable = lua.create_named_table("MetaModifiers");
-#define P(x) sol::property(getMetaModFactory(x), setMetaModFactory(x))
-	auto metaModifiersMetaTable = lua.create_table_with(
-	    "EffectDurationModifier", P(MetaModifiers::m_EffectDurationModifier), "TimerSpeedModifier",
-	    P(MetaModifiers::m_TimerSpeedModifier), "AdditionalEffectsToDispatch",
-	    P(MetaModifiers::m_AdditionalEffectsToDispatch), "HideChaosUI", P(MetaModifiers::m_HideChaosUI), "DisableChaos",
-	    P(MetaModifiers::m_DisableChaos), "FlipChaosUI", P(MetaModifiers::m_FlipChaosUI));
+		auto metaModifiersTable = lua.create_named_table("MetaModifiers");
+#define P(x)                                                           \
+	sol::property(getMetaModFactory(GetComponent<MetaModifiers>()->x), \
+	              setMetaModFactory(GetComponent<MetaModifiers>()->x))
+		auto metaModifiersMetaTable = lua.create_table_with(
+		    "EffectDurationModifier", P(EffectDurationModifier), "TimerSpeedModifier", P(TimerSpeedModifier),
+		    "AdditionalEffectsToDispatch", P(AdditionalEffectsToDispatch), "HideChaosUI", P(HideChaosUI),
+		    "DisableChaos", P(DisableChaos), "FlipChaosUI", P(FlipChaosUI));
 #undef P
-	metaModifiersMetaTable[sol::meta_function::new_index] = [] {
-	};
-	metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
-	metaModifiersTable[sol::metatable_key]            = metaModifiersMetaTable;
+		metaModifiersMetaTable[sol::meta_function::new_index] = [] {
+		};
+		metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
+		metaModifiersTable[sol::metatable_key]            = metaModifiersMetaTable;
+	}
 
 	if (!ms_NativesDefCache.empty())
 	{

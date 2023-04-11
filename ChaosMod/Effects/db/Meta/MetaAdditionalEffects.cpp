@@ -4,16 +4,22 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStop()
 {
-	MetaModifiers::m_AdditionalEffectsToDispatch = 0;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch = 0;
+	}
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_AdditionalEffectsToDispatch = 2;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch = 2;
+	}
 }
 
 // clang-format off

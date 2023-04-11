@@ -15,6 +15,7 @@
 #include "Components/Failsafe.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
+#include "Components/MetaModifiers.h"
 #include "Components/Mp3Manager.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
@@ -162,13 +163,16 @@ static void Init()
 	const auto &effectTimerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
-	LOG("Running custom scripts");
-	InitComponent<LuaScripts>();
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
 	LOG("Initializing effect sound system");
 	InitComponent<Mp3Manager>();
 
-	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
+	LOG("Initializing meta modifier states");
+	InitComponent<MetaModifiers>();
+
+	LOG("Initializing Lua scripts");
+	InitComponent<LuaScripts>();
 
 	LOG("Initializing effects dispatcher");
 	InitComponent<EffectDispatcher>(timerColor, textColor, effectTimerColor);

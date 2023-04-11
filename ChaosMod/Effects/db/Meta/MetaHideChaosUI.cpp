@@ -4,16 +4,22 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStop()
 {
-	MetaModifiers::m_HideChaosUI = false;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->HideChaosUI = false;
+	}
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_HideChaosUI = true;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->HideChaosUI = true;
+	}
 }
 
 // clang-format off

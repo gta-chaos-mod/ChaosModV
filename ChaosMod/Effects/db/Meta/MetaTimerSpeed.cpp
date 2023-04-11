@@ -4,16 +4,22 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStop()
 {
-	MetaModifiers::m_TimerSpeedModifier = 1;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 1.f;
+	}
 }
 
 static void OnTick_0_5x()
 {
-	MetaModifiers::m_TimerSpeedModifier = 0.5;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = .5f;
+	}
 }
 
 // clang-format off
@@ -30,7 +36,10 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 
 static void OnTick_2x()
 {
-	MetaModifiers::m_TimerSpeedModifier = 2;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 2.f;
+	}
 }
 
 // clang-format off
@@ -47,7 +56,10 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 
 static void OnTick_5x()
 {
-	MetaModifiers::m_TimerSpeedModifier = 5;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 5.f;
+	}
 }
 
 // clang-format off
