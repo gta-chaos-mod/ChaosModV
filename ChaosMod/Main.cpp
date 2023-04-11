@@ -1,7 +1,6 @@
 #include <stdafx.h>
 
 #include "Main.h"
-#include "Mp3Manager.h"
 
 #include "Effects/EffectConfig.h"
 
@@ -15,6 +14,8 @@
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
 #include "Components/KeyStates.h"
+#include "Components/LuaScripts.h"
+#include "Components/Mp3Manager.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
@@ -72,8 +73,6 @@ static void Reset()
 	}
 
 	ClearEntityPool();
-
-	Mp3Manager::ResetCache();
 
 	for (auto component : g_Components)
 	{
@@ -165,6 +164,9 @@ static void Init()
 
 	LOG("Running custom scripts");
 	InitComponent<LuaScripts>();
+
+	LOG("Initializing effect sound system");
+	InitComponent<Mp3Manager>();
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 

@@ -122,17 +122,17 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectName << " " << entry.Suffix;
 			}
 
-			if (!MetaModifiers::m_HideChaosUI)
+			if (!MetaModifiers::m_HideChaosUI && ComponentExists<Mp3Manager>())
 			{
 				// Play global sound (if one exists)
 				// HACK: Force no global sound for "Fake Crash"
 				if (entry.Identifier.GetEffectId() != "misc_fakecrash")
 				{
-					Mp3Manager::PlayChaosSoundFile("global_effectdispatch");
+					GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
 				}
 
 				// Play a sound if corresponding .mp3 file exists
-				Mp3Manager::PlayChaosSoundFile(effectData.Id);
+				GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
 			}
 
 			int effectTime = -1;

@@ -393,7 +393,7 @@
     </ClCompile>
     <ClCompile Include="Effects\EffectThreads.cpp" />
     <ClCompile Include="Components\TwitchVoting.cpp" />
-    <ClCompile Include="Mp3Manager.cpp" />
+    <ClCompile Include="Components\Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Components\KeyStates.cpp" />
   </ItemGroup>
@@ -464,7 +464,7 @@
     <ClInclude Include="Util\Peds.h" />
     <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
-    <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Components\Mp3Manager.h" />
     <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
     <ClInclude Include="Util\Script.h" />
