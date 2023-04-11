@@ -75,8 +75,6 @@ static void Reset()
 
 	Mp3Manager::ResetCache();
 
-	LuaScripts::Unload();
-
 	for (auto component : g_Components)
 	{
 		component->OnModPauseCleanup();
@@ -166,7 +164,7 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
 	LOG("Running custom scripts");
-	LuaScripts::Load();
+	InitComponent<LuaScripts>();
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
@@ -324,7 +322,6 @@ namespace Main
 
 	void OnCleanup()
 	{
-		LuaScripts::Unload();
 	}
 
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,

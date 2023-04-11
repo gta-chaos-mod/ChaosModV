@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LuaScripts.h"
+#include "Components/LuaScripts.h"
 
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectTimedType.h"
@@ -60,7 +60,11 @@ struct RegisteredEffect
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Start);
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Start);
+				}
 			}
 			else if (m_OnStart)
 			{
@@ -77,7 +81,11 @@ struct RegisteredEffect
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Stop);
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Stop);
+				}
 			}
 			else if (m_OnStop)
 			{
@@ -92,7 +100,11 @@ struct RegisteredEffect
 		{
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), LuaScripts::ExecuteFuncType::Tick);
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Tick);
+				}
 			}
 			else if (m_OnTick)
 			{
@@ -119,21 +131,6 @@ inline RegisteredEffect *GetRegisteredEffect(const EffectIdentifier &effectIdent
 	const auto &result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectIdentifier);
 
 	return result != g_RegisteredEffects.end() ? &*result : nullptr;
-}
-
-inline void ClearRegisteredScriptEffects()
-{
-	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
-	{
-		if (it->IsScript())
-		{
-			it = g_RegisteredEffects.erase(it);
-		}
-		else
-		{
-			it++;
-		}
-	}
 }
 
 class RegisterEffect

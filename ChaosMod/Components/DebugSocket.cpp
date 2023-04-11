@@ -107,8 +107,14 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
 	json["script_name"] = scriptName;
 	webSocket.send(json.dump());
 
-	QueueDelegate(debugSocket, [payloadJson, scriptName]()
-	              { LuaScripts::RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]); });
+	QueueDelegate(debugSocket,
+	              [payloadJson, scriptName]()
+	              {
+		              if (ComponentExists<LuaScripts>())
+		              {
+			              GetComponent<LuaScripts>()->RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]);
+		              }
+	              });
 }
 
 static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,

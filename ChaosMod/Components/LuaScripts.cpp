@@ -35,11 +35,11 @@
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
 #ifdef _MSC_VER
-#define _LUAFUNC static __forceinline
+#define _LUAFUNC __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
-#define _LUAFUNC __attribute__((always_inline)) static inline
+#define _LUAFUNC __attribute__((always_inline)) inline
 #else
-#define _LUAFUNC static inline
+#define _LUAFUNC inline
 #endif
 
 // MinGW doesn't have SEH :(
@@ -133,67 +133,6 @@ template <typename T, typename... A> _LUAFUNC T Generate(const A &...args)
 	return T(args...);
 }
 
-class LuaScript
-{
-  private:
-	std::string m_ScriptName;
-	sol::state m_Lua;
-	bool m_IsTemporary;
-
-  public:
-	LuaScript(const std::string &scriptName, sol::state &lua, bool isTemporary)
-	    : m_ScriptName(scriptName), m_Lua(std::move(lua)), m_IsTemporary(isTemporary)
-	{
-	}
-
-	LuaScript(const LuaScript &)            = delete;
-
-	LuaScript &operator=(const LuaScript &) = delete;
-
-	LuaScript(LuaScript &&script) noexcept
-	    : m_ScriptName(std::move(script.m_ScriptName)),
-	      m_Lua(std::move(script.m_Lua)),
-	      m_IsTemporary(script.m_IsTemporary)
-	{
-	}
-
-	LuaScript &operator=(LuaScript &&script) noexcept
-	{
-		m_ScriptName  = std::move(script.m_ScriptName);
-		m_Lua         = std::move(script.m_Lua);
-		m_IsTemporary = script.m_IsTemporary;
-
-		return *this;
-	}
-
-	const std::string &GetScriptName() const
-	{
-		return m_ScriptName;
-	}
-
-	bool IsTemporary() const
-	{
-		return m_IsTemporary;
-	}
-
-	void Execute(const char *funcName) const
-	{
-		const sol::protected_function &func = m_Lua[funcName];
-		if (!func.valid())
-		{
-			return;
-		}
-
-		const sol::protected_function_result &result = func();
-		if (!result.valid())
-		{
-			const sol::error &error = result;
-
-			LuaPrint(m_ScriptName, error.what());
-		}
-	}
-};
-
 struct LuaVector3
 {
 	alignas(8) float X = 0.f;
@@ -258,8 +197,6 @@ enum class LuaNativeReturnType
 	String,
 	Vector3
 };
-
-static std::unordered_map<std::string, LuaScript> ms_RegisteredEffects;
 
 _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 nativeHash,
                                LuaNativeReturnType returnType, const sol::variadic_args &args)
@@ -343,36 +280,199 @@ _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_st
 	return sol::make_object(lua, sol::lua_nil);
 }
 
-static void RemoveScriptEntry(const std::string &effectId)
+LuaScripts::LuaScripts()
 {
-	ms_RegisteredEffects.erase(effectId);
-	g_EnabledEffects.erase(effectId);
-
-	auto result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectId);
-	if (result != g_RegisteredEffects.end())
+	ms_NativesDefCache.clear();
+	if (DoesFileExist(LUA_NATIVESDEF))
 	{
-		g_RegisteredEffects.erase(result);
+		std::ifstream inStream(LUA_NATIVESDEF);
+		std::ostringstream ossBuffer;
+		ossBuffer << inStream.rdbuf();
+		ms_NativesDefCache = ossBuffer.str();
+	}
+
+	SYSTEM_INFO systemInfo {};
+	GetSystemInfo(&systemInfo);
+
+	struct WorkerThread
+	{
+		std::thread Thread;
+	};
+	std::vector<std::unique_ptr<WorkerThread>> workerThreadPool;
+	workerThreadPool.resize(systemInfo.dwNumberOfProcessors - 1);
+
+	std::queue<std::filesystem::directory_entry> entryQueue;
+	std::mutex entryQueueMutex;
+
+	std::queue<std::filesystem::directory_entry> threadUnsafeEntryQueue;
+	std::mutex threadUnsafeEntryQueueMutex;
+
+	auto mainThread  = std::this_thread::get_id();
+
+	bool isDone      = false;
+
+	auto parseScript = [this, mainThread, &threadUnsafeEntryQueue, &threadUnsafeEntryQueueMutex](
+	                       const std::filesystem::directory_entry &entry, bool printRunningLog = true)
+	{
+		const auto &path     = entry.path();
+		const auto &fileName = path.filename().string();
+		const auto &pathStr  = path.string();
+		auto scriptName      = pathStr.substr(pathStr.find("\\") + 1);
+
+		std::ifstream fileStream(path.c_str());
+		std::stringstream buffer;
+		buffer << fileStream.rdbuf();
+
+		if (printRunningLog)
+		{
+			// Don't include chaosmod directory
+			LUA_LOG("Running script " << scriptName);
+		}
+
+		auto currentThread = std::this_thread::get_id();
+		if (ParseScriptRaw(fileName, buffer.str(),
+		                   currentThread == mainThread ? ParseScriptFlag_None : ParseScriptFlag_IsAlienThread)
+		    == ParseScriptReturnReason::Error_ThreadUnsafe)
+		{
+			std::lock_guard lock(threadUnsafeEntryQueueMutex);
+			threadUnsafeEntryQueue.push(entry);
+		}
+	};
+
+	auto parseScriptThreaded = [&](const std::filesystem::directory_entry &entry)
+	{
+		// For our 1c/1t users out here we'll do evaluation immediately in the main thread
+		if (workerThreadPool.empty())
+		{
+			parseScript(entry);
+			return;
+		}
+
+		bool foundNewThread = false;
+		for (auto &workerThread : workerThreadPool)
+		{
+			if (workerThread)
+			{
+				continue;
+			}
+
+			workerThread         = std::make_unique<WorkerThread>();
+			workerThread->Thread = std::thread(
+			    [entry, parseScript, &entryQueue, &entryQueueMutex, &isDone]()
+			    {
+				    parseScript(entry);
+
+				    while (!isDone || !entryQueue.empty())
+				    {
+					    if (entryQueue.empty())
+					    {
+						    continue;
+					    }
+					    std::unique_lock lock(entryQueueMutex);
+					    if (entryQueue.empty())
+					    {
+						    continue;
+					    }
+
+					    auto entry = entryQueue.front();
+					    entryQueue.pop();
+
+					    lock.unlock();
+
+					    parseScript(entry);
+				    }
+			    });
+
+			foundNewThread = true;
+			break;
+		}
+
+		if (!foundNewThread)
+		{
+			entryQueue.push(entry);
+		}
+	};
+
+	for (auto dir : ms_ScriptDirs)
+	{
+		if (!DoesFileExist(dir))
+		{
+			continue;
+		}
+
+		if (!strcmp(dir, "chaosmod\\workshop"))
+		{
+			for (const auto &entry : std::filesystem::directory_iterator(dir))
+			{
+				if (entry.is_directory())
+				{
+					for (const auto &entry :
+					     GetWorkshopSubmissionFiles(entry.path().string(), WorkshopFileType::Script))
+					{
+						parseScriptThreaded(entry);
+					}
+				}
+			}
+		}
+		else
+		{
+			for (const auto &entry : GetFiles(dir, ".lua", true))
+			{
+				parseScriptThreaded(entry);
+			}
+		}
+	}
+
+	isDone = true;
+
+	for (auto &workerThread : workerThreadPool)
+	{
+		if (workerThread && workerThread->Thread.joinable())
+		{
+			workerThread->Thread.join();
+		}
+	}
+
+	while (!threadUnsafeEntryQueue.empty())
+	{
+		auto &entry = threadUnsafeEntryQueue.front();
+		parseScript(entry, false);
+		threadUnsafeEntryQueue.pop();
 	}
 }
 
-enum ParseScriptFlags
+LuaScripts::~LuaScripts()
 {
-	ParseScriptFlag_None,
-	// Immediately dispatch effect (if script registers one) and remove it OnStop
-	// Assumes this is only being called from the main thread!
-	ParseScriptFlag_IsTemporary   = (1 << 0),
-	// Whether this is called from an alien thread, aborts and returns ParseScriptReturnReason::Error_ThreadUnsafe if
-	// thread-unsafe function was called
-	ParseScriptFlag_IsAlienThread = (1 << 1),
-};
-enum class ParseScriptReturnReason
-{
-	Success,
-	Error,
-	Error_ThreadUnsafe
-};
-static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
-                                              ParseScriptFlags flags = ParseScriptFlag_None)
+	// Clean up all registered script effects
+	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
+	{
+		if (it->IsScript())
+		{
+			it = g_RegisteredEffects.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	// Clean up all effect groups registered by scripts
+	for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
+	{
+		const auto &[groupName, groupData] = *it;
+		if (groupData.WasRegisteredByScript)
+		{
+			it = g_EffectGroups.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+}
+
+LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script,
+                                                               ParseScriptFlags flags)
 {
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
@@ -692,8 +792,8 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	static std::mutex effectsMutex;
 	{
 		std::unique_lock lock(effectsMutex);
-		auto result             = ms_RegisteredEffects.find(effectId);
-		bool doesIdAlreadyExist = result != ms_RegisteredEffects.end();
+		auto result             = m_RegisteredEffects.find(effectId);
+		bool doesIdAlreadyExist = result != m_RegisteredEffects.end();
 
 		if (doesIdAlreadyExist)
 		{
@@ -888,7 +988,7 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 
 	{
 		std::lock_guard lock(effectsMutex);
-		ms_RegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScriptFlag_IsTemporary));
+		m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, lua, flags & ParseScriptFlag_IsTemporary));
 		g_EnabledEffects.emplace(effectId, effectData);
 		g_RegisteredEffects.emplace_back(effectId);
 	}
@@ -909,217 +1009,44 @@ static ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::strin
 	return ParseScriptReturnReason::Success;
 }
 
-namespace LuaScripts
+void LuaScripts::RemoveScriptEntry(const std::string &effectId)
 {
-	void Load()
+	m_RegisteredEffects.erase(effectId);
+	g_EnabledEffects.erase(effectId);
+
+	auto result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectId);
+	if (result != g_RegisteredEffects.end())
 	{
-		ms_RegisteredEffects.clear();
-
-		ClearRegisteredScriptEffects();
-
-		ms_NativesDefCache.clear();
-		if (DoesFileExist(LUA_NATIVESDEF))
-		{
-			std::ifstream inStream(LUA_NATIVESDEF);
-			std::ostringstream ossBuffer;
-			ossBuffer << inStream.rdbuf();
-			ms_NativesDefCache = ossBuffer.str();
-		}
-
-		SYSTEM_INFO systemInfo {};
-		GetSystemInfo(&systemInfo);
-
-		struct WorkerThread
-		{
-			std::thread Thread;
-		};
-		std::vector<std::unique_ptr<WorkerThread>> workerThreadPool;
-		workerThreadPool.resize(systemInfo.dwNumberOfProcessors - 1);
-
-		std::queue<std::filesystem::directory_entry> entryQueue;
-		std::mutex entryQueueMutex;
-
-		std::queue<std::filesystem::directory_entry> threadUnsafeEntryQueue;
-		std::mutex threadUnsafeEntryQueueMutex;
-
-		auto mainThread  = std::this_thread::get_id();
-
-		bool isDone      = false;
-
-		auto parseScript = [mainThread, &threadUnsafeEntryQueue, &threadUnsafeEntryQueueMutex](
-		                       const std::filesystem::directory_entry &entry, bool printRunningLog = true)
-		{
-			const auto &path     = entry.path();
-			const auto &fileName = path.filename().string();
-			const auto &pathStr  = path.string();
-			auto scriptName      = pathStr.substr(pathStr.find("\\") + 1);
-
-			std::ifstream fileStream(path.c_str());
-			std::stringstream buffer;
-			buffer << fileStream.rdbuf();
-
-			if (printRunningLog)
-			{
-				// Don't include chaosmod directory
-				LUA_LOG("Running script " << scriptName);
-			}
-
-			auto currentThread = std::this_thread::get_id();
-			if (ParseScriptRaw(fileName, buffer.str(),
-			                   currentThread == mainThread ? ParseScriptFlag_None : ParseScriptFlag_IsAlienThread)
-			    == ParseScriptReturnReason::Error_ThreadUnsafe)
-			{
-				std::lock_guard lock(threadUnsafeEntryQueueMutex);
-				threadUnsafeEntryQueue.push(entry);
-			}
-		};
-
-		auto parseScriptThreaded = [&](const std::filesystem::directory_entry &entry)
-		{
-			// For our 1c/1t users out here we'll do evaluation immediately in the main thread
-			if (workerThreadPool.empty())
-			{
-				parseScript(entry);
-				return;
-			}
-
-			bool foundNewThread = false;
-			for (auto &workerThread : workerThreadPool)
-			{
-				if (workerThread)
-				{
-					continue;
-				}
-
-				workerThread         = std::make_unique<WorkerThread>();
-				workerThread->Thread = std::thread(
-				    [entry, parseScript, &entryQueue, &entryQueueMutex, &isDone]()
-				    {
-					    parseScript(entry);
-
-					    while (!isDone || !entryQueue.empty())
-					    {
-						    if (entryQueue.empty())
-						    {
-							    continue;
-						    }
-						    std::unique_lock lock(entryQueueMutex);
-						    if (entryQueue.empty())
-						    {
-							    continue;
-						    }
-
-						    auto entry = entryQueue.front();
-						    entryQueue.pop();
-
-						    lock.unlock();
-
-						    parseScript(entry);
-					    }
-				    });
-
-				foundNewThread = true;
-				break;
-			}
-
-			if (!foundNewThread)
-			{
-				entryQueue.push(entry);
-			}
-		};
-
-		for (auto dir : ms_ScriptDirs)
-		{
-			if (!DoesFileExist(dir))
-			{
-				continue;
-			}
-
-			if (!strcmp(dir, "chaosmod\\workshop"))
-			{
-				for (const auto &entry : std::filesystem::directory_iterator(dir))
-				{
-					if (entry.is_directory())
-					{
-						for (const auto &entry :
-						     GetWorkshopSubmissionFiles(entry.path().string(), WorkshopFileType::Script))
-						{
-							parseScriptThreaded(entry);
-						}
-					}
-				}
-			}
-			else
-			{
-				for (const auto &entry : GetFiles(dir, ".lua", true))
-				{
-					parseScriptThreaded(entry);
-				}
-			}
-		}
-
-		isDone = true;
-
-		for (auto &workerThread : workerThreadPool)
-		{
-			if (workerThread && workerThread->Thread.joinable())
-			{
-				workerThread->Thread.join();
-			}
-		}
-
-		while (!threadUnsafeEntryQueue.empty())
-		{
-			auto &entry = threadUnsafeEntryQueue.front();
-			parseScript(entry, false);
-			threadUnsafeEntryQueue.pop();
-		}
+		g_RegisteredEffects.erase(result);
 	}
+}
 
-	void Unload()
+void LuaScripts::Execute(const std::string &effectId, ExecuteFuncType funcType)
+{
+	const auto &script = m_RegisteredEffects.at(effectId);
+
+	switch (funcType)
 	{
-		// Clean up all effect groups registered by scripts
-		for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
+	case ExecuteFuncType::Start:
+		script.Execute("OnStart");
+		break;
+	case ExecuteFuncType::Stop:
+		script.Execute("OnStop");
+
+		// Yes, OnStop also gets called on non-timed effects
+		if (script.IsTemporary())
 		{
-			const auto &[groupName, groupData] = *it;
-			if (groupData.WasRegisteredByScript)
-			{
-				it = g_EffectGroups.erase(it);
-			}
-			else
-			{
-				it++;
-			}
+			RemoveScriptEntry(effectId);
 		}
+
+		break;
+	case ExecuteFuncType::Tick:
+		script.Execute("OnTick");
+		break;
 	}
+}
 
-	void Execute(const std::string &effectId, ExecuteFuncType funcType)
-	{
-		const auto &script = ms_RegisteredEffects.at(effectId);
-
-		switch (funcType)
-		{
-		case ExecuteFuncType::Start:
-			script.Execute("OnStart");
-			break;
-		case ExecuteFuncType::Stop:
-			script.Execute("OnStop");
-
-			// Yes, OnStop also gets called on non-timed effects
-			if (script.IsTemporary())
-			{
-				RemoveScriptEntry(effectId);
-			}
-
-			break;
-		case ExecuteFuncType::Tick:
-			script.Execute("OnTick");
-			break;
-		}
-	}
-
-	void RegisterScriptRawTemporary(std::string scriptName, std::string script)
-	{
-		ParseScriptRaw(scriptName, script, ParseScriptFlag_IsTemporary);
-	}
+void LuaScripts::RegisterScriptRawTemporary(std::string scriptName, std::string script)
+{
+	ParseScriptRaw(scriptName, script, ParseScriptFlag_IsTemporary);
 }
