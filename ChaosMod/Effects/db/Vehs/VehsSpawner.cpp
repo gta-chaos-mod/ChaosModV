@@ -336,3 +336,33 @@ REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, EffectInfo
 		.EffectGroupType = EffectGroupType::SpawnGeneric
 	}
 );
+// clang-format on
+
+static void OnStartPianoCar()
+{
+	static const Hash carHash    = 0x1BB290BC;
+	static const Hash pianoHash  = 0xC0217799;
+	REQUEST_MODEL(carHash);
+	REQUEST_MODEL(pianoHash);
+
+    Ped player = PLAYER_PED_ID();
+	Vector3 playerPos = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(player, 0, 2, 0);
+
+	Vehicle veh       = CreatePoolVehicle(carHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(player));
+	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
+	SET_VEHICLE_MOD_KIT(veh, 0);
+	SET_ENTITY_ALPHA(veh, 0, false);
+	SET_ENTITY_VISIBLE(veh, false, false);
+
+	Object piano = CreatePoolProp(pianoHash, playerPos.x, playerPos.y, playerPos.z, true);
+	ATTACH_ENTITY_TO_ENTITY(piano, veh, 0, 0, 1.3f, -0.7f, 0, 0, 0, true, false, false, false, 0, true);
+}
+
+// clang-format off
+REGISTER_EFFECT(OnStartPianoCar, nullptr, nullptr, EffectInfo
+	{
+		.Name = "Makin' My Way Downtown",
+		.Id = "vehs_spawn_piano",
+		.EffectGroupType = EEffectGroupType::SpawnGeneric
+	}
+);
