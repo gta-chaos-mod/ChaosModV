@@ -399,6 +399,7 @@ namespace ConfigApp
             { "peds_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Peds, true) },
             { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
+            { "player_fakedeathx2", new EffectInfo("Fake Fake Death", EffectCategory.Player) },
         };
     }
 }
