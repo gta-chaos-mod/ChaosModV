@@ -27,9 +27,9 @@ namespace ConfigApp
     {
         private bool m_bInitializedTitle = false;
         
-        private OptionsFile m_ConfigFile = new OptionsFile("config.ini");
-        private OptionsFile m_TwitchFile = new OptionsFile("twitch.ini");
-        private OptionsFile m_EffectsFile = new OptionsFile("effects.ini");
+        private OptionsFile m_ConfigFile = new OptionsFile("configs/config.ini", "config.ini");
+        private OptionsFile m_TwitchFile = new OptionsFile("configs/twitch.ini", "twitch.ini");
+        private OptionsFile m_EffectsFile = new OptionsFile("configs/effects.ini", "effects.ini");
 
         private Dictionary<string, TreeMenuItem> m_TreeMenuItemsMap;
         private Dictionary<string, EffectData> m_EffectDataMap;
@@ -426,6 +426,16 @@ namespace ConfigApp
 
         private void user_save_Click(object sender, RoutedEventArgs e)
         {
+            if (m_ConfigFile.HasCompatFile() || m_TwitchFile.HasCompatFile() || m_EffectsFile.HasCompatFile())
+            {
+                if (MessageBox.Show("Note: Config files reside inside the configs/ subdirectory now. Clicking OK will move the files there. " +
+                    "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
+                    != MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
             WriteConfigFile();
             WriteTwitchFile();
             WriteEffectsFile();
@@ -433,6 +443,19 @@ namespace ConfigApp
             // Reload saved config to show the "new" (saved) settings
             ParseConfigFile();
             ParseTwitchFile();
+
+            if (m_ConfigFile.HasCompatFile())
+            {
+                File.Delete(m_ConfigFile.GetCompatFile());
+            }
+            if (m_TwitchFile.HasCompatFile())
+            {
+                File.Delete(m_TwitchFile.GetCompatFile());
+            }
+            if (m_EffectsFile.HasCompatFile())
+            {
+                File.Delete(m_EffectsFile.GetCompatFile());
+            }
 
             MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }

@@ -11,10 +11,11 @@ class OptionsFile
 {
   private:
 	const char *m_FileName;
+	const char *m_CompatFileName;
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
-	OptionsFile(const char *fileName) : m_FileName(fileName)
+	OptionsFile(const char *fileName, const char *compatFileName = nullptr) : m_FileName(fileName), m_CompatFileName(compatFileName)
 	{
 		Reset();
 	}
@@ -23,32 +24,43 @@ class OptionsFile
 	{
 		m_Options.clear();
 
-		bool exists = true;
-
-		std::ifstream file(m_FileName);
-		if (file.fail())
+		auto readData = [&](const char *fileName)
 		{
-			LOG("Config file " << m_FileName << " not found!");
+			std::ifstream file(fileName);
+			if (file.fail())
+			{
+				return false;
+			}
 
+			char buffer[256];
+			while (file.getline(buffer, 256))
+			{
+				std::string line(buffer);
+				const auto &key = line.substr(0, line.find("="));
+
+				// Ignore line if there's no "="
+				if (line == key)
+				{
+					continue;
+				}
+
+				const auto &value =
+				    line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
+
+				m_Options.emplace(key, value);
+			}
+
+			return true;
+		};
+
+		if (readData(m_CompatFileName))
+		{
 			return;
 		}
 
-		char buffer[256];
-		while (file.getline(buffer, 256))
+		if (!readData(m_FileName))
 		{
-			std::string line(buffer);
-			const auto &key = line.substr(0, line.find("="));
-
-			// Ignore line if there's no "="
-			if (line == key)
-			{
-				continue;
-			}
-
-			const auto &value =
-			    line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
-
-			m_Options.emplace(key, value);
+			LOG("Config file " << m_FileName << " not found!");
 		}
 	}
 

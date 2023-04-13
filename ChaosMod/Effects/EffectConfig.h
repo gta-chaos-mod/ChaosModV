@@ -37,9 +37,9 @@ namespace EffectConfig
 		return -1;
 	}
 
-	inline void ReadConfig(const char *configPath, auto &out)
+	inline void ReadConfig(const char *configPath, auto &out, const char *compatConfigPath = nullptr)
 	{
-		OptionsFile effectsFile(configPath);
+		OptionsFile effectsFile(configPath, compatConfigPath);
 
 		for (auto &[effectId, effectInfo] : g_EffectsMap)
 		{
