@@ -18,6 +18,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Bus Bois",
 		.Id = "peds_busbois",
-		.EffectGroupType = EEffectGroupType::TrafficSpawner
+		.EffectGroupType = EffectGroupType::TrafficSpawner
 	}
 );

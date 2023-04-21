@@ -43,6 +43,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Dance Troupe",
 		.Id = "peds_spawndancingapes",
-		.EffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );

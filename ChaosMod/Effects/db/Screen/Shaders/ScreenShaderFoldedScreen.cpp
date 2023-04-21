@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_szShaderSrcPrefix = R"SRC(
+static const char *ms_ShaderSrcPrefix = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -43,7 +43,7 @@ static void OnStart()
 
 	if (!shaderSrcSuffix.empty())
 	{
-		Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrcPrefix + shaderSrcSuffix);
+		Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrcPrefix + shaderSrcSuffix);
 	}
 }
 
@@ -59,7 +59,7 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Id = "screen_foldedscreen",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Shader,
-		.EffectGroupType = EEffectGroupType::Shader
+		.EffectCategory = EffectCategory::Shader,
+		.EffectGroupType = EffectGroupType::Shader
 	}
 );

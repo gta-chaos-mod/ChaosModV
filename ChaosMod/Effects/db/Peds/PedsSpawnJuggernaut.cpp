@@ -18,6 +18,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Juggernaut",
         .Id = "peds_spawn_juggernaut",
-        .EffectGroupType = EEffectGroupType::SpawnEnemy
+        .EffectGroupType = EffectGroupType::SpawnEnemy
     }
 );

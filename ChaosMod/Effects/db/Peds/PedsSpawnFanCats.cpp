@@ -27,6 +27,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Fan Cats",
 		.Id = "peds_spawnfancats",
-		.EffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );

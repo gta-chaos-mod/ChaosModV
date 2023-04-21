@@ -22,6 +22,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Invisible Vehicles",
 		.Id = "vehs_ghost",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor
 	}
 );

@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 #include "Memory/UI.h"
 
@@ -47,7 +47,10 @@ static void OnStart()
 
 static void OnTick()
 {
-	MetaModifiers::m_bFlipChaosUI = true;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->FlipChaosUI = true;
+	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -69,7 +72,10 @@ static void OnTick()
 
 static void OnStop()
 {
-	MetaModifiers::m_bFlipChaosUI = false;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->FlipChaosUI = false;
+	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{

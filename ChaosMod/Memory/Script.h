@@ -10,9 +10,9 @@ using Hash = unsigned long;
 namespace Memory
 {
 	// Thanks to rainbomizer for this one!
-	inline rage::scrProgram *ScriptThreadToProgram(rage::scrThread *pThread)
+	inline rage::scrProgram *ScriptThreadToProgram(rage::scrThread *thread)
 	{
-		if (!pThread)
+		if (!thread)
 		{
 			return nullptr;
 		}
@@ -54,6 +54,6 @@ namespace Memory
 			return nullptr;
 		}
 
-		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, pThread->GetHash());
+		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, thread->GetHash());
 	}
 }

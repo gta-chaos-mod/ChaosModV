@@ -10,12 +10,12 @@
 #define WAIT_TIME 10000      // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
 
-static int m_overlay = 0;
-static Vehicle m_lastVeh;
+static int ms_Overlay = 0;
+static Vehicle ms_LastVeh;
 
-static DWORD64 m_timeReserve;
-static DWORD64 m_lastTick    = 0;
-static bool m_enteredVehicle = false;
+static DWORD64 ms_TimeReserve;
+static DWORD64 ms_LastTick    = 0;
+static bool ms_EnteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -42,64 +42,64 @@ static void OnTick()
 	// GET_VEHICLE_PED_IS_IN seems to always imply includeLastVehicle regardless of what's actually set since either
 	// b2699 or b2802
 	// We use IS_PED_IN_ANY_VEHICLE instead to check if the player is inside any vehicle
-	if (m_lastVeh != 0 && (veh != m_lastVeh || !IS_PED_IN_ANY_VEHICLE(playerPed, false)))
+	if (ms_LastVeh != 0 && (veh != ms_LastVeh || !IS_PED_IN_ANY_VEHICLE(playerPed, false)))
 	{
-		EXPLODE_VEHICLE(m_lastVeh, true, false);
+		EXPLODE_VEHICLE(ms_LastVeh, true, false);
 
-		m_timeReserve = WAIT_TIME;
+		ms_TimeReserve = WAIT_TIME;
 	}
 
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false) && IS_PED_IN_ANY_VEHICLE(playerPed, false)
 	    && GET_IS_VEHICLE_ENGINE_RUNNING(veh))
 	{
-		if (!m_enteredVehicle)
+		if (!ms_EnteredVehicle)
 		{
-			m_enteredVehicle = true;
+			ms_EnteredVehicle = true;
 
-			m_lastVeh        = 0;
-			m_timeReserve    = WAIT_TIME;
-			m_lastTick       = GET_GAME_TIMER();
+			ms_LastVeh        = 0;
+			ms_TimeReserve    = WAIT_TIME;
+			ms_LastTick       = GET_GAME_TIMER();
 
 			return;
 		}
 
-		m_lastVeh           = veh;
+		ms_LastVeh          = veh;
 
 		float minSpeed      = GET_VEHICLE_MODEL_ESTIMATED_MAX_SPEED(GET_ENTITY_MODEL(veh)) * SPEED_THRESHOLD;
 		float speedms       = GET_ENTITY_SPEED(veh);
 		DWORD64 currentTick = GET_GAME_TIMER();
-		DWORD64 tickDelta   = currentTick - m_lastTick;
+		DWORD64 tickDelta   = currentTick - ms_LastTick;
 		int overlaycolor    = 0;
 		if (speedms < minSpeed)
 		{
 			overlaycolor = 75;
-			if (m_timeReserve < tickDelta)
+			if (ms_TimeReserve < tickDelta)
 			{
 				EXPLODE_VEHICLE(veh, true, false);
-				m_timeReserve = WAIT_TIME;
+				ms_TimeReserve = WAIT_TIME;
 				return;
 			}
 
-			if (Beepable(m_timeReserve - tickDelta) && !Beepable(m_timeReserve))
+			if (Beepable(ms_TimeReserve - tickDelta) && !Beepable(ms_TimeReserve))
 			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
 			}
 
-			m_timeReserve -= tickDelta;
+			ms_TimeReserve -= tickDelta;
 		}
 		else
 		{
 			overlaycolor = 25;
-			m_timeReserve += tickDelta / 2; // slows down regaining time
-			if (m_timeReserve > WAIT_TIME)
+			ms_TimeReserve += tickDelta / 2; // slows down regaining time
+			if (ms_TimeReserve > WAIT_TIME)
 			{
-				m_timeReserve = WAIT_TIME;
+				ms_TimeReserve = WAIT_TIME;
 			}
 		}
 
-		m_lastTick = currentTick;
+		ms_LastTick = currentTick;
 
-		BEGIN_SCALEFORM_MOVIE_METHOD(m_overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
+		BEGIN_SCALEFORM_MOVIE_METHOD(ms_Overlay, "SHOW_SHARD_RANKUP_MP_MESSAGE");
 
 		char charBuf[64];
 		auto displaySpeed    = FormatSpeed(speedms);
@@ -107,15 +107,15 @@ static void OnTick()
 		sprintf_s(charBuf, "%s", displaySpeed.c_str());
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
 
-		if (m_timeReserve != WAIT_TIME && speedms < minSpeed)
+		if (ms_TimeReserve != WAIT_TIME && speedms < minSpeed)
 		{
 			sprintf_s(charBuf, "Minimum: %s\nDetonation In: %.1fs", displayMinSpeed.c_str(),
-			          float(m_timeReserve) / 1000);
+			          float(ms_TimeReserve) / 1000);
 		}
-		else if (m_timeReserve != WAIT_TIME && speedms > minSpeed)
+		else if (ms_TimeReserve != WAIT_TIME && speedms > minSpeed)
 		{
 			sprintf_s(charBuf, "Minimum: %s\nDetonation In: %.1fs (Recovering)", displayMinSpeed.c_str(),
-			          float(m_timeReserve) / 1000);
+			          float(ms_TimeReserve) / 1000);
 		}
 		else
 		{
@@ -124,25 +124,25 @@ static void OnTick()
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(overlaycolor);
 		END_SCALEFORM_MOVIE_METHOD();
-		DRAW_SCALEFORM_MOVIE_FULLSCREEN(m_overlay, 255, 255, 255, 255, 0);
+		DRAW_SCALEFORM_MOVIE_FULLSCREEN(ms_Overlay, 255, 255, 255, 255, 0);
 	}
 	else
 	{
-		m_enteredVehicle = false;
+		ms_EnteredVehicle = false;
 	}
 }
 
 static void OnStart()
 {
-	m_overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
-	while (!HAS_SCALEFORM_MOVIE_LOADED(m_overlay))
+	ms_Overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
+	while (!HAS_SCALEFORM_MOVIE_LOADED(ms_Overlay))
 	{
 		WAIT(0);
 	}
-	m_enteredVehicle = false;
-	m_lastTick       = GET_GAME_TIMER();
-	m_lastVeh        = 0;
-	m_timeReserve    = WAIT_TIME;
+	ms_EnteredVehicle = false;
+	ms_LastTick       = GET_GAME_TIMER();
+	ms_LastVeh        = 0;
+	ms_TimeReserve    = WAIT_TIME;
 }
 
 // clang-format off

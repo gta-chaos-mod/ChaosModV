@@ -6,18 +6,18 @@
 
 #define ENTITY_POOL_MAX 40
 
-static std::list<Entity> m_rgEntities;
+static std::list<Entity> m_Entities;
 
 static void HandleEntity(Entity entity)
 {
-	m_rgEntities.push_back(entity);
+	m_Entities.push_back(entity);
 
 	// Clean up entities which don't exist anymore first
-	for (auto it = m_rgEntities.begin(); it != m_rgEntities.end();)
+	for (auto it = m_Entities.begin(); it != m_Entities.end();)
 	{
 		if (!DOES_ENTITY_EXIST(*it))
 		{
-			it = m_rgEntities.erase(it);
+			it = m_Entities.erase(it);
 		}
 		else
 		{
@@ -26,45 +26,45 @@ static void HandleEntity(Entity entity)
 	}
 
 	// Delete front entity if size above limit
-	if (m_rgEntities.size() > ENTITY_POOL_MAX)
+	if (m_Entities.size() > ENTITY_POOL_MAX)
 	{
-		Entity frontEntity = m_rgEntities.front();
+		auto frontEntity = m_Entities.front();
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
 			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
 		}
 
-		m_rgEntities.pop_front();
+		m_Entities.pop_front();
 	}
 }
 
-void ClearEntityPool(int iDistance)
+void ClearEntityPool(int distance)
 {
-	Vector3 playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	auto playerCoords = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	for (std::list<Entity>::iterator it = m_rgEntities.begin(); it != m_rgEntities.end();)
+	for (std::list<Entity>::iterator it = m_Entities.begin(); it != m_Entities.end();)
 	{
-		Entity frontEntity = *it;
+		auto frontEntity = *it;
 
 		if (DOES_ENTITY_EXIST(frontEntity))
 		{
-			bool bDoRemove = iDistance <= 0;
+			bool doRemove = distance <= 0;
 
-			if (!bDoRemove)
+			if (!doRemove)
 			{
 				Vector3 entityCoords = GET_ENTITY_COORDS(frontEntity, false);
 
-				bDoRemove            = playerCoords.DistanceTo(entityCoords) < iDistance;
+				doRemove             = playerCoords.DistanceTo(entityCoords) < distance;
 			}
 
-			if (bDoRemove)
+			if (doRemove)
 			{
 				SET_ENTITY_AS_MISSION_ENTITY(frontEntity, true, true);
 
 				DELETE_ENTITY(&frontEntity);
 
-				it = m_rgEntities.erase(it);
+				it = m_Entities.erase(it);
 			}
 			else
 			{
@@ -73,16 +73,16 @@ void ClearEntityPool(int iDistance)
 		}
 		else
 		{
-			it = m_rgEntities.erase(it);
+			it = m_Entities.erase(it);
 		}
 	}
 }
 
 Ped CreatePoolClonePed(Ped pedToClone)
 {
-	Vector3 pos = GET_ENTITY_COORDS(pedToClone, !IS_ENTITY_DEAD(pedToClone, 0));
-	Ped clone   = CreatePoolPed(GET_PED_TYPE(pedToClone), GET_ENTITY_MODEL(pedToClone), pos.x, pos.y, pos.z + 2.f,
-	                            GET_ENTITY_HEADING(pedToClone));
+	auto pos   = GET_ENTITY_COORDS(pedToClone, !IS_ENTITY_DEAD(pedToClone, 0));
+	auto clone = CreatePoolPed(GET_PED_TYPE(pedToClone), GET_ENTITY_MODEL(pedToClone), pos.x, pos.y, pos.z + 2.f,
+	                           GET_ENTITY_HEADING(pedToClone));
 
 	CLONE_PED_TO_TARGET(pedToClone, clone);
 
@@ -124,35 +124,31 @@ Ped CreatePoolClonePed(Ped pedToClone)
 	return clone;
 }
 
-Ped CreatePoolPed(int iPedType, Hash ulHodelHash, float fPosX, float fPosY, float fPosZ, float fHeading)
+Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading)
 {
-	LoadModel(ulHodelHash);
-
-	Ped ped = CREATE_PED(iPedType, ulHodelHash, fPosX, fPosY, fPosZ, fHeading, true, false);
-
+	LoadModel(modelHash);
+	Ped ped = CREATE_PED(pedType, modelHash, x, y, z, heading, true, false);
 	HandleEntity(ped);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulHodelHash);
-
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	return ped;
 }
 
-Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading)
+Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 {
-	static const std::vector<Hash> &c_rgPedModels = Memory::GetAllPedModels();
+	const auto &pedModels = Memory::GetAllPedModels();
 
 	Ped ped;
-	if (!c_rgPedModels.empty())
+	if (!pedModels.empty())
 	{
-		Hash model = c_rgPedModels[g_Random.GetRandomInt(0, c_rgPedModels.size() - 1)];
+		Hash model = pedModels[g_Random.GetRandomInt(0, pedModels.size() - 1)];
 
-		ped        = CreatePoolPed(4, model, fPosX, fPosY, fPosZ, fHeading);
+		ped        = CreatePoolPed(4, model, x, y, z, heading);
 	}
 	else
 	{
-		ped = CREATE_RANDOM_PED(fPosX, fPosY, fPosZ);
+		ped = CREATE_RANDOM_PED(x, y, z);
 
-		SET_ENTITY_HEADING(ped, fHeading);
+		SET_ENTITY_HEADING(ped, heading);
 	}
 
 	for (int i = 0; i < 12; i++)
@@ -180,39 +176,30 @@ Ped CreateRandomPoolPed(float fPosX, float fPosY, float fPosZ, float fHeading)
 	return ped;
 }
 
-Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int iPedType, Hash ulModelHash, int iSeatIdx)
+Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seatIdx)
 {
-	LoadModel(ulModelHash);
-
-	Ped ped = CREATE_PED_INSIDE_VEHICLE(vehicle, iPedType, ulModelHash, iSeatIdx, true, false);
-
+	LoadModel(modelHash);
+	auto ped = CREATE_PED_INSIDE_VEHICLE(vehicle, pedType, modelHash, seatIdx, true, false);
 	HandleEntity(ped);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
-
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	return ped;
 }
 
-Vehicle CreatePoolVehicle(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, float fHeading)
+Vehicle CreatePoolVehicle(Hash modelHash, float x, float y, float z, float heading)
 {
-	LoadModel(ulModelHash);
-
-	Vehicle veh = CREATE_VEHICLE(ulModelHash, fPosX, fPosY, fPosZ, fHeading, true, false, false);
-
+	LoadModel(modelHash);
+	auto veh = CREATE_VEHICLE(modelHash, x, y, z, heading, true, false, false);
 	HandleEntity(veh);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
-
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	return veh;
 }
 
 Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 {
-	Vector3 pos = GET_ENTITY_COORDS(vehToClone, false);
-	Vehicle clone =
-	    CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
+	auto pos   = GET_ENTITY_COORDS(vehToClone, false);
+	auto clone = CreatePoolVehicle(GET_ENTITY_MODEL(vehToClone), pos.x, pos.y, pos.z, GET_ENTITY_HEADING(vehToClone));
 
-	Vector3 velocity = GET_ENTITY_VELOCITY(vehToClone);
+	auto velocity = GET_ENTITY_VELOCITY(vehToClone);
 	SET_ENTITY_VELOCITY(clone, velocity.x, velocity.y, velocity.z);
 
 	SET_VEHICLE_MOD_KIT(clone, 0);
@@ -247,24 +234,19 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 	return clone;
 }
 
-Object CreatePoolProp(Hash ulModelHash, float fPosX, float fPosY, float fPosZ, bool bDynamic)
+Object CreatePoolProp(Hash modelHash, float x, float y, float z, bool dynamic)
 {
-	LoadModel(ulModelHash);
-
-	Object prop = CREATE_OBJECT(ulModelHash, fPosX, fPosY, fPosZ, true, false, bDynamic);
-
+	LoadModel(modelHash);
+	auto prop = CREATE_OBJECT(modelHash, x, y, z, true, false, dynamic);
 	HandleEntity(prop);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulModelHash);
-
+	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
 	return prop;
 }
 
-Object CreatePoolPropAttachedToPed(Hash ulModelHash, Ped ped, int boneIndex, float offsetX, float offsetY,
-                                   float offsetZ, float rotX, float rotY, float rotZ, bool softPinning, bool collision,
-                                   bool fixedRot)
+Object CreatePoolPropAttachedToPed(Hash modelHash, Ped ped, int boneIndex, float offsetX, float offsetY, float offsetZ,
+                                   float rotX, float rotY, float rotZ, bool softPinning, bool collision, bool fixedRot)
 {
-	Object prop = CreatePoolProp(ulModelHash, 0, 0, 0, false);
+	Object prop = CreatePoolProp(modelHash, 0, 0, 0, false);
 	ATTACH_ENTITY_TO_ENTITY(prop, ped, boneIndex, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, false, softPinning,
 	                        collision, true, 0, fixedRot);
 	return prop;

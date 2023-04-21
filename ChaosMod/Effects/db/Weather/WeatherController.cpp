@@ -10,7 +10,7 @@ REGISTER_EFFECT(OnStartExtraSunny, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Extra Sunny Weather",
 		.Id = "weather_extrasunny",
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );
 // clang-format on
@@ -25,7 +25,7 @@ REGISTER_EFFECT(OnStartThunder, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Stormy Weather",
 		.Id = "weather_stormy",
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );
 // clang-format on
@@ -40,7 +40,7 @@ REGISTER_EFFECT(OnStartFoggy, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Foggy Weather",
 		.Id = "weather_foggy",
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );
 // clang-format on
@@ -55,7 +55,7 @@ REGISTER_EFFECT(OnStartNeutral, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Neutral Weather",
 		.Id = "weather_neutral",
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );
 // clang-format on
@@ -70,7 +70,7 @@ REGISTER_EFFECT(OnStartXmas, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Snowy Weather",
 		.Id = "weather_snowy",
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );
 // clang-format on
@@ -103,6 +103,6 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickRandom, EffectInfo
 		.Name = "Disco Weather",
 		.Id = "weather_randomizer",
 		.IsTimed = true,
-		.EffectGroupType = EEffectGroupType::WeatherChange
+		.EffectGroupType = EffectGroupType::WeatherChange
 	}
 );

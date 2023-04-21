@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;4099;4244;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -374,7 +374,7 @@
     <ClCompile Include="Effects\db\Vehs\VehsSpawnIESultan.cpp" />
     <ClCompile Include="Effects\db\Weather\WeatherController.cpp" />
     <ClCompile Include="Components\Failsafe.cpp" />
-    <ClCompile Include="LuaScripts.cpp" />
+    <ClCompile Include="Components\LuaScripts.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
@@ -393,8 +393,9 @@
     </ClCompile>
     <ClCompile Include="Effects\EffectThreads.cpp" />
     <ClCompile Include="Components\TwitchVoting.cpp" />
-    <ClCompile Include="Mp3Manager.cpp" />
+    <ClCompile Include="Components\Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
+    <ClCompile Include="Components\KeyStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -407,21 +408,21 @@
     <ClInclude Include="Components\DebugSocket.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="Components\Shortcuts.h" />
-    <ClInclude Include="Effects\EEffectCategory.h" />
+    <ClInclude Include="Effects\EffectCategory.h" />
     <ClInclude Include="Effects\EffectConfig.h" />
-    <ClInclude Include="Effects\EEffectAttributes.h" />
+    <ClInclude Include="Effects\EffectAttributes.h" />
     <ClInclude Include="Effects\EffectData.h" />
-    <ClInclude Include="Effects\EEffectExecutionType.h" />
+    <ClInclude Include="Effects\EffectExecutionType.h" />
     <ClInclude Include="Effects\EffectGroups.h" />
     <ClInclude Include="Effects\Effect.h" />
     <ClInclude Include="Effects\EffectIdentifier.h" />
     <ClInclude Include="Effects\EffectsInfo.h" />
-    <ClInclude Include="Effects\MetaModifiers.h" />
-    <ClInclude Include="Effects\EEffectTimedType.h" />
+    <ClInclude Include="Components\MetaModifiers.h" />
+    <ClInclude Include="Effects\EffectTimedType.h" />
     <ClInclude Include="Effects\EnabledEffectsMap.h" />
     <ClInclude Include="Components\Failsafe.h" />
     <ClInclude Include="Lib\scrThread.h" />
-    <ClInclude Include="LuaScripts.h" />
+    <ClInclude Include="Components\LuaScripts.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Audio.h" />
     <ClInclude Include="Memory\Entity.h" />
@@ -463,7 +464,7 @@
     <ClInclude Include="Util\Peds.h" />
     <ClInclude Include="Util\Text.h" />
     <ClInclude Include="Util\Model.h" />
-    <ClInclude Include="Mp3Manager.h" />
+    <ClInclude Include="Components\Mp3Manager.h" />
     <ClInclude Include="Util\OptionsManager.h" />
     <ClInclude Include="Util\PoolSpawner.h" />
     <ClInclude Include="Util\Script.h" />
@@ -472,8 +473,11 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
+    <ClInclude Include="Util\Workshop.h" />
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="Components\KeyStates.h" />
+    <ClInclude Include="Util\Events.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

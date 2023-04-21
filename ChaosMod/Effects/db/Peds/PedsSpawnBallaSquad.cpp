@@ -55,6 +55,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Balla Squad",
 		.Id = "peds_spawnballasquad",
-		.EffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EffectGroupType::SpawnEnemy
 	}
 );

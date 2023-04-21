@@ -9,7 +9,9 @@
 #include <sstream>
 #include <string>
 
-inline std::ofstream g_Log("chaosmod/chaoslog.txt");
+#define CHAOS_LOG_FILE "chaosmod/chaoslog.txt"
+
+inline std::ofstream g_Log(CHAOS_LOG_FILE);
 
 inline std::ofstream g_ConsoleOut;
 

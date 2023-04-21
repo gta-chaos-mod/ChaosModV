@@ -18,33 +18,33 @@ namespace Memory
 
 	struct PatternScanRange
 	{
-		DWORD64 m_startAddr = 0;
-		DWORD64 m_endAddr   = 0;
+		DWORD64 StartAddr  = 0;
+		DWORD64 EndAddr    = 0;
 
-		PatternScanRange()  = default;
+		PatternScanRange() = default;
 
-		PatternScanRange(DWORD64 startAddr, DWORD64 endAddr) : m_startAddr(startAddr), m_endAddr(endAddr)
+		PatternScanRange(DWORD64 startAddr, DWORD64 endAddr) : StartAddr(startAddr), EndAddr(endAddr)
 		{
 		}
 	};
 
-	Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange = {});
-	MH_STATUS AddHook(void *pTarget, void *pTetour, void *ppOrig);
+	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange = {});
+	MH_STATUS AddHook(void *target, void *detour, void *orig);
 
-	template <typename T> inline void Write(T *pAddr, T value, int iCount = 1)
+	template <typename T> inline void Write(T *addr, T value, int count = 1)
 	{
-		DWORD ulOldProtect;
-		VirtualProtect(pAddr, sizeof(T) * iCount, PAGE_EXECUTE_READWRITE, &ulOldProtect);
+		DWORD oldProtect;
+		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
 
-		for (int i = 0; i < iCount; i++)
+		for (int i = 0; i < count; i++)
 		{
-			pAddr[i] = value;
+			addr[i] = value;
 		}
 
-		VirtualProtect(pAddr, sizeof(T) * iCount, ulOldProtect, &ulOldProtect);
+		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
 	}
 
-	const char *GetTypeName(__int64 ullVftAddr);
+	const char *GetTypeName(__int64 vftAddr);
 
 	DWORD64 *GetGlobalPtr(int globalId);
 

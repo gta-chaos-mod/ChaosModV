@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_szShaderSrc = R"SRC(
+static const char *ms_ShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -21,7 +21,7 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-	Hooks::OverrideShader(EOverrideShaderType::LensDistortion, ms_szShaderSrc);
+	Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrc);
 }
 
 static void OnStop()
@@ -36,7 +36,7 @@ REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 		.Id = "screen_localcoop",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Shader,
-		.EffectGroupType = EEffectGroupType::Shader
+		.EffectCategory = EffectCategory::Shader,
+		.EffectGroupType = EffectGroupType::Shader
 	}
 );

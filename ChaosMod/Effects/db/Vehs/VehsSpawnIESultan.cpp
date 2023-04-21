@@ -62,6 +62,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Blue Sultan",
 		.Id = "spawn_bluesultan",
-		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
 	}
 );

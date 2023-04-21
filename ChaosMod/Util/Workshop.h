@@ -14,10 +14,9 @@ enum class WorkshopFileType
 	Audio
 };
 
-inline std::vector<std::filesystem::directory_entry>
-GetWorkshopFiles(std::string submissionPath, WorkshopFileType fileType, std::string subPath = "")
+inline std::vector<std::string> GetWorkshopSubmissionBlacklistedFiles(const std::string &submissionPath)
 {
-	std::string submissionSettingsFile = submissionPath + ".json";
+	auto submissionSettingsFile = submissionPath + ".json";
 	std::vector<std::string> blacklistedFiles;
 	if (DoesFileExist(submissionSettingsFile))
 	{
@@ -38,6 +37,14 @@ GetWorkshopFiles(std::string submissionPath, WorkshopFileType fileType, std::str
 		}
 	}
 
+	return blacklistedFiles;
+}
+
+inline std::vector<std::filesystem::directory_entry>
+GetWorkshopSubmissionFiles(const std::string &submissionPath, WorkshopFileType fileType, std::string subPath = "")
+{
+	const auto &blacklistedFiles = GetWorkshopSubmissionBlacklistedFiles(submissionPath);
+
 	std::vector<std::filesystem::directory_entry> entries;
 	switch (fileType)
 	{
@@ -45,7 +52,7 @@ GetWorkshopFiles(std::string submissionPath, WorkshopFileType fileType, std::str
 		entries = GetFiles(submissionPath + "\\" + subPath, ".lua", true, blacklistedFiles);
 		break;
 	case WorkshopFileType::Audio:
-		entries = GetFiles(submissionPath + "\\" + subPath, ".mp3", false, blacklistedFiles);
+		entries = GetFiles(submissionPath + "\\" + subPath, ".mp3", true, blacklistedFiles);
 		break;
 	default:
 		return {};

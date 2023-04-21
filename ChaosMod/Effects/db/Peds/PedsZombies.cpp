@@ -1,10 +1,10 @@
 #include <stdafx.h>
 
-static std::list<Ped> m_zombies;
+static std::list<Ped> ms_Zombies;
 
 static void OnStart()
 {
-	m_zombies.clear();
+	ms_Zombies.clear();
 
 	static const Hash playerGroupHash    = "PLAYER"_hash;
 	static const Hash civMaleGroupHash   = "CIVMALE"_hash;
@@ -19,7 +19,7 @@ static void OnStart()
 
 static void OnStop()
 {
-	for (Ped ped : m_zombies)
+	for (Ped ped : ms_Zombies)
 	{
 		if (DOES_ENTITY_EXIST(ped))
 		{
@@ -38,10 +38,10 @@ static void OnTick()
 	Ped playerPed                    = PLAYER_PED_ID();
 	Vector3 playerPos                = GET_ENTITY_COORDS(playerPed, false);
 
-	if (m_zombies.size() <= MAX_ZOMBIES)
+	if (ms_Zombies.size() <= MAX_ZOMBIES)
 	{
 		Vector3 spawnPos;
-		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + m_zombies.size(), &spawnPos, 0, 0,
+		if (GET_NTH_CLOSEST_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 10 + ms_Zombies.size(), &spawnPos, 0, 0,
 		                                 0)
 		    && GET_DISTANCE_BETWEEN_COORDS(playerPos.x, playerPos.y, playerPos.z, spawnPos.x, spawnPos.y, spawnPos.z,
 		                                   false)
@@ -51,7 +51,7 @@ static void OnTick()
 
 			Ped zombie = CREATE_PED(26, MODEL_HASH, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 
-			m_zombies.push_back(zombie);
+			ms_Zombies.push_back(zombie);
 
 			SET_PED_RELATIONSHIP_GROUP_HASH(zombie, zombieGroupHash);
 			SET_PED_COMBAT_ATTRIBUTES(zombie, 5, true);
@@ -66,7 +66,7 @@ static void OnTick()
 		}
 	}
 
-	for (std::list<Ped>::iterator it = m_zombies.begin(); it != m_zombies.end();)
+	for (std::list<Ped>::iterator it = ms_Zombies.begin(); it != ms_Zombies.end();)
 	{
 		Ped zombie = *it;
 
@@ -100,7 +100,7 @@ static void OnTick()
 			SET_PED_AS_NO_LONGER_NEEDED(&zombie);
 		}
 
-		it = m_zombies.erase(it);
+		it = ms_Zombies.erase(it);
 	}
 }
 

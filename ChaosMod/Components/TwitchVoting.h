@@ -11,7 +11,7 @@ using BYTE    = unsigned char;
 
 using HANDLE  = void *;
 
-enum class ETwitchOverlayMode : int
+enum class TwitchOverlayMode : int
 {
 	ChatMessages,
 	OverlayIngame,
@@ -23,52 +23,52 @@ class TwitchVoting : public Component
   private:
 	struct ChoosableEffect
 	{
-		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &szName, int iMatch)
-		    : m_EffectIdentifier(effectIdentifier), m_szEffectName(szName), m_iMatch(iMatch)
+		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &name, int match)
+		    : m_EffectIdentifier(effectIdentifier), m_EffectName(name), m_Match(match)
 		{
 		}
 
 		EffectIdentifier m_EffectIdentifier;
-		std::string m_szEffectName;
-		int m_iMatch;
-		int m_iChanceVotes = 0;
+		std::string m_EffectName;
+		int m_Match;
+		int m_ChanceVotes = 0;
 	};
 
-	bool m_bEnableTwitchVoting;
+	bool m_EnableTwitchVoting;
 
-	bool m_bReceivedHello     = false;
-	bool m_bReceivedFirstPing = false;
-	bool m_bHasReceivedResult = false;
+	bool m_ReceivedHello     = false;
+	bool m_ReceivedFirstPing = false;
+	bool m_HasReceivedResult = false;
 
-	int m_iTwitchSecsBeforeVoting;
+	int m_TwitchSecsBeforeVoting;
 
-	HANDLE m_hPipeHandle            = INVALID_HANDLE_VALUE;
+	HANDLE m_PipeHandle          = INVALID_HANDLE_VALUE;
 
-	DWORD64 m_ullLastPing           = GetTickCount64();
-	DWORD64 m_ullLastVotesFetchTime = GetTickCount64();
+	DWORD64 m_LastPing           = GetTickCount64();
+	DWORD64 m_LastVotesFetchTime = GetTickCount64();
 
-	int m_iNoPingRuns               = 0;
+	int m_NoPingRuns             = 0;
 
-	bool m_bIsVotingRoundDone       = true;
-	bool m_bAlternatedVotingRound   = false;
+	bool m_IsVotingRoundDone     = true;
+	bool m_AlternatedVotingRound = false;
 
-	ETwitchOverlayMode m_eTwitchOverlayMode;
+	TwitchOverlayMode m_TwitchOverlayMode;
 
-	bool m_bEnableTwitchChanceSystem;
-	bool m_bEnableVotingChanceSystemRetainChance;
-	bool m_bEnableTwitchRandomEffectVoteable;
+	bool m_EnableTwitchChanceSystem;
+	bool m_EnableVotingChanceSystemRetainChance;
+	bool m_EnableTwitchRandomEffectVoteable;
 
-	std::array<BYTE, 3> m_rgTextColor;
+	std::array<BYTE, 3> m_TextColor;
 
-	bool m_bIsVotingRunning = false;
+	bool m_IsVotingRunning = false;
 
-	std::vector<std::unique_ptr<ChoosableEffect>> m_rgEffectChoices;
+	std::vector<std::unique_ptr<ChoosableEffect>> m_EffectChoices;
 
-	std::unique_ptr<EffectIdentifier> m_pChosenEffectIdentifier;
+	std::unique_ptr<EffectIdentifier> m_ChosenEffectIdentifier;
 	std::string GetPipeJson(std::string identifier, std::vector<std::string> params);
 
   protected:
-	TwitchVoting(const std::array<BYTE, 3> &rgTextColor);
+	TwitchVoting(const std::array<BYTE, 3> &TextColor);
 	virtual ~TwitchVoting() override;
 
   public:
@@ -77,11 +77,11 @@ class TwitchVoting : public Component
 
 	bool IsEnabled() const;
 
-	bool HandleMsg(const std::string &szMsg);
+	bool HandleMsg(const std::string &msg);
 
 	void SendToPipe(std::string identifier, std::vector<std::string> params = {});
 
-	void ErrorOutWithMsg(const std::string &&szMsg);
+	void ErrorOutWithMsg(const std::string &&msg);
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

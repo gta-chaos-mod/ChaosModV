@@ -82,6 +82,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Make Random Stunt Jump",
         .Id = "player_tp_stunt",
-        .EffectGroupType = EEffectGroupType::Teleport
+        .EffectGroupType = EffectGroupType::Teleport
     }
 );

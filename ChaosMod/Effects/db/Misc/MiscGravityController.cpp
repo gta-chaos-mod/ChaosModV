@@ -20,7 +20,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickLow, EffectInfo
 		.Id = "lowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -37,7 +37,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, EffectInfo
 		.Id = "verylowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -69,7 +69,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
 		.Id = "insanegravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -106,7 +106,7 @@ REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, EffectInfo
 		.Id = "invertgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -155,7 +155,7 @@ REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 		.Id = "misc_sideways_gravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -209,6 +209,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
 		.Id = "misc_randomgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory  = EEffectCategory::Gravity
+		.EffectCategory  = EffectCategory::Gravity
 	}
 );

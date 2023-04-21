@@ -100,6 +100,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Delayed Camera",
 		.Id = "player_laggy_camera",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::Camera
+		.EffectCategory = EffectCategory::Camera
 	}
 );

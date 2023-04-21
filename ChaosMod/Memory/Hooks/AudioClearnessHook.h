@@ -2,7 +2,7 @@
 
 namespace Hooks
 {
-	void SetAudioClearness(int iValue);
+	void SetAudioClearness(int value);
 
 	void ResetAudioClearness();
 }

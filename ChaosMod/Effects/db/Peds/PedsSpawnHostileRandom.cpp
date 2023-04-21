@@ -43,6 +43,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Random Enemy",
 		.Id = "peds_spawnrandomhostile",
-		.EffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EffectGroupType::SpawnEnemy
 	}
 );

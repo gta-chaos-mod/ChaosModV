@@ -36,22 +36,22 @@ static const char *TV_PLAYLISTS[] = {
 	"PL_CINEMA_MULTIPLAYER_NO_MELTDOWN",
 };
 
-static float ms_fPosX = 0.f;
-static float ms_fPosY = 0.f;
+static float ms_PosX = 0.f;
+static float ms_PosY = 0.f;
 
 static void OnStart()
 {
-	const char *szPlaylist = TV_PLAYLISTS[g_Random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1)];
+	auto playlist = TV_PLAYLISTS[g_Random.GetRandomInt(0, sizeof(TV_PLAYLISTS) / sizeof(TV_PLAYLISTS[0]) - 1)];
 
-	GRAPHICS::SET_TV_CHANNEL_PLAYLIST_AT_HOUR(0, szPlaylist, g_Random.GetRandomInt(0, 23));
+	GRAPHICS::SET_TV_CHANNEL_PLAYLIST_AT_HOUR(0, playlist, g_Random.GetRandomInt(0, 23));
 	GRAPHICS::SET_TV_AUDIO_FRONTEND(true);
 	GRAPHICS::SET_TV_VOLUME(1.0f); // 0.0 is actually the highest the player can normally tune to.
 	GRAPHICS::ATTACH_TV_AUDIO_TO_ENTITY(PLAYER_PED_ID());
 	GRAPHICS::SET_TV_CHANNEL(0);
 	GRAPHICS::ENABLE_MOVIE_SUBTITLES(true);
 
-	ms_fPosX = g_Random.GetRandomFloat(0.3f, 0.7f);
-	ms_fPosY = g_Random.GetRandomFloat(0.3f, 0.7f);
+	ms_PosX = g_Random.GetRandomFloat(0.3f, 0.7f);
+	ms_PosY = g_Random.GetRandomFloat(0.3f, 0.7f);
 }
 
 static void OnStop()
@@ -65,7 +65,7 @@ static void OnTick()
 {
 	GRAPHICS::SET_SCRIPT_GFX_DRAW_ORDER(4);
 	GRAPHICS::SET_SCRIPT_GFX_DRAW_BEHIND_PAUSEMENU(1);
-	GRAPHICS::DRAW_TV_CHANNEL(ms_fPosX, ms_fPosY, 0.3f, 0.3f, 0.0f, 255, 255, 255, 255);
+	GRAPHICS::DRAW_TV_CHANNEL(ms_PosX, ms_PosY, 0.3f, 0.3f, 0.0f, 255, 255, 255, 255);
 }
 
 // clang-format off

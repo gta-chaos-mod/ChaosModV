@@ -1,11 +1,13 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include <set>
+
+using DWORD = unsigned long;
 
 class Component;
 
-inline std::vector<Component *> g_rgComponents;
+inline std::set<Component *> g_Components;
 
 template <class T>
 requires std::is_base_of_v<Component, T>
@@ -71,12 +73,12 @@ class Component
   protected:
 	Component()
 	{
-		g_rgComponents.push_back(this);
+		g_Components.insert(this);
 	}
 
 	virtual ~Component()
 	{
-		g_rgComponents.erase(std::find(g_rgComponents.begin(), g_rgComponents.end(), this));
+		g_Components.erase(this);
 	}
 
   public:
@@ -87,7 +89,14 @@ class Component
 	virtual void OnModPauseCleanup()
 	{
 	}
-	virtual void OnRun() = 0;
+
+	virtual void OnRun()
+	{
+	}
+
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+	{
+	}
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

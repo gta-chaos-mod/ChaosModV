@@ -16,7 +16,7 @@ REGISTER_EFFECT(OnStartLSIA, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To LS Airport",
 		.Id = "tp_lsairport",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on
@@ -31,7 +31,7 @@ REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
 		.Id = "tp_mazebanktower",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on
@@ -53,7 +53,7 @@ REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on
@@ -75,7 +75,7 @@ REGISTER_EFFECT(OnStartMountChilliad, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on
@@ -90,7 +90,7 @@ REGISTER_EFFECT(OnStartSkyFall, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on
@@ -234,7 +234,7 @@ REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
-		.EffectGroupType = EEffectGroupType::Teleport
+		.EffectGroupType = EffectGroupType::Teleport
 	}
 );
 // clang-format on

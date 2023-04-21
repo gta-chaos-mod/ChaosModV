@@ -18,6 +18,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Angry Chimp",
 		.Id = "spawn_angry_chimp",
-		.EffectGroupType = EEffectGroupType::SpawnEnemy,
+		.EffectGroupType = EffectGroupType::SpawnEnemy,
 	}
 );

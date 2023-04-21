@@ -28,6 +28,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 		.Id = "player_suicide",
 		.IsTimed = false,
 		.IncompatibleWith = { "player_invincible" },
-		.EffectGroupType = EEffectGroupType::PlayerKill
+		.EffectGroupType = EffectGroupType::PlayerKill
 	}
 );

@@ -1,7 +1,6 @@
 #include <stdafx.h>
 
 #include "Main.h"
-#include "Mp3Manager.h"
 
 #include "Effects/EffectConfig.h"
 
@@ -14,6 +13,10 @@
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/Failsafe.h"
+#include "Components/KeyStates.h"
+#include "Components/LuaScripts.h"
+#include "Components/MetaModifiers.h"
+#include "Components/Mp3Manager.h"
 #include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
@@ -22,34 +25,37 @@
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
 
-static bool ms_bClearAllEffects             = false;
-static bool ms_bClearEffectsShortcutEnabled = false;
-static bool ms_bToggleModShortcutEnabled    = false;
-static bool ms_bDisableMod                  = false;
-static bool ms_bEnablePauseTimerShortcut    = false;
-static bool ms_bHaveLateHooksRan            = false;
-static bool ms_bAntiSoftlockShortcutEnabled = false;
-static bool ms_bRunAntiSoftlock             = false;
+static struct
+{
+	bool ClearAllEffects             = false;
+	bool ClearEffectsShortcutEnabled = false;
+	bool ToggleModShortcutEnabled    = false;
+	bool DisableMod                  = false;
+	bool PauseTimerShortcutEnabled   = false;
+	bool HaveLateHooksRan            = false;
+	bool AntiSoftlockShortcutEnabled = false;
+	bool RunAntiSoftlock             = false;
+} ms_Flags;
 
-static std::array<BYTE, 3> ParseConfigColorString(const std::string &szColorText)
+static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
 {
 	// Format: #ARGB
-	std::array<BYTE, 3> rgColors;
+	std::array<BYTE, 3> colors;
 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
 	{
-		Util::TryParse<BYTE>(szColorText.substr(i, 2), rgColors[j++], 16);
+		Util::TryParse<BYTE>(colorText.substr(i, 2), colors[j++], 16);
 	}
 
-	return rgColors;
+	return colors;
 }
 
 static void ParseEffectsFile()
 {
-	g_dictEnabledEffects.clear();
+	g_EnabledEffects.clear();
 
-	EffectConfig::ReadConfig("chaosmod/effects.ini", g_dictEnabledEffects);
+	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, "chaosmod/effects.ini");
 }
 
 static void Reset()
@@ -69,13 +75,9 @@ static void Reset()
 
 	ClearEntityPool();
 
-	Mp3Manager::ResetCache();
-
-	LuaScripts::Unload();
-
-	for (auto pComponent : g_rgComponents)
+	for (auto component : g_Components)
 	{
-		pComponent->OnModPauseCleanup();
+		component->OnModPauseCleanup();
 	}
 }
 
@@ -96,7 +98,7 @@ static void Init()
 		return true;
 	}();
 
-	static std::streambuf *c_pOldStreamBuf;
+	static std::streambuf *oldStreamBuf;
 	if (DoesFileExist("chaosmod\\.enableconsole"))
 	{
 		if (GetConsoleWindow())
@@ -112,25 +114,25 @@ static void Init()
 			SetConsoleTitle(L"ChaosModV");
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
-			c_pOldStreamBuf = std::cout.rdbuf();
+			oldStreamBuf = std::cout.rdbuf();
 
-			g_ConsoleOut    = std::ofstream("CONOUT$");
+			g_ConsoleOut = std::ofstream("CONOUT$");
 			std::cout.rdbuf(g_ConsoleOut.rdbuf());
 
 			std::cout.clear();
 
 			HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-			DWORD ulConMode;
-			GetConsoleMode(handle, &ulConMode);
-			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ulConMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+			DWORD conMode;
+			GetConsoleMode(handle, &conMode);
+			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), conMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		}
 	}
 	else if (GetConsoleWindow())
 	{
 		LOG("Destroying log console");
 
-		std::cout.rdbuf(c_pOldStreamBuf);
+		std::cout.rdbuf(oldStreamBuf);
 
 		g_ConsoleOut.close();
 
@@ -142,40 +144,49 @@ static void Init()
 
 	g_OptionsManager.Reset();
 
-	ms_bClearEffectsShortcutEnabled =
+	ms_Flags.ClearEffectsShortcutEnabled =
 	    g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
-	ms_bToggleModShortcutEnabled =
+	ms_Flags.ToggleModShortcutEnabled =
 	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
-	ms_bEnablePauseTimerShortcut =
+	ms_Flags.PauseTimerShortcutEnabled =
 	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
-	ms_bAntiSoftlockShortcutEnabled =
+	ms_Flags.AntiSoftlockShortcutEnabled =
 	    g_OptionsManager.GetConfigValue<bool>("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
-	g_bEnableGroupWeighting =
+	g_EnableGroupWeighting =
 	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
-	const auto &rgTimerColor = ParseConfigColorString(
+	const auto &timerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
-	const auto &rgTextColor = ParseConfigColorString(
+	const auto &textColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
-	const auto &rgEffectTimerColor = ParseConfigColorString(
+	const auto &effectTimerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
-
-	LOG("Running custom scripts");
-	LuaScripts::Load();
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
+	LOG("Initializing effect sound system");
+	InitComponent<Mp3Manager>();
+
+	LOG("Initializing meta modifier states");
+	InitComponent<MetaModifiers>();
+
+	LOG("Initializing Lua scripts");
+	InitComponent<LuaScripts>();
+
 	LOG("Initializing effects dispatcher");
-	InitComponent<EffectDispatcher>(rgTimerColor, rgTextColor, rgEffectTimerColor);
+	InitComponent<EffectDispatcher>(timerColor, textColor, effectTimerColor);
 
 	InitComponent<DebugMenu>();
 
-	LOG("Initializing shortcuts");
+	LOG("Initializing shortcuts handler");
 	InitComponent<Shortcuts>();
 
+	LOG("Initializing key state handler");
+	InitComponent<KeyStates>();
+
 	LOG("Initializing Twitch voting");
-	InitComponent<TwitchVoting>(rgTextColor);
+	InitComponent<TwitchVoting>(textColor);
 
 	LOG("Initializing Failsafe");
 	InitComponent<Failsafe>();
@@ -198,36 +209,34 @@ static void Init()
 
 static void MainRun()
 {
-	if (!ms_bHaveLateHooksRan)
+	if (!ms_Flags.HaveLateHooksRan)
 	{
-		ms_bHaveLateHooksRan = true;
+		ms_Flags.HaveLateHooksRan = true;
 
 		Memory::RunLateHooks();
 	}
 
 	g_MainThread = GetCurrentFiber();
 
-	EffectThreads::ClearThreads();
-
 	Reset();
 
 	InitComponent<SplashTexts>();
 	GetComponent<SplashTexts>()->ShowInitSplash();
 
-	ms_bDisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+	ms_Flags.DisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 
-	bool c_bJustReenabled = false;
+	bool isDisabled = false;
 
 	while (true)
 	{
 		WAIT(0);
 
 		// This will run regardless if mod is disabled
-		if (ms_bRunAntiSoftlock)
+		if (ms_Flags.RunAntiSoftlock)
 		{
-			ms_bRunAntiSoftlock = false;
+			ms_Flags.RunAntiSoftlock = false;
 			if (IS_SCREEN_FADED_OUT())
 			{
 				DO_SCREEN_FADE_IN(0);
@@ -235,45 +244,63 @@ static void MainRun()
 			}
 		}
 
-		if (!EffectThreads::IsAnyThreadRunningOnStart())
+		if (ms_Flags.DisableMod && !isDisabled)
 		{
-			if (ms_bDisableMod && !c_bJustReenabled)
+			isDisabled = true;
+
+			if (ComponentExists<EffectDispatcher>())
 			{
-				c_bJustReenabled = true;
-				Reset();
-
-				continue;
-			}
-			else if (c_bJustReenabled)
-			{
-				if (!ms_bDisableMod)
-				{
-					c_bJustReenabled = false;
-
-					LOG("Mod has been re-enabled");
-
-					// Restart the main part of the mod completely
-					Init();
-				}
-
-				continue;
-			}
-
-			if (ms_bClearAllEffects)
-			{
-				ms_bClearAllEffects = false;
-
-				GetComponent<EffectDispatcher>()->Reset(false);
+				GetComponent<EffectDispatcher>()->Reset(EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
 					GetComponent<EffectDispatcher>()->OnRun();
 					WAIT(0);
 				}
-
-				ClearEntityPool();
 			}
+
+			Reset();
+
+			continue;
 		}
-		else if (IS_SCREEN_FADED_OUT())
+		else if (isDisabled)
+		{
+			if (!ms_Flags.DisableMod)
+			{
+				isDisabled = false;
+
+				LOG("Mod has been re-enabled");
+
+				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+				{
+					// Clear log
+					g_Log = std::ofstream(CHAOS_LOG_FILE);
+				}
+
+				// Restart the main part of the mod completely
+				Init();
+			}
+
+			continue;
+		}
+
+		if (ms_Flags.ClearAllEffects)
+		{
+			ms_Flags.ClearAllEffects = false;
+
+			if (ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->Reset(EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
+				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+				{
+					GetComponent<EffectDispatcher>()->OnRun();
+					WAIT(0);
+				}
+			}
+
+			ClearEntityPool();
+		}
+
+		if (IS_SCREEN_FADED_OUT())
 		{
 			// Prevent potential softlock for certain effects
 			SET_TIME_SCALE(1.f);
@@ -283,9 +310,9 @@ static void MainRun()
 			continue;
 		}
 
-		for (auto pComponent : g_rgComponents)
+		for (auto component : g_Components)
 		{
-			pComponent->OnRun();
+			component->OnRun();
 		}
 	}
 }
@@ -301,60 +328,69 @@ namespace Main
 
 	void OnCleanup()
 	{
-		LuaScripts::Unload();
 	}
 
-	void OnKeyboardInput(DWORD ulKey, WORD usRepeats, BYTE ucScanCode, BOOL bIsExtended, BOOL bIsWithAlt,
-	                     BOOL bWasDownBefore, BOOL bIsUpNow)
+	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,
+	                     BOOL isUpNow)
 	{
-		static bool c_bIsCtrlPressed  = false;
-		static bool c_bIsShiftPressed = false;
+		static bool isCtrlPressed  = false;
+		static bool isShiftPressed = false;
 
-		if (ulKey == VK_CONTROL)
+		if (key == VK_CONTROL)
 		{
-			c_bIsCtrlPressed = !bIsUpNow;
+			isCtrlPressed = !isUpNow;
 		}
-		else if (ulKey == VK_SHIFT)
+		else if (key == VK_SHIFT)
 		{
-			c_bIsShiftPressed = !bIsUpNow;
+			isShiftPressed = !isUpNow;
 		}
-		else if (c_bIsCtrlPressed && !bWasDownBefore)
+		else if (isCtrlPressed && !wasDownBefore)
 		{
-			if (ulKey == VK_OEM_MINUS && ms_bClearEffectsShortcutEnabled)
+			if (key == VK_OEM_MINUS)
 			{
-				ms_bClearAllEffects = true;
-
-				if (ComponentExists<SplashTexts>())
+				if (ms_Flags.ClearEffectsShortcutEnabled)
 				{
-					GetComponent<SplashTexts>()->ShowClearEffectsSplash();
+					ms_Flags.ClearAllEffects = true;
+
+					if (ComponentExists<SplashTexts>())
+					{
+						GetComponent<SplashTexts>()->ShowClearEffectsSplash();
+					}
 				}
 			}
-			else if (ulKey == VK_OEM_PERIOD && ms_bEnablePauseTimerShortcut && ComponentExists<EffectDispatcher>())
+			else if (key == VK_OEM_PERIOD)
 			{
-				GetComponent<EffectDispatcher>()->m_bPauseTimer = !GetComponent<EffectDispatcher>()->m_bPauseTimer;
+				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
+				{
+					GetComponent<EffectDispatcher>()->m_PauseTimer = !GetComponent<EffectDispatcher>()->m_PauseTimer;
+				}
 			}
-			else if (ulKey == VK_OEM_COMMA && ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
+			else if (key == VK_OEM_COMMA)
 			{
-				GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
+				if (ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
+				{
+					GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
+				}
 			}
-			else if (ulKey == 0x4B && ms_bAntiSoftlockShortcutEnabled && c_bIsShiftPressed) // K
+			else if (key == 0x4B) // K
 			{
-				ms_bRunAntiSoftlock = true;
+				if (ms_Flags.AntiSoftlockShortcutEnabled && isShiftPressed)
+				{
+					ms_Flags.RunAntiSoftlock = true;
+				}
 			}
-			else if (ulKey == 0x4C && ms_bToggleModShortcutEnabled) // L
+			else if (key == 0x4C) // L
 			{
-				ms_bDisableMod = !ms_bDisableMod;
+				if (ms_Flags.ToggleModShortcutEnabled)
+				{
+					ms_Flags.DisableMod = !ms_Flags.DisableMod;
+				}
 			}
 		}
 
-		if (ComponentExists<DebugMenu>())
+		for (auto component : g_Components)
 		{
-			GetComponent<DebugMenu>()->HandleInput(ulKey, bWasDownBefore);
-		}
-
-		if (ComponentExists<Shortcuts>())
-		{
-			GetComponent<Shortcuts>()->HandleInput(ulKey, bWasDownBefore);
+			component->OnKeyInput(key, wasDownBefore, isUpNow);
 		}
 	}
 }

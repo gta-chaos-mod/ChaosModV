@@ -9,16 +9,16 @@ using DWORD                           = unsigned long;
 inline void *g_MainThread             = nullptr;
 inline void *g_EffectDispatcherThread = nullptr;
 
-inline void WAIT(DWORD ulTimeMs, void *callerFiber = nullptr)
+inline void WAIT(DWORD timeMs, void *callerFiber = nullptr)
 {
 	auto currentFiber = GetCurrentFiber();
 	if (currentFiber == g_MainThread || currentFiber == g_EffectDispatcherThread)
 	{
-		scriptWait(ulTimeMs);
+		scriptWait(timeMs);
 	}
 	else
 	{
-		EffectThreads::PutThreadOnPause(ulTimeMs);
+		EffectThreads::PauseThisThread(timeMs);
 
 		if (callerFiber)
 		{

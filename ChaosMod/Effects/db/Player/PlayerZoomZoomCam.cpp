@@ -49,6 +49,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
         .Id = "player_zoomzoom_cam",
         .IsTimed = true,
         .IsShortDuration = true,
-        .EffectCategory = EEffectCategory::Camera
+        .EffectCategory = EffectCategory::Camera
     }
 );

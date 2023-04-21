@@ -2,13 +2,13 @@
 
 #include "Hook.h"
 
-static bool ms_bEnabledHook = false;
-static int ms_fValue = 0;
+static bool ms_EnabledHook = false;
+static int ms_Value        = 0;
 
-__int64(*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 clearness);
+__int64 (*_OG_rage__audRequestedSettings__SetClearness)(__int64 _this, __int64 clearness);
 __int64 _HK_rage__audRequestedSettings__SetClearness(__int64 _this, __int64 clearness)
 {
-	return _OG_rage__audRequestedSettings__SetClearness(_this, ms_bEnabledHook ? ms_fValue : clearness);
+	return _OG_rage__audRequestedSettings__SetClearness(_this, ms_EnabledHook ? ms_Value : clearness);
 }
 
 static bool OnHook()
@@ -19,7 +19,8 @@ static bool OnHook()
 		return false;
 	}
 
-	Memory::AddHook(handle.Into().Get<void>(), _HK_rage__audRequestedSettings__SetClearness, &_OG_rage__audRequestedSettings__SetClearness);
+	Memory::AddHook(handle.Into().Get<void>(), _HK_rage__audRequestedSettings__SetClearness,
+	                &_OG_rage__audRequestedSettings__SetClearness);
 
 	return true;
 }
@@ -28,14 +29,14 @@ static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__S
 
 namespace Hooks
 {
-	void SetAudioClearness(int iValue)
+	void SetAudioClearness(int value)
 	{
-		ms_bEnabledHook = true;
-		ms_fValue = iValue;
+		ms_EnabledHook = true;
+		ms_Value       = value;
 	}
 
 	void ResetAudioClearness()
 	{
-		ms_bEnabledHook = false;
+		ms_EnabledHook = false;
 	}
 }

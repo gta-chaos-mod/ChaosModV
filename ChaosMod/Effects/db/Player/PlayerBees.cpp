@@ -2,9 +2,9 @@
 
 // Effect by kolyaventuri
 
-static int CHANCE = 100;                              // Higher is less chance
-int match         = g_Random.GetRandomInt(0, CHANCE); // "Seed" for chance to match against
-int particleId;
+#define CHANCE 100 // Higher is less chance
+
+static int ms_ParticleId;
 
 static void OnStart()
 {
@@ -17,7 +17,7 @@ static void OnStart()
 	Ped player = PLAYER_PED_ID();
 	USE_PARTICLE_FX_ASSET("core");
 
-	particleId =
+	ms_ParticleId =
 	    START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_amb_fly_swarm", player, 0, 0, 0, 0, 0, 0, 1.1, false, false, false);
 }
 
@@ -37,7 +37,7 @@ static void OnTick()
 	int rand_int                  = g_Random.GetRandomInt(0, CHANCE);
 
 	PLAY_STREAM_FROM_PED(player);
-	if (rand_int == match)
+	if (rand_int == 50)
 	{
 		APPLY_DAMAGE_TO_PED(player, 1, false, false);
 		PLAY_PAIN(player, 22, 0, 0);
@@ -57,7 +57,7 @@ static void OnTick()
 static void OnStop()
 {
 	// Cleanup
-	STOP_PARTICLE_FX_LOOPED(particleId, 0);
+	STOP_PARTICLE_FX_LOOPED(ms_ParticleId, 0);
 	REMOVE_NAMED_PTFX_ASSET("core");
 	CLEAR_TIMECYCLE_MODIFIER();
 }

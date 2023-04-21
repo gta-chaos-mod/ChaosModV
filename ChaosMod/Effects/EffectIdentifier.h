@@ -7,20 +7,19 @@
 class EffectIdentifier
 {
   private:
-	std::string m_szEffectId;
-	bool m_bIsScript = false;
+	std::string m_EffectId;
+	bool m_IsScript = false;
 
   public:
 	EffectIdentifier() = default;
 
-	EffectIdentifier(const std::string &szScriptId, bool bIsScript = false)
-	    : m_szEffectId(szScriptId), m_bIsScript(bIsScript)
+	EffectIdentifier(const std::string &scriptId, bool isScript = false) : m_EffectId(scriptId), m_IsScript(isScript)
 	{
 	}
 
 	inline bool operator==(const EffectIdentifier &other) const
 	{
-		return m_szEffectId == other.GetEffectId();
+		return m_EffectId == other.GetEffectId();
 	}
 
 	inline bool operator!=(const EffectIdentifier &other) const
@@ -30,11 +29,11 @@ class EffectIdentifier
 
 	inline bool IsScript() const
 	{
-		return m_bIsScript;
+		return m_IsScript;
 	}
 
 	inline const std::string &GetEffectId() const
 	{
-		return m_szEffectId;
+		return m_EffectId;
 	}
 };

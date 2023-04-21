@@ -74,6 +74,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Blimp Strats",
         .Id = "player_blimp_strats",
-        .EffectGroupType = EEffectGroupType::Teleport
+        .EffectGroupType = EffectGroupType::Teleport
     }
 );

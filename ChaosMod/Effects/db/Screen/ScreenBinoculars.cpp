@@ -40,6 +40,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
         .Id = "player_binoculars",
         .IsTimed = true,
         .IsShortDuration = true,
-        .EffectCategory = EEffectCategory::Camera
+        .EffectCategory = EffectCategory::Camera
     }
 );

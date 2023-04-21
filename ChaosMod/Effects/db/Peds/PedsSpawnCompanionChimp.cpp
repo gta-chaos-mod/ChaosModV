@@ -40,6 +40,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Companion Chimp",
 		.Id = "spawn_chimp",
-		.EffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );

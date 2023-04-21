@@ -1,5 +1,5 @@
 /*
-	Effect by OnlyRealNubs
+    Effect by OnlyRealNubs
 */
 
 #include <stdafx.h>
@@ -9,10 +9,10 @@ static const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
 static void OnStart()
 {
 	static const Ped plr = PLAYER_PED_ID();
-	Vector3 pos = GET_ENTITY_COORDS(plr, false);
+	Vector3 pos          = GET_ENTITY_COORDS(plr, false);
 
-	Vehicle car = CreatePoolVehicle("POLICE2"_hash, pos.x, pos.y, pos.z, GET_ENTITY_HEADING(plr));
-	Ped cop = CreatePoolPedInsideVehicle(car, 4, "S_M_Y_Cop_01"_hash, -1);
+	Vehicle car          = CreatePoolVehicle("POLICE2"_hash, pos.x, pos.y, pos.z, GET_ENTITY_HEADING(plr));
+	Ped cop              = CreatePoolPedInsideVehicle(car, 4, "S_M_Y_Cop_01"_hash, -1);
 
 	SET_PED_INTO_VEHICLE(plr, car, 1);
 	SET_VEHICLE_SIREN(car, 1);
@@ -29,6 +29,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail",
-		.EffectGroupType = EEffectGroupType::SpawnGeneric,
+		.EffectGroupType = EffectGroupType::SpawnGeneric,
 	}
 );

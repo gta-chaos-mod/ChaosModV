@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 
-enum class EEffectGroupType
+enum class EffectGroupType
 {
 	None,
 	Teleport,          // Effects which teleport the player potentially far away without (explicitly) being helpful
@@ -23,12 +24,13 @@ enum class EEffectGroupType
 
 struct EffectGroupData
 {
-	unsigned short WeightMult  = 1;
+	std::uint16_t MemberCount  = 0;
+	std::uint16_t WeightMult   = 1;
 	bool IsPlaceholder         = false;
 	bool WasRegisteredByScript = false;
 };
 
-inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups {
+inline std::unordered_map<std::string, EffectGroupData> g_EffectGroups {
 	{ "_group_teleport", { .WeightMult = 2 } },          { "_group_spawngeneric", { .WeightMult = 5 } },
 	{ "_group_spawnenemyspecial", { .WeightMult = 5 } }, { "_group_spawnenemy", { .WeightMult = 4 } },
 	{ "_group_spawncompanion", { .WeightMult = 5 } },    { "_group_weapons", { .WeightMult = 4 } },
@@ -38,20 +40,18 @@ inline std::unordered_map<std::string, EffectGroupData> g_dictEffectGroups {
 	{ "_group_wantedlevel", { .WeightMult = 2 } },
 };
 
-inline const std::unordered_map<EEffectGroupType, std::string> g_dictEffectTypeToGroup {
-	{ EEffectGroupType::Teleport, "_group_teleport" },
-	{ EEffectGroupType::SpawnGeneric, "_group_spawngeneric" },
-	{ EEffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial" },
-	{ EEffectGroupType::SpawnEnemy, "_group_spawnenemy" },
-	{ EEffectGroupType::SpawnCompanion, "_group_spawncompanion" },
-	{ EEffectGroupType::Weapons, "_group_weapons" },
-	{ EEffectGroupType::PlayerKill, "_group_playerkill" },
-	{ EEffectGroupType::TrafficSpawner, "_group_trafficspawner" },
-	{ EEffectGroupType::TrafficColor, "_group_trafficcolor" },
-	{ EEffectGroupType::TimeChange, "_group_timechange" },
-	{ EEffectGroupType::WeatherChange, "_group_weatherchange" },
-	{ EEffectGroupType::Shader, "_group_shader" },
-	{ EEffectGroupType::WantedLevel, "_group_wantedlevel" },
+inline const std::unordered_map<EffectGroupType, std::string> g_EffectTypeToGroup {
+	{ EffectGroupType::Teleport, "_group_teleport" },
+	{ EffectGroupType::SpawnGeneric, "_group_spawngeneric" },
+	{ EffectGroupType::SpawnEnemySpecial, "_group_spawnenemyspecial" },
+	{ EffectGroupType::SpawnEnemy, "_group_spawnenemy" },
+	{ EffectGroupType::SpawnCompanion, "_group_spawncompanion" },
+	{ EffectGroupType::Weapons, "_group_weapons" },
+	{ EffectGroupType::PlayerKill, "_group_playerkill" },
+	{ EffectGroupType::TrafficSpawner, "_group_trafficspawner" },
+	{ EffectGroupType::TrafficColor, "_group_trafficcolor" },
+	{ EffectGroupType::TimeChange, "_group_timechange" },
+	{ EffectGroupType::WeatherChange, "_group_weatherchange" },
+	{ EffectGroupType::Shader, "_group_shader" },
+	{ EffectGroupType::WantedLevel, "_group_wantedlevel" },
 };
-
-inline std::unordered_map<std::string, unsigned short> g_dictEffectGroupMemberCount;

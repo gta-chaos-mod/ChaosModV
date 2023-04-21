@@ -3,7 +3,7 @@
 #include "Util/XInput.h"
 
 static Vector3 ms_BlackHolePos;
-static float ms_fCurRadius;
+static float ms_CurRadius;
 
 static void OnStart()
 {
@@ -12,7 +12,7 @@ static void OnStart()
 	ms_BlackHolePos.y += g_Random.GetRandomInt(-1000, 1000);
 	ms_BlackHolePos.z += g_Random.GetRandomInt(400, 800);
 
-	ms_fCurRadius = 0.f;
+	ms_CurRadius = 0.f;
 }
 
 static void OnStop()
@@ -24,30 +24,30 @@ static void OnTick()
 {
 	XInput::SetAllControllersRumble(40000, 40000);
 
-	if (ms_fCurRadius < 200.f)
+	if (ms_CurRadius < 200.f)
 	{
-		ms_fCurRadius += 0.2f + GET_FRAME_TIME();
+		ms_CurRadius += 0.2f + GET_FRAME_TIME();
 	}
 
-	_DRAW_SPHERE(ms_BlackHolePos.x, ms_BlackHolePos.y, ms_BlackHolePos.z, ms_fCurRadius, 0, 0, 0, 1.f);
-	SHAKE_GAMEPLAY_CAM("LARGE_EXPLOSION_SHAKE", 0.1f * ms_fCurRadius / 200.f);
+	_DRAW_SPHERE(ms_BlackHolePos.x, ms_BlackHolePos.y, ms_BlackHolePos.z, ms_CurRadius, 0, 0, 0, 1.f);
+	SHAKE_GAMEPLAY_CAM("LARGE_EXPLOSION_SHAKE", 0.1f * ms_CurRadius / 200.f);
 
-	std::list<Entity> rgEntities;
+	std::list<Entity> entities;
 	for (auto ped : GetAllPeds())
 	{
-		rgEntities.push_back(ped);
+		entities.push_back(ped);
 	}
 	for (auto veh : GetAllVehs())
 	{
-		rgEntities.push_back(veh);
+		entities.push_back(veh);
 	}
 	for (auto prop : GetAllProps())
 	{
-		rgEntities.push_back(prop);
+		entities.push_back(prop);
 	}
 
 	auto playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
-	for (auto entity : rgEntities)
+	for (auto entity : entities)
 	{
 		auto pos = GET_ENTITY_COORDS(entity, false);
 
@@ -63,7 +63,7 @@ static void OnTick()
 			APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(entity, 0, newVel.x, newVel.y, newVel.z, true, false, true, true);
 		}
 
-		if (pos.DistanceTo(ms_BlackHolePos) < ms_fCurRadius)
+		if (pos.DistanceTo(ms_BlackHolePos) < ms_CurRadius)
 		{
 			if (IS_ENTITY_A_PED(entity))
 			{

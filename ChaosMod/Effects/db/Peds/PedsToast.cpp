@@ -123,7 +123,7 @@ static void OnStop()
 
 	for (int i = 0; i < TOAST_MODEL_COUNT; ++i)
 	{
-		availablePropModels[i] = NULL;
+		availablePropModels[i] = 0;
 	}
 }
 

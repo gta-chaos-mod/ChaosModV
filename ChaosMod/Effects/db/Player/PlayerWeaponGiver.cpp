@@ -17,6 +17,6 @@ REGISTER_EFFECT(OnStartAll, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Give All Weapons",
 		.Id = "player_allweps",
-		.EffectGroupType = EEffectGroupType::Weapons
+		.EffectGroupType = EffectGroupType::Weapons
 	}
 );

@@ -12,26 +12,24 @@ static void OnStart()
 	Ped playerPed                 = PLAYER_PED_ID();
 
 	static const Hash model       = "cs_milton"_hash;
-
 	static const Hash playerGroup = "PLAYER"_hash;
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_BOND", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
 	                                                                           : playerPed);
 
-	float x_pos   = sin((360 - heading) * PI / 180) * 10;
-	float y_pos   = cos((360 - heading) * PI / 180) * 10;
+	float xPos    = sin((360 - heading) * PI / 180) * 10;
+	float yPos    = cos((360 - heading) * PI / 180) * 10;
 
-	Vehicle veh =
-	    CreatePoolVehicle("JB700"_hash, playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
+	auto veh      = CreatePoolVehicle("JB700"_hash, playerPos.x - xPos, playerPos.y - yPos, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
-	Vector3 vel = GET_ENTITY_VELOCITY(playerPed);
+	auto vel = GET_ENTITY_VELOCITY(playerPed);
 	SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 
 	Ped bond = CreatePoolPedInsideVehicle(veh, 4, model, -1);
@@ -60,6 +58,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Deadly Agent",
 		.Id = "peds_jamesbond",
-		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
 	}
 );

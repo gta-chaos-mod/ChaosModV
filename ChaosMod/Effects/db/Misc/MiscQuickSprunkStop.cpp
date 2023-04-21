@@ -19,6 +19,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Quick Sprunk Stop",
         .Id = "misc_quick_sprunk_stop",
-        .EffectGroupType = EEffectGroupType::SpawnGeneric
+        .EffectGroupType = EffectGroupType::SpawnGeneric
     }
 );

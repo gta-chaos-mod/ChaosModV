@@ -16,7 +16,7 @@ static void OnStop()
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
 	{
 		.Name = "Muffled Audio",
-		.Id = "misc_audio_muffled",
+		.Id = "misc_muffled_audio",
 		.IsTimed = true,
 	}
 );

@@ -4,12 +4,12 @@
 
 #include "Util/Script.h"
 
-inline void LoadModel(Hash ulModel)
+inline void LoadModel(Hash model)
 {
-	if (IS_MODEL_VALID(ulModel))
+	if (IS_MODEL_VALID(model))
 	{
-		REQUEST_MODEL(ulModel);
-		while (!HAS_MODEL_LOADED(ulModel))
+		REQUEST_MODEL(model);
+		while (!HAS_MODEL_LOADED(model))
 		{
 			WAIT(0);
 		}

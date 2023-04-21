@@ -12,27 +12,27 @@ class SplashTexts : public Component
   private:
 	struct SplashText
 	{
-		const std::string m_szText;
-		const ScreenTextVector m_textPos;
-		const float m_fScale;
-		const ScreenTextColor m_textColor;
-		float m_fTime;
+		const std::string Text;
+		const ScreenTextVector TextPos;
+		const float Scale;
+		const ScreenTextColor TextColor;
+		float Time;
 
-		SplashText(const std::string &szText, const ScreenTextVector &textPos, float fScale,
-		           const ScreenTextColor &textColor, float fTime)
-		    : m_szText(szText), m_textPos(textPos), m_fScale(fScale), m_textColor(textColor), m_fTime(fTime)
+		SplashText(const std::string &text, const ScreenTextVector &textPos, float scale,
+		           const ScreenTextColor &textColor, float time)
+		    : Text(text), TextPos(textPos), Scale(scale), TextColor(textColor), Time(time)
 		{
 		}
 	};
 
-	std::list<SplashText> m_activeSplashes;
+	std::list<SplashText> m_ActiveSplashes;
 
   public:
 	virtual void OnRun() override;
 	virtual void OnModPauseCleanup() override;
 
-	void ShowSplash(const std::string &szText, const ScreenTextVector &textPos, float fScale, ScreenTextColor textColor,
-	                float fTime);
+	void ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale, ScreenTextColor textColor,
+	                float time);
 	void ShowInitSplash();
 	void ShowTwitchVotingSplash();
 	void ShowClearEffectsSplash();

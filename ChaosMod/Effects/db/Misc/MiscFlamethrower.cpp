@@ -6,9 +6,9 @@
 
 struct ShooterInfo
 {
-	float fullDuration          = 0;
-	float durationSinceLastShot = 0;
-	int fxHandle                = 0;
+	float FullDuration          = 0;
+	float DurationSinceLastShot = 0;
+	int FxHandle                = 0;
 };
 
 static int MAX_DURATION_BETWEEN_SHOTS = 10;
@@ -47,18 +47,18 @@ static void OnTick()
 	for (auto it = animationHandleByPed.cbegin(); it != animationHandleByPed.cend();)
 	{
 		ShooterInfo animationInfo = it->second;
-		if (!DOES_ENTITY_EXIST(it->first) || animationInfo.fxHandle <= 0
-		    || it->second.fullDuration > MAX_DURATION_ANIMATION
+		if (!DOES_ENTITY_EXIST(it->first) || animationInfo.FxHandle <= 0
+		    || it->second.FullDuration > MAX_DURATION_ANIMATION
 		    || ((!IS_PED_SHOOTING(it->first) && IS_PED_WEAPON_READY_TO_SHOOT(it->first))
-		        && animationInfo.durationSinceLastShot > MAX_DURATION_BETWEEN_SHOTS))
+		        && animationInfo.DurationSinceLastShot > MAX_DURATION_BETWEEN_SHOTS))
 		{
-			STOP_PARTICLE_FX_LOOPED(animationInfo.fxHandle, false);
+			STOP_PARTICLE_FX_LOOPED(animationInfo.FxHandle, false);
 			animationHandleByPed.erase(it++);
 		}
 		else
 		{
-			animationHandleByPed[it->first].fullDuration += 1.f;
-			animationHandleByPed[it->first].durationSinceLastShot += 1.f;
+			animationHandleByPed[it->first].FullDuration += 1.f;
+			animationHandleByPed[it->first].DurationSinceLastShot += 1.f;
 			++it;
 		}
 		if (--delayRemovePeds == 0)
@@ -79,12 +79,12 @@ static void OnTick()
 			int handle =
 			    START_PARTICLE_FX_LOOPED_ON_ENTITY("ent_sht_flame", weapon, 1, 0, 0, 90, 0, 90, 2, false, false, false);
 			ShooterInfo animInfo;
-			animInfo.fxHandle         = handle;
+			animInfo.FxHandle         = handle;
 			animationHandleByPed[ped] = animInfo;
 		}
 		else
 		{
-			animationHandleByPed[ped].durationSinceLastShot = 0;
+			animationHandleByPed[ped].DurationSinceLastShot = 0;
 		}
 		if (--delayAnimationStart == 0)
 		{

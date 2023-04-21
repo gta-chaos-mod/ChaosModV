@@ -4,8 +4,8 @@
 
 #include "Memory/Hooks/Hook.h"
 
-static DWORD64 ms_ullBaseAddr;
-static DWORD64 ms_ullEndAddr;
+static DWORD64 ms_BaseAddr;
+static DWORD64 ms_EndAddr;
 
 namespace Memory
 {
@@ -14,18 +14,17 @@ namespace Memory
 		MODULEINFO moduleInfo;
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &moduleInfo, sizeof(moduleInfo));
 
-		ms_ullBaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
-		ms_ullEndAddr  = ms_ullBaseAddr + moduleInfo.SizeOfImage;
+		ms_BaseAddr = reinterpret_cast<DWORD64>(moduleInfo.lpBaseOfDll);
+		ms_EndAddr  = ms_BaseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
 
 		LOG("Running hooks");
-		for (RegisteredHook *pRegisteredHook = g_pRegisteredHooks; pRegisteredHook;
-		     pRegisteredHook                 = pRegisteredHook->GetNext())
+		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
-			if (!pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
+			if (!registeredHook->IsLateHook() && !registeredHook->RunHook())
 			{
-				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
+				LOG("Error while executing " << registeredHook->GetName() << " hook");
 			}
 		}
 
@@ -107,60 +106,60 @@ namespace Memory
 		MH_EnableHook(MH_ALL_HOOKS);
 	}
 
-	Handle FindPattern(const std::string &szPattern, const PatternScanRange &&scanRange)
+	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
 	{
-		if ((scanRange.m_startAddr != 0 || scanRange.m_endAddr != 0) && scanRange.m_startAddr >= scanRange.m_endAddr)
+		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)
 		{
 			LOG("startAddr is equal / bigger than endAddr???");
 			return Handle();
 		}
 
-		std::string szCopy = szPattern;
-		for (size_t pos = szCopy.find("??"); pos != std::string::npos; pos = szCopy.find("??", pos + 1))
+		auto copy = pattern;
+		for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
 		{
-			szCopy.replace(pos, 2, "?");
+			copy.replace(pos, 2, "?");
 		}
 
-		hook::pattern pattern = scanRange.m_startAddr == 0 && scanRange.m_endAddr == 0
-		                          ? hook::pattern(szCopy)
-		                          : hook::pattern(scanRange.m_startAddr, scanRange.m_endAddr, szCopy);
-		if (!pattern.size())
+		auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
+		                    ? hook::pattern(copy)
+		                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
+		if (!thePattern.size())
 		{
 			return Handle();
 		}
 
-		return Handle(uintptr_t(pattern.get_first()));
+		return Handle(uintptr_t(thePattern.get_first()));
 	}
 
-	MH_STATUS AddHook(void *pTarget, void *pDetour, void *ppOrig)
+	MH_STATUS AddHook(void *target, void *detour, void *orig)
 	{
-		MH_STATUS result = MH_CreateHook(pTarget, pDetour, reinterpret_cast<void **>(ppOrig));
+		auto result = MH_CreateHook(target, detour, reinterpret_cast<void **>(orig));
 
 		if (result == MH_OK)
 		{
-			MH_EnableHook(pTarget);
+			MH_EnableHook(target);
 		}
 
 		return result;
 	}
 
-	const char *GetTypeName(__int64 ullVftAddr)
+	const char *GetTypeName(__int64 vftAddr)
 	{
-		if (ullVftAddr)
+		if (vftAddr)
 		{
-			__int64 ullVftable = *reinterpret_cast<__int64 *>(ullVftAddr);
-			if (ullVftable)
+			auto vftable = *reinterpret_cast<__int64 *>(vftAddr);
+			if (vftable)
 			{
-				__int64 ullRtti = *reinterpret_cast<__int64 *>(ullVftable - 8);
-				if (ullRtti)
+				auto rtti = *reinterpret_cast<__int64 *>(vftable - 8);
+				if (rtti)
 				{
-					__int64 ullRva = *reinterpret_cast<DWORD *>(ullRtti + 12);
-					if (ullRva)
+					auto rva = *reinterpret_cast<DWORD *>(rtti + 12);
+					if (rva)
 					{
-						__int64 ullTypeDesc = ms_ullBaseAddr + ullRva;
-						if (ullTypeDesc)
+						auto typeDesc = ms_BaseAddr + rva;
+						if (typeDesc)
 						{
-							return reinterpret_cast<const char *>(ullTypeDesc + 16);
+							return reinterpret_cast<const char *>(typeDesc + 16);
 						}
 					}
 				}

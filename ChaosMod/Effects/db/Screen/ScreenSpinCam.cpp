@@ -43,6 +43,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
         .Id = "player_spin_camera",
         .IsTimed = true,
         .IsShortDuration = true,
-        .EffectCategory = EEffectCategory::Camera
+        .EffectCategory = EffectCategory::Camera
     }
 );
