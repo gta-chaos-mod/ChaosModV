@@ -2,6 +2,21 @@
 
 #include "Natives.h"
 
+struct Vec2
+{
+	float x, y;
+};
+
+struct Vec3
+{
+	float x, y, z;
+};
+
+struct Resolution
+{
+	uint32_t Width, Height;
+};
+
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {
 	if (relative)

@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Hook.h"
+#include "Util/Color.h"
 
 // Thanks CitizenFX!
 // Adapted by MoneyWasted for ChaosModV
@@ -15,13 +16,13 @@ static char *g_drawRects           = 0;
 static int *g_mainThreadFrameIndex = 0;
 static int g_drawRectsSize         = 0;
 
-char* (*_OG_allocateDrawRect)(void *);
-char* _HK_allocateDrawRect(void *drawRects)
+char *(*_OG_allocateDrawRect)(void *);
+char *_HK_allocateDrawRect(void *drawRects)
 {
 	return _OG_allocateDrawRect(drawRects);
 }
 
-void (*_OG_setDrawRectCoords)(void*, float, float, float, float);
+void (*_OG_setDrawRectCoords)(void *, float, float, float, float);
 void _HK_setDrawRectCoords(void *rect, float a2, float a3, float a4, float a5)
 {
 	_OG_setDrawRectCoords(rect, a2, a3, a4, a5);

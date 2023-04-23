@@ -1,5 +1,8 @@
 #include <stdafx.h>
 
+#include "Util/Color.h"
+#include "Util/Types.h"
+
 #include "Memory/Hooks/DrawingHooks.h"
 #include "Memory/Hooks/WorldToScreenHook.h"
 

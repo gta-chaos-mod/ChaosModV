@@ -1,11 +1,12 @@
 #include <stdafx.h>
 
 #include "Hook.h"
+#include "Util/Types.h"
 #include "WorldToScreenHook.h"
 
 static Resolution *m_resolution;
 
-bool (*_OG_WorldToScreen)(Vec3 worldPosition, float* X, float* Y);
+bool (*_OG_WorldToScreen)(Vec3 worldPosition, float *X, float *Y);
 bool _HK_WorldToScreen(Vec3 worldPosition, float *X, float *Y)
 {
 	return _OG_WorldToScreen(worldPosition, X, Y);
@@ -36,13 +37,9 @@ static RegisterHook registerHook(OnHook, nullptr, "_WorldToScreen");
 
 namespace Hooks
 {
-	bool WorldToScreen(Vector3 worldPosition, Vec2* screenPosition)
+	bool WorldToScreen(Vector3 worldPosition, Vec2 *screenPosition)
 	{
-		Vec3 worldVec {
-			.x = worldPosition.x,
-			.y = worldPosition.y,
-			.z = worldPosition.z
-		};
+		Vec3 worldVec { .x = worldPosition.x, .y = worldPosition.y, .z = worldPosition.z };
 
 		if (_HK_WorldToScreen(worldVec, &screenPosition->x, &screenPosition->y))
 		{
