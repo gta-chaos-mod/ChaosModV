@@ -30,10 +30,19 @@ Vec2 GetBoneScreenCoords(Ped ped, int boneID)
 
 void DrawSkeleton(Vec2 points[], int connections[][2], int num_connections, Color lineColor, float thickness)
 {
-	for (int i = 0; i < num_connections; i++)
-	{
-		Hooks::DrawLine(points[connections[i][0]], points[connections[i][1]], lineColor, thickness);
-	}
+    for (int i = 0; i < num_connections; i++)
+    {
+        Vec2 pointA = points[connections[i][0]];
+        Vec2 pointB = points[connections[i][1]];
+
+        bool validPointA = pointA.x > 0 && pointA.x < 1 && pointA.y > 0 && pointA.y < 1;
+        bool validPointB = pointB.x > 0 && pointB.x < 1 && pointB.y > 0 && pointB.y < 1;
+
+        if (validPointA && validPointB)
+        {
+            Hooks::DrawLine(pointA, pointB, lineColor, thickness);
+        }
+    }
 }
 
 static bool WithinDistance(Ped from, Ped to)
