@@ -6,7 +6,7 @@
 #include "Memory/Hooks/DrawingHooks.h"
 #include "Memory/Hooks/WorldToScreenHook.h"
 
-// Keep clang formatting off!
+// This file is manually formatted.
 // clang-format off
 
 static const float maxDistance = 75.0f;
@@ -92,7 +92,6 @@ static void OnTick()
 	}
 }
 
-// clang-format off
 REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "ESP",
