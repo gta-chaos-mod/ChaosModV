@@ -7,11 +7,6 @@
 // Adapted by MoneyWasted for ChaosModV
 // https://github.com/citizenfx/fivem/blob/master/code/components/extra-natives-five/src/Draw2dNatives.cpp
 
-// Notes:
-// Analysis in IDA shows that the return values of
-// _HK_allocateDrawRect is most likely a structure
-// of some sorts.
-
 // This file is manually formatted.
 // clang-format off
 
@@ -53,8 +48,10 @@ namespace Hooks
 {
 	void DrawLine(float x1, float y1, float x2, float y2, float width, int r, int g, int b, int a)
 	{
+		// Analysis in IDA shows that the return value of OG_AllocateDrawRect would be a structure.
 		if (auto rect = OG_AllocateDrawRect(&ms_DrawRects[ms_DrawRectsSize * *ms_MainThreadFrameIndex]))
 		{
+			// Clamp each color value then combine them.
 			uint32_t color = (
 				(std::clamp(a, 0, 255) << 24) |
 				(std::clamp(r, 0, 255) << 16) |
@@ -64,6 +61,7 @@ namespace Hooks
 
 			OG_SetDrawRectCoords(rect, x1, y1, x2, y2);
 
+			// Set unknown structure pointers.
 			*(uint32_t*)(rect + 0x34) &= 0xFA;
 			*(uint32_t*)(rect + 0x34) |= 0x8A;
 			*(float*)(rect + 0x1C)    = width;
