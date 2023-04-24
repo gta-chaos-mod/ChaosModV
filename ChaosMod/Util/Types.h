@@ -2,20 +2,18 @@
 
 #include "Natives.h"
 
-struct Vec2
+namespace rage
 {
-	float x, y;
-};
+	struct Vector2
+	{
+		float x, y;
+	};
 
-struct Vec3
-{
-	float x, y, z;
-};
-
-struct Resolution
-{
-	uint32_t Width, Height;
-};
+	struct Vector3
+	{
+		float x, y, z;
+	};
+}
 
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {

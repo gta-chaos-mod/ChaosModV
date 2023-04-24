@@ -2,5 +2,5 @@
 
 namespace Hooks
 {
-	bool WorldToScreen(Vector3 worldPosition, Vec2 *screenPosition);
+	bool WorldToScreen(Vector3 worldPosition, rage::Vector2 *screenPosition);
 }

@@ -4,13 +4,9 @@
 #include "Util/Types.h"
 #include "WorldToScreenHook.h"
 
-static Resolution *m_resolution;
+bool (*OG_WorldToScreen)(rage::Vector3, float *, float *);
 
-bool (*_OG_WorldToScreen)(Vec3 worldPosition, float *X, float *Y);
-bool _HK_WorldToScreen(Vec3 worldPosition, float *X, float *Y)
-{
-	return _OG_WorldToScreen(worldPosition, X, Y);
-}
+static void **ms_WorldToScreenAddr = 0;
 
 static bool OnHook()
 {
@@ -20,15 +16,8 @@ static bool OnHook()
 		return false;
 	}
 
-	Memory::AddHook(handle.Get<bool>(), _HK_WorldToScreen, &_OG_WorldToScreen);
-
-	handle = Memory::FindPattern("8B 0D ? ? ? ? 49 8D 56 28");
-	if (!handle.IsValid())
-	{
-		return false;
-	}
-
-	m_resolution = handle.At(1).Into().Get<Resolution>();
+	ms_WorldToScreenAddr = handle.Get<void *>();
+	OG_WorldToScreen     = *(bool (*)(rage::Vector3, float *, float *))ms_WorldToScreenAddr;
 
 	return true;
 }
@@ -37,11 +26,11 @@ static RegisterHook registerHook(OnHook, nullptr, "_WorldToScreen");
 
 namespace Hooks
 {
-	bool WorldToScreen(Vector3 worldPosition, Vec2 *screenPosition)
+	bool WorldToScreen(Vector3 worldPosition, rage::Vector2 *screenPosition)
 	{
-		Vec3 worldVec { .x = worldPosition.x, .y = worldPosition.y, .z = worldPosition.z };
+		rage::Vector3 worldVec { .x = worldPosition.x, .y = worldPosition.y, .z = worldPosition.z };
 
-		if (_HK_WorldToScreen(worldVec, &screenPosition->x, &screenPosition->y))
+		if (OG_WorldToScreen(worldVec, &screenPosition->x, &screenPosition->y))
 		{
 			return true;
 		}

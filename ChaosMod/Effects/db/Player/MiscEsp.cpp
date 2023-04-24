@@ -6,12 +6,14 @@
 #include "Memory/Hooks/DrawingHooks.h"
 #include "Memory/Hooks/WorldToScreenHook.h"
 
+// Keep clang formatting off!
+// clang-format off
+
 static const float maxDistance = 75.0f;
 static const float thickness   = 0.001f;
 
 static Color lineColor;
 
-// clang-format off
 static const std::array<int, 19> BONE_IDS = {
 	0x796e, 0x9995, 0xfcd9, 0x58b7,
 	0xb1c5, 0xeeeb, 0x49d9, 0x29d2,
@@ -26,23 +28,24 @@ constexpr std::array<std::array<int, 2>, 14> connections = {{
 	{ 12, 13 }, { 13, 14 }, { 12, 15 }, { 15, 16 },
 	{ 14, 17 }, { 16, 18 },
 }};
-// clang-format on
 
-Vec2 GetBoneScreenCoords(Ped ped, int boneID)
+static rage::Vector2 GetBoneScreenCoords(Ped ped, int boneID)
 {
 	Vector3 boneCoords = GET_PED_BONE_COORDS(ped, boneID, 0, 0, 0);
-	Vec2 screenCoords;
+	rage::Vector2 screenCoords;
 	Hooks::WorldToScreen(boneCoords, &screenCoords);
 	return screenCoords;
 }
 
-void DrawSkeleton(const std::array<Vec2, 19> &points, const std::array<std::array<int, 2>, 14> &connections,
-                  Color lineColor, float thickness)
+static void DrawSkeleton(
+	const std::array<rage::Vector2, 19> &points,
+	const std::array<std::array<int, 2>, 14> &connections,
+	Color lineColor, float thickness)
 {
 	for (const auto &connection : connections)
 	{
-		Vec2 pointA      = points[connection[0]];
-		Vec2 pointB      = points[connection[1]];
+		rage::Vector2 pointA = points[connection[0]];
+		rage::Vector2 pointB = points[connection[1]];
 
 		bool validPointA = pointA.x > 0 && pointA.x < 1 && pointA.y > 0 && pointA.y < 1;
 		bool validPointB = pointB.x > 0 && pointB.x < 1 && pointB.y > 0 && pointB.y < 1;
@@ -75,10 +78,10 @@ static void OnTick()
 	Ped playerPed = PLAYER_PED_ID();
 	for (auto ped : GetAllPeds())
 	{
-		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) && !IS_PED_A_PLAYER(ped)
-		    && WithinDistance(playerPed, ped))
+		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) &&
+			!IS_PED_A_PLAYER(ped) && WithinDistance(playerPed, ped))
 		{
-			std::array<Vec2, BONE_IDS.size()> points {};
+			std::array<rage::Vector2, BONE_IDS.size()> points {};
 			for (size_t i = 0; i < BONE_IDS.size(); i++)
 			{
 				points[i] = GetBoneScreenCoords(ped, BONE_IDS[i]);
