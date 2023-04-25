@@ -10,6 +10,8 @@
 // This file is manually formatted.
 // clang-format off
 
+static const int MAX_LINES = 5000;
+
 char *(*OG_AllocateDrawRect)(void *);
 void (*OG_SetDrawRectCoords)(void *, float, float, float, float);
 
@@ -36,8 +38,18 @@ static bool OnHook()
 	ms_AllocateDrawRectAddr  = handle.At(0x56).Into().Get<void *>();
 	ms_SetDrawRectCoordsAddr = handle.At(0x92).Into().Get<void *>();
 
-	OG_AllocateDrawRect      = *(char *(*)(void *))ms_AllocateDrawRectAddr;
-	OG_SetDrawRectCoords     = *(void (*)(void *, float, float, float, float))ms_SetDrawRectCoordsAddr;
+	// At the instruction 'cmp edx, 500' in allocateDrawRect.
+	handle = Memory::FindPattern("81 FA F4 01 00 00 73 13");
+	if (!handle.IsValid())
+	{
+		return false;
+	}
+
+	// Increase the number of lines that can be draw.
+	Memory::Write<int>(handle.At(2).Get<int>(), MAX_LINES);
+
+	OG_AllocateDrawRect  = *(char *(*)(void *))ms_AllocateDrawRectAddr;
+	OG_SetDrawRectCoords = *(void (*)(void *, float, float, float, float))ms_SetDrawRectCoordsAddr;
 
 	return true;
 }
