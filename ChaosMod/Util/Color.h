@@ -9,10 +9,10 @@ struct Color
 inline Color GetRandomColorRGB(unsigned int min = 0, unsigned int max = 255)
 {
 	return {
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		255
+		(unsigned int)g_Random.GetRandomInt(min, max), // R
+		(unsigned int)g_Random.GetRandomInt(min, max), // G
+		(unsigned int)g_Random.GetRandomInt(min, max), // B
+		255                                            // A
 	};
 }
 
@@ -20,9 +20,9 @@ inline Color GetRandomColorRGB(unsigned int min = 0, unsigned int max = 255)
 inline Color GetRandomColorRGBA(unsigned int min = 0, unsigned int max = 255)
 {
 	return {
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		(unsigned int)g_Random.GetRandomInt(min, max),
-		(unsigned int)g_Random.GetRandomInt(min, max)
+		(unsigned int)g_Random.GetRandomInt(min, max), // R
+		(unsigned int)g_Random.GetRandomInt(min, max), // G
+		(unsigned int)g_Random.GetRandomInt(min, max), // B
+		(unsigned int)g_Random.GetRandomInt(min, max)  // A
 	};
 }
