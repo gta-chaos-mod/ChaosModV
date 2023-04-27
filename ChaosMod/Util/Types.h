@@ -2,18 +2,10 @@
 
 #include "Natives.h"
 
-namespace rage
+struct ChaosVector3
 {
-	struct Vector2
-	{
-		float x, y;
-	};
-
-	struct Vector3
-	{
-		float x, y, z;
-	};
-}
+	float x, y, z;
+};
 
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {

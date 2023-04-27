@@ -380,14 +380,12 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
-    <ClCompile Include="Memory\Hooks\DrawingHooks.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
     <ClCompile Include="Memory\Hooks\AudioPitchHook.cpp" />
     <ClCompile Include="Memory\Hooks\MiscHooks.cpp" />
     <ClCompile Include="Memory\Hooks\ShaderHook.cpp" />
-    <ClCompile Include="Memory\Hooks\WorldToScreenHook.cpp" />
     <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="..\vendor\Patterns\Patterns.cpp" />
     <ClCompile Include="Components\SplashTexts.cpp" />
@@ -429,13 +427,12 @@
     <ClInclude Include="Components\LuaScripts.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Audio.h" />
+    <ClInclude Include="Memory\Drawing.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\EntityFragments.h" />
     <ClInclude Include="Memory\Gravity.h" />
     <ClInclude Include="Memory\Hooks\AudioClearnessHook.h" />
-    <ClInclude Include="Memory\Hooks\DrawingHooks.h" />
     <ClInclude Include="Memory\Hooks\ShaderHook.h" />
-    <ClInclude Include="Memory\Hooks\WorldToScreenHook.h" />
     <ClInclude Include="Memory\Physics.h" />
     <ClInclude Include="Memory\Handle.h" />
     <ClInclude Include="Memory\Hooks\ScriptThreadRunHook.h" />
@@ -452,6 +449,7 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
+    <ClInclude Include="Memory\WorldToScreen.h" />
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="..\vendor\json.hpp" />
