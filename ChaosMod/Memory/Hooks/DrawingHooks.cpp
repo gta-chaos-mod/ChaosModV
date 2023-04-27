@@ -45,7 +45,7 @@ static bool OnHook()
 		return false;
 	}
 
-	// Increase the number of lines that can be draw.
+	// Increase the number of lines that can be drawn.
 	Memory::Write<int>(handle.At(2).Get<int>(), MAX_LINES);
 
 	OG_AllocateDrawRect  = *(char *(*)(void *))ms_AllocateDrawRectAddr;
