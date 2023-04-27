@@ -68,8 +68,7 @@ static bool WithinDistance(Ped from, Ped to)
 
 static void OnStart()
 {
-	lineColor   = GetRandomColorRGB();
-	lineColor.A = 255;
+	lineColor = GetRandomColorRGB();
 }
 
 static void OnTick()
