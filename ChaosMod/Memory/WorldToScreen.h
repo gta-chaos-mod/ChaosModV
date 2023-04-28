@@ -1,18 +1,12 @@
 #pragma once
 
-#include "Util/Types.h"
-
-bool (*OG_WorldToScreen)(ChaosVector3, float *, float *);
-
-static void *ms_WorldToScreenAddr = 0;
-
-namespace Hooks
+namespace Memory
 {
-	inline bool WorldToScreen(Vector3 worldPosition, Vector3 *screenPosition)
+	inline bool WorldToScreen(ChaosVector3 worldPosition, ChaosVector2 *screenPosition)
 	{
-		static void *ms_WorldToScreenAddr = 0;
+		static bool (*WorldToScreen)(ChaosVector3, float *, float *);
 
-		if (!ms_WorldToScreenAddr)
+		if (!WorldToScreen)
 		{
 			Handle handle = Memory::FindPattern("48 89 5C 24 ? 55 56 57 48 83 EC 70 65 4C 8B 0C 25");
 			if (!handle.IsValid())
@@ -20,17 +14,10 @@ namespace Hooks
 				return false;
 			}
 
-			ms_WorldToScreenAddr = handle.Get<void>();
-			OG_WorldToScreen     = *(bool (*)(ChaosVector3, float *, float *))ms_WorldToScreenAddr;
+			WorldToScreen = handle.Get<bool(ChaosVector3, float *, float *)>();
 		}
 
-		ChaosVector3 _ {
-			.x = worldPosition.x,
-			.y = worldPosition.y,
-			.z = worldPosition.z,
-		};
-
-		if (OG_WorldToScreen(_, &screenPosition->x, &screenPosition->y))
+		if (WorldToScreen(worldPosition, &screenPosition->x, &screenPosition->y))
 		{
 			return true;
 		}

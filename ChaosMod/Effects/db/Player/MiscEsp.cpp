@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Util/Color.h"
+#include "Util/Types.h"
 
 #include "Memory/Drawing.h"
 #include "Memory/WorldToScreen.h"
@@ -28,30 +29,30 @@ constexpr std::array<std::array<int, 2>, 14> connections = {{
 	{ 14, 17 }, { 16, 18 },
 }};
 
-static Vector3 GetBoneScreenCoords(Ped ped, int boneID)
+static ChaosVector2 GetBoneScreenCoords(Ped ped, int boneID)
 {
 	Vector3 boneCoords = GET_PED_BONE_COORDS(ped, boneID, 0, 0, 0);
-	Vector3 screenCoords;
-	Hooks::WorldToScreen(boneCoords, &screenCoords);
+	ChaosVector2 screenCoords;
+	Memory::WorldToScreen((ChaosVector3)boneCoords, &screenCoords);
 	return screenCoords;
 }
 
 static void DrawSkeleton(
-	const std::array<Vector3, 19> &points,
+	const std::array<ChaosVector2, 19> &points,
 	const std::array<std::array<int, 2>, 14> &connections,
 	Color lineColor, float thickness)
 {
 	for (const auto &connection : connections)
 	{
-		Vector3 pointA = points[connection[0]];
-		Vector3 pointB = points[connection[1]];
+		ChaosVector2 pointA = points[connection[0]];
+		ChaosVector2 pointB = points[connection[1]];
 
 		bool validPointA = pointA.x > 0 && pointA.x < 1 && pointA.y > 0 && pointA.y < 1;
 		bool validPointB = pointB.x > 0 && pointB.x < 1 && pointB.y > 0 && pointB.y < 1;
 
 		if (validPointA && validPointB)
 		{
-			Hooks::DrawLine(pointA, pointB, lineColor, thickness);
+			Memory::DrawLine(pointA, pointB, lineColor, thickness);
 		}
 	}
 }
@@ -79,7 +80,7 @@ static void OnTick()
 		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) &&
 			!IS_PED_A_PLAYER(ped) && WithinDistance(playerPed, ped))
 		{
-			std::array<Vector3, BONE_IDS.size()> points {};
+			std::array<ChaosVector2, BONE_IDS.size()> points {};
 			for (size_t i = 0; i < BONE_IDS.size(); i++)
 			{
 				points[i] = GetBoneScreenCoords(ped, BONE_IDS[i]);
