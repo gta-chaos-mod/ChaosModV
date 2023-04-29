@@ -52,6 +52,12 @@ namespace ConfigApp
                 "OBS Overlay"
             };
 
+            misc_distance_type.ItemsSource = new string[]
+            {
+                "Distance",
+                "Displacement"
+            };
+
             if (!m_bInitializedTitle)
             {
                 m_bInitializedTitle = true;
@@ -128,6 +134,14 @@ namespace ConfigApp
             return effectData;
         }
 
+        private void HandleDistanceFields()
+        {
+            bool enabled = misc_enable_distance_based_effects.IsChecked ?? false;
+
+            misc_distance_type.IsEnabled = enabled;
+            misc_distance_to_activate_effect.IsEnabled = enabled;
+        }
+
         private void ParseConfigFile()
         {
             m_ConfigFile.ReadFile();
@@ -159,6 +173,10 @@ namespace ConfigApp
             misc_user_effects_enable_group_weighting.IsChecked = m_ConfigFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
             misc_user_effects_enable_failsafe.IsChecked = m_ConfigFile.ReadValueBool("EnableFailsafe", true);
             misc_user_anti_softlock_shortcut.IsChecked = m_ConfigFile.ReadValueBool("EnableAntiSoftlockShortcut", true);
+            misc_enable_distance_based_effects.IsChecked = m_ConfigFile.ReadValueBool("EnableDistanceBasedEffectDispatch", false);
+            misc_distance_to_activate_effect.Text = m_ConfigFile.ReadValue("DistanceToActivateEffect", "250");
+            misc_distance_type.SelectedIndex = m_ConfigFile.ReadValueInt("DistanceType", 0);
+            HandleDistanceFields();
 
             // Meta Effects
             meta_effects_spawn_dur.Text = m_ConfigFile.ReadValue("NewMetaEffectSpawnTime", "600");
@@ -184,6 +202,9 @@ namespace ConfigApp
             m_ConfigFile.WriteValue("DisableStartup", misc_user_effects_disable_startup.IsChecked.Value);
             m_ConfigFile.WriteValue("EnableGroupWeightingAdjustments", misc_user_effects_enable_group_weighting.IsChecked.Value);
             m_ConfigFile.WriteValue("EnableFailsafe", misc_user_effects_enable_failsafe.IsChecked.Value);
+            m_ConfigFile.WriteValue("EnableDistanceBasedEffectDispatch", misc_enable_distance_based_effects.IsChecked.Value);
+            m_ConfigFile.WriteValue("DistanceToActivateEffect", misc_distance_to_activate_effect.Text);
+            m_ConfigFile.WriteValue("DistanceType", misc_distance_type.SelectedIndex);
             int runningEffects;
             if (int.TryParse(misc_user_effects_max_running_effects.Text, out runningEffects) && runningEffects > 0)
             {
@@ -743,6 +764,11 @@ namespace ConfigApp
         private void contribute_discord_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+        }
+
+        private void misc_enable_distance_based_effects_Click(object sender, RoutedEventArgs e)
+        {
+            HandleDistanceFields();
         }
     }
 }

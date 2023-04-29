@@ -64,6 +64,12 @@ class EffectDispatcher : public Component
 		}
 	};
 
+	enum TravelledDistanceType
+	{
+		Distance,
+		Displacement
+	};
+	
 	std::array<BYTE, 3> m_TimerColor;
 	std::array<BYTE, 3> m_TextColor;
 	std::array<BYTE, 3> m_EffectTimerColor;
@@ -95,6 +101,13 @@ class EffectDispatcher : public Component
 	std::list<RegisteredEffect *> m_DispatchedEffectsLog;
 
   private:
+	bool m_EnableDistanceBasedEffectDispatch = false;
+
+	float m_DistanceToActivateEffect = 500.f;
+	Vector3 m_SavedPosition = Vector3();
+	bool m_DeadFlag = true;
+	TravelledDistanceType m_DistanceType = Distance;
+
 	bool m_EnableNormalEffectDispatch = true;
 
 	bool m_MetaEffectsEnabled         = true;
@@ -164,6 +177,7 @@ class EffectDispatcher : public Component
 	void UpdateTimer(int deltaTime);
 	void UpdateEffects(int deltaTime);
 	void UpdateMetaEffects(int deltaTime);
+	void UpdateTravelledDistance();
 
 	void ClearEffect(const EffectIdentifier &effectId);
 	enum ClearEffectsFlags
