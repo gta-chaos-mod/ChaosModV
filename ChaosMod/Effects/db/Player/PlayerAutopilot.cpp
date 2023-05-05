@@ -68,7 +68,7 @@ static void OnTick()
 
 #ifdef _DEBUG
 	// Draw debug go to line
-	if (m_state == STATE_TO_COORDS)
+	if (ms_State == STATE_TO_COORDS)
 	{
 		DRAW_LINE(playerPos.x, playerPos.y, playerPos.z, ms_WaypointCoords.x, ms_WaypointCoords.y, ms_WaypointCoords.z,
 		          0, 255, 0, 255);
