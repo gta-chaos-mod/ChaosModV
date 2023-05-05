@@ -23,7 +23,11 @@ void Shortcuts::OnRun()
 		while (!m_EffectQueue.empty())
 		{
 			auto &identifier = m_EffectQueue.front();
-			GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
+
+			if (ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
+			}
 
 			m_EffectQueue.pop();
 		}
