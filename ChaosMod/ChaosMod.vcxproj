@@ -58,6 +58,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
