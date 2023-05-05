@@ -36,7 +36,7 @@ namespace Memory
 			drawRectsSize        = handle.At(0x2C).Value<int>();
 			mainThreadFrameIndex = handle.At(0x0E).Into().Get<int>();
 
-			// At the instruction 'cmp edx, 500' in allocateDrawRect.
+			// At the instruction 'cmp edx, 500' in AllocateDrawRect.
 			handle = Memory::FindPattern("81 FA F4 01 00 00 73 13");
 			if (!handle.IsValid())
 			{
@@ -47,7 +47,7 @@ namespace Memory
 			Memory::Write<int>(handle.At(2).Get<int>(), MAX_LINES);
 		}
 
-		// Analysis in IDA shows that the return value of OG_AllocateDrawRect would be a structure.
+		// Analysis in IDA shows that the return value of AllocateDrawRect would be a structure.
 		if (auto rect = AllocateDrawRect(&drawRects[drawRectsSize * *mainThreadFrameIndex]))
 		{
 			// Clamp each color value then combine them.
