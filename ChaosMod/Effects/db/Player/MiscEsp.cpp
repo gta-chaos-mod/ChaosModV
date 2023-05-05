@@ -94,8 +94,7 @@ static void OnTick()
 REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
 	{
 		.Name = "ESP",
-		.Id = "msic_esp",
-		.IsTimed = true,
-		.EffectGroupType = EffectGroupType::Weapons
+		.Id = "misc_esp",
+		.IsTimed = true
 	}
 );
