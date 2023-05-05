@@ -706,9 +706,8 @@ void EffectDispatcher::Reset(ClearEffectsFlags clearEffectFlags)
 	ClearEffects(clearEffectFlags);
 	ResetTimer();
 
-	m_EnableNormalEffectDispatch = false;
-	m_MetaEffectsEnabled         = true;
-	m_MetaEffectTimerPercentage  = 0.f;
+	m_MetaEffectsEnabled        = true;
+	m_MetaEffectTimerPercentage = 0.f;
 }
 
 void EffectDispatcher::ResetTimer()
