@@ -15,7 +15,8 @@ class OptionsFile
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
-	OptionsFile(const char *fileName, const char *compatFileName = nullptr) : m_FileName(fileName), m_CompatFileName(compatFileName)
+	OptionsFile(const char *fileName, const char *compatFileName = nullptr)
+	    : m_FileName(fileName), m_CompatFileName(compatFileName)
 	{
 		Reset();
 	}
@@ -53,12 +54,7 @@ class OptionsFile
 			return true;
 		};
 
-		if (readData(m_CompatFileName))
-		{
-			return;
-		}
-
-		if (!readData(m_FileName))
+		if (!readData(m_FileName) && !readData(m_CompatFileName))
 		{
 			LOG("Config file " << m_FileName << " not found!");
 		}
