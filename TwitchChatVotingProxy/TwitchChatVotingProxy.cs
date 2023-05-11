@@ -34,7 +34,7 @@ namespace TwitchChatVotingProxy
             logger.Information("===============================");
             
             // Read big config file WIP
-            var config = new Config.Config("./chaosmod/twitch.ini");
+            var config = new Config.Config("./chaosmod/configs/twitch.ini", "./chaosmod/twitch.ini");
 
             // Validate voting mode
             EVotingMode votingMode;
