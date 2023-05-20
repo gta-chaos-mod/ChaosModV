@@ -95,7 +95,7 @@ class EffectDispatcher : public Component
 	std::list<RegisteredEffect *> m_DispatchedEffectsLog;
 
   private:
-	bool m_EnableNormalEffectDispatch = true;
+	bool m_EnableNormalEffectDispatch = false;
 
 	bool m_MetaEffectsEnabled         = true;
 	float m_MetaEffectTimerPercentage = 0.f;

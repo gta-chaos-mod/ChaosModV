@@ -237,6 +237,16 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 
 	Reset();
 
+	for (const auto &[effectIdentifier, effectData] : g_EnabledEffects)
+	{
+		if (!effectData.IsMeta() && !effectData.IsUtility())
+		{
+			// There's at least 1 enabled non-permanent effect, enable timer
+			m_EnableNormalEffectDispatch = true;
+			break;
+		}
+	}
+
 	if (g_EffectDispatcherThread)
 	{
 		DeleteFiber(g_EffectDispatcherThread);
@@ -740,11 +750,6 @@ void EffectDispatcher::RegisterPermanentEffects()
 				auto threadId = EffectThreads::CreateThread(registeredEffect, true);
 				m_PermanentEffects.push_back(threadId);
 			}
-		}
-		else if (!effectData.IsMeta() && !effectData.IsUtility())
-		{
-			// There's at least 1 enabled non-permanent effect, enable timer
-			m_EnableNormalEffectDispatch = true;
 		}
 	}
 }
