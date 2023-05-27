@@ -74,8 +74,8 @@ namespace TwitchChatVotingProxy
                 }
 
                 // Create components
-                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
                 var chaosPipe = new ChaosPipeClient();
+                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig, chaosPipe);
 
                 // Start the chaos mod controller
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);

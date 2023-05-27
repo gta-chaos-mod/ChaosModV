@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Threading.Tasks;
+using TwitchChatVotingProxy.ChaosPipe;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -20,11 +21,13 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         private TwitchClient client;
         private TwitchVotingReceiverConfig config;
+        private ChaosPipeClient chaosPipe;
         private ILogger logger = Log.Logger.ForContext<TwitchVotingReceiver>();
 
-        public TwitchVotingReceiver(TwitchVotingReceiverConfig config)
+        public TwitchVotingReceiver(TwitchVotingReceiverConfig config, ChaosPipeClient chaosPipe)
         {
             this.config = config;
+            this.chaosPipe = chaosPipe;
 
             // Connect to twitch
             logger.Information(
@@ -40,6 +43,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             client.OnConnected += OnConnected;
             client.OnError += OnError;
             client.OnIncorrectLogin += OnIncorrectLogin;
+            client.OnFailureToReceiveJoinConfirmation += OnFailureToReceiveJoinConfirmation;
             client.OnJoinedChannel += OnJoinedChannel;
             client.OnMessageReceived += OnMessageReceived;
 
@@ -62,6 +66,8 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private void OnConnected(object sender, OnConnectedArgs e)
         {
             logger.Information("successfully connected to twitch");
+
+            chaosPipe.SendMessageToPipe("hello");
         }
         /// <summary>
         /// Called when the twitch client disconnects (callback)
@@ -86,6 +92,16 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private void OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
         {
             logger.Error("incorrect twitch login, check user name and oauth");
+            chaosPipe.SendMessageToPipe("invalid_login");
+            client.Disconnect();
+        }
+        /// <summary>
+        /// Called when the twitch client has not received a join confirmation (callback)
+        /// </summary>
+        private void OnFailureToReceiveJoinConfirmation(object sender, OnFailureToReceiveJoinConfirmationArgs e)
+        {
+            logger.Error("invalid specified channel");
+            chaosPipe.SendMessageToPipe("invalid_channel");
             client.Disconnect();
         }
         /// <summary>
