@@ -228,7 +228,8 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 
 	m_EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue<bool>("EnableDistanceBasedEffectDispatch", false);
 	m_DistanceToActivateEffect = g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", 250);
-	m_DistanceType = static_cast<TravelledDistanceType>(g_OptionsManager.GetConfigValue<int>("DistanceType", Distance));
+	m_DistanceType                      = static_cast<TravelledDistanceType>(
+        g_OptionsManager.GetConfigValue<int>("DistanceType", static_cast<int>(TravelledDistanceType::Distance)));
 
 	m_MaxRunningEffects =
 	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
@@ -312,7 +313,7 @@ void EffectDispatcher::UpdateTravelledDistance()
 	float distance = GET_DISTANCE_BETWEEN_COORDS(position.x, position.y, position.z, m_SavedPosition.x,
 	                                             m_SavedPosition.y, m_SavedPosition.z, true);
 
-	if (m_DistanceType == Displacement)
+	if (m_DistanceType == TravelledDistanceType::Displacement)
 	{
 		if (distance >= m_DistanceToActivateEffect)
 		{
@@ -325,7 +326,7 @@ void EffectDispatcher::UpdateTravelledDistance()
 
 		m_TimerPercentage = distance / m_DistanceToActivateEffect;
 	}
-	else if (m_DistanceType == Distance)
+	else if (m_DistanceType == TravelledDistanceType::Distance)
 	{
 		m_SavedPosition = position;
 		m_TimerPercentage += distance / m_DistanceToActivateEffect;

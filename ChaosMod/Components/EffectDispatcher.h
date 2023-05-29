@@ -64,7 +64,7 @@ class EffectDispatcher : public Component
 		}
 	};
 
-	enum TravelledDistanceType
+	enum class TravelledDistanceType
 	{
 		Distance,
 		Displacement
@@ -104,9 +104,9 @@ class EffectDispatcher : public Component
 	bool m_EnableDistanceBasedEffectDispatch = false;
 
 	float m_DistanceToActivateEffect = 500.f;
-	Vector3 m_SavedPosition = Vector3();
+	Vector3 m_SavedPosition;
 	bool m_DeadFlag = true;
-	TravelledDistanceType m_DistanceType = Distance;
+	TravelledDistanceType m_DistanceType = TravelledDistanceType::Distance;
 
 	bool m_EnableNormalEffectDispatch = true;
 
