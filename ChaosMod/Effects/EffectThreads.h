@@ -32,15 +32,15 @@ namespace EffectThreads
 
 struct EffectThreadData
 {
-	RegisteredEffect *m_Effect = nullptr;
-	bool *m_HasOnStartExecuted = nullptr;
-	bool *m_IsRunning          = nullptr;
-	bool *m_HasStopped         = nullptr;
+	RegisteredEffect *Effect = nullptr;
+	bool *HasOnStartExecuted = nullptr;
+	bool *IsRunning          = nullptr;
+	bool *HasStopped         = nullptr;
 
-	void *m_CallerFiber        = nullptr;
+	void *CallerFiber        = nullptr;
 
 	EffectThreadData(RegisteredEffect *effect, bool *hasOnStartExecuted, bool *isRunning, bool *hasStopped)
-	    : m_Effect(effect), m_HasOnStartExecuted(hasOnStartExecuted), m_IsRunning(isRunning), m_HasStopped(hasStopped)
+	    : Effect(effect), HasOnStartExecuted(hasOnStartExecuted), IsRunning(isRunning), HasStopped(hasStopped)
 	{
 	}
 };
@@ -49,21 +49,21 @@ inline void EffectThreadFunc(LPVOID data)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(data);
+	auto &threadData = *reinterpret_cast<EffectThreadData *>(data);
 
-	threadData.m_Effect->Start();
-	*threadData.m_HasOnStartExecuted = true;
+	threadData.Effect->Start();
+	*threadData.HasOnStartExecuted = true;
 
-	while (*threadData.m_IsRunning)
+	while (*threadData.IsRunning)
 	{
-		SwitchToFiber(threadData.m_CallerFiber);
-		threadData.m_Effect->Tick();
+		SwitchToFiber(threadData.CallerFiber);
+		threadData.Effect->Tick();
 	}
 
-	threadData.m_Effect->Stop();
+	threadData.Effect->Stop();
 
-	*threadData.m_HasStopped = true;
-	SwitchToFiber(threadData.m_CallerFiber);
+	*threadData.HasStopped = true;
+	SwitchToFiber(threadData.CallerFiber);
 }
 
 class EffectThread
@@ -76,35 +76,35 @@ class EffectThread
 	EffectThreadData m_ThreadData;
 
   public:
-	DWORD64 m_PauseTimestamp = 0;
-	LPVOID m_Thread          = nullptr;
+	DWORD64 PauseTimestamp = 0;
+	LPVOID Thread          = nullptr;
 
 	EffectThread(RegisteredEffect *effect, bool isTimed)
 	    : m_Effect(effect),
 	      m_IsRunning(isTimed),
 	      m_ThreadData(effect, &m_HasOnStartExecuted, &m_IsRunning, &m_HasStopped),
-	      m_Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
+	      Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
 	{
 	}
 
 	~EffectThread()
 	{
-		DeleteFiber(m_Thread);
+		DeleteFiber(Thread);
 	}
 
 	EffectThread(const EffectThread &)            = delete;
 
 	EffectThread &operator=(const EffectThread &) = delete;
 
-	friend bool operator==(const std::unique_ptr<EffectThread> &pThisThread, LPVOID pThread)
+	friend bool operator==(const std::unique_ptr<EffectThread> &thisThread, LPVOID thread)
 	{
-		return pThisThread->m_Thread == pThread;
+		return thisThread->Thread == thread;
 	}
 
 	inline void OnRun()
 	{
-		m_ThreadData.m_CallerFiber = GetCurrentFiber();
-		SwitchToFiber(m_Thread);
+		m_ThreadData.CallerFiber = GetCurrentFiber();
+		SwitchToFiber(Thread);
 	}
 
 	inline void Stop()

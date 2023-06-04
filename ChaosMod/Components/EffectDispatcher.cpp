@@ -375,7 +375,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
-			EffectData &effectData = g_EnabledEffects.at(effect.Identifier);
+			auto &effectData = g_EnabledEffects.at(effect.Identifier);
 			isTimed = effectData.TimedType != EffectTimedType::NotTimed && effectData.TimedType != EffectTimedType::Unk;
 			isMeta  = effectData.IsMeta();
 		}

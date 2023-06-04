@@ -836,10 +836,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		}
 	}
 
-	lua["WAIT"] = [](DWORD time)
-	{
-		WAIT(time);
-	};
+	lua["WAIT"]               = WAIT;
 
 	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
 	{
