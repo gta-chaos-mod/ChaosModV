@@ -34,7 +34,7 @@ namespace TwitchChatVotingProxy
             logger.Information("===============================");
             
             // Read big config file WIP
-            var config = new Config.Config("./chaosmod/twitch.ini");
+            var config = new Config.Config("./chaosmod/configs/twitch.ini", "./chaosmod/twitch.ini");
 
             // Validate voting mode
             EVotingMode votingMode;
@@ -74,8 +74,8 @@ namespace TwitchChatVotingProxy
                 }
 
                 // Create components
-                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig);
                 var chaosPipe = new ChaosPipeClient();
+                var votingReceiver = new TwitchVotingReceiver(twitchVotingReceiverConfig, chaosPipe);
 
                 // Start the chaos mod controller
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);

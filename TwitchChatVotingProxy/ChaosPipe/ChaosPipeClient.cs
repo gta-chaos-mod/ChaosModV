@@ -77,8 +77,6 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 pipeWriter = new StreamWriter(pipe);
                 pipeWriter.AutoFlush = true;
 
-                SendMessageToPipe("hello");
-
                 logger.Information("successfully connected to chaos mod pipe");
 
                 pipeTick.Start();
@@ -202,7 +200,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// Sends a message to the chaos mod pipe
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        private void SendMessageToPipe(string message)
+        public void SendMessageToPipe(string message)
         {
             pipeWriter.Write($"{message}\0");
             pipe.WaitForPipeDrain();

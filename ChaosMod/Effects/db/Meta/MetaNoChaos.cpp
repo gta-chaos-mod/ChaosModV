@@ -7,7 +7,10 @@ static void OnStart()
 {
 	ClearEntityPool();
 
-	GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
+	}
 }
 
 static void OnStop()

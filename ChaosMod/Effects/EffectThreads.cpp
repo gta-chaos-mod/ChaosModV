@@ -28,7 +28,7 @@ namespace EffectThreads
 	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed)
 	{
 		auto thread         = std::make_unique<EffectThread>(effect, isTimed);
-		auto threadId       = thread->m_Thread;
+		auto threadId       = thread->Thread;
 		m_Threads[threadId] = std::move(thread);
 
 		return threadId;
@@ -71,7 +71,7 @@ namespace EffectThreads
 		auto fiber = GetCurrentFiber();
 		if (m_Threads.contains(fiber))
 		{
-			m_Threads.at(fiber)->m_PauseTimestamp = GetTickCount64() + timeMs;
+			m_Threads.at(fiber)->PauseTimestamp = GetTickCount64() + timeMs;
 		}
 	}
 
@@ -82,10 +82,10 @@ namespace EffectThreads
 			return true;
 		}
 
-		return m_Threads.at(threadId)->m_PauseTimestamp >= GetTickCount64();
+		return m_Threads.at(threadId)->PauseTimestamp > GetTickCount64();
 	}
 
-	void _RunThread(auto &it, DWORD64 curTimestamp)
+	void _RunThread(auto &it)
 	{
 		auto &[threadId, thread] = *it;
 
@@ -95,7 +95,7 @@ namespace EffectThreads
 			return;
 		}
 
-		if (GetTickCount64() > thread->m_PauseTimestamp)
+		if (GetTickCount64() >= thread->PauseTimestamp)
 		{
 			thread->OnRun();
 		}
@@ -105,10 +105,9 @@ namespace EffectThreads
 
 	void RunThreads()
 	{
-		auto curTimestamp = GetTickCount64();
 		for (auto it = m_Threads.begin(); it != m_Threads.end();)
 		{
-			_RunThread(it, curTimestamp);
+			_RunThread(it);
 		}
 	}
 
@@ -117,7 +116,7 @@ namespace EffectThreads
 		auto result = m_Threads.find(threadId);
 		if (result != m_Threads.end())
 		{
-			_RunThread(result, GetTickCount64());
+			_RunThread(result);
 		}
 	}
 

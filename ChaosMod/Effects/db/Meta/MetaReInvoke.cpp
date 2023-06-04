@@ -8,6 +8,11 @@
 
 static void OnStart()
 {
+	if (!ComponentExists<EffectDispatcher>())
+	{
+		return;
+	}
+
 	auto disp       = GetComponent<EffectDispatcher>();
 	const auto &eff = disp->GetRecentEffects(5, "meta_re_invoke");
 	for (RegisteredEffect *effect : eff)

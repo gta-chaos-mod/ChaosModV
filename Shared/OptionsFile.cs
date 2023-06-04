@@ -99,9 +99,9 @@ namespace Shared
             }
 
             string data;
-            if ((data = readData(m_CompatFileName)) == null)
+            if ((data = readData(m_FileName)) == null)
             {
-                if ((data = readData(m_FileName)) == null)
+                if ((data = readData(m_CompatFileName)) == null)
                 {
                     return;
                 }

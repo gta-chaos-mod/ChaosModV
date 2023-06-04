@@ -87,7 +87,10 @@ void DebugMenu::OnRun()
 	{
 		m_DispatchEffect = false;
 
-		GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
+		}
 	}
 
 	float y                 = .1f;

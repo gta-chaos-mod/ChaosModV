@@ -20,27 +20,14 @@ namespace Memory
 		{
 			Handle handle;
 
-			// TODO: Fix the insanity that are these patterns
-
-			handle = Memory::FindPattern(
-			    "0F B7 15 ?? ?? ?? ?? 45 33 D2 FF CA 78 29 4C 8B 1D ?? ?? ?? ?? 46 8D 04 12 41 D1 F8 4B 8B 0C C3 44 3B "
-			    "49 10 74 13 73 06 41 8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
+			handle = Memory::FindPattern("74 42 0F B7 15 ? ? ? 01");
 			if (!handle.IsValid())
 			{
 				return weapons;
 			}
 
-			WORD *dword_7FF6D9EF9748 = handle.At(2).Into().Get<WORD>();
-
-			handle =
-			    Memory::FindPattern("4C 8B 1D ?? ?? ?? ?? 46 8D 04 12 41 D1 F8 4B 8B 0C C3 44 3B 49 10 74 13 73 06 41 "
-			                        "8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
-			if (!handle.IsValid())
-			{
-				return weapons;
-			}
-
-			DWORD64 *qword_7FF6D9EF9740 = handle.At(2).Into().Get<DWORD64>();
+			WORD *dword_7FF6D9EF9748    = handle.At(4).Into().Get<WORD>();
+			DWORD64 *qword_7FF6D9EF9740 = handle.At(18).Into().Get<DWORD64>();
 
 			// Get address of CWeaponInfo's vftable and store it
 			handle                      = Memory::FindPattern("48 8D 05 ? ? ? ? 4C 89 71 08 4C 89 71 10");

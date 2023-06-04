@@ -2,6 +2,19 @@
 
 #include "Natives.h"
 
+struct ChaosVector3
+{
+	float x, y, z;
+	explicit ChaosVector3(const Vector3 &vec) : x(vec.x), y(vec.y), z(vec.z)
+	{
+	}
+};
+
+struct ChaosVector2
+{
+	float x, y;
+};
+
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {
 	if (relative)
