@@ -24,7 +24,7 @@ inline void WAIT(DWORD timeMs, void *callerFiber = nullptr)
 		{
 			SwitchToFiber(callerFiber);
 		}
-		if (g_EffectDispatcherThread)
+		else if (g_EffectDispatcherThread)
 		{
 			SwitchToFiber(g_EffectDispatcherThread);
 		}

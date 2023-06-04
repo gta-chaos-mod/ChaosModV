@@ -45,11 +45,11 @@ struct EffectThreadData
 	}
 };
 
-inline void EffectThreadFunc(LPVOID pData)
+inline void EffectThreadFunc(LPVOID data)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(pData);
+	EffectThreadData threadData = *reinterpret_cast<EffectThreadData *>(data);
 
 	threadData.m_Effect->Start();
 	*threadData.m_HasOnStartExecuted = true;
