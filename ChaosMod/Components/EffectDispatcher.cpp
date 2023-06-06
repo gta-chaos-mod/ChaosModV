@@ -226,10 +226,10 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 	m_MetaEffectShortDur =
 	    g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
-	m_EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue<bool>("EnableDistanceBasedEffectDispatch", false);
-	m_DistanceToActivateEffect = g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", 250);
-	m_DistanceType                      = static_cast<TravelledDistanceType>(
-        g_OptionsManager.GetConfigValue<int>("DistanceType", static_cast<int>(TravelledDistanceType::Distance)));
+	m_EnableDistanceBasedEffectDispatch = 
+		g_OptionsManager.GetConfigValue<bool>("EnableDistanceBasedEffectDispatch", OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
+	m_DistanceToActivateEffect = g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	m_DistanceType = static_cast<TravelledDistanceType>(g_OptionsManager.GetConfigValue<int>("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
 
 	m_MaxRunningEffects =
 	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
