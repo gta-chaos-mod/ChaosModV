@@ -27,12 +27,18 @@ namespace TwitchChatVotingProxy.Config
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
         
-        public Config(string file)
+        public Config(string file, string compatFile = null)
         {
+            if (!File.Exists(file) && compatFile != null)
+            {
+                file = compatFile;
+            }
+            
             if (!File.Exists(file))
             {
                 logger.Warning($"twitch config file \"{file}\" not found");
-            } else
+            }
+            else
             {
                 // If the file does exist, read its content
                 optionsFile = new OptionsFile(file);

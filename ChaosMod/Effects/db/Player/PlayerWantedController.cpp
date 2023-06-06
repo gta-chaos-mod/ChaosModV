@@ -123,7 +123,10 @@ static void OnStartFake()
 
 	Hooks::EnableScriptThreadBlock();
 
-	GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.Name);
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.Name);
+	}
 
 	Player player  = PLAYER_ID();
 	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);

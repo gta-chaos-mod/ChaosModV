@@ -30,7 +30,7 @@ static struct
 	bool ClearAllEffects             = false;
 	bool ClearEffectsShortcutEnabled = false;
 	bool ToggleModShortcutEnabled    = false;
-	bool DisableMod                  = false;
+	bool ToggleModState              = false;
 	bool PauseTimerShortcutEnabled   = false;
 	bool HaveLateHooksRan            = false;
 	bool AntiSoftlockShortcutEnabled = false;
@@ -60,7 +60,6 @@ static void ParseEffectsFile()
 
 static void Reset()
 {
-	// Check if this isn't the first time this is being run
 	if (ComponentExists<EffectDispatcher>())
 	{
 		GetComponent<EffectDispatcher>()->Reset();
@@ -69,8 +68,6 @@ static void Reset()
 			GetComponent<EffectDispatcher>()->OnRun();
 			WAIT(0);
 		}
-
-		LOG("Mod has been disabled");
 	}
 
 	ClearEntityPool();
@@ -223,7 +220,7 @@ static void MainRun()
 	InitComponent<SplashTexts>();
 	GetComponent<SplashTexts>()->ShowInitSplash();
 
-	ms_Flags.DisableMod = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 
@@ -244,27 +241,30 @@ static void MainRun()
 			}
 		}
 
-		if (ms_Flags.DisableMod && !isDisabled)
+		if (ms_Flags.ToggleModState)
 		{
-			isDisabled = true;
+			ms_Flags.ToggleModState = false;
 
-			if (ComponentExists<EffectDispatcher>())
+			if (!isDisabled)
 			{
-				GetComponent<EffectDispatcher>()->Reset(EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
-				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+				isDisabled = true;
+
+				LOG("Mod has been disabled");
+
+				if (ComponentExists<EffectDispatcher>())
 				{
-					GetComponent<EffectDispatcher>()->OnRun();
-					WAIT(0);
+					GetComponent<EffectDispatcher>()->Reset(
+					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
+					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
+					{
+						GetComponent<EffectDispatcher>()->OnRun();
+						WAIT(0);
+					}
 				}
+
+				Reset();
 			}
-
-			Reset();
-
-			continue;
-		}
-		else if (isDisabled)
-		{
-			if (!ms_Flags.DisableMod)
+			else
 			{
 				isDisabled = false;
 
@@ -279,7 +279,10 @@ static void MainRun()
 				// Restart the main part of the mod completely
 				Init();
 			}
+		}
 
+		if (isDisabled)
+		{
 			continue;
 		}
 
@@ -383,7 +386,7 @@ namespace Main
 			{
 				if (ms_Flags.ToggleModShortcutEnabled)
 				{
-					ms_Flags.DisableMod = !ms_Flags.DisableMod;
+					ms_Flags.ToggleModState = true;
 				}
 			}
 		}

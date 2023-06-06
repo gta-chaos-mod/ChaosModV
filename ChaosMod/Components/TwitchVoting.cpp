@@ -116,19 +116,16 @@ void TwitchVoting::OnModPauseCleanup()
 
 void TwitchVoting::OnRun()
 {
-	if (!m_EnableTwitchVoting)
+	if (!m_EnableTwitchVoting || !ComponentExists<EffectDispatcher>())
 	{
 		return;
 	}
 
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->m_DispatchEffectsOnTimer = false;
-	}
+	GetComponent<EffectDispatcher>()->m_DispatchEffectsOnTimer = false;
 
 	// Check if there's been no ping for too long and error out
 	// Also if the chance system is enabled, get current vote status every second (if shown on screen)
-	auto curTick = GetTickCount64();
+	auto curTick                                               = GetTickCount64();
 	if (m_LastPing < curTick - 1000)
 	{
 		if (m_NoPingRuns == 5)

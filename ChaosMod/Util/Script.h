@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../Effects/EffectThreads.h"
+#include "Effects/EffectThreads.h"
 
-#include "../vendor/scripthookv/inc/main.h"
+#include <scripthookv/inc/main.h>
 
 using DWORD                           = unsigned long;
 
 inline void *g_MainThread             = nullptr;
 inline void *g_EffectDispatcherThread = nullptr;
 
-inline void WAIT(DWORD timeMs, void *callerFiber = nullptr)
+inline void WAIT(DWORD timeMs)
 {
 	auto currentFiber = GetCurrentFiber();
 	if (currentFiber == g_MainThread || currentFiber == g_EffectDispatcherThread)
@@ -20,10 +20,6 @@ inline void WAIT(DWORD timeMs, void *callerFiber = nullptr)
 	{
 		EffectThreads::PauseThisThread(timeMs);
 
-		if (callerFiber)
-		{
-			SwitchToFiber(callerFiber);
-		}
 		if (g_EffectDispatcherThread)
 		{
 			SwitchToFiber(g_EffectDispatcherThread);

@@ -107,8 +107,8 @@ class EffectDispatcher : public Component
 	Vector3 m_SavedPosition;
 	bool m_DeadFlag = true;
 	TravelledDistanceType m_DistanceType = TravelledDistanceType::Distance;
-
-	bool m_EnableNormalEffectDispatch = true;
+  
+	bool m_EnableNormalEffectDispatch = false;
 
 	bool m_MetaEffectsEnabled         = true;
 	float m_MetaEffectTimerPercentage = 0.f;

@@ -58,6 +58,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +154,7 @@
     <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscEsp.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
@@ -425,6 +427,7 @@
     <ClInclude Include="Components\LuaScripts.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Memory\Audio.h" />
+    <ClInclude Include="Memory\Drawing.h" />
     <ClInclude Include="Memory\Entity.h" />
     <ClInclude Include="Memory\EntityFragments.h" />
     <ClInclude Include="Memory\Gravity.h" />
@@ -446,6 +449,8 @@
     <ClInclude Include="Memory\Vehicle.h" />
     <ClInclude Include="Memory\WeaponPool.h" />
     <ClInclude Include="Components\SplashTexts.h" />
+    <ClInclude Include="Memory\WorldToScreen.h" />
+    <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="..\vendor\json.hpp" />
     <ClInclude Include="Util\Natives.h" />

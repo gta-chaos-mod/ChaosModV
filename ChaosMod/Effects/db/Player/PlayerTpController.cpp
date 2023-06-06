@@ -326,7 +326,11 @@ static void OnStartFakeTp()
 {
 	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
 	auto overrideId                       = selectedLocationInfo.type;
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
+	}
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -393,7 +397,11 @@ static void OnStartFakeFakeTp()
 {
 	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
 	auto overrideId                       = selectedLocationInfo.type;
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
+	}
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -444,7 +452,10 @@ static void OnStartFakeFakeTp()
 	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
+	}
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 

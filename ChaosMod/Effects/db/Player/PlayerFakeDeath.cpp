@@ -174,8 +174,11 @@ static void OnStart()
 				}
 			}
 
-			// Set the fake name accordingly
-			GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
+			if (ComponentExists<EffectDispatcher>())
+			{
+				// Set the fake name accordingly
+				GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
+			}
 
 			nextModeTime = 0;
 

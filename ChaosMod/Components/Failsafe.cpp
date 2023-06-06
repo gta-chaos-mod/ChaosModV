@@ -30,7 +30,7 @@ int Failsafe::GetGlobalIndex()
 
 void Failsafe::OnRun()
 {
-	if (!m_Enabled || !ms_StateGlobalIdx)
+	if (!m_Enabled || !ms_StateGlobalIdx || !ComponentExists<EffectDispatcher>())
 	{
 		return;
 	}

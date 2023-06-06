@@ -242,6 +242,16 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 
 	Reset();
 
+	for (const auto &[effectIdentifier, effectData] : g_EnabledEffects)
+	{
+		if (!effectData.IsMeta() && !effectData.IsUtility())
+		{
+			// There's at least 1 enabled non-permanent effect, enable timer
+			m_EnableNormalEffectDispatch = true;
+			break;
+		}
+	}
+
 	if (g_EffectDispatcherThread)
 	{
 		DeleteFiber(g_EffectDispatcherThread);
@@ -422,7 +432,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
-			EffectData &effectData = g_EnabledEffects.at(effect.Identifier);
+			auto &effectData = g_EnabledEffects.at(effect.Identifier);
 			isTimed = effectData.TimedType != EffectTimedType::NotTimed && effectData.TimedType != EffectTimedType::Unk;
 			isMeta  = effectData.IsMeta();
 		}
@@ -763,9 +773,8 @@ void EffectDispatcher::Reset(ClearEffectsFlags clearEffectFlags)
 	ClearEffects(clearEffectFlags);
 	ResetTimer();
 
-	m_EnableNormalEffectDispatch = false;
-	m_MetaEffectsEnabled         = true;
-	m_MetaEffectTimerPercentage  = 0.f;
+	m_MetaEffectsEnabled        = true;
+	m_MetaEffectTimerPercentage = 0.f;
 }
 
 void EffectDispatcher::ResetTimer()
@@ -798,11 +807,6 @@ void EffectDispatcher::RegisterPermanentEffects()
 				auto threadId = EffectThreads::CreateThread(registeredEffect, true);
 				m_PermanentEffects.push_back(threadId);
 			}
-		}
-		else if (!effectData.IsMeta() && !effectData.IsUtility())
-		{
-			// There's at least 1 enabled non-permanent effect, enable timer
-			m_EnableNormalEffectDispatch = true;
 		}
 	}
 }
