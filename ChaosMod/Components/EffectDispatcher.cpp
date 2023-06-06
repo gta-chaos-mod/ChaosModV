@@ -226,6 +226,11 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 	m_MetaEffectShortDur =
 	    g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
+	m_EnableDistanceBasedEffectDispatch = 
+		g_OptionsManager.GetConfigValue<bool>("EnableDistanceBasedEffectDispatch", OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
+	m_DistanceToActivateEffect = g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	m_DistanceType = static_cast<TravelledDistanceType>(g_OptionsManager.GetConfigValue<int>("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
+
 	m_MaxRunningEffects =
 	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
 
@@ -275,9 +280,14 @@ void EffectDispatcher::OnRun()
 		deltaTime = 0;
 	}
 
-	if (!m_PauseTimer)
+	if (!m_PauseTimer && !m_EnableDistanceBasedEffectDispatch)
 	{
 		UpdateTimer(deltaTime);
+	}
+
+	if (!m_PauseTimer && m_EnableDistanceBasedEffectDispatch)
+	{
+		UpdateTravelledDistance();
 	}
 
 	DrawTimerBar();
@@ -290,6 +300,53 @@ void EffectDispatcher::OnRun()
 	DrawEffectTexts();
 
 	m_Timer = currentUpdateTime;
+}
+
+void EffectDispatcher::UpdateTravelledDistance()
+{
+	Ped player = PLAYER_PED_ID();
+	Vector3 position = GET_ENTITY_COORDS(player, false);
+
+	if (IS_ENTITY_DEAD(player, false))
+	{
+		m_DeadFlag = true;
+		return;
+	}
+
+	if (m_DeadFlag)
+	{
+		m_DeadFlag = false;
+		m_SavedPosition = GET_ENTITY_COORDS(player, false);
+		return;
+	}
+
+	float distance = GET_DISTANCE_BETWEEN_COORDS(position.x, position.y, position.z, m_SavedPosition.x,
+	                                             m_SavedPosition.y, m_SavedPosition.z, true);
+
+	if (m_DistanceType == TravelledDistanceType::Displacement)
+	{
+		if (distance >= m_DistanceToActivateEffect)
+		{
+			if (m_DispatchEffectsOnTimer)
+			{
+				DispatchRandomEffect();
+			}
+			m_SavedPosition = position;
+		}
+
+		m_TimerPercentage = distance / m_DistanceToActivateEffect;
+	}
+	else if (m_DistanceType == TravelledDistanceType::Distance)
+	{
+		m_SavedPosition = position;
+		m_TimerPercentage += distance / m_DistanceToActivateEffect;
+
+		if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer)
+		{
+			DispatchRandomEffect();
+			m_TimerPercentage = 0;
+		}
+	}
 }
 
 void EffectDispatcher::UpdateTimer(int deltaTime)
