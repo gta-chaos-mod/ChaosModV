@@ -400,6 +400,7 @@ namespace ConfigApp
             { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
+            { "screen_tinyscreen", new EffectInfo("Tiny Screen", EffectCategory.Screen, true, true) },
         };
     }
 }
