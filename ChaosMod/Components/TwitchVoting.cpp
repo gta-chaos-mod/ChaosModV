@@ -17,68 +17,8 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &textColor) : Component(), 
 	m_EnableTwitchVoting =
 	    g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
-	if (!m_EnableTwitchVoting)
+	if (m_EnableTwitchVoting && !InitTwitch())
 	{
-		return;
-	}
-
-	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
-	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
-	    < 3)
-	{
-		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable Twitch "
-		                "voting. Reverting to normal mode.");
-
-		return;
-	}
-
-	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
-	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
-	if (hMutex)
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		ReleaseMutex(hMutex);
-		CloseHandle(hMutex);
-	}
-
-	m_TwitchSecsBeforeVoting =
-	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
-
-	m_TwitchOverlayMode = g_OptionsManager.GetTwitchValue<TwitchOverlayMode>(
-	    "TwitchVotingOverlayMode", static_cast<TwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
-
-	m_EnableTwitchChanceSystem =
-	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
-	m_EnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>(
-	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
-
-	m_EnableTwitchRandomEffectVoteable =
-	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
-
-	STARTUPINFO startupInfo      = {};
-	PROCESS_INFORMATION procInfo = {};
-
-	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
-#ifdef _DEBUG
-	DWORD attributes = NULL;
-	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
-	{
-		attributes = CREATE_NO_WINDOW;
-	}
-
-	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
-#else
-	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
-#endif
-	free(str);
-
-	if (!result)
-	{
-		ErrorOutWithMsg((std::ostringstream()
-		                 << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError()
-		                 << "). Please verify the file exists. Reverting to normal mode.")
-		                    .str());
-
 		return;
 	}
 
@@ -121,11 +61,9 @@ void TwitchVoting::OnRun()
 		return;
 	}
 
-	GetComponent<EffectDispatcher>()->m_DispatchEffectsOnTimer = false;
-
 	// Check if there's been no ping for too long and error out
 	// Also if the chance system is enabled, get current vote status every second (if shown on screen)
-	auto curTick                                               = GetTickCount64();
+	auto curTick = GetTickCount64();
 	if (m_LastPing < curTick - 1000)
 	{
 		if (m_NoPingRuns == 5)
@@ -356,6 +294,71 @@ void TwitchVoting::OnRun()
 	}
 }
 
+bool TwitchVoting::InitTwitch()
+{
+	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
+	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
+	    < 3)
+	{
+		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable Twitch "
+		                "voting. Reverting to normal mode.");
+
+		return false;
+	}
+
+	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
+	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
+	if (hMutex)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		ReleaseMutex(hMutex);
+		CloseHandle(hMutex);
+	}
+
+	m_TwitchSecsBeforeVoting =
+	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+
+	m_TwitchOverlayMode = g_OptionsManager.GetTwitchValue<TwitchOverlayMode>(
+	    "TwitchVotingOverlayMode", static_cast<TwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
+	m_EnableTwitchChanceSystem =
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_EnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>(
+	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+
+	m_EnableTwitchRandomEffectVoteable =
+	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+
+	STARTUPINFO startupInfo      = {};
+	PROCESS_INFORMATION procInfo = {};
+
+	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
+#ifdef _DEBUG
+	DWORD attributes = NULL;
+	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
+	{
+		attributes = CREATE_NO_WINDOW;
+	}
+
+	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
+#else
+	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+#endif
+	free(str);
+
+	if (!result)
+	{
+		ErrorOutWithMsg((std::ostringstream()
+		                 << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError()
+		                 << "). Please verify the file exists. Reverting to normal mode.")
+		                    .str());
+
+		return false;
+	}
+
+	return true;
+}
+
 bool TwitchVoting::IsEnabled() const
 {
 	return m_EnableTwitchVoting;
@@ -365,9 +368,19 @@ bool TwitchVoting::HandleMsg(const std::string &msg)
 {
 	if (msg == "hello")
 	{
-		m_ReceivedHello = true;
+		if (!m_ReceivedHello)
+		{
+			m_ReceivedHello = true;
 
-		LOG("Received hello from voting proxy");
+			LOG("Received hello from voting pipe");
+
+			if (ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = false;
+			}
+
+			SendToPipe("hello_back");
+		}
 	}
 	else if (msg == "ping")
 	{
@@ -447,7 +460,7 @@ void TwitchVoting::ErrorOutWithMsg(const std::string &&msg)
 
 	if (ComponentExists<EffectDispatcher>())
 	{
-		GetComponent<EffectDispatcher>()->m_DispatchEffectsOnTimer = true;
+		GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = true;
 	}
 	m_EnableTwitchVoting = false;
 }

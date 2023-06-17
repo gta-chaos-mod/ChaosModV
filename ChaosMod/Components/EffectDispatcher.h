@@ -69,7 +69,7 @@ class EffectDispatcher : public Component
 		Distance,
 		Displacement
 	};
-	
+
 	std::array<BYTE, 3> m_TimerColor;
 	std::array<BYTE, 3> m_TextColor;
 	std::array<BYTE, 3> m_EffectTimerColor;
@@ -103,15 +103,15 @@ class EffectDispatcher : public Component
   private:
 	bool m_EnableDistanceBasedEffectDispatch = false;
 
-	float m_DistanceToActivateEffect = 500.f;
+	float m_DistanceToActivateEffect         = 500.f;
 	Vector3 m_SavedPosition;
-	bool m_DeadFlag = true;
+	bool m_DeadFlag                      = true;
 	TravelledDistanceType m_DistanceType = TravelledDistanceType::Distance;
-  
-	bool m_EnableNormalEffectDispatch = false;
 
-	bool m_MetaEffectsEnabled         = true;
-	float m_MetaEffectTimerPercentage = 0.f;
+	bool m_EnableNormalEffectDispatch    = false;
+
+	bool m_MetaEffectsEnabled            = true;
+	float m_MetaEffectTimerPercentage    = 0.f;
 
 	bool m_EnableTwitchVoting;
 	TwitchOverlayMode m_TwitchOverlayMode;
@@ -124,13 +124,13 @@ class EffectDispatcher : public Component
 	} m_ClearEffectsState = ClearEffectsState::None;
 
   public:
-	DWORD64 m_Timer                = 0;
+	DWORD64 Timer                = 0;
 
-	bool m_PauseTimer              = false;
+	bool PauseTimer              = false;
 
-	bool m_DispatchEffectsOnTimer  = true;
+	bool DispatchEffectsOnTimer  = true;
 
-	float m_FakeTimerBarPercentage = 0.f;
+	float FakeTimerBarPercentage = 0.f;
 
 	enum DispatchEffectFlags
 	{
@@ -145,7 +145,7 @@ class EffectDispatcher : public Component
 		std::string Suffix;
 		DispatchEffectFlags Flags;
 	};
-	std::queue<EffectDispatchEntry> m_EffectDispatchQueue;
+	std::queue<EffectDispatchEntry> EffectDispatchQueue;
 
   protected:
 	EffectDispatcher(const std::array<BYTE, 3> &timerColor, const std::array<BYTE, 3> &textColor,

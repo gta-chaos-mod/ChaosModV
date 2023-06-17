@@ -75,6 +75,8 @@ class TwitchVoting : public Component
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
 
+	bool InitTwitch();
+
 	bool IsEnabled() const;
 
 	bool HandleMsg(const std::string &msg);

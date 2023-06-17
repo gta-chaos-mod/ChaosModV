@@ -178,7 +178,7 @@ static void _OnRunEffects(LPVOID data)
 	while (true)
 	{
 		auto currentUpdateTime = GetTickCount64();
-		int deltaTime          = currentUpdateTime - effectDispatcher->m_Timer;
+		int deltaTime          = currentUpdateTime - effectDispatcher->Timer;
 
 		// the game was paused
 		if (deltaTime > 1000)
@@ -186,15 +186,15 @@ static void _OnRunEffects(LPVOID data)
 			deltaTime = 0;
 		}
 
-		while (!effectDispatcher->m_EffectDispatchQueue.empty())
+		while (!effectDispatcher->EffectDispatchQueue.empty())
 		{
-			_DispatchEffect(effectDispatcher, effectDispatcher->m_EffectDispatchQueue.front());
-			effectDispatcher->m_EffectDispatchQueue.pop();
+			_DispatchEffect(effectDispatcher, effectDispatcher->EffectDispatchQueue.front());
+			effectDispatcher->EffectDispatchQueue.pop();
 		}
 
 		effectDispatcher->UpdateEffects(deltaTime);
 
-		if (!effectDispatcher->m_PauseTimer)
+		if (!effectDispatcher->PauseTimer)
 		{
 			effectDispatcher->UpdateMetaEffects(deltaTime);
 		}
@@ -226,10 +226,12 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 	m_MetaEffectShortDur =
 	    g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
-	m_EnableDistanceBasedEffectDispatch = 
-		g_OptionsManager.GetConfigValue<bool>("EnableDistanceBasedEffectDispatch", OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
-	m_DistanceToActivateEffect = g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
-	m_DistanceType = static_cast<TravelledDistanceType>(g_OptionsManager.GetConfigValue<int>("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
+	m_EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue<bool>(
+	    "EnableDistanceBasedEffectDispatch", OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
+	m_DistanceToActivateEffect =
+	    g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	m_DistanceType = static_cast<TravelledDistanceType>(
+	    g_OptionsManager.GetConfigValue<int>("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
 
 	m_MaxRunningEffects =
 	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
@@ -272,7 +274,7 @@ void EffectDispatcher::OnModPauseCleanup()
 void EffectDispatcher::OnRun()
 {
 	auto currentUpdateTime = GetTickCount64();
-	int deltaTime          = currentUpdateTime - m_Timer;
+	int deltaTime          = currentUpdateTime - Timer;
 
 	// the game was paused
 	if (deltaTime > 1000)
@@ -280,12 +282,12 @@ void EffectDispatcher::OnRun()
 		deltaTime = 0;
 	}
 
-	if (!m_PauseTimer && !m_EnableDistanceBasedEffectDispatch)
+	if (!PauseTimer && !m_EnableDistanceBasedEffectDispatch)
 	{
 		UpdateTimer(deltaTime);
 	}
 
-	if (!m_PauseTimer && m_EnableDistanceBasedEffectDispatch)
+	if (!PauseTimer && m_EnableDistanceBasedEffectDispatch)
 	{
 		UpdateTravelledDistance();
 	}
@@ -299,12 +301,12 @@ void EffectDispatcher::OnRun()
 
 	DrawEffectTexts();
 
-	m_Timer = currentUpdateTime;
+	Timer = currentUpdateTime;
 }
 
 void EffectDispatcher::UpdateTravelledDistance()
 {
-	Ped player = PLAYER_PED_ID();
+	Ped player       = PLAYER_PED_ID();
 	Vector3 position = GET_ENTITY_COORDS(player, false);
 
 	if (IS_ENTITY_DEAD(player, false))
@@ -315,7 +317,7 @@ void EffectDispatcher::UpdateTravelledDistance()
 
 	if (m_DeadFlag)
 	{
-		m_DeadFlag = false;
+		m_DeadFlag      = false;
 		m_SavedPosition = GET_ENTITY_COORDS(player, false);
 		return;
 	}
@@ -327,7 +329,7 @@ void EffectDispatcher::UpdateTravelledDistance()
 	{
 		if (distance >= m_DistanceToActivateEffect)
 		{
-			if (m_DispatchEffectsOnTimer)
+			if (DispatchEffectsOnTimer)
 			{
 				DispatchRandomEffect();
 			}
@@ -341,7 +343,7 @@ void EffectDispatcher::UpdateTravelledDistance()
 		m_SavedPosition = position;
 		m_TimerPercentage += distance / m_DistanceToActivateEffect;
 
-		if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer)
+		if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
 		{
 			DispatchRandomEffect();
 			m_TimerPercentage = 0;
@@ -361,7 +363,7 @@ void EffectDispatcher::UpdateTimer(int deltaTime)
 	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
 	                   / m_EffectSpawnTime / 1000;
 
-	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer)
+	if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
 	{
 		DispatchRandomEffect();
 
@@ -547,8 +549,8 @@ void EffectDispatcher::DrawTimerBar()
 		return;
 	}
 
-	float percentage = m_FakeTimerBarPercentage > 0.f && m_FakeTimerBarPercentage <= 1.f ? m_FakeTimerBarPercentage
-	                                                                                     : m_TimerPercentage;
+	float percentage =
+	    FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_TimerPercentage;
 
 	// New Effect Bar
 	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
@@ -650,7 +652,7 @@ int EffectDispatcher::GetRemainingTimerTime() const
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, DispatchEffectFlags dispatchEffectFlags,
                                       const std::string &suffix)
 {
-	m_EffectDispatchQueue.push({ .Identifier = effectIdentifier, .Suffix = suffix, .Flags = dispatchEffectFlags });
+	EffectDispatchQueue.push({ .Identifier = effectIdentifier, .Suffix = suffix, .Flags = dispatchEffectFlags });
 }
 
 void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags, const std::string &suffix)
@@ -780,7 +782,7 @@ void EffectDispatcher::Reset(ClearEffectsFlags clearEffectFlags)
 void EffectDispatcher::ResetTimer()
 {
 	m_TimerPercentage = 0.f;
-	m_Timer           = GetTickCount64();
+	Timer             = GetTickCount64();
 }
 
 float EffectDispatcher::GetEffectTopSpace()

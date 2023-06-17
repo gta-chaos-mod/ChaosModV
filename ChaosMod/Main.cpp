@@ -365,7 +365,7 @@ namespace Main
 			{
 				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
 				{
-					GetComponent<EffectDispatcher>()->m_PauseTimer = !GetComponent<EffectDispatcher>()->m_PauseTimer;
+					GetComponent<EffectDispatcher>()->PauseTimer = !GetComponent<EffectDispatcher>()->PauseTimer;
 				}
 			}
 			else if (key == VK_OEM_COMMA)

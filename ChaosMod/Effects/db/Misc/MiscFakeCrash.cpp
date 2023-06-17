@@ -54,7 +54,7 @@ static void OnStart()
 	{
 		if (ComponentExists<EffectDispatcher>())
 		{
-			GetComponent<EffectDispatcher>()->m_FakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
+			GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
 		}
 
 		WAIT(0);
@@ -76,7 +76,7 @@ static void OnStart()
 
 	if (fakeTimer && ComponentExists<EffectDispatcher>())
 	{
-		GetComponent<EffectDispatcher>()->m_FakeTimerBarPercentage = 0.f;
+		GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = 0.f;
 	}
 }
 
