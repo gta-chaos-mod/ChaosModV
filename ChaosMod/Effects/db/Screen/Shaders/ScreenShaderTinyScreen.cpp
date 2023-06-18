@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_ShaderSrc = R"SRC(
+static const char *ms_ShaderSrcPrefix = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -13,8 +13,9 @@ SamplerState g_samLinear : register(s5)
 
 float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 color : COLOR0) : SV_Target0
 {
-	float multiplier = 25;
+	float multiplier =)SRC";
 
+static const char *ms_ShaderSrcSuffix = R"SRC(;
 	texcoord.x = (texcoord.x - 0.5) * multiplier + 0.5;
 	texcoord.y = (texcoord.y - 0.5) * multiplier + 0.5;
 
@@ -28,7 +29,7 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
 
 static void OnStart()
 {
-	Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrc);
+	Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrcPrefix + std::to_string(g_Random.GetRandomInt(9, 40)) + ms_ShaderSrcSuffix);
 }
 
 static void OnStop()
