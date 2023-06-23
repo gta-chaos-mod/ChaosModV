@@ -1,0 +1,24 @@
+﻿<Page x:Class="ChaosModInstaller.Install"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ChaosModInstaller"
+      mc:Ignorable="d" 
+      Title="Install" Height="268" Width="476" Background="#FF232844">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel x:Name="spinnerpanel" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            
+        </StackPanel>
+        <Label x:Name="install_output" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="" Foreground="White" FontFamily="Comic Sans MS"/>
+        <Button x:Name="next_btn" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="25" Content="Finish" Background="Green" Foreground="White" Visibility="Hidden"/>
+    </Grid>
+</Page>

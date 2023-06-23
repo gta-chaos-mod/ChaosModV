@@ -1,0 +1,22 @@
+﻿<Window x:Class="ChaosModInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChaosModInstaller"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" 
+        Height="288" Width="476" 
+        Background="#FF232844" 
+        ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="268"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Name="CloseButton" Content="x" Click="CloseButton_Click" Width="20" Foreground="#FF191B29" Background="Transparent" FontWeight="ExtraBold" HorizontalAlignment="Right" BorderBrush="Transparent"/>
+        <Frame Grid.Row="1" x:Name="PageFrame" Source="/Pages/StartUp.xaml" NavigationUIVisibility="Hidden"/>
+    </Grid>
+    
+</Window>
