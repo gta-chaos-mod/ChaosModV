@@ -358,10 +358,7 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem x:Name="workshop_tab" Background="#FFF0F0F0" BorderBrush="LightGray">
-                    <TabItem.Header>
-                        <Label Content="Workshop" MouseLeftButtonDown="workshop_tab_Click" HorizontalAlignment="Stretch"/>
-                    </TabItem.Header>
+                <TabItem x:Name="workshop_tab" Header="Workshop" Background="#FFF0F0F0" BorderBrush="LightGray" Selector.Selected="workshop_tab_Selected">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25" />
