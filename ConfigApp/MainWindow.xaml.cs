@@ -692,7 +692,7 @@ namespace ConfigApp
             }
         }
 
-        private async void workshop_tab_Click(object sender, MouseButtonEventArgs e)
+        private async void workshop_tab_Selected(object sender, RoutedEventArgs e)
         {
             // Only fetch them once
             if (m_WorkshopSubmissionItems.Count > 0)
