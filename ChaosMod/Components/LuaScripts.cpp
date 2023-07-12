@@ -557,7 +557,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 			ExposeFunc(lua);
 		}
 	};
-	static const std::vector<ExposableFunc> exposables {
+	const std::vector<ExposableFunc> exposables {
 		E("print", [scriptName](const std::string &text) { LuaPrint(scriptName, text); }),
 
 		E("_invoke",
