@@ -134,21 +134,21 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="How often should a new effect start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                                <TextBlock Text="New effect timer (in seconds)" Grid.Row="0" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 <TextBox x:Name="misc_user_effects_spawn_dur" Width="60" Height="20" Grid.Row="0" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                                <TextBlock Text="How long should timed effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                                <TextBlock Text="Timed effects duration (in seconds)" Grid.Row="1" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                                <TextBlock Text="How long should short timed effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                                <TextBlock Text="Short timed effects duration (in seconds)" Grid.Row="2" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -226,7 +226,7 @@
                                     HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" />
                                 <CheckBox x:Name="misc_enable_distance_based_effects" Grid.Row="9" Grid.Column="2" Content="Enable distance-based effect dispatch"
                                     HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,12" Click="misc_enable_distance_based_effects_Click" />
-                                <TextBlock Text="Distance to activate effect" Grid.Row="10" Grid.Column="0"
+                                <TextBlock Text="Distance to activate effect (in meters)" Grid.Row="10" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,7" />
                                 <TextBox x:Name="misc_distance_to_activate_effect" Height="20" Width="60" Grid.Row="10" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
