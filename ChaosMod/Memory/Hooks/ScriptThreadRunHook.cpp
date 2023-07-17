@@ -13,8 +13,11 @@
 #include <scripthookv/inc/main.h>
 
 static bool ms_bEnabledHook                     = false;
-static int ms_iOnlineVehicleMeasureEnableGlobal = 0;
 static bool ms_bSearchedForMissionStateGlobal   = false;
+
+static bool ms_RanOnlineVehicleDespawnPatch     = false;
+static DWORD64 ms_OnlineVehicleDespawnPatchAddr = 0;
+static std::array<BYTE, 3> ms_OnlineVehicleDespawnPatchOrigBytes;
 
 static Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
 {
@@ -39,48 +42,32 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 {
 	if (!strcmp(thread->GetName(), "shop_controller"))
 	{
-		if (!ms_iOnlineVehicleMeasureEnableGlobal)
+		if (!ms_RanOnlineVehicleDespawnPatch)
 		{
-			auto program = Memory::ScriptThreadToProgram(thread);
+			ms_RanOnlineVehicleDespawnPatch = true;
+
+			auto program                    = Memory::ScriptThreadToProgram(thread);
 			if (program->m_pCodeBlocks)
 			{
-				Handle handle;
-				if (getGameVersion() < VER_1_0_2802_0)
-				{
-					// Thanks to drp4lyf
-					handle = FindScriptPattern("2D ? ? 00 00 2C 01 ? ? 56 04 00 6E 2E ? 01 5F ? ? ? ? 04 00 6E 2E ? 01",
-					                           program);
-				}
-				else
-				{
-					// Thanks to LeeC22
-					handle = FindScriptPattern("2D 01 04 00 00 2C 01 01 F8 56 ? ? 71 2E 01 01 62", program);
-				}
+				// Thanks to rainbomizer
+				auto handle = FindScriptPattern("2D ? ? 00 ? 38 00 5D ? ? ? 06 56 ? ? 2E 01 00", program);
 
 				if (!handle.IsValid())
 				{
 					LOG("Error while bypassing online vehicle despawn mechanism; spawned online vehicles will "
-					    "despawn!");
+					    "despawn (unless already patched)!");
 				}
 				else
 				{
-					ms_iOnlineVehicleMeasureEnableGlobal = handle.At(17).Value<int>() & 0xFFFFFF;
+					ms_OnlineVehicleDespawnPatchAddr = handle.Addr() + 12;
+					memcpy_s(ms_OnlineVehicleDespawnPatchOrigBytes.data(), ms_OnlineVehicleDespawnPatchOrigBytes.size(),
+					         reinterpret_cast<void *>(ms_OnlineVehicleDespawnPatchAddr), 3);
 
-					LOG("Online vehicle despawn mechanism successfully bypassed (Global: "
-					    << ms_iOnlineVehicleMeasureEnableGlobal << ")");
+					Memory::Write<BYTE>(reinterpret_cast<BYTE *>(ms_OnlineVehicleDespawnPatchAddr), 0, 3);
+
+					LOG("Online vehicle despawn mechanism successfully bypassed");
 				}
 			}
-
-			// Don't try again if it failed the first time
-			if (!ms_iOnlineVehicleMeasureEnableGlobal)
-			{
-				ms_iOnlineVehicleMeasureEnableGlobal = -1;
-			}
-		}
-
-		if (ms_iOnlineVehicleMeasureEnableGlobal > 0)
-		{
-			*Memory::GetGlobalPtr(ms_iOnlineVehicleMeasureEnableGlobal) = 1;
 		}
 	}
 
@@ -144,7 +131,16 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, nullptr, "rage::scrThread::Run");
+static void OnCleanup()
+{
+	if (ms_OnlineVehicleDespawnPatchAddr)
+	{
+		memcpy_s(reinterpret_cast<void *>(ms_OnlineVehicleDespawnPatchAddr), 3,
+		         ms_OnlineVehicleDespawnPatchOrigBytes.data(), ms_OnlineVehicleDespawnPatchOrigBytes.size());
+	}
+}
+
+static RegisterHook registerHook(OnHook, OnCleanup, "rage::scrThread::Run");
 
 namespace Hooks
 {
