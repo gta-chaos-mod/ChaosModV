@@ -141,14 +141,14 @@
                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                                <TextBlock Text="Timed effects duration (in seconds)" Grid.Row="1" Grid.Column="0"
+                                <TextBlock Text="Timed effect duration (in seconds)" Grid.Row="1" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 <TextBox x:Name="misc_user_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
                                     MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                                     CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
                                     Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                                <TextBlock Text="Short timed effects duration (in seconds)" Grid.Row="2" Grid.Column="0"
+                                <TextBlock Text="Short timed effect duration (in seconds)" Grid.Row="2" Grid.Column="0"
                                     HorizontalAlignment="Right" VerticalAlignment="Center" />
                                 <TextBox x:Name="misc_user_effects_timed_short_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
