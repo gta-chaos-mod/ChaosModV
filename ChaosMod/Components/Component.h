@@ -94,7 +94,8 @@ class Component
 	{
 	}
 
-	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+	                        bool isAltPressed)
 	{
 	}
 
