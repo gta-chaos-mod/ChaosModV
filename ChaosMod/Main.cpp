@@ -393,7 +393,7 @@ namespace Main
 
 		for (auto component : g_Components)
 		{
-			component->OnKeyInput(key, wasDownBefore, isUpNow);
+			component->OnKeyInput(key, wasDownBefore, isUpNow, isCtrlPressed, isShiftPressed, isWithAlt);
 		}
 	}
 }

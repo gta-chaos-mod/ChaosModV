@@ -141,7 +141,8 @@ bool DebugMenu::IsEnabled() const
 	return m_IsEnabled;
 }
 
-void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+                           bool isAltPressed)
 {
 	if (!m_IsEnabled || !m_Visible)
 	{

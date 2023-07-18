@@ -23,7 +23,7 @@ class Shortcuts : public Component
   public:
 	virtual void OnRun() override;
 
-	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow) override;
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed, bool isAltPressed) override;
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

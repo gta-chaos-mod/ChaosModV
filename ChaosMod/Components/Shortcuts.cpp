@@ -34,13 +34,15 @@ void Shortcuts::OnRun()
 	}
 }
 
-void Shortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+void Shortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed, bool isAltPressed)
 {
 	if (repeated)
 	{
 		return;
 	}
 
+	key += (isCtrlPressed << 10) + (isShiftPressed << 9) + (isAltPressed << 8);
+  
 	if (m_AvailableShortcuts.contains(key))
 	{
 		std::lock_guard lock(m_EffectQueueMtx);
