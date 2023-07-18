@@ -12,56 +12,52 @@ using WORD    = unsigned short;
 
 namespace Memory
 {
-	inline std::vector<Hash> GetAllWeapons()
+	inline const std::vector<Hash> &GetAllWeapons()
 	{
-		static std::vector<Hash> c_rgWeapons;
+		static std::vector<Hash> weapons;
 
-		if (c_rgWeapons.empty())
+		if (weapons.empty())
 		{
 			Handle handle;
 
-			// TODO: Fix the insanity that are these patterns
-
-			handle = Memory::FindPattern(
-			    "0F B7 15 ?? ?? ?? ?? 45 33 D2 FF CA 78 29 4C 8B 1D ?? ?? ?? ?? 46 8D 04 12 41 D1 F8 4B 8B 0C C3 44 3B "
-			    "49 10 74 13 73 06 41 8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
+			handle = Memory::FindPattern("74 42 0F B7 15 ? ? ? 01");
 			if (!handle.IsValid())
 			{
-				return c_rgWeapons;
+				return weapons;
 			}
 
-			WORD *dword_7FF6D9EF9748 = handle.At(2).Into().Get<WORD>();
+			WORD *dword_7FF6D9EF9748    = handle.At(4).Into().Get<WORD>();
+			DWORD64 *qword_7FF6D9EF9740 = handle.At(18).Into().Get<DWORD64>();
 
-			handle =
-			    Memory::FindPattern("4C 8B 1D ?? ?? ?? ?? 46 8D 04 12 41 D1 F8 4B 8B 0C C3 44 3B 49 10 74 13 73 06 41 "
-			                        "8D 50 FF EB 04 45 8D 50 01 44 3B D2 7E DE 33 C9 48 85 C9 74 04 8B 41 1C");
+			// Get address of CWeaponInfo's vftable and store it
+			handle                      = Memory::FindPattern("48 8D 05 ? ? ? ? 4C 89 71 08 4C 89 71 10");
 			if (!handle.IsValid())
 			{
-				return c_rgWeapons;
+				return weapons;
 			}
 
-			DWORD64 *qword_7FF6D9EF9740 = handle.At(2).Into().Get<DWORD64>();
+			auto CWeaponInfo_vftable = handle.At(2).Into().Addr();
 
 			int v3;
 			DWORD64 v4;
-			DWORD64 v5;
+			DWORD64 vftableAddrPtr;
 
 			for (v3 = *dword_7FF6D9EF9748 - 1; v3 >= 0; v3 = v4 - 1)
 			{
-				v4 = static_cast<DWORD>(v3);
+				v4             = static_cast<DWORD>(v3);
 
-				v5 = *(reinterpret_cast<DWORD64 *>(*qword_7FF6D9EF9740) + v4);
+				vftableAddrPtr = *(reinterpret_cast<DWORD64 *>(*qword_7FF6D9EF9740) + v4);
 
-				// Only include actual ped weapons
-				if (strcmp(Memory::GetTypeName(v5), ".?AVCWeaponInfo@@"))
+				// Only include actual ped weapons by checking if vftable pointed to is CWeaponInfo's
+				if (*reinterpret_cast<DWORD64 *>(vftableAddrPtr) != CWeaponInfo_vftable)
 				{
 					continue;
 				}
 
 				// Check if weapon has valid model & slot
-				if (*reinterpret_cast<DWORD *>(v5 + 20) && *reinterpret_cast<DWORD *>(v5 + 28))
+				if (*reinterpret_cast<DWORD *>(vftableAddrPtr + 20) && *reinterpret_cast<DWORD *>(vftableAddrPtr + 28))
 				{
-					Hash weaponHash = *reinterpret_cast<Hash *>(v5 + 16);
+					Hash weaponHash = *reinterpret_cast<Hash *>(vftableAddrPtr + 16);
 
 					// Blacklist the remaining invalid weapons I found
 					switch (weaponHash)
@@ -76,11 +72,11 @@ namespace Memory
 						continue;
 					}
 
-					c_rgWeapons.push_back(weaponHash);
+					weapons.push_back(weaponHash);
 				}
 			}
 		}
 
-		return c_rgWeapons;
+		return weapons;
 	}
 }

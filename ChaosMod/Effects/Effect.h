@@ -1,15 +1,13 @@
 #pragma once
 
-#include "LuaScripts.h"
+#include "Components/LuaScripts.h"
 
-#include "Effects/EEffectTimedType.h"
 #include "Effects/EffectIdentifier.h"
+#include "Effects/EffectTimedType.h"
 #include "Effects/EffectsInfo.h"
 
-#include <string>
 #include <algorithm>
-
-#define _NODISCARD [[nodiscard]]
+#include <string>
 
 #define _EFFECT_CONCAT(a, b) a##b
 #define EFFECT_CONCAT(a, b) _EFFECT_CONCAT(a, b)
@@ -24,23 +22,23 @@ struct RegisteredEffect
   private:
 	EffectIdentifier m_EffectIdentifier;
 
-	void (*m_pOnStart)() = nullptr;
-	void (*m_pOnStop)()  = nullptr;
-	void (*m_pOnTick)()  = nullptr;
+	void (*m_OnStart)() = nullptr;
+	void (*m_OnStop)()  = nullptr;
+	void (*m_OnTick)()  = nullptr;
 
-	bool m_bIsRunning    = false;
+	bool m_IsRunning    = false;
 
   public:
 	RegisteredEffect()
 	{
 	}
 
-	RegisteredEffect(const std::string &szScriptId, void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)())
-	    : m_EffectIdentifier(szScriptId), m_pOnStart(pOnStart), m_pOnStop(pOnStop), m_pOnTick(pOnTick)
+	RegisteredEffect(const std::string &scriptId, void (*onStart)(), void (*onStop)(), void (*onTick)())
+	    : m_EffectIdentifier(scriptId), m_OnStart(onStart), m_OnStop(onStop), m_OnTick(onTick)
 	{
 	}
 
-	RegisteredEffect(const std::string &szScriptId) : m_EffectIdentifier(szScriptId, true)
+	RegisteredEffect(const std::string &scriptId) : m_EffectIdentifier(scriptId, true)
 	{
 	}
 
@@ -56,59 +54,71 @@ struct RegisteredEffect
 
 	void Start()
 	{
-		if (!m_bIsRunning)
+		if (!m_IsRunning)
 		{
-			m_bIsRunning = true;
+			m_IsRunning = true;
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnStart");
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Start);
+				}
 			}
-			else if (m_pOnStart)
+			else if (m_OnStart)
 			{
-				m_pOnStart();
+				m_OnStart();
 			}
 		}
 	}
 
 	void Stop()
 	{
-		if (m_bIsRunning)
+		if (m_IsRunning)
 		{
-			m_bIsRunning = false;
+			m_IsRunning = false;
 
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnStop");
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Stop);
+				}
 			}
-			else if (m_pOnStop)
+			else if (m_OnStop)
 			{
-				m_pOnStop();
+				m_OnStop();
 			}
 		}
 	}
 
 	void Tick()
 	{
-		if (m_bIsRunning)
+		if (m_IsRunning)
 		{
 			if (m_EffectIdentifier.IsScript())
 			{
-				LuaScripts::Execute(m_EffectIdentifier.GetEffectId(), "OnTick");
+				if (ComponentExists<LuaScripts>())
+				{
+					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
+					                                    LuaScripts::ExecuteFuncType::Tick);
+				}
 			}
-			else if (m_pOnTick)
+			else if (m_OnTick)
 			{
-				m_pOnTick();
+				m_OnTick();
 			}
 		}
 	}
 
-	_NODISCARD inline bool IsRunning() const
+	inline bool IsRunning() const
 	{
-		return m_bIsRunning;
+		return m_IsRunning;
 	}
 
-	_NODISCARD inline bool IsScript() const
+	inline bool IsScript() const
 	{
 		return m_EffectIdentifier.IsScript();
 	}
@@ -116,26 +126,11 @@ struct RegisteredEffect
 
 inline std::vector<RegisteredEffect> g_RegisteredEffects;
 
-_NODISCARD inline RegisteredEffect *GetRegisteredEffect(const EffectIdentifier &effectIdentifier)
+inline RegisteredEffect *GetRegisteredEffect(const EffectIdentifier &effectIdentifier)
 {
 	const auto &result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectIdentifier);
 
 	return result != g_RegisteredEffects.end() ? &*result : nullptr;
-}
-
-inline void ClearRegisteredScriptEffects()
-{
-	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
-	{
-		if (it->IsScript())
-		{
-			it = g_RegisteredEffects.erase(it);
-		}
-		else
-		{
-			it++;
-		}
-	}
 }
 
 class RegisterEffect
@@ -143,15 +138,15 @@ class RegisterEffect
 	RegisteredEffect m_RegisteredEffect;
 
   public:
-	RegisterEffect(void (*pOnStart)(), void (*pOnStop)(), void (*pOnTick)(), EffectInfo &&effectInfo)
+	RegisterEffect(void (*onStart)(), void (*onStop)(), void (*onTick)(), EffectInfo &&effectInfo)
 	{
-		m_RegisteredEffect = { effectInfo.Id, pOnStart, pOnStop, pOnTick };
+		m_RegisteredEffect = { effectInfo.Id, onStart, onStop, onTick };
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);
-		g_dictEffectsMap[effectInfo.Id] = std::move(effectInfo);
+		g_EffectsMap[effectInfo.Id] = std::move(effectInfo);
 	}
 
-	RegisterEffect(const RegisterEffect &) = delete;
+	RegisterEffect(const RegisterEffect &)            = delete;
 
 	RegisterEffect &operator=(const RegisterEffect &) = delete;
 };

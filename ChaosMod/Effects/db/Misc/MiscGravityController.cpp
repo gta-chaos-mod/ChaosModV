@@ -20,7 +20,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickLow, EffectInfo
 		.Id = "lowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -37,7 +37,7 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, EffectInfo
 		.Id = "verylowgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -69,14 +69,14 @@ REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
 		.Id = "insanegravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
 
 static void OnStartInvert()
 {
-	GIVE_WEAPON_TO_PED(PLAYER_PED_ID(), GET_HASH_KEY("WEAPON_PARACHUTE"), 9999, true, true);
+	GIVE_WEAPON_TO_PED(PLAYER_PED_ID(), "WEAPON_PARACHUTE"_hash, 9999, true, true);
 }
 
 static void OnTickInvert()
@@ -106,7 +106,7 @@ REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, EffectInfo
 		.Id = "invertgravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
 	}
 );
 // clang-format on
@@ -155,6 +155,60 @@ REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 		.Id = "misc_sideways_gravity",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Gravity
+		.EffectCategory = EffectCategory::Gravity
+	}
+);
+// clang-format on
+
+static Vector3 randomGravityForce;
+static void OnTickRandom()
+{
+	Memory::SetGravityLevel(0.f);
+
+	static DWORD lastTick;
+	DWORD curTick = GetTickCount();
+
+	if (lastTick < curTick - 5000)
+	{
+		lastTick = curTick;
+
+		randomGravityForce =
+		    Vector3(g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1), g_Random.GetRandomFloat(-1, 1));
+		randomGravityForce = randomGravityForce / randomGravityForce.Length(); // Normalize the direction
+		randomGravityForce = randomGravityForce * 0.5f;
+	}
+
+	for (auto ped : GetAllPeds())
+	{
+		if (!IS_PED_IN_ANY_VEHICLE(ped, false))
+		{
+			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
+
+			Memory::ApplyForceToEntityCenterOfMass(ped, 1, randomGravityForce.x, randomGravityForce.y,
+			                                       randomGravityForce.z, false, false, true, false);
+		}
+	}
+
+	for (auto object : GetAllProps())
+	{
+		Memory::ApplyForceToEntityCenterOfMass(object, 1, randomGravityForce.x, randomGravityForce.y,
+		                                       randomGravityForce.z, false, false, true, false);
+	}
+
+	for (auto veh : GetAllVehs())
+	{
+		Memory::ApplyForceToEntityCenterOfMass(veh, 1, randomGravityForce.x, randomGravityForce.y, randomGravityForce.z,
+		                                       false, false, true, false);
+	}
+}
+
+// clang-format off
+REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
+	{
+		.Name = "Random Gravity",
+		.Id = "misc_randomgravity",
+		.IsTimed = true,
+		.IsShortDuration = true,
+		.EffectCategory  = EffectCategory::Gravity
 	}
 );

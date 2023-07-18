@@ -6,8 +6,8 @@
 
 static void OnStart()
 {
-	static const Hash ballHash     = GET_HASH_KEY("prop_juicestand");
-	static const Hash weaponHash   = GET_HASH_KEY("weapon_specialcarbine");
+	static const Hash ballHash     = "prop_juicestand"_hash;
+	static const Hash weaponHash   = "weapon_specialcarbine"_hash;
 	static const int minDistance   = 2;
 	static const int maxDistance   = 7;
 	static const int maxSpeedCheck = 40;
@@ -33,6 +33,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
     {
         .Name = "Spawn Orange Ball",
         .Id = "misc_spawn_orange_ball",
-        .EffectGroupType = EEffectGroupType::SpawnGeneric
+        .EffectGroupType = EffectGroupType::SpawnGeneric
     }
 );

@@ -10,42 +10,42 @@
 
 DebugMenu::DebugMenu() : Component()
 {
-	m_bIsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
-	if (!m_bIsEnabled)
+	m_IsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	if (!m_IsEnabled)
 	{
 		return;
 	}
 
-	for (const auto &pair : g_dictEnabledEffects)
+	for (const auto &pair : g_EnabledEffects)
 	{
 		const auto &[effectIdentifier, effectData] = pair;
 
-		if (effectData.TimedType != EEffectTimedType::Permanent)
+		if (!effectData.IsHidden())
 		{
-			m_rgEffects.emplace_back(effectIdentifier,
-			                         effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
+			m_Effects.emplace_back(effectIdentifier,
+			                       effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
 		}
 	}
 
-	if (m_rgEffects.empty())
+	if (m_Effects.empty())
 	{
-		m_rgEffects.emplace_back(EffectIdentifier(), "No enabled effects :(");
+		m_Effects.emplace_back(EffectIdentifier(), "No enabled effects :(");
 
 		return;
 	}
 
-	std::sort(m_rgEffects.begin(), m_rgEffects.end(),
+	std::sort(m_Effects.begin(), m_Effects.end(),
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
 		          for (int idx = 0;; idx++)
 		          {
-			          if (idx >= a.m_szEffectName.size()
-			              || std::toupper(a.m_szEffectName[idx]) < std::toupper(b.m_szEffectName[idx]))
+			          if (idx >= a.EffectName.size()
+			              || std::toupper(a.EffectName[idx]) < std::toupper(b.EffectName[idx]))
 			          {
 				          return true;
 			          }
-			          else if (idx >= b.m_szEffectName.size()
-			                   || std::toupper(b.m_szEffectName[idx]) < std::toupper(a.m_szEffectName[idx]))
+			          else if (idx >= b.EffectName.size()
+			                   || std::toupper(b.EffectName[idx]) < std::toupper(a.EffectName[idx]))
 			          {
 				          return false;
 			          }
@@ -55,7 +55,7 @@ DebugMenu::DebugMenu() : Component()
 
 void DebugMenu::OnRun()
 {
-	if (!m_bIsEnabled || !m_bVisible)
+	if (!m_IsEnabled || !m_Visible)
 	{
 		return;
 	}
@@ -83,117 +83,120 @@ void DebugMenu::OnRun()
 	DISABLE_CONTROL_ACTION(1, 194, true);
 	DISABLE_CONTROL_ACTION(1, 202, true);
 
-	if (m_bDispatchEffect)
+	if (m_DispatchEffect)
 	{
-		m_bDispatchEffect = false;
+		m_DispatchEffect = false;
 
-		GetComponent<EffectDispatcher>()->DispatchEffect(m_rgEffects[m_iSelectedIdx].m_EffectIdentifier);
+		if (ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
+		}
 	}
 
-	float fY                   = .1f;
-	WORD culRemainingDrawItems = MAX_VIS_ITEMS;
+	float y                 = .1f;
+	WORD remainingDrawItems = MAX_VIS_ITEMS;
 
-	for (int idx = 0; culRemainingDrawItems > 0; idx++)
+	for (int i = 0; remainingDrawItems > 0; i++)
 	{
-		short sOverflow = MAX_VIS_ITEMS / 2 - (m_rgEffects.size() - 1 - m_iSelectedIdx);
+		short overflow = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
 
-		if (idx < 0 || idx < m_iSelectedIdx - culRemainingDrawItems / 2 - (sOverflow > 0 ? sOverflow : 0))
+		if (i < 0 || i < m_SelectedIdx - remainingDrawItems / 2 - (overflow > 0 ? overflow : 0))
 		{
 			continue;
 		}
-		else if (idx >= m_rgEffects.size())
+		else if (i >= m_Effects.size())
 		{
 			break;
 		}
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_rgEffects[idx].m_szEffectName.c_str());
+		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_Effects[i].EffectName.c_str());
 		SET_TEXT_SCALE(.3f, .3f);
 		SET_TEXT_CENTRE(true);
 		SET_TEXT_PROPORTIONAL(true);
 		SET_TEXT_JUSTIFICATION(0);
 
-		if (idx == m_iSelectedIdx)
+		if (i == m_SelectedIdx)
 		{
-			DRAW_RECT(.1f, fY, .2f, .05f, 255, 255, 255, 200, true);
+			DRAW_RECT(.1f, y, .2f, .05f, 255, 255, 255, 200, true);
 
 			SET_TEXT_COLOUR(0, 0, 0, 255);
 		}
 		else
 		{
-			DRAW_RECT(.1f, fY, .2f, .05f, 0, 0, 0, 200, true);
+			DRAW_RECT(.1f, y, .2f, .05f, 0, 0, 0, 200, true);
 
 			SET_TEXT_COLOUR(255, 255, 255, 255);
 		}
 
-		END_TEXT_COMMAND_DISPLAY_TEXT(.1f, fY - .0125f, 0);
+		END_TEXT_COMMAND_DISPLAY_TEXT(.1f, y - .0125f, 0);
 
-		fY += .05f;
-		culRemainingDrawItems--;
+		y += .05f;
+		remainingDrawItems--;
 	}
 }
 
-_NODISCARD bool DebugMenu::IsEnabled() const
+bool DebugMenu::IsEnabled() const
 {
-	return m_bIsEnabled;
+	return m_IsEnabled;
 }
 
-void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
+void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
 {
-	if (!m_bIsEnabled || !m_bVisible)
+	if (!m_IsEnabled || !m_Visible)
 	{
 		return;
 	}
 
-	if (bOnRepeat)
+	if (repeated)
 	{
-		DWORD ulCurTime = GetTickCount64();
+		auto curTime = GetTickCount64();
 
-		if (ulKey == VK_RETURN || m_ulRepeatTime > ulCurTime - 250)
+		if (key == VK_RETURN || m_RepeatTime > curTime - 250)
 		{
 			return;
 		}
 	}
 	else
 	{
-		m_ulRepeatTime = GetTickCount64();
+		m_RepeatTime = GetTickCount64();
 	}
 
-	switch (ulKey)
+	switch (key)
 	{
 	case VK_UP:
-		if (--m_iSelectedIdx < 0)
+		if (--m_SelectedIdx < 0)
 		{
-			m_iSelectedIdx = m_rgEffects.size() - 1;
+			m_SelectedIdx = m_Effects.size() - 1;
 		}
 
 		break;
 	case VK_DOWN:
-		if (++m_iSelectedIdx >= m_rgEffects.size())
+		if (++m_SelectedIdx >= m_Effects.size())
 		{
-			m_iSelectedIdx = 0;
+			m_SelectedIdx = 0;
 		}
 
 		break;
 	case VK_RIGHT:
 	{
-		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
+		char searchChar = std::tolower(m_Effects[m_SelectedIdx].EffectName[0]);
 
-		bool bFound      = false;
-		while (!bFound)
+		bool found      = false;
+		while (!found)
 		{
-			if (cSearchChar++ == SCHAR_MAX)
+			if (searchChar++ == SCHAR_MAX)
 			{
-				cSearchChar = SCHAR_MIN;
+				searchChar = SCHAR_MIN;
 			}
 
-			for (int idx = 0; idx < m_rgEffects.size(); idx++)
+			for (int idx = 0; idx < m_Effects.size(); idx++)
 			{
-				if (std::tolower(m_rgEffects[idx].m_szEffectName[0]) == cSearchChar)
+				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{
-					m_iSelectedIdx = idx;
+					m_SelectedIdx = idx;
 
-					bFound         = true;
+					found         = true;
 
 					break;
 				}
@@ -204,23 +207,23 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 	}
 	case VK_LEFT:
 	{
-		char cSearchChar = std::tolower(m_rgEffects[m_iSelectedIdx].m_szEffectName[0]);
+		char searchChar = std::tolower(m_Effects[m_SelectedIdx].EffectName[0]);
 
-		bool bFound      = false;
-		while (!bFound)
+		bool found      = false;
+		while (!found)
 		{
-			if (cSearchChar-- == SCHAR_MIN)
+			if (searchChar-- == SCHAR_MIN)
 			{
-				cSearchChar = SCHAR_MAX;
+				searchChar = SCHAR_MAX;
 			}
 
-			for (int idx = 0; idx < m_rgEffects.size(); idx++)
+			for (int idx = 0; idx < m_Effects.size(); idx++)
 			{
-				if (std::tolower(m_rgEffects[idx].m_szEffectName[0]) == cSearchChar)
+				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{
-					m_iSelectedIdx = idx;
+					m_SelectedIdx = idx;
 
-					bFound         = true;
+					found         = true;
 
 					break;
 				}
@@ -230,25 +233,25 @@ void DebugMenu::HandleInput(DWORD ulKey, bool bOnRepeat)
 		break;
 	}
 	case VK_RETURN:
-		if (!m_rgEffects[m_iSelectedIdx].m_EffectIdentifier.GetEffectId().empty())
+		if (!m_Effects[m_SelectedIdx].Identifier.GetEffectId().empty())
 		{
-			m_bDispatchEffect = true;
+			m_DispatchEffect = true;
 		}
 
 		break;
 	case VK_BACK:
-		m_bVisible = false;
+		m_Visible = false;
 
 		break;
 	}
 }
 
-void DebugMenu::SetVisible(bool bState)
+void DebugMenu::SetVisible(bool state)
 {
-	m_bVisible = bState;
+	m_Visible = state;
 }
 
-_NODISCARD bool DebugMenu::IsVisible() const
+bool DebugMenu::IsVisible() const
 {
-	return m_bVisible;
+	return m_Visible;
 }

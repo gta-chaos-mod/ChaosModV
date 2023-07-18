@@ -11,29 +11,29 @@
 #include "Util/Model.h"
 #include "Util/PoolSpawner.h"
 
-inline Vehicle CreateTempVehicle(Hash ulModel, float fPosX, float fPosY, float fPosZ, float fHeading)
+inline Vehicle CreateTempVehicle(Hash model, float x, float y, float z, float heading)
 {
-	LoadModel(ulModel);
+	LoadModel(model);
 
-	Vehicle veh = CREATE_VEHICLE(ulModel, fPosX, fPosY, fPosZ, fHeading, true, false, false);
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulModel);
+	auto veh = CREATE_VEHICLE(model, x, y, z, heading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 
-	Vehicle dummy = veh;
+	auto dummy = veh;
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
 
 	return veh;
 }
 
-inline Vehicle CreateTempVehicleOnPlayerPos(Hash ulModel, float fHeading)
+inline Vehicle CreateTempVehicleOnPlayerPos(Hash model, float heading)
 {
-	LoadModel(ulModel);
+	LoadModel(model);
 
-	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+	auto playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 
-	Vehicle veh       = CREATE_VEHICLE(ulModel, playerPos.x, playerPos.y, playerPos.z, fHeading, true, false, false);
-	SET_MODEL_AS_NO_LONGER_NEEDED(ulModel);
+	auto veh       = CREATE_VEHICLE(model, playerPos.x, playerPos.y, playerPos.z, heading, true, false, false);
+	SET_MODEL_AS_NO_LONGER_NEEDED(model);
 
-	Vehicle dummy = veh;
+	auto dummy = veh;
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&dummy);
 
 	return veh;
@@ -84,12 +84,12 @@ inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
 
 struct SeatPed
 {
-	Ped ped;
-	int seatIndex;
+	Ped Ped;
+	int SeatIndex;
 };
-inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPed> seatPeds, bool addToPool,
-                                           Vector3 coords, float heading, bool engineRunning, Vector3 velocity,
-                                           float forwardSpeed)
+inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<SeatPed> &seatPeds, bool addToPool,
+                                           const Vector3 &coords, float heading, bool engineRunning,
+                                           const Vector3 &velocity, float forwardSpeed)
 {
 	static const std::vector<Hash> &vehicleModels = Memory::GetAllVehModels();
 	if (vehicleModels.empty())
@@ -112,7 +112,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 	{
 		for (int i = 0; i < seatPeds.size(); i++)
 		{
-			Ped seatPed = seatPeds[i].ped;
+			Ped seatPed = seatPeds[i].Ped;
 			SET_ENTITY_COORDS(seatPed, coords.x, coords.y, coords.z + 5.f, 0, 0, 0, 0);
 		}
 
@@ -132,13 +132,13 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, std::vector<SeatPe
 	for (int i = 0; i < seatPeds.size(); i++)
 	{
 		SeatPed seatPed = seatPeds.at(i);
-		int seatIndex   = seatPed.seatIndex;
+		int seatIndex   = seatPed.SeatIndex;
 		if (seatIndex >= numberOfSeats || !IS_VEHICLE_SEAT_FREE(newVehicle, seatIndex, 0))
 		{
 			seatIndex = -2;
 		}
 
-		SET_PED_INTO_VEHICLE(seatPed.ped, newVehicle, seatIndex);
+		SET_PED_INTO_VEHICLE(seatPed.Ped, newVehicle, seatIndex);
 	}
 
 	if (engineRunning)

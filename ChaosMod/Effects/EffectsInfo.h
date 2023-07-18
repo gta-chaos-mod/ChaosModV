@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Effects/EEffectCategory.h"
-#include "Effects/EEffectExecutionType.h"
+#include "Effects/EffectCategory.h"
+#include "Effects/EffectExecutionType.h"
 #include "Effects/EffectGroups.h"
 
 #include <string_view>
@@ -14,10 +14,13 @@ struct EffectInfo
 	const char *Id;
 	bool IsTimed         = false;
 	bool IsShortDuration = false;
+#ifdef _DEBUG
+	int DebugShortcutKeycode = 0;
+#endif
 	std::vector<std::string_view> IncompatibleWith;
-	EEffectCategory EffectCategory     = EEffectCategory::None;
-	EEffectGroupType EffectGroupType   = EEffectGroupType::None;
-	EEffectExecutionType ExecutionType = EEffectExecutionType::Default;
+	EffectCategory EffectCategory     = EffectCategory::None;
+	EffectGroupType EffectGroupType   = EffectGroupType::None;
+	EffectExecutionType ExecutionType = EffectExecutionType::Default;
 };
 
-inline std::unordered_map<std::string_view, EffectInfo> g_dictEffectsMap;
+inline std::unordered_map<std::string_view, EffectInfo> g_EffectsMap;

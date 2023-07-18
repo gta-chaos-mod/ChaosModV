@@ -1,6 +1,6 @@
 #pragma once
 
-enum class EEffectExecutionType
+enum class EffectExecutionType
 {
 	Default,
 	Meta

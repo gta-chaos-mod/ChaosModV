@@ -1,5 +1,7 @@
-﻿using Serilog;
+﻿using Newtonsoft.Json;
+using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -31,6 +33,36 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private StreamWriter pipeWriter;
         private Task<string> readPipeTask;
 
+        private class PipeMessage
+        {
+            public string Identifier { get; set; }
+            public List<string> Options { get; set; }
+        }
+
+        public class CurrentVotesResult
+        {
+            public CurrentVotesResult(List<int> votes)
+            {
+                this.Identifier = "currentvotes";
+                this.Votes = votes;
+            }
+
+            public string Identifier { get; }
+            public List<int> Votes { get; }
+        }
+
+        public class VoteResultObject
+        {
+            public VoteResultObject(int? selectedOption)
+            {
+                this.Identifier = "voteresult";
+                this.SelectedOption = selectedOption;
+            }
+
+            public string Identifier { get; }
+            public int? SelectedOption { get; }
+        }
+
         public ChaosPipeClient()
         {
             // Setup pipe tick
@@ -45,11 +77,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 pipeWriter = new StreamWriter(pipe);
                 pipeWriter.AutoFlush = true;
 
-                SendMessageToPipe("hello");
-
                 logger.Information("successfully connected to chaos mod pipe");
 
-                pipeTick.Enabled = true;
+                pipeTick.Start();
             } catch (Exception e)
             {
                 logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
@@ -71,8 +101,14 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         private void DisconnectFromPipe()
         {
-            pipeReader.Close();
-            pipeWriter.Close();
+            pipeTick.Stop();
+            pipeTick.Close();
+            try
+            {
+                pipeReader.Close();
+                pipeWriter.Close();
+            }
+            catch (ObjectDisposedException) {}
             pipe.Close();
         }
         
@@ -85,8 +121,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 logger.Error("listeners failed to supply on get current vote args");
             } else
             {
-                var currentVotes = string.Join(":", args.CurrentVotes.Select(_ => _.ToString()).ToArray());
-                SendMessageToPipe($"currentvotes:{currentVotes}");
+                CurrentVotesResult res = new CurrentVotesResult(args.CurrentVotes);
+                SendMessageToPipe(JsonConvert.SerializeObject(res));
             }
         }
         /// <summary>
@@ -104,7 +140,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 logger.Warning("get vote result did not update chosen option, using 0 (first option)");
                 e.ChosenOption = 0;
             }
-            SendMessageToPipe($"voteresult:{e.ChosenOption}");
+            VoteResultObject result = new VoteResultObject(e.ChosenOption);
+            SendMessageToPipe(JsonConvert.SerializeObject(result));
             logger.Debug($"vote result sent to pipe: {e.ChosenOption}");
         }
         /// <summary>
@@ -116,9 +153,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
             {
                 SendHeartBeat();
                 ReadPipe();
-            } catch(Exception exception)
+            } catch(IOException exception)
             {
-                logger.Fatal(exception, "chaos mod pipe tick failed, disconnecting");
+                logger.Information("Pipe disconnected: " + exception.Message);
                 DisconnectFromPipe();
             }
         }
@@ -138,41 +175,44 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 readPipeTask = null;
 
                 // Evaluate message
-                if (message.StartsWith("vote:")) StartNewVote(message);
-                else if (message == "getvoteresult") GetVoteResult();
-                else if (message == "novoteround") StartNoVotingRound();
-                else if (message == "getcurrentvotes") GetCurrentVotes();
-                else logger.Warning($"unknown request: {message}");
+                PipeMessage pipe = JsonConvert.DeserializeObject<PipeMessage>(message);
+                switch (pipe.Identifier)
+                {
+                    case "vote":
+                        StartNewVote(pipe.Options);
+                        break;
+                    case "getvoteresult":
+                        GetVoteResult();
+                        break;
+                    case "novoteround":
+                        StartNoVotingRound();
+                        break;
+                    case "getcurrentvotes":
+                        GetCurrentVotes();
+                        break;
+                    default:
+                        logger.Warning($"unknown request: {message}");
+                        break;
+                }
             }
         }
         /// <summary>
         /// Sends a message to the chaos mod pipe
         /// </summary>
         /// <param name="message">Message to be sent</param>
-        private void SendMessageToPipe(string message)
+        public void SendMessageToPipe(string message)
         {
-            try
-            {
-                pipeWriter.Write($"{message}\0");
-            } catch (Exception e)
-            {
-                logger.Information(e, "error that ocurred when writing pipe");
-                DisconnectFromPipe();
-            }
+            pipeWriter.Write($"{message}\0");
+            pipe.WaitForPipeDrain();
         }
         /// <summary>
         /// Is called when the chaos mod starts a new vote
         /// </summary>
         /// <param name="message">Message from the pipe to be parsed into votes</param>
-        private void StartNewVote(string message)
+        private void StartNewVote(List<string> options)
         {
-            // Get vote option names (they are separated by ':')
-            var optionNames = message.Split(':').ToList();
-            // Remove the first option (which is basically the indicator
-            // that this is a new vote)
-            optionNames.RemoveAt(0);
             // Dispatch information to listeners
-            OnNewVote.Invoke(this, new OnNewVoteArgs(optionNames.ToArray()));
+            OnNewVote.Invoke(this, new OnNewVoteArgs(options.ToArray()));
         }
         /// <summary>
         /// Start a no-voting round. The chaos mod will decide over the options

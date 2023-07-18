@@ -4,16 +4,22 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStop()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 1;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 1.f;
+	}
 }
 
 static void OnTick_0_5x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 0.5;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = .5f;
+	}
 }
 
 // clang-format off
@@ -23,14 +29,17 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_0_5x, EffectInfo
 		.Id = "meta_timerspeed_0_5x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_timerspeed_2x", "meta_timerspeed_5x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );
 // clang-format on
 
 static void OnTick_2x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 2;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 2.f;
+	}
 }
 
 // clang-format off
@@ -40,14 +49,17 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_2x, EffectInfo
 		.Id = "meta_timerspeed_2x",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_timerspeed_0_5x", "meta_timerspeed_5x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );
 // clang-format on
 
 static void OnTick_5x()
 {
-	MetaModifiers::m_fTimerSpeedModifier = 5;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->TimerSpeedModifier = 5.f;
+	}
 }
 
 // clang-format off
@@ -58,6 +70,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_5x, EffectInfo
 		.IsTimed = true,
 		.IsShortDuration = true,
 		.IncompatibleWith = { "meta_timerspeed_0_5x", "meta_timerspeed_2x" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

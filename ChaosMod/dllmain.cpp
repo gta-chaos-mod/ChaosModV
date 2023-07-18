@@ -1,21 +1,24 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "Main.h"
 
 #include "Memory/Memory.h"
 
 #include "Util/CrashHandler.h"
 
-BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE instance, DWORD reason, LPVOID reserved)
 {
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
 		SetUnhandledExceptionFilter(CrashHandler);
 
+		RAW_LOG("Chaos Mod v" MOD_VERSION "\n\n");
+
 		Memory::Init();
 
-		scriptRegister(hInstance, Main::OnRun);
+		scriptRegister(instance, Main::OnRun);
 
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
@@ -24,7 +27,7 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 		Main::OnCleanup();
 		Memory::Uninit();
 
-		scriptUnregister(hInstance);
+		scriptUnregister(instance);
 
 		keyboardHandlerUnregister(Main::OnKeyboardInput);
 

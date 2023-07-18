@@ -36,6 +36,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Id = "player_gta_2",
 		.IsTimed = true,
 		.IsShortDuration = true,
-		.EffectCategory = EEffectCategory::Camera
+		.EffectCategory = EffectCategory::Camera
 	}
 );

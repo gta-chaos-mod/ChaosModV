@@ -5,22 +5,24 @@ namespace Shared
 {
     public class OptionsFile
     {
-        private string m_fileName;
-        private Dictionary<string, string> m_options = new Dictionary<string, string>();
+        private string m_FileName;
+        private string m_CompatFileName;
+        private Dictionary<string, string> m_Options = new Dictionary<string, string>();
 
-        public OptionsFile(string fileName)
+        public OptionsFile(string fileName, string compatFileName = null)
         {
-            m_fileName = fileName;
+            m_FileName = fileName;
+            m_CompatFileName = compatFileName;
         }
 
         public bool HasKey(string key)
         {
-            return m_options.ContainsKey(key);
+            return m_Options.ContainsKey(key);
         }
 
         public IEnumerable<string> GetKeys()
         {
-            foreach (var option in m_options)
+            foreach (var option in m_Options)
             {
                 yield return option.Key;
             }
@@ -28,7 +30,7 @@ namespace Shared
 
         public string ReadValue(string key, string defaultValue = null)
         {
-            return HasKey(key) ? m_options[key] : defaultValue;
+            return HasKey(key) ? m_Options[key] : defaultValue;
         }
 
         public int ReadValueInt(string key, int defaultValue)
@@ -60,11 +62,11 @@ namespace Shared
         {
             if (value != null && value.Trim().Length > 0)
             {
-                m_options[key] = value;
+                m_Options[key] = value;
             }
             else
             {
-                m_options.Remove(key);
+                m_Options.Remove(key);
             }
         }
 
@@ -80,18 +82,32 @@ namespace Shared
 
         public void ReadFile()
         {
-            if (!File.Exists(m_fileName))
-            {
-                return;
+            string readData(string fileName)
+            { 
+                if (!File.Exists(fileName))
+                {
+                    return null;
+                }
+
+                string _data = File.ReadAllText(fileName);
+                if (_data.Length == 0)
+                {
+                    return null;
+                }
+
+                return _data;
             }
 
-            string data = File.ReadAllText(m_fileName);
-            if (data.Length == 0)
+            string data;
+            if ((data = readData(m_FileName)) == null)
             {
-                return;
+                if ((data = readData(m_CompatFileName)) == null)
+                {
+                    return;
+                }
             }
 
-            m_options.Clear();
+            m_Options.Clear();
 
             foreach (string line in data.Split('\n'))
             {
@@ -101,7 +117,7 @@ namespace Shared
                     continue;
                 }
 
-                m_options[keyValuePair[0]] = keyValuePair[1];
+                m_Options[keyValuePair[0]] = keyValuePair[1];
             }
         }
 
@@ -109,20 +125,32 @@ namespace Shared
         {
             string data = string.Empty;
 
-            foreach (var option in m_options)
+            foreach (var option in m_Options)
             {
                 data += $"{option.Key}={option.Value}\n";
             }
 
-            File.WriteAllText(m_fileName, data);
+            Directory.CreateDirectory(Path.GetDirectoryName(m_FileName));
+            File.WriteAllText(m_FileName, data);
         }
 
         public void ResetFile()
         {
-            File.WriteAllText(m_fileName, null);
+            Directory.CreateDirectory(Path.GetDirectoryName(m_FileName));
+            File.WriteAllText(m_FileName, null);
 
             // Reset all options too
-            m_options = new Dictionary<string, string>();
+            m_Options = new Dictionary<string, string>();
+        }
+
+        public bool HasCompatFile()
+        {
+            return m_CompatFileName != null && File.Exists(m_CompatFileName);
+        }
+
+        public string GetCompatFile()
+        {
+            return m_CompatFileName;
         }
     }
 }

@@ -8,51 +8,58 @@
 
 // These should be 8 characters all uppercase.
 // But there isn't anything enforcing that :^)
-const char *ROULETTE_WORDS[] = { "ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG", "TAKE_TWO", "DAVEYYYY", "MWEATHER",
-	                             "RED_DEAD", "CHAOSMOD", "HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS",
-	                             "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY", "ELIAS_GR", "KOLYA_VE", "LU7YOSHI",
-	                             "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH", "$$WASTED",
-	                             "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE",
-	                             "HUGO_ONE", "GATMUN!!", "MO_11___", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_",
-	                             "{RANDOM}", "ROULETTE", "PASS1234", "/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__",
-	                             "LESTER__", "SYNFETIC" };
+const char *ROULETTE_WORDS[] = {
+	"ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG", "TAKE_TWO", "DAVEYYYY", "MWEATHER", "RED_DEAD", "CHAOSMOD",
+	"HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS", "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY",
+	"ELIAS_GR", "KOLYA_VE", "LU7YOSHI", "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH",
+	"$$WASTED", "JOSHUAX8", "SSOBOSS1", "DZWDZWDZ", "BIRD1338", "BRANDWAR", "YZIMRONI", "T_AVENGE", "HUGO_ONE",
+	"GATMUN!!", "MO_11___", "HUNTER2_", "PASSWORD", "1+4=-2+7", "_MATRIX_", "{RANDOM}", "ROULETTE", "PASS1234",
+	"/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__", "LESTER__", "SYNFETIC",
+};
 
-const char *WIN_PHRASES[]    = { "Rockstar: Creating realistic hacking since 1998.",
-                              "I swear that was made for a child, by a child.",
-                              "I wonder what would happen if you failed...",
-                              "I'll make it harder next time, I promise!",
-                              "https://youtube.com/watch?v=dQw4w9WgXcQ",
-                              "I'm not sure what you hacked, but it's now hacked.",
-                              "i ran out of phrases to put here. please pity me.",
-                              "I should get Linux.",
-                              "Yay, hacking!",
-                              "ping rockstargames.com",
-                              "You obviously must know something about something...",
-                              "I can read machine code!",
-                              "Well that wasn't fun",
-                              "Was that a promotion?",
-                              "We'll get right back to normal gameplay, hope you weren't doing anything important",
-                              "I use arch btw",
-                              "Vim > Emacs",
-                              "loooool cool hacker reference xdd",
-                              "You wouldn't download a car...",
-                              "Needs more blockchain",
-                              "HTML is my favorite programming language.",
-                              "Don't worry, it's not like you were mining cryptocurrencies for us...",
-                              "What? You wanted a witty win phrase? Too bad!",
-                              "sudo rm -rf /",
-                              "can you hack my friends instagram account plz?????",
-                              "Good thing I have 2FA",
-                              "/hack GTA5.exe",
-                              "Well that certainly was... something.",
-                              "Good job! You didn't lose a single time!",
-                              "Dude, that's illegal, I'm calling the cops.",
-                              "It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
-                              "GTA Online just went down... I'm sure it's unrelated.",
-                              "int* hacked = true;",
-                              "Matrix reference",
-                              "\"I'm in the mainframe\"",
-                              "I frequent r/ProgrammerHumor." };
+const char *WIN_PHRASES[] = {
+	"Rockstar: Creating realistic hacking since 1998.",
+	"I swear that was made for a child, by a child.",
+	"I wonder what would happen if you failed...",
+	"I'll make it harder next time, I promise!",
+	"https://youtube.com/watch?v=dQw4w9WgXcQ",
+	"I'm not sure what you hacked, but it's now hacked.",
+	"i ran out of phrases to put here. please pity me.",
+	"I should get Linux.",
+	"Yay, hacking!",
+	"ping rockstargames.com",
+	"You obviously must know something about something...",
+	"I can read machine code!",
+	"Well that wasn't fun",
+	"Was that a promotion?",
+	"We'll get right back to normal gameplay, hope you weren't doing anything important",
+	"I use arch btw",
+	"Vim > Emacs",
+	"loooool cool hacker reference xdd",
+	"You wouldn't download a car...",
+	"Needs more blockchain",
+	"HTML is my favorite programming language.",
+	"Don't worry, it's not like you were mining cryptocurrencies for us...",
+	"What? You wanted a witty win phrase? Too bad!",
+	"sudo rm -rf /",
+	"can you hack my friends instagram account plz?????",
+	"Good thing I have 2FA",
+	"/hack GTA5.exe",
+	"Well that certainly was... something.",
+	"Good job! You didn't lose a single time!",
+	"Dude, that's illegal, I'm calling the cops.",
+	"It's a bird! It's a plane! It's xx_thehackerman2006_xx!",
+	"GTA Online just went down... I'm sure it's unrelated.",
+	"int* hacked = true;",
+	"Matrix reference",
+	"\"I'm in the mainframe\"",
+	"Aaaand... bingo!",
+	"Access encoded... Gigabyte o'RAM should do the trick... We're in!",
+	"Kernel bitrate overclocked!",
+	"[ Hacking skill raised by 1 ]",
+	"Ah ah ah, you didn't say the magic word!",
+	"I frequent r/ProgrammerHumor.",
+};
 
 enum class TimerAction
 {
@@ -125,7 +132,9 @@ static void OnStart()
 
 	scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
 	while (!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleform))
+	{
 		WAIT(0);
+	}
 
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_BACKGROUND");
 	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);

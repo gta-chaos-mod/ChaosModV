@@ -12,10 +12,10 @@ using DWORD = unsigned long;
 class Shortcuts : public Component
 {
   private:
-	std::unordered_map<int, std::vector<EffectIdentifier>> m_ugAvailableShortcuts;
+	std::unordered_map<int, std::vector<EffectIdentifier>> m_AvailableShortcuts;
 
-	std::queue<EffectIdentifier> m_effectQueue;
-	std::mutex m_effectQueueMtx;
+	std::queue<EffectIdentifier> m_EffectQueue;
+	std::mutex m_EffectQueueMtx;
 
   protected:
 	Shortcuts();
@@ -23,7 +23,7 @@ class Shortcuts : public Component
   public:
 	virtual void OnRun() override;
 
-	void HandleInput(DWORD ulKey, bool bOnRepeat, bool bIsCtrlPressed, bool bIsShiftPressed, bool bIsAltPressed);
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed, bool isAltPressed) override;
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

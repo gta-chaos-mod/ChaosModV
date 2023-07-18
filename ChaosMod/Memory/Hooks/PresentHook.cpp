@@ -3,17 +3,17 @@
 #include "Memory/Hooks/Hook.h"
 #include "Memory/Hooks/ShaderHook.h"
 
-static void **ms_pPresentAddr = nullptr;
+static void **ms_PresentAddr = nullptr;
 
-HRESULT (*OG_IDXGISwapChain_Present)(IDXGISwapChain *pSwapChain, UINT uiSyncInterval, UINT uiFlags);
-HRESULT HK_IDXGISwapChain_Present(IDXGISwapChain *pSwapChain, UINT uiSyncInterval, UINT uiFlags)
+HRESULT (*OG_IDXGISwapChain_Present)(IDXGISwapChain *, UINT, UINT);
+HRESULT HK_IDXGISwapChain_Present(IDXGISwapChain *swapChain, UINT syncInterval, UINT flags)
 {
-	if (!(uiFlags & DXGI_PRESENT_TEST))
+	if (!(flags & DXGI_PRESENT_TEST))
 	{
 		Hooks::OnPresentCallback();
 	}
 
-	return OG_IDXGISwapChain_Present(pSwapChain, uiSyncInterval, uiFlags);
+	return OG_IDXGISwapChain_Present(swapChain, syncInterval, flags);
 }
 
 static bool OnHook()
@@ -29,9 +29,9 @@ static bool OnHook()
 	// IDXGISwapChain
 	handle                    = *handle.At(6).Into().Value<DWORD64 *>();
 
-	ms_pPresentAddr           = handle.At(64).Get<void *>();
-	OG_IDXGISwapChain_Present = *(HRESULT(**)(IDXGISwapChain *, UINT, UINT))ms_pPresentAddr;
-	Memory::Write<void *>(ms_pPresentAddr, HK_IDXGISwapChain_Present);
+	ms_PresentAddr            = handle.At(64).Get<void *>();
+	OG_IDXGISwapChain_Present = *(HRESULT(**)(IDXGISwapChain *, UINT, UINT))ms_PresentAddr;
+	Memory::Write<void *>(ms_PresentAddr, HK_IDXGISwapChain_Present);
 
 	return true;
 }
@@ -39,9 +39,9 @@ static bool OnHook()
 static void OnCleanup()
 {
 	// Only reset vftable entries if address still points to our retour
-	if (ms_pPresentAddr && *ms_pPresentAddr == HK_IDXGISwapChain_Present)
+	if (ms_PresentAddr && *ms_PresentAddr == HK_IDXGISwapChain_Present)
 	{
-		Memory::Write<void *>(ms_pPresentAddr, OG_IDXGISwapChain_Present);
+		Memory::Write<void *>(ms_PresentAddr, OG_IDXGISwapChain_Present);
 	}
 }
 

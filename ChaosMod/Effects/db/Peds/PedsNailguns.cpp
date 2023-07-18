@@ -44,10 +44,10 @@ static void OnTick()
 			else
 			{
 				// (kolyaventuri): Check for weapon visiblity
-				Weapon weapon    = GET_SELECTED_PED_WEAPON(ped);
-				int weaponType   = GET_WEAPON_DAMAGE_TYPE(weapon);
+				Weapon weapon     = GET_SELECTED_PED_WEAPON(ped);
+				int weaponType    = GET_WEAPON_DAMAGE_TYPE(weapon);
 
-				int isHoldingGun = weaponType == 3;
+				bool isHoldingGun = weaponType == 3;
 				SET_ENTITY_VISIBLE(nailgun, isHoldingGun, 0);
 
 				if (isHoldingGun)

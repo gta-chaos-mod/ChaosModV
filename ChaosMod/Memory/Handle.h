@@ -1,53 +1,51 @@
 #pragma once
 
-#define _HANDLEFUNC [[nodiscard]] inline
-
 using DWORD64 = unsigned long long;
 using DWORD   = unsigned long;
 
 class Handle
 {
   private:
-	DWORD64 m_ullAddr;
+	DWORD64 m_Addr;
 
   public:
-	Handle() : m_ullAddr(0)
+	Handle() : m_Addr(0)
 	{
 	}
-	Handle(DWORD64 ullAddr) : m_ullAddr(ullAddr)
+	Handle(DWORD64 addr) : m_Addr(addr)
 	{
 	}
 
-	_HANDLEFUNC bool IsValid() const
+	inline bool IsValid() const
 	{
-		return m_ullAddr;
+		return m_Addr;
 	}
 
-	_HANDLEFUNC Handle At(int iOffset) const
+	inline Handle At(int offset) const
 	{
-		return IsValid() ? m_ullAddr + iOffset : 0;
+		return IsValid() ? m_Addr + offset : 0;
 	}
 
-	template <typename T> _HANDLEFUNC T *Get() const
+	template <typename T> inline T *Get() const
 	{
-		return reinterpret_cast<T *>(m_ullAddr);
+		return reinterpret_cast<T *>(m_Addr);
 	}
 
-	template <typename T> _HANDLEFUNC T Value() const
+	template <typename T> inline T Value() const
 	{
 		return IsValid() ? *Get<T>() : 0;
 	}
 
-	_HANDLEFUNC DWORD64 Addr() const
+	inline DWORD64 Addr() const
 	{
-		return m_ullAddr;
+		return m_Addr;
 	}
 
-	_HANDLEFUNC Handle Into() const
+	inline Handle Into() const
 	{
 		if (IsValid())
 		{
-			Handle handle = At(1);
+			auto handle = At(1);
 			return handle.At(handle.Value<DWORD>()).At(4);
 		}
 

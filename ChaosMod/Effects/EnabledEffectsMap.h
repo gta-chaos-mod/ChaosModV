@@ -19,4 +19,4 @@ class EffectsIdentifierHasher
 	}
 };
 
-inline std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> g_dictEnabledEffects;
+inline std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> g_EnabledEffects;

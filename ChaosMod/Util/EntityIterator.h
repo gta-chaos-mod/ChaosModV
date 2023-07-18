@@ -6,8 +6,6 @@
 
 #include <vector>
 
-#define _NODISCARD [[nodiscard]]
-
 // Thanks to menyoo for most of these!!
 
 // Pool Interator class to iterate over pools. Has just enough operators defined to be able to be used in a for loop,
@@ -26,7 +24,7 @@ template <typename T> class PoolIterator
 
 	PoolIterator &operator++()
 	{
-		for (Index++; Index < Pool->m_ulSize; Index++)
+		for (Index++; Index < Pool->m_Size; Index++)
 		{
 			if (Pool->IsValid(Index))
 			{
@@ -34,7 +32,7 @@ template <typename T> class PoolIterator
 			}
 		}
 
-		Index = Pool->m_ulSize;
+		Index = Pool->m_Size;
 		return *this;
 	}
 
@@ -46,9 +44,9 @@ template <typename T> class PoolIterator
 			return handle.At(-0x68).Get<int(__int64)>();
 		}();
 
-		__int64 ullAddr = Pool->GetAddress(Index);
-		int iHandle     = _addEntityToPoolFunc(ullAddr);
-		return iHandle;
+		auto addr  = Pool->GetAddress(Index);
+		int handle = _addEntityToPoolFunc(addr);
+		return handle;
 	}
 
 	bool operator!=(const PoolIterator &other) const
@@ -79,38 +77,38 @@ template <typename T> class PoolUtils
 
 	auto end()
 	{
-		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->m_ulSize);
+		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->m_Size);
 	}
 };
 
 class VehiclePool : public PoolUtils<VehiclePool>
 {
   public:
-	UINT64 *m_pullPoolAddress;
-	UINT32 m_ulSize;
+	UINT64 *m_PoolAddress;
+	UINT32 m_Size;
 	char _Padding2[36];
-	UINT32 *m_pulBitArray;
+	UINT32 *m_BitArray;
 	char _Padding3[40];
-	UINT32 m_ulItemCount;
+	UINT32 m_ItemCount;
 
 	inline bool IsValid(UINT32 i)
 	{
-		return (m_pulBitArray[i >> 5] >> (i & 0x1F)) & 1;
+		return (m_BitArray[i >> 5] >> (i & 0x1F)) & 1;
 	}
 
 	inline UINT64 GetAddress(UINT32 i)
 	{
-		return m_pullPoolAddress[i];
+		return m_PoolAddress[i];
 	}
 };
 
 class GenericPool : public PoolUtils<GenericPool>
 {
   public:
-	UINT64 m_ullPoolStartAddress;
-	BYTE *m_ucByteArray;
-	UINT32 m_ulSize;
-	UINT32 m_ulItemSize;
+	UINT64 m_PoolStartAddress;
+	BYTE *m_ByteArray;
+	UINT32 m_Size;
+	UINT32 m_ItemSize;
 
 	inline bool IsValid(UINT32 i)
 	{
@@ -119,61 +117,61 @@ class GenericPool : public PoolUtils<GenericPool>
 
 	inline UINT64 GetAddress(UINT32 i)
 	{
-		return Mask(i) & (m_ullPoolStartAddress + i * m_ulItemSize);
+		return Mask(i) & (m_PoolStartAddress + i * m_ItemSize);
 	}
 
   private:
 	inline long long Mask(UINT32 i)
 	{
-		long long num1 = m_ucByteArray[i] & 0x80;
+		long long num1 = m_ByteArray[i] & 0x80;
 		return ~((num1 | -num1) >> 63);
 	}
 };
 
-_NODISCARD inline auto &GetAllPeds()
+inline auto &GetAllPeds()
 {
-	static GenericPool *pPedPool = []
+	static GenericPool *pedPool = []
 	{
-		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
+		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
 		return handle.At(2).Into().Value<GenericPool *>();
 	}();
 
-	return *pPedPool;
+	return *pedPool;
 }
 
-_NODISCARD inline auto &GetAllVehs()
+inline auto &GetAllVehs()
 {
-	static VehiclePool *pVehPool = []
+	static VehiclePool *vehPool = []
 	{
-		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
+		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
 		return *handle.At(2).Into().Value<VehiclePool **>();
 	}();
 
-	return *pVehPool;
+	return *vehPool;
 }
 
-_NODISCARD inline auto &GetAllProps()
+inline auto &GetAllProps()
 {
-	static GenericPool *pPropPool = []
+	static GenericPool *propPool = []
 	{
-		Handle handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
+		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
 		return handle.At(2).Into().Value<GenericPool *>();
 	}();
 
-	return *pPropPool;
+	return *propPool;
 }
 
-_NODISCARD inline auto GetAllPedsArray()
+inline auto GetAllPedsArray()
 {
 	return GetAllPeds().ToArray();
 }
 
-_NODISCARD inline auto GetAllVehsArray()
+inline auto GetAllVehsArray()
 {
 	return GetAllVehs().ToArray();
 }
 
-_NODISCARD inline auto GetAllPropsArray()
+inline auto GetAllPropsArray()
 {
 	return GetAllProps().ToArray();
 }

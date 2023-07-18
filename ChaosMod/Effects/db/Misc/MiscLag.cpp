@@ -1,32 +1,31 @@
 #include <stdafx.h>
 
-static int m_state;
-static std::map<Ped, Vector3> m_toTpPeds;
-static std::map<Vehicle, Vector3> m_toTpVehs;
+static int ms_State;
+static std::map<Ped, Vector3> ms_ToTpPeds;
+static std::map<Vehicle, Vector3> ms_ToTpVehs;
 
 static void OnStart()
 {
-	m_state = 0;
-	m_toTpPeds.clear();
-	m_toTpVehs.clear();
+	ms_State = 0;
+	ms_ToTpVehs.clear();
+	ms_ToTpVehs.clear();
 }
 
 static void OnTickLag()
 {
-
 	static DWORD64 lastTick = 0;
-	DWORD64 curTick         = GET_GAME_TIMER();
+	auto curTick            = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
 		lastTick = curTick;
 
-		if (++m_state == 4)
+		if (++ms_State == 4)
 		{
-			m_state = 0;
+			ms_State = 0;
 		}
 
-		if (m_state == 2)
+		if (ms_State == 2)
 		{
 			for (Ped ped : GetAllPeds())
 			{
@@ -34,7 +33,7 @@ static void OnTickLag()
 				{
 					Vector3 pedPos = GET_ENTITY_COORDS(ped, false);
 
-					m_toTpPeds.emplace(ped, pedPos);
+					ms_ToTpPeds.emplace(ped, pedPos);
 				}
 			}
 
@@ -42,15 +41,15 @@ static void OnTickLag()
 			{
 				Vector3 vehPos = GET_ENTITY_COORDS(veh, false);
 
-				m_toTpVehs.emplace(veh, vehPos);
+				ms_ToTpVehs.emplace(veh, vehPos);
 			}
 		}
-		else if (m_state == 3)
+		else if (ms_State == 3)
 		{
 			// save current camera heading to apply after teleporting
 			float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 
-			for (const auto &pair : m_toTpPeds)
+			for (const auto &pair : ms_ToTpVehs)
 			{
 				const Ped &ped       = pair.first;
 
@@ -65,9 +64,9 @@ static void OnTickLag()
 				SET_ENTITY_VELOCITY(ped, vel.x, vel.y, vel.z);
 			}
 
-			m_toTpPeds.clear();
+			ms_ToTpVehs.clear();
 
-			for (const auto &pair : m_toTpVehs)
+			for (const auto &pair : ms_ToTpVehs)
 			{
 				const Vehicle &veh = pair.first;
 
@@ -91,7 +90,7 @@ static void OnTickLag()
 				SET_VEHICLE_FORWARD_SPEED(veh, forwardSpeed);
 			}
 
-			m_toTpVehs.clear();
+			ms_ToTpVehs.clear();
 
 			SET_GAMEPLAY_CAM_RELATIVE_HEADING(camHeading);
 		}

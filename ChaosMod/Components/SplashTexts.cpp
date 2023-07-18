@@ -1,50 +1,54 @@
 #include <stdafx.h>
 
+#include "Info.h"
 #include "SplashTexts.h"
 
-#include "Util/Text.h"
+void SplashTexts::OnModPauseCleanup()
+{
+	m_ActiveSplashes.clear();
+}
 
 void SplashTexts::OnRun()
 {
-	float fFrameTime = GET_FRAME_TIME();
+	float frameTime = GET_FRAME_TIME();
 
-	if (m_fStartupSplashTime > 0)
+	for (std::list<SplashText>::iterator it = m_ActiveSplashes.begin(); it != m_ActiveSplashes.end();)
 	{
-		DrawScreenText("Chaos Mod v1.11.3\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
-		               { 60, 245, 190 }, true);
-#ifdef _DEBUG
-		DrawScreenText("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 }, true);
-#endif
+		DrawScreenText(it->Text, it->TextPos, it->Scale, it->TextColor, true);
+		it->Time -= frameTime;
 
-		m_fStartupSplashTime -= fFrameTime;
+		if (it->Time <= 0)
+		{
+			it = m_ActiveSplashes.erase(it);
+		}
+		else
+		{
+			it++;
+		}
 	}
+}
 
-	if (m_fTwitchVotingSplashTime > 0)
-	{
-		DrawScreenText("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 }, true);
-
-		m_fTwitchVotingSplashTime -= fFrameTime;
-	}
-
-	if (m_fClearEffectsSplashTime > 0)
-	{
-		DrawScreenText("Effects Cleared!", { .86f, .86f }, .8f, { 255, 100, 100 }, true);
-
-		m_fClearEffectsSplashTime -= fFrameTime;
-	}
+void SplashTexts::ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale,
+                             ScreenTextColor textColor, float time = SPLASH_TEXT_DUR_SECS)
+{
+	m_ActiveSplashes.emplace_back(text, textPos, scale, textColor, time);
 }
 
 void SplashTexts::ShowInitSplash()
 {
-	m_fStartupSplashTime = SPLASH_TEXT_DUR_SECS;
+	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
+	           { 60, 245, 190 });
+#ifdef _DEBUG
+	ShowSplash("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 });
+#endif
 }
 
 void SplashTexts::ShowTwitchVotingSplash()
 {
-	m_fTwitchVotingSplashTime = SPLASH_TEXT_DUR_SECS;
+	ShowSplash("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
 }
 
 void SplashTexts::ShowClearEffectsSplash()
 {
-	m_fClearEffectsSplashTime = SPLASH_TEXT_DUR_SECS;
+	ShowSplash("Effects Cleared!", { .86f, .86f }, .8f, { 255, 100, 100 });
 }

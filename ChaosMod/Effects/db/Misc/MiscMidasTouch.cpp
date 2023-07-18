@@ -44,7 +44,7 @@ static void OnTick()
 		}
 	}
 
-	static const auto model = GET_HASH_KEY("prop_money_bag_01");
+	static const auto model = "prop_money_bag_01"_hash;
 	REQUEST_MODEL(model);
 	for (Ped ped : GetAllPeds())
 	{
@@ -56,8 +56,8 @@ static void OnTick()
 				if (IS_ENTITY_TOUCHING_ENTITY(cE, ped))
 				{
 					auto pos = GET_ENTITY_COORDS(ped, false);
-					CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_MONEY_SECURITY_CASE"), pos.x, pos.y, pos.z, 0, 1000,
-					                      model, false, true);
+					CREATE_AMBIENT_PICKUP("PICKUP_MONEY_SECURITY_CASE"_hash, pos.x, pos.y, pos.z, 0, 1000, model, false,
+					                      true);
 					SET_ENTITY_COORDS(ped, 0, 0, 0, 1, 0, 0, 1);
 					SET_PED_AS_NO_LONGER_NEEDED(&ped);
 					DELETE_PED(&ped);
@@ -75,8 +75,8 @@ static void OnTick()
 				if (GET_ENTITY_ATTACHED_TO(prop) == false)
 				{
 					auto pos = GET_ENTITY_COORDS(prop, false);
-					CREATE_AMBIENT_PICKUP(GET_HASH_KEY("PICKUP_MONEY_SECURITY_CASE"), pos.x, pos.y, pos.z, 0, 1000,
-					                      model, false, true);
+					CREATE_AMBIENT_PICKUP("PICKUP_MONEY_SECURITY_CASE"_hash, pos.x, pos.y, pos.z, 0, 1000, model, false,
+					                      true);
 					SET_ENTITY_COORDS(prop, 0, 0, 0, 1, 0, 0, 1);
 					SET_ENTITY_AS_NO_LONGER_NEEDED(&prop);
 					DELETE_ENTITY(&prop);

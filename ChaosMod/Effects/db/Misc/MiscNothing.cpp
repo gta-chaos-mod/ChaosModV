@@ -27,7 +27,12 @@ static const std::array options = { "Nothing",
 static void OnStart()
 {
 	const auto &effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
-	GetComponent<EffectDispatcher>()->OverrideEffectName("nothing", effectOverride);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectName("nothing", effectOverride);
+	}
+
 	WAIT(25000);
 }
 

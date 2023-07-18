@@ -4,16 +4,22 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStop()
 {
-	MetaModifiers::m_bHideChaosUI = false;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->HideChaosUI = false;
+	}
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_bHideChaosUI = true;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->HideChaosUI = true;
+	}
 }
 
 // clang-format off
@@ -22,6 +28,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "What's Happening??",
 		.Id = "meta_hide_chaos_ui",
 		.IsTimed = true,
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

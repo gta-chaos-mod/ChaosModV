@@ -13,8 +13,8 @@ static void OnStart()
 	{
 		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
 
-		Vehicle veh       = CreatePoolVehicle(GET_HASH_KEY("PANTO"), playerPos.x, playerPos.y, playerPos.z,
-		                                      GET_ENTITY_HEADING(PLAYER_PED_ID()));
+		Vehicle veh =
+		    CreatePoolVehicle("PANTO"_hash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(PLAYER_PED_ID()));
 		SET_VEHICLE_COLOURS(veh, 135, 135);
 		SET_PED_INTO_VEHICLE(playerPed, veh, -1);
 	}
@@ -24,7 +24,7 @@ static void OnStart()
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_WHEEL_JESUS", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
 
 	Vehicle veh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	SET_PED_INTO_VEHICLE(playerPed, veh, -2);

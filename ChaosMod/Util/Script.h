@@ -1,23 +1,32 @@
 #pragma once
 
-#include "../Effects/EffectThreads.h"
+#include "Effects/EffectThreads.h"
 
-#include "../vendor/scripthookv/inc/main.h"
+#include <scripthookv/inc/main.h>
 
-using DWORD               = unsigned long;
+using DWORD                           = unsigned long;
 
-inline void *g_MainThread = nullptr;
+inline void *g_MainThread             = nullptr;
+inline void *g_EffectDispatcherThread = nullptr;
 
-inline void WAIT(DWORD ulTimeMs)
+inline void WAIT(DWORD timeMs)
 {
-	if (!g_MainThread || GetCurrentFiber() == g_MainThread)
+	auto currentFiber = GetCurrentFiber();
+	if (currentFiber == g_MainThread || currentFiber == g_EffectDispatcherThread)
 	{
-		scriptWait(ulTimeMs);
+		scriptWait(timeMs);
 	}
 	else
 	{
-		EffectThreads::PutThreadOnPause(ulTimeMs);
+		EffectThreads::PauseThisThread(timeMs);
 
-		EffectThreads::SwitchToMainThread();
+		if (g_EffectDispatcherThread)
+		{
+			SwitchToFiber(g_EffectDispatcherThread);
+		}
+		else
+		{
+			SwitchToFiber(g_MainThread);
+		}
 	}
 }

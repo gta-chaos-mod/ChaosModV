@@ -23,6 +23,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 		.Name = "Ignite Player",
 		.Id = "player_ignite",
 		.IncompatibleWith = { "player_invincible" },
-		.EffectGroupType = EEffectGroupType::PlayerKill
+		.EffectGroupType = EffectGroupType::PlayerKill
 	}
 );

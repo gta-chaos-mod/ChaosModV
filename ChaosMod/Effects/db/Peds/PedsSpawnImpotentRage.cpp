@@ -2,9 +2,9 @@
 
 static void OnStart()
 {
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
-	static const Hash civGroup    = GET_HASH_KEY("CIVMALE");
-	static const Hash femCivGroup = GET_HASH_KEY("CIVFEMALE");
+	static const Hash playerGroup = "PLAYER"_hash;
+	static const Hash civGroup    = "CIVMALE"_hash;
+	static const Hash femCivGroup = "CIVFEMALE"_hash;
 
 	Hash relGroup;
 	ADD_RELATIONSHIP_GROUP("_IM_RAGE", &relGroup);
@@ -12,7 +12,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, civGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relGroup, femCivGroup);
 
-	Hash model        = GET_HASH_KEY("u_m_y_imporage");
+	Hash model        = "u_m_y_imporage"_hash;
 
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -66,6 +66,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Impotent Rage",
 		.Id = "peds_spawnimrage",
-		.EffectGroupType = EEffectGroupType::SpawnEnemySpecial
+		.EffectGroupType = EffectGroupType::SpawnEnemySpecial
 	}
 );

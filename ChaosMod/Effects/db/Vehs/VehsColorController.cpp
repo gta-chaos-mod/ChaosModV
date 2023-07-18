@@ -22,8 +22,8 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );
 // clang-format on
@@ -48,8 +48,8 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );
 // clang-format on
@@ -74,8 +74,8 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );
 // clang-format on
@@ -103,8 +103,8 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );
 // clang-format on
@@ -171,8 +171,8 @@ REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );
 // clang-format on
@@ -244,7 +244,7 @@ REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",
 		.IsTimed = true,
-		.EffectCategory = EEffectCategory::TrafficColor,
-		.EffectGroupType = EEffectGroupType::TrafficColor
+		.EffectCategory = EffectCategory::TrafficColor,
+		.EffectGroupType = EffectGroupType::TrafficColor
 	}
 );

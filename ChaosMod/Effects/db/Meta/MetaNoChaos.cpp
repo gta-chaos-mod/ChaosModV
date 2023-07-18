@@ -1,24 +1,32 @@
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
-
 #include "Components/EffectDispatcher.h"
+#include "Components/MetaModifiers.h"
 
 static void OnStart()
 {
 	ClearEntityPool();
 
-	GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
+	}
 }
 
 static void OnStop()
 {
-	MetaModifiers::m_bDisableChaos = false;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->DisableChaos = false;
+	}
 }
 
 static void OnTick()
 {
-	MetaModifiers::m_bDisableChaos = true;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->DisableChaos = true;
+	}
 }
 
 // clang-format off
@@ -28,6 +36,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Id = "meta_nochaos",
 		.IsTimed = true,
 		.IncompatibleWith = { "meta_hide_chaos_ui" },
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-#include "Effects/MetaModifiers.h"
+#include "Components/MetaModifiers.h"
 
 #include "Memory/UI.h"
 
@@ -47,7 +47,10 @@ static void OnStart()
 
 static void OnTick()
 {
-	MetaModifiers::m_bFlipChaosUI = true;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->FlipChaosUI = true;
+	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -69,7 +72,10 @@ static void OnTick()
 
 static void OnStop()
 {
-	MetaModifiers::m_bFlipChaosUI = false;
+	if (ComponentExists<MetaModifiers>())
+	{
+		GetComponent<MetaModifiers>()->FlipChaosUI = false;
+	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -83,7 +89,7 @@ static void OnStop()
 	GET_MOBILE_PHONE_POSITION(&mobilePos);
 	SET_MOBILE_PHONE_POSITION(originalMobilePhoneX, mobilePos.y, mobilePos.z);
 
-	Memory::SetRadarOffsetX(0.f);
+	Memory::ResetRadar();
 }
 
 // clang-format off
@@ -92,6 +98,6 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",
 		.IsTimed = true,
-		.IncompatibleWith = { "no_hud" }
+		.IncompatibleWith = { "no_hud", "screen_maximap"}
 	}
 );

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class EEffectTimedType
+enum class EffectTimedType
 {
 	NotTimed = -4,
 	Permanent,

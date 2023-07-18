@@ -11,6 +11,11 @@
 
 inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 {
+	if (DoesFileExist("chaosmod\\.nodumps"))
+	{
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
+
 	SYSTEMTIME systemTime;
 	GetSystemTime(&systemTime);
 

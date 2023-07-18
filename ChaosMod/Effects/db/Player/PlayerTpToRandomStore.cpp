@@ -69,6 +69,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",
-        .EffectGroupType = EEffectGroupType::Teleport
+        .EffectGroupType = EffectGroupType::Teleport
 	}
 );

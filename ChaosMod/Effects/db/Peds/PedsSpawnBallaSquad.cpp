@@ -12,21 +12,21 @@ static void OnStart()
 
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_ENEMY_BALLAS", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, GET_HASH_KEY("PLAYER"));
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, "PLAYER"_hash);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(5, "PLAYER"_hash, relationshipGroup);
 
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
 	                                                                           : playerPed);
-	static const Hash carModel = GET_HASH_KEY("Virgo2");
+	static const Hash carModel = "Virgo2"_hash;
 
 	Vehicle veh                = CreatePoolVehicle(carModel, playerPos.x, playerPos.y, playerPos.z, heading);
 	SET_VEHICLE_COLOURS(veh, 148, 148);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 
 	WAIT(0);
-	static const Hash microSmgHash = GET_HASH_KEY("WEAPON_MICROSMG");
+	static const Hash microSmgHash = "WEAPON_MICROSMG"_hash;
 	for (int i = 0; i < 2; i++)
 	{
 		Hash choosenPropHash = ballaNames.at(g_Random.GetRandomInt(0, ballaNames.size() - 1));
@@ -55,6 +55,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Balla Squad",
 		.Id = "peds_spawnballasquad",
-		.EffectGroupType = EEffectGroupType::SpawnEnemy
+		.EffectGroupType = EffectGroupType::SpawnEnemy
 	}
 );

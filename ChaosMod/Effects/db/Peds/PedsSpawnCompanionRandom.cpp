@@ -4,8 +4,8 @@ static void OnStart()
 {
 	Hash relationshipGroup;
 	ADD_RELATIONSHIP_GROUP("_COMPANION_RANDOM", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, GET_HASH_KEY("PLAYER"));
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, GET_HASH_KEY("PLAYER"), relationshipGroup);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
+	SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
 
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
@@ -34,6 +34,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Spawn Random Companion",
 		.Id = "spawn_comprnd",
-		.EffectGroupType = EEffectGroupType::SpawnCompanion
+		.EffectGroupType = EffectGroupType::SpawnCompanion
 	}
 );

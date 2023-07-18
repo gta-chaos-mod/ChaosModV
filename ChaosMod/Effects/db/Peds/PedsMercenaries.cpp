@@ -72,7 +72,7 @@ static void spawnBuzzard()
 {
 	Ped playerPed      = PLAYER_PED_ID();
 	Vector3 playerPos  = GET_ENTITY_COORDS(playerPed, false);
-	Hash buzzardHash   = GET_HASH_KEY("BUZZARD");
+	Hash buzzardHash   = "BUZZARD"_hash;
 	Vector3 spawnPoint = getRandomOffsetCoord(playerPos, 200, 250);
 	float xDiff        = playerPos.x - spawnPoint.x;
 	float yDiff        = playerPos.y - spawnPoint.y;
@@ -108,7 +108,7 @@ static void spawnMesa()
 	float xDiff   = playerPos.x - spawnPoint.x;
 	float yDiff   = playerPos.y - spawnPoint.y;
 	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
-	Hash mesaHash = GET_HASH_KEY("Mesa3");
+	Hash mesaHash = "Mesa3"_hash;
 	mesaGroup     = EnemyGroup();
 	LoadModel(mesaHash);
 	mesaGroup.vehicle =
@@ -125,10 +125,10 @@ static void OnStart()
 	Ped playerPed                 = PLAYER_PED_ID();
 	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
 
-	model                         = GET_HASH_KEY("csb_mweather");
-	microSmgHash                  = GET_HASH_KEY("WEAPON_MICROSMG");
+	model                         = "csb_mweather"_hash;
+	microSmgHash                  = "WEAPON_MICROSMG"_hash;
 
-	static const Hash playerGroup = GET_HASH_KEY("PLAYER");
+	static const Hash playerGroup = "PLAYER"_hash;
 	ADD_RELATIONSHIP_GROUP("_HOSTILE_MERRYWEATHER", &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, playerGroup, relationshipGroup);

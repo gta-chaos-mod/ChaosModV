@@ -8,11 +8,16 @@
 
 static void OnStart()
 {
+	if (!ComponentExists<EffectDispatcher>())
+	{
+		return;
+	}
+
 	auto disp       = GetComponent<EffectDispatcher>();
 	const auto &eff = disp->GetRecentEffects(5, "meta_re_invoke");
 	for (RegisteredEffect *effect : eff)
 	{
-		disp->DispatchEffect(effect->GetIndentifier(), nullptr, false);
+		disp->DispatchEffect(effect->GetIndentifier(), EffectDispatcher::DispatchEffectFlag_NoAddToLog);
 	}
 }
 
@@ -21,6 +26,6 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Re-Invoke Previous Effects",
 		.Id = "meta_re_invoke",
-		.ExecutionType = EEffectExecutionType::Meta
+		.ExecutionType = EffectExecutionType::Meta
 	}
 );

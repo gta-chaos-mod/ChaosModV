@@ -5,9 +5,9 @@ using Hash = unsigned long;
 namespace Util
 {
 	// TODO: Maybe CWeaponInfo has some field which can be checked (instead of hardcoding the weapon hashes)
-	inline bool IsWeaponShotgun(Hash ulWepHash)
+	inline bool IsWeaponShotgun(Hash weaponHash)
 	{
-		switch ((long)ulWepHash)
+		switch ((long)weaponHash)
 		{
 		case 487013001:
 		case 2017895192:

@@ -14,7 +14,7 @@ namespace Memory
 {
 	inline void InvalidateShaderCache()
 	{
-		static auto rage_sgaShader_ResolveShader = []() -> void *(*)(Hash ulHash)
+		static auto rage_sgaShader_ResolveShader = []() -> void *(*)(Hash hash)
 		{
 			auto handle = FindPattern("E8 ? ? ? ? 8B C8 E8 ? ? ? ? ? 85 C0 75 ? 81 3D ? ? ? ? 00 02 00 00");
 			if (!handle.IsValid())
@@ -52,14 +52,14 @@ namespace Memory
 
 		if (reloadShaders && rage_sgaShader_ResolveShader && rage_sgaShader_destructor)
 		{
-			static const std::vector<Hash> ugToDelete = { "postfx"_hash,
-				                                          "postfxms"_hash,
-				                                          "postfxms0"_hash,
-				                                          "deferred_lighting"_hash,
-				                                          "deferred_lightingms"_hash,
-				                                          "deferred_lightingms0"_hash };
+			static const std::vector<Hash> toDelete = { "postfx"_hash,
+				                                        "postfxms"_hash,
+				                                        "postfxms0"_hash,
+				                                        "deferred_lighting"_hash,
+				                                        "deferred_lightingms"_hash,
+				                                        "deferred_lightingms0"_hash };
 
-			for (auto hash : ugToDelete)
+			for (auto hash : toDelete)
 			{
 				auto shader = rage_sgaShader_ResolveShader(hash);
 				if (shader)
