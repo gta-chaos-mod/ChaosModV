@@ -92,12 +92,12 @@ requires std::is_base_of_v<_ChaosBaseEvent, ChaosEventType>
 class ChaosEventListener
 {
   private:
-	struct Event
+	struct EventData
 	{
 		ChaosEventType *Event;
 		typename ChaosEventType::Listener Listener;
 	};
-	std::list<Event> m_Events;
+	std::list<EventData> m_Events;
 
   public:
 	~ChaosEventListener()
@@ -113,7 +113,8 @@ class ChaosEventListener
 
 	void Register(ChaosEventType &event, typename ChaosEventType::CallbackType callback)
 	{
-		m_Events.push_back({ .Event = &event, .Listener = { .Callback = callback } });
+		EventData eventData { .Event = &event, .Listener = { .Callback = callback } };
+		m_Events.push_back(eventData);
 		event.RegisterListener(&m_Events.back().Listener);
 	}
 };
