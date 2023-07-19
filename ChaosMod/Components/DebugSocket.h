@@ -3,6 +3,8 @@
 
 #include "Component.h"
 
+#include "Components/EffectDispatcher.h"
+
 #include <ixwebsocket/IXWebSocketServer.h>
 
 #include <cstdint>
@@ -37,6 +39,10 @@ class DebugSocket : public Component
 
   private:
 	std::unique_ptr<ix::WebSocketServer> m_Server;
+
+	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreDispatchEffect) m_OnPreDispatchEffectListener;
+	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreRunEffect) m_OnPreRunEffectListener;
+	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPostRunEffect) m_OnPostRunEffectListener;
 
   public:
 	DebugSocket();
