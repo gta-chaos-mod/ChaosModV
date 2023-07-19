@@ -936,6 +936,12 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		effectData.SetAttribute(EffectAttributes::IsUtility, *isUtilityOpt);
 	}
 
+	const sol::optional<bool> &hideRealNameOnStartOpt = effectInfo["HideRealNameOnStart"];
+	if (hideRealNameOnStartOpt)
+	{
+		effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, *hideRealNameOnStartOpt);
+	}
+
 	const sol::optional<sol::table> &incompatibleIdsOpt = effectInfo["IncompatibleIds"];
 	if (incompatibleIdsOpt)
 	{

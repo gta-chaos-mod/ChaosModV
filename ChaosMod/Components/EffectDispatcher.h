@@ -37,25 +37,26 @@ class EffectDispatcher : public Component
 	{
 		EffectIdentifier Identifier;
 
-		LPVOID ThreadId = nullptr;
-
 		std::string Name;
 		std::string FakeName;
 
-		float Timer     = 0.f;
-		float MaxTime   = 0.f;
+		LPVOID ThreadId     = nullptr;
 
-		bool HideText   = true;
-		bool IsStopping = false;
+		float Timer         = 0.f;
+		float MaxTime       = 0.f;
+
+		bool HideEffectName = false;
+		bool IsStopping     = false;
 
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
-		             const std::string &name, const std::string &fakeName, float timer)
+		             const std::string &name, const EffectData &effectData, float effectDuration)
 		{
 			Identifier                 = effectIdentifier;
 			Name                       = name;
-			FakeName                   = fakeName;
-			Timer                      = timer;
-			MaxTime                    = timer;
+			FakeName                   = effectData.FakeName;
+			Timer                      = effectDuration;
+			MaxTime                    = effectDuration;
+			HideEffectName             = effectData.ShouldHideRealNameOnStart();
 
 			EffectTimedType eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
 

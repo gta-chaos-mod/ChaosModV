@@ -12,18 +12,18 @@ inline bool g_EnableGroupWeighting = true;
 
 struct EffectData
 {
-	std::vector<std::string> IncompatibleIds;
 	std::string Name;
 	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
+	std::string GroupType;
+	std::vector<std::string> IncompatibleIds;
 	float Weight                  = 5.f;
 	int CustomTime                = -1;
 	int WeightMult                = 5;
 	int ShortcutKeycode           = 0;
 	EffectTimedType TimedType     = EffectTimedType::Unk;
 	EffectCategory EffectCategory = EffectCategory::None;
-	std::string GroupType;
 
   private:
 	EffectAttributes Attributes {};
@@ -70,6 +70,11 @@ struct EffectData
 	inline bool IsTemporary() const
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::IsTemporary);
+	}
+
+	inline bool ShouldHideRealNameOnStart() const
+	{
+		return static_cast<bool>(Attributes & EffectAttributes::HideRealNameOnStart);
 	}
 };
 

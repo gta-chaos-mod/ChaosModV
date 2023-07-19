@@ -40,6 +40,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Nothing",
-		.Id = "nothing"
+		.Id = "nothing",
+		.HideRealNameOnStart = true
 	}
 );

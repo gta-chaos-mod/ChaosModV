@@ -136,24 +136,27 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
 			}
 
-			int effectTime = -1;
+			int effectDuration;
 			switch (effectData.TimedType)
 			{
 			case EffectTimedType::Normal:
-				effectTime =
+				effectDuration =
 				    effectData.IsMeta() ? effectDispatcher->m_MetaEffectTimedDur : effectDispatcher->m_EffectTimedDur;
 				break;
 			case EffectTimedType::Short:
-				effectTime = effectData.IsMeta() ? effectDispatcher->m_MetaEffectShortDur
-				                                 : effectDispatcher->m_EffectTimedShortDur;
+				effectDuration = effectData.IsMeta() ? effectDispatcher->m_MetaEffectShortDur
+				                                     : effectDispatcher->m_EffectTimedShortDur;
 				break;
 			case EffectTimedType::Custom:
-				effectTime = effectData.CustomTime;
+				effectDuration = effectData.CustomTime;
+				break;
+			default:
+				effectDuration = -1;
 				break;
 			}
 
 			effectDispatcher->m_ActiveEffects.emplace_back(entry.Identifier, registeredEffect, effectName.str(),
-			                                               effectData.FakeName, effectTime);
+			                                               effectData, effectDuration);
 
 			// There might be a reason to include meta effects in the future, for now we will just exclude them
 			if (!(entry.Flags & EffectDispatcher::DispatchEffectFlag_NoAddToLog) && !effectData.IsMeta()
@@ -424,9 +427,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			OnPostRunEffect.Fire(effect.Identifier);
 		}
 
-		if (effect.HideText && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
+		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
 		{
-			effect.HideText = false;
+			effect.HideEffectName = false;
 		}
 
 		bool isTimed = false;
@@ -591,7 +594,7 @@ void EffectDispatcher::DrawEffectTexts()
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
 			auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			if ((effect.HideText && !hasFake)
+			if ((effect.HideEffectName && !hasFake)
 			    || ((ComponentExists<MetaModifiers>()
 			         && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos))
 			        && !effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsTemporary()))
@@ -600,20 +603,20 @@ void EffectDispatcher::DrawEffectTexts()
 			}
 		}
 
-		std::string name = effect.Name;
-		if (effect.HideText && hasFake)
+		auto effectName = effect.Name;
+		if (effect.HideEffectName && hasFake)
 		{
-			name = effect.FakeName;
+			effectName = effect.FakeName;
 		}
 
 		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 		{
-			DrawScreenText(name, { .085f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
+			DrawScreenText(effectName, { .085f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
 			               ScreenTextAdjust::Left, { .0f, .915f });
 		}
 		else
 		{
-			DrawScreenText(name, { .915f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
+			DrawScreenText(effectName, { .915f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
 			               ScreenTextAdjust::Right, { .0f, .915f });
 		}
 

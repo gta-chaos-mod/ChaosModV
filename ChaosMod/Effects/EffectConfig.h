@@ -119,6 +119,7 @@ namespace EffectConfig
 			effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, values[5]);
 			effectData.SetAttribute(EffectAttributes::IsMeta, effectInfo.ExecutionType == EffectExecutionType::Meta);
 			effectData.Name = effectInfo.Name;
+			effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, effectInfo.HideRealNameOnStart);
 #ifdef _DEBUG
 			effectData.ShortcutKeycode = effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : values[7];
 #else

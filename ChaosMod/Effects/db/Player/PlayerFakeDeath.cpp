@@ -267,6 +267,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Death",
-		.Id = "player_fakedeath"
+		.Id = "player_fakedeath",
+		.HideRealNameOnStart = true
 	}
 );
