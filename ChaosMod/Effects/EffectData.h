@@ -52,11 +52,6 @@ struct EffectData
 		return IsTemporary() || TimedType == EffectTimedType::Permanent;
 	}
 
-	inline bool HasCustomName() const
-	{
-		return static_cast<bool>(Attributes & EffectAttributes::HasCustomName);
-	}
-
 	inline bool IsMeta() const
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::IsMeta);
@@ -75,6 +70,11 @@ struct EffectData
 	inline bool ShouldHideRealNameOnStart() const
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::HideRealNameOnStart);
+	}
+
+	inline bool HasCustomName() const
+	{
+		return !CustomName.empty();
 	}
 
 	float GetEffectWeight() const

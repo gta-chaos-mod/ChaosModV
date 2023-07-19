@@ -127,7 +127,6 @@ namespace EffectConfig
 #endif
 			if (!valueEffectName.empty())
 			{
-				effectData.SetAttribute(EffectAttributes::HasCustomName, true);
 				effectData.CustomName = valueEffectName;
 			}
 			effectData.Id             = effectInfo.Id;
