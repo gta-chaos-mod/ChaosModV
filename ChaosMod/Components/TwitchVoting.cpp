@@ -256,10 +256,10 @@ void TwitchVoting::OnRun()
 		}
 
 		float y = .1f;
-		for (const auto &pChoosableEffect : m_EffectChoices)
+		for (const auto &choosableEffect : m_EffectChoices)
 		{
 			std::ostringstream oss;
-			oss << pChoosableEffect->m_Match << ": " << pChoosableEffect->m_EffectName;
+			oss << choosableEffect->m_Match << ": " << choosableEffect->m_EffectName;
 
 			// Also show chance percentages if chance system is enabled
 			if (m_EnableTwitchChanceSystem)
@@ -267,12 +267,11 @@ void TwitchVoting::OnRun()
 				float percentage;
 				if (totalVotes == 0)
 				{
-					percentage = 100 / m_EffectChoices.size() * .01f;
+					percentage = 100.f / m_EffectChoices.size() * .01f;
 				}
 				else
 				{
-					int chanceVotes =
-					    pChoosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainChance ? 1 : 0);
+					int chanceVotes = choosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainChance ? 1 : 0);
 
 					percentage =
 					    !chanceVotes
