@@ -192,7 +192,7 @@ void TwitchVoting::OnRun()
 			{
 				const EffectData &effectData = pair.second;
 
-				totalWeight += GetEffectWeight(effectData);
+				totalWeight += effectData.GetEffectWeight();
 			}
 
 			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
@@ -205,7 +205,7 @@ void TwitchVoting::OnRun()
 			{
 				auto &[effectIdentifier, effectData] = pair;
 
-				totalWeight += GetEffectWeight(effectData);
+				totalWeight += effectData.GetEffectWeight();
 
 				if (chosen <= totalWeight)
 				{

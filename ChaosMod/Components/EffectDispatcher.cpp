@@ -502,7 +502,7 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 		{
 			if (effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
 			{
-				totalWeight += GetEffectWeight(effectData);
+				totalWeight += effectData.GetEffectWeight();
 
 				availableMetaEffects.push_back(std::make_tuple(effectId, &effectData));
 			}
@@ -518,7 +518,7 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 			const EffectIdentifier *targetEffectIdentifier = nullptr;
 			for (const auto &[effectIdentifier, effectData] : availableMetaEffects)
 			{
-				totalWeight += GetEffectWeight(*effectData);
+				totalWeight += effectData->GetEffectWeight();
 
 				effectData->Weight += effectData->WeightMult;
 
@@ -677,7 +677,7 @@ void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFl
 	float totalWeight = 0.f;
 	for (const auto &[effectIdentifier, effectData] : choosableEffects)
 	{
-		totalWeight += GetEffectWeight(effectData);
+		totalWeight += effectData.GetEffectWeight();
 	}
 
 	float chosen                                   = g_Random.GetRandomFloat(0.f, totalWeight);
@@ -687,7 +687,7 @@ void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFl
 	const EffectIdentifier *targetEffectIdentifier = nullptr;
 	for (const auto &[effectIdentifier, effectData] : choosableEffects)
 	{
-		totalWeight += GetEffectWeight(effectData);
+		totalWeight += effectData.GetEffectWeight();
 
 		if (chosen <= totalWeight)
 		{

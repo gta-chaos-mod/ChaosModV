@@ -76,14 +76,14 @@ struct EffectData
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::HideRealNameOnStart);
 	}
+
+	float GetEffectWeight() const
+	{
+		const auto &effectGroup = GroupType;
+		auto effectWeight       = Weight;
+
+		return g_EnableGroupWeighting && !effectGroup.empty() && !g_EffectGroups.at(effectGroup).IsPlaceholder
+		         ? effectWeight / g_EffectGroups.at(effectGroup).MemberCount * g_EffectGroups.at(effectGroup).WeightMult
+		         : effectWeight;
+	}
 };
-
-inline float GetEffectWeight(const EffectData &effectData)
-{
-	const auto &effectGroup = effectData.GroupType;
-	auto effectWeight       = effectData.Weight;
-
-	return g_EnableGroupWeighting && !effectGroup.empty() && !g_EffectGroups.at(effectGroup).IsPlaceholder
-	         ? effectWeight / g_EffectGroups.at(effectGroup).MemberCount * g_EffectGroups.at(effectGroup).WeightMult
-	         : effectWeight;
-}
