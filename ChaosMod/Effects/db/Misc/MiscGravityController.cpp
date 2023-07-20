@@ -6,6 +6,8 @@
 static void OnStop()
 {
 	SET_GRAVITY_LEVEL(0);
+
+	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), false);
 }
 
 static void OnTickLow()
@@ -122,6 +124,8 @@ static void OnStartSideways()
 
 static void OnTickSideways()
 {
+	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), true);
+
 	Memory::SetGravityLevel(0.f);
 
 	for (auto ped : GetAllPeds())
