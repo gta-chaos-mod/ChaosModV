@@ -672,12 +672,10 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 	lua.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
 	             OverrideShaderType::Snow);
 
-	try
+	const auto &result = lua.safe_script(script);
+	if (!result.valid())
 	{
-		const auto &result = lua.safe_script(script);
-	}
-	catch (const sol::error &error)
-	{
+		const sol::error &error = result;
 		LUA_SCRIPT_LOG(scriptName, error.what());
 
 		return ParseScriptReturnReason::Error;
