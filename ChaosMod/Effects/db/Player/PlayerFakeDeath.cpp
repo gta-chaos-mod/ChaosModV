@@ -81,8 +81,6 @@ static void OnStart()
 			SET_PLAYER_INVINCIBLE(playerPed, true);
 		}
 
-		// Eager assumption
-		std::string fakeEffectId = "player_suicide";
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
@@ -90,6 +88,12 @@ static void OnStart()
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
+					if (ComponentExists<EffectDispatcher>())
+					{
+						// Set the fake name accordingly
+						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "player_suicide");
+					}
+
 					if (IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 					{
 						// Fake suicide
@@ -108,8 +112,11 @@ static void OnStart()
 				}
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					// Fake veh explosion
-					fakeEffectId      = "playerveh_explode";
+					if (ComponentExists<EffectDispatcher>())
+					{
+						// Set the fake name accordingly
+						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "playerveh_explode");
+					}
 
 					Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
@@ -172,12 +179,6 @@ static void OnStart()
 						lastTimestamp = curTimestamp;
 					}
 				}
-			}
-
-			if (ComponentExists<EffectDispatcher>())
-			{
-				// Set the fake name accordingly
-				GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
 			}
 
 			nextModeTime = 0;
