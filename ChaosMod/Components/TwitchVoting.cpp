@@ -3,6 +3,7 @@
 #include "TwitchVoting.h"
 
 #include "Components/MetaModifiers.h"
+#include "Components/SplashTexts.h"
 
 #include "Util/OptionsManager.h"
 #include "Util/Text.h"
@@ -35,6 +36,11 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &textColor) : Component(), 
 	}
 
 	ConnectNamedPipe(m_PipeHandle, NULL);
+
+	if (m_EnableTwitchVoting && ComponentExists<SplashTexts>())
+	{
+		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
+	}
 }
 
 TwitchVoting::~TwitchVoting()
