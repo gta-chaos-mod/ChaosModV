@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../Lib/scrThread.h"
-#include "../Util/Logging.h"
-#include "Handle.h"
-#include "Memory.h"
+#include "Lib/scrThread.h"
+
+#include "Memory/Handle.h"
+#include "Memory/Memory.h"
+
+#include "Util/Logging.h"
 
 using Hash = unsigned long;
 
@@ -55,5 +57,23 @@ namespace Memory
 		}
 
 		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, thread->GetHash());
+	}
+
+	inline Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
+	{
+		DWORD codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
+		for (int i = 0; i < codeBlocksSize; i++)
+		{
+			auto handle = Memory::FindPattern(
+			    pattern,
+			    { program->m_CodeBlocks[i],
+			      program->m_CodeBlocks[i] + (i == codeBlocksSize - 1 ? program->m_CodeSize : program->PAGE_SIZE) });
+			if (handle.IsValid())
+			{
+				return handle;
+			}
+		}
+
+		return Handle();
 	}
 }

@@ -18,29 +18,14 @@ static bool ms_RanOnlineVehicleDespawnPatch     = false;
 static DWORD64 ms_OnlineVehicleDespawnPatchAddr = 0;
 static std::array<BYTE, 3> ms_OnlineVehicleDespawnPatchOrigBytes;
 
-static bool ms_SearchedForMissionStateGlobal = false;
-
-static Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
-{
-	DWORD codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
-	for (int i = 0; i < codeBlocksSize; i++)
-	{
-		auto handle = Memory::FindPattern(
-		    pattern,
-		    { program->m_CodeBlocks[i],
-		      program->m_CodeBlocks[i] + (i == codeBlocksSize - 1 ? program->m_CodeSize : program->PAGE_SIZE) });
-		if (handle.IsValid())
-		{
-			return handle;
-		}
-	}
-
-	return Handle();
-}
-
 __int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
 __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 {
+	if (!Hooks::OnScriptThreadRun.Fire(thread))
+	{
+		return 0;
+	}
+
 	if (!strcmp(thread->GetName(), "shop_controller"))
 	{
 		if (!ms_RanOnlineVehicleDespawnPatch)
@@ -51,7 +36,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 			if (program->m_CodeBlocks)
 			{
 				// Thanks to rainbomizer
-				auto handle = FindScriptPattern("2D ? ? 00 ? 38 00 5D ? ? ? 06 56 ? ? 2E 01 00", program);
+				auto handle = Memory::FindScriptPattern("2D ? ? 00 ? 38 00 5D ? ? ? 06 56 ? ? 2E 01 00", program);
 
 				if (!handle.IsValid())
 				{
@@ -68,36 +53,6 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 
 					LOG("Online vehicle despawn mechanism successfully bypassed");
 				}
-			}
-		}
-	}
-
-	if (!ms_SearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(thread->GetName(), "main"))
-	{
-		auto program = Memory::ScriptThreadToProgram(thread);
-		if (program->m_CodeBlocks)
-		{
-			ms_SearchedForMissionStateGlobal = true;
-
-			Handle handle;
-			if (getGameVersion() < VER_1_0_2802_0)
-			{
-				handle = FindScriptPattern("2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E", program);
-			}
-			else
-			{
-				handle = FindScriptPattern("2D ? ? 00 00 25 0D 63 ? ? ? 70 61", program);
-			}
-
-			if (!handle.IsValid())
-			{
-				LOG("Fail state global not found; Failsafe can not be enabled!");
-			}
-			else
-			{
-				Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
-
-				LOG("Fail state global found (Global: " << Failsafe::GetGlobalIndex() << ")");
 			}
 		}
 	}

@@ -2,17 +2,19 @@
 
 #include "Component.h"
 
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+
 class Failsafe : public Component
 {
   private:
-	bool m_Enabled                      = false;
+	bool m_Enabled      = false;
 
-	char m_FailCounts                   = 0;
-	int m_FailTimestamp                 = 0;
-	int m_LastState                     = -1;
-	int *m_StateGlobal                  = nullptr;
+	char m_FailCounts   = 0;
+	int m_FailTimestamp = 0;
+	int m_LastState     = -1;
+	int *m_StateGlobal  = nullptr;
 
-	static inline int ms_StateGlobalIdx = 0;
+	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_OnScriptThreadRunListener;
 
   protected:
 	Failsafe();
