@@ -12,14 +12,15 @@
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
+#include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
 #include "Components/MetaModifiers.h"
 #include "Components/Mp3Manager.h"
-#include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
 #include "Components/TwitchVoting.h"
+
 
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
@@ -199,7 +200,7 @@ static void Init()
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
-	INIT_COMPONENT("EffectShortcuts", "effect shortcuts handler", Shortcuts);
+	INIT_COMPONENT("EffectShortcuts", "effect shortcuts handler", EffectShortcuts);
 
 	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
 
