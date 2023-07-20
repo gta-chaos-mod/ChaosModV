@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Logging.h"
-#include "TryParse.h"
+#include "Util/Logging.h"
+#include "Util/Text.h"
+#include "Util/TryParse.h"
 
 #include <iostream>
 #include <string>
@@ -33,11 +34,11 @@ class OptionsFile
 				return false;
 			}
 
-			char buffer[256];
-			while (file.getline(buffer, 256))
+			std::string line;
+			line.resize(128);
+			while (file.getline(line.data(), 128))
 			{
-				std::string line(buffer);
-				const auto &key = line.substr(0, line.find("="));
+				const auto &key = StringTrim(line.substr(0, line.find("=")));
 
 				// Ignore line if there's no "="
 				if (line == key)
@@ -45,8 +46,8 @@ class OptionsFile
 					continue;
 				}
 
-				const auto &value =
-				    line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
+				const auto &value = StringTrim(
+				    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
 
 				m_Options.emplace(key, value);
 			}
