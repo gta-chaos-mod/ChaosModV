@@ -10,7 +10,7 @@
 
 #include "Util/OptionsManager.h"
 #include "Util/Random.h"
-#include "Util/Text.h"
+#include "Util/ScriptText.h"
 
 static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDispatcher::EffectDispatchEntry &entry)
 {

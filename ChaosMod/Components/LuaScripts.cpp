@@ -27,6 +27,7 @@
 #include "Util/Player.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
+#include "Util/Text.h"
 #include "Util/Types.h"
 #include "Util/Vehicle.h"
 #include "Util/Weapon.h"
@@ -695,18 +696,6 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		}
 	}
 
-	auto trim = [](std::string str) -> std::string
-	{
-		if (str.find_first_not_of(' ') == str.npos)
-		{
-			return "";
-		}
-
-		str = str.substr(str.find_first_not_of(' '));
-		str = str.substr(0, str.find_last_not_of(' ') == str.npos ? str.npos : str.find_last_not_of(' ') + 1);
-		return str;
-	};
-
 	static std::mutex effectGroupMutex;
 	const sol::optional<sol::table> &effectGroupInfoOpt = lua["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
@@ -720,7 +709,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		}
 		else
 		{
-			const auto &groupName = trim(*groupNameOpt);
+			const auto &groupName = StringTrim(*groupNameOpt);
 
 			if (!(flags & ParseScriptFlag_IsTemporary))
 			{
@@ -770,7 +759,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Missing Name!");
 		return ParseScriptReturnReason::Error;
 	}
-	const auto &effectName = trim(*effectNameOpt);
+	const auto &effectName = StringTrim(*effectNameOpt);
 	if (effectName.empty())
 	{
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect: Invalid Name!");
@@ -788,7 +777,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 			return ParseScriptReturnReason::Error;
 		}
 	}
-	const auto &effectId = trim(*effectIdOpt);
+	const auto &effectId = StringTrim(*effectIdOpt);
 	if (effectId.empty() || effectId.starts_with('.'))
 	{
 		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": Invalid EffectId!");

@@ -24,6 +24,7 @@
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
+#include "Util/Text.h"
 
 static struct
 {
@@ -162,39 +163,58 @@ static void Init()
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
 
-	LOG("Initializing effect sound system");
-	InitComponent<Mp3Manager>();
+	std::set<std::string> blacklistedComponentNames;
+	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
+	{
+		std::ifstream file("chaosmod\\.blacklistedcomponents");
+		if (!file.fail())
+		{
+			std::string line;
+			line.resize(64);
+			while (file.getline(line.data(), 64))
+			{
+				blacklistedComponentNames.insert(StringTrim(line.substr(0, line.find("\n"))));
+			}
+		}
+	}
 
-	LOG("Initializing meta modifier states");
-	InitComponent<MetaModifiers>();
+#define INIT_COMPONENT(componentName, logName, componentType, ...)   \
+	if (blacklistedComponentNames.contains(componentName))           \
+	{                                                                \
+		LOG("" << componentName << " is blacklisted from loading!"); \
+	}                                                                \
+	else                                                             \
+	{                                                                \
+		LOG("Initializing " << logName);                             \
+		InitComponent<componentType>(__VA_ARGS__);                   \
+	}
 
-	LOG("Initializing Lua scripts");
-	InitComponent<LuaScripts>();
+	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
 
-	LOG("Initializing effects dispatcher");
-	InitComponent<EffectDispatcher>(timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("MetaModifiers", "meta modifier states", MetaModifiers);
 
-	InitComponent<DebugMenu>();
+	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	LOG("Initializing shortcuts handler");
-	InitComponent<Shortcuts>();
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
 
-	LOG("Initializing key state handler");
-	InitComponent<KeyStates>();
+	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
-	LOG("Initializing Twitch voting");
-	InitComponent<TwitchVoting>(textColor);
+	INIT_COMPONENT("EffectShortcuts", "effect shortcuts handler", Shortcuts);
 
-	LOG("Initializing Failsafe");
-	InitComponent<Failsafe>();
+	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
+
+	INIT_COMPONENT("TwitchVoting", "Twitch voting", TwitchVoting, textColor);
+
+	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
 	{
-		LOG("Initializing Debug Websocket");
-		InitComponent<DebugSocket>();
+		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
 	}
 #endif
+
+#undef INIT_COMPONENT
 
 	LOG("Completed init");
 }

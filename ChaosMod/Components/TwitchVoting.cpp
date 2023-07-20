@@ -6,7 +6,7 @@
 #include "Components/SplashTexts.h"
 
 #include "Util/OptionsManager.h"
-#include "Util/Text.h"
+#include "Util/ScriptText.h"
 
 #include <json.hpp>
 

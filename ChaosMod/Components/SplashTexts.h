@@ -3,7 +3,7 @@
 #include <list>
 
 #include "Component.h"
-#include "Util/Text.h"
+#include "Util/ScriptText.h"
 
 #define SPLASH_TEXT_DUR_SECS 10
 
