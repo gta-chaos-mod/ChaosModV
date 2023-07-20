@@ -4,6 +4,8 @@
 
 #include <numeric>
 
+#define SOL_ALL_SAFETIES_ON 1
+#define SOL_SAFE_NUMERICS 1
 #include <sol3/sol.hpp>
 
 #include <string>
