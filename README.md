@@ -64,11 +64,11 @@ Afterwards choose one of the following methods depending on the projects you wan
 
   NOTE: The methods above are preferred over this one for the ASI (the ChaosMod project). There may be components of the ASI only available to CMake due to complications with third-party libraries.
 
-  1. Open `vendor/minhook/build/VC16/MinHookVC16.sln` in Visual Studio
+  1. Open `vendor/minhook/build/VC17/MinHookVC17.sln` in Visual Studio (or click on the "Switch between solutions and available views" button and load `MinHookVC17.sln`)
 
   2. Compile libMinHook as x64 Release build
 
-  3. Open `ChaosMod.sln` in the root folder in Visual Studio
+  3. Open `ChaosMod.sln` in the root folder in Visual Studio (if not open already)
 
   4. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
 	
