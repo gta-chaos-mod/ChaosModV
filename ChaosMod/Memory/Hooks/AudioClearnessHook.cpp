@@ -1,6 +1,8 @@
 #include <stdafx.h>
 
-#include "Hook.h"
+#include "AudioClearnessHook.h"
+
+#include "Memory/Hooks/Hook.h"
 
 static bool ms_EnabledHook = false;
 static int ms_Value        = 0;

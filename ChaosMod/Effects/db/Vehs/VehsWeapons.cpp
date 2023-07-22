@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Util/HelpText.h"
+
 static int last_shot = 0;
 
 static void OnStop()
@@ -16,6 +18,8 @@ static void OnTick()
 	Ped player = PLAYER_PED_ID();
 	if (IS_PED_IN_ANY_VEHICLE(player, false))
 	{
+		DisplayHelpText("Press ~INPUT_VEH_ATTACK~ to shoot rockets from your vehicle.");
+
 		// INPUT_VEH_ATTACK - Left MouseButton
 		if (IS_CONTROL_PRESSED(0, 69) || IS_CONTROL_JUST_RELEASED(0, 69))
 		{
@@ -54,7 +58,7 @@ static void OnTick()
 // clang-format off
 REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 	{
-		.Name = "Vehicles Shoot Rockets (Left Click/RB)",
+		.Name = "Vehicles Shoot Rockets",
 		.Id = "veh_weapons",
 		.IsTimed = true
 	}

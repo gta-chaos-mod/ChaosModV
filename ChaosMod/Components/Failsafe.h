@@ -14,7 +14,7 @@ class Failsafe : public Component
 	int m_LastState     = -1;
 	int *m_StateGlobal  = nullptr;
 
-	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_OnScriptThreadRunListener;
+	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_SearchFailGlobalListener;
 
   protected:
 	Failsafe();

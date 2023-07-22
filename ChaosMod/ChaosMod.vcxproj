@@ -398,6 +398,8 @@
     <ClCompile Include="Components\Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Components\KeyStates.cpp" />
+    <ClCompile Include="Components\HelpTextQueue.cpp" />
+    <ClCompile Include="Components\GetLabelTextHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -484,6 +486,9 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="Components\KeyStates.h" />
     <ClInclude Include="Util\Events.h" />
+    <ClInclude Include="Util\HelpText.h" />
+    <ClInclude Include="Components\HelpTextQueue.h" />
+    <ClInclude Include="Components\GetLabelTextHook.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

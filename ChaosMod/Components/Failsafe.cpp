@@ -23,7 +23,7 @@ Failsafe::Failsafe() : Component()
 		return;
 	}
 
-	m_OnScriptThreadRunListener.Register(
+	m_SearchFailGlobalListener.Register(
 	    Hooks::OnScriptThreadRun,
 	    [](rage::scrThread *thread)
 	    {
