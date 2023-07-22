@@ -16,7 +16,7 @@ __forceinline void DisplayHelpText(std::string_view text, std::uint8_t durationS
 
 	auto label = STRINGIFY(__FILENAME__) STRINGIFY(__LINE__);
 
-	Hooks::AddLabel(label, text);
+	Hooks::AddCustomLabel(label, text);
 
 #undef STRINGIFY
 #undef __FILENAME__

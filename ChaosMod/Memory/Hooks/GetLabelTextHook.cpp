@@ -2,13 +2,13 @@
 
 #include "Memory/Hooks/Hook.h"
 
-static std::unordered_map<Hash, std::string_view> ms_ChaosLabels;
+static std::unordered_map<Hash, std::string_view> ms_CustomLabels;
 
 const char *(*OG_GetLabelText)(void *, Hash);
 const char *HK_GetLabelText(void *text, Hash hash)
 {
-	const auto &result = ms_ChaosLabels.find(hash);
-	if (result != ms_ChaosLabels.end())
+	const auto &result = ms_CustomLabels.find(hash);
+	if (result != ms_CustomLabels.end())
 	{
 		return result->second.data();
 	}
@@ -33,8 +33,13 @@ static RegisterHook registerHook(OnHook, nullptr, "GetLabelText");
 
 namespace Hooks
 {
-	void AddLabel(std::string_view label, std::string_view text)
+	void AddCustomLabel(std::string_view label, std::string_view text)
 	{
-		ms_ChaosLabels[GET_HASH_KEY(label.data())] = text;
+		ms_CustomLabels[GET_HASH_KEY(label.data())] = text;
+	}
+
+	void ClearCustomLabels()
+	{
+		ms_CustomLabels.clear();
 	}
 }

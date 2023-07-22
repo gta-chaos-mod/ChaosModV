@@ -17,6 +17,7 @@ class HelpTextQueue : public Component
   public:
 	void DisplayLabel(std::string_view label, std::uint8_t durationSecs);
 
+	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
 
 	template <class T>

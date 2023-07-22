@@ -4,5 +4,6 @@
 
 namespace Hooks
 {
-	void AddLabel(std::string_view label, std::string_view text);
+	void AddCustomLabel(std::string_view label, std::string_view text);
+	void ClearCustomLabels();
 }

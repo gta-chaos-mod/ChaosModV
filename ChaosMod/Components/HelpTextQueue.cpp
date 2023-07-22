@@ -14,6 +14,11 @@ void HelpTextQueue::DisplayLabel(std::string_view label, std::uint8_t durationSe
 	m_HelpTextQueue.emplace(label, durationSecs / 1000.f);
 }
 
+void HelpTextQueue::OnModPauseCleanup()
+{
+	Hooks::ClearCustomLabels();
+}
+
 void HelpTextQueue::OnRun()
 {
 	if (m_HelpTextQueue.empty() || IS_HELP_MESSAGE_BEING_DISPLAYED())
