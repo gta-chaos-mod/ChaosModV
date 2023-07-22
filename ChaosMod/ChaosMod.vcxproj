@@ -399,7 +399,7 @@
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Components\KeyStates.cpp" />
     <ClCompile Include="Components\HelpTextQueue.cpp" />
-    <ClCompile Include="Components\GetLabelTextHook.cpp" />
+    <ClCompile Include="Memory\Hooks\GetLabelTextHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -488,7 +488,7 @@
     <ClInclude Include="Util\Events.h" />
     <ClInclude Include="Util\HelpText.h" />
     <ClInclude Include="Components\HelpTextQueue.h" />
-    <ClInclude Include="Components\GetLabelTextHook.h" />
+    <ClInclude Include="Memory\Hooks\GetLabelTextHook.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />
