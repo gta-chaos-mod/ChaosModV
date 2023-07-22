@@ -14,7 +14,9 @@
 
 #include "Memory/Hooks/AudioClearnessHook.h"
 #include "Memory/Hooks/AudioPitchHook.h"
+#include "Memory/Hooks/GetLabelTextHook.h"
 #include "Memory/Hooks/ShaderHook.h"
+
 #include "Memory/PedModels.h"
 #include "Memory/Snow.h"
 #include "Memory/Vehicle.h"
@@ -649,6 +651,8 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 
 		E("GetChaosModVersion", []() { return MOD_VERSION; }),
 		E("GetGameBuild", Memory::GetGameBuild),
+
+		E("AddCustomLabel", Hooks::AddCustomLabel),
 	};
 #undef E
 

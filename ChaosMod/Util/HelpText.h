@@ -6,7 +6,7 @@
 
 #include <string_view>
 
-__forceinline void DisplayHelpText(std::string_view text, std::uint8_t durationSecs = 0)
+__forceinline void DisplayHelpText(const std::string &text, std::uint8_t durationSecs = 0)
 {
 #define __FILENAME__                                        \
 	(strrchr(__FILE__, '\\')  ? strrchr(__FILE__, '\\') + 1 \
