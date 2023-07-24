@@ -19,17 +19,6 @@ namespace Memory
 
 		MH_Initialize();
 
-		LOG("Running hooks");
-		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
-		{
-			if (!registeredHook->IsLateHook() && !registeredHook->RunHook())
-			{
-				LOG("Error while executing " << registeredHook->GetName() << " hook");
-			}
-		}
-
-		MH_EnableHook(MH_ALL_HOOKS);
-
 		if (DoesFileExist("chaosmod\\.skipintro"))
 		{
 			// Splash screen
@@ -76,14 +65,34 @@ namespace Memory
 				LOG("SkipDLCs: Patched DLC loading");
 			}
 		}
+
+		LOG("Running hooks");
+		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
+		{
+			if (registeredHook->IsLateHook())
+			{
+				continue;
+			}
+
+			LOG("Running " << registeredHook->GetName() << " hook");
+
+			if (!registeredHook->RunHook())
+			{
+				LOG(registeredHook->GetName() << " hook failed!");
+			}
+		}
+
+		MH_EnableHook(MH_ALL_HOOKS);
 	}
 
 	void Uninit()
 	{
 		LOG("Running hook cleanups");
-		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
-			pRegisteredHook->RunCleanup();
+			LOG("Running " << registeredHook->GetName() << " cleanup");
+
+			registeredHook->RunCleanup();
 		}
 
 		MH_DisableHook(MH_ALL_HOOKS);
@@ -95,11 +104,18 @@ namespace Memory
 	{
 		LOG("Running late hooks");
 
-		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
-			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
+			if (!registeredHook->IsLateHook())
 			{
-				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
+				continue;
+			}
+
+			LOG("Running " << registeredHook->GetName() << " hook");
+
+			if (!registeredHook->RunHook())
+			{
+				LOG(registeredHook->GetName() << " hook failed!");
 			}
 		}
 
