@@ -67,10 +67,12 @@ namespace TwitchChatVotingProxy
                 if (config.OverlayMode == EOverlayMode.OVERLAY_OBS)
                 {
                     // Create overlay server config
-                    OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.RetainInitalVotes, config.OverlayServerPort);
+                    OverlayServerConfig overlayServerConfig = new OverlayServerConfig(votingMode, config.RetainInitalVotes, config.OverlayServerPort, config.OverlayVotingBarColor);
 
                     // Create component
                     overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
+
+                    logger.Information("succesfully setup OBS voting overlay");
                 }
 
                 // Create components
@@ -80,9 +82,14 @@ namespace TwitchChatVotingProxy
                 // Start the chaos mod controller
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
 
-                while (chaosPipe.IsConnected()) 
+                if (chaosPipe.IsConnected())
                 {
-                    Thread.Sleep(100);
+                    logger.Information("successfully set up twitch chat voting proxy");
+
+                    while (chaosPipe.IsConnected())
+                    {
+                        Thread.Sleep(100);
+                    }
                 }
             }
             finally

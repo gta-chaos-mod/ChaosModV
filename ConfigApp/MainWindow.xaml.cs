@@ -230,6 +230,10 @@ namespace ConfigApp
             twitch_user_channel_oauth.Password = m_TwitchFile.ReadValue("TwitchChannelOAuth");
             twitch_user_effects_secs_before_chat_voting.Text = m_TwitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             twitch_user_overlay_mode.SelectedIndex = m_TwitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
+            if (m_ConfigFile.HasKey("OverlayVotingBarColor"))
+            {
+                twitch_user_overlay_bar_color.SelectedColor = (Color)ColorConverter.ConvertFromString(m_TwitchFile.ReadValue("TwitchVotingOverlayBarColor"));
+            }
             twitch_user_chance_system_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             twitch_user_chance_system_retain_chance_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
             twitch_user_random_voteable_enable.IsChecked = m_TwitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
@@ -244,6 +248,7 @@ namespace ConfigApp
             m_TwitchFile.WriteValue("TwitchChannelOAuth", twitch_user_channel_oauth.Password);
             m_TwitchFile.WriteValue("TwitchVotingSecsBeforeVoting", twitch_user_effects_secs_before_chat_voting.Text);
             m_TwitchFile.WriteValue("TwitchVotingOverlayMode", twitch_user_overlay_mode.SelectedIndex);
+            m_TwitchFile.WriteValue("TwitchVotingOverlayBarColor", twitch_user_overlay_bar_color.SelectedColor.ToString());
             m_TwitchFile.WriteValue("TwitchVotingChanceSystem", twitch_user_chance_system_enable.IsChecked.Value);
             m_TwitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", twitch_user_chance_system_retain_chance_enable.IsChecked.Value);
             m_TwitchFile.WriteValue("TwitchRandomEffectVoteableEnable", twitch_user_random_voteable_enable.IsChecked.Value);
@@ -420,6 +425,8 @@ namespace ConfigApp
             twitch_user_effects_secs_before_chat_voting.IsEnabled = agreed;
             twitch_user_overlay_mode_label.IsEnabled = agreed;
             twitch_user_overlay_mode.IsEnabled = agreed;
+            twitch_user_overlay_bar_color.IsEnabled = agreed && twitch_user_overlay_mode.SelectedIndex == 2;
+            twitch_user_overlay_bar_color_reset_button.IsEnabled = agreed && twitch_user_overlay_mode.SelectedIndex == 2;
             twitch_user_chance_system_enable_label.IsEnabled = agreed;
             twitch_user_chance_system_enable.IsEnabled = agreed;
             twitch_user_chance_system_retain_chance_enable_label.IsEnabled = agreed;
@@ -513,6 +520,28 @@ namespace ConfigApp
         private void twitch_user_agreed_Click(object sender, RoutedEventArgs e)
         {
             TwitchTabHandleAgreed();
+        }
+
+        private void twitch_user_overlay_mode_changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (!twitch_user_overlay_bar_color.IsEnabled && twitch_user_overlay_mode.SelectedIndex == 2 && twitch_user_agreed.IsChecked.GetValueOrDefault())
+            {
+                twitch_user_overlay_bar_color.IsEnabled = true;
+                twitch_user_overlay_bar_color_reset_button.IsEnabled = true;
+            }
+            else
+            {
+                twitch_user_overlay_bar_color.IsEnabled = false;
+                twitch_user_overlay_bar_color_reset_button.IsEnabled = false;
+            }
+        }
+
+        private void twitch_user_overlay_bar_color_reset_Click(object sender, RoutedEventArgs e)
+        {
+            if (twitch_user_overlay_bar_color.IsEnabled && twitch_user_overlay_mode.SelectedIndex == 2)
+            {
+                twitch_user_overlay_bar_color.SelectedColor = (Color)ColorConverter.ConvertFromString("#238BEB");
+            }
         }
 
         private void effect_user_config_Click(object sender, RoutedEventArgs e)

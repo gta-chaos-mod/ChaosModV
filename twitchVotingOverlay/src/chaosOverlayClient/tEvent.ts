@@ -1,3 +1,3 @@
-import { IChaosOverlayClientMessage } from './iMessage';
+import { IChaosOverlayVotingClientMessage } from './iMessage';
 
-export type TChaosOverlayClientEvent = (event: IChaosOverlayClientMessage) => void;
+export type TChaosOverlayClientEvent = (event: IChaosOverlayVotingClientMessage) => void;

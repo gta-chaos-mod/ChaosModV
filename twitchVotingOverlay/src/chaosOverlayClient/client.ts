@@ -1,8 +1,9 @@
 import { IChaosOverlayClient } from './iClient';
 import { LiteEvent } from '../lightEvent';
 import { IChaosOverlayVoteOption } from './iVoteOption';
-import { IChaosOverlayClientMessage } from './iMessage';
+import { IChaosOverlayBaseClientMessage, IChaosOverlayVotingClientMessage, IChaosOverlayColorClientMessage } from './iMessage';
 import { TChaosOverlayClientEvent } from './tEvent';
+import { SetBarProgressColor } from '../style';
 
 export class ChaosOverlayClient implements IChaosOverlayClient {
 	/**
@@ -13,12 +14,12 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 
 	private URL: string;
 	private WS: WebSocket | null = null;
-	private createEvent = new LiteEvent<IChaosOverlayClientMessage>();
+	private createEvent = new LiteEvent<IChaosOverlayVotingClientMessage>();
 	private connectEvent = new LiteEvent();
 	private disconnectEvent = new LiteEvent();
-	private endEvent = new LiteEvent<IChaosOverlayClientMessage>();
-	private noVoteRoundEvent = new LiteEvent<IChaosOverlayClientMessage>();
-	private updateEvent = new LiteEvent<IChaosOverlayClientMessage>();
+	private endEvent = new LiteEvent<IChaosOverlayVotingClientMessage>();
+	private noVoteRoundEvent = new LiteEvent<IChaosOverlayVotingClientMessage>();
+	private updateEvent = new LiteEvent<IChaosOverlayVotingClientMessage>();
 
 	public constructor(URL: string) {
 		this.URL = URL;
@@ -108,23 +109,39 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	 */
 	private onSocketMessage(message: MessageEvent): void {
 		try {
-			const MESSAGE: IChaosOverlayClientMessage = JSON.parse(message.data);
+			const BASE_MESSAGE: IChaosOverlayBaseClientMessage = JSON.parse(message.data);
 
-			switch (MESSAGE.request) {
-				case 'CREATE':
-					this.createEvent.dispatch(MESSAGE);
-					break;
-				case 'END':
-					this.endEvent.dispatch(MESSAGE);
-					break;
-				case 'NO_VOTING_ROUND':
-					this.noVoteRoundEvent.dispatch(MESSAGE);
-					break;
-				case 'UPDATE':
-					this.updateEvent.dispatch(MESSAGE);
-					break;
+			switch (BASE_MESSAGE.type) {
+				case 'SET_VOTES': {
+						const MESSAGE: IChaosOverlayVotingClientMessage = JSON.parse(BASE_MESSAGE.messageData);
+						switch (MESSAGE.request) {
+							case 'CREATE':
+								this.createEvent.dispatch(MESSAGE);
+								break;
+							case 'END':
+								this.endEvent.dispatch(MESSAGE);
+								break;
+							case 'NO_VOTING_ROUND':
+								this.noVoteRoundEvent.dispatch(MESSAGE);
+								break;
+							case 'UPDATE':
+								this.updateEvent.dispatch(MESSAGE);
+								break;
+							default:
+								console.warn(`unknown voting message request type: ${MESSAGE.request}`);
+						}
+	
+						break;
+					}
+				case 'SET_COLOR': {
+						const MESSAGE : IChaosOverlayColorClientMessage = JSON.parse(BASE_MESSAGE.messageData);
+						SetBarProgressColor(MESSAGE.colorR, MESSAGE.colorG, MESSAGE.colorB);
+	
+						break;
+					}
 				default:
-					console.warn(`unknown request type: ${MESSAGE.request}`);
+					console.warn(`unknown message type: ${BASE_MESSAGE.type}`);
+					break;
 			}
 		} catch (e) {
 			console.error(`failed to parse json data: ${e}`);
