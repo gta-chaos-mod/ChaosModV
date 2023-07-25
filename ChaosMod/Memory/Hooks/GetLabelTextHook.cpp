@@ -2,7 +2,12 @@
 
 #include "Memory/Hooks/Hook.h"
 
+#include <queue>
+
+#define MAX_CUSTOM_LABELS 1000
+
 static std::unordered_map<Hash, std::string> ms_CustomLabels;
+static std::queue<Hash> ms_CustomLabelHashes;
 
 const char *(*OG_GetLabelText)(void *, Hash);
 const char *HK_GetLabelText(void *text, Hash hash)
@@ -35,11 +40,27 @@ namespace Hooks
 {
 	void AddCustomLabel(std::string_view label, const std::string &text)
 	{
-		ms_CustomLabels[GET_HASH_KEY(label.data())] = text;
+		auto hash = GET_HASH_KEY(label.data());
+
+		if (ms_CustomLabels.contains(hash))
+		{
+			return;
+		}
+
+		ms_CustomLabels[hash] = text;
+		ms_CustomLabelHashes.push(hash);
+
+		if (ms_CustomLabelHashes.size() > MAX_CUSTOM_LABELS)
+		{
+			auto eraseHash = ms_CustomLabelHashes.front();
+			ms_CustomLabels.erase(eraseHash);
+			ms_CustomLabelHashes.pop();
+		}
 	}
 
 	void ClearCustomLabels()
 	{
 		ms_CustomLabels.clear();
+		ms_CustomLabelHashes = std::queue<Hash>();
 	}
 }
