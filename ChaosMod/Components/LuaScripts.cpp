@@ -25,6 +25,7 @@
 #include "Util/Camera.h"
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
+#include "Util/HelpText.h"
 #include "Util/Peds.h"
 #include "Util/Player.h"
 #include "Util/PoolSpawner.h"
@@ -653,6 +654,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		E("GetGameBuild", Memory::GetGameBuild),
 
 		E("AddCustomLabel", Hooks::AddCustomLabel),
+		E("DisplayHelpText", DisplayHelpText),
 	};
 #undef E
 
