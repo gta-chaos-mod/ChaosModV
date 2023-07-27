@@ -4,8 +4,12 @@
 
 #include "Memory/Hooks/Hook.h"
 
+#include "Util/Text.h"
+
 static DWORD64 ms_BaseAddr;
 static DWORD64 ms_EndAddr;
+
+static std::set<std::string> ms_BlacklistedHookNames;
 
 namespace Memory
 {
@@ -66,6 +70,20 @@ namespace Memory
 			}
 		}
 
+		if (DoesFileExist("chaosmod\\.blacklistedhooks"))
+		{
+			std::ifstream file("chaosmod\\.blacklistedhooks");
+			if (!file.fail())
+			{
+				std::string line;
+				line.resize(64);
+				while (file.getline(line.data(), 64))
+				{
+					ms_BlacklistedHookNames.insert(StringTrim(line.substr(0, line.find("\n"))));
+				}
+			}
+		}
+
 		LOG("Running hooks");
 		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
@@ -74,11 +92,19 @@ namespace Memory
 				continue;
 			}
 
-			LOG("Running " << registeredHook->GetName() << " hook");
+			const auto &hookName = registeredHook->GetName();
+
+			if (ms_BlacklistedHookNames.contains(hookName))
+			{
+				LOG(hookName << " hook has been blacklisted from running!");
+				continue;
+			}
+
+			LOG("Running " << hookName << " hook");
 
 			if (!registeredHook->RunHook())
 			{
-				LOG(registeredHook->GetName() << " hook failed!");
+				LOG(hookName << " hook failed!");
 			}
 		}
 
@@ -90,7 +116,14 @@ namespace Memory
 		LOG("Running hook cleanups");
 		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
-			LOG("Running " << registeredHook->GetName() << " cleanup");
+			const auto &hookName = registeredHook->GetName();
+
+			if (ms_BlacklistedHookNames.contains(hookName))
+			{
+				continue;
+			}
+
+			LOG("Running " << hookName << " hook cleanup");
 
 			registeredHook->RunCleanup();
 		}
@@ -111,11 +144,19 @@ namespace Memory
 				continue;
 			}
 
-			LOG("Running " << registeredHook->GetName() << " hook");
+			const auto &hookName = registeredHook->GetName();
+
+			if (ms_BlacklistedHookNames.contains(hookName))
+			{
+				LOG(hookName << " hook has been blacklisted from running!");
+				continue;
+			}
+
+			LOG("Running " << hookName << " hook");
 
 			if (!registeredHook->RunHook())
 			{
-				LOG(registeredHook->GetName() << " hook failed!");
+				LOG(hookName << " hook failed!");
 			}
 		}
 

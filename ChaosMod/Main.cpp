@@ -179,15 +179,15 @@ static void Init()
 		}
 	}
 
-#define INIT_COMPONENT(componentName, logName, componentType, ...)   \
-	if (blacklistedComponentNames.contains(componentName))           \
-	{                                                                \
-		LOG("" << componentName << " is blacklisted from loading!"); \
-	}                                                                \
-	else                                                             \
-	{                                                                \
-		LOG("Initializing " << logName);                             \
-		InitComponent<componentType>(__VA_ARGS__);                   \
+#define INIT_COMPONENT(componentName, logName, componentType, ...)             \
+	if (blacklistedComponentNames.contains(componentName))                     \
+	{                                                                          \
+		LOG(componentName << " component has been blacklisted from running!"); \
+	}                                                                          \
+	else                                                                       \
+	{                                                                          \
+		LOG("Initializing " << logName << " component");                       \
+		InitComponent<componentType>(__VA_ARGS__);                             \
 	}
 
 	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
@@ -204,7 +204,7 @@ static void Init()
 
 	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
 
-	INIT_COMPONENT("TwitchVoting", "Twitch voting", Voting, textColor);
+	INIT_COMPONENT("Voting", "voting", Voting, textColor);
 
 	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
 
