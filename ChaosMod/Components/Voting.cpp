@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#include "TwitchVoting.h"
+#include "Voting.h"
 
 #include "Components/MetaModifiers.h"
 #include "Components/SplashTexts.h"
@@ -13,12 +13,11 @@
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
 
-TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
+Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
 {
-	m_EnableTwitchVoting =
-	    g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_EnableVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
-	if (m_EnableTwitchVoting && !InitTwitch())
+	if (m_EnableVoting && !Init())
 	{
 		return;
 	}
@@ -37,18 +36,27 @@ TwitchVoting::TwitchVoting(const std::array<BYTE, 3> &textColor) : Component(), 
 
 	ConnectNamedPipe(m_PipeHandle, NULL);
 
-	if (m_EnableTwitchVoting && ComponentExists<SplashTexts>())
+	if (m_EnableVoting)
 	{
-		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
+		if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
+		    && ComponentExists<EffectDispatcher>())
+		{
+			GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
+		}
+
+		if (ComponentExists<SplashTexts>())
+		{
+			GetComponent<SplashTexts>()->ShowVotingSplash();
+		}
 	}
 }
 
-TwitchVoting::~TwitchVoting()
+Voting::~Voting()
 {
 	OnModPauseCleanup();
 }
 
-void TwitchVoting::OnModPauseCleanup()
+void Voting::OnModPauseCleanup()
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
 	{
@@ -60,9 +68,9 @@ void TwitchVoting::OnModPauseCleanup()
 	}
 }
 
-void TwitchVoting::OnRun()
+void Voting::OnRun()
 {
-	if (!m_EnableTwitchVoting || !ComponentExists<EffectDispatcher>())
+	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>())
 	{
 		return;
 	}
@@ -87,7 +95,7 @@ void TwitchVoting::OnRun()
 	{
 		m_LastVotesFetchTime = curTick;
 
-		if (m_IsVotingRunning && m_EnableTwitchChanceSystem && m_TwitchOverlayMode == TwitchOverlayMode::OverlayIngame)
+		if (m_IsVotingRunning && m_EnableChanceSystem && m_OverlayMode == OverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
 			SendToPipe("getcurrentvotes");
@@ -154,8 +162,8 @@ void TwitchVoting::OnRun()
 		m_IsVotingRoundDone = true;
 	}
 	else if (!m_IsVotingRunning && m_ReceivedFirstPing
-	         && (m_TwitchSecsBeforeVoting == 0
-	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_TwitchSecsBeforeVoting)
+	         && (m_SecsBeforeVoting == 0
+	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
 	         && m_IsVotingRoundDone)
 	{
 		// New voting round
@@ -184,7 +192,7 @@ void TwitchVoting::OnRun()
 			// 4th voteable is for random effect (if enabled)
 			if (idx == 3)
 			{
-				if (m_EnableTwitchRandomEffectVoteable)
+				if (m_EnableRandomEffectVoteable)
 				{
 					m_EffectChoices.push_back(std::make_unique<ChoosableEffect>(EffectIdentifier(), "Random Effect",
 					                                                            !m_AlternatedVotingRound ? 4 : 8));
@@ -221,9 +229,9 @@ void TwitchVoting::OnRun()
 
 					pTargetChoice     = std::make_unique<ChoosableEffect>(
                         effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name,
-                        !m_AlternatedVotingRound             ? idx + 1
-					        : m_EnableTwitchRandomEffectVoteable ? idx + 5
-					                                             : idx + 4);
+                        !m_AlternatedVotingRound       ? idx + 1
+					        : m_EnableRandomEffectVoteable ? idx + 5
+					                                       : idx + 4);
 					break;
 				}
 			}
@@ -245,17 +253,18 @@ void TwitchVoting::OnRun()
 		m_AlternatedVotingRound = !m_AlternatedVotingRound;
 	}
 
-	if (m_IsVotingRunning && m_TwitchOverlayMode == TwitchOverlayMode::OverlayIngame)
+	if (m_IsVotingRunning && m_OverlayMode == OverlayMode::OverlayIngame)
 	{
 		// Print voteables on screen
 
 		// Count total votes if chance system is enabled
 		int totalVotes = 0;
-		if (m_EnableTwitchChanceSystem)
+		if (m_EnableChanceSystem)
 		{
 			for (const auto &pChoosableEffect : m_EffectChoices)
 			{
-				int chanceVotes = pChoosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainChance ? 1 : 0);
+				int chanceVotes =
+				    pChoosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 				totalVotes += chanceVotes;
 			}
@@ -268,7 +277,7 @@ void TwitchVoting::OnRun()
 			oss << choosableEffect->m_Match << ": " << choosableEffect->m_EffectName;
 
 			// Also show chance percentages if chance system is enabled
-			if (m_EnableTwitchChanceSystem)
+			if (m_EnableChanceSystem)
 			{
 				float percentage;
 				if (totalVotes == 0)
@@ -277,7 +286,8 @@ void TwitchVoting::OnRun()
 				}
 				else
 				{
-					int chanceVotes = choosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainChance ? 1 : 0);
+					int chanceVotes =
+					    choosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 					percentage =
 					    !chanceVotes
@@ -289,8 +299,6 @@ void TwitchVoting::OnRun()
 				oss << " (" << percentage * 100.f << "%)";
 			}
 
-			oss << std::endl;
-
 			DrawScreenText(oss.str(), { .95f, y }, .41f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
 			               ScreenTextAdjust::Right, { .0f, .95f }, true);
 
@@ -299,7 +307,7 @@ void TwitchVoting::OnRun()
 	}
 }
 
-bool TwitchVoting::InitTwitch()
+bool Voting::Init()
 {
 	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
 	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
@@ -312,26 +320,26 @@ bool TwitchVoting::InitTwitch()
 	}
 
 	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
-	HANDLE hMutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
-	if (hMutex)
+	auto mutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
+	if (mutex)
 	{
-		WaitForSingleObject(hMutex, INFINITE);
-		ReleaseMutex(hMutex);
-		CloseHandle(hMutex);
+		WaitForSingleObject(mutex, INFINITE);
+		ReleaseMutex(mutex);
+		CloseHandle(mutex);
 	}
 
-	m_TwitchSecsBeforeVoting =
+	m_SecsBeforeVoting =
 	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_TwitchOverlayMode = g_OptionsManager.GetTwitchValue<TwitchOverlayMode>(
-	    "TwitchVotingOverlayMode", static_cast<TwitchOverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_OverlayMode = g_OptionsManager.GetTwitchValue<OverlayMode>(
+	    "TwitchVotingOverlayMode", static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_EnableTwitchChanceSystem =
+	m_EnableChanceSystem =
 	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
-	m_EnableVotingChanceSystemRetainChance = g_OptionsManager.GetTwitchValue<bool>(
+	m_EnableVotingChanceSystemRetainInitialChance = g_OptionsManager.GetTwitchValue<bool>(
 	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
-	m_EnableTwitchRandomEffectVoteable =
+	m_EnableRandomEffectVoteable =
 	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	STARTUPINFO startupInfo      = {};
@@ -364,12 +372,12 @@ bool TwitchVoting::InitTwitch()
 	return true;
 }
 
-bool TwitchVoting::IsEnabled() const
+bool Voting::IsEnabled() const
 {
-	return m_EnableTwitchVoting;
+	return m_EnableVoting;
 }
 
-bool TwitchVoting::HandleMsg(const std::string &msg)
+bool Voting::HandleMsg(std::string_view msg)
 {
 	if (msg == "hello")
 	{
@@ -395,19 +403,19 @@ bool TwitchVoting::HandleMsg(const std::string &msg)
 	}
 	else if (msg == "invalid_login")
 	{
-		ErrorOutWithMsg("Invalid Twitch Credentials. Please verify your config. Reverting to normal mode.");
+		ErrorOutWithMsg("Invalid Credentials. Please verify your config. Reverting to normal mode.");
 
 		return false;
 	}
 	else if (msg == "invalid_channel")
 	{
-		ErrorOutWithMsg("Invalid Twitch Channel. Please verify your config. Reverting to normal mode.");
+		ErrorOutWithMsg("Invalid Channel. Please verify your config. Reverting to normal mode.");
 
 		return false;
 	}
 	else
 	{
-		nlohmann::json receivedJSON = nlohmann::json::parse(msg);
+		auto receivedJSON = nlohmann::json::parse(msg);
 		if (!receivedJSON.empty())
 		{
 			std::string identifier = receivedJSON["Identifier"];
@@ -439,7 +447,7 @@ bool TwitchVoting::HandleMsg(const std::string &msg)
 	return true;
 }
 
-std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::string> params)
+std::string Voting::GetPipeJson(std::string_view identifier, std::vector<std::string> params)
 {
 	nlohmann::json finalJSON;
 	finalJSON["Identifier"] = identifier;
@@ -447,14 +455,14 @@ std::string TwitchVoting::GetPipeJson(std::string identifier, std::vector<std::s
 	return finalJSON.dump();
 }
 
-void TwitchVoting::SendToPipe(std::string identifier, std::vector<std::string> params)
+void Voting::SendToPipe(std::string_view identifier, std::vector<std::string> params)
 {
 	auto msg = GetPipeJson(identifier, params);
 	msg += "\n";
 	WriteFile(m_PipeHandle, msg.c_str(), msg.length(), NULL, NULL);
 }
 
-void TwitchVoting::ErrorOutWithMsg(const std::string &&msg)
+void Voting::ErrorOutWithMsg(std::string_view msg)
 {
 	std::wstring wStr = { msg.begin(), msg.end() };
 	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
@@ -467,5 +475,5 @@ void TwitchVoting::ErrorOutWithMsg(const std::string &&msg)
 	{
 		GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = true;
 	}
-	m_EnableTwitchVoting = false;
+	m_EnableVoting = false;
 }

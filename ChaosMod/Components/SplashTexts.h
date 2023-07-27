@@ -1,11 +1,10 @@
 #pragma once
 
-#include <list>
+#include "Components/Component.h"
 
-#include "Component.h"
 #include "Util/ScriptText.h"
 
-#define SPLASH_TEXT_DUR_SECS 10
+#include <list>
 
 class SplashTexts : public Component
 {
@@ -34,7 +33,7 @@ class SplashTexts : public Component
 	void ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale, ScreenTextColor textColor,
 	                float time);
 	void ShowInitSplash();
-	void ShowTwitchVotingSplash();
+	void ShowVotingSplash();
 	void ShowClearEffectsSplash();
 
 	template <class T>

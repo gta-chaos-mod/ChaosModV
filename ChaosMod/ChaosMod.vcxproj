@@ -394,7 +394,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Effects\EffectThreads.cpp" />
-    <ClCompile Include="Components\TwitchVoting.cpp" />
+    <ClCompile Include="Components\Voting.cpp" />
     <ClCompile Include="Components\Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Components\KeyStates.cpp" />
@@ -462,7 +462,7 @@
     <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Effects\EffectThreads.h" />
-    <ClInclude Include="Components\TwitchVoting.h" />
+    <ClInclude Include="Components\Voting.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\CrashHandler.h" />
     <ClInclude Include="Util\EntityIterator.h" />

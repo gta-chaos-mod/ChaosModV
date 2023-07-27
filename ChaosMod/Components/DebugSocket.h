@@ -1,8 +1,7 @@
 #pragma once
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 
-#include "Component.h"
-
+#include "Components/Component.h"
 #include "Components/EffectDispatcher.h"
 
 #include <ixwebsocket/IXWebSocketServer.h>
@@ -44,7 +43,7 @@ class DebugSocket : public Component
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreRunEffect) m_OnPreRunEffectListener;
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPostRunEffect) m_OnPostRunEffectListener;
 
-  public:
+  protected:
 	DebugSocket();
 	virtual ~DebugSocket() override;
 

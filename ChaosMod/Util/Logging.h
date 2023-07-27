@@ -17,8 +17,6 @@ inline std::ofstream g_ConsoleOut;
 
 inline const auto g_ModStartTime = std::time(nullptr);
 
-#define _OSS std::ostringstream()
-
 #define __FILENAME__                                        \
 	(strrchr(__FILE__, '\\')  ? strrchr(__FILE__, '\\') + 1 \
 	 : strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1  \

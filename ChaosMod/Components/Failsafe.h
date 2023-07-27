@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.h"
+#include "Components/Component.h"
 
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 

@@ -3,6 +3,8 @@
 #include "Info.h"
 #include "SplashTexts.h"
 
+#define SPLASH_TEXT_DUR_SECS 10
+
 void SplashTexts::OnModPauseCleanup()
 {
 	m_ActiveSplashes.clear();
@@ -43,7 +45,7 @@ void SplashTexts::ShowInitSplash()
 #endif
 }
 
-void SplashTexts::ShowTwitchVotingSplash()
+void SplashTexts::ShowVotingSplash()
 {
 	ShowSplash("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
 }

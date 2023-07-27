@@ -20,7 +20,7 @@
 #include "Components/MetaModifiers.h"
 #include "Components/Mp3Manager.h"
 #include "Components/SplashTexts.h"
-#include "Components/TwitchVoting.h"
+#include "Components/Voting.h"
 
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
@@ -204,7 +204,7 @@ static void Init()
 
 	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
 
-	INIT_COMPONENT("TwitchVoting", "Twitch voting", TwitchVoting, textColor);
+	INIT_COMPONENT("TwitchVoting", "Twitch voting", Voting, textColor);
 
 	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
 
