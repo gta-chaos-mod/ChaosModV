@@ -167,6 +167,8 @@ REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
 static Vector3 randomGravityForce;
 static void OnTickRandom()
 {
+	SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), true);
+
 	Memory::SetGravityLevel(0.f);
 
 	static DWORD lastTick;
