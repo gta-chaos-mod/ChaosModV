@@ -25,8 +25,8 @@ Mp3Manager::~Mp3Manager()
 void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soundName)
 {
 	auto soundRootDirName = dir + "\\sounds\\";
-	auto soundDirName     = soundRootDirName + soundName;
-	auto soundFileName    = soundDirName + ".mp3";
+	auto soundDirPath     = soundRootDirName + soundName;
+	auto soundFilePath    = soundDirPath + ".mp3";
 
 	std::vector<std::string> blacklistedFiles;
 	if (dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR))
@@ -39,8 +39,13 @@ void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soun
 	const auto &entries = GetFiles(soundRootDirName, ".mp3", true, blacklistedFiles);
 	for (const auto &entry : entries)
 	{
-		const auto &pathName = entry.path().string();
-		if (pathName == soundFileName || pathName.starts_with(soundName + "\\"))
+		const auto &pathName     = entry.path().string();
+		// Make sure the path is laid out like this: sounds/player_suicide/something.mp3
+		// Don't register sound if the sound file isn't directly under sound dir
+		auto soundDirOnwardsPath = pathName.substr(soundRootDirName.size());
+		if (pathName == soundFilePath
+		    || (soundDirOnwardsPath.starts_with(soundName + "\\")
+		        && soundDirOnwardsPath.find("\\", soundName.size() + 1) == pathName.npos))
 		{
 			soundFiles.push_back(pathName);
 		}
