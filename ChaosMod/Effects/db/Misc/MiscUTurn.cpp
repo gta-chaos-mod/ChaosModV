@@ -44,7 +44,10 @@ static void OnStartFake()
 {
 	OnStart();
 
-	GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fakeuturn", "misc_uturn");
+	if (ComponentExists<EffectDispatcher>())
+	{
+		GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fakeuturn", "misc_uturn");
+	}
 
 	WAIT(g_Random.GetRandomInt(6000, 9000));
 
@@ -58,11 +61,13 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 		.Id = "misc_uturn"
 	}
 );
+// clang-format on
 
 // clang-format off
 REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake U-Turn",
-		.Id = "misc_fakeuturn"
+		.Id = "misc_fakeuturn",
+		.HideRealNameOnStart = true
 	}
 );
