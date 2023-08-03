@@ -34,7 +34,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, nullptr, "GetLabelText");
+static RegisterHook registerHook(OnHook, nullptr, "GetLabelText", true);
 
 namespace Hooks
 {
