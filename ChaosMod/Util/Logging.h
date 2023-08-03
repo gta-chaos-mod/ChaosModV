@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 
 #define CHAOS_LOG_FILE "chaosmod/chaoslog.txt"
 
@@ -16,11 +17,6 @@ inline std::ofstream g_Log(CHAOS_LOG_FILE);
 inline std::ofstream g_ConsoleOut;
 
 inline const auto g_ModStartTime = std::time(nullptr);
-
-#define __FILENAME__                                        \
-	(strrchr(__FILE__, '\\')  ? strrchr(__FILE__, '\\') + 1 \
-	 : strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1  \
-	                          : __FILE__)
 
 #define _LOG(_text, _stream) _stream << _text
 
@@ -46,7 +42,21 @@ inline const auto g_ModStartTime = std::time(nullptr);
 		}                                                                                                             \
 	} while (0)
 
-#define LOG(_text) COLOR_PREFIX_LOG("(" << __FILENAME__ << ")", _text);
+#define LOG(_text)                                                                           \
+	do                                                                                       \
+	{                                                                                        \
+		static const auto fileName = []() consteval                                          \
+		{                                                                                    \
+			std::string_view filePath(__FILE__);                                             \
+			size_t slashPos = filePath.find_last_of("\\");                                   \
+			auto fileName   = filePath.substr(slashPos != filePath.npos ? slashPos + 1 : 0); \
+			slashPos        = fileName.find_last_of("/");                                    \
+			fileName        = fileName.substr(slashPos != fileName.npos ? slashPos + 1 : 0); \
+			return fileName;                                                                 \
+		}                                                                                    \
+		();                                                                                  \
+		COLOR_PREFIX_LOG("(" << fileName << ")", _text);                                     \
+	} while (0)
 
 #ifdef _DEBUG
 #define DEBUG_LOG(_text) LOG(_text)

@@ -131,7 +131,7 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
 		if (!debugSocket->m_IsProfiling)
 		{
 			debugSocket->m_IsProfiling = true;
-			QueueDelegate(debugSocket, []() { LOG("Started Profiling!") });
+			QueueDelegate(debugSocket, []() { LOG("Started Profiling!"); });
 		}
 	}
 	else if (state == "stop")
