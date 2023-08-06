@@ -212,17 +212,17 @@ namespace ConfigApp
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            Utils.HandleOnlyNumbersPreviewTextInput(e);
+            Utils.HandleOnlyNumbersPreviewTextInput(sender, e);
         }
 
         private void NoSpacePreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Utils.HandleNoSpacePreviewKeyDown(e);
+            Utils.HandleNoSpacePreviewKeyDown(sender, e);
         }
 
         private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Utils.HandleNoCopyPastePreviewExecuted(e);
+            Utils.HandleNoCopyPastePreviewExecuted(sender, e);
         }
 
         private void OnSave(object sender, RoutedEventArgs e)

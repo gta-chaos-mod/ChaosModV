@@ -1,31 +1,60 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ConfigApp
 {
     public static class Utils
     {
-        public static void HandleOnlyNumbersPreviewTextInput(TextCompositionEventArgs e)
+        public static void HandleOnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs eventArgs)
         {
-            if (e.Text.Length == 0 || !char.IsDigit(e.Text[0]))
+            if (eventArgs.Text.Length == 0 || !char.IsDigit(eventArgs.Text[0]))
             {
-                e.Handled = true;
+                eventArgs.Handled = true;
             }
         }
 
-        public static void HandleNoSpacePreviewKeyDown(KeyEventArgs e)
+        public static void HandleNoSpacePreviewKeyDown(object sender, KeyEventArgs eventArgs)
         {
-            if (e.Key == Key.Space)
+            if (eventArgs.Key == Key.Space)
             {
-                e.Handled = true;
+                eventArgs.Handled = true;
             }
         }
 
-        public static void HandleNoCopyPastePreviewExecuted(ExecutedRoutedEventArgs e)
+        public static void HandleNoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (e.Command == ApplicationCommands.Copy || e.Command == ApplicationCommands.Cut || e.Command == ApplicationCommands.Paste)
+            if (eventArgs.Command == ApplicationCommands.Copy || eventArgs.Command == ApplicationCommands.Cut
+                || eventArgs.Command == ApplicationCommands.Paste)
             {
-                e.Handled = true;
+                eventArgs.Handled = true;
             }
+        }
+
+        public static CheckBox GenerateCommonCheckBox()
+        {
+            return new CheckBox()
+            {
+                Width = 60f,
+                Height = 20f,
+                VerticalContentAlignment = VerticalAlignment.Center
+            };
+        }
+
+        public static TextBox GenerateCommonNumericOnlyTextBox(int maxLength = 6, double width = 60f, double height = 20f)
+        {
+            var textBox = new TextBox()
+            {
+                Width = width,
+                Height = height,
+                MaxLength = maxLength
+            };
+            textBox.PreviewTextInput += HandleOnlyNumbersPreviewTextInput;
+            textBox.AddHandler(CommandManager.PreviewExecutedEvent, new ExecutedRoutedEventHandler(HandleNoCopyPastePreviewExecuted));
+            textBox.ContextMenu = null;
+            textBox.AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(HandleNoSpacePreviewKeyDown));
+
+            return textBox;
         }
     }
 }

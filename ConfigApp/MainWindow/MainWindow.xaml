@@ -1,0 +1,135 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigApp" d:DataContext="{d:DesignInstance Type=local:TreeMenuItem}" x:Class="ConfigApp.MainWindow.MainWindow"
+        mc:Ignorable="d" Title="ChaosModV Configuration" MinHeight="510" Height="510" MinWidth="1060" Width="1060">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="75" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <TabControl x:Name="root_tabcontrol" Background="{x:Null}" BorderBrush="LightGray" SelectionChanged="OnTabSelectionChanged">
+                <TabItem Header="Effects" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <TreeView x:Name="effects_user_effects_tree_view" Background="{x:Null}" BorderBrush="White" VerticalAlignment="Stretch">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                    <StackPanel Orientation="Horizontal" Height="20">
+                                        <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                                        <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
+                    </Grid>
+                </TabItem>
+
+                <TabItem x:Name="meta_tab" Header="Meta" Background="#FFF0F0F0" BorderBrush="LightGray">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="Meta effects modify various aspects of mod itself on a regular basis to add more variety.&#xA;They are not a part of the normal effects pool; instead, they are automatically dispatched by the mod on a fixed interval (configurable below)."
+                                   Grid.Row="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="500" />
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="330" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="How often should a new meta start (in seconds)?" Grid.Row="0" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_spawn_dur" Height="20" Width="60" Grid.Row="0" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                                <TextBlock Text="How long should meta effects last (in seconds)?" Grid.Row="1" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_timed_dur" Height="20" Width="60" Grid.Row="1" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                                <TextBlock Text="How long should short timed meta effects last (in seconds)?" Grid.Row="2" Grid.Column="0"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_short_timed_dur" Height="20" Width="60" Grid.Row="2" Grid.Column="2"
+                                         HorizontalAlignment="Left" VerticalAlignment="Center"
+                                         MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
+                                         CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}"
+                                         Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <TreeView x:Name="meta_effects_tree_view" BorderBrush="White" Background="{x:Null}">
+                                    <TreeView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type TreeViewItem}">
+                                            <Setter Property="IsExpanded" Value="True" />
+                                        </Style>
+                                    </TreeView.ItemContainerStyle>
+                                    <TreeView.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
+                                            <StackPanel Orientation="Horizontal" Height="20">
+                                                <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                                                <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0" VerticalAlignment="Center" Click="effect_user_config_Click" />
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.Resources>
+                                </TreeView>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="105" />
+                <ColumnDefinition Width="105" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="update_available_label" Text="A new version is available! Visit the GTA5-Mods thread for a download and changelogs." Grid.Column="0"
+                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <Button x:Name="update_available_button" Content="GTA5-Mods" Width="100" Height="40" Grid.Column="2"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Visibility="Hidden" Click="OpenModPageEvent" />
+            <Button x:Name="user_reset" Content="Reset" Width="100" Height="40" Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Click="user_reset_Click" />
+            <Button x:Name="user_save" Content="Save" Width="100" Height="40" Grid.Column="4"
+                    VerticalAlignment="Center"
+                    Click="user_save_Click" />
+        </Grid>
+    </Grid>
+</Window>
