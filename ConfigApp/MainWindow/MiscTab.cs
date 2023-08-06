@@ -93,9 +93,7 @@ namespace ConfigApp.MainWindow
             grid.PopRow();
 
             grid.SetRowHeight(new GridLength(40f));
-            m_MaxRunningEffects = Utils.GenerateCommonNumericOnlyTextBox();
-            m_MaxRunningEffects.MaxLength = 2;
-            grid.PushRowSpacedPair("Max amount of simultaneously running effects", m_MaxRunningEffects);
+            grid.PushRowSpacedPair("Max amount of simultaneously running effects", m_MaxRunningEffects = Utils.GenerateCommonNumericOnlyTextBox(2));
             grid.PushRowSpacedPair("Enable effects menu (allows you to choose effects manually, CTRL + ,)", m_EnableEffectsMenu = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
@@ -125,9 +123,9 @@ namespace ConfigApp.MainWindow
             m_EnableDistanceBasedDispatch = Utils.GenerateCommonCheckBox();
             m_EnableDistanceBasedDispatch.Click += (sender, eventArgs) =>
             {
-                
+                SetDistanceDispatchFieldsEnabled(m_EnableDistanceBasedDispatch.IsChecked.GetValueOrDefault());
             };
-            grid.PushRowSpacedPair("Enable distance-based effect dispatch", m_EnableDistanceBasedDispatch = Utils.GenerateCommonCheckBox());
+            grid.PushRowSpacedPair("Enable distance-based effect dispatch", m_EnableDistanceBasedDispatch);
             grid.PopRow();
 
             grid.SetRowHeight(new GridLength(40f));
