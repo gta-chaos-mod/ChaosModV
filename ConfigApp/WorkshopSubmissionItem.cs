@@ -1,10 +1,10 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using System.Windows;
-using System.Diagnostics;
-using System.Windows.Input;
-using System.ComponentModel;
 
 namespace ConfigApp
 {
@@ -34,7 +34,9 @@ namespace ConfigApp
         }
         private SubmissionInstallState m_InstallState = SubmissionInstallState.NotInstalled;
 
-        public SubmissionInstallState InstallState { get
+        public SubmissionInstallState InstallState
+        {
+            get
             {
                 return m_InstallState;
             }
@@ -76,7 +78,8 @@ namespace ConfigApp
             }
         }
 
-        public ICommand InstallButtonCommand {
+        public ICommand InstallButtonCommand
+        {
             get
             {
                 return new WorkshopInstallHandler(this);

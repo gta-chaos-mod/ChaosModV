@@ -1,4 +1,4 @@
-﻿using Serilog;
+using Serilog;
 using System.Timers;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.Config;
@@ -33,7 +33,8 @@ namespace TwitchChatVotingProxy
             IOverlayServer overlayServer,
             IVotingReceiver votingReceiver,
             IConfig config
-        ) {
+        )
+        {
             this.chaosPipe = chaosPipe;
             this.overlayServer = overlayServer;
             this.votingReceiver = votingReceiver;
@@ -130,7 +131,8 @@ namespace TwitchChatVotingProxy
             {
                 overlayServer.EndVoting();
 
-            } catch (Exception err)
+            }
+            catch (Exception err)
             {
                 Log.Error(err, "error occured");
             }
@@ -168,7 +170,7 @@ namespace TwitchChatVotingProxy
 
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
-            // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message
+            // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             switch (overlayMode)
             {
                 case EOverlayMode.CHAT_MESSAGES:
@@ -256,14 +258,15 @@ namespace TwitchChatVotingProxy
                         // If they haven't voted, count his vote
                         userVotedFor.Add(e.ClientId, i);
                         voteOption.Votes++;
-       
-                    } else if (previousVote != i)
+
+                    }
+                    else if (previousVote != i)
                     {
                         // If the player has already voted, and it's not the same as before,
                         // remove the old vote, and add the new one.
                         userVotedFor.Remove(e.ClientId);
                         activeVoteOptions[previousVote].Votes--;
-                        
+
                         userVotedFor.Add(e.ClientId, i);
                         voteOption.Votes++;
                     }

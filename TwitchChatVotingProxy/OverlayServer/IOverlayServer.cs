@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TwitchChatVotingProxy.OverlayServer
+﻿namespace TwitchChatVotingProxy.OverlayServer
 {
     interface IOverlayServer
     {

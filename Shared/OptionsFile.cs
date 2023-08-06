@@ -83,7 +83,7 @@ namespace Shared
         public void ReadFile()
         {
             string readData(string fileName)
-            { 
+            {
                 if (!File.Exists(fileName))
                 {
                     return null;

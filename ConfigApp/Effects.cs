@@ -389,7 +389,7 @@ namespace ConfigApp
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
             { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
             { "timecycle_fuzzy", new EffectInfo("Static", EffectCategory.Screen, true, true) },
-            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
+            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },
             { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
             { "timecycle_darkworld", new EffectInfo("A Dark World", EffectCategory.Screen, true, true) },
             { "peds_reflectivedamage", new EffectInfo("Friendly Fire", EffectCategory.Peds, true, true) },

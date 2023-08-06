@@ -1,8 +1,6 @@
 ﻿using Fleck;
 using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
 
 // TODO: fix voting mode
 namespace TwitchChatVotingProxy.OverlayServer
@@ -26,7 +24,8 @@ namespace TwitchChatVotingProxy.OverlayServer
                     connection.OnOpen += () => OnWsConnectionOpen(connection);
                     connection.OnClose += () => OnWSConnectionClose(connection);
                 });
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Fatal(e, "failed so start websocket server");
             }
@@ -72,7 +71,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 logger.Information($"websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Remove(connection);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e, "error occurred as client disconnected");
             }
@@ -87,7 +87,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 logger.Information($"new websocket client {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Add(connection);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e, "error occurred as client connected");
             }
@@ -107,7 +108,8 @@ namespace TwitchChatVotingProxy.OverlayServer
             if (strVotingMode != null)
             {
                 msg.votingMode = strVotingMode;
-            } else
+            }
+            else
             {
                 logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
                 msg.votingMode = "UNKNOWN_VOTING_MODE";

@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using System;
-using System.Threading;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
@@ -32,7 +30,7 @@ namespace TwitchChatVotingProxy
             logger.Information("===============================");
             logger.Information("Starting chaos mod twitch proxy");
             logger.Information("===============================");
-            
+
             // Read big config file WIP
             var config = new Config.Config("./chaosmod/configs/twitch.ini", "./chaosmod/twitch.ini");
 
@@ -80,7 +78,7 @@ namespace TwitchChatVotingProxy
                 // Start the chaos mod controller
                 new ChaosModController(chaosPipe, overlayServer, votingReceiver, config);
 
-                while (chaosPipe.IsConnected()) 
+                while (chaosPipe.IsConnected())
                 {
                     Thread.Sleep(100);
                 }

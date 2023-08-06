@@ -1,13 +1,12 @@
 ﻿using Serilog;
 using Shared;
-using System.IO;
 
 namespace TwitchChatVotingProxy.Config
 {
     class Config : IConfig
     {
         public static readonly string KEY_OVERLAY_SERVER_PORT = "OverlayServerPort";
-        public static readonly string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName"; 
+        public static readonly string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName";
         public static readonly string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
         public static readonly string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
         public static readonly string KEY_TWITCH_OVERLAY_MODE = "TwitchVotingOverlayMode";
@@ -26,14 +25,14 @@ namespace TwitchChatVotingProxy.Config
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
-        
+
         public Config(string file, string compatFile = null)
         {
             if (!File.Exists(file) && compatFile != null)
             {
                 file = compatFile;
             }
-            
+
             if (!File.Exists(file))
             {
                 logger.Warning($"twitch config file \"{file}\" not found");

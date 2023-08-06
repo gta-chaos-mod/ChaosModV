@@ -124,7 +124,7 @@ namespace ConfigApp.MainWindow
             });
 
             m_Grids.Add(bodyGrid.Grid);
-            
+
             PushRowElement(bodyGrid.Grid);
             PopRow();
 
@@ -153,7 +153,7 @@ namespace ConfigApp.MainWindow
         {
             m_EnableVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableTwitchVoting", false);
             SetGridsEnabled(m_EnableVoting.IsChecked.GetValueOrDefault());
-            
+
             m_ChannelName.Text = OptionsManager.TwitchFile.ReadValue("TwitchChannelName");
             m_OverlayMode.SelectedIndex = OptionsManager.TwitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
 

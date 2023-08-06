@@ -89,7 +89,7 @@ namespace ConfigApp.MainWindow
                 {
                     using (File.Create(".writetest"))
                     {
-                    
+
                     }
 
                     File.Delete(".writetest");
@@ -270,7 +270,7 @@ namespace ConfigApp.MainWindow
             {
                 sortedEffects.Add(pair.Value.Name, new Tuple<string, EffectCategory>(pair.Key, pair.Value.EffectCategory));
             }
-            
+
             foreach (var effect in sortedEffects)
             {
                 var effectTuple = effect.Value;

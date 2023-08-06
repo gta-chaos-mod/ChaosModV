@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using System;
-using System.Threading.Tasks;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -55,7 +53,8 @@ namespace TwitchChatVotingProxy.VotingReceiver
             try
             {
                 client.SendMessage(config.ChannelName, message);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e, $"failed to send message to channel \"{config.ChannelName}\"");
             }

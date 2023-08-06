@@ -131,7 +131,7 @@ namespace ConfigApp.MainWindow
             });
 
             scrollViewer.Content = grid.Grid;
-            
+
             PushRowElement(scrollViewer);
 
             SetDistanceDispatchFieldsEnabled(false);

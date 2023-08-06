@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using static ConfigApp.Effects;
@@ -136,8 +134,8 @@ namespace ConfigApp
                 key = e.SystemKey;
             }
 
-            if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift 
-                || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt 
+            if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift
+                || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt
                 || key == Key.LWin || key == Key.RWin || key == Key.Apps)                                   // Don't want a shortcut with any of these as the main key
             {
                 return;

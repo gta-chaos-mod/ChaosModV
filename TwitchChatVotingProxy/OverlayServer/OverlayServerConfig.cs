@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TwitchChatVotingProxy.OverlayServer
+﻿namespace TwitchChatVotingProxy.OverlayServer
 {
     /// <summary>
     /// Config for the default implementation of the overlay server

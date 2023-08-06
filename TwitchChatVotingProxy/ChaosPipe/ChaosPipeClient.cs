@@ -77,13 +77,14 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 logger.Information("successfully connected to chaos mod pipe");
 
                 pipeTick.Start();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
                 return;
             }
         }
-        
+
         /// <summary>
         /// Check if the chaos mod pipe is still connected
         /// </summary>
@@ -105,10 +106,10 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 pipeReader.Close();
                 pipeWriter.Close();
             }
-            catch (ObjectDisposedException) {}
+            catch (ObjectDisposedException) { }
             pipe.Close();
         }
-        
+
         private void GetCurrentVotes()
         {
             var args = new OnGetCurrentVotesArgs();
@@ -116,7 +117,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
             if (args.CurrentVotes == null)
             {
                 logger.Error("listeners failed to supply on get current vote args");
-            } else
+            }
+            else
             {
                 CurrentVotesResult res = new CurrentVotesResult(args.CurrentVotes);
                 SendMessageToPipe(JsonConvert.SerializeObject(res));
@@ -150,7 +152,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
             {
                 SendHeartBeat();
                 ReadPipe();
-            } catch(IOException exception)
+            }
+            catch (IOException exception)
             {
                 logger.Information("Pipe disconnected: " + exception.Message);
                 DisconnectFromPipe();

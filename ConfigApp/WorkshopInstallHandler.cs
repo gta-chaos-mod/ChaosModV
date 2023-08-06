@@ -1,16 +1,16 @@
-﻿using System;
-using System.Net.Http;
-using System.Windows.Input;
-using System.Windows;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Security.Cryptography;
-using Newtonsoft.Json.Linq;
-using System.Text;
 using System.Linq;
-using ZstdSharp;
-using System.Collections.Generic;
 using System.Media;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using ZstdSharp;
 
 namespace ConfigApp
 {
@@ -158,7 +158,7 @@ namespace ConfigApp
                             }
                         }
                         files.Sort();
-                        
+
                         var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
                         if (!(bool)installConfirmationWindow.ShowDialog())
                         {
