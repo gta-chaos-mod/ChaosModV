@@ -35,15 +35,12 @@ namespace ConfigApp.MainWindow
             settingsGrid.PushNewColumn(new GridLength(10f));
             settingsGrid.PushNewColumn(new GridLength());
 
-            settingsGrid.SetRowHeight(new GridLength(40f));
             settingsGrid.PushRowSpacedPair("How often should a new meta start (in seconds)?", m_MetaEffectDispatchTimer = Utils.GenerateCommonNumericOnlyTextBox());
             settingsGrid.PopRow();
 
-            settingsGrid.SetRowHeight(new GridLength(40f));
             settingsGrid.PushRowSpacedPair("How long should meta effects last (in seconds)?", m_MetaEffectDuration = Utils.GenerateCommonNumericOnlyTextBox());
             settingsGrid.PopRow();
 
-            settingsGrid.SetRowHeight(new GridLength(40f));
             settingsGrid.PushRowSpacedPair("How long should short timed meta effects last (in seconds)?", m_MetaEffectShortDuration = Utils.GenerateCommonNumericOnlyTextBox());
             settingsGrid.PopRow();
 

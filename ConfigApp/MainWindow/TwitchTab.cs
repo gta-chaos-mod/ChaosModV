@@ -84,7 +84,6 @@ namespace ConfigApp.MainWindow
             var bodyGrid = new ChaosGrid();
             SetupSettingsGrid(bodyGrid);
 
-            bodyGrid.SetRowHeight(new GridLength(40f));
             bodyGrid.PushRowSpacedPair("Channel Name", m_ChannelName = new TextBox()
             {
                 Width = 120f,
@@ -101,7 +100,6 @@ namespace ConfigApp.MainWindow
             });
             bodyGrid.PopRow();
 
-            bodyGrid.SetRowHeight(new GridLength(40f));
             bodyGrid.PushRowSpacedPair("Username", m_UserName = new TextBox()
             {
                 Width = 120f,
@@ -110,7 +108,6 @@ namespace ConfigApp.MainWindow
             bodyGrid.PushRowSpacedPair("Enable \"Random Effect\" voteable option", m_EnableRandomEffect = Utils.GenerateCommonCheckBox());
             bodyGrid.PopRow();
 
-            bodyGrid.SetRowHeight(new GridLength(40f));
             bodyGrid.PushRowSpacedPair("OAuth Token", m_Token = new PasswordBox()
             {
                 Width = 120f,
@@ -118,7 +115,6 @@ namespace ConfigApp.MainWindow
             });
             bodyGrid.PopRow();
 
-            bodyGrid.SetRowHeight(new GridLength(40f));
             bodyGrid.PushRowSpacedPair("Only enable chat voting X seconds before new effect triggers\n" +
                 "(Keep at 0 to allow chat to immediately vote, value can't be 1)", m_SecsBeforeVoting = Utils.GenerateCommonNumericOnlyTextBox());
             bodyGrid.PushRowSpacedPair("Permitted Twitch usernames (separated by , )", m_PermittedUserNames = new TextBox()
@@ -132,7 +128,6 @@ namespace ConfigApp.MainWindow
             PushRowElement(bodyGrid.Grid);
             PopRow();
 
-            SetRowHeight(new GridLength(40f));
             PushRowElement(new TextBlock()
             {
                 Text = "---------- Proportional Voting Mode ----------",

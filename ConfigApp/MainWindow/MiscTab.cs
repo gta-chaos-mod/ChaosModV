@@ -72,54 +72,44 @@ namespace ConfigApp.MainWindow
             grid.PushNewColumn(new GridLength(10f));
             grid.PushNewColumn(new GridLength());
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("New effect timer (in seconds)", m_EffectDispatchTimer = Utils.GenerateCommonNumericOnlyTextBox());
             grid.PushRowSpacedPair("Don't draw timer bar", m_DisableDrawTimer = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Timed effect duration (in seconds)", m_TimedEffectDuration = Utils.GenerateCommonNumericOnlyTextBox());
             grid.PushRowSpacedPair("Don't draw effect text", m_DisableDrawEffectText = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Short timed effect duration (in seconds)", m_ShortTimedEffectDuration = Utils.GenerateCommonNumericOnlyTextBox());
             grid.PushRowSpacedPair("Enable clear active effects shortcut (CTRL + -)", m_EnableClearActiveEffectsShortcut = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Random Seed (Leave empty for random seed every time)", m_RandomSeed = Utils.GenerateCommonNumericOnlyTextBox());
             grid.PushRowSpacedPair("Enable toggle mod shortcut (CTRL + L)", m_EnableToggleModShortcut = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Max amount of simultaneously running effects", m_MaxRunningEffects = Utils.GenerateCommonNumericOnlyTextBox(2));
             grid.PushRowSpacedPair("Enable effects menu (allows you to choose effects manually, CTRL + ,)", m_EnableEffectsMenu = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Timer bar color", m_TimerBarColor = GenerateCommonColorPicker(Color.FromRgb(0x40, 0x40, 0xFF)));
             grid.PushRowSpacedPair("Enable pause timer shortcut (CTRL + .)", m_EnablePauseTimerShortcut = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Effect text color", m_EffectTextColor = GenerateCommonColorPicker(Color.FromRgb(0xFF, 0xFF, 0xFF)));
             grid.PushRowSpacedPair("Enable black screen softlock prevention shortcut (CTRL + SHIFT + K)", m_EnableAntiSoftlockShortcut = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Effect timer bar color", m_EffectTimerBarColor = GenerateCommonColorPicker(Color.FromRgb(0xB4, 0xB4, 0xB4)));
             grid.PushRowSpacedPair("Enable effect group weighting", m_EnableEffectGroupWeighting = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Disable mod on startup by default", m_DisableModOnStartup = Utils.GenerateCommonCheckBox());
             grid.PushRowSpacedPair("Allow prevention of repetitive mission fails (Failsafe)", m_EnableFailsafe = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             m_EnableDistanceBasedDispatch = Utils.GenerateCommonCheckBox();
             m_EnableDistanceBasedDispatch.Click += (sender, eventArgs) =>
             {
@@ -128,7 +118,6 @@ namespace ConfigApp.MainWindow
             grid.PushRowSpacedPair("Enable distance-based effect dispatch", m_EnableDistanceBasedDispatch);
             grid.PopRow();
 
-            grid.SetRowHeight(new GridLength(40f));
             grid.PushRowSpacedPair("Distance to activate effect (in meters)", m_DistanceBasedDispatchDistance = Utils.GenerateCommonNumericOnlyTextBox());
             grid.PushRowSpacedPair("Type of travel distance", m_DistanceBasedDispatchType = new ComboBox()
             {
