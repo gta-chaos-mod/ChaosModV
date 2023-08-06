@@ -34,6 +34,8 @@ namespace ConfigApp.MainWindow
         private CheckBox m_DisableModOnStartup;
         private CheckBox m_EnableFailsafe;
 
+        private CheckBox m_EnableModSplashTexts;
+
         private CheckBox m_EnableDistanceBasedDispatch;
 
         private TextBox m_DistanceBasedDispatchDistance;
@@ -108,6 +110,9 @@ namespace ConfigApp.MainWindow
             grid.PushRowSpacedPair("Allow prevention of repetitive mission fails (Failsafe)", m_EnableFailsafe = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
+            grid.PushRowSpacedPair("Show mod splash texts", m_EnableModSplashTexts = Utils.GenerateCommonCheckBox());
+            grid.PopRow();
+
             grid.PopRow();
 
             m_EnableDistanceBasedDispatch = Utils.GenerateCommonCheckBox();
@@ -175,6 +180,8 @@ namespace ConfigApp.MainWindow
             m_DisableModOnStartup.IsChecked = OptionsManager.ConfigFile.ReadValueBool("DisableStartup", false);
             m_EnableFailsafe.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableFailsafe", true);
 
+            m_EnableModSplashTexts.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableModSplashTexts", true);
+
             m_EnableDistanceBasedDispatch.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableDistanceBasedEffectDispatch", false);
             SetDistanceDispatchFieldsEnabled(m_EnableDistanceBasedDispatch.IsChecked.GetValueOrDefault());
 
@@ -210,6 +217,8 @@ namespace ConfigApp.MainWindow
 
             OptionsManager.ConfigFile.WriteValue("DisableStartup", m_DisableModOnStartup.IsChecked.Value);
             OptionsManager.ConfigFile.WriteValue("EnableFailsafe", m_EnableFailsafe.IsChecked.Value);
+
+            OptionsManager.ConfigFile.WriteValue("EnableModSplashTexts", m_EnableModSplashTexts.IsChecked.Value);
 
             OptionsManager.ConfigFile.WriteValue("EnableDistanceBasedEffectDispatch", m_EnableDistanceBasedDispatch.IsChecked.Value);
 
