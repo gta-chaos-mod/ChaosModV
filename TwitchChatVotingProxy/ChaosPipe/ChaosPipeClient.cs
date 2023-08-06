@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Timers;
+
+using Timer = System.Timers.Timer;
 
 namespace TwitchChatVotingProxy.ChaosPipe
 {

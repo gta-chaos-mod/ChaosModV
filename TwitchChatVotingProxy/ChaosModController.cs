@@ -1,12 +1,11 @@
 ﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Timers;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.Config;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
+
+using Timer = System.Timers.Timer;
 
 namespace TwitchChatVotingProxy
 {
