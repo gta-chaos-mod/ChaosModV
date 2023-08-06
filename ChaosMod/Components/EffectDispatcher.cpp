@@ -802,17 +802,27 @@ float EffectDispatcher::GetEffectTopSpace()
 
 void EffectDispatcher::RegisterPermanentEffects()
 {
+	auto registerEffect = [&](EffectIdentifier effectIdentifier)
+	{
+		auto *registeredEffect = GetRegisteredEffect(effectIdentifier);
+		if (registeredEffect)
+		{
+			auto threadId = EffectThreads::CreateThread(registeredEffect, true);
+			m_PermanentEffects.push_back(threadId);
+		}
+	};
+
+	if (g_OptionsManager.GetConfigValue("Australia", false))
+	{
+		registerEffect({ "player_flip_camera" });
+	}
+
 	for (const auto &[effectIdentifier, effectData] : g_EnabledEffects)
 	{
 		if (effectData.TimedType == EffectTimedType::Permanent)
 		{
 			// Always run permanent timed effects in background
-			RegisteredEffect *registeredEffect = GetRegisteredEffect(effectIdentifier);
-			if (registeredEffect)
-			{
-				auto threadId = EffectThreads::CreateThread(registeredEffect, true);
-				m_PermanentEffects.push_back(threadId);
-			}
+			registerEffect(effectIdentifier);
 		}
 	}
 }
