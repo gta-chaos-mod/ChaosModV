@@ -108,7 +108,10 @@ namespace ConfigApp
             {
                 using (Icon ico = Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName))
                 {
-                    ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    if (ico != null)
+                    {
+                        ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    }
                 }
             }
 

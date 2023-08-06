@@ -21,7 +21,7 @@ jobs:
       run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
 
     - name: Compile Config App
-      run: msbuild ChaosMod.sln /t:ConfigApp /p:Configuration=Release
+      run: dotnet publish ConfigApp -c Release
 
     - name: Compile Voting Proxy
       run: msbuild ChaosMod.sln /t:TwitchChatVotingProxy /p:Configuration=Release
@@ -53,7 +53,7 @@ jobs:
         7z.exe x data.zip
         rm data.zip
         cp ../ChaosMod/build/ChaosMod.asi
-        cp ../ConfigApp/bin/Release/ChaosModVConfig.exe chaosmod/
+        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish//ChaosModVConfig.exe chaosmod/
         cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.exe chaosmod/
         cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
         cp ../scripts/natives_def.lua chaosmod/
@@ -61,7 +61,7 @@ jobs:
         mkdir symbols
         cd symbols
         cp ../ChaosMod/build/ChaosMod.pdb
-        cp ../ConfigApp/bin/Release/ChaosModVConfig.pdb
+        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish/ChaosModVConfig.pdb
         cp ../TwitchChatVotingProxy/bin/Release/TwitchChatVotingProxy.pdb
 
     - name: Upload :)

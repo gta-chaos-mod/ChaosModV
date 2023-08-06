@@ -24,6 +24,7 @@ namespace ConfigApp.MainWindow
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }
         };
+        private Dictionary<string, TabItem> m_TabItems = new Dictionary<string, TabItem>();
 
         private bool m_bInitializedTitle = false;
 
@@ -55,6 +56,8 @@ namespace ConfigApp.MainWindow
                 tabItem.Content = grid;
 
                 root_tabcontrol.Items.Add(tabItem);
+
+                m_TabItems[tab.Key] = tabItem;
             }
 
             if (!m_bInitializedTitle)
@@ -103,15 +106,24 @@ namespace ConfigApp.MainWindow
 
         private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
         {
-            foreach (var tab in m_Tabs)
+            if (eventArgs.OriginalSource is not TabControl)
             {
-                tab.Value.OnTabSelected();
+                return;
+            }
+
+            foreach (var tab in m_TabItems)
+            {
+                if (tab.Value.IsSelected)
+                {
+                    m_Tabs[tab.Key].OnTabSelected();
+                    break;
+                }
             }
         }
 
         private async void CheckForUpdates()
         {
-            HttpClient httpClient = new HttpClient();
+            var httpClient = new HttpClient();
 
             try
             {
@@ -163,8 +175,6 @@ namespace ConfigApp.MainWindow
 
         private void ParseEffectsFile()
         {
-            OptionsManager.EffectsFile.ReadFile();
-
             foreach (string key in OptionsManager.EffectsFile.GetKeys())
             {
                 string value = OptionsManager.EffectsFile.ReadValue(key);
@@ -177,7 +187,7 @@ namespace ConfigApp.MainWindow
                     continue;
                 }
 
-                EffectTimedType effectTimedType = effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
+                var effectTimedType = effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
                 int effectTimedTime = -1;
                 int effectWeight = 5;
                 bool effectPermanent = false;
@@ -245,14 +255,14 @@ namespace ConfigApp.MainWindow
             m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
             m_EffectDataMap = new Dictionary<string, EffectData>();
 
-            TreeMenuItem playerParentItem = new TreeMenuItem("Player");
-            TreeMenuItem vehicleParentItem = new TreeMenuItem("Vehicle");
-            TreeMenuItem pedsParentItem = new TreeMenuItem("Peds");
-            TreeMenuItem screenParentItem = new TreeMenuItem("Screen");
-            TreeMenuItem timeParentItem = new TreeMenuItem("Time");
-            TreeMenuItem weatherParentItem = new TreeMenuItem("Weather");
-            TreeMenuItem miscParentItem = new TreeMenuItem("Misc");
-            TreeMenuItem metaParentItem = new TreeMenuItem("Meta");
+            var playerParentItem = new TreeMenuItem("Player");
+            var vehicleParentItem = new TreeMenuItem("Vehicle");
+            var pedsParentItem = new TreeMenuItem("Peds");
+            var screenParentItem = new TreeMenuItem("Screen");
+            var timeParentItem = new TreeMenuItem("Time");
+            var weatherParentItem = new TreeMenuItem("Weather");
+            var miscParentItem = new TreeMenuItem("Misc");
+            var metaParentItem = new TreeMenuItem("Meta");
 
             var sortedEffects = new SortedDictionary<string, Tuple<string, EffectCategory>>();
 
@@ -308,6 +318,12 @@ namespace ConfigApp.MainWindow
 
             meta_effects_tree_view.Items.Clear();
             meta_effects_tree_view.Items.Add(metaParentItem);
+
+            // We want every effect to be enabled by default, also this is necessary to make the enabled effect counter show up
+            foreach (var treeMenuItem in m_TreeMenuItemsMap)
+            {
+                treeMenuItem.Value.IsChecked = true;
+            }
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
