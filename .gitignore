@@ -331,6 +331,9 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
+# vscode
+.vscode/
+
 # Custom
 ChaosMod/.cache/
 ChaosMod/build/
