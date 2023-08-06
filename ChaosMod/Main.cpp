@@ -309,7 +309,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
-				GetComponent<EffectDispatcher>()->Reset(EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
+				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
 					GetComponent<EffectDispatcher>()->OnRun();
