@@ -60,6 +60,7 @@ inline void EffectThreadFunc(LPVOID data)
 		threadData.Effect->Tick();
 	}
 
+	SwitchToFiber(threadData.CallerFiber);
 	threadData.Effect->Stop();
 
 	*threadData.HasStopped = true;
