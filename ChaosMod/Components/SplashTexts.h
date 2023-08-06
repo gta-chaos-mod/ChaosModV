@@ -4,7 +4,9 @@
 
 #include "Util/ScriptText.h"
 
+#include <cstdint>
 #include <list>
+
 
 class SplashTexts : public Component
 {
@@ -26,13 +28,17 @@ class SplashTexts : public Component
 
 	std::list<SplashText> m_ActiveSplashes;
 
+	bool m_EnableSplashTexts = true;
+
+  protected:
+	SplashTexts();
+
   public:
 	virtual void OnRun() override;
 	virtual void OnModPauseCleanup() override;
 
 	void ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale, ScreenTextColor textColor,
-	                float time);
-	void ShowInitSplash();
+	                std::uint8_t timeSecs = 10);
 	void ShowVotingSplash();
 	void ShowClearEffectsSplash();
 

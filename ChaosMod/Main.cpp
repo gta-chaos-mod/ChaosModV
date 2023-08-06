@@ -144,16 +144,16 @@ static void Init()
 	g_OptionsManager.Reset();
 
 	ms_Flags.ClearEffectsShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	    g_OptionsManager.GetConfigValue("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 	ms_Flags.ToggleModShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	    g_OptionsManager.GetConfigValue("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 	ms_Flags.PauseTimerShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	    g_OptionsManager.GetConfigValue("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 	ms_Flags.AntiSoftlockShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
+	    g_OptionsManager.GetConfigValue("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
 	g_EnableGroupWeighting =
-	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	    g_OptionsManager.GetConfigValue("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
 
 	const auto &timerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
@@ -162,7 +162,7 @@ static void Init()
 	const auto &effectTimerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
 
-	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue("Seed", 0));
 
 	std::set<std::string> blacklistedComponentNames;
 	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
@@ -189,6 +189,8 @@ static void Init()
 		LOG("Initializing " << logName << " component");                       \
 		InitComponent<componentType>(__VA_ARGS__);                             \
 	}
+
+	INIT_COMPONENT("SplashTexts", "mod splash texts handler", SplashTexts);
 
 	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
 
@@ -235,10 +237,7 @@ static void MainRun()
 
 	Reset();
 
-	InitComponent<SplashTexts>();
-	GetComponent<SplashTexts>()->ShowInitSplash();
-
-	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 

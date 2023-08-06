@@ -216,36 +216,34 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
                                    const std::array<BYTE, 3> &effectTimerColor)
     : Component()
 {
-	m_TimerColor          = timerColor;
-	m_TextColor           = textColor;
-	m_EffectTimerColor    = effectTimerColor;
+	m_TimerColor             = timerColor;
+	m_TextColor              = textColor;
+	m_EffectTimerColor       = effectTimerColor;
 
-	m_DisableDrawTimerBar = g_OptionsManager.GetConfigValue<bool>("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
-	m_DisableDrawEffectTexts =
-	    g_OptionsManager.GetConfigValue<bool>("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
+	m_DisableDrawTimerBar    = g_OptionsManager.GetConfigValue("DisableTimerBarDraw", OPTION_DEFAULT_NO_EFFECT_BAR);
+	m_DisableDrawEffectTexts = g_OptionsManager.GetConfigValue("DisableEffectTextDraw", OPTION_DEFAULT_NO_TEXT_DRAW);
 
-	m_EffectSpawnTime = g_OptionsManager.GetConfigValue<int>("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
-	SharedState.EffectTimedDur =
-	    g_OptionsManager.GetConfigValue<int>("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
+	m_EffectSpawnTime        = g_OptionsManager.GetConfigValue("NewEffectSpawnTime", OPTION_DEFAULT_EFFECT_SPAWN_TIME);
+	SharedState.EffectTimedDur = g_OptionsManager.GetConfigValue("EffectTimedDur", OPTION_DEFAULT_EFFECT_TIMED_DUR);
 	SharedState.EffectTimedShortDur =
-	    g_OptionsManager.GetConfigValue<int>("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue("EffectTimedShortDur", OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
 
 	SharedState.MetaEffectSpawnTime =
-	    g_OptionsManager.GetConfigValue<int>("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
+	    g_OptionsManager.GetConfigValue("NewMetaEffectSpawnTime", OPTION_DEFAULT_EFFECT_META_SPAWN_TIME);
 	SharedState.MetaEffectTimedDur =
-	    g_OptionsManager.GetConfigValue<int>("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue("MetaEffectDur", OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
 	SharedState.MetaEffectShortDur =
-	    g_OptionsManager.GetConfigValue<int>("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
+	    g_OptionsManager.GetConfigValue("MetaShortEffectDur", OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
 
-	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue<bool>(
+	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue(
 	    "EnableDistanceBasedEffectDispatch", OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
 	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue<int>("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	    g_OptionsManager.GetConfigValue("DistanceToActivateEffect", OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
-	    g_OptionsManager.GetConfigValue<int>("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
+	    g_OptionsManager.GetConfigValue("DistanceType", OPTION_DEFAULT_DISTANCE_TYPE));
 
 	m_MaxRunningEffects =
-	    g_OptionsManager.GetConfigValue<int>("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
+	    g_OptionsManager.GetConfigValue("MaxParallelRunningEffects", OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
 
 	Reset();
 

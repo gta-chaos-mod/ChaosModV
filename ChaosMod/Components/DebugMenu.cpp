@@ -10,7 +10,7 @@
 
 DebugMenu::DebugMenu() : Component()
 {
-	m_IsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	m_IsEnabled = g_OptionsManager.GetConfigValue("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_IsEnabled)
 	{
 		return;

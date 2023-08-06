@@ -15,7 +15,7 @@
 
 Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
 {
-	m_EnableVoting = g_OptionsManager.GetTwitchValue<bool>("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_EnableVoting = g_OptionsManager.GetTwitchValue("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 
 	if (m_EnableVoting && !Init())
 	{
@@ -329,18 +329,18 @@ bool Voting::Init()
 	}
 
 	m_SecsBeforeVoting =
-	    g_OptionsManager.GetTwitchValue<int>("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	    g_OptionsManager.GetTwitchValue("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_OverlayMode = g_OptionsManager.GetTwitchValue<OverlayMode>(
-	    "TwitchVotingOverlayMode", static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_OverlayMode = g_OptionsManager.GetTwitchValue("TwitchVotingOverlayMode",
+	                                                static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
 	m_EnableChanceSystem =
-	    g_OptionsManager.GetTwitchValue<bool>("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
-	m_EnableVotingChanceSystemRetainInitialChance = g_OptionsManager.GetTwitchValue<bool>(
+	    g_OptionsManager.GetTwitchValue("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_EnableVotingChanceSystemRetainInitialChance = g_OptionsManager.GetTwitchValue(
 	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
 	m_EnableRandomEffectVoteable =
-	    g_OptionsManager.GetTwitchValue<bool>("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+	    g_OptionsManager.GetTwitchValue("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	STARTUPINFO startupInfo      = {};
 	PROCESS_INFORMATION procInfo = {};
