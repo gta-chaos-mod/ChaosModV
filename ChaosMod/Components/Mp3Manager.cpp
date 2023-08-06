@@ -25,6 +25,11 @@ Mp3Manager::~Mp3Manager()
 void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soundName)
 {
 	auto soundRootDirName = dir + "\\sounds\\";
+	if (!DoesFileExist(soundRootDirName))
+	{
+		return;
+	}
+
 	auto soundDirPath     = soundRootDirName + soundName;
 	auto soundFilePath    = soundDirPath + ".mp3";
 
