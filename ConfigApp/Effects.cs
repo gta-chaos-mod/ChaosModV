@@ -401,6 +401,7 @@ namespace ConfigApp
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
             { "misc_fakeuturn", new EffectInfo("Fake U-Turn", EffectCategory.Misc) },
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
+            { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
         };
     }
 }
