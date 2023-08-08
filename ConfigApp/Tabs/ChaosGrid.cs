@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public class ChaosGrid
     {

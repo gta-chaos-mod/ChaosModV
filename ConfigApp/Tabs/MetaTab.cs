@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public class MetaTab : Tab
     {

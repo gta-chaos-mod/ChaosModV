@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ConfigApp.Tabs;
+using ConfigApp.Tabs.Voting;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -9,10 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using static ConfigApp.Effects;
-using Color = System.Windows.Media.Color;
-using MessageBox = System.Windows.MessageBox;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
@@ -20,7 +20,7 @@ namespace ConfigApp.MainWindow
         {
             //{ "Meta", new MetaTab() },
             { "Misc", new MiscTab() },
-            { "Twitch", new TwitchTab() },
+            { "Voting", new VotingTab() },
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }
         };
@@ -244,7 +244,7 @@ namespace ConfigApp.MainWindow
                     + $",{(effectData.TimedType == EffectTimedType.TimedNormal ? 0 : 1)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
-                    + $",{(effectData.Shortcut)}");
+                    + $",{effectData.Shortcut}");
             }
 
             OptionsManager.EffectsFile.WriteFile();

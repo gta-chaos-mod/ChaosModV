@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public class MiscTab : Tab
     {

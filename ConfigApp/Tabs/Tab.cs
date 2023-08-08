@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public abstract class Tab : ChaosGrid
     {

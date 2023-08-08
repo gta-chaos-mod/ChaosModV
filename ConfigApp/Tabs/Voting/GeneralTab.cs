@@ -2,21 +2,16 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs.Voting
 {
-    public class TwitchTab : Tab
+    public class GeneralTab : Tab
     {
         private List<Grid> m_Grids = new List<Grid>();
 
         private CheckBox m_EnableVoting;
 
-        private TextBox m_ChannelName;
         private ComboBox m_OverlayMode;
-
-        private TextBox m_UserName;
         private CheckBox m_EnableRandomEffect;
-
-        private PasswordBox m_Token;
 
         private TextBox m_SecsBeforeVoting;
         private TextBox m_PermittedUserNames;
@@ -79,16 +74,11 @@ namespace ConfigApp.MainWindow
             PushRowElement(headerGrid.Grid);
             PopRow();
 
-            SetRowHeight(new GridLength(180f));
+            SetRowHeight(new GridLength(100f));
 
             var bodyGrid = new ChaosGrid();
             SetupSettingsGrid(bodyGrid);
 
-            bodyGrid.PushRowSpacedPair("Channel Name", m_ChannelName = new TextBox()
-            {
-                Width = 120f,
-                Height = 20f
-            });
             bodyGrid.PushRowSpacedPair("Voting Overlay Mode", m_OverlayMode = new ComboBox()
             {
                 ItemsSource = new string[]
@@ -98,26 +88,12 @@ namespace ConfigApp.MainWindow
                     "OBS Overlay"
                 }
             });
-            bodyGrid.PopRow();
-
-            bodyGrid.PushRowSpacedPair("Username", m_UserName = new TextBox()
-            {
-                Width = 120f,
-                Height = 20f
-            });
             bodyGrid.PushRowSpacedPair("Enable \"Random Effect\" voteable option", m_EnableRandomEffect = Utils.GenerateCommonCheckBox());
-            bodyGrid.PopRow();
-
-            bodyGrid.PushRowSpacedPair("OAuth Token", m_Token = new PasswordBox()
-            {
-                Width = 120f,
-                Height = 20f
-            });
             bodyGrid.PopRow();
 
             bodyGrid.PushRowSpacedPair("Only enable chat voting X seconds before new effect triggers\n" +
                 "(Keep at 0 to allow chat to immediately vote, value can't be 1)", m_SecsBeforeVoting = Utils.GenerateCommonNumericOnlyTextBox());
-            bodyGrid.PushRowSpacedPair("Permitted Twitch usernames (separated by , )", m_PermittedUserNames = new TextBox()
+            bodyGrid.PushRowSpacedPair("Limit voting to usernames (separated by , )", m_PermittedUserNames = new TextBox()
             {
                 Width = 200f,
                 Height = 20f
@@ -154,13 +130,8 @@ namespace ConfigApp.MainWindow
             m_EnableVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableTwitchVoting", false);
             SetGridsEnabled(m_EnableVoting.IsChecked.GetValueOrDefault());
 
-            m_ChannelName.Text = OptionsManager.TwitchFile.ReadValue("TwitchChannelName");
             m_OverlayMode.SelectedIndex = OptionsManager.TwitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
-
-            m_UserName.Text = OptionsManager.TwitchFile.ReadValue("TwitchUserName");
             m_EnableRandomEffect.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
-
-            m_Token.Password = OptionsManager.TwitchFile.ReadValue("TwitchChannelOAuth");
 
             m_SecsBeforeVoting.Text = OptionsManager.TwitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             m_PermittedUserNames.Text = OptionsManager.TwitchFile.ReadValue("TwitchPermittedUsernames");
@@ -173,13 +144,8 @@ namespace ConfigApp.MainWindow
         {
             OptionsManager.TwitchFile.WriteValue("EnableTwitchVoting", m_EnableVoting.IsChecked.Value);
 
-            OptionsManager.TwitchFile.WriteValue("TwitchChannelName", m_ChannelName.Text);
             OptionsManager.TwitchFile.WriteValue("TwitchVotingOverlayMode", m_OverlayMode.SelectedIndex);
-
-            OptionsManager.TwitchFile.WriteValue("TwitchUserName", m_UserName.Text);
             OptionsManager.TwitchFile.WriteValue("TwitchRandomEffectVoteableEnable", m_EnableRandomEffect.IsChecked.Value);
-
-            OptionsManager.TwitchFile.WriteValue("TwitchChannelOAuth", m_Token.Password);
 
             OptionsManager.TwitchFile.WriteValue("TwitchVotingSecsBeforeVoting", m_SecsBeforeVoting.Text);
             OptionsManager.TwitchFile.WriteValue("TwitchPermittedUsernames", m_PermittedUserNames.Text);
