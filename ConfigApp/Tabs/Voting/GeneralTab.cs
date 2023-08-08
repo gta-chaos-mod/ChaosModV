@@ -16,6 +16,8 @@ namespace ConfigApp.Tabs.Voting
         private TextBox m_SecsBeforeVoting;
         private TextBox m_PermittedUserNames;
 
+        private TextBox m_VoteablePrefix;
+
         private CheckBox m_EnableProportionalVoting;
         private CheckBox m_EnableProportionalVotingRetainInitialChance;
 
@@ -74,7 +76,7 @@ namespace ConfigApp.Tabs.Voting
             PushRowElement(headerGrid.Grid);
             PopRow();
 
-            SetRowHeight(new GridLength(100f));
+            SetRowHeight(new GridLength(120f));
 
             var bodyGrid = new ChaosGrid();
             SetupSettingsGrid(bodyGrid);
@@ -97,6 +99,14 @@ namespace ConfigApp.Tabs.Voting
             {
                 Width = 200f,
                 Height = 20f
+            });
+            bodyGrid.PopRow();
+
+            bodyGrid.PushRowSpacedPair("Use character as prefix for voteable options", m_VoteablePrefix = new TextBox()
+            {
+                Width = 40f,
+                Height = 20f,
+                MaxLength = 1
             });
 
             m_Grids.Add(bodyGrid.Grid);
@@ -136,6 +146,8 @@ namespace ConfigApp.Tabs.Voting
             m_SecsBeforeVoting.Text = OptionsManager.TwitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
             m_PermittedUserNames.Text = OptionsManager.TwitchFile.ReadValue("TwitchPermittedUsernames");
 
+            m_VoteablePrefix.Text = OptionsManager.TwitchFile.ReadValue("VoteablePrefix", "");
+
             m_EnableProportionalVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
             m_EnableProportionalVotingRetainInitialChance.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
         }
@@ -149,6 +161,8 @@ namespace ConfigApp.Tabs.Voting
 
             OptionsManager.TwitchFile.WriteValue("TwitchVotingSecsBeforeVoting", m_SecsBeforeVoting.Text);
             OptionsManager.TwitchFile.WriteValue("TwitchPermittedUsernames", m_PermittedUserNames.Text);
+
+            OptionsManager.TwitchFile.WriteValue("VoteablePrefix", m_VoteablePrefix.Text);
 
             OptionsManager.TwitchFile.WriteValue("TwitchVotingChanceSystem", m_EnableProportionalVoting.IsChecked.Value);
             OptionsManager.TwitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", m_EnableProportionalVotingRetainInitialChance.IsChecked.Value);

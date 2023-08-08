@@ -10,19 +10,20 @@
 class Voting : public Component
 {
   private:
+	std::string m_VoteablePrefix;
+
 	struct ChoosableEffect
 	{
-		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &name, int match)
+		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &name, const std::string &match)
 		    : m_EffectIdentifier(effectIdentifier), m_EffectName(name), m_Match(match)
 		{
 		}
 
 		EffectIdentifier m_EffectIdentifier;
 		std::string m_EffectName;
-		int m_Match;
+		std::string m_Match;
 		int m_ChanceVotes = 0;
 	};
-
 	std::vector<std::unique_ptr<ChoosableEffect>> m_EffectChoices;
 
 	std::uint64_t m_LastPing           = GetTickCount64();

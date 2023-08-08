@@ -111,13 +111,13 @@ namespace Shared
 
             foreach (string line in data.Split('\n'))
             {
-                string[] keyValuePair = line.Split('=');
+                var keyValuePair = line.Split('=');
                 if (keyValuePair.Length != 2)
                 {
                     continue;
                 }
 
-                m_Options[keyValuePair[0]] = keyValuePair[1];
+                m_Options[keyValuePair[0].Trim()] = keyValuePair[1].Trim();
             }
         }
 

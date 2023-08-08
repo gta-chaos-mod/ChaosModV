@@ -10,5 +10,6 @@
         string TwitchOAuth { get; set; }
         string TwitchUserName { get; set; }
         public string[] PermittedTwitchUsernames { get; set; }
+        public string VoteablePrefix { get; set; }
     }
 }
