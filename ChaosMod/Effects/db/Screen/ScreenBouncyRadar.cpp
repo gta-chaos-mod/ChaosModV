@@ -9,11 +9,16 @@ static void OnStart()
 	int screenWidth, screenHeight;
 	_GET_ACTIVE_SCREEN_RESOLUTION(&screenWidth, &screenHeight);
 
-	float multiplier = ((float)screenWidth / 16) * (9 / (float)screenHeight);
+	float multiplier = ((float)screenWidth / (float)screenHeight) * (9 / 16);
 
 	xOffset = 0.f;
 	yOffset = 0.f;
-	xMin = -0.005f * safezoneSize * multiplier;
+
+	if (multiplier > 1) {
+		xMin = -0.005f * safezoneSize * multiplier - (multiplier - 1) / 2;
+	} else {
+		xMin = -0.005f * safezoneSize * multiplier;
+	}
 	xMax = multiplier - 0.14f + xMin;
 	yMax = 0.005f * safezoneSize;
 	yMin = yMax - 0.825f;
