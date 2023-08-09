@@ -1,5 +1,6 @@
-#include "Memory/UI.h"
 #include <stdafx.h>
+
+#include "Memory/UI.h"
 
 static float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
 
