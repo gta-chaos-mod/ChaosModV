@@ -14,9 +14,10 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using Xceed.Wpf.Toolkit;
 using ZstdSharp;
+
 using MessageBox = System.Windows.MessageBox;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public class WorkshopTab : Tab
     {

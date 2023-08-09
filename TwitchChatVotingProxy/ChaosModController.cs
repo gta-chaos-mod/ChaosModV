@@ -27,6 +27,7 @@ namespace TwitchChatVotingProxy
         private EOverlayMode? overlayMode;
         private IVotingReceiver votingReceiver;
         private string[] permittedUsernames;
+        private string voteablePrefix;
 
         public ChaosModController(
             IChaosPipeClient chaosPipe,
@@ -53,6 +54,7 @@ namespace TwitchChatVotingProxy
             overlayMode = config.OverlayMode;
             retainInitialVotes = config.RetainInitalVotes;
             permittedUsernames = config.PermittedTwitchUsernames;
+            voteablePrefix = config.VoteablePrefix;
 
             // Setup display update tick
             displayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -165,8 +167,8 @@ namespace TwitchChatVotingProxy
                 // Round 0: [O1, O2, O3, ...]
                 // Round 1: [O4, O5, O6, ...]
                 var match = voteCounter % 2 == 0
-                    ? (index + 1).ToString()
-                    : (index + 1 + activeVoteOptions.Count).ToString();
+                    ? voteablePrefix + (index + 1)
+                    : voteablePrefix + (index + 1 + activeVoteOptions.Count);
 
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();

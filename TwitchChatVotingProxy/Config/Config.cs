@@ -13,6 +13,7 @@ namespace TwitchChatVotingProxy.Config
         public static readonly string KEY_TWITCH_RETAIN_INITIAL_VOTES = "TwitchVotingChanceSystemRetainChance";
         public static readonly string KEY_TWITCH_VOTING_CHANCE_SYSTEM = "TwitchVotingChanceSystem";
         public static readonly string KEY_TWITCH_PERMITTED_USERNAMES = "TwitchPermittedUsernames";
+        public static readonly string KEY_VOTEABLE_PREFIX = "VoteablePrefix";
 
         public EOverlayMode? OverlayMode { get; set; }
         public int? OverlayServerPort { get; set; }
@@ -22,6 +23,7 @@ namespace TwitchChatVotingProxy.Config
         public string TwitchOAuth { get; set; }
         public string TwitchUserName { get; set; }
         public string[] PermittedTwitchUsernames { get; set; }
+        public string VoteablePrefix { get; set; }
 
         private ILogger logger = Log.Logger.ForContext<Config>();
         private OptionsFile optionsFile;
@@ -52,8 +54,7 @@ namespace TwitchChatVotingProxy.Config
                 VotingMode = optionsFile.ReadValueInt(KEY_TWITCH_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
                 OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_TWITCH_OVERLAY_MODE, 0);
 
-                string tmpPermittedUsernames = optionsFile.ReadValue(KEY_TWITCH_PERMITTED_USERNAMES, "").Trim().ToLower();  // lower case the username to allow case-insensitive comparisons
-
+                var tmpPermittedUsernames = optionsFile.ReadValue(KEY_TWITCH_PERMITTED_USERNAMES, "").ToLower();  // lower case the username to allow case-insensitive comparisons
                 if (tmpPermittedUsernames.Length > 0)
                 {
                     PermittedTwitchUsernames = tmpPermittedUsernames.Split(',');
@@ -68,6 +69,8 @@ namespace TwitchChatVotingProxy.Config
                 {
                     PermittedTwitchUsernames = new string[0];
                 }
+
+                VoteablePrefix = optionsFile.ReadValue(KEY_VOTEABLE_PREFIX, "");
             }
         }
     }

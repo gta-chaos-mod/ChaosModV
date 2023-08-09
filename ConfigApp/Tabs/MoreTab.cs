@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace ConfigApp.MainWindow
+namespace ConfigApp.Tabs
 {
     public class MoreTab : Tab
     {

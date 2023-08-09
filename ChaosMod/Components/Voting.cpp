@@ -15,7 +15,8 @@
 
 Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
 {
-	m_EnableVoting = g_OptionsManager.GetTwitchValue("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_EnableVoting   = g_OptionsManager.GetTwitchValue("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_VoteablePrefix = g_OptionsManager.GetTwitchValue<std::string>("VoteablePrefix", "");
 
 	if (m_EnableVoting && !Init())
 	{
@@ -175,7 +176,7 @@ void Voting::OnRun()
 		m_ChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
 
 		m_EffectChoices.clear();
-		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> ChoosableEffects;
+		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 		for (auto &pair : g_EnabledEffects)
 		{
 			auto &[effectIdentifier, effectData] = pair;
@@ -183,7 +184,7 @@ void Voting::OnRun()
 			if (!effectData.IsMeta() && !effectData.IsExcludedFromVoting() && !effectData.IsUtility()
 			    && !effectData.IsHidden())
 			{
-				ChoosableEffects.emplace(effectIdentifier, effectData);
+				choosableEffects.emplace(effectIdentifier, effectData);
 			}
 		}
 
@@ -194,15 +195,16 @@ void Voting::OnRun()
 			{
 				if (m_EnableRandomEffectVoteable)
 				{
-					m_EffectChoices.push_back(std::make_unique<ChoosableEffect>(EffectIdentifier(), "Random Effect",
-					                                                            !m_AlternatedVotingRound ? 4 : 8));
+					auto match = (std::ostringstream() << m_VoteablePrefix << (!m_AlternatedVotingRound ? 4 : 8)).str();
+					m_EffectChoices.push_back(
+					    std::make_unique<ChoosableEffect>(EffectIdentifier(), "Random Effect", match));
 				}
 
 				break;
 			}
 
 			float totalWeight = 0.f;
-			for (const auto &pair : ChoosableEffects)
+			for (const auto &pair : choosableEffects)
 			{
 				const EffectData &effectData = pair.second;
 
@@ -215,7 +217,7 @@ void Voting::OnRun()
 
 			std::unique_ptr<ChoosableEffect> pTargetChoice;
 
-			for (auto &pair : ChoosableEffects)
+			for (auto &pair : choosableEffects)
 			{
 				auto &[effectIdentifier, effectData] = pair;
 
@@ -227,11 +229,13 @@ void Voting::OnRun()
 					// EffectWeightMult
 					effectData.Weight = 0;
 
-					pTargetChoice     = std::make_unique<ChoosableEffect>(
-                        effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name,
-                        !m_AlternatedVotingRound       ? idx + 1
-					        : m_EnableRandomEffectVoteable ? idx + 5
-					                                       : idx + 4);
+					auto match        = (std::ostringstream() << m_VoteablePrefix
+                                                       << (!m_AlternatedVotingRound       ? idx + 1
+					                                              : m_EnableRandomEffectVoteable ? idx + 5
+					                                                                             : idx + 4))
+					                 .str();
+					pTargetChoice = std::make_unique<ChoosableEffect>(
+					    effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name, match);
 					break;
 				}
 			}
@@ -239,7 +243,7 @@ void Voting::OnRun()
 			EffectIdentifier effectIdentifier = pTargetChoice->m_EffectIdentifier;
 
 			m_EffectChoices.push_back(std::move(pTargetChoice));
-			ChoosableEffects.erase(effectIdentifier);
+			choosableEffects.erase(effectIdentifier);
 		}
 
 		std::vector<std::string> effectNames;
