@@ -77,7 +77,7 @@ namespace Memory
 		    {
 			    dst.PosX = src.PosX + xOffset;
 			    dst.PosY = src.PosY + yOffset;
-			});
+		    });
 	}
 
 	inline void MultiplyRadarSize(float multiplier, float offsetX = 0.f, float offsetY = 0.f)
