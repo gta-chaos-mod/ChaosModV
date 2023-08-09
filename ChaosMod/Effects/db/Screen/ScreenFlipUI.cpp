@@ -65,7 +65,7 @@ static void OnTick()
 	GET_MOBILE_PHONE_POSITION(&mobilePos);
 	SET_MOBILE_PHONE_POSITION(-110.f, mobilePos.y, mobilePos.z);
 
-	Memory::SetRadarOffsetX(0.825f);
+	Memory::SetRadarOffset(0.825f, 0.f);
 
 	// TODO: Find a way to move character swap circle to the left
 }
