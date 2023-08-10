@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Shared
 {
@@ -15,9 +16,17 @@ namespace Shared
             m_CompatFileNames = compatFileNames;
         }
 
-        public bool HasKey(string key)
+        public bool HasKey(params string[] keys)
         {
-            return m_Options.ContainsKey(key);
+            foreach (var key in keys)
+            {
+                if (m_Options.ContainsKey(key))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public IEnumerable<string> GetKeys()
@@ -28,15 +37,24 @@ namespace Shared
             }
         }
 
-        public string ReadValue(string key, string defaultValue = null)
+        public string ReadValue(string key, string defaultValue = null, params string[] compatKeys)
         {
-            return HasKey(key) ? m_Options[key] : defaultValue;
+            var keys = compatKeys.Concat(new [] { key });
+            foreach (var _key in keys)
+            {
+                if (m_Options.ContainsKey(_key))
+                {
+                    return m_Options[_key];
+                }
+            }
+
+            return defaultValue;
         }
 
-        public int ReadValueInt(string key, int defaultValue)
+        public int ReadValueInt(string key, int defaultValue, params string[] compatKeys)
         {
             int result;
-            if (!int.TryParse(ReadValue(key), out result))
+            if (!int.TryParse(ReadValue(key, null, compatKeys), out result))
             {
                 result = defaultValue;
             }
@@ -44,12 +62,12 @@ namespace Shared
             return result;
         }
 
-        public bool ReadValueBool(string key, bool defaultValue)
+        public bool ReadValueBool(string key, bool defaultValue, params string[] compatKeys)
         {
             bool result = defaultValue;
             if (HasKey(key))
             {
-                if (int.TryParse(ReadValue(key), out int tmp))
+                if (int.TryParse(ReadValue(key, null, compatKeys), out int tmp))
                 {
                     result = tmp != 0;
                 }

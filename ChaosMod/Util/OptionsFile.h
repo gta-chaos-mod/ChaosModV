@@ -90,6 +90,25 @@ class OptionsFile
 		return defaultValue;
 	}
 
+	template <typename T> inline T ReadValue(std::vector<std::string> keys, T defaultValue) const
+	{
+		for (const auto &key : keys)
+		{
+			const auto &value = ReadValueString(key);
+
+			if (!value.empty())
+			{
+				T result;
+				if (Util::TryParse<T>(value, result))
+				{
+					return result;
+				}
+			}
+		}
+
+		return defaultValue;
+	}
+
 	inline std::string ReadValueString(const std::string &key, const std::string &defaultValue = {}) const
 	{
 		const auto &result = m_Options.find(key);
@@ -98,9 +117,22 @@ class OptionsFile
 		{
 			return result->second;
 		}
-		else
+
+		return defaultValue;
+	}
+
+	inline std::string ReadValueString(std::vector<std::string> keys, const std::string &defaultValue = {}) const
+	{
+		for (const auto &key : keys)
 		{
-			return defaultValue;
+			const auto &result = m_Options.find(key);
+
+			if (result != m_Options.end())
+			{
+				return result->second;
+			}
 		}
+
+		return defaultValue;
 	}
 };
