@@ -15,8 +15,9 @@
 
 Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
 {
-	m_EnableVoting   = g_OptionsManager.GetTwitchValue("EnableTwitchVoting", OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
-	m_VoteablePrefix = g_OptionsManager.GetTwitchValue<std::string>("VoteablePrefix", "");
+	m_EnableVoting =
+	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
+	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
 
 	if (m_EnableVoting && !Init())
 	{
@@ -317,8 +318,8 @@ bool Voting::Init()
 	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
 	    < 3)
 	{
-		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable Twitch "
-		                "voting. Reverting to normal mode.");
+		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable voting."
+		                " Reverting to normal mode.");
 
 		return false;
 	}
@@ -332,19 +333,20 @@ bool Voting::Init()
 		CloseHandle(mutex);
 	}
 
-	m_SecsBeforeVoting =
-	    g_OptionsManager.GetTwitchValue("TwitchVotingSecsBeforeVoting", OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	m_SecsBeforeVoting   = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
+	                                                       OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_OverlayMode = g_OptionsManager.GetTwitchValue("TwitchVotingOverlayMode",
-	                                                static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_OverlayMode        = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
+	                                                       static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_EnableChanceSystem =
-	    g_OptionsManager.GetTwitchValue("TwitchVotingChanceSystem", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
-	m_EnableVotingChanceSystemRetainInitialChance = g_OptionsManager.GetTwitchValue(
-	    "TwitchVotingChanceSystemRetainChance", OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+	m_EnableChanceSystem = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
+	                                                       OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_EnableVotingChanceSystemRetainInitialChance =
+	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
+	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
 
-	m_EnableRandomEffectVoteable =
-	    g_OptionsManager.GetTwitchValue("TwitchRandomEffectVoteableEnable", OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+	m_EnableRandomEffectVoteable = g_OptionsManager.GetVotingValue(
+	    { "RandomEffectVoteableEnable", "TwitchRandomEffectVoteableEnable" }, OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
 
 	STARTUPINFO startupInfo      = {};
 	PROCESS_INFORMATION procInfo = {};

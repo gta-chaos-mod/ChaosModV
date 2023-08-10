@@ -50,7 +50,7 @@ namespace EffectConfig
 			// HACK: Store EffectCustomName seperately
 			std::string valueEffectName;
 
-			auto value = effectsFile.ReadValueString(std::string(effectId));
+			auto value = effectsFile.ReadValueString({ std::string(effectId) });
 			if (!value.empty())
 			{
 				size_t splitIndex = GetNextDelimiterOffset(value);

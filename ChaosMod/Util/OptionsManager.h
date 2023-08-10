@@ -3,6 +3,9 @@
 #include "Util/OptionDefaults.h"
 #include "Util/OptionsFile.h"
 
+#include <string>
+#include <vector>
+
 class OptionsManager
 {
   private:
@@ -17,28 +20,28 @@ class OptionsManager
 		m_TwitchFile.Reset();
 	}
 
-	template <typename T> inline T GetConfigValue(const std::string &key, T defaultValue)
+	template <typename T> inline T GetConfigValue(std::vector<std::string> keys, T defaultValue)
 	{
-		return GetOptionValue(m_ConfigFile, key, defaultValue);
+		return GetOptionValue(m_ConfigFile, keys, defaultValue);
 	}
 
-	template <typename T> inline T GetTwitchValue(const std::string &key, T defaultValue)
+	template <typename T> inline T GetVotingValue(std::vector<std::string> keys, T defaultValue)
 	{
-		return GetOptionValue(m_TwitchFile, key, defaultValue);
+		return GetOptionValue(m_TwitchFile, keys, defaultValue);
 	}
 
   private:
 	template <typename T>
-	inline T GetOptionValue(const OptionsFile &optionsFile, const std::string &key, T defaultValue = T())
+	inline T GetOptionValue(const OptionsFile &optionsFile, std::vector<std::string> keys, T defaultValue = T())
 	{
 		if constexpr (std::is_same<typename std::remove_const<T>::type, std::string>()
 		              || std::is_same<typename std::remove_const<T>::type, char *>())
 		{
-			return optionsFile.ReadValueString(key, defaultValue);
+			return optionsFile.ReadValueString(keys, defaultValue);
 		}
 		else
 		{
-			return optionsFile.ReadValue(key, defaultValue);
+			return optionsFile.ReadValue(keys, defaultValue);
 		}
 	}
 };

@@ -74,48 +74,20 @@ class OptionsFile
 		}
 	}
 
-	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
-	{
-		const auto &value = ReadValueString(key);
-
-		if (!value.empty())
-		{
-			T result;
-			if (Util::TryParse<T>(value, result))
-			{
-				return result;
-			}
-		}
-
-		return defaultValue;
-	}
-
 	template <typename T> inline T ReadValue(std::vector<std::string> keys, T defaultValue) const
 	{
 		for (const auto &key : keys)
 		{
-			const auto &value = ReadValueString(key);
+			const auto &result = m_Options.find(key);
 
-			if (!value.empty())
+			if (result != m_Options.end() && !result->second.empty())
 			{
-				T result;
-				if (Util::TryParse<T>(value, result))
+				T parsedResult;
+				if (Util::TryParse<T>(result->second, parsedResult))
 				{
-					return result;
+					return parsedResult;
 				}
 			}
-		}
-
-		return defaultValue;
-	}
-
-	inline std::string ReadValueString(const std::string &key, const std::string &defaultValue = {}) const
-	{
-		const auto &result = m_Options.find(key);
-
-		if (result != m_Options.end())
-		{
-			return result->second;
 		}
 
 		return defaultValue;

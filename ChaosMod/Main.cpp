@@ -144,25 +144,25 @@ static void Init()
 	g_OptionsManager.Reset();
 
 	ms_Flags.ClearEffectsShortcutEnabled =
-	    g_OptionsManager.GetConfigValue("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	    g_OptionsManager.GetConfigValue({ "EnableClearEffectsShortcut" }, OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 	ms_Flags.ToggleModShortcutEnabled =
-	    g_OptionsManager.GetConfigValue("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	    g_OptionsManager.GetConfigValue({ "EnableToggleModShortcut" }, OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 	ms_Flags.PauseTimerShortcutEnabled =
-	    g_OptionsManager.GetConfigValue("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	    g_OptionsManager.GetConfigValue({ "EnablePauseTimerShortcut" }, OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 	ms_Flags.AntiSoftlockShortcutEnabled =
-	    g_OptionsManager.GetConfigValue("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
+	    g_OptionsManager.GetConfigValue({ "EnableAntiSoftlockShortcut" }, OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
 	g_EnableGroupWeighting =
-	    g_OptionsManager.GetConfigValue("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	    g_OptionsManager.GetConfigValue({ "EnableGroupWeightingAdjustments" }, OPTION_DEFAULT_GROUP_WEIGHTING);
 
 	const auto &timerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimerColor" }, OPTION_DEFAULT_BAR_COLOR));
 	const auto &textColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTextColor" }, OPTION_DEFAULT_TEXT_COLOR));
 	const auto &effectTimerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
-	g_Random.SetSeed(g_OptionsManager.GetConfigValue("Seed", 0));
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
 
 	std::set<std::string> blacklistedComponentNames;
 	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
@@ -237,7 +237,7 @@ static void MainRun()
 
 	Reset();
 
-	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 

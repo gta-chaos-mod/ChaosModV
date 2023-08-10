@@ -16,7 +16,7 @@ static bool ms_SearchedForMissionStateGlobal = false;
 
 Failsafe::Failsafe() : Component()
 {
-	m_Enabled = g_OptionsManager.GetConfigValue("EnableFailsafe", OPTION_DEFAULT_FAILSAFE);
+	m_Enabled = g_OptionsManager.GetConfigValue({ "EnableFailsafe" }, OPTION_DEFAULT_FAILSAFE);
 	if (!m_Enabled)
 	{
 		LOG("Failsafe has been disabled in the config!");

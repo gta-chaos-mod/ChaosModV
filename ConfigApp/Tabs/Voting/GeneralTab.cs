@@ -137,35 +137,36 @@ namespace ConfigApp.Tabs.Voting
 
         public override void OnLoadValues()
         {
-            m_EnableVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableTwitchVoting", false);
+            m_EnableVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableVoting", false, "EnableTwitchVoting");
             SetGridsEnabled(m_EnableVoting.IsChecked.GetValueOrDefault());
 
-            m_OverlayMode.SelectedIndex = OptionsManager.TwitchFile.ReadValueInt("TwitchVotingOverlayMode", 0);
-            m_EnableRandomEffect.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchRandomEffectVoteableEnable", true);
+            m_OverlayMode.SelectedIndex = OptionsManager.TwitchFile.ReadValueInt("VotingOverlayMode", 0, "TwitchVotingOverlayMode");
+            m_EnableRandomEffect.IsChecked = OptionsManager.TwitchFile.ReadValueBool("RandomEffectVoteableEnable", true, "TwitchRandomEffectVoteableEnable");
 
-            m_SecsBeforeVoting.Text = OptionsManager.TwitchFile.ReadValue("TwitchVotingSecsBeforeVoting", "0");
-            m_PermittedUserNames.Text = OptionsManager.TwitchFile.ReadValue("TwitchPermittedUsernames");
+            m_SecsBeforeVoting.Text = OptionsManager.TwitchFile.ReadValue("VotingSecsBeforeVoting", "0", "TwitchVotingSecsBeforeVoting");
+            m_PermittedUserNames.Text = OptionsManager.TwitchFile.ReadValue("PermittedUsernames", null, "TwitchPermittedUsernames");
 
             m_VoteablePrefix.Text = OptionsManager.TwitchFile.ReadValue("VoteablePrefix", "");
 
-            m_EnableProportionalVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchVotingChanceSystem", false);
-            m_EnableProportionalVotingRetainInitialChance.IsChecked = OptionsManager.TwitchFile.ReadValueBool("TwitchVotingChanceSystemRetainChance", true);
+            m_EnableProportionalVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("VotingChanceSystem", false, "TwitchVotingChanceSystem");
+            m_EnableProportionalVotingRetainInitialChance.IsChecked = OptionsManager.TwitchFile.ReadValueBool("VotingChanceSystemRetainChance", true,
+                "TwitchVotingChanceSystemRetainChance");
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.TwitchFile.WriteValue("EnableTwitchVoting", m_EnableVoting.IsChecked.Value);
+            OptionsManager.TwitchFile.WriteValue("EnableVoting", m_EnableVoting.IsChecked.Value);
 
-            OptionsManager.TwitchFile.WriteValue("TwitchVotingOverlayMode", m_OverlayMode.SelectedIndex);
-            OptionsManager.TwitchFile.WriteValue("TwitchRandomEffectVoteableEnable", m_EnableRandomEffect.IsChecked.Value);
+            OptionsManager.TwitchFile.WriteValue("VotingOverlayMode", m_OverlayMode.SelectedIndex);
+            OptionsManager.TwitchFile.WriteValue("RandomEffectVoteableEnable", m_EnableRandomEffect.IsChecked.Value);
 
-            OptionsManager.TwitchFile.WriteValue("TwitchVotingSecsBeforeVoting", m_SecsBeforeVoting.Text);
-            OptionsManager.TwitchFile.WriteValue("TwitchPermittedUsernames", m_PermittedUserNames.Text);
+            OptionsManager.TwitchFile.WriteValue("VotingSecsBeforeVoting", m_SecsBeforeVoting.Text);
+            OptionsManager.TwitchFile.WriteValue("PermittedUsernames", m_PermittedUserNames.Text);
 
             OptionsManager.TwitchFile.WriteValue("VoteablePrefix", m_VoteablePrefix.Text);
 
-            OptionsManager.TwitchFile.WriteValue("TwitchVotingChanceSystem", m_EnableProportionalVoting.IsChecked.Value);
-            OptionsManager.TwitchFile.WriteValue("TwitchVotingChanceSystemRetainChance", m_EnableProportionalVotingRetainInitialChance.IsChecked.Value);
+            OptionsManager.TwitchFile.WriteValue("VotingChanceSystem", m_EnableProportionalVoting.IsChecked.Value);
+            OptionsManager.TwitchFile.WriteValue("VotingChanceSystemRetainChance", m_EnableProportionalVotingRetainInitialChance.IsChecked.Value);
         }
     }
 }

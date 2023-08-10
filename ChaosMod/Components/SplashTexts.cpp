@@ -10,7 +10,8 @@ static bool ms_InitalSplashShown = false;
 
 SplashTexts::SplashTexts()
 {
-	m_EnableSplashTexts = g_OptionsManager.GetConfigValue("EnableModSplashTexts", OPTION_DEFAULT_ENABLE_SPLASH_TEXTS);
+	m_EnableSplashTexts =
+	    g_OptionsManager.GetConfigValue({ "EnableModSplashTexts" }, OPTION_DEFAULT_ENABLE_SPLASH_TEXTS);
 
 	if (ms_InitalSplashShown)
 	{

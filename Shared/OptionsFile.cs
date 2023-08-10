@@ -39,7 +39,7 @@ namespace Shared
 
         public string ReadValue(string key, string defaultValue = null, params string[] compatKeys)
         {
-            var keys = compatKeys.Concat(new [] { key });
+            var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
                 if (m_Options.ContainsKey(_key))
@@ -64,16 +64,21 @@ namespace Shared
 
         public bool ReadValueBool(string key, bool defaultValue, params string[] compatKeys)
         {
-            bool result = defaultValue;
-            if (HasKey(key))
+            var keys = compatKeys.Prepend(key);
+            foreach (var _key in keys)
             {
-                if (int.TryParse(ReadValue(key, null, compatKeys), out int tmp))
+                if (!HasKey(_key))
                 {
-                    result = tmp != 0;
+                    continue;
+                }
+
+                if (int.TryParse(ReadValue(_key, null), out int tmp))
+                {
+                    return tmp != 0;
                 }
             }
 
-            return result;
+            return defaultValue;
         }
 
         public void WriteValue(string key, string value)

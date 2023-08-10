@@ -10,10 +10,10 @@ namespace TwitchChatVotingProxy.Config
         public static readonly string KEY_TWITCH_CHANNEL_NAME = "TwitchChannelName";
         public static readonly string KEY_TWITCH_CHANNEL_OAUTH = "TwitchChannelOAuth";
         public static readonly string KEY_TWITCH_CHANNEL_USER_NAME = "TwitchUserName";
-        public static readonly string KEY_OVERLAY_MODE = "TwitchVotingOverlayMode";
-        public static readonly string KEY_RETAIN_INITIAL_VOTES = "TwitchVotingChanceSystemRetainChance";
-        public static readonly string KEY_VOTING_CHANCE_SYSTEM = "TwitchVotingChanceSystem";
-        public static readonly string KEY_PERMITTED_USERNAMES = "TwitchPermittedUsernames";
+        public static readonly string KEY_OVERLAY_MODE = "VotingOverlayMode";
+        public static readonly string KEY_RETAIN_INITIAL_VOTES = "VotingChanceSystemRetainChance";
+        public static readonly string KEY_VOTING_CHANCE_SYSTEM = "VotingChanceSystem";
+        public static readonly string KEY_PERMITTED_USERNAMES = "PermittedUsernames";
         public static readonly string KEY_VOTEABLE_PREFIX = "VoteablePrefix";
 
         public EOverlayMode? OverlayMode { get; set; }
@@ -31,7 +31,7 @@ namespace TwitchChatVotingProxy.Config
 
         public Config(string file, params string[] compatFileNames)
         {
-            var files = compatFileNames.Concat(new [] { file });
+            var files = compatFileNames.Prepend(file);
 
             if (!File.Exists(file))
             {
@@ -59,14 +59,14 @@ namespace TwitchChatVotingProxy.Config
 
             OverlayServerPort = optionsFile.ReadValueInt(KEY_OVERLAY_SERVER_PORT, -1);
             if (OverlayServerPort == -1) OverlayServerPort = null;
-            RetainInitalVotes = optionsFile.ReadValueBool(KEY_RETAIN_INITIAL_VOTES, false);
+            RetainInitalVotes = optionsFile.ReadValueBool(KEY_RETAIN_INITIAL_VOTES, false, "TwitchVotingChanceSystemRetainChance");
             TwitchChannelName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_NAME);
             TwitchOAuth = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_OAUTH);
             TwitchUserName = optionsFile.ReadValue(KEY_TWITCH_CHANNEL_USER_NAME);
-            VotingMode = optionsFile.ReadValueInt(KEY_VOTING_CHANCE_SYSTEM, 0) == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
-            OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_OVERLAY_MODE, 0);
+            VotingMode = optionsFile.ReadValueInt(KEY_VOTING_CHANCE_SYSTEM, 0, "TwitchVotingChanceSystem") == 0 ? EVotingMode.MAJORITY : EVotingMode.PERCENTAGE;
+            OverlayMode = (EOverlayMode)optionsFile.ReadValueInt(KEY_OVERLAY_MODE, 0, "TwitchVotingOverlayMode");
 
-            var tmpPermittedUsernames = optionsFile.ReadValue(KEY_PERMITTED_USERNAMES, "").ToLower();  // lower case the username to allow case-insensitive comparisons
+            var tmpPermittedUsernames = optionsFile.ReadValue(KEY_PERMITTED_USERNAMES, "", "TwitchPermittedUsernames").ToLower();  // lower case the username to allow case-insensitive comparisons
             if (tmpPermittedUsernames.Length > 0)
             {
                 PermittedUsernames = tmpPermittedUsernames.Split(',');
