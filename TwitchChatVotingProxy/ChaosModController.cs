@@ -53,7 +53,7 @@ namespace TwitchChatVotingProxy
             votingMode = config.VotingMode;
             overlayMode = config.OverlayMode;
             retainInitialVotes = config.RetainInitalVotes;
-            permittedUsernames = config.PermittedTwitchUsernames;
+            permittedUsernames = config.PermittedUsernames;
             voteablePrefix = config.VoteablePrefix;
 
             // Setup display update tick
