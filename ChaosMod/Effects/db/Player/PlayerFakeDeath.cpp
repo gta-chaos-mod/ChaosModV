@@ -197,19 +197,19 @@ static void OnStart()
 			{
 			case 225514697: // Michael
 				deathAnimationName = "DeathFailMichaelIn";
-				playerDeathName    = "Micheal Died";
+				playerDeathName    = "Micheal Ded";
 				break;
 			case 2602752943: // Franklin
 				deathAnimationName = "DeathFailFranklinIn";
-				playerDeathName    = "Franklin Died";
+				playerDeathName    = "Fraklin Ded";
 				break;
 			case 2608926626: // Trevor
 				deathAnimationName = "DeathFailTrevorIn";
-				playerDeathName    = "Trever Died";
+				playerDeathName    = "Trever Ded";
 				break;
 			default: // default
 				deathAnimationName = "DeathFailNeutralIn";
-				playerDeathName    = "You Died";
+				playerDeathName    = "You Ded";
 				break;
 			}
 			START_AUDIO_SCENE(isOnMission ? "MISSION_FAILED_SCENE" : "DEATH_SCENE");
