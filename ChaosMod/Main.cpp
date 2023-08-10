@@ -57,7 +57,7 @@ static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
 
-	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, "chaosmod/effects.ini");
+	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
 }
 
 static void Reset()

@@ -6,13 +6,13 @@ namespace Shared
     public class OptionsFile
     {
         private string m_FileName;
-        private string m_CompatFileName;
+        private string[] m_CompatFileNames;
         private Dictionary<string, string> m_Options = new Dictionary<string, string>();
 
-        public OptionsFile(string fileName, string compatFileName = null)
+        public OptionsFile(string fileName, params string[] compatFileNames)
         {
             m_FileName = fileName;
-            m_CompatFileName = compatFileName;
+            m_CompatFileNames = compatFileNames;
         }
 
         public bool HasKey(string key)
@@ -101,7 +101,17 @@ namespace Shared
             string data;
             if ((data = readData(m_FileName)) == null)
             {
-                if ((data = readData(m_CompatFileName)) == null)
+                bool dataRead = false;
+                foreach (var compatFileName in m_CompatFileNames)
+                {
+                    if ((data = readData(compatFileName)) != null)
+                    {
+                        dataRead = true;
+                        break;
+                    }
+                }
+
+                if (!dataRead)
                 {
                     return;
                 }
@@ -145,12 +155,35 @@ namespace Shared
 
         public bool HasCompatFile()
         {
-            return m_CompatFileName != null && File.Exists(m_CompatFileName);
+            foreach (var compatFileName in m_CompatFileNames)
+            {
+                if (File.Exists(compatFileName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public string GetCompatFile()
+        public string[] GetCompatFiles()
         {
-            return m_CompatFileName;
+            return m_CompatFileNames;
+        }
+
+        public string[] GetValidCompatFiles()
+        {
+            var compatFiles = new List<string>();
+
+            foreach (var compatFileName in m_CompatFileNames)
+            {
+                if (File.Exists(compatFileName))
+                {
+                    compatFiles.Add(compatFileName);
+                }
+            }
+
+            return compatFiles.ToArray();
         }
     }
 }

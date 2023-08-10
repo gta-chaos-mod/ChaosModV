@@ -7,17 +7,18 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 class OptionsFile
 {
   private:
 	const char *m_FileName;
-	const char *m_CompatFileName;
+	std::vector<const char *> m_CompatFileNames;
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
-	OptionsFile(const char *fileName, const char *compatFileName = nullptr)
-	    : m_FileName(fileName), m_CompatFileName(compatFileName)
+	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
+	    : m_FileName(fileName), m_CompatFileNames(compatFileNames)
 	{
 		Reset();
 	}
@@ -55,9 +56,21 @@ class OptionsFile
 			return true;
 		};
 
-		if (!readData(m_FileName) && !readData(m_CompatFileName))
+		if (!readData(m_FileName))
 		{
-			LOG("Config file " << m_FileName << " not found!");
+			bool dataRead = false;
+			for (auto compatFileName : m_CompatFileNames)
+			{
+				if ((dataRead = readData(compatFileName)))
+				{
+					break;
+				}
+			}
+
+			if (!dataRead)
+			{
+				LOG("Config file " << m_FileName << " not found!");
+			}
 		}
 	}
 
