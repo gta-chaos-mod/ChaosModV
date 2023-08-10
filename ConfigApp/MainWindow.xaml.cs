@@ -343,7 +343,8 @@ namespace ConfigApp
 
         private void user_save_Click(object sender, RoutedEventArgs e)
         {
-            if (OptionsManager.ConfigFile.HasCompatFile() || OptionsManager.TwitchFile.HasCompatFile() || OptionsManager.EffectsFile.HasCompatFile())
+            if (OptionsManager.ConfigFile.HasCompatFile("config.ini") || OptionsManager.TwitchFile.HasCompatFile("twitch.ini")
+                || OptionsManager.EffectsFile.HasCompatFile("effects.ini"))
             {
                 if (MessageBox.Show("Note: Config files reside inside the configs/ subdirectory now. Clicking OK will move the files there. " +
                     "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)

@@ -184,24 +184,14 @@ namespace Shared
             return false;
         }
 
+        public bool HasCompatFile(string fileName)
+        {
+            return m_CompatFileNames.Contains(fileName) && File.Exists(fileName);
+        }
+
         public string[] GetCompatFiles()
         {
             return m_CompatFileNames;
-        }
-
-        public string[] GetValidCompatFiles()
-        {
-            var compatFiles = new List<string>();
-
-            foreach (var compatFileName in m_CompatFileNames)
-            {
-                if (File.Exists(compatFileName))
-                {
-                    compatFiles.Add(compatFileName);
-                }
-            }
-
-            return compatFiles.ToArray();
         }
     }
 }

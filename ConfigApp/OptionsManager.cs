@@ -6,7 +6,7 @@ namespace ConfigApp
     public static class OptionsManager
     {
         public static OptionsFile ConfigFile { get; } = new OptionsFile("configs/config.ini", "config.ini");
-        public static OptionsFile TwitchFile { get; } = new OptionsFile("configs/twitch.ini", "twitch.ini");
+        public static OptionsFile TwitchFile { get; } = new OptionsFile("configs/voting.ini", "configs/twitch.ini", "twitch.ini");
         public static OptionsFile EffectsFile { get; } = new OptionsFile("configs/effects.ini", "effects.ini");
 
         public static void ReadFiles()
@@ -43,15 +43,15 @@ namespace ConfigApp
 
             if (ConfigFile.HasCompatFile())
             {
-                deleteFiles(ConfigFile.GetValidCompatFiles());
+                deleteFiles(ConfigFile.GetCompatFiles());
             }
             if (TwitchFile.HasCompatFile())
             {
-                deleteFiles(TwitchFile.GetValidCompatFiles());
+                deleteFiles(TwitchFile.GetCompatFiles());
             }
             if (EffectsFile.HasCompatFile())
             {
-                deleteFiles(EffectsFile.GetValidCompatFiles());
+                deleteFiles(EffectsFile.GetCompatFiles());
             }
         }
     }
