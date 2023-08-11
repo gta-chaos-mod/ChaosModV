@@ -65,8 +65,6 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private void OnConnected(object sender, OnConnectedArgs e)
         {
             logger.Information("successfully connected to twitch");
-
-            chaosPipe.SendMessageToPipe("hello");
         }
         /// <summary>
         /// Called when the twitch client disconnects (callback)

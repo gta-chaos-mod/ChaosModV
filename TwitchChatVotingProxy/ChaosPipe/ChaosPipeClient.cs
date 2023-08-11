@@ -14,6 +14,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         public static readonly int PIPE_TICKRATE = 100;
 
+        public bool GotHelloBack { get; private set; } = false;
+
         public event EventHandler<OnGetCurrentVotesArgs> OnGetCurrentVotes;
         public event EventHandler<OnGetVoteResultArgs> OnGetVoteResult;
         public event EventHandler<OnNewVoteArgs> OnNewVote;
@@ -178,6 +180,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 PipeMessage pipe = JsonConvert.DeserializeObject<PipeMessage>(message);
                 switch (pipe.Identifier)
                 {
+                    case "hello_back":
+                        GotHelloBack = true;
+                        break;
                     case "vote":
                         StartNewVote(pipe.Options);
                         break;
