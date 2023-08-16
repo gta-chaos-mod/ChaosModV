@@ -1,7 +1,6 @@
 using Serilog;
 using System.Timers;
 using TwitchChatVotingProxy.ChaosPipe;
-using TwitchChatVotingProxy.Config;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
 
@@ -13,52 +12,42 @@ namespace TwitchChatVotingProxy
     {
         public static readonly int DISPLAY_UPDATE_TICKRATE = 200;
 
-        private List<IVoteOption> activeVoteOptions = new List<IVoteOption>();
-        private IChaosPipeClient chaosPipe;
-        private Timer displayUpdateTick = new Timer(DISPLAY_UPDATE_TICKRATE);
-        private ILogger logger = Log.Logger.ForContext<ChaosModController>();
-        private IOverlayServer? overlayServer;
-        private Dictionary<string, int> userVotedFor = new Dictionary<string, int>();
-        private Random random = new Random();
-        private Boolean retainInitialVotes;
-        private int voteCounter = 0;
-        private bool voteRunning = false;
-        private EVotingMode? votingMode;
-        private EOverlayMode? overlayMode;
-        private IVotingReceiver votingReceiver;
-        private string[] permittedUsernames;
-        private string voteablePrefix;
+        private IChaosPipeClient m_ChaosPipe;
+        private IOverlayServer? m_OverlayServer;
+        private IVotingReceiver[] m_VotingReceivers;
+        private ChaosModControllerConfig m_Config;
 
-        public ChaosModController(
-            IChaosPipeClient chaosPipe,
-            IOverlayServer overlayServer,
-            IVotingReceiver votingReceiver,
-            IConfig config
-        )
+        private List<IVoteOption> m_ActiveVoteOptions = new List<IVoteOption>();
+        private Timer m_DisplayUpdateTick = new Timer(DISPLAY_UPDATE_TICKRATE);
+        private ILogger m_Logger = Log.Logger.ForContext<ChaosModController>();
+        private Dictionary<string, int> m_UserVotedFor = new Dictionary<string, int>();
+        private Random m_Random = new Random();
+        private int m_VoteCounter = 0;
+        private bool m_VoteRunning = false;
+
+        public ChaosModController(IChaosPipeClient chaosPipe, IOverlayServer overlayServer, IVotingReceiver[] votingReceivers,
+            ChaosModControllerConfig config)
         {
-            this.chaosPipe = chaosPipe;
-            this.overlayServer = overlayServer;
-            this.votingReceiver = votingReceiver;
+            m_ChaosPipe = chaosPipe;
+            m_OverlayServer = overlayServer;
+            m_VotingReceivers = votingReceivers;
+            m_Config = config;
 
             // Setup pipe listeners
-            this.chaosPipe.OnGetCurrentVotes += OnGetCurrentVotes;
-            this.chaosPipe.OnGetVoteResult += OnGetVoteResult;
-            this.chaosPipe.OnNewVote += OnNewVote;
-            this.chaosPipe.OnNoVotingRound += OnNoVotingRound;
+            m_ChaosPipe.OnGetCurrentVotes += OnGetCurrentVotes;
+            m_ChaosPipe.OnGetVoteResult += OnGetVoteResult;
+            m_ChaosPipe.OnNewVote += OnNewVote;
+            m_ChaosPipe.OnNoVotingRound += OnNoVotingRound;
 
             // Setup receiver listeners
-            this.votingReceiver.OnMessage += OnVoteReceiverMessage;
-
-            // Setup config options
-            votingMode = config.VotingMode;
-            overlayMode = config.OverlayMode;
-            retainInitialVotes = config.RetainInitalVotes;
-            permittedUsernames = config.PermittedUsernames;
-            voteablePrefix = config.VoteablePrefix;
+            foreach (var votingReceiver in m_VotingReceivers)
+            {
+                votingReceiver.OnMessage += OnVoteReceiverMessage;
+            }
 
             // Setup display update tick
-            displayUpdateTick.Elapsed += DisplayUpdateTick;
-            displayUpdateTick.Enabled = true;
+            m_DisplayUpdateTick.Elapsed += DisplayUpdateTick;
+            m_DisplayUpdateTick.Enabled = true;
         }
 
         /// <summary>
@@ -66,7 +55,7 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void DisplayUpdateTick(object sender, ElapsedEventArgs e)
         {
-            overlayServer.UpdateVoting(activeVoteOptions);
+            m_OverlayServer.UpdateVoting(m_ActiveVoteOptions);
         }
         /// <summary>
         /// Calculate the voting result by counting them, and returning the one
@@ -75,17 +64,17 @@ namespace TwitchChatVotingProxy
         private int GetVoteResultByMajority()
         {
             // Find the highest vote count
-            var highestVoteCount = activeVoteOptions.Max(_ => _.Votes);
+            var highestVoteCount = m_ActiveVoteOptions.Max(_ => _.Votes);
             // Get all options that have the highest vote count
-            var choosenOptions = activeVoteOptions.FindAll(_ => _.Votes == highestVoteCount);
+            var choosenOptions = m_ActiveVoteOptions.FindAll(_ => _.Votes == highestVoteCount);
             IVoteOption choosenOption;
             // If we only have one choosen option, use that
             if (choosenOptions.Count == 1) choosenOption = choosenOptions[0];
             // Otherwise we have more than one option with the same vote count
             // and choose one at random
-            else choosenOption = choosenOptions[random.Next(0, choosenOptions.Count)];
+            else choosenOption = choosenOptions[m_Random.Next(0, choosenOptions.Count)];
 
-            return activeVoteOptions.IndexOf(choosenOption);
+            return m_ActiveVoteOptions.IndexOf(choosenOption);
         }
         /// <summary>
         /// Calculate the voting result by assigning them a percentage based on votes,
@@ -93,13 +82,13 @@ namespace TwitchChatVotingProxy
         private int GetVoteResultByPercentage()
         {
             // Get total votes
-            var votes = activeVoteOptions.Select(_ => retainInitialVotes ? _.Votes + 1 : _.Votes).ToList();
+            var votes = m_ActiveVoteOptions.Select(_ => m_Config.RetainInitialVotes ? _.Votes + 1 : _.Votes).ToList();
             var totalVotes = 0;
             votes.ForEach(_ => totalVotes += _);
             // If we have no votes, choose one at random
-            if (totalVotes == 0) return random.Next(0, votes.Count);
+            if (totalVotes == 0) return m_Random.Next(0, votes.Count);
             // Select a random vote from all votes
-            var selectedVote = random.Next(1, totalVotes + 1);
+            var selectedVote = m_Random.Next(1, totalVotes + 1);
             // Now find out in what vote range/option that vote is
             var voteRange = 0;
             var selectedOption = 0;
@@ -121,7 +110,7 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void OnGetCurrentVotes(object sender, OnGetCurrentVotesArgs args)
         {
-            args.CurrentVotes = activeVoteOptions.Select(_ => _.Votes).ToList();
+            args.CurrentVotes = m_ActiveVoteOptions.Select(_ => _.Votes).ToList();
         }
         /// <summary>
         /// Is called when the chaos mod wants to know the voting result (callback)
@@ -131,7 +120,7 @@ namespace TwitchChatVotingProxy
             // Tell the overlay server that the vote has ended
             try
             {
-                overlayServer.EndVoting();
+                m_OverlayServer.EndVoting();
 
             }
             catch (Exception err)
@@ -140,7 +129,7 @@ namespace TwitchChatVotingProxy
             }
 
             // Evaluate what result calculation to use
-            switch (votingMode)
+            switch (m_Config.VotingMode)
             {
                 case EVotingMode.MAJORITY:
                     e.ChosenOption = GetVoteResultByMajority();
@@ -151,14 +140,14 @@ namespace TwitchChatVotingProxy
             }
 
             // Vote round ended
-            voteRunning = false;
+            m_VoteRunning = false;
         }
         /// <summary>
         /// Is called when the chaos mod start a new vote (callback)
         /// </summary>
-        private void OnNewVote(object sender, OnNewVoteArgs e)
+        private async void OnNewVote(object sender, OnNewVoteArgs e)
         {
-            activeVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
+            m_ActiveVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
             {
                 // We want the options to alternate between matches.
                 // If we are on an even round we basically select the index (+1 for non programmers).
@@ -166,20 +155,20 @@ namespace TwitchChatVotingProxy
                 // This gives us a pattern like following:
                 // Round 0: [O1, O2, O3, ...]
                 // Round 1: [O4, O5, O6, ...]
-                var match = voteCounter % 2 == 0
-                    ? voteablePrefix + (index + 1)
-                    : voteablePrefix + (index + 1 + activeVoteOptions.Count);
+                var match = m_VoteCounter % 2 == 0
+                    ? m_Config.VoteablePrefix + (index + 1)
+                    : m_Config.VoteablePrefix + (index + 1 + m_ActiveVoteOptions.Count);
 
                 return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
             }).ToList();
             // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-            switch (overlayMode)
+            switch (m_Config.OverlayMode)
             {
                 case EOverlayMode.CHAT_MESSAGES:
-                    votingReceiver.SendMessage("Time for a new effect! Vote between:");
-                    foreach (IVoteOption voteOption in activeVoteOptions)
+                    string msg = "Time for a new effect! Vote between:";
+                    foreach (IVoteOption voteOption in m_ActiveVoteOptions)
                     {
-                        string msg = string.Empty;
+                        msg += "\n";
 
                         bool firstIndex = true;
                         foreach (string match in voteOption.Matches)
@@ -189,48 +178,54 @@ namespace TwitchChatVotingProxy
                             firstIndex = true;
                         }
 
-                        msg += $": {voteOption.Label}\n";
-
-                        votingReceiver.SendMessage(msg);
+                        msg += $": {voteOption.Label}";
                     }
 
-                    if (votingMode == EVotingMode.PERCENTAGE)
+                    if (m_Config.VotingMode == EVotingMode.PERCENTAGE)
                     {
-                        votingReceiver.SendMessage("Votes will affect the chance for one of the effects to occur.");
+                        msg += "\nVotes will affect the chance for one of the effects to occur.";
+                    }
+
+                    foreach (var votingReceiver in m_VotingReceivers)
+                    {
+                        await votingReceiver.SendMessage(msg);
                     }
 
                     break;
                 case EOverlayMode.OVERLAY_OBS:
-                    overlayServer.NewVoting(activeVoteOptions);
+                    m_OverlayServer.NewVoting(m_ActiveVoteOptions);
                     break;
             }
             // Clear the old voted for information
-            userVotedFor.Clear();
+            m_UserVotedFor.Clear();
             // Increase the vote counter
-            voteCounter++;
+            m_VoteCounter++;
 
             // Vote round started now
-            voteRunning = true;
+            m_VoteRunning = true;
         }
         /// <summary>
         /// Is called when the chaos mod stars a no voting round (callback)
         /// </summary>
         private void OnNoVotingRound(object sender, EventArgs e)
         {
-            overlayServer.NoVotingRound();
+            m_OverlayServer.NoVotingRound();
         }
         /// <summary>
         /// Is called when the voting receiver receives a message
         /// </summary>
         private void OnVoteReceiverMessage(object sender, OnMessageArgs e)
         {
-            if (!voteRunning) return;
+            if (!m_VoteRunning)
+            {
+                return;
+            }
 
-            if (permittedUsernames.Length > 0)
+            if (m_Config.PermittedUsernames.Length > 0)
             {
                 bool found = false;
 
-                foreach (string name in permittedUsernames)
+                foreach (string name in m_Config.PermittedUsernames)
                 {
                     // both have already been lowered in other methods, so this comparison is always case-insensitive
                     if (name == e.Username)
@@ -246,19 +241,19 @@ namespace TwitchChatVotingProxy
                 }
             }
 
-            for (int i = 0; i < activeVoteOptions.Count; i++)
+            for (int i = 0; i < m_ActiveVoteOptions.Count; i++)
             {
-                var voteOption = activeVoteOptions[i];
+                var voteOption = m_ActiveVoteOptions[i];
 
                 if (voteOption.Matches.Contains(e.Message))
                 {
                     int previousVote;
 
                     // Check if the player has already voted
-                    if (!userVotedFor.TryGetValue(e.ClientId, out previousVote))
+                    if (!m_UserVotedFor.TryGetValue(e.ClientId, out previousVote))
                     {
                         // If they haven't voted, count his vote
-                        userVotedFor.Add(e.ClientId, i);
+                        m_UserVotedFor.Add(e.ClientId, i);
                         voteOption.Votes++;
 
                     }
@@ -266,10 +261,10 @@ namespace TwitchChatVotingProxy
                     {
                         // If the player has already voted, and it's not the same as before,
                         // remove the old vote, and add the new one.
-                        userVotedFor.Remove(e.ClientId);
-                        activeVoteOptions[previousVote].Votes--;
+                        m_UserVotedFor.Remove(e.ClientId);
+                        m_ActiveVoteOptions[previousVote].Votes--;
 
-                        userVotedFor.Add(e.ClientId, i);
+                        m_UserVotedFor.Add(e.ClientId, i);
                         voteOption.Votes++;
                     }
 

@@ -10,7 +10,8 @@ namespace ConfigApp.Tabs.Voting
         private Dictionary<string, Tab> m_Tabs = new Dictionary<string, Tab>
         {
             { "General", new GeneralTab() },
-            { "Twitch", new TwitchTab() }
+            { "Twitch", new TwitchTab() },
+            { "Discord", new DiscordTab() }
         };
 
         protected override void InitContent()

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Serilog;
+using System.Data.Common;
 using System.IO.Pipes;
 using System.Timers;
 
@@ -21,16 +22,16 @@ namespace TwitchChatVotingProxy.ChaosPipe
         public event EventHandler<OnNewVoteArgs> OnNewVote;
         public event EventHandler OnNoVotingRound;
 
-        private ILogger logger = Log.Logger.ForContext<ChaosPipeClient>();
-        private NamedPipeClientStream pipe = new NamedPipeClientStream(
+        private ILogger m_Logger = Log.Logger.ForContext<ChaosPipeClient>();
+        private NamedPipeClientStream m_Pipe = new NamedPipeClientStream(
             ".",
-            "ChaosModVTwitchChatPipe",
+            "ChaosModVVotingPipe",
             PipeDirection.InOut,
             PipeOptions.Asynchronous);
-        private StreamReader pipeReader;
-        private Timer pipeTick = new Timer();
-        private StreamWriter pipeWriter;
-        private Task<string> readPipeTask;
+        private StreamReader m_PipeReader;
+        private Timer m_PipeTick = new Timer();
+        private StreamWriter m_PipeWriter;
+        private Task<string> m_ReadPipeTask;
 
         private class PipeMessage
         {
@@ -40,49 +41,58 @@ namespace TwitchChatVotingProxy.ChaosPipe
 
         public class CurrentVotesResult
         {
+            public string Identifier { get; } = "currentvotes";
+            public List<int> Votes { get; }
+
             public CurrentVotesResult(List<int> votes)
             {
-                this.Identifier = "currentvotes";
-                this.Votes = votes;
+                Votes = votes;
             }
-
-            public string Identifier { get; }
-            public List<int> Votes { get; }
         }
 
         public class VoteResultObject
         {
+            public string Identifier { get; } = "voteresult";
+            public int? SelectedOption { get; }
+
             public VoteResultObject(int? selectedOption)
             {
-                this.Identifier = "voteresult";
-                this.SelectedOption = selectedOption;
+                SelectedOption = selectedOption;
             }
+        }
 
-            public string Identifier { get; }
-            public int? SelectedOption { get; }
+        public class ErrorObject
+        {
+            public string Identifier { get; } = "error";
+            public string Message { get; }
+
+            public ErrorObject(string message)
+            {
+                Message = $"{message} Reverting to normal mode.";
+            }
         }
 
         public ChaosPipeClient()
         {
             // Setup pipe tick
-            pipeTick.Interval = PIPE_TICKRATE;
-            pipeTick.Elapsed += PipeTick;
+            m_PipeTick.Interval = PIPE_TICKRATE;
+            m_PipeTick.Elapsed += PipeTick;
 
             // Connect to the chaos mod pipe
             try
             {
-                pipe.Connect(1000);
-                pipeReader = new StreamReader(pipe);
-                pipeWriter = new StreamWriter(pipe);
-                pipeWriter.AutoFlush = true;
+                m_Pipe.Connect(1000);
+                m_PipeReader = new StreamReader(m_Pipe);
+                m_PipeWriter = new StreamWriter(m_Pipe);
+                m_PipeWriter.AutoFlush = true;
 
-                logger.Information("successfully connected to chaos mod pipe");
+                m_Logger.Information("Successfully connected to chaos mod pipe");
 
-                pipeTick.Start();
+                m_PipeTick.Start();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                logger.Fatal(e, "failed to connect to chaos mod pipe, aborting");
+                m_Logger.Fatal(exception, "Failed to connect to chaos mod pipe, aborting");
                 return;
             }
         }
@@ -93,7 +103,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// <returns>If the chaos mod pipe is still connected</returns>
         public bool IsConnected()
         {
-            return pipe.IsConnected;
+            return m_Pipe.IsConnected;
         }
 
         /// <summary>
@@ -101,15 +111,20 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         private void DisconnectFromPipe()
         {
-            pipeTick.Stop();
-            pipeTick.Close();
+            m_PipeTick.Stop();
+            m_PipeTick.Close();
+
             try
             {
-                pipeReader.Close();
-                pipeWriter.Close();
+                m_PipeReader.Close();
+                m_PipeWriter.Close();
             }
-            catch (ObjectDisposedException) { }
-            pipe.Close();
+            catch (ObjectDisposedException)
+            {
+
+            }
+
+            m_Pipe.Close();
         }
 
         private void GetCurrentVotes()
@@ -118,7 +133,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
             OnGetCurrentVotes.Invoke(this, args);
             if (args.CurrentVotes == null)
             {
-                logger.Error("listeners failed to supply on get current vote args");
+                m_Logger.Error("Listeners failed to supply on get current vote args");
             }
             else
             {
@@ -131,19 +146,19 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// </summary>
         private void GetVoteResult()
         {
-            logger.Debug("asking listeners for vote result");
+            m_Logger.Debug("Asking listeners for vote result");
             var e = new OnGetVoteResultArgs();
             // Dispatch information to listeners
             OnGetVoteResult.Invoke(this, e);
             // Send the chosen option to the pipe
             if (e.ChosenOption == null)
             {
-                logger.Warning("get vote result did not update chosen option, using 0 (first option)");
+                m_Logger.Warning("Get vote result did not update chosen option, using 0 (first option)");
                 e.ChosenOption = 0;
             }
             VoteResultObject result = new VoteResultObject(e.ChosenOption);
             SendMessageToPipe(JsonConvert.SerializeObject(result));
-            logger.Debug($"vote result sent to pipe: {e.ChosenOption}");
+            m_Logger.Debug($"Vote result sent to pipe: {e.ChosenOption}");
         }
         /// <summary>
         /// Gets called every pipe tick
@@ -157,7 +172,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
             }
             catch (IOException exception)
             {
-                logger.Information("Pipe disconnected: " + exception.Message);
+                m_Logger.Information("Pipe disconnected: " + exception.Message);
                 DisconnectFromPipe();
             }
         }
@@ -167,17 +182,17 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void ReadPipe()
         {
             // If no reading task is active, create one
-            if (readPipeTask == null) readPipeTask = pipeReader.ReadLineAsync();
+            if (m_ReadPipeTask == null) m_ReadPipeTask = m_PipeReader.ReadLineAsync();
             // If the reading task is created and complete, get its results
-            else if (readPipeTask.IsCompleted)
+            else if (m_ReadPipeTask.IsCompleted)
             {
                 // Get the message from the pipe read
-                var message = readPipeTask.Result;
+                var message = m_ReadPipeTask.Result;
                 // Null the reading task so the next read is dispatched
-                readPipeTask = null;
+                m_ReadPipeTask = null;
 
                 // Evaluate message
-                PipeMessage pipe = JsonConvert.DeserializeObject<PipeMessage>(message);
+                var pipe = JsonConvert.DeserializeObject<PipeMessage>(message);
                 switch (pipe.Identifier)
                 {
                     case "hello_back":
@@ -196,7 +211,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                         GetCurrentVotes();
                         break;
                     default:
-                        logger.Warning($"unknown request: {message}");
+                        m_Logger.Warning($"Unknown request: {message}");
                         break;
                 }
             }
@@ -207,8 +222,8 @@ namespace TwitchChatVotingProxy.ChaosPipe
         /// <param name="message">Message to be sent</param>
         public void SendMessageToPipe(string message)
         {
-            pipeWriter.Write($"{message}\0");
-            pipe.WaitForPipeDrain();
+            m_PipeWriter.Write($"{message}\0");
+            m_Pipe.WaitForPipeDrain();
         }
         /// <summary>
         /// Is called when the chaos mod starts a new vote
@@ -232,6 +247,17 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void SendHeartBeat()
         {
             SendMessageToPipe("ping");
+        }
+        /// <summary>
+        /// Sends an error message to the mod and stops voting mode
+        /// </summary>
+        /// <param name="message">Message to be sent</param>
+        public void SendErrorMessage(string message)
+        {
+            var error = new ErrorObject(message);
+            SendMessageToPipe(JsonConvert.SerializeObject(error));
+
+            DisconnectFromPipe();
         }
     }
 }

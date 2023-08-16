@@ -51,9 +51,9 @@ namespace ConfigApp.Tabs.Voting
             headerGrid.SetRowHeight(new GridLength(80f));
             headerGrid.PushRowElement(new TextBlock()
             {
-                Text = "This feature allows Twitch chat to vote for an effect from a collection of random ones each time the timer" +
-                " runs out by making use of Twitch's chat feature.\nThere are specific options you can / must configure below." +
-                "\nConsult the twitch__readme.txt file included with the mod (inside the README folder) for more information.",
+                Text = "This feature allows viewers to vote for an effect from a collection of random ones each time the timer" +
+                " runs out by making use of respective platform's chat feature.\nThere are specific options you can / must configure below." +
+                "\nConsult the \"chaosmod/README/voting/voting.txt\" file for more information.",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             });
@@ -63,7 +63,7 @@ namespace ConfigApp.Tabs.Voting
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Content = "Enable Twitch Voting"
+                Content = "Enable Voting"
             };
             m_EnableVoting.Click += (sender, eventArgs) =>
             {

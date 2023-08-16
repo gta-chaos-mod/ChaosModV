@@ -25,7 +25,7 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 	}
 
 	m_PipeHandle =
-	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVTwitchChatPipe", PIPE_ACCESS_DUPLEX,
+	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
 	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
 
 	if (m_PipeHandle == INVALID_HANDLE_VALUE)
@@ -82,14 +82,15 @@ void Voting::OnRun()
 	auto curTick = GetTickCount64();
 	if (m_LastPing < curTick - 1000)
 	{
-		if (m_NoPingRuns == 5)
+		if (m_NoPingRuns++ == 5)
 		{
-			ErrorOutWithMsg("Connection to TwitchChatVotingProxy aborted. Returning to normal mode.");
+			ErrorOutWithMsg(
+			    "Connection to voting proxy process lost. Check chaosmod/chaosproxy.log for more information."
+			    " Returning to normal mode.");
 
 			return;
 		}
 
-		m_NoPingRuns++;
 		m_LastPing = curTick;
 	}
 
@@ -116,10 +117,7 @@ void Voting::OnRun()
 
 	if (bytesRead > 0)
 	{
-		if (!HandleMsg(std::string(buffer)))
-		{
-			return;
-		}
+		HandleMsg(buffer);
 	}
 
 	if (!m_ReceivedHello)
@@ -163,7 +161,7 @@ void Voting::OnRun()
 
 		m_IsVotingRoundDone = true;
 	}
-	else if (!m_IsVotingRunning && m_ReceivedFirstPing
+	else if (!m_IsVotingRunning && m_ReceivedHello
 	         && (m_SecsBeforeVoting == 0
 	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
 	         && m_IsVotingRoundDone)
@@ -383,13 +381,14 @@ bool Voting::IsEnabled() const
 	return m_EnableVoting;
 }
 
-bool Voting::HandleMsg(std::string_view msg)
+void Voting::HandleMsg(std::string_view message)
 {
-	if (msg == "hello")
+	if (message == "hello")
 	{
 		if (!m_ReceivedHello)
 		{
 			m_ReceivedHello = true;
+			m_NoPingRuns    = 0;
 
 			LOG("Received hello from voting pipe");
 
@@ -401,27 +400,14 @@ bool Voting::HandleMsg(std::string_view msg)
 			SendToPipe("hello_back");
 		}
 	}
-	else if (msg == "ping")
+	else if (message == "ping")
 	{
-		m_LastPing          = GetTickCount64();
-		m_NoPingRuns        = 0;
-		m_ReceivedFirstPing = true;
-	}
-	else if (msg == "invalid_login")
-	{
-		ErrorOutWithMsg("Invalid Credentials. Please verify your config. Reverting to normal mode.");
-
-		return false;
-	}
-	else if (msg == "invalid_channel")
-	{
-		ErrorOutWithMsg("Invalid Channel. Please verify your config. Reverting to normal mode.");
-
-		return false;
+		m_LastPing   = GetTickCount64();
+		m_NoPingRuns = 0;
 	}
 	else
 	{
-		auto receivedJSON = nlohmann::json::parse(msg);
+		auto receivedJSON = nlohmann::json::parse(message);
 		if (!receivedJSON.empty())
 		{
 			std::string identifier = receivedJSON["Identifier"];
@@ -447,10 +433,13 @@ bool Voting::HandleMsg(std::string_view msg)
 					}
 				}
 			}
+			else if (identifier == "error")
+			{
+				std::string message = receivedJSON["Message"];
+				ErrorOutWithMsg(message);
+			}
 		}
 	}
-
-	return true;
 }
 
 std::string Voting::GetPipeJson(std::string_view identifier, std::vector<std::string> params)
@@ -468,9 +457,9 @@ void Voting::SendToPipe(std::string_view identifier, std::vector<std::string> pa
 	WriteFile(m_PipeHandle, msg.c_str(), msg.length(), NULL, NULL);
 }
 
-void Voting::ErrorOutWithMsg(std::string_view msg)
+void Voting::ErrorOutWithMsg(std::string_view message)
 {
-	std::wstring wStr = { msg.begin(), msg.end() };
+	std::wstring wStr = { message.begin(), message.end() };
 	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
 
 	DisconnectNamedPipe(m_PipeHandle);

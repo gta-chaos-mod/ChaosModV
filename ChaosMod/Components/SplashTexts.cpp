@@ -65,7 +65,7 @@ void SplashTexts::ShowSplash(const std::string &text, const ScreenTextVector &te
 
 void SplashTexts::ShowVotingSplash()
 {
-	ShowSplash("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
+	ShowSplash("Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
 }
 
 void SplashTexts::ShowClearEffectsSplash()

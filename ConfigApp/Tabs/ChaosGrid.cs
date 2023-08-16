@@ -135,6 +135,15 @@ namespace ConfigApp.Tabs
             PushRow(null, element);
         }
 
+        public void PushRowExpandElement(UIElement element)
+        {
+            element.ClipToBounds = false;
+
+            var canvas = new Canvas();
+            canvas.Children.Add(element);
+            PushRow(null, canvas);
+        }
+
         public void PushRowPair(string text, UIElement element)
         {
             PushRow(text, element);

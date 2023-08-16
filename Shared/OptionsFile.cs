@@ -42,10 +42,12 @@ namespace Shared
             var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
-                if (m_Options.ContainsKey(_key))
+                if (!m_Options.ContainsKey(_key))
                 {
-                    return m_Options[_key];
+                    continue;
                 }
+
+                return m_Options[_key];
             }
 
             return defaultValue;
@@ -62,19 +64,30 @@ namespace Shared
             return result;
         }
 
+        public long ReadValueLong(string key, long defaultValue, params string[] compatKeys)
+        {
+            long result;
+            if (!long.TryParse(ReadValue(key, null, compatKeys), out result))
+            {
+                result = defaultValue;
+            }
+
+            return result;
+        }
+
         public bool ReadValueBool(string key, bool defaultValue, params string[] compatKeys)
         {
             var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
-                if (!HasKey(_key))
+                if (!m_Options.ContainsKey(_key))
                 {
                     continue;
                 }
 
-                if (int.TryParse(ReadValue(_key, null), out int tmp))
+                if (int.TryParse(ReadValue(_key), out int result))
                 {
-                    return tmp != 0;
+                    return result != 0;
                 }
             }
 

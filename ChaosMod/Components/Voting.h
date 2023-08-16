@@ -49,7 +49,6 @@ class Voting : public Component
 	bool m_EnableVoting;
 
 	bool m_ReceivedHello                               = false;
-	bool m_ReceivedFirstPing                           = false;
 	bool m_HasReceivedResult                           = false;
 
 	bool m_IsVotingRoundDone                           = true;
@@ -73,7 +72,7 @@ class Voting : public Component
 
 	bool IsEnabled() const;
 
-	bool HandleMsg(std::string_view msg);
+	void HandleMsg(std::string_view message);
 
   private:
 	std::string GetPipeJson(std::string_view identifier, std::vector<std::string> params);
@@ -81,7 +80,7 @@ class Voting : public Component
   public:
 	void SendToPipe(std::string_view identifier, std::vector<std::string> params = {});
 
-	void ErrorOutWithMsg(std::string_view msg);
+	void ErrorOutWithMsg(std::string_view message);
 
 	template <class T>
 	requires std::is_base_of_v<Component, T>

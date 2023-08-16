@@ -9,11 +9,11 @@
         public EVotingMode VotingMode { get; set; }
         public int Port { get; set; }
 
-        public OverlayServerConfig(EVotingMode votingMode, bool retainInitialVotes, int? port)
+        public OverlayServerConfig(EVotingMode votingMode, bool retainInitialVotes, int port)
         {
             RetainInitialVotes = retainInitialVotes;
             VotingMode = votingMode;
-            Port = port == null ? 9091 : (int)port;
+            Port = port;
         }
     }
 }
