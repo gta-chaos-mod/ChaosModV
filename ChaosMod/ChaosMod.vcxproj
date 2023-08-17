@@ -91,6 +91,7 @@
     <ClCompile Include="Components\DebugMenu.cpp" />
     <ClCompile Include="Components\DebugSocket.cpp" />
     <ClCompile Include="Components\EffectShortcuts.cpp" />
+    <ClCompile Include="Components\Globals.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Components\EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
@@ -115,6 +116,7 @@
     <ClCompile Include="Effects\db\Misc\MiscNoWaypoint.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPause.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPayRespects.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscPhoneCall.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscPortraitMode.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscNoSky.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscRampJam.cpp" />
@@ -413,6 +415,7 @@
     <ClInclude Include="Components\DebugSocket.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
     <ClInclude Include="Components\EffectShortcuts.h" />
+    <ClInclude Include="Components\Globals.h" />
     <ClInclude Include="Effects\EffectCategory.h" />
     <ClInclude Include="Effects\EffectConfig.h" />
     <ClInclude Include="Effects\EffectAttributes.h" />
