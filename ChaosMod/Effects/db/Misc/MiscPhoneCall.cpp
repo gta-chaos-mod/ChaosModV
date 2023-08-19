@@ -328,7 +328,7 @@ REGISTER_EFFECT(OnStartAgatha, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Hello, this is Agatha",
 		.Id = "misc_phonecall_agatha",
-		.IncompatibleWith = { "player_nophone", "player_phonecall_dave" },
+		.IncompatibleWith = { "player_nophone", "misc_phonecall_dave" },
 	}
 );
 
@@ -336,6 +336,6 @@ REGISTER_EFFECT(OnStartDave, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Dave Here",
 		.Id = "misc_phonecall_dave",
-		.IncompatibleWith = { "player_nophone", "player_phonecall_agatha" },
+		.IncompatibleWith = { "player_nophone", "misc_phonecall_agatha" },
 	}
 );
