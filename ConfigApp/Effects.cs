@@ -34,6 +34,7 @@ namespace ConfigApp
 
         public enum EffectTimedType
         {
+            TimedDefault = -1,
             TimedNormal,
             TimedShort
         }

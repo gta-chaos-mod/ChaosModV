@@ -63,7 +63,7 @@ class EffectDispatcher : public Component
 
 			auto eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
 
-			ThreadId        = EffectThreads::CreateThread(registeredEffect, eTimedType != EffectTimedType::Unk
+			ThreadId        = EffectThreads::CreateThread(registeredEffect, eTimedType != EffectTimedType::Default
 			                                                                    && eTimedType != EffectTimedType::NotTimed);
 		}
 	};

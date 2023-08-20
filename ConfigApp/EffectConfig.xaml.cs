@@ -18,13 +18,6 @@ namespace ConfigApp
                 return m_IsSaved;
             }
         }
-        public int EffectShortcut
-        {
-            get
-            {
-                return m_EffectShortcut;
-            }
-        }
 
         public EffectConfig(string effectId, EffectData effectData, EffectInfo effectInfo)
         {
@@ -116,7 +109,8 @@ namespace ConfigApp
             effectconf_effect_custom_name.Text = effectconf_effect_custom_name.Text.Replace("\"", "");
         }
 
-        private void EffectShortcutTextFieldPreviewKeyDown(object sender, KeyEventArgs e)   // PreviewKeyDown so that text editing shortcuts such as "CTRL+C" are possible
+        // PreviewKeyDown so that text editing shortcuts such as "CTRL+C" are possible
+        private void EffectShortcutTextFieldPreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
 
@@ -135,9 +129,10 @@ namespace ConfigApp
                 key = e.SystemKey;
             }
 
+            // Don't want a shortcut with any of these as the main key
             if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift
                 || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt
-                || key == Key.LWin || key == Key.RWin || key == Key.Apps)                                   // Don't want a shortcut with any of these as the main key
+                || key == Key.LWin || key == Key.RWin || key == Key.Apps)
             {
                 return;
             }
@@ -150,7 +145,8 @@ namespace ConfigApp
             m_EffectShortcut = 0;
             var text = new System.Text.StringBuilder();
 
-            if (modifiers.HasFlag(ModifierKeys.Control))            // CTRL is marked as true even if only the AltGr Key is pressed
+            // CTRL is marked as true even if only the AltGr Key is pressed
+            if (modifiers.HasFlag(ModifierKeys.Control))
             {
                 text.Append("Ctrl + ");
                 m_EffectShortcut += 1 << 10;
@@ -222,6 +218,19 @@ namespace ConfigApp
         private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             Utils.HandleNoCopyPastePreviewExecuted(sender, e);
+        }
+
+        public void GetData(ref EffectData effectData)
+        {
+            effectData.TimedType = effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectconf_timer_type.SelectedIndex
+                : EffectTimedType.TimedDefault;
+            effectData.CustomTime = effectconf_timer_time_enable.IsChecked.Value
+                ? effectconf_timer_time.Text.Length > 0 ? int.Parse(effectconf_timer_time.Text) : -1 : -1;
+            effectData.Permanent = effectconf_timer_permanent_enable.IsChecked.Value;
+            effectData.WeightMult = effectconf_effect_weight_mult.SelectedIndex + 1;
+            effectData.ExcludedFromVoting = effectconf_exclude_voting_enable.IsChecked.Value;
+            effectData.CustomName = effectconf_effect_custom_name.Text.Trim();
+            effectData.Shortcut = m_EffectShortcut;
         }
 
         private void OnSave(object sender, RoutedEventArgs e)

@@ -46,7 +46,7 @@ namespace EffectConfig
 			// Default EffectData values
 			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for
 			// name-override", Shortcut
-			std::vector<int> values = { true, static_cast<int>(EffectTimedType::Unk), -1, 5, false, false, 0, 0 };
+			std::vector<int> values = { true, static_cast<int>(EffectTimedType::Default), -1, 5, false, false, 0, 0 };
 			// HACK: Store EffectCustomName seperately
 			std::string valueEffectName;
 
@@ -110,8 +110,8 @@ namespace EffectConfig
 			else
 			{
 				effectData.TimedType = static_cast<EffectTimedType>(
-				    static_cast<EffectTimedType>(values[1]) == EffectTimedType::Unk ? effectInfo.IsShortDuration
-				                                                                    : values[1]);
+				    static_cast<EffectTimedType>(values[1]) == EffectTimedType::Default ? effectInfo.IsShortDuration
+				                                                                        : values[1]);
 			}
 
 			effectData.WeightMult = values[3];

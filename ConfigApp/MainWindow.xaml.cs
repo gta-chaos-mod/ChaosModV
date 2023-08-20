@@ -241,7 +241,7 @@ namespace ConfigApp
                 EffectData effectData = GetEffectData(pair.Key);
 
                 OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
-                    + $",{(effectData.TimedType == EffectTimedType.TimedNormal ? 0 : 1)}"
+                    + $",{((int)effectData.TimedType)}"
                     + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
                     + $",{effectData.Shortcut}");
@@ -423,15 +423,7 @@ namespace ConfigApp
 
                 if (effectConfig.IsSaved)
                 {
-                    effectData.TimedType = effectConfig.effectconf_timer_type_enable.IsChecked.Value ? (EffectTimedType)effectConfig.effectconf_timer_type.SelectedIndex
-                        : effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
-                    effectData.CustomTime = effectConfig.effectconf_timer_time_enable.IsChecked.Value
-                        ? effectConfig.effectconf_timer_time.Text.Length > 0 ? int.Parse(effectConfig.effectconf_timer_time.Text) : -1 : -1;
-                    effectData.Permanent = effectConfig.effectconf_timer_permanent_enable.IsChecked.Value;
-                    effectData.WeightMult = effectConfig.effectconf_effect_weight_mult.SelectedIndex + 1;
-                    effectData.ExcludedFromVoting = effectConfig.effectconf_exclude_voting_enable.IsChecked.Value;
-                    effectData.CustomName = effectConfig.effectconf_effect_custom_name.Text.Trim();
-                    effectData.Shortcut = effectConfig.EffectShortcut;
+                    effectConfig.GetData(ref effectData);
                 }
             }
         }

@@ -5,7 +5,7 @@ enum class EffectTimedType
 	NotTimed = -4,
 	Permanent,
 	Custom,
-	Unk,
+	Default,
 	Normal,
 	Short
 };
