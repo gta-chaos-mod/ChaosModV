@@ -599,7 +599,7 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		E("GetAllPeds", GetAllPedsArray),
 		E("CreatePoolPed", CreatePoolPed),
 
-		E("TeleportPlayer", [](LuaVector3 pos, bool noOffset) { TeleportPlayer(pos.X, pos.Y, pos.Z, noOffset); }),
+		E("TeleportPlayer", [](float x, float y, float z, bool noOffset) { TeleportPlayer(x, y, z, noOffset); }),
 
 		E("GetAllVehicles", GetAllVehsArray),
 		E("CreatePoolVehicle", CreatePoolVehicle),
