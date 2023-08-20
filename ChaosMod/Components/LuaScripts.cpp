@@ -981,6 +981,10 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 		int shortcutKeycode = *shortcutKeycodeOpt;
 		if (shortcutKeycode > 0 && shortcutKeycode < 255)
 		{
+			shortcutKeycode += (effectInfo["ShortcutWithCtrl"].get_or(false) << 10);
+			shortcutKeycode += (effectInfo["ShortcutWithShift"].get_or(false) << 9);
+			shortcutKeycode += (effectInfo["ShortcutWithAlt"].get_or(false) << 8);
+
 			effectData.ShortcutKeycode = shortcutKeycode;
 		}
 	}
