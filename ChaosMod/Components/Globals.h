@@ -32,7 +32,7 @@ struct GlobalRegistration
 class Globals : public Component
 {
   private:
-	static std::map<std::string, int> m_GlobalsIndexMap;
+	static inline std::map<std::string, int> m_GlobalsIndexMap;
 
 	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_SearchGlobalsListener;
 
