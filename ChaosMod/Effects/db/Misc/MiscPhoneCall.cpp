@@ -118,7 +118,9 @@ static void PlayPhoneCall(PhoneCall &phoneCall)
 
 	phoneScaleform       = REQUEST_SCALEFORM_MOVIE(phoneScaleforms.at(GET_ENTITY_MODEL(playerPed)));
 	while (!HAS_SCALEFORM_MOVIE_LOADED(phoneScaleform))
+	{
 		WAIT(0);
+	}
 
 	CLEAR_ADDITIONAL_TEXT(14, false);
 	REQUEST_ADDITIONAL_TEXT_FOR_DLC(phoneCall.GXTFile, 14);
