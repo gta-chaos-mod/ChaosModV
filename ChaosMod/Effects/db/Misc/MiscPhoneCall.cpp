@@ -102,11 +102,22 @@ static void UpdatePhone(PhoneCall &phoneCall)
 
 static void PlayPhoneCall(PhoneCall &phoneCall)
 {
+	REGISTER_GLOBAL("CellPhoneState", "dialogue_handler",
+	                "2D 00 02 00 ? 52 ? ? 41 ? 72 08 2A 06 56 ? ? 52 ? ? 41 ? 71 08 20 56 ? ? 72", 6,
+	                GlobalPatternIdiom::GLOBAL_U16);
+
+	REGISTER_GLOBAL(
+	    "CellPhoneLock", "dialogue_handler",
+	    "72 54 ? ? 5D ? ? ? 71 2C ? ? ? 2B 72 54 ? ? 77 54 ? ? 52 ? ? 25 ? 2C ? ? ? 53 ? ? 06 56 ? ? 52 ? ? 76", 2,
+	    GlobalPatternIdiom::GLOBAL_U16);
+
+	while (!Globals::GlobalExists("CellPhoneState") || !Globals::GlobalExists("CellPhoneLock"))
+	{
+		WAIT(0);
+	}
+
 	lockCellphoneGlobal  = Globals::GetGlobalAddr<uint8_t>("CellPhoneLock");
 	cellphoneStateGlobal = Globals::GetGlobalAddr<CellPhone>("CellPhoneState");
-
-	if (cellphoneStateGlobal == nullptr || lockCellphoneGlobal == nullptr)
-		return;
 
 	*lockCellphoneGlobal = 0;
 

@@ -6,30 +6,18 @@
 
 #include "Memory/Script.h"
 
-std::map<std::string, int> Globals::m_GlobalsIndexMap = {};
-static std::vector<GlobalRegistration> m_GlobalsRegistration = {};
+std::vector<GlobalRegistration> m_GlobalsRegistration = {};
 
 Globals::Globals() : Component()
 {
-	REGISTER_GLOBAL("CellPhoneState", "dialogue_handler",
-	                "2D 00 02 00 ? 52 ? ? 41 ? 72 08 2A 06 56 ? ? 52 ? ? 41 ? 71 08 20 56 ? ? 72", 6,
-	                GlobalPatternIdiom::GLOBAL_U16);	
-	
-	REGISTER_GLOBAL("CellPhoneLock", "dialogue_handler",
-	                "72 54 ? ? 5d ? ? ? 71 2c ? ? ? 2b 72 54 ? ? 77 54 ? ? 52 ? ? 25 ? 2c ? ? ? 53 ? ? 06 56 ? ? 52 ? ? 76", 2,
-	                GlobalPatternIdiom::GLOBAL_U16);
-
-
 	m_SearchGlobalsListener.Register(
 	    Hooks::OnScriptThreadRun,
 	    [&](rage::scrThread *thread)
 	    {
-			// Save a f**k-tonne of CPU resources by destructing the event listener when we no longer have anymore globals to find
-			if (m_GlobalsRegistration.size() <= 0)
-			{
-			    m_SearchGlobalsListener.~ChaosEventListener();
+		    if (m_GlobalsRegistration.size() <= 0)
+		    {
 			    return true;
-			}
+		    }
 
 		    auto match =
 		        std::find_if(m_GlobalsRegistration.begin(), m_GlobalsRegistration.end(),
@@ -40,7 +28,7 @@ Globals::Globals() : Component()
 
 		    GlobalRegistration searchedGlobal = *match;
 
-		    auto program = Memory::ScriptThreadToProgram(thread);
+		    auto program                      = Memory::ScriptThreadToProgram(thread);
 		    if (program->m_CodeBlocks)
 		    {
 			    Handle handle = Memory::FindScriptPattern(searchedGlobal.m_Pattern, program);
@@ -68,4 +56,18 @@ Globals::Globals() : Component()
 
 		    return true;
 	    });
+}
+
+void Globals::RegisterGlobal(std::string name, std::string scriptName, std::string pattern, int patternOffset,
+                             GlobalPatternIdiom patternIdiom)
+{
+	if (std::find_if(m_GlobalsRegistration.begin(), m_GlobalsRegistration.end(),
+	                 [&](GlobalRegistration &reg) { return reg.m_Name == name; })
+	        != m_GlobalsRegistration.end()
+	    || Globals::GetGlobalAddr<void>(name) != nullptr)
+	{
+		return;
+	}
+
+	m_GlobalsRegistration.push_back({ name, scriptName, pattern, patternOffset, patternIdiom });
 }

@@ -32,7 +32,7 @@ struct GlobalRegistration
 class Globals : public Component
 {
   private:
-	static inline std::map<std::string, int> m_GlobalsIndexMap;
+	static inline std::map<std::string, int> m_GlobalsIndexMap = {};
 
 	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_SearchGlobalsListener;
 
@@ -40,6 +40,8 @@ class Globals : public Component
 	Globals();
 
   public:
+	static inline std::vector<GlobalRegistration> m_GlobalsRegistration;
+
 	static void SetGlobalIndex(std::string name, int index)
 	{
 		m_GlobalsIndexMap.emplace(name, index);
@@ -57,10 +59,18 @@ class Globals : public Component
 		return reinterpret_cast<T *>(Memory::GetGlobalPtr(it));
 	}
 
+	static bool GlobalExists(std::string name)
+	{
+		return m_GlobalsIndexMap.contains(name);
+	}
+
+	static void RegisterGlobal(std::string name, std::string scriptName, std::string pattern, int patternOffset,
+	                           GlobalPatternIdiom patternIdiom);
+
 	template <class T>
 	requires std::is_base_of_v<Component, T>
 	friend struct ComponentHolder;
 };
 
 #define REGISTER_GLOBAL(name, scriptName, pattern, patternOffset, patternIdiom) \
-	m_GlobalsRegistration.push_back({ name, scriptName, pattern, patternOffset, patternIdiom })
+	Globals::RegisterGlobal(name, scriptName, pattern, patternOffset, patternIdiom);
