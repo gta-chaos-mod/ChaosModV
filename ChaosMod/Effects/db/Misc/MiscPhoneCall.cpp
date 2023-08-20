@@ -126,7 +126,9 @@ static void PlayPhoneCall(PhoneCall &phoneCall)
 	REQUEST_ADDITIONAL_TEXT_FOR_DLC(phoneCall.GXTFile, 14);
 
 	while (!HAS_ADDITIONAL_TEXT_LOADED(14))
+	{
 		WAIT(0);
+	}
 
 	if (_GET_NUMBER_OF_REFERENCES_OF_SCRIPT_WITH_NAME_HASH(GET_HASH_KEY("cellphone_flashhand")) == 0)
 	{
