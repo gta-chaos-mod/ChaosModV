@@ -47,30 +47,25 @@
                  IsEnabled="False"
                  MaxLength="6" PreviewTextInput="OnlyNumbersPreviewTextInput"
                  CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" />
-        <Label Content="Make Permanent (Might not work well with every effect)" Grid.Row="3" Grid.Column="0"
-               HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <CheckBox x:Name="effectconf_timer_permanent_enable" Grid.Row="3" Grid.Column="2"
-                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center"
-                  Click="OnClicked" />
         <Label x:Name="effectconf_effect_weight_mult_title" Content="Set Effect Weight Multiplier (Affects chances of this effect occuring)&#xD;&#xA;lowest: 1, highest: 10, default: 5"
-               Grid.Row="4" Grid.Column="0"
+               Grid.Row="3" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <ComboBox x:Name="effectconf_effect_weight_mult" Height="25" Width="45" Grid.Row="4" Grid.Column="2"
+        <ComboBox x:Name="effectconf_effect_weight_mult" Height="25" Width="100" Grid.Row="3" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <Label x:Name="effectconf_exclude_voting_enable_title" Content="Exclude Effect from Voting (Twitch)" Grid.Row="5" Grid.Column="0"
+        <Label x:Name="effectconf_exclude_voting_enable_title" Content="Exclude Effect from Voting" Grid.Row="4" Grid.Column="0"
                HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <CheckBox x:Name="effectconf_exclude_voting_enable" Grid.Row="5" Grid.Column="2"
+        <CheckBox x:Name="effectconf_exclude_voting_enable" Grid.Row="4" Grid.Column="2"
                   HorizontalAlignment="Left" VerticalAlignment="Center"
                   Click="OnClicked"/>
+        <Label x:Name="effectconf_effect_shortcut_key_title" Content="Shortcut (ESC to reset)"
+                  Grid.Row="5" Grid.Column="0" Margin="0,5.667,0,10.333" HorizontalAlignment="Right" Width="360" HorizontalContentAlignment="Right" />
+        <TextBox x:Name="effectconf_effect_shortcut_input" Grid.Row="5" Grid.Column="2" Margin="0,10,0,10" AllowDrop="False" Height="20" 
+                 IsUndoEnabled="False" IsReadOnly="True" PreviewKeyDown="EffectShortcutTextFieldPreviewKeyDown" HorizontalContentAlignment="Center" 
+                 HorizontalAlignment="Left" Text="None" SelectionBrush="{x:Null}" MinWidth="120"/>
         <TextBlock x:Name="effectconf_mp3_label" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" FontSize="10"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
         <Button Content="Save" Height="40" Width="75" Margin="0,0,5,0" Grid.Row="8" Grid.Column="2"
                 HorizontalAlignment="Right" VerticalAlignment="Center" 
                 Click="OnSave"/>
-        <Label x:Name="effectconf_effect_shortcut_key_title" Content="Shortcut (ESC to reset)"
-            Grid.Row="6" Grid.Column="0" Margin="0,5.667,0,10.333" HorizontalAlignment="Right" Width="360" HorizontalContentAlignment="Right" />
-        <TextBox x:Name="effectconf_effect_shortcut_input" Grid.Row="6" Grid.Column="2" Margin="0,10,0,10" AllowDrop="False" Height="20" 
-                 IsUndoEnabled="False" IsReadOnly="True" PreviewKeyDown="EffectShortcutTextFieldPreviewKeyDown" HorizontalContentAlignment="Center" 
-                 HorizontalAlignment="Left" Text="None" SelectionBrush="{x:Null}" MinWidth="120"/>
     </Grid>
 </Window>

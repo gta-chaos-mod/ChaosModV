@@ -1,11 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ConfigApp
 {
     public class TreeMenuItem : INotifyPropertyChanged
     {
+        private class TreeMenuItemAction : ICommand
+        {
+            public event EventHandler CanExecuteChanged;
+
+            private Action m_Action;
+
+            public TreeMenuItemAction(Action action)
+            {
+                m_Action = action;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                if (m_Action == null)
+                {
+                    return;
+                }
+
+                m_Action();
+            }
+        }
+
         public string Text { get; private set; }
         public string BaseText { get; private set; }
         public TreeMenuItem Parent;
@@ -35,11 +64,19 @@ namespace ConfigApp
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
         }
+        private bool m_ForceConfigHidden = false;
         public string IsConfigVisible
         {
             get
             {
-                return Children.Count == 0 ? "Visible" : "Hidden";
+                return Children.Count == 0 && !m_ForceConfigHidden ? "Visible" : "Hidden";
+            }
+        }
+        public bool ForceConfigHidden
+        {
+            set
+            {
+                m_ForceConfigHidden = value;
             }
         }
         public bool IsConfigEnabled
@@ -47,6 +84,14 @@ namespace ConfigApp
             get
             {
                 return IsChecked;
+            }
+        }
+        public Action OnConfigureClick { get; set; }
+        public ICommand OnConfigureCommand
+        {
+            get
+            {
+                return new TreeMenuItemAction(OnConfigureClick);
             }
         }
 

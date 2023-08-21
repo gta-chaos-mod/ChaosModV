@@ -21,6 +21,7 @@
 #include "Components/Mp3Manager.h"
 #include "Components/SplashTexts.h"
 #include "Components/Voting.h"
+#include "Components/Workshop.h"
 
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
@@ -191,6 +192,8 @@ static void Init()
 	}
 
 	INIT_COMPONENT("SplashTexts", "mod splash texts handler", SplashTexts);
+
+	INIT_COMPONENT("Workshop", "workshop", Workshop);
 
 	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
 

@@ -154,7 +154,7 @@ namespace ConfigApp
                             var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                             if (trimmedName.Length > 0)
                             {
-                                files.Add(new WorkshopSubmissionFile(trimmedName));
+                                files.Add(new WorkshopSubmissionFile(trimmedName, true));
                             }
                         }
                         files.Sort();

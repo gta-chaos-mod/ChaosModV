@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -149,8 +148,7 @@ namespace ConfigApp
             // Create EffectData in case effect wasn't saved yet
             if (!m_EffectDataMap.TryGetValue(effectId, out EffectData effectData))
             {
-                effectData = new EffectData(EffectsMap[effectId].IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal, -1, 5, false, false, null, 0);
-
+                effectData = new EffectData();
                 m_EffectDataMap.Add(effectId, effectData);
             }
 
@@ -177,60 +175,15 @@ namespace ConfigApp
         {
             foreach (string key in OptionsManager.EffectsFile.GetKeys())
             {
-                string value = OptionsManager.EffectsFile.ReadValue(key);
+                var value = OptionsManager.EffectsFile.ReadValue(key);
+                var effectData = Utils.ValueStringToEffectData(value);
 
-                // Split by comma, ignoring commas in between quotation marks
-                string[] values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+                m_EffectDataMap.Add(key, effectData);
 
-                if (!EffectsMap.TryGetValue(key, out EffectInfo effectInfo))
+                if (m_TreeMenuItemsMap.ContainsKey(key))
                 {
-                    continue;
+                    m_TreeMenuItemsMap[key].IsChecked = effectData.Enabled.GetValueOrDefault(true);
                 }
-
-                var effectTimedType = effectInfo.IsShort ? EffectTimedType.TimedShort : EffectTimedType.TimedNormal;
-                int effectTimedTime = -1;
-                int effectWeight = 5;
-                bool effectPermanent = false;
-                bool effectExcludedFromVoting = false;
-                string effectCustomName = null;
-                int effectShortcut = 0;
-
-                // Compatibility checks, previous versions had less options
-                if (values.Length >= 4)
-                {
-                    Enum.TryParse(values[1], out effectTimedType);
-                    int.TryParse(values[2], out effectTimedTime);
-                    int.TryParse(values[3], out effectWeight);
-
-                    if (values.Length >= 5)
-                    {
-                        int tmp;
-
-                        int.TryParse(values[4], out tmp);
-                        effectPermanent = tmp != 0;
-
-                        if (values.Length >= 6)
-                        {
-                            int.TryParse(values[5], out tmp);
-                            effectExcludedFromVoting = tmp != 0;
-
-                            if (values.Length >= 7)
-                            {
-                                effectCustomName = values[6] == "0" ? null : values[6].Trim('\"');
-                                if (values.Length >= 8)
-                                {
-                                    int.TryParse(values[7], out effectShortcut);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                int.TryParse(values[0], out int enabled);
-                m_TreeMenuItemsMap[key].IsChecked = enabled == 0 ? false : true;
-
-                m_EffectDataMap.Add(key, new EffectData(effectTimedType, effectTimedTime, effectWeight, effectPermanent,
-                    effectExcludedFromVoting, effectCustomName, effectShortcut));
             }
         }
 
@@ -238,13 +191,16 @@ namespace ConfigApp
         {
             foreach (var pair in EffectsMap)
             {
-                EffectData effectData = GetEffectData(pair.Key);
+                var effectData = GetEffectData(pair.Key);
 
                 OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
-                    + $",{((int)effectData.TimedType)}"
-                    + $",{effectData.CustomTime},{effectData.WeightMult},{(effectData.Permanent ? 1 : 0)},{(effectData.ExcludedFromVoting ? 1 : 0)}"
+                    + $",{(int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed)}"
+                    + $",{effectData.CustomTime.GetValueOrDefault(0)}"
+                    + $",{effectData.WeightMult.GetValueOrDefault(-1)}"
+                    + $",{(effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent ? 1 : 0)}"
+                    + $",{(effectData.ExcludedFromVoting.GetValueOrDefault(false) ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
-                    + $",{effectData.Shortcut}");
+                    + $",{effectData.ShortcutKeycode.GetValueOrDefault(0)}");
             }
 
             OptionsManager.EffectsFile.WriteFile();
@@ -264,21 +220,39 @@ namespace ConfigApp
             var miscParentItem = new TreeMenuItem("Misc");
             var metaParentItem = new TreeMenuItem("Meta");
 
-            var sortedEffects = new SortedDictionary<string, Tuple<string, EffectCategory>>();
+            var sortedEffects = new SortedDictionary<string, (string EffectId, EffectCategory EffectCategory)>();
 
             foreach (var pair in EffectsMap)
             {
-                sortedEffects.Add(pair.Value.Name, new Tuple<string, EffectCategory>(pair.Key, pair.Value.EffectCategory));
+                sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, EffectCategory: pair.Value.EffectCategory));
             }
 
             foreach (var effect in sortedEffects)
             {
-                var effectTuple = effect.Value;
+                var effectName = effect.Key;
+                var effectMisc = effect.Value;
 
-                TreeMenuItem menuItem = new TreeMenuItem(effect.Key);
-                m_TreeMenuItemsMap.Add(effectTuple.Item1, menuItem);
+                var menuItem = new TreeMenuItem(effectName)
+                {
+                    OnConfigureClick = () =>
+                    {
+                        var effectInfo = EffectsMap[effectMisc.EffectId];
+                        var effectData = GetEffectData(effectMisc.EffectId);
 
-                switch (effectTuple.Item2)
+                        var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
+                        effectConfig.ShowDialog();
+
+                        if (!effectConfig.IsSaved)
+                        {
+                            return;
+                        }
+
+                        m_EffectDataMap[effectMisc.EffectId] = effectConfig.GetNewData();
+                    }
+                };
+                m_TreeMenuItemsMap.Add(effectMisc.EffectId, menuItem);
+
+                switch (effectMisc.EffectCategory)
                 {
                     case EffectCategory.Player:
                         playerParentItem.AddChild(menuItem);
@@ -395,36 +369,6 @@ namespace ConfigApp
                 Init();
 
                 MessageBox.Show("Config has been reverted to default settings!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void effect_user_config_Click(object sender, RoutedEventArgs e)
-        {
-            TreeMenuItem curTreeMenuItem = (TreeMenuItem)((TreeViewItem)((Grid)((Border)((ContentPresenter)((StackPanel)((Button)sender).Parent).TemplatedParent).Parent).Parent).TemplatedParent).DataContext;
-
-            string effectId = null;
-            foreach (var pair in m_TreeMenuItemsMap)
-            {
-                if (pair.Value == curTreeMenuItem)
-                {
-                    effectId = pair.Key;
-
-                    break;
-                }
-            }
-
-            if (effectId != null)
-            {
-                var effectInfo = EffectsMap[effectId];
-                var effectData = GetEffectData(effectId);
-
-                var effectConfig = new EffectConfig(effectId, effectData, effectInfo);
-                effectConfig.ShowDialog();
-
-                if (effectConfig.IsSaved)
-                {
-                    effectConfig.GetData(ref effectData);
-                }
             }
         }
 

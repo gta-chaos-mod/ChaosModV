@@ -8,6 +8,8 @@
 #define SOL_SAFE_NUMERICS 1
 #include <sol3/sol.hpp>
 
+#include <json.hpp>
+
 #include <string>
 
 class LuaScripts : public Component
@@ -98,7 +100,8 @@ class LuaScripts : public Component
 		Error_ThreadUnsafe
 	};
 	ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
-	                                       ParseScriptFlags flags = ParseScriptFlag_None);
+	                                       ParseScriptFlags flags = ParseScriptFlag_None,
+	                                       std::unordered_map<std::string, nlohmann::json> settingOverrides = {});
 	void RemoveScriptEntry(const std::string &effectId);
 
   public:

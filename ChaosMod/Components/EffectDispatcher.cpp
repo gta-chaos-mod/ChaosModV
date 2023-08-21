@@ -71,7 +71,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 		if (activeEffect.Identifier == entry.Identifier)
 		{
-			if (effectData.TimedType != EffectTimedType::Default && effectData.TimedType != EffectTimedType::NotTimed)
+			if (effectData.TimedType != EffectTimedType::NotTimed)
 			{
 				alreadyExists      = true;
 				activeEffect.Timer = activeEffect.MaxTime;
@@ -444,9 +444,8 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
 			auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isTimed =
-			    effectData.TimedType != EffectTimedType::NotTimed && effectData.TimedType != EffectTimedType::Default;
-			isMeta = effectData.IsMeta();
+			isTimed          = effectData.TimedType != EffectTimedType::NotTimed;
+			isMeta           = effectData.IsMeta();
 		}
 
 		if (effect.MaxTime > 0)

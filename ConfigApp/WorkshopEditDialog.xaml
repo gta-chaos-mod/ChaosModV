@@ -21,6 +21,8 @@
                     <StackPanel Orientation="Horizontal" Height="20">
                         <CheckBox Focusable="False" Visibility="{Binding CheckBoxVisiblity}" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
+                        <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0"
+                                VerticalAlignment="Center" Command="{Binding OnConfigureCommand}"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>

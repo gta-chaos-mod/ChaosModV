@@ -6,6 +6,16 @@ namespace ConfigApp
     {
         public struct EffectInfo
         {
+            public string Name { get; set; } = null;
+            public EffectCategory EffectCategory { get; set; } = EffectCategory.Unknown;
+            public bool IsTimed { get; set; } = false;
+            public bool IsShort { get; set; } = false;
+
+            public EffectInfo()
+            {
+
+            }
+
             public EffectInfo(string name, EffectCategory effectCategory, bool isTimed = false, bool isShort = false)
             {
                 Name = name;
@@ -13,15 +23,11 @@ namespace ConfigApp
                 IsTimed = isTimed;
                 IsShort = isShort;
             }
-
-            public readonly string Name;
-            public readonly EffectCategory EffectCategory;
-            public readonly bool IsTimed;
-            public readonly bool IsShort;
         }
 
         public enum EffectCategory
         {
+            Unknown = -1,
             Player,
             Vehicle,
             Peds,
@@ -34,9 +40,11 @@ namespace ConfigApp
 
         public enum EffectTimedType
         {
-            TimedDefault = -1,
-            TimedNormal,
-            TimedShort
+            Permanent = -3,
+            Custom, // Not used here, CustomTime is set to something other than 0 instead
+            NotTimed,
+            Normal,
+            Short,
         }
 
         public static readonly Dictionary<string, EffectInfo> EffectsMap = new Dictionary<string, EffectInfo>()

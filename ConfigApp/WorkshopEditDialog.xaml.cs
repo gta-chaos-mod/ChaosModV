@@ -15,11 +15,13 @@ namespace ConfigApp
     {
         public string Name { get; private set; }
         public bool IsEnabled { get; private set; }
+        public EffectData? EffectData { get; private set; }
 
-        public WorkshopSubmissionFile(string name, bool enabled = true)
+        public WorkshopSubmissionFile(string name, bool enabled, EffectData? effectData = null)
         {
             Name = name;
             IsEnabled = enabled;
+            EffectData = effectData;
         }
 
         public int CompareTo(WorkshopSubmissionFile obj)
@@ -32,11 +34,13 @@ namespace ConfigApp
     {
         public TreeMenuItem Item { get; private set; }
         public string FullPath { get; private set; }
+        public EffectData? EffectData { get; set; }
 
-        public WorkshopSubmissionFileState(TreeMenuItem item, string fullPath)
+        public WorkshopSubmissionFileState(TreeMenuItem item, string fullPath, EffectData? effectData = null)
         {
             Item = item;
             FullPath = fullPath;
+            EffectData = effectData;
         }
     }
 
@@ -52,7 +56,7 @@ namespace ConfigApp
 
             m_DialogMode = dialogMode;
 
-            if (dialogMode == WorkshopEditDialogMode.Install)
+            if (m_DialogMode == WorkshopEditDialogMode.Install)
             {
                 Title = "Install Submission";
 
@@ -65,16 +69,16 @@ namespace ConfigApp
             TreeMenuItem generateItem(string text, TreeMenuItem parent = null)
             {
                 var item = new TreeMenuItem(text, parent);
-                if (dialogMode == WorkshopEditDialogMode.Install)
+                if (m_DialogMode == WorkshopEditDialogMode.Install)
                 {
                     item.CheckBoxVisiblity = Visibility.Collapsed;
                 }
                 return item;
             }
 
-            TreeMenuItem luaParentItem = generateItem("Scripts");
-            TreeMenuItem mp3ParentItem = generateItem("Sounds");
-            TreeMenuItem txtParentItem = generateItem("Text Files");
+            var luaParentItem = generateItem("Scripts");
+            var mp3ParentItem = generateItem("Sounds");
+            var txtParentItem = generateItem("Text Files");
 
             var parentFolderItems = new Dictionary<string, TreeMenuItem>();
 
@@ -91,16 +95,18 @@ namespace ConfigApp
                 var pathFragments = (pathName.StartsWith("sounds\\") ? pathName.Substring(7) : pathName).Split('\\');
 
                 TreeMenuItem targetItem;
+                bool isConfigurable = false;
                 switch (pathName.Substring(pathName.Length - 4))
                 {
                     case ".lua":
                         targetItem = luaParentItem;
+                        isConfigurable = true;
                         break;
                     case ".mp3":
                         targetItem = mp3ParentItem;
                         break;
                     case ".txt":
-                        if (dialogMode != WorkshopEditDialogMode.Install)
+                        if (m_DialogMode != WorkshopEditDialogMode.Install)
                         {
                             continue;
                         }
@@ -140,8 +146,26 @@ namespace ConfigApp
                 }
 
                 var menuItem = generateItem(pathFragments.Last(), targetItem);
+                var fileState = new WorkshopSubmissionFileState(menuItem, pathName, file.EffectData);
+                menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit || !isConfigurable;
+                menuItem.OnConfigureClick = () =>
+                {
+                    var effectConfig = new EffectConfig(null, fileState.EffectData, new Effects.EffectInfo()
+                    {
+                        Name = pathName,
+                        IsTimed = true
+                    });
+                    effectConfig.ShowDialog();
+
+                    if (!effectConfig.IsSaved)
+                    {
+                        return;
+                    }
+
+                    fileState.EffectData = effectConfig.GetNewData();
+                };
                 targetItem.AddChild(menuItem);
-                FileStates.Add(new WorkshopSubmissionFileState(menuItem, pathName));
+                FileStates.Add(fileState);
 
                 menuItem.IsChecked = file.IsEnabled;
             }
@@ -153,7 +177,7 @@ namespace ConfigApp
 
             for (int i = files_tree_view.Items.Count - 1; i >= 0; i--)
             {
-                TreeMenuItem child = (TreeMenuItem)files_tree_view.Items.GetItemAt(i);
+                var child = (TreeMenuItem)files_tree_view.Items.GetItemAt(i);
                 if (child.Children.Count == 0)
                 {
                     files_tree_view.Items.RemoveAt(i);

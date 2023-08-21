@@ -7,6 +7,7 @@
 #include "Components/EffectDispatcher.h"
 #include "Components/KeyStates.h"
 #include "Components/MetaModifiers.h"
+#include "Components/Workshop.h"
 
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
@@ -34,7 +35,6 @@
 #include "Util/Types.h"
 #include "Util/Vehicle.h"
 #include "Util/Weapon.h"
-#include "Util/Workshop.h"
 
 #define LUA_NATIVESDEF "chaosmod\\natives_def.lua"
 
@@ -333,9 +333,25 @@ LuaScripts::LuaScripts()
 			LUA_LOG("Running script " << scriptName);
 		}
 
-		auto currentThread = std::this_thread::get_id();
-		if (ParseScriptRaw(fileName, buffer.str(),
-		                   currentThread == mainThread ? ParseScriptFlag_None : ParseScriptFlag_IsAlienThread)
+		auto currentThread   = std::this_thread::get_id();
+		int parseScriptFlags = ParseScriptFlag_None;
+		if (currentThread != mainThread)
+		{
+			parseScriptFlags |= ParseScriptFlag_IsAlienThread;
+		}
+
+		std::unordered_map<std::string, nlohmann::json> userEffectSettings;
+		if (pathStr.starts_with("chaosmod\\workshop") && ComponentExists<Workshop>())
+		{
+			// Read user script settings
+			auto tmp           = pathStr.substr(strlen("chaosmod\\workshop\\"));
+			userEffectSettings = GetComponent<Workshop>()->GetSubmissionScriptSettings(
+			    pathStr.substr(0, pathStr.find('\\', pathStr.find_first_not_of("chaosmod\\workshop\\"))),
+			    tmp.substr(tmp.find("\\") + 1));
+		}
+
+		if (ParseScriptRaw(fileName, buffer.str(), static_cast<LuaScripts::ParseScriptFlags>(parseScriptFlags),
+		                   userEffectSettings)
 		    == ParseScriptReturnReason::Error_ThreadUnsafe)
 		{
 			std::lock_guard lock(threadUnsafeEntryQueueMutex);
@@ -408,10 +424,10 @@ LuaScripts::LuaScripts()
 		{
 			for (const auto &entry : std::filesystem::directory_iterator(dir))
 			{
-				if (entry.is_directory())
+				if (entry.is_directory() && ComponentExists<Workshop>())
 				{
-					for (const auto &entry :
-					     GetWorkshopSubmissionFiles(entry.path().string(), WorkshopFileType::Script))
+					for (const auto &entry : GetComponent<Workshop>()->GetSubmissionFiles(entry.path().string(),
+					                                                                      Workshop::FileType::Script))
 					{
 						parseScriptThreaded(entry);
 					}
@@ -475,8 +491,9 @@ LuaScripts::~LuaScripts()
 	}
 }
 
-LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script,
-                                                               ParseScriptFlags flags)
+LuaScripts::ParseScriptReturnReason
+LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, ParseScriptFlags flags,
+                           std::unordered_map<std::string, nlohmann::json> settingOverrides)
 {
 	sol::state lua;
 	lua.open_libraries(sol::lib::base);
@@ -903,12 +920,37 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 			                                                           << effectName << "\"!");
 		}
 	}
+	try
+	{
+		effectData.TimedType = static_cast<EffectTimedType>(settingOverrides["TimedType"]);
+	}
+	catch (nlohmann::json::exception)
+	{
+	}
+	try
+	{
+		effectData.CustomTime = settingOverrides["CustomTime"];
+		if (effectData.CustomTime > 0)
+		{
+			effectData.TimedType = EffectTimedType::Custom;
+		}
+	}
+	catch (nlohmann::json::exception)
+	{
+	}
 
 	const sol::optional<int> &weightMultOpt = effectInfo["WeightMultiplier"];
 	if (weightMultOpt)
 	{
 		effectData.WeightMult = (std::max)(1, *weightMultOpt);
 		effectData.Weight     = effectData.WeightMult;
+	}
+	try
+	{
+		effectData.WeightMult = settingOverrides["WeightMult"];
+	}
+	catch (nlohmann::json::exception)
+	{
 	}
 
 	const sol::optional<bool> &isMetaOpt = effectInfo["IsMeta"];
@@ -921,6 +963,13 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 	if (excludeFromVotingOpt)
 	{
 		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
+	}
+	try
+	{
+		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, settingOverrides["ExcludedFromVoting"]);
+	}
+	catch (nlohmann::json::exception)
+	{
 	}
 
 	const sol::optional<bool> &isUtilityOpt = effectInfo["IsUtility"];
@@ -987,6 +1036,25 @@ LuaScripts::ParseScriptReturnReason LuaScripts::ParseScriptRaw(std::string scrip
 
 			effectData.ShortcutKeycode = shortcutKeycode;
 		}
+	}
+	try
+	{
+		effectData.ShortcutKeycode = settingOverrides["ShortcutKeycode"];
+	}
+	catch (nlohmann::json::exception)
+	{
+	}
+
+	try
+	{
+		std::string name = StringTrim(settingOverrides["CustomName"]);
+		if (!name.empty())
+		{
+			effectData.CustomName = name;
+		}
+	}
+	catch (nlohmann::json::exception)
+	{
 	}
 
 	// Exclude temporary effects from choices pool

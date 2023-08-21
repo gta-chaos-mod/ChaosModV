@@ -54,17 +54,15 @@ class EffectDispatcher : public Component
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
 		             const std::string &name, const EffectData &effectData, float effectDuration)
 		{
-			Identifier      = effectIdentifier;
-			Name            = name;
-			FakeName        = effectData.FakeName;
-			Timer           = effectDuration;
-			MaxTime         = effectDuration;
-			HideEffectName  = effectData.ShouldHideRealNameOnStart();
+			Identifier     = effectIdentifier;
+			Name           = name;
+			FakeName       = effectData.FakeName;
+			Timer          = effectDuration;
+			MaxTime        = effectDuration;
+			HideEffectName = effectData.ShouldHideRealNameOnStart();
 
-			auto eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
-
-			ThreadId        = EffectThreads::CreateThread(registeredEffect, eTimedType != EffectTimedType::Default
-			                                                                    && eTimedType != EffectTimedType::NotTimed);
+			auto timedType = g_EnabledEffects.at(effectIdentifier).TimedType;
+			ThreadId       = EffectThreads::CreateThread(registeredEffect, timedType != EffectTimedType::NotTimed);
 		}
 	};
 	struct

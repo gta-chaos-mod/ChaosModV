@@ -22,7 +22,7 @@ struct EffectData
 	int CustomTime                = -1;
 	int WeightMult                = 5;
 	int ShortcutKeycode           = 0;
-	EffectTimedType TimedType     = EffectTimedType::Default;
+	EffectTimedType TimedType     = EffectTimedType::NotTimed;
 	EffectCategory EffectCategory = EffectCategory::None;
 
   private:

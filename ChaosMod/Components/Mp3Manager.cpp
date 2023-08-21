@@ -2,7 +2,7 @@
 
 #include "Mp3Manager.h"
 
-#include "Util/Workshop.h"
+#include "Components/Workshop.h"
 
 #define CHAOS_SOUNDFILES_USER_DIR "chaosmod"
 #define CHAOS_SOUNDFILES_WORKSHOP_DIR "chaosmod\\workshop"
@@ -30,13 +30,13 @@ void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soun
 		return;
 	}
 
-	auto soundDirPath     = soundRootDirName + soundName;
-	auto soundFilePath    = soundDirPath + ".mp3";
+	auto soundDirPath  = soundRootDirName + soundName;
+	auto soundFilePath = soundDirPath + ".mp3";
 
 	std::vector<std::string> blacklistedFiles;
-	if (dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR))
+	if (dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR) && ComponentExists<Workshop>())
 	{
-		blacklistedFiles = GetWorkshopSubmissionBlacklistedFiles(dir);
+		blacklistedFiles = GetComponent<Workshop>()->GetSubmissionBlacklistedFiles(dir);
 	}
 
 	auto &soundFiles    = m_EffectSoundFilesCache[soundName];
