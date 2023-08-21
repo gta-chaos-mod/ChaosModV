@@ -401,6 +401,7 @@
     <ClCompile Include="Components\KeyStates.cpp" />
     <ClCompile Include="Components\HelpTextQueue.cpp" />
     <ClCompile Include="Memory\Hooks\GetLabelTextHook.cpp" />
+    <ClCompile Include="Components\Workshop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -482,7 +483,7 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
-    <ClInclude Include="Util\Workshop.h" />
+    <ClInclude Include="Components\Workshop.h" />
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Components\KeyStates.h" />
