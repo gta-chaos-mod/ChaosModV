@@ -85,30 +85,36 @@ namespace Memory
 		}
 
 		LOG("Running hooks");
-		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
-		{
-			if (registeredHook->IsLateHook())
-			{
-				continue;
-			}
+		std::thread(
+		    []()
+		    {
+			    for (auto registeredHook = g_pRegisteredHooks; registeredHook;
+			         registeredHook      = registeredHook->GetNext())
+			    {
+				    if (registeredHook->IsLateHook())
+				    {
+					    continue;
+				    }
 
-			const auto &hookName = registeredHook->GetName();
+				    const auto &hookName = registeredHook->GetName();
 
-			if (ms_BlacklistedHookNames.contains(hookName))
-			{
-				LOG(hookName << " hook has been blacklisted from running!");
-				continue;
-			}
+				    if (ms_BlacklistedHookNames.contains(hookName))
+				    {
+					    LOG(hookName << " hook has been blacklisted from running!");
+					    continue;
+				    }
 
-			LOG("Running " << hookName << " hook");
+				    LOG("Running " << hookName << " hook");
 
-			if (!registeredHook->RunHook())
-			{
-				LOG(hookName << " hook failed!");
-			}
-		}
+				    if (!registeredHook->RunHook())
+				    {
+					    LOG(hookName << " hook failed!");
+				    }
+			    }
 
-		MH_EnableHook(MH_ALL_HOOKS);
+			    MH_EnableHook(MH_ALL_HOOKS);
+		    })
+		    .detach();
 	}
 
 	void Uninit()
@@ -137,30 +143,36 @@ namespace Memory
 	{
 		LOG("Running late hooks");
 
-		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
-		{
-			if (!registeredHook->IsLateHook())
-			{
-				continue;
-			}
+		std::thread(
+		    []()
+		    {
+			    for (auto registeredHook = g_pRegisteredHooks; registeredHook;
+			         registeredHook      = registeredHook->GetNext())
+			    {
+				    if (!registeredHook->IsLateHook())
+				    {
+					    continue;
+				    }
 
-			const auto &hookName = registeredHook->GetName();
+				    const auto &hookName = registeredHook->GetName();
 
-			if (ms_BlacklistedHookNames.contains(hookName))
-			{
-				LOG(hookName << " hook has been blacklisted from running!");
-				continue;
-			}
+				    if (ms_BlacklistedHookNames.contains(hookName))
+				    {
+					    LOG(hookName << " hook has been blacklisted from running!");
+					    continue;
+				    }
 
-			LOG("Running " << hookName << " hook");
+				    LOG("Running " << hookName << " hook");
 
-			if (!registeredHook->RunHook())
-			{
-				LOG(hookName << " hook failed!");
-			}
-		}
+				    if (!registeredHook->RunHook())
+				    {
+					    LOG(hookName << " hook failed!");
+				    }
+			    }
 
-		MH_EnableHook(MH_ALL_HOOKS);
+			    MH_EnableHook(MH_ALL_HOOKS);
+		    })
+		    .detach();
 	}
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
