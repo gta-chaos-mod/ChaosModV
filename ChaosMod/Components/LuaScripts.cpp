@@ -616,7 +616,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		E("GetAllPeds", GetAllPedsArray),
 		E("CreatePoolPed", CreatePoolPed),
 
-		E("TeleportPlayer", TeleportPlayer),
+		E("TeleportPlayer", [](float x, float y, float z, bool noOffset) { TeleportPlayer(x, y, z, noOffset); }),
 
 		E("GetAllVehicles", GetAllVehsArray),
 		E("CreatePoolVehicle", CreatePoolVehicle),
