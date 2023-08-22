@@ -129,7 +129,7 @@ namespace EffectConfig
 				        : configValues.TimedType;
 			}
 
-			if (configValues.WeightMult)
+			if (configValues.WeightMult > 0)
 			{
 				effectData.WeightMult = configValues.WeightMult;
 			}
