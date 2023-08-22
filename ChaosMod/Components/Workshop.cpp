@@ -86,7 +86,7 @@ std::unordered_map<std::string, nlohmann::json> Workshop::GetSubmissionScriptSet
 	{
 		for (const auto &[key, value] : json["effect_settings"][scriptPath].items())
 		{
-			LOG(key << " " << value);
+			DEBUG_LOG(key << " " << value);
 			scriptSettings[key] = value;
 		}
 	}
