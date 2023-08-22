@@ -43,7 +43,7 @@ static void OnTickx05()
 // clang-format off
 REGISTER_EFFECT(nullptr, nullptr, OnTickx05, EffectInfo
 	{
-		.Name = "x0.5 Movement Speed",
+		.Name = "0.5x Movement Speed",
 		.Id = "player_movementx05",
 		.IsTimed = true,
 		.IsShortDuration = true,
