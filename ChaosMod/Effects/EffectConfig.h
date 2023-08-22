@@ -147,7 +147,7 @@ namespace EffectConfig
 			effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, effectInfo.HideRealNameOnStart);
 #ifdef _DEBUG
 			effectData.ShortcutKeycode =
-			    effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : configValues.SValues.hortcutKeycode;
+			    effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : configValues.Values.ShortcutKeycode;
 #else
 			effectData.ShortcutKeycode = configValues.Values.ShortcutKeycode;
 #endif
