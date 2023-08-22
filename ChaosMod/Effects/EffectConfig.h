@@ -50,14 +50,14 @@ namespace EffectConfig
 					std::array<int, 8> Values;
 					struct
 					{
-						bool Enabled;
-						EffectTimedType TimedType;
-						int CustomTime;
-						int WeightMult;
-						bool Permanent;
-						bool ExcludedFromVoting;
+						bool Enabled              = true;
+						EffectTimedType TimedType = EffectTimedType::NotTimed;
+						int CustomTime            = 0;
+						int WeightMult            = 0;
+						bool Permanent            = false;
+						bool ExcludedFromVoting   = false;
 						char Placeholder;
-						int ShortcutKeycode;
+						int ShortcutKeycode = 0;
 					};
 				};
 			} configValues;

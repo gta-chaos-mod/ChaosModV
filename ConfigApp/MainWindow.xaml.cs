@@ -196,7 +196,7 @@ namespace ConfigApp
                 OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
                     + $",{(int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed)}"
                     + $",{effectData.CustomTime.GetValueOrDefault(0)}"
-                    + $",{effectData.WeightMult.GetValueOrDefault(-1)}"
+                    + $",{effectData.WeightMult.GetValueOrDefault(0)}"
                     + $",{(effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent ? 1 : 0)}"
                     + $",{(effectData.ExcludedFromVoting.GetValueOrDefault(false) ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
