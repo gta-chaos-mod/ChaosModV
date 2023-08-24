@@ -337,7 +337,16 @@ void EffectDispatcher::UpdateTravelledDistance()
 			if (DispatchEffectsOnTimer)
 			{
 				DispatchRandomEffect();
+
+				if (ComponentExists<MetaModifiers>())
+				{
+					for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
+					{
+						DispatchRandomEffect();
+					}
+				}
 			}
+
 			m_DistanceChaosState.SavedPosition = position;
 		}
 
@@ -355,6 +364,15 @@ void EffectDispatcher::UpdateTravelledDistance()
 		if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
 		{
 			DispatchRandomEffect();
+
+			if (ComponentExists<MetaModifiers>())
+			{
+				for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
+				{
+					DispatchRandomEffect();
+				}
+			}
+
 			m_TimerPercentage = 0;
 		}
 	}
@@ -378,7 +396,7 @@ void EffectDispatcher::UpdateTimer(int deltaTime)
 
 		if (ComponentExists<MetaModifiers>())
 		{
-			for (BYTE ucIdx = 0; ucIdx < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; ucIdx++)
+			for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
 			{
 				DispatchRandomEffect();
 			}
