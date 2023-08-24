@@ -12,10 +12,10 @@
 
 #include <scripthookv/inc/main.h>
 
-static bool ms_EnabledHook                      = false;
+static bool ms_EnabledHook                         = false;
 
-static bool ms_RanOnlineVehicleDespawnPatch     = false;
-static DWORD64 ms_OnlineVehicleDespawnPatchAddr = 0;
+static DWORD ms_OnlineVehicleDespawnScriptThreadId = 0;
+static DWORD64 ms_OnlineVehicleDespawnPatchAddr    = 0;
 static std::array<BYTE, 3> ms_OnlineVehicleDespawnPatchOrigBytes;
 
 __int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
@@ -28,11 +28,15 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 
 	if (!strcmp(thread->GetName(), "shop_controller"))
 	{
-		if (!ms_RanOnlineVehicleDespawnPatch)
+		auto threadId = thread->GetThreadId();
+		if (ms_OnlineVehicleDespawnScriptThreadId != threadId)
 		{
-			ms_RanOnlineVehicleDespawnPatch = true;
+			LOG("New shop_controller script instance with thread ID " << threadId << "!");
 
-			auto program                    = Memory::ScriptThreadToProgram(thread);
+			ms_OnlineVehicleDespawnScriptThreadId = threadId;
+			ms_OnlineVehicleDespawnPatchAddr      = 0;
+
+			auto program                          = Memory::ScriptThreadToProgram(thread);
 			if (program->m_CodeBlocks)
 			{
 				// Thanks to rainbomizer
