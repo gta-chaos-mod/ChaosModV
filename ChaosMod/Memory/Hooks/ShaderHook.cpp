@@ -70,7 +70,7 @@ namespace Hooks
 		{
 			auto future = std::async(
 			    std::launch::async,
-			    [&]
+			    [&]()
 			    {
 				    ID3DBlob *shader;
 				    ID3DBlob *errorMessages;

@@ -210,17 +210,11 @@ namespace Memory
 		if (EffectThreads::IsThreadAnEffectThread())
 		{
 			Handle handle;
-			bool isDone = false;
 
-			std::thread thread(
-			    [&]()
-			    {
-				    handle = scanPattern();
-				    isDone = true;
-			    });
-			thread.detach();
+			auto future = std::async(std::launch::async, [&]() { handle = scanPattern(); });
 
-			while (!isDone)
+			using namespace std::chrono_literals;
+			while (future.wait_for(0ms) != std::future_status::ready)
 			{
 				WAIT(0);
 			}
