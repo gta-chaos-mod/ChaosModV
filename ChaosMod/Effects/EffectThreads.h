@@ -28,6 +28,8 @@ namespace EffectThreads
 
 	bool DoesThreadExist(LPVOID threadId);
 	bool HasThreadOnStartExecuted(LPVOID threadId);
+
+	bool IsThreadAnEffectThread();
 };
 
 struct EffectThreadData

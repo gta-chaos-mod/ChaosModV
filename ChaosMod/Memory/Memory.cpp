@@ -2,8 +2,11 @@
 
 #include "Memory.h"
 
+#include "Effects/EffectThreads.h"
+
 #include "Memory/Hooks/Hook.h"
 
+#include "Util/Script.h"
 #include "Util/Text.h"
 
 static DWORD64 ms_BaseAddr;
@@ -177,27 +180,55 @@ namespace Memory
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
 	{
+		DEBUG_LOG("Searching for pattern: " << pattern);
+
 		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)
 		{
 			LOG("startAddr is equal / bigger than endAddr???");
 			return Handle();
 		}
 
-		auto copy = pattern;
-		for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
+		auto scanPattern = [&]()
 		{
-			copy.replace(pos, 2, "?");
+			auto copy = pattern;
+			for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
+			{
+				copy.replace(pos, 2, "?");
+			}
+
+			auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
+			                    ? hook::pattern(copy)
+			                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
+			if (!thePattern.size())
+			{
+				return Handle();
+			}
+
+			return Handle(uintptr_t(thePattern.get_first()));
+		};
+
+		if (EffectThreads::IsThreadAnEffectThread())
+		{
+			Handle handle;
+			bool isDone = false;
+
+			std::thread thread(
+			    [&]()
+			    {
+				    handle = scanPattern();
+				    isDone = true;
+			    });
+			thread.detach();
+
+			while (!isDone)
+			{
+				WAIT(0);
+			}
+
+			return handle;
 		}
 
-		auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
-		                    ? hook::pattern(copy)
-		                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
-		if (!thePattern.size())
-		{
-			return Handle();
-		}
-
-		return Handle(uintptr_t(thePattern.get_first()));
+		return scanPattern();
 	}
 
 	MH_STATUS AddHook(void *target, void *detour, void *orig)
