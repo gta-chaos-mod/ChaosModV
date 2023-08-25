@@ -74,7 +74,7 @@ class OptionsFile
 		}
 	}
 
-	template <typename T> inline T ReadValue(std::vector<std::string> keys, T defaultValue) const
+	template <typename T> inline T ReadValue(const std::vector<std::string> &keys, T defaultValue) const
 	{
 		for (const auto &key : keys)
 		{
@@ -93,7 +93,7 @@ class OptionsFile
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(std::vector<std::string> keys, const std::string &defaultValue = {}) const
+	inline std::string ReadValueString(const std::vector<std::string> &keys, const std::string &defaultValue = {}) const
 	{
 		for (const auto &key : keys)
 		{

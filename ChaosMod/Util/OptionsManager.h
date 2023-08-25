@@ -20,19 +20,19 @@ class OptionsManager
 		m_TwitchFile.Reset();
 	}
 
-	template <typename T> inline T GetConfigValue(std::vector<std::string> keys, T defaultValue)
+	template <typename T> inline T GetConfigValue(const std::vector<std::string> &keys, T defaultValue)
 	{
 		return GetOptionValue(m_ConfigFile, keys, defaultValue);
 	}
 
-	template <typename T> inline T GetVotingValue(std::vector<std::string> keys, T defaultValue)
+	template <typename T> inline T GetVotingValue(const std::vector<std::string> &keys, T defaultValue)
 	{
 		return GetOptionValue(m_TwitchFile, keys, defaultValue);
 	}
 
   private:
 	template <typename T>
-	inline T GetOptionValue(const OptionsFile &optionsFile, std::vector<std::string> keys, T defaultValue = T())
+	inline T GetOptionValue(const OptionsFile &optionsFile, const std::vector<std::string> &keys, T defaultValue = {})
 	{
 		if constexpr (std::is_same<typename std::remove_const<T>::type, std::string>()
 		              || std::is_same<typename std::remove_const<T>::type, char *>())
