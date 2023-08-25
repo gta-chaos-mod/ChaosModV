@@ -61,12 +61,8 @@ namespace EffectConfig
 				union
 				{
 					std::array<int, 8> ValuesRaw;
-					DetailedValues Values;
+					DetailedValues Values {};
 				};
-
-				ConfigValues()
-				{
-				}
 			} configValues;
 			// HACK: Store EffectCustomName seperately
 			std::string valueEffectName;
