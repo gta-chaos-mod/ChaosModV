@@ -42,7 +42,7 @@ static int soundId                                     = 0;
 static bool isDialing                                  = true;
 static bool lockCellphone                              = true;
 
-std::unordered_map<Hash, const char *> phoneScaleforms = { { 0xD7114C9, "cellphone_ifruit" },
+static std::unordered_map<Hash, const char *> phoneScaleforms = { { 0xD7114C9, "cellphone_ifruit" },
 	                                                       { 0x9B22DBAF, "cellphone_badger" },
 	                                                       { 0x9B810FA2, "cellphone_facade" } };
 
