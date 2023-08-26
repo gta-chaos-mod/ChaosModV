@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-enum GlobalPatternIdiom : uint8_t
+enum class GlobalPatternIdiom : uint8_t
 {
 	GLOBAL_U16,
 	GLOBAL_U24
