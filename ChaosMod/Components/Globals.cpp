@@ -24,7 +24,9 @@ Globals::Globals() : Component()
 		                     [&thread](GlobalRegistration &reg) { return reg.m_ScriptName == thread->GetName(); });
 
 		    if (match == m_GlobalsRegistration.end())
+		    {
 			    return true;
+		    }
 
 		    GlobalRegistration searchedGlobal = *match;
 
