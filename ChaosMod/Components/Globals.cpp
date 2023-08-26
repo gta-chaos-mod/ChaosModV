@@ -42,9 +42,13 @@ Globals::Globals() : Component()
 				    int globalIndex;
 
 				    if (searchedGlobal.m_PatternIdiom == GlobalPatternIdiom::GLOBAL_U16)
+				    {
 					    globalIndex = handle.At(searchedGlobal.m_Offset).Value<uint16_t>() & 0xFFFFFF;
+				    }
 				    else
+				    {
 					    globalIndex = handle.At(searchedGlobal.m_Offset).Value<uint32_t>() & 0xFFFFFF;
+				    }
 
 				    Globals::SetGlobalIndex(searchedGlobal.m_Name, globalIndex);
 
