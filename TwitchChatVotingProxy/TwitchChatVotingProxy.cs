@@ -96,7 +96,7 @@ namespace TwitchChatVotingProxy
                 m_Logger.Information("Initializing controller");
 
                 var permittedUsernames = config.ReadValue("PermittedUsernames", "", "TwitchPermittedUsernames").ToLower()
-                    .Split(',').Select(userName => userName.Trim()).ToArray();
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToArray();
                 var chaosModControllerConfig = new ChaosModControllerConfig()
                 {
                     VotingMode = votingMode,
