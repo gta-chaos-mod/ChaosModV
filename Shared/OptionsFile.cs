@@ -42,7 +42,7 @@ namespace Shared
             var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
-                if (!m_Options.ContainsKey(_key))
+                if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
                 {
                     continue;
                 }
@@ -80,7 +80,7 @@ namespace Shared
             var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
-                if (!m_Options.ContainsKey(_key))
+                if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
                 {
                     continue;
                 }
@@ -96,14 +96,7 @@ namespace Shared
 
         public void WriteValue(string key, string value)
         {
-            if (value != null && value.Trim().Length > 0)
-            {
-                m_Options[key] = value;
-            }
-            else
-            {
-                m_Options.Remove(key);
-            }
+            m_Options[key] = value;
         }
 
         public void WriteValue(string key, int value)
@@ -157,13 +150,15 @@ namespace Shared
 
             foreach (string line in data.Split('\n'))
             {
-                var keyValuePair = line.Split('=');
-                if (keyValuePair.Length != 2)
+                if (!line.Contains("="))
                 {
                     continue;
                 }
 
-                m_Options[keyValuePair[0].Trim()] = keyValuePair[1].Trim();
+                var keyValuePair = line.Split('=', 2, System.StringSplitOptions.RemoveEmptyEntries
+                    | System.StringSplitOptions.TrimEntries);
+
+                m_Options[keyValuePair[0]] = keyValuePair.Length == 2 ? keyValuePair[1] : null;
             }
         }
 
