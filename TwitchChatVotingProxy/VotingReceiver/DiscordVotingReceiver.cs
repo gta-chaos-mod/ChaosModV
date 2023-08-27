@@ -12,8 +12,6 @@ namespace TwitchChatVotingProxy.VotingReceiver
     /// </summary>
     class DiscordVotingReceiver : IVotingReceiver
     {
-        public static readonly int RECONNECT_INTERVAL = 1000;
-
         public event EventHandler<OnMessageArgs> OnMessage;
 
         private string m_BotToken;
@@ -45,7 +43,13 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 return false;
             }
 
-            m_Client = new DiscordSocketClient();
+            m_Client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                // We don't actually need any but the Ready event fires much later without this for whatever reason
+                // So we just enable all unprivileged intents minus the ones the log warns us against using
+                GatewayIntents = GatewayIntents.AllUnprivileged
+                    & ~(GatewayIntents.GuildScheduledEvents | GatewayIntents.GuildInvites)
+            });
 
             m_Client.Log += OnLog;
             m_Client.Ready += OnReady;
