@@ -31,20 +31,23 @@ struct CellPhone
 	alignas(8) uint32_t state;
 };
 
+static int lockCellPhoneGlobalHandle  = -1;
+static int cellphoneStateGlobalHandle = -1;
+
 static uint8_t *lockCellphoneGlobal;
 static CellPhone *cellphoneStateGlobal;
 
-static int phoneScaleform                              = 0;
-static int currentMode                                 = 0;
-static int lastTick                                    = 0;
-static int soundId                                     = 0;
+static int phoneScaleform                                     = 0;
+static int currentMode                                        = 0;
+static int lastTick                                           = 0;
+static int soundId                                            = 0;
 
-static bool isDialing                                  = true;
-static bool lockCellphone                              = true;
+static bool isDialing                                         = true;
+static bool lockCellphone                                     = true;
 
 static std::unordered_map<Hash, const char *> phoneScaleforms = { { 0xD7114C9, "cellphone_ifruit" },
-	                                                       { 0x9B22DBAF, "cellphone_badger" },
-	                                                       { 0x9B810FA2, "cellphone_facade" } };
+	                                                              { 0x9B22DBAF, "cellphone_badger" },
+	                                                              { 0x9B810FA2, "cellphone_facade" } };
 
 static void DrawPhone(PhoneCall &phoneCall)
 {
@@ -96,33 +99,42 @@ static void DrawPhone(PhoneCall &phoneCall)
 static void UpdatePhone(PhoneCall &phoneCall)
 {
 	DrawPhone(phoneCall);
-	*lockCellphoneGlobal = (uint8_t)lockCellphone; // disables phone inputs
+	*lockCellphoneGlobal = lockCellphone; // disables phone inputs
 	TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cellphone_controller");
 }
 
 static void PlayPhoneCall(PhoneCall &phoneCall)
 {
-	REGISTER_GLOBAL("CellPhoneState", "dialogue_handler",
-	                "2D 00 02 00 ? 52 ? ? 41 ? 72 08 2A 06 56 ? ? 52 ? ? 41 ? 71 08 20 56 ? ? 72", 6,
-	                GlobalPatternIdiom::GLOBAL_U16);
+	if (cellphoneStateGlobalHandle < 0)
+	{
+		cellphoneStateGlobalHandle =
+		    Globals::RegisterGlobal("CellPhoneState", "dialogue_handler",
+		                            "2D 00 02 00 ? 52 ? ? 41 ? 72 08 2A 06 56 ? ? 52 ? ? 41 ? 71 08 20 56 ? ? 72", 6,
+		                            GlobalPatternIdiom::GLOBAL_U16);
+	}
 
-	REGISTER_GLOBAL(
-	    "CellPhoneLock", "dialogue_handler",
-	    "72 54 ? ? 5D ? ? ? 71 2C ? ? ? 2B 72 54 ? ? 77 54 ? ? 52 ? ? 25 ? 2C ? ? ? 53 ? ? 06 56 ? ? 52 ? ? 76", 2,
-	    GlobalPatternIdiom::GLOBAL_U16);
+	if (lockCellPhoneGlobalHandle < 0)
+	{
+		lockCellPhoneGlobalHandle = Globals::RegisterGlobal(
+		    "CellPhoneLock", "dialogue_handler",
+		    "72 54 ? ? 5D ? ? ? 71 2C ? ? ? 2B 72 54 ? ? 77 54 ? ? 52 ? ? 25 ? 2C ? ? ? 53 ? ? 06 56 ? ? 52 ? ? 76", 2,
+		    GlobalPatternIdiom::GLOBAL_U16);
+	}
 
-	while (!Globals::GlobalExists("CellPhoneState") || !Globals::GlobalExists("CellPhoneLock"))
+	while (Globals::Searching(cellphoneStateGlobalHandle) || Globals::Searching(lockCellPhoneGlobalHandle))
 	{
 		WAIT(0);
 	}
 
-	lockCellphoneGlobal  = Globals::GetGlobalAddr<uint8_t>("CellPhoneLock");
-	cellphoneStateGlobal = Globals::GetGlobalAddr<CellPhone>("CellPhoneState");
+	if (cellphoneStateGlobalHandle < 0 || lockCellPhoneGlobalHandle < 0)
+	{
+		return;
+	}
 
-	*lockCellphoneGlobal = 0;
+	cellphoneStateGlobal = Globals::GetGlobalAddr<CellPhone>(cellphoneStateGlobalHandle);
+	lockCellphoneGlobal  = Globals::GetGlobalAddr<uint8_t>(lockCellPhoneGlobalHandle);
 
 	currentMode          = 0;
-	lockCellphone        = true;
 
 	Ped playerPed        = PLAYER_PED_ID();
 	soundId              = GET_SOUND_ID();
@@ -161,6 +173,8 @@ static void PlayPhoneCall(PhoneCall &phoneCall)
 	}
 
 	cellphoneStateGlobal->state = 10; // Put into further state
+
+	lockCellphone = true;
 
 	while (currentMode < 9)
 	{

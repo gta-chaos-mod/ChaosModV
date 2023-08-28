@@ -6,7 +6,7 @@
 
 #include "Memory/Script.h"
 
-std::vector<GlobalRegistration> m_GlobalsRegistration = {};
+std::vector<Globals::GlobalRegistration> ms_GlobalsRegistration = {};
 
 Globals::Globals() : Component()
 {
@@ -14,16 +14,16 @@ Globals::Globals() : Component()
 	    Hooks::OnScriptThreadRun,
 	    [&](rage::scrThread *thread)
 	    {
-		    if (m_GlobalsRegistration.size() <= 0)
+		    if (ms_GlobalsRegistration.size() <= 0)
 		    {
 			    return true;
 		    }
 
 		    auto match =
-		        std::find_if(m_GlobalsRegistration.begin(), m_GlobalsRegistration.end(),
+		        std::find_if(ms_GlobalsRegistration.begin(), ms_GlobalsRegistration.end(),
 		                     [&thread](GlobalRegistration &reg) { return reg.m_ScriptName == thread->GetName(); });
 
-		    if (match == m_GlobalsRegistration.end())
+		    if (match == ms_GlobalsRegistration.end())
 		    {
 			    return true;
 		    }
@@ -52,28 +52,39 @@ Globals::Globals() : Component()
 					    globalIndex = handle.At(searchedGlobal.m_Offset).Value<uint32_t>() & 0xFFFFFF;
 				    }
 
-				    Globals::SetGlobalIndex(searchedGlobal.m_Name, globalIndex);
+				    Globals::SetGlobal(searchedGlobal, globalIndex);
 
 				    LOG("Found global \"" << searchedGlobal.m_Name << "\" (Global: " << globalIndex << ")");
 			    }
 		    }
 
-		    m_GlobalsRegistration.erase(match);
+		    ms_GlobalsRegistration.erase(match);
 
 		    return true;
 	    });
 }
 
-void Globals::RegisterGlobal(std::string name, std::string scriptName, std::string pattern, int patternOffset,
-                             GlobalPatternIdiom patternIdiom)
+bool Globals::Searching(int handle)
 {
-	if (std::find_if(m_GlobalsRegistration.begin(), m_GlobalsRegistration.end(),
+	return std::find_if(ms_GlobalsRegistration.begin(), ms_GlobalsRegistration.end(),
+	                    [&](GlobalRegistration &reg) { return reg.m_Handle == handle; })
+	    != ms_GlobalsRegistration.end();
+}
+
+int Globals::RegisterGlobal(std::string name, std::string scriptName, std::string pattern,
+                                                     int patternOffset, GlobalPatternIdiom patternIdiom)
+{
+	if (std::find_if(ms_GlobalsRegistration.begin(), ms_GlobalsRegistration.end(),
 	                 [&](GlobalRegistration &reg) { return reg.m_Name == name; })
-	        != m_GlobalsRegistration.end()
-	    || Globals::GetGlobalAddr<void>(name) != nullptr)
+	        != ms_GlobalsRegistration.end()
+	    || Globals::GlobalFoundName(name))
 	{
-		return;
+		return -1;
 	}
 
-	m_GlobalsRegistration.push_back({ name, scriptName, pattern, patternOffset, patternIdiom });
+	int handle = GetTickCount(); // Allows the handle to be truly unique
+
+	ms_GlobalsRegistration.push_back({ name, scriptName, pattern, patternOffset, patternIdiom, handle });
+
+	return handle;
 }
