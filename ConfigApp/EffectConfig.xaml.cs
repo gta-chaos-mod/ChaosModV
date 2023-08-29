@@ -13,7 +13,7 @@ namespace ConfigApp
         private EffectData m_EffectData;
         private bool m_IsTimedEffect = false;
         private bool m_IsSaved = false;
-        private int? m_EffectShortcut; // Win32Key + 2^10 (if CTRL) + 2^9 (if Shift) + 2^8 (if Alt)
+        private int m_EffectShortcut = 0; // Win32Key + 2^10 (if CTRL) + 2^9 (if Shift) + 2^8 (if Alt)
 
         public bool IsSaved
         {
@@ -23,7 +23,7 @@ namespace ConfigApp
             }
         }
 
-        public EffectConfig(string effectId, EffectData? effectData, EffectInfo effectInfo)
+        public EffectConfig(string? effectId, EffectData? effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
 
@@ -75,7 +75,12 @@ namespace ConfigApp
             };
             effectconf_effect_weight_mult.SelectedIndex = m_EffectData.WeightMult.GetValueOrDefault(0);
 
-            effectconf_exclude_voting_enable.IsChecked = m_EffectData.ExcludedFromVoting.GetValueOrDefault(false);
+            effectconf_exclude_voting_state.ItemsSource = new List<string>()
+            {
+                "Default", "Disabled", "Enabled"
+            };
+            effectconf_exclude_voting_state.SelectedIndex = m_EffectData.ExcludedFromVoting.HasValue
+                ? (m_EffectData.ExcludedFromVoting.Value ? 2 : 1) : 0;
 
             effectconf_effect_custom_name.Text = m_EffectData.CustomName;
             effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
@@ -93,14 +98,38 @@ namespace ConfigApp
             if (effectInfo.EffectCategory == EffectCategory.Meta)
             {
                 effectconf_exclude_voting_enable_title.Visibility = Visibility.Hidden;
-                effectconf_exclude_voting_enable.Visibility = Visibility.Hidden;
-                effectconf_exclude_voting_enable.IsChecked = false;
+                effectconf_exclude_voting_state.Visibility = Visibility.Hidden;
+                effectconf_exclude_voting_state.SelectedIndex = 0;
             }
 
-            // Shortcut
-            if (int.TryParse(m_EffectData.ShortcutKeycode.ToString(), out int savedWin32Key))
+            /* Shortcut */
+
+            // HACK: effectId is set to null for custom effects so make use of that to hide shortcut checkbox for built-in effects
+            // as those should not have set a shortcut to begin with so 0 == null in that case
+            // Also hide the custom shortcut toggle for built-in effects as those save shortcut as 0 even if non-existant
+            if (effectId != null)
             {
-                if (savedWin32Key > 0)
+                effectconf_effect_shortcut_enable.IsChecked = true;
+                effectconf_effect_shortcut_enable.Visibility = Visibility.Collapsed;
+
+                effectconf_effect_shortcut_input.IsEnabled = true;
+                // Another HACK: Move the textbox to the left :)
+                var margin = effectconf_effect_shortcut_input.Margin;
+                margin.Left = 0f;
+                effectconf_effect_shortcut_input.Margin = margin;
+            }
+
+            if (m_EffectData.ShortcutKeycode.HasValue &&
+                int.TryParse(m_EffectData.ShortcutKeycode.ToString(), out int savedWin32Key))
+            {
+                effectconf_effect_shortcut_enable.IsChecked = true;
+                effectconf_effect_shortcut_input.IsEnabled = true;
+
+                if (savedWin32Key <= 0)
+                {
+                    effectconf_effect_shortcut_input.Text = "None";
+                }
+                else
                 {
                     Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
                     var modifiers = ModifierKeys.None;
@@ -118,10 +147,6 @@ namespace ConfigApp
                     }
 
                     SetEffectShortcut(key, modifiers);
-                }
-                else if (savedWin32Key == 0)
-                {
-                    effectconf_effect_shortcut_input.Text = "None";
                 }
             }
 
@@ -144,7 +169,7 @@ namespace ConfigApp
             if (key == Key.Escape || key == Key.Back)
             {
                 effectconf_effect_shortcut_input.Text = "None";
-                m_EffectShortcut = null;
+                m_EffectShortcut = 0;
                 return;
             }
 
@@ -200,13 +225,22 @@ namespace ConfigApp
                 effectconf_timer_time_enable.IsEnabled = false;
             }
 
-            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.Value;
-            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsChecked.Value;
+            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false);
+            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsChecked.GetValueOrDefault(false);
         }
 
         private void OnClicked(object sender, RoutedEventArgs e)
         {
-            if (((CheckBox)sender).IsChecked.Value)
+            var checkBox = (CheckBox)sender;
+
+            if (checkBox == effectconf_effect_shortcut_enable)
+            {
+                effectconf_effect_shortcut_input.IsEnabled = checkBox.IsChecked.GetValueOrDefault(false);
+
+                return;
+            }
+
+            if (checkBox.IsChecked.GetValueOrDefault(false))
             {
                 if (sender == effectconf_timer_type_enable)
                 {
@@ -264,10 +298,22 @@ namespace ConfigApp
             m_EffectData.CustomTime = effectconf_timer_time_enable.IsChecked.HasValue && effectconf_timer_time_enable.IsChecked.Value
                 ? effectconf_timer_time.Text.Length > 0 ? int.Parse(effectconf_timer_time.Text) : null : null;
             m_EffectData.WeightMult = effectconf_effect_weight_mult.SelectedIndex > 0 ? effectconf_effect_weight_mult.SelectedIndex : null;
-            m_EffectData.ExcludedFromVoting = effectconf_exclude_voting_enable.IsChecked.HasValue && effectconf_exclude_voting_enable.IsChecked.Value
-                ? true : null; // Currently the assumption is that every effect is voteable in the mod anyways so don't waste space where unneeded storing this is false
+
+            switch (effectconf_exclude_voting_state.SelectedIndex)
+            {
+                case 1:
+                    m_EffectData.ExcludedFromVoting = false;
+                    break;
+                case 2:
+                    m_EffectData.ExcludedFromVoting = true;
+                    break;
+                default:
+                    m_EffectData.ExcludedFromVoting = null;
+                    break;
+            }
+
             m_EffectData.CustomName = effectconf_effect_custom_name.Text.Trim().Length > 0 ? effectconf_effect_custom_name.Text.Trim() : null;
-            m_EffectData.ShortcutKeycode = m_EffectShortcut;
+            m_EffectData.ShortcutKeycode = effectconf_effect_shortcut_enable.IsChecked.GetValueOrDefault(false) ? m_EffectShortcut : null;
 
             return m_EffectData;
         }
