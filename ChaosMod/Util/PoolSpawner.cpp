@@ -133,48 +133,6 @@ Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float 
 	return ped;
 }
 
-Ped CreatePoolPedEnemy(int pedType, Hash modelHash, float x, float y, float z, float heading, Hash weaponHash, bool inPlayerVehicle)
-{
-	LoadModel(modelHash);
-
-	Ped ped                       = CREATE_PED(pedType, modelHash, x, y, z, heading, true, false);
-
-	Ped playerPed                 = PLAYER_PED_ID();
-	Vector3 playerPos             = GET_ENTITY_COORDS(playerPed, false);
-
-	static const Hash playerGroup = "PLAYER"_hash;
-	static const Hash civGroup    = "CIVMALE"_hash;
-	static const Hash femCivGroup = "CIVFEMALE"_hash;
-
-	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_GENERIC_HOSTILE_PED", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, playerGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, civGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
-
-	if (IS_PED_IN_ANY_VEHICLE(playerPed, false) && inPlayerVehicle)
-	{
-		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
-
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
-	SET_PED_HEARING_RANGE(ped, 9999.f);
-	SET_PED_CONFIG_FLAG(ped, 281, true);
-
-	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
-	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);
-
-	GIVE_WEAPON_TO_PED(ped, weaponHash, 9999, true, true);
-	TASK_COMBAT_PED(ped, playerPed, 0, 16);
-
-	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
-
-	SET_MODEL_AS_NO_LONGER_NEEDED(modelHash);
-	HandleEntity(ped);
-
-	return ped;
-}
-
 Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 {
 	const auto &pedModels = Memory::GetAllPedModels();

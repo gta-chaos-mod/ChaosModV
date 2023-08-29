@@ -8,8 +8,6 @@ void ClearEntityPool(int distance = 0);
 
 Ped CreatePoolClonePed(Ped pedToClone);
 Ped CreatePoolPed(int pedType, Hash modelHash, float x, float y, float z, float heading);
-Ped CreatePoolPedEnemy(int pedType, Hash modelHash, float x, float y, float z, float heading, Hash weapon,
-                       bool inPlayerVehicle);
 Ped CreateRandomPoolPed(float x, float y, float z, float heading);
 Ped CreatePoolPedInsideVehicle(Vehicle vehicle, int pedType, Hash modelHash, int seatIdx);
 
