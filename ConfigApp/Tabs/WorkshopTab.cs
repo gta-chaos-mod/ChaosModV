@@ -35,7 +35,26 @@ namespace ConfigApp.Tabs
         {
             var transformedText = m_SearchBox.Text.Trim().ToLower();
             var view = CollectionViewSource.GetDefaultView(m_WorkshopSubmissionItems);
-            view.Filter = submissionItem => ((WorkshopSubmissionItem)submissionItem).Name.ToLower().Contains(transformedText);
+            view.Filter = (submissionItem) =>
+            {
+                var item = (WorkshopSubmissionItem)submissionItem;
+                var texts = new string[]
+                {
+                    item.Name,
+                    item.Author,
+                    item.Description
+                };
+
+                foreach (var text in texts)
+                {
+                    if (text.ToLower().Contains(transformedText))
+                    {
+                        return true;
+                    }
+                };
+
+                return false;
+            };
         }
 
         private void ParseWorkshopSubmissionsFile(byte[] compressedFileContent)
