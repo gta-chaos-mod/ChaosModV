@@ -49,6 +49,11 @@ static void OnTick()
 	auto playerVeh = GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false);
 	for (auto entity : entities)
 	{
+		if (!DOES_ENTITY_EXIST(entity))
+		{
+			continue;
+		}
+
 		auto pos = GET_ENTITY_COORDS(entity, false);
 
 		if ((entity != playerVeh && !IS_ENTITY_A_MISSION_ENTITY(entity))
