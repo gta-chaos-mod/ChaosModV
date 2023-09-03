@@ -49,14 +49,14 @@ namespace EffectConfig
 				// unnamed structs inside unions
 				struct DetailedValues
 				{
-					bool Enabled              = true;
-					EffectTimedType TimedType = EffectTimedType::NotTimed;
-					int CustomTime            = 0;
-					int WeightMult            = 0;
-					bool Permanent            = false;
-					bool ExcludedFromVoting   = false;
-					char Placeholder;
-					int ShortcutKeycode = 0;
+					alignas(int) bool Enabled              = true;
+					alignas(int) EffectTimedType TimedType = EffectTimedType::NotTimed;
+					alignas(int) int CustomTime            = 0;
+					alignas(int) int WeightMult            = 0;
+					alignas(int) bool Permanent            = false;
+					alignas(int) bool ExcludedFromVoting   = false;
+					alignas(int) char Placeholder;
+					alignas(int) int ShortcutKeycode = 0;
 				};
 				union
 				{
