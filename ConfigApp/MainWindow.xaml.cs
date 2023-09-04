@@ -34,6 +34,8 @@ namespace ConfigApp
 
         private Dictionary<string, EffectData> m_EffectDataMap;
 
+        private bool m_InitializedTabs = false;
+
         public MainWindow()
         {
             Init();
@@ -43,24 +45,29 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            foreach (var tab in m_Tabs)
+            if (!m_InitializedTabs)
             {
-                var tabItem = new TabItem()
+                m_InitializedTabs = true;
+
+                foreach (var tab in m_Tabs)
                 {
-                    Header = tab.Key,
-                    Background = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0)),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3))
-                };
+                    var tabItem = new TabItem()
+                    {
+                        Header = tab.Key,
+                        Background = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0)),
+                        BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3))
+                    };
 
-                var grid = new Grid();
+                    var grid = new Grid();
 
-                tab.Value.Init(grid);
+                    tab.Value.Init(grid);
 
-                tabItem.Content = grid;
+                    tabItem.Content = grid;
 
-                root_tabcontrol.Items.Add(tabItem);
+                    root_tabcontrol.Items.Add(tabItem);
 
-                m_TabItems[tab.Key] = tabItem;
+                    m_TabItems[tab.Key] = tabItem;
+                }
             }
 
             if (!m_bInitializedTitle)
