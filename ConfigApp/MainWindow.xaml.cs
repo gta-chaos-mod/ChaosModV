@@ -397,7 +397,7 @@ namespace ConfigApp
             {
                 OptionsManager.ResetFiles();
 
-                result = MessageBox.Show("Do you want to reset your Twitch settings too?", "ChaosModV",
+                result = MessageBox.Show("Do you want to reset your voting settings too?", "ChaosModV",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
