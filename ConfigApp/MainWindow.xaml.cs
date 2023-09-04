@@ -3,6 +3,7 @@ using ConfigApp.Tabs.Voting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +29,9 @@ namespace ConfigApp
         private bool m_bInitializedTitle = false;
 
         private Dictionary<string, TreeMenuItem> m_TreeMenuItemsMap;
+        private List<TreeMenuItem> m_TreeMenuItemsAll;
+        private List<TreeMenuItem> m_TreeMenuItemsFiltered;
+
         private Dictionary<string, EffectData> m_EffectDataMap;
 
         public MainWindow()
@@ -208,7 +212,11 @@ namespace ConfigApp
 
         private void InitEffectsTreeView()
         {
+            effects_user_effects_search.Clear();
+
             m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
+            m_TreeMenuItemsAll = new List<TreeMenuItem>();
+
             m_EffectDataMap = new Dictionary<string, EffectData>();
 
             var playerParentItem = new TreeMenuItem("Player");
@@ -281,23 +289,54 @@ namespace ConfigApp
                 }
             }
 
-            effects_user_effects_tree_view.Items.Clear();
-            effects_user_effects_tree_view.Items.Add(playerParentItem);
-            effects_user_effects_tree_view.Items.Add(vehicleParentItem);
-            effects_user_effects_tree_view.Items.Add(pedsParentItem);
-            effects_user_effects_tree_view.Items.Add(screenParentItem);
-            effects_user_effects_tree_view.Items.Add(timeParentItem);
-            effects_user_effects_tree_view.Items.Add(weatherParentItem);
-            effects_user_effects_tree_view.Items.Add(miscParentItem);
+            m_TreeMenuItemsAll.Add(playerParentItem);
+            m_TreeMenuItemsAll.Add(vehicleParentItem);
+            m_TreeMenuItemsAll.Add(pedsParentItem);
+            m_TreeMenuItemsAll.Add(screenParentItem);
+            m_TreeMenuItemsAll.Add(timeParentItem);
+            m_TreeMenuItemsAll.Add(weatherParentItem);
+            m_TreeMenuItemsAll.Add(miscParentItem);
+
+            m_TreeMenuItemsFiltered = m_TreeMenuItemsAll.ToList();
+            effects_user_effects_tree_view.ItemsSource = m_TreeMenuItemsFiltered;
 
             meta_effects_tree_view.Items.Clear();
             meta_effects_tree_view.Items.Add(metaParentItem);
 
             // We want every effect to be enabled by default, also this is necessary to make the enabled effect counter show up
-            foreach (var treeMenuItem in m_TreeMenuItemsMap)
+            foreach (var treeMenuItem in m_TreeMenuItemsAll)
             {
-                treeMenuItem.Value.IsChecked = true;
+                treeMenuItem.IsChecked = true;
             }
+        }
+
+        private void effects_user_effects_search_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var filterText = effects_user_effects_search.Text?.Trim();
+
+            m_TreeMenuItemsFiltered.Clear();
+            foreach (var parentMenuItem in m_TreeMenuItemsAll)
+            {
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    m_TreeMenuItemsFiltered.Add(parentMenuItem);
+                    continue;
+                }
+
+                if (parentMenuItem.Children == null)
+                {
+                    continue;
+                }
+
+                foreach (var childMenuItem in parentMenuItem.Children)
+                {
+                    if (childMenuItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        m_TreeMenuItemsFiltered.Add(childMenuItem);
+                    }
+                }
+            }
+            effects_user_effects_tree_view.Items.Refresh();
         }
 
         private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
