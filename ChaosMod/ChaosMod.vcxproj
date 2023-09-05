@@ -155,6 +155,7 @@
     <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerDeadEye.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEsp.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerGoPro.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGravitySphere.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerGTA2.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerHacking.cpp" />
