@@ -4,15 +4,16 @@
 
 #include <stdafx.h>
 
-Cam goPro;
-Entity boneProxy;
-int state = 0;
+static Cam goPro;
+static Entity boneProxy;
+static int state = 0;
 
 static bool SafetyCheck()
 {
+	Ped playerPed = PLAYER_PED_ID();
 	//Removes camera on player switch, death, and potential non-existence
-	if (IS_PLAYER_SWITCH_IN_PROGRESS() || IS_PLAYER_DEAD(PLAYER_ID()) || !ENTITY::DOES_ENTITY_EXIST(PLAYER_PED_ID())
-	    || !ENTITY::IS_ENTITY_VISIBLE(PLAYER_PED_ID()))
+	if (IS_PLAYER_SWITCH_IN_PROGRESS() || IS_PLAYER_DEAD(PLAYER_ID()) || !ENTITY::DOES_ENTITY_EXIST(playerPed)
+	    || !ENTITY::IS_ENTITY_VISIBLE(playerPed))
 	{
 		return true;
 	}
@@ -22,11 +23,12 @@ static bool SafetyCheck()
 static void OnStart()
 {
 	//Not sure of a direct way to obtain bone rotation. Attaching a prop is a workaround.
-	Vector3 boneCoords = GET_PED_BONE_COORDS(PLAYER_PED_ID(), 0x322c, 0, 0, 0);
+	Ped playerPed      = PLAYER_PED_ID();
+	Vector3 boneCoords = GET_PED_BONE_COORDS(playerPed, 0x322c, 0, 0, 0);
 	goPro = CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", boneCoords.x, boneCoords.y, boneCoords.z, 0, 0, 0, 60, false, 2);
 	boneProxy = CREATE_OBJECT("p_cs_leaf_s"_hash, boneCoords.x, boneCoords.y, boneCoords.z, false, false, true);
 	SET_ENTITY_ALPHA(boneProxy, 0, false);
-	ATTACH_ENTITY_TO_ENTITY(boneProxy, PLAYER_PED_ID(), GET_PED_BONE_INDEX(PLAYER_PED_ID(), 0x322c), 0.1, 0, 0, 0, 90,
+	ATTACH_ENTITY_TO_ENTITY(boneProxy, playerPed, GET_PED_BONE_INDEX(playerPed, 0x322c), 0.1, 0, 0, 0, 90,
 	                        0, false, false, false, true, 0, true);
 	ATTACH_CAM_TO_ENTITY(goPro, boneProxy, 0, 0, 0, false);
 
@@ -45,7 +47,6 @@ static void OnStop()
 	{
 		SET_CAM_ACTIVE(goPro, false);
 		DESTROY_CAM(goPro, true);
-		goPro = NULL;
 	}
 }
 
