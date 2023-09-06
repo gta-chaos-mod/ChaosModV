@@ -106,7 +106,7 @@ static void OnTick()
 REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "GoPro Footage",
-		.Id = "player_gopro",
+		.Id = "screen_gopro",
 		.IsTimed = true
 	}
 );

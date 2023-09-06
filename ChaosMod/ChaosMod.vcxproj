@@ -182,6 +182,7 @@
     <ClCompile Include="Effects\db\Screen\ScreenDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenGoPro.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenHeatVision.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenMaximap.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNightVision.cpp" />
