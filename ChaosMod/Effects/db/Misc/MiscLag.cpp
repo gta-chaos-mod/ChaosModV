@@ -88,6 +88,8 @@ static void OnTickLag()
 				SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 
 				SET_VEHICLE_FORWARD_SPEED(veh, forwardSpeed);
+
+				SET_VEHICLE_ENGINE_ON(veh, true, true, false);
 			}
 
 			ms_ToTpVehs.clear();
