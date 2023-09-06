@@ -64,6 +64,20 @@ namespace ConfigApp
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
         }
+        private bool m_isColored;
+        public bool IsColored
+        {
+            get
+            {
+                return m_isColored;
+            }
+            set
+            {
+                m_isColored = value;
+
+                NotifyFieldsUpdated();
+            }
+        }
         private bool m_ForceConfigHidden = false;
         public string IsConfigVisible
         {
@@ -159,6 +173,7 @@ namespace ConfigApp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChecked"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigVisible"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConfigEnabled"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsColored"));
         }
     }
 }

@@ -86,11 +86,13 @@ namespace ConfigApp
                 tab.Value.OnLoadValues();
             }
 
+            m_EffectDataMap = new Dictionary<string, EffectData>();
+
             ParseConfigFile();
 
-            InitEffectsTreeView();
-
             ParseEffectsFile();
+
+            InitEffectsTreeView();
 
             // Check write permissions
             try
@@ -190,11 +192,6 @@ namespace ConfigApp
                 var effectData = Utils.ValueStringToEffectData(value);
 
                 m_EffectDataMap.Add(key, effectData);
-
-                if (m_TreeMenuItemsMap.ContainsKey(key))
-                {
-                    m_TreeMenuItemsMap[key].IsChecked = effectData.Enabled.GetValueOrDefault(true);
-                }
             }
         }
 
@@ -224,8 +221,6 @@ namespace ConfigApp
             m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
             m_TreeMenuItemsAll = new List<TreeMenuItem>();
 
-            m_EffectDataMap = new Dictionary<string, EffectData>();
-
             var playerParentItem = new TreeMenuItem("Player");
             var vehicleParentItem = new TreeMenuItem("Vehicle");
             var pedsParentItem = new TreeMenuItem("Peds");
@@ -246,25 +241,27 @@ namespace ConfigApp
             {
                 var effectName = effect.Key;
                 var effectMisc = effect.Value;
+                var effectData = GetEffectData(effectMisc.EffectId);
 
-                var menuItem = new TreeMenuItem(effectName)
+                var menuItem = new TreeMenuItem(effectName);
+                menuItem.OnConfigureClick = () =>
                 {
-                    OnConfigureClick = () =>
+                    var effectInfo = EffectsMap[effectMisc.EffectId];
+
+                    var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
+                    effectConfig.ShowDialog();
+
+                    if (!effectConfig.IsSaved)
                     {
-                        var effectInfo = EffectsMap[effectMisc.EffectId];
-                        var effectData = GetEffectData(effectMisc.EffectId);
-
-                        var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
-                        effectConfig.ShowDialog();
-
-                        if (!effectConfig.IsSaved)
-                        {
-                            return;
-                        }
-
-                        m_EffectDataMap[effectMisc.EffectId] = effectConfig.GetNewData();
+                        return;
                     }
+
+                    effectData = effectConfig.GetNewData();
+                    m_EffectDataMap[effectMisc.EffectId] = effectData;
+                    menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 };
+                menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
+                menuItem.IsChecked = effectData.Enabled ?? true;
                 m_TreeMenuItemsMap.Add(effectMisc.EffectId, menuItem);
 
                 switch (effectMisc.EffectCategory)
@@ -310,10 +307,9 @@ namespace ConfigApp
             meta_effects_tree_view.Items.Clear();
             meta_effects_tree_view.Items.Add(metaParentItem);
 
-            // We want every effect to be enabled by default, also this is necessary to make the enabled effect counter show up
             foreach (var treeMenuItem in m_TreeMenuItemsAll)
             {
-                treeMenuItem.IsChecked = true;
+                treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
             }
         }
 

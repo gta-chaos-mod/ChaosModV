@@ -22,6 +22,18 @@
                         <xctk:WatermarkTextBox x:Name="effects_user_effects_search" Grid.Row="0" Width="300" HorizontalAlignment="Left" Watermark="Search for effect..."
                                                KeepWatermarkOnGotFocus="True" Margin="5" TextChanged="effects_user_effects_search_TextChanged" />
                         <TreeView x:Name="effects_user_effects_tree_view" Grid.Row="1" Background="{x:Null}" BorderBrush="White" VerticalAlignment="Stretch">
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsColored}" Value="True">
+                                            <Setter Property="Background" Value="#FFF6F653" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsColored}" Value="False">
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
                             <TreeView.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                     <StackPanel Orientation="Horizontal" Height="20">
