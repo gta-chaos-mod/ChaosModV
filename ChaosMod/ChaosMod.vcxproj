@@ -162,7 +162,6 @@
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
