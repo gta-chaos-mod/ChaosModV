@@ -350,15 +350,15 @@ void EffectDispatcher::UpdateTravelledDistance()
 			m_DistanceChaosState.SavedPosition = position;
 		}
 
-		m_TimerPercentage = distance
-		                  * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-		                  / m_DistanceChaosState.DistanceToActivateEffect;
+		m_TimerPercentage =
+		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
+		    / m_DistanceChaosState.DistanceToActivateEffect;
 	}
 	else if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Distance)
 	{
 		m_DistanceChaosState.SavedPosition = position;
 		m_TimerPercentage +=
-		    distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
+		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
 		    / m_DistanceChaosState.DistanceToActivateEffect;
 
 		if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
