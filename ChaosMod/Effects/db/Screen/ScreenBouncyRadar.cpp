@@ -2,6 +2,8 @@
 
 #include "Memory/UI.h"
 
+#define BOUNCE_SPEED_MULT 100.f
+
 static float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
 
 static void OnStart()
@@ -43,8 +45,10 @@ static void OnTick()
 		yVelocity *= -1;
 	}
 
-	xOffset += xVelocity;
-	yOffset += yVelocity;
+	auto mult = GET_FRAME_TIME() * BOUNCE_SPEED_MULT;
+
+	xOffset += xVelocity * mult;
+	yOffset += yVelocity * mult;
 
 	Memory::SetRadarOffset(xOffset, yOffset);
 }
