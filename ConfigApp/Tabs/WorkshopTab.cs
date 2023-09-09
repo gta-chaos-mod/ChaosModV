@@ -205,13 +205,6 @@ namespace ConfigApp.Tabs
 
             var headerGrid = new Grid();
 
-            headerGrid.Children.Add(new TextBlock()
-            {
-                Text = "NOTE: This is still experimental!",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            });
-
             m_SearchBox = new WatermarkTextBox()
             {
                 HorizontalAlignment = HorizontalAlignment.Right,
