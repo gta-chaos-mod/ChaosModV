@@ -110,6 +110,7 @@ REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
 	{
 		.Name = "Real First Person",
 		.Id = "screen_realfp",
-		.IsTimed = true
+		.IsTimed = true,
+		.EffectCategory = EffectCategory::Camera
 	}
 );
