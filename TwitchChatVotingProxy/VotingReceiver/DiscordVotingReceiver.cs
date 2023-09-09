@@ -136,13 +136,19 @@ namespace TwitchChatVotingProxy.VotingReceiver
         {
             m_Logger.Information("Successfully connected to discord");
 
-            await m_Client.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
+            async void registerCommand(string name)
             {
-                Name = "vote",
-                Description = "Vote for one of the options in Chaos Mod"
+                await m_Client.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
+                {
+                    Name = name,
+                    Description = "Vote for one of the options in Chaos Mod"
+                }
+                .AddOption("option", ApplicationCommandOptionType.String, "Option to vote for", isRequired: true)
+                .Build());
             }
-            .AddOption("option", ApplicationCommandOptionType.String, "Option to vote for", isRequired: true)
-            .Build());
+
+            registerCommand("vote");
+            registerCommand("v");
 
             m_IsReady = true;
         }
