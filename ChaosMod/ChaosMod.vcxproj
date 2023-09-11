@@ -103,6 +103,7 @@
     <ClCompile Include="Effects\db\Misc\MiscAirstrike.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackHole.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscBlackout.cpp" />
+    <ClCompile Include="Effects\db\Misc\MiscCocktail.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscEarthquake.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFpsLimit.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGhostWorld.cpp" />
