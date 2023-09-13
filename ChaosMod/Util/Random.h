@@ -28,6 +28,18 @@ class Random
 		std::uniform_real_distribution<float> distr(lower, upper);
 		return distr(m_Random);
 	}
+
+	inline float GetNormalRandomFloat(float mean, float stddev)
+	{
+		std::normal_distribution<float> distr(mean, stddev);
+		return distr(m_Random);
+	}
+
+	inline float GetGammaRandomFloat(float shape, float scale)
+	{
+		std::gamma_distribution<float> distr(shape, scale);
+		return distr(m_Random);
+	}
 };
 
 inline Random g_Random;
