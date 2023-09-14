@@ -14,6 +14,7 @@
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
+#include "Components/Globals.h"
 #include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
@@ -213,6 +214,8 @@ static void Init()
 	INIT_COMPONENT("Voting", "voting", Voting, textColor);
 
 	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
+
+	INIT_COMPONENT("Globals", "Script Globals", Globals);
 
 	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 

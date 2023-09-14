@@ -411,6 +411,8 @@ namespace ConfigApp
             { "misc_fakeuturn", new EffectInfo("Fake U-Turn", EffectCategory.Misc) },
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
             { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
+            { "misc_phonecall_agatha", new EffectInfo("Hello, this is Agatha", EffectCategory.Misc) },
+            { "misc_phonecall_dave", new EffectInfo("Dave Here", EffectCategory.Misc) },
         };
     }
 }
