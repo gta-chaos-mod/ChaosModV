@@ -26,7 +26,7 @@ static void OnStart()
         float rot = GET_ENTITY_HEADING(ped);
         auto x = sin((360 - rot) * PI / 180);
         auto y = cos((360 - rot) * PI / 180);
-        float force = g_Random.GetGammaRandomFloat(2.4f, 2.05f) * 500;
+        float force = g_Random.GetGammaRandomFloat(2.4f, 2.1f) * 2750.f;
 		Memory::ApplyForceToEntityCenterOfMass(ped, 0, x * force, y * force, 0.f, false, false, true, false);
     }
 }
