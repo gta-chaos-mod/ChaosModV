@@ -201,11 +201,14 @@ namespace ConfigApp
             {
                 var effectData = GetEffectData(pair.Key);
 
+                var defaultData = pair.Value;
+                var timedType = defaultData.IsTimed ? (defaultData.IsShort ? EffectTimedType.Short : EffectTimedType.Normal) : EffectTimedType.NotTimed;
+
                 OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
-                    + $",{(int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed)}"
-                    + $",{effectData.CustomTime.GetValueOrDefault(0)}"
-                    + $",{effectData.WeightMult.GetValueOrDefault(0)}"
-                    + $",{(effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent ? 1 : 0)}"
+                    + $",{(int) effectData.TimedType.GetValueOrDefault(timedType)}"
+                    + $",{effectData.CustomTime.GetValueOrDefault(-1)}"
+                    + $",{effectData.WeightMult.GetValueOrDefault(5)}"
+                    + $",{(effectData.TimedType.GetValueOrDefault(timedType) == EffectTimedType.Permanent ? 1 : 0)}"
                     + $",{(effectData.ExcludedFromVoting.GetValueOrDefault(false) ? 1 : 0)}"
                     + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
                     + $",{effectData.ShortcutKeycode.GetValueOrDefault(0)}");
