@@ -461,9 +461,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
-			auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isTimed          = effectData.TimedType != EffectTimedType::NotTimed;
-			isMeta           = effectData.IsMeta();
+			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
+			isTimed                = effectData.TimedType != EffectTimedType::NotTimed;
+			isMeta                 = effectData.IsMeta();
 		}
 
 		if (effect.MaxTime > 0)
@@ -494,9 +494,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		}
 		else
 		{
-			if (effect.MaxTime > 0 && effect.Timer <= 0
-			    || !isTimed && (SharedState.ActiveEffects.size() > maxEffects || effect.Timer >= 0.f)
-			           && !effect.IsStopping)
+			if (((effect.MaxTime > 0 && effect.Timer <= 0)
+			     || (!isTimed && (SharedState.ActiveEffects.size() > maxEffects || effect.Timer >= 0.f)))
+			    && !effect.IsStopping)
 			{
 				EffectThreads::StopThread(effect.ThreadId);
 				effect.IsStopping = true;
