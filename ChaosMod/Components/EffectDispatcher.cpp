@@ -58,6 +58,23 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 		}
 	}
 
+	auto playEffectDispatchSound = [&]()
+	{
+		if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+		    && ComponentExists<Mp3Manager>())
+		{
+			// Play global sound (if one exists)
+			// HACK: Force no global sound for "Fake Crash"
+			if (entry.Identifier.GetEffectId() != "misc_fakecrash")
+			{
+				GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
+			}
+
+			// Play a sound if corresponding .mp3 file exists
+			GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
+		}
+	};
+
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
 	bool alreadyExists = false;
@@ -71,6 +88,8 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				// Just extend timer of existing instance of timed effect
 				alreadyExists      = true;
 				activeEffect.Timer = activeEffect.MaxTime;
+
+				playEffectDispatchSound();
 			}
 			else
 			{
@@ -123,19 +142,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectName << " " << entry.Suffix;
 			}
 
-			if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
-			    && ComponentExists<Mp3Manager>())
-			{
-				// Play global sound (if one exists)
-				// HACK: Force no global sound for "Fake Crash"
-				if (entry.Identifier.GetEffectId() != "misc_fakecrash")
-				{
-					GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
-				}
-
-				// Play a sound if corresponding .mp3 file exists
-				GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
-			}
+			playEffectDispatchSound();
 
 			int effectDuration;
 			switch (effectData.TimedType)
