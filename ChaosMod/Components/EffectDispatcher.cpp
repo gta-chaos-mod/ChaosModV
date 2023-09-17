@@ -442,9 +442,21 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 	int effectCountToCheckCleaning = 3;
 	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
 	{
-		auto &effect = *it;
+		auto &effect        = *it;
 
-		if (EffectThreads::DoesThreadExist(effect.ThreadId) && !EffectThreads::IsThreadPaused(effect.ThreadId))
+		bool isEffectPaused = EffectThreads::IsThreadPaused(effect.ThreadId);
+
+		if (!EffectThreads::DoesThreadExist(effect.ThreadId))
+		{
+			if (effect.MaxTime > 0.f
+			    || (effect.MaxTime < 0.f && effect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
+			{
+				// Effect thread doesn't exist anymore so just remove the effect from list
+				it = SharedState.ActiveEffects.erase(it);
+				continue;
+			}
+		}
+		else if (!isEffectPaused)
 		{
 			OnPreRunEffect.Fire(effect.Identifier);
 			EffectThreads::RunThread(effect.ThreadId);
@@ -456,17 +468,15 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			effect.HideEffectName = false;
 		}
 
-		bool isTimed = false;
-		bool isMeta  = false;
+		bool isMeta = false;
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
 		if (g_EnabledEffects.contains(effect.Identifier))
 		{
 			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isTimed                = effectData.TimedType != EffectTimedType::NotTimed;
 			isMeta                 = effectData.IsMeta();
 		}
 
-		if (effect.MaxTime > 0)
+		if (effect.MaxTime > 0.f)
 		{
 			if (isMeta)
 			{
@@ -479,31 +489,22 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
 			}
 		}
-		else if (!isTimed)
+		else
 		{
 			float t = SharedState.EffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
-			// ensure effects stay on screen for at least 5 seconds
+			// Ensure non-timed effects stay on screen for a certain amount of time
 			effect.Timer += adjustedDeltaTime / t
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if (effect.IsStopping)
+		if (!effect.IsStopping
+		    && ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || SharedState.ActiveEffects.size() > maxEffects))
 		{
-			EffectThreads::StopThreadImmediately(effect.ThreadId);
-			it = SharedState.ActiveEffects.erase(it);
+			EffectThreads::StopThread(effect.ThreadId);
+			effect.IsStopping = true;
 		}
-		else
-		{
-			if (((effect.MaxTime > 0 && effect.Timer <= 0)
-			     || (!isTimed && (SharedState.ActiveEffects.size() > maxEffects || effect.Timer >= 0.f)))
-			    && !effect.IsStopping)
-			{
-				EffectThreads::StopThread(effect.ThreadId);
-				effect.IsStopping = true;
-			}
 
-			it++;
-		}
+		it++;
 	}
 }
 
@@ -646,7 +647,7 @@ void EffectDispatcher::DrawEffectTexts()
 			               ScreenTextAdjust::Right, { .0f, .915f });
 		}
 
-		if (effect.MaxTime > 0)
+		if (effect.MaxTime > 0.f)
 		{
 			if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 			{
@@ -769,9 +770,9 @@ void EffectDispatcher::ClearMostRecentEffect()
 {
 	if (!SharedState.ActiveEffects.empty())
 	{
-		ActiveEffect &mostRecentEffect = SharedState.ActiveEffects[SharedState.ActiveEffects.size() - 1];
+		auto &mostRecentEffect = SharedState.ActiveEffects[SharedState.ActiveEffects.size() - 1];
 
-		if (mostRecentEffect.Timer > 0)
+		if (mostRecentEffect.Timer > 0.f)
 		{
 			EffectThreads::StopThread(mostRecentEffect.ThreadId);
 			mostRecentEffect.IsStopping = true;
