@@ -66,27 +66,30 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	for (auto it = effectDispatcher->SharedState.ActiveEffects.begin();
 	     it != effectDispatcher->SharedState.ActiveEffects.end();)
 	{
-		auto &activeEffect     = *it;
-		auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
+		auto &activeEffect = *it;
 
 		if (activeEffect.Identifier == entry.Identifier)
 		{
 			if (effectData.TimedType != EffectTimedType::NotTimed)
 			{
+				// Just extend timer of existing instance of timed effect
 				alreadyExists      = true;
 				activeEffect.Timer = activeEffect.MaxTime;
 			}
 			else
 			{
+				// Replace previous instance of non-timed effect with this new one
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
-				it = effectDispatcher->SharedState.ActiveEffects.erase(it);
+				effectDispatcher->SharedState.ActiveEffects.erase(it);
 			}
 
 			break;
 		}
 
-		bool found = false;
-		if (std::find(incompatibleIds.begin(), incompatibleIds.end(), activeEffectData.Id) != incompatibleIds.end())
+		auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
+
+		bool found             = false;
+		if (incompatibleIds.contains(activeEffectData.Id))
 		{
 			found = true;
 		}
@@ -97,8 +100,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			const auto &activeIncompatibleIds = activeEffectData.IncompatibleIds;
 			if ((effectData.EffectCategory != EffectCategory::None
 			     && effectData.EffectCategory == activeEffectData.EffectCategory)
-			    || std::find(activeIncompatibleIds.begin(), activeIncompatibleIds.end(), effectData.Id)
-			           != activeIncompatibleIds.end())
+			    || activeIncompatibleIds.contains(effectData.Id))
 			{
 				found = true;
 			}
@@ -106,6 +108,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 		if (found)
 		{
+			// No immediate effect thread stopping required here, do it gracefully
 			EffectThreads::StopThread(activeEffect.ThreadId);
 			activeEffect.IsStopping = true;
 		}
@@ -115,7 +118,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	if (!alreadyExists)
 	{
-		RegisteredEffect *registeredEffect = GetRegisteredEffect(entry.Identifier);
+		auto *registeredEffect = GetRegisteredEffect(entry.Identifier);
 
 		if (registeredEffect)
 		{
