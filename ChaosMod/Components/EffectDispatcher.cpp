@@ -18,7 +18,8 @@
 
 static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDispatcher::EffectDispatchEntry &entry)
 {
-	EffectData &effectData = g_EnabledEffects.at(entry.Identifier);
+	auto &effectData = g_EnabledEffects.at(entry.Identifier);
+
 	if (effectData.TimedType == EffectTimedType::Permanent)
 	{
 		return;
@@ -59,15 +60,10 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
-	bool alreadyExists          = false;
+	bool alreadyExists = false;
 
-	const auto &incompatibleIds = effectData.IncompatibleIds;
-
-	for (auto it = effectDispatcher->SharedState.ActiveEffects.begin();
-	     it != effectDispatcher->SharedState.ActiveEffects.end();)
+	for (auto &activeEffect : effectDispatcher->SharedState.ActiveEffects)
 	{
-		auto &activeEffect = *it;
-
 		if (activeEffect.Identifier == entry.Identifier)
 		{
 			if (effectData.TimedType != EffectTimedType::NotTimed)
@@ -80,40 +76,37 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			{
 				// Replace previous instance of non-timed effect with this new one
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
-				effectDispatcher->SharedState.ActiveEffects.erase(it);
 			}
 
 			break;
 		}
 
-		auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
+		const auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
 
-		bool found             = false;
-		if (incompatibleIds.contains(activeEffectData.Id))
+		bool isIncompatible          = false;
+		if (effectData.IncompatibleIds.contains(activeEffectData.Id))
 		{
-			found = true;
+			isIncompatible = true;
 		}
 
 		// Check if current effect is either the same effect category or marked as incompatible in active effect
-		if (!found)
+		if (!isIncompatible)
 		{
 			const auto &activeIncompatibleIds = activeEffectData.IncompatibleIds;
 			if ((effectData.EffectCategory != EffectCategory::None
 			     && effectData.EffectCategory == activeEffectData.EffectCategory)
 			    || activeIncompatibleIds.contains(effectData.Id))
 			{
-				found = true;
+				isIncompatible = true;
 			}
 		}
 
-		if (found)
+		if (isIncompatible)
 		{
 			// No immediate effect thread stopping required here, do it gracefully
 			EffectThreads::StopThread(activeEffect.ThreadId);
 			activeEffect.IsStopping = true;
 		}
-
-		it++;
 	}
 
 	if (!alreadyExists)
