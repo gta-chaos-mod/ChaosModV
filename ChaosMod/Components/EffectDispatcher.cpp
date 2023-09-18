@@ -442,8 +442,10 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 	int maxEffects =
 	    std::min((int)(floor((1.0f - GetEffectTopSpace()) / EFFECT_TEXT_INNER_SPACING_MIN) - 1), m_MaxRunningEffects);
+	int activeEffects              = 0;
 	int effectCountToCheckCleaning = 3;
-	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
+	// Reverse order to ensure the effects on top of the list are removed if activeEffects > maxEffects
+	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
 		auto &effect        = *it;
 
@@ -455,7 +457,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			    || (effect.MaxTime < 0.f && effect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
 			{
 				// Effect thread doesn't exist anymore so just remove the effect from list
-				it = SharedState.ActiveEffects.erase(it);
+				it = static_cast<decltype(it)>(SharedState.ActiveEffects.erase(std::next(it).base()));
 				continue;
 			}
 		}
@@ -464,6 +466,8 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			OnPreRunEffect.Fire(effect.Identifier);
 			EffectThreads::RunThread(effect.ThreadId);
 			OnPostRunEffect.Fire(effect.Identifier);
+
+			activeEffects++;
 		}
 
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
@@ -500,8 +504,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if (!effect.IsStopping
-		    && ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || SharedState.ActiveEffects.size() > maxEffects))
+		if (!effect.IsStopping && ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects))
 		{
 			EffectThreads::StopThread(effect.ThreadId);
 			effect.IsStopping = true;
