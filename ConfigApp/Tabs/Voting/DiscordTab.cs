@@ -33,7 +33,7 @@ namespace ConfigApp.Tabs.Voting
             PushRowEmpty();
             PushRowExpandElement(new TextBlock()
             {
-                Text = "This is still an experimental feature!",
+                Text = "NOTE: This is still an experimental feature!",
                 HorizontalAlignment = HorizontalAlignment.Left
             });
             PopRow();
