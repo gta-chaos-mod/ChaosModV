@@ -116,6 +116,9 @@ static std::vector<FakeWantedInfo> ms_FakeWantedLevels = {
 	{ "+2 Wanted Stars", ADD, 2 },
 };
 
+int lastLevel;
+int lastLevelf;
+
 static void OnStartFake()
 {
 	FakeWantedInfo selectedInfo  = ms_FakeWantedLevels.at(g_Random.GetRandomInt(0, ms_FakeWantedLevels.size() - 1));
@@ -129,8 +132,8 @@ static void OnStartFake()
 	}
 
 	Player player  = PLAYER_ID();
-	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);
-	int lastLevelf = GET_FAKE_WANTED_LEVEL();
+	lastLevel  = GET_PLAYER_WANTED_LEVEL(player);
+	lastLevelf = GET_FAKE_WANTED_LEVEL();
 
 	switch (selectedType)
 	{
@@ -167,5 +170,52 @@ REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
 		.HideRealNameOnStart = true,
 		.IncompatibleWith = { "player_neverwanted" },
         .EffectGroupType = EffectGroupType::WantedLevel
+	}
+);
+
+static void spawnMesa()
+{
+	Ped playerPed     = PLAYER_PED_ID();
+	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Vector3 spawnPoint;
+	// Try spawning on a vehicle node, fall back to random coord
+	int nodeId;
+	if (!GET_RANDOM_VEHICLE_NODE(playerPos.x, playerPos.y, playerPos.z, 150, false, false, false, &spawnPoint, &nodeId))
+	{
+		spawnPoint = getRandomOffsetCoord(playerPos, 50, 50);
+		float groundZ;
+		if (GET_GROUND_Z_FOR_3D_COORD(spawnPoint.x, spawnPoint.y, spawnPoint.z, &groundZ, false, false))
+		{
+			spawnPoint.z = groundZ;
+		}
+	}
+	float xDiff   = playerPos.x - spawnPoint.x;
+	float yDiff   = playerPos.y - spawnPoint.y;
+	float heading = GET_HEADING_FROM_VECTOR_2D(xDiff, yDiff);
+	Hash mesaHash = "Mesa3"_hash;
+	mesaGroup     = EnemyGroup();
+	LoadModel(mesaHash);
+	mesaGroup.vehicle =
+	    CREATE_VEHICLE(mesaHash, spawnPoint.x, spawnPoint.y, spawnPoint.z + 5, heading, true, false, false);
+	SET_VEHICLE_ON_GROUND_PROPERLY(mesaGroup.vehicle, 5);
+	SET_VEHICLE_COLOURS(mesaGroup.vehicle, 0, 0);
+	SET_VEHICLE_ENGINE_ON(mesaGroup.vehicle, true, true, true);
+	SET_VEHICLE_CHEAT_POWER_INCREASE(mesaGroup.vehicle, 2); // Make it easier to catch up
+	fillVehicleWithPeds(mesaGroup.vehicle, playerPed, relationshipGroup, model, microSmgHash, mesaGroup.peds, true);
+}
+
+static void OnStartSix(void)
+{
+
+}
+
+// clang-format off
+REGISTER_EFFECT(OnStartSix, nullptr, nullptr, EffectInfo
+	{
+		.Name = "!6 Wanted Stars",
+		.Id = "player_6stars",
+		.IncompatibleWith = { "player_neverwanted" },
+        .EffectGroupType = EffectGroupType::WantedLevel,
+		//.IsTimed = true
 	}
 );
