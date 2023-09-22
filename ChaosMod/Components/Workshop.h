@@ -18,8 +18,6 @@ class Workshop : public Component
 	nlohmann::json GetSubmissionSettingJson(const std::string &submissionPath);
 
   public:
-	void OnModPauseCleanup() override;
-
 	std::vector<std::string> GetSubmissionBlacklistedFiles(const std::string &submissionPath);
 	enum class FileType
 	{

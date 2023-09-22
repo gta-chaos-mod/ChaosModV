@@ -5,8 +5,8 @@
 #include "EffectGroups.h"
 #include "EffectTimedType.h"
 
+#include <set>
 #include <string>
-#include <vector>
 
 inline bool g_EnableGroupWeighting = true;
 
@@ -17,7 +17,7 @@ struct EffectData
 	std::string CustomName;
 	std::string Id;
 	std::string GroupType;
-	std::vector<std::string> IncompatibleIds;
+	std::set<std::string> IncompatibleIds;
 	float Weight                  = 5.f;
 	int CustomTime                = -1;
 	int WeightMult                = 5;

@@ -40,6 +40,11 @@ struct ComponentHolder
 		{
 			return m_Ptr.get();
 		}
+
+		void Reset()
+		{
+			m_Ptr.reset();
+		}
 	};
 
 	static inline Ptr Instance;
@@ -66,6 +71,13 @@ inline void InitComponent(auto &&...args)
 	// For whatever reason the compiler prepends an additional template param to Args, breaking std::forward
 	// We're just going to perfect forward using a tuple instead
 	ComponentHolder<T>::Instance = std::forward_as_tuple(args...);
+}
+
+template <class T>
+requires std::is_base_of_v<Component, T>
+inline void UninitComponent()
+{
+	ComponentHolder<T>::Instance.Reset();
 }
 
 class Component
