@@ -470,12 +470,6 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			activeEffects++;
 		}
 
-		if (effect.IsStopping)
-		{
-			it++;
-			continue;
-		}
-
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
 		{
 			effect.HideEffectName = false;
@@ -512,8 +506,16 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects)
 		{
-			EffectThreads::StopThread(effect.ThreadId);
-			effect.IsStopping = true;
+			if (effect.Timer < -60.f)
+			{
+				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
+				EffectThreads::StopThreadImmediately(effect.ThreadId);
+			}
+			else if (!effect.IsStopping)
+			{
+				EffectThreads::StopThread(effect.ThreadId);
+				effect.IsStopping = true;
+			}
 		}
 
 		it++;
