@@ -27,6 +27,5 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Cinematic Vehicle Cam",
 		.Id = "player_forcedcinematiccam",
 		.IsTimed = true,
-		.IncompatibleWith = { "player_firstperson" }
 	}
 );
