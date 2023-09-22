@@ -470,6 +470,12 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			activeEffects++;
 		}
 
+		if (effect.IsStopping)
+		{
+			it++;
+			continue;
+		}
+
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
 		{
 			effect.HideEffectName = false;
@@ -504,7 +510,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if (!effect.IsStopping && ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects))
+		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects)
 		{
 			EffectThreads::StopThread(effect.ThreadId);
 			effect.IsStopping = true;
@@ -621,6 +627,11 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect &effect : SharedState.ActiveEffects)
 	{
+		if (effect.IsStopping)
+		{
+			continue;
+		}
+
 		const bool hasFake = !effect.FakeName.empty();
 
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
