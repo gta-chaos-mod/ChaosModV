@@ -412,6 +412,7 @@ namespace ConfigApp
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
             { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
             { "tyre_rain", new EffectInfo("Tyre Rain", EffectCategory.Misc, true) },
+            { "pepega_traffic", new EffectInfo("Pepega Traffic", EffectCategory.Vehicle, true) },
         };
     }
 }
