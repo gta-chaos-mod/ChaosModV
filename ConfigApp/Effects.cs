@@ -410,7 +410,7 @@ namespace ConfigApp
             { "misc_fakeuturn", new EffectInfo("Fake U-Turn", EffectCategory.Misc) },
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
             { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
-            { "cocktail_shaker", new EffectInfo("Cocktail Shaker", EffectCategory.Misc, true) },
+            { "cocktail_shaker", new EffectInfo("Cocktail Shaker", EffectCategory.Misc, true, true) },
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
         };
     }
