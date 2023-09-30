@@ -412,7 +412,6 @@ namespace ConfigApp
             { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
             { "tyre_rain", new EffectInfo("Tyre Rain", EffectCategory.Misc, true) },
-            { "pepega_traffic", new EffectInfo("Pepega Traffic", EffectCategory.Vehicle, true) },
         };
     }
 }
