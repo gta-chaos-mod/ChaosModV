@@ -2,11 +2,6 @@
 
 #include "Workshop.h"
 
-void Workshop::OnModPauseCleanup()
-{
-	m_CachedSubmissionSettings.clear();
-}
-
 nlohmann::json Workshop::GetSubmissionSettingJson(const std::string &submissionPath)
 {
 	if (m_CachedSubmissionSettings.contains(submissionPath))

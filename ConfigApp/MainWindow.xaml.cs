@@ -307,7 +307,7 @@ namespace ConfigApp
             meta_effects_tree_view.Items.Clear();
             meta_effects_tree_view.Items.Add(metaParentItem);
 
-            foreach (var treeMenuItem in m_TreeMenuItemsAll)
+            foreach (var treeMenuItem in m_TreeMenuItemsAll.Append(metaParentItem))
             {
                 treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
             }

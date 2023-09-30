@@ -184,6 +184,7 @@ static void Init()
 	if (blacklistedComponentNames.contains(componentName))                     \
 	{                                                                          \
 		LOG(componentName << " component has been blacklisted from running!"); \
+		UninitComponent<componentType>();                                      \
 	}                                                                          \
 	else                                                                       \
 	{                                                                          \

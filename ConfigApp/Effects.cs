@@ -97,7 +97,6 @@ namespace ConfigApp
             { "vehs_chrome", new EffectInfo("Chrome Traffic", EffectCategory.Vehicle, true) },
             { "vehs_pink", new EffectInfo("Hot Traffic", EffectCategory.Vehicle, true) },
             { "vehs_rainbow", new EffectInfo("Rainbow Traffic", EffectCategory.Vehicle, true) },
-            { "player_firstperson", new EffectInfo("First Person", EffectCategory.Misc, true) },
             { "vehs_slippery", new EffectInfo("Slippery Vehicles", EffectCategory.Vehicle, true) },
             { "vehs_nogravity", new EffectInfo("Vehicles Have No Gravity", EffectCategory.Vehicle, true, true) },
             { "player_invincible", new EffectInfo("Invincibility", EffectCategory.Player, true) },
@@ -412,6 +411,8 @@ namespace ConfigApp
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
             { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
             { "veh_boostbrake", new EffectInfo("Boost Braking", EffectCategory.Vehicle, true) },
+            { "cocktail_shaker", new EffectInfo("Cocktail Shaker", EffectCategory.Misc, true, true) },
+            { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
         };
     }
 }

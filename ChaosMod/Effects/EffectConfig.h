@@ -156,7 +156,7 @@ namespace EffectConfig
 
 			for (auto effectType : effectInfo.IncompatibleWith)
 			{
-				effectData.IncompatibleIds.push_back(g_EffectsMap.at(effectType).Id);
+				effectData.IncompatibleIds.insert(g_EffectsMap.at(effectType).Id);
 			}
 
 			if (effectInfo.EffectGroupType != EffectGroupType::None)
