@@ -2,10 +2,9 @@
 
 enum class EffectTimedType
 {
-	NotTimed = -4,
-	Permanent,
+	Permanent = -3,
 	Custom,
-	Unk,
+	NotTimed,
 	Normal,
 	Short
 };

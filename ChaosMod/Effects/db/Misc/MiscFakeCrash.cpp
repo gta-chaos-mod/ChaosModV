@@ -84,6 +84,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Crash",
-		.Id = "misc_fakecrash"
+		.Id = "misc_fakecrash",
+		.HideRealNameOnStart = true
 	}
 );

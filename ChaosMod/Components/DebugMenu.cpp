@@ -10,7 +10,7 @@
 
 DebugMenu::DebugMenu() : Component()
 {
-	m_IsEnabled = g_OptionsManager.GetConfigValue<bool>("EnableDebugMenu", OPTION_DEFAULT_DEBUG_MENU);
+	m_IsEnabled = g_OptionsManager.GetConfigValue({ "EnableDebugMenu" }, OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_IsEnabled)
 	{
 		return;
@@ -141,7 +141,8 @@ bool DebugMenu::IsEnabled() const
 	return m_IsEnabled;
 }
 
-void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+                           bool isAltPressed)
 {
 	if (!m_IsEnabled || !m_Visible)
 	{

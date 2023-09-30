@@ -2,10 +2,17 @@
 
 #include "Memory.h"
 
+#include "Effects/EffectThreads.h"
+
 #include "Memory/Hooks/Hook.h"
+
+#include "Util/Script.h"
+#include "Util/Text.h"
 
 static DWORD64 ms_BaseAddr;
 static DWORD64 ms_EndAddr;
+
+static std::set<std::string> ms_BlacklistedHookNames;
 
 namespace Memory
 {
@@ -18,17 +25,6 @@ namespace Memory
 		ms_EndAddr  = ms_BaseAddr + moduleInfo.SizeOfImage;
 
 		MH_Initialize();
-
-		LOG("Running hooks");
-		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
-		{
-			if (!registeredHook->IsLateHook() && !registeredHook->RunHook())
-			{
-				LOG("Error while executing " << registeredHook->GetName() << " hook");
-			}
-		}
-
-		MH_EnableHook(MH_ALL_HOOKS);
 
 		if (DoesFileExist("chaosmod\\.skipintro"))
 		{
@@ -76,14 +72,69 @@ namespace Memory
 				LOG("SkipDLCs: Patched DLC loading");
 			}
 		}
+
+		if (DoesFileExist("chaosmod\\.blacklistedhooks"))
+		{
+			std::ifstream file("chaosmod\\.blacklistedhooks");
+			if (!file.fail())
+			{
+				std::string line;
+				line.resize(64);
+				while (file.getline(line.data(), 64))
+				{
+					ms_BlacklistedHookNames.insert(StringTrim(line.substr(0, line.find("\n"))));
+				}
+			}
+		}
+
+		LOG("Running hooks");
+		std::thread(
+		    []()
+		    {
+			    for (auto registeredHook = g_pRegisteredHooks; registeredHook;
+			         registeredHook      = registeredHook->GetNext())
+			    {
+				    if (registeredHook->IsLateHook())
+				    {
+					    continue;
+				    }
+
+				    const auto &hookName = registeredHook->GetName();
+
+				    if (ms_BlacklistedHookNames.contains(hookName))
+				    {
+					    LOG(hookName << " hook has been blacklisted from running!");
+					    continue;
+				    }
+
+				    LOG("Running " << hookName << " hook");
+
+				    if (!registeredHook->RunHook())
+				    {
+					    LOG(hookName << " hook failed!");
+				    }
+			    }
+
+			    MH_EnableHook(MH_ALL_HOOKS);
+		    })
+		    .detach();
 	}
 
 	void Uninit()
 	{
 		LOG("Running hook cleanups");
-		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
+		for (auto registeredHook = g_pRegisteredHooks; registeredHook; registeredHook = registeredHook->GetNext())
 		{
-			pRegisteredHook->RunCleanup();
+			const auto &hookName = registeredHook->GetName();
+
+			if (ms_BlacklistedHookNames.contains(hookName))
+			{
+				continue;
+			}
+
+			LOG("Running " << hookName << " hook cleanup");
+
+			registeredHook->RunCleanup();
 		}
 
 		MH_DisableHook(MH_ALL_HOOKS);
@@ -95,40 +146,83 @@ namespace Memory
 	{
 		LOG("Running late hooks");
 
-		for (auto pRegisteredHook = g_pRegisteredHooks; pRegisteredHook; pRegisteredHook = pRegisteredHook->GetNext())
-		{
-			if (pRegisteredHook->IsLateHook() && !pRegisteredHook->RunHook())
-			{
-				LOG("Error while executing " << pRegisteredHook->GetName() << " hook");
-			}
-		}
+		std::thread(
+		    []()
+		    {
+			    for (auto registeredHook = g_pRegisteredHooks; registeredHook;
+			         registeredHook      = registeredHook->GetNext())
+			    {
+				    if (!registeredHook->IsLateHook())
+				    {
+					    continue;
+				    }
 
-		MH_EnableHook(MH_ALL_HOOKS);
+				    const auto &hookName = registeredHook->GetName();
+
+				    if (ms_BlacklistedHookNames.contains(hookName))
+				    {
+					    LOG(hookName << " hook has been blacklisted from running!");
+					    continue;
+				    }
+
+				    LOG("Running " << hookName << " hook");
+
+				    if (!registeredHook->RunHook())
+				    {
+					    LOG(hookName << " hook failed!");
+				    }
+			    }
+
+			    MH_EnableHook(MH_ALL_HOOKS);
+		    })
+		    .detach();
 	}
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
 	{
+		DEBUG_LOG("Searching for pattern: " << pattern);
+
 		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)
 		{
 			LOG("startAddr is equal / bigger than endAddr???");
 			return Handle();
 		}
 
-		auto copy = pattern;
-		for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
+		auto scanPattern = [&]()
 		{
-			copy.replace(pos, 2, "?");
+			auto copy = pattern;
+			for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
+			{
+				copy.replace(pos, 2, "?");
+			}
+
+			auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
+			                    ? hook::pattern(copy)
+			                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
+			if (!thePattern.size())
+			{
+				return Handle();
+			}
+
+			return Handle(uintptr_t(thePattern.get_first()));
+		};
+
+		if (EffectThreads::IsThreadAnEffectThread())
+		{
+			Handle handle;
+
+			auto future = std::async(std::launch::async, [&]() { handle = scanPattern(); });
+
+			using namespace std::chrono_literals;
+			while (future.wait_for(0ms) != std::future_status::ready)
+			{
+				WAIT(0);
+			}
+
+			return handle;
 		}
 
-		auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
-		                    ? hook::pattern(copy)
-		                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
-		if (!thePattern.size())
-		{
-			return Handle();
-		}
-
-		return Handle(uintptr_t(thePattern.get_first()));
+		return scanPattern();
 	}
 
 	MH_STATUS AddHook(void *target, void *detour, void *orig)

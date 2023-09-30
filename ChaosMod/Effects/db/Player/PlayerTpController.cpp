@@ -388,7 +388,8 @@ static void OnStartFakeTp()
 REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Teleport",
-		.Id = "tp_fake"
+		.Id = "tp_fake",
+		.HideRealNameOnStart = true
 	}
 );
 // clang-format on
@@ -468,6 +469,7 @@ static void OnStartFakeFakeTp()
 REGISTER_EFFECT(OnStartFakeFakeTp, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Fake Teleport",
-		.Id = "tp_fakex2"
+		.Id = "tp_fakex2",
+		.HideRealNameOnStart = true
 	}
 );

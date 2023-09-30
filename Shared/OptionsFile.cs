@@ -1,23 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Shared
 {
     public class OptionsFile
     {
         private string m_FileName;
-        private string m_CompatFileName;
+        private string[] m_CompatFileNames;
         private Dictionary<string, string> m_Options = new Dictionary<string, string>();
 
-        public OptionsFile(string fileName, string compatFileName = null)
+        public OptionsFile(string fileName, params string[] compatFileNames)
         {
             m_FileName = fileName;
-            m_CompatFileName = compatFileName;
+            m_CompatFileNames = compatFileNames;
         }
 
-        public bool HasKey(string key)
+        public bool HasKey(params string[] keys)
         {
-            return m_Options.ContainsKey(key);
+            foreach (var key in keys)
+            {
+                if (m_Options.ContainsKey(key))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public IEnumerable<string> GetKeys()
@@ -28,15 +37,26 @@ namespace Shared
             }
         }
 
-        public string ReadValue(string key, string defaultValue = null)
+        public string ReadValue(string key, string defaultValue = null, params string[] compatKeys)
         {
-            return HasKey(key) ? m_Options[key] : defaultValue;
+            var keys = compatKeys.Prepend(key);
+            foreach (var _key in keys)
+            {
+                if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
+                {
+                    continue;
+                }
+
+                return m_Options[_key];
+            }
+
+            return defaultValue;
         }
 
-        public int ReadValueInt(string key, int defaultValue)
+        public int ReadValueInt(string key, int defaultValue, params string[] compatKeys)
         {
             int result;
-            if (!int.TryParse(ReadValue(key), out result))
+            if (!int.TryParse(ReadValue(key, null, compatKeys), out result))
             {
                 result = defaultValue;
             }
@@ -44,30 +64,39 @@ namespace Shared
             return result;
         }
 
-        public bool ReadValueBool(string key, bool defaultValue)
+        public long ReadValueLong(string key, long defaultValue, params string[] compatKeys)
         {
-            bool result = defaultValue;
-            if (HasKey(key))
+            long result;
+            if (!long.TryParse(ReadValue(key, null, compatKeys), out result))
             {
-                if (int.TryParse(ReadValue(key), out int tmp))
-                {
-                    result = tmp != 0;
-                }
+                result = defaultValue;
             }
 
             return result;
         }
 
+        public bool ReadValueBool(string key, bool defaultValue, params string[] compatKeys)
+        {
+            var keys = compatKeys.Prepend(key);
+            foreach (var _key in keys)
+            {
+                if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
+                {
+                    continue;
+                }
+
+                if (int.TryParse(ReadValue(_key), out int result))
+                {
+                    return result != 0;
+                }
+            }
+
+            return defaultValue;
+        }
+
         public void WriteValue(string key, string value)
         {
-            if (value != null && value.Trim().Length > 0)
-            {
-                m_Options[key] = value;
-            }
-            else
-            {
-                m_Options.Remove(key);
-            }
+            m_Options[key] = value;
         }
 
         public void WriteValue(string key, int value)
@@ -83,7 +112,7 @@ namespace Shared
         public void ReadFile()
         {
             string readData(string fileName)
-            { 
+            {
                 if (!File.Exists(fileName))
                 {
                     return null;
@@ -101,7 +130,17 @@ namespace Shared
             string data;
             if ((data = readData(m_FileName)) == null)
             {
-                if ((data = readData(m_CompatFileName)) == null)
+                bool dataRead = false;
+                foreach (var compatFileName in m_CompatFileNames)
+                {
+                    if ((data = readData(compatFileName)) != null)
+                    {
+                        dataRead = true;
+                        break;
+                    }
+                }
+
+                if (!dataRead)
                 {
                     return;
                 }
@@ -111,13 +150,15 @@ namespace Shared
 
             foreach (string line in data.Split('\n'))
             {
-                string[] keyValuePair = line.Split('=');
-                if (keyValuePair.Length != 2)
+                if (!line.Contains("="))
                 {
                     continue;
                 }
 
-                m_Options[keyValuePair[0]] = keyValuePair[1];
+                var keyValuePair = line.Split('=', 2, System.StringSplitOptions.RemoveEmptyEntries
+                    | System.StringSplitOptions.TrimEntries);
+
+                m_Options[keyValuePair[0]] = keyValuePair.Length == 2 ? keyValuePair[1] : null;
             }
         }
 
@@ -145,12 +186,25 @@ namespace Shared
 
         public bool HasCompatFile()
         {
-            return m_CompatFileName != null && File.Exists(m_CompatFileName);
+            foreach (var compatFileName in m_CompatFileNames)
+            {
+                if (File.Exists(compatFileName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public string GetCompatFile()
+        public bool HasCompatFile(string fileName)
         {
-            return m_CompatFileName;
+            return m_CompatFileNames.Contains(fileName) && File.Exists(fileName);
+        }
+
+        public string[] GetCompatFiles()
+        {
+            return m_CompatFileNames;
         }
     }
 }

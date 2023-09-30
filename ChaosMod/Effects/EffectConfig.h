@@ -37,20 +37,37 @@ namespace EffectConfig
 		return -1;
 	}
 
-	inline void ReadConfig(const char *configPath, auto &out, const char *compatConfigPath = nullptr)
+	inline void ReadConfig(const char *configPath, auto &out, std::vector<const char *> compatConfigPaths = {})
 	{
-		OptionsFile effectsFile(configPath, compatConfigPath);
+		OptionsFile effectsFile(configPath, compatConfigPaths);
 
 		for (auto &[effectId, effectInfo] : g_EffectsMap)
 		{
-			// Default EffectData values
-			// Enabled, TimedType, CustomTime (-1 = Disabled), Weight, Permanent, ExcludedFromVoting, "Dummy for
-			// name-override", Shortcut
-			std::vector<int> values = { true, static_cast<int>(EffectTimedType::Unk), -1, 5, false, false, 0, 0 };
+			struct ConfigValues
+			{
+				// Declared as named struct outside the union because MSVC doesn't like default initialization in
+				// unnamed structs inside unions
+				struct DetailedValues
+				{
+					alignas(int) bool Enabled              = true;
+					alignas(int) EffectTimedType TimedType = EffectTimedType::NotTimed;
+					alignas(int) int CustomTime            = 0;
+					alignas(int) int WeightMult            = 0;
+					alignas(int) bool Permanent            = false;
+					alignas(int) bool ExcludedFromVoting   = false;
+					alignas(int) char Placeholder;
+					alignas(int) int ShortcutKeycode = 0;
+				};
+				union
+				{
+					std::array<int, 8> ValuesRaw;
+					DetailedValues Values {};
+				};
+			} configValues;
 			// HACK: Store EffectCustomName seperately
 			std::string valueEffectName;
 
-			auto value = effectsFile.ReadValueString(std::string(effectId));
+			auto value = effectsFile.ReadValueString({ std::string(effectId) });
 			if (!value.empty())
 			{
 				size_t splitIndex = GetNextDelimiterOffset(value);
@@ -75,7 +92,7 @@ namespace EffectConfig
 					{
 						const auto &split = value.substr(0, splitIndex);
 
-						Util::TryParse<int>(split, values[j]);
+						Util::TryParse<int>(split, configValues.ValuesRaw[j]);
 					}
 
 					if (splitIndex == value.npos)
@@ -88,7 +105,7 @@ namespace EffectConfig
 				}
 			}
 
-			if (!values[0]) // enabled == false
+			if (!configValues.Values.Enabled)
 			{
 				continue;
 			}
@@ -98,35 +115,40 @@ namespace EffectConfig
 			{
 				effectData.TimedType = EffectTimedType::NotTimed;
 			}
-			else if (values[4])
+			else if (configValues.Values.Permanent)
 			{
 				effectData.TimedType = EffectTimedType::Permanent;
 			}
-			else if (values[2] > -1)
+			else if (configValues.Values.CustomTime > 0)
 			{
 				effectData.TimedType  = EffectTimedType::Custom;
-				effectData.CustomTime = values[2];
+				effectData.CustomTime = configValues.Values.CustomTime;
 			}
 			else
 			{
-				effectData.TimedType = static_cast<EffectTimedType>(
-				    static_cast<EffectTimedType>(values[1]) == EffectTimedType::Unk ? effectInfo.IsShortDuration
-				                                                                    : values[1]);
+				effectData.TimedType =
+				    configValues.Values.TimedType == EffectTimedType::NotTimed
+				        ? (effectInfo.IsShortDuration ? EffectTimedType::Short : EffectTimedType::Normal)
+				        : configValues.Values.TimedType;
 			}
 
-			effectData.WeightMult = values[3];
-			effectData.Weight     = effectData.WeightMult; // Set initial effect weight to WeightMult
-			effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, values[5]);
+			if (configValues.Values.WeightMult > 0)
+			{
+				effectData.WeightMult = configValues.Values.WeightMult;
+			}
+			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
+			effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, configValues.Values.ExcludedFromVoting);
 			effectData.SetAttribute(EffectAttributes::IsMeta, effectInfo.ExecutionType == EffectExecutionType::Meta);
 			effectData.Name = effectInfo.Name;
+			effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, effectInfo.HideRealNameOnStart);
 #ifdef _DEBUG
-			effectData.ShortcutKeycode = effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : values[7];
+			effectData.ShortcutKeycode =
+			    effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : configValues.Values.ShortcutKeycode;
 #else
-			effectData.ShortcutKeycode = values[7];
+			effectData.ShortcutKeycode = configValues.Values.ShortcutKeycode;
 #endif
 			if (!valueEffectName.empty())
 			{
-				effectData.SetAttribute(EffectAttributes::HasCustomName, true);
 				effectData.CustomName = valueEffectName;
 			}
 			effectData.Id             = effectInfo.Id;
@@ -134,7 +156,7 @@ namespace EffectConfig
 
 			for (auto effectType : effectInfo.IncompatibleWith)
 			{
-				effectData.IncompatibleIds.push_back(g_EffectsMap.at(effectType).Id);
+				effectData.IncompatibleIds.insert(g_EffectsMap.at(effectType).Id);
 			}
 
 			if (effectInfo.EffectGroupType != EffectGroupType::None)

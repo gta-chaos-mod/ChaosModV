@@ -1,22 +1,24 @@
 #pragma once
 
-#include "Logging.h"
-#include "TryParse.h"
+#include "Util/Logging.h"
+#include "Util/Text.h"
+#include "Util/TryParse.h"
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 class OptionsFile
 {
   private:
 	const char *m_FileName;
-	const char *m_CompatFileName;
+	std::vector<const char *> m_CompatFileNames;
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
-	OptionsFile(const char *fileName, const char *compatFileName = nullptr)
-	    : m_FileName(fileName), m_CompatFileName(compatFileName)
+	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
+	    : m_FileName(fileName), m_CompatFileNames(compatFileNames)
 	{
 		Reset();
 	}
@@ -33,11 +35,11 @@ class OptionsFile
 				return false;
 			}
 
-			char buffer[256];
-			while (file.getline(buffer, 256))
+			std::string line;
+			line.resize(128);
+			while (file.getline(line.data(), 128))
 			{
-				std::string line(buffer);
-				const auto &key = line.substr(0, line.find("="));
+				const auto &key = StringTrim(line.substr(0, line.find("=")));
 
 				// Ignore line if there's no "="
 				if (line == key)
@@ -45,8 +47,8 @@ class OptionsFile
 					continue;
 				}
 
-				const auto &value =
-				    line.substr(line.find("=") + 1).substr(0, line.find('\n')); // Also do trimming of newline
+				const auto &value = StringTrim(
+				    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
 
 				m_Options.emplace(key, value);
 			}
@@ -54,39 +56,55 @@ class OptionsFile
 			return true;
 		};
 
-		if (!readData(m_FileName) && !readData(m_CompatFileName))
+		if (!readData(m_FileName))
 		{
-			LOG("Config file " << m_FileName << " not found!");
+			bool dataRead = false;
+			for (auto compatFileName : m_CompatFileNames)
+			{
+				if ((dataRead = readData(compatFileName)))
+				{
+					break;
+				}
+			}
+
+			if (!dataRead)
+			{
+				LOG("Config file " << m_FileName << " not found!");
+			}
 		}
 	}
 
-	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
+	template <typename T> inline T ReadValue(const std::vector<std::string> &keys, T defaultValue) const
 	{
-		const auto &value = ReadValueString(key);
-
-		if (!value.empty())
+		for (const auto &key : keys)
 		{
-			T result;
-			if (Util::TryParse<T>(value, result))
+			const auto &result = m_Options.find(key);
+
+			if (result != m_Options.end() && !result->second.empty())
 			{
-				return result;
+				T parsedResult;
+				if (Util::TryParse<T>(result->second, parsedResult))
+				{
+					return parsedResult;
+				}
 			}
 		}
 
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::string &key, const std::string &defaultValue = {}) const
+	inline std::string ReadValueString(const std::vector<std::string> &keys, const std::string &defaultValue = {}) const
 	{
-		const auto &result = m_Options.find(key);
+		for (const auto &key : keys)
+		{
+			const auto &result = m_Options.find(key);
 
-		if (result != m_Options.end())
-		{
-			return result->second;
+			if (result != m_Options.end())
+			{
+				return result->second;
+			}
 		}
-		else
-		{
-			return defaultValue;
-		}
+
+		return defaultValue;
 	}
 };

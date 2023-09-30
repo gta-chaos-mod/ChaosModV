@@ -1,7 +1,31 @@
 #include <stdafx.h>
 
-#include "Info.h"
 #include "SplashTexts.h"
+
+#include "Info.h"
+
+#include "Util/OptionsManager.h"
+
+static bool ms_InitalSplashShown = false;
+
+SplashTexts::SplashTexts()
+{
+	m_EnableSplashTexts =
+	    g_OptionsManager.GetConfigValue({ "EnableModSplashTexts" }, OPTION_DEFAULT_ENABLE_SPLASH_TEXTS);
+
+	if (ms_InitalSplashShown)
+	{
+		return;
+	}
+
+	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
+	           { 60, 245, 190 });
+#ifdef _DEBUG
+	ShowSplash("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 });
+#endif
+
+	ms_InitalSplashShown = true;
+}
 
 void SplashTexts::OnModPauseCleanup()
 {
@@ -29,23 +53,19 @@ void SplashTexts::OnRun()
 }
 
 void SplashTexts::ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale,
-                             ScreenTextColor textColor, float time = SPLASH_TEXT_DUR_SECS)
+                             ScreenTextColor textColor, std::uint8_t time)
 {
+	if (!m_EnableSplashTexts)
+	{
+		return;
+	}
+
 	m_ActiveSplashes.emplace_back(text, textPos, scale, textColor, time);
 }
 
-void SplashTexts::ShowInitSplash()
+void SplashTexts::ShowVotingSplash()
 {
-	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
-	           { 60, 245, 190 });
-#ifdef _DEBUG
-	ShowSplash("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 });
-#endif
-}
-
-void SplashTexts::ShowTwitchVotingSplash()
-{
-	ShowSplash("Twitch Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
+	ShowSplash("Voting Enabled!", { .86f, .7f }, .8f, { 255, 100, 100 });
 }
 
 void SplashTexts::ShowClearEffectsSplash()

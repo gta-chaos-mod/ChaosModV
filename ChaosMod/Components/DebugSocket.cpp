@@ -131,7 +131,7 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
 		if (!debugSocket->m_IsProfiling)
 		{
 			debugSocket->m_IsProfiling = true;
-			QueueDelegate(debugSocket, []() { LOG("Started Profiling!") });
+			QueueDelegate(debugSocket, []() { LOG("Started Profiling!"); });
 		}
 	}
 	else if (state == "stop")
@@ -293,12 +293,17 @@ DebugSocket::DebugSocket()
 
 	if (ComponentExists<EffectDispatcher>())
 	{
-		GetComponent<EffectDispatcher>()->OnPreDispatchEffect.AddListener(
-		    [&](const EffectIdentifier &identifier) { return EventOnPreDispatchEffect(this, identifier); });
-		GetComponent<EffectDispatcher>()->OnPreRunEffect.AddListener([&](const EffectIdentifier &identifier)
-		                                                             { EventOnPreRunEffect(this, identifier); });
-		GetComponent<EffectDispatcher>()->OnPostRunEffect.AddListener([&](const EffectIdentifier &identifier)
-		                                                              { EventOnPostRunEffect(this, identifier); });
+		m_OnPreDispatchEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreDispatchEffect,
+		                                       [&](const EffectIdentifier &identifier)
+		                                       { return EventOnPreDispatchEffect(this, identifier); });
+
+		m_OnPreRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreRunEffect,
+		                                  [&](const EffectIdentifier &identifier)
+		                                  { EventOnPreRunEffect(this, identifier); });
+
+		m_OnPostRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPostRunEffect,
+		                                   [&](const EffectIdentifier &identifier)
+		                                   { EventOnPostRunEffect(this, identifier); });
 	}
 }
 

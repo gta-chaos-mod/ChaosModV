@@ -1,16 +1,16 @@
-﻿using System;
-using System.Net.Http;
-using System.Windows.Input;
-using System.Windows;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Security.Cryptography;
-using Newtonsoft.Json.Linq;
-using System.Text;
 using System.Linq;
-using ZstdSharp;
-using System.Collections.Generic;
 using System.Media;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using ZstdSharp;
 
 namespace ConfigApp
 {
@@ -37,14 +37,16 @@ namespace ConfigApp
 
             var targetDirName = $"workshop/{m_SubmissionItem.Id}";
 
-            if (m_SubmissionItem.InstallState == WorkshopSubmissionItem.SubmissionInstallState.Installed)
+            var origInstallState = m_SubmissionItem.InstallState;
+
+            if (origInstallState == WorkshopSubmissionItem.SubmissionInstallState.Installed)
             {
                 // Remove submission
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Removing;
 
                 if (MessageBox.Show("Are you sure you want to remove this submission?", "ChaosModV", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
-                    m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                    m_SubmissionItem.InstallState = origInstallState;
                     return;
                 }
 
@@ -64,7 +66,7 @@ namespace ConfigApp
                 catch (IOException)
                 {
                     MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                    m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                    m_SubmissionItem.InstallState = origInstallState;
                     return;
                 }
 
@@ -77,7 +79,7 @@ namespace ConfigApp
 
             void fatalCleanup()
             {
-                m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
+                m_SubmissionItem.InstallState = origInstallState;
             }
 
             if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c))))
@@ -152,10 +154,11 @@ namespace ConfigApp
                             var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                             if (trimmedName.Length > 0)
                             {
-                                files.Add(new WorkshopSubmissionFile(trimmedName));
+                                files.Add(new WorkshopSubmissionFile(trimmedName, true));
                             }
                         }
                         files.Sort();
+
                         var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
                         if (!(bool)installConfirmationWindow.ShowDialog())
                         {
@@ -189,7 +192,7 @@ namespace ConfigApp
                     return;
                 }
 
-                JObject metadataJson = new JObject();
+                var metadataJson = new JObject();
                 metadataJson["name"] = m_SubmissionItem.Name;
                 metadataJson["author"] = m_SubmissionItem.Author;
                 metadataJson["description"] = m_SubmissionItem.Description;

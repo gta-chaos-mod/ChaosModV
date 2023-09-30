@@ -6,6 +6,16 @@ namespace ConfigApp
     {
         public struct EffectInfo
         {
+            public string Name { get; set; } = null;
+            public EffectCategory EffectCategory { get; set; } = EffectCategory.Unknown;
+            public bool IsTimed { get; set; } = false;
+            public bool IsShort { get; set; } = false;
+
+            public EffectInfo()
+            {
+
+            }
+
             public EffectInfo(string name, EffectCategory effectCategory, bool isTimed = false, bool isShort = false)
             {
                 Name = name;
@@ -13,15 +23,11 @@ namespace ConfigApp
                 IsTimed = isTimed;
                 IsShort = isShort;
             }
-
-            public readonly string Name;
-            public readonly EffectCategory EffectCategory;
-            public readonly bool IsTimed;
-            public readonly bool IsShort;
         }
 
         public enum EffectCategory
         {
+            Unknown = -1,
             Player,
             Vehicle,
             Peds,
@@ -34,8 +40,11 @@ namespace ConfigApp
 
         public enum EffectTimedType
         {
-            TimedNormal,
-            TimedShort
+            Permanent = -3,
+            Custom, // Not used here, CustomTime is set to something other than 0 instead
+            NotTimed,
+            Normal,
+            Short,
         }
 
         public static readonly Dictionary<string, EffectInfo> EffectsMap = new Dictionary<string, EffectInfo>()
@@ -88,7 +97,6 @@ namespace ConfigApp
             { "vehs_chrome", new EffectInfo("Chrome Traffic", EffectCategory.Vehicle, true) },
             { "vehs_pink", new EffectInfo("Hot Traffic", EffectCategory.Vehicle, true) },
             { "vehs_rainbow", new EffectInfo("Rainbow Traffic", EffectCategory.Vehicle, true) },
-            { "player_firstperson", new EffectInfo("First Person", EffectCategory.Misc, true) },
             { "vehs_slippery", new EffectInfo("Slippery Vehicles", EffectCategory.Vehicle, true) },
             { "vehs_nogravity", new EffectInfo("Vehicles Have No Gravity", EffectCategory.Vehicle, true, true) },
             { "player_invincible", new EffectInfo("Invincibility", EffectCategory.Player, true) },
@@ -381,15 +389,15 @@ namespace ConfigApp
             { "vehs_disassemble", new EffectInfo("Disassemble Current Vehicle", EffectCategory.Vehicle) },
             { "vehs_detach_wheel", new EffectInfo("Detach Random Wheel", EffectCategory.Vehicle) },
             { "screen_maximap", new EffectInfo("Maximap", EffectCategory.Misc, true) },
-            { "player_movementx5", new EffectInfo("x5 Movement Speed", EffectCategory.Player, true) },
-            { "player_movementx10", new EffectInfo("x10 Movement Speed", EffectCategory.Player, true) },
-            { "player_movementx05", new EffectInfo("x0.5 Movement Speed", EffectCategory.Player, true, true) },
+            { "player_movementx5", new EffectInfo("5x Movement Speed", EffectCategory.Player, true) },
+            { "player_movementx10", new EffectInfo("10x Movement Speed", EffectCategory.Player, true) },
+            { "player_movementx05", new EffectInfo("0.5x Movement Speed", EffectCategory.Player, true, true) },
             { "player_3stars", new EffectInfo("3 Wanted Stars", EffectCategory.Player ) },
             { "player_1star", new EffectInfo("1 Wanted Star", EffectCategory.Player ) },
             { "player_fakestars", new EffectInfo("Fake Wanted Level", EffectCategory.Player ) },
             { "misc_pay_respects", new EffectInfo("Pay Respects", EffectCategory.Misc, true, true) },
             { "timecycle_fuzzy", new EffectInfo("Static", EffectCategory.Screen, true, true) },
-            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },          
+            { "peds_hotcougars", new EffectInfo("Hot Cougars In Your Area", EffectCategory.Peds, true, true) },
             { "peds_grapple_guns", new EffectInfo("Gravity Guns", EffectCategory.Peds, true) },
             { "timecycle_darkworld", new EffectInfo("A Dark World", EffectCategory.Screen, true, true) },
             { "peds_reflectivedamage", new EffectInfo("Friendly Fire", EffectCategory.Peds, true, true) },
@@ -399,8 +407,11 @@ namespace ConfigApp
             { "peds_not_menendez", new EffectInfo("Not Menendez!", EffectCategory.Peds, true) },
             { "misc_go_to_jail", new EffectInfo("Bad Boys", EffectCategory.Misc) },
             { "misc_muffled_audio", new EffectInfo("Muffled Audio", EffectCategory.Misc, true) },
+            { "misc_fakeuturn", new EffectInfo("Fake U-Turn", EffectCategory.Misc) },
             { "misc_esp", new EffectInfo("ESP", EffectCategory.Misc, true) },
             { "screen_tinyscreen", new EffectInfo("Tiny Screen", EffectCategory.Screen, true, true) },
+            { "screen_bouncyradar", new EffectInfo("Bouncy Radar", EffectCategory.Screen, true) },
+            { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
         };
     }
 }

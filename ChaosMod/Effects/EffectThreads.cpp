@@ -134,4 +134,9 @@ namespace EffectThreads
 
 		return m_Threads.at(threadId)->HasOnStartExecuted();
 	}
+
+	bool IsThreadAnEffectThread()
+	{
+		return m_Threads.contains(GetCurrentFiber());
+	}
 }

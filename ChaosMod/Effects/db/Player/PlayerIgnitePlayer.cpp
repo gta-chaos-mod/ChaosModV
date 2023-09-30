@@ -14,6 +14,10 @@ static void OnStart()
 	else
 	{
 		START_ENTITY_FIRE(playerPed);
+
+		WAIT(5000);
+
+		STOP_ENTITY_FIRE(playerPed);
 	}
 }
 

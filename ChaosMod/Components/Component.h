@@ -40,6 +40,11 @@ struct ComponentHolder
 		{
 			return m_Ptr.get();
 		}
+
+		void Reset()
+		{
+			m_Ptr.reset();
+		}
 	};
 
 	static inline Ptr Instance;
@@ -68,6 +73,13 @@ inline void InitComponent(auto &&...args)
 	ComponentHolder<T>::Instance = std::forward_as_tuple(args...);
 }
 
+template <class T>
+requires std::is_base_of_v<Component, T>
+inline void UninitComponent()
+{
+	ComponentHolder<T>::Instance.Reset();
+}
+
 class Component
 {
   protected:
@@ -94,7 +106,8 @@ class Component
 	{
 	}
 
-	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+	                        bool isAltPressed)
 	{
 	}
 

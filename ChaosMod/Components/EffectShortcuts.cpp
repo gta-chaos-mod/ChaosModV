@@ -1,10 +1,10 @@
 #include <stdafx.h>
 
-#include "Shortcuts.h"
+#include "EffectShortcuts.h"
 
 #include "Components/EffectDispatcher.h"
 
-Shortcuts::Shortcuts() : Component()
+EffectShortcuts::EffectShortcuts() : Component()
 {
 	for (const auto &[effectId, effectData] : g_EnabledEffects)
 	{
@@ -15,7 +15,7 @@ Shortcuts::Shortcuts() : Component()
 	}
 }
 
-void Shortcuts::OnRun()
+void EffectShortcuts::OnRun()
 {
 	if (!m_EffectQueue.empty())
 	{
@@ -34,12 +34,15 @@ void Shortcuts::OnRun()
 	}
 }
 
-void Shortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow)
+void EffectShortcuts::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+                                 bool isAltPressed)
 {
 	if (repeated)
 	{
 		return;
 	}
+
+	key += (isCtrlPressed << 10) + (isShiftPressed << 9) + (isAltPressed << 8);
 
 	if (m_AvailableShortcuts.contains(key))
 	{

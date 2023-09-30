@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "AudioPitchHook.h"
+
 #include "Memory/Hooks/Hook.h"
 
 static bool ms_EnabledHook  = false;

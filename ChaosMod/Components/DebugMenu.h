@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Component.h"
+#include "Components/Component.h"
+
 #include "Effects/EffectIdentifier.h"
 
 #include <vector>
@@ -37,7 +38,8 @@ class DebugMenu : public Component
   public:
 	virtual void OnRun() override;
 
-	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow) override;
+	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
+	                        bool isAltPressed) override;
 
 	bool IsEnabled() const;
 

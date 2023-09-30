@@ -28,19 +28,20 @@ namespace EffectThreads
 
 	bool DoesThreadExist(LPVOID threadId);
 	bool HasThreadOnStartExecuted(LPVOID threadId);
+
+	bool IsThreadAnEffectThread();
 };
 
 struct EffectThreadData
 {
 	RegisteredEffect *Effect = nullptr;
-	bool *HasOnStartExecuted = nullptr;
-	bool *IsRunning          = nullptr;
-	bool *HasStopped         = nullptr;
+	bool HasOnStartExecuted  = false;
+	bool IsRunning           = false;
+	bool HasStopped          = false;
 
 	void *CallerFiber        = nullptr;
 
-	EffectThreadData(RegisteredEffect *effect, bool *hasOnStartExecuted, bool *isRunning, bool *hasStopped)
-	    : Effect(effect), HasOnStartExecuted(hasOnStartExecuted), IsRunning(isRunning), HasStopped(hasStopped)
+	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
 	{
 	}
 };
@@ -52,27 +53,24 @@ inline void EffectThreadFunc(LPVOID data)
 	auto &threadData = *reinterpret_cast<EffectThreadData *>(data);
 
 	threadData.Effect->Start();
-	*threadData.HasOnStartExecuted = true;
+	threadData.HasOnStartExecuted = true;
 
-	while (*threadData.IsRunning)
+	while (threadData.IsRunning)
 	{
 		SwitchToFiber(threadData.CallerFiber);
 		threadData.Effect->Tick();
 	}
 
+	SwitchToFiber(threadData.CallerFiber);
 	threadData.Effect->Stop();
 
-	*threadData.HasStopped = true;
+	threadData.HasStopped = true;
 	SwitchToFiber(threadData.CallerFiber);
 }
 
 class EffectThread
 {
   private:
-	RegisteredEffect *m_Effect = nullptr;
-	bool m_HasOnStartExecuted  = false;
-	bool m_IsRunning           = false;
-	bool m_HasStopped          = false;
 	EffectThreadData m_ThreadData;
 
   public:
@@ -80,10 +78,7 @@ class EffectThread
 	LPVOID Thread          = nullptr;
 
 	EffectThread(RegisteredEffect *effect, bool isTimed)
-	    : m_Effect(effect),
-	      m_IsRunning(isTimed),
-	      m_ThreadData(effect, &m_HasOnStartExecuted, &m_IsRunning, &m_HasStopped),
-	      Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
+	    : m_ThreadData(effect, isTimed), Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
 	{
 	}
 
@@ -109,9 +104,9 @@ class EffectThread
 
 	inline void Stop()
 	{
-		if (!m_HasStopped)
+		if (!m_ThreadData.HasStopped)
 		{
-			m_IsRunning = false;
+			m_ThreadData.IsRunning = false;
 
 			OnRun();
 		}
@@ -119,16 +114,16 @@ class EffectThread
 
 	inline bool HasStopped() const
 	{
-		return m_HasStopped;
+		return m_ThreadData.HasStopped;
 	}
 
 	inline bool HasOnStartExecuted() const
 	{
-		return m_HasOnStartExecuted;
+		return m_ThreadData.HasOnStartExecuted;
 	}
 
 	inline bool IsStopping() const
 	{
-		return !m_IsRunning;
+		return !m_ThreadData.IsRunning;
 	}
 };

@@ -5,18 +5,13 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChaosMod", "ChaosMod\ChaosMod.vcxproj", "{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigApp", "ConfigApp\ConfigApp.csproj", "{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchChatVotingProxy", "TwitchChatVotingProxy\TwitchChatVotingProxy.csproj", "{4765F6E3-B78C-4B76-BA30-AA5362862818}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{E8C71724-789E-46CF-82B9-8A9C0D964E91}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigApp", "ConfigApp\ConfigApp.csproj", "{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchChatVotingProxy", "TwitchChatVotingProxy\TwitchChatVotingProxy.csproj", "{D1C25141-4773-424D-90D1-53A2FB9664C0}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\Shared.projitems*{4765f6e3-b78c-4b76-ba30-aa5362862818}*SharedItemsImports = 4
-		Shared\Shared.projitems*{9fb10f9b-9f3f-4fec-9237-7059e15c8953}*SharedItemsImports = 4
-		Shared\Shared.projitems*{e8c71724-789e-46cf-82b9-8a9c0d964e91}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
@@ -26,19 +21,24 @@ Global
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Debug|x64.Build.0 = Debug|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.ActiveCfg = Release|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.Build.0 = Release|x64
-		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Debug|x64.Build.0 = Debug|Any CPU
-		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Release|x64.ActiveCfg = Release|Any CPU
-		{9FB10F9B-9F3F-4FEC-9237-7059E15C8953}.Release|x64.Build.0 = Release|Any CPU
-		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Debug|x64.Build.0 = Debug|Any CPU
-		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Release|x64.ActiveCfg = Release|Any CPU
-		{4765F6E3-B78C-4B76-BA30-AA5362862818}.Release|x64.Build.0 = Release|Any CPU
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.Build.0 = Debug|Any CPU
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.ActiveCfg = Release|Any CPU
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.Build.0 = Release|Any CPU
+		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Debug|x64.Build.0 = Debug|Any CPU
+		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Release|x64.ActiveCfg = Release|Any CPU
+		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC955B93-4342-4B53-BDC1-096AEEFA72F6}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{6c0f4e58-1bd1-4e16-af5f-d743a93c8f9c}*SharedItemsImports = 5
+		Shared\Shared.projitems*{d1c25141-4773-424d-90d1-53a2fb9664c0}*SharedItemsImports = 5
+		Shared\Shared.projitems*{e8c71724-789e-46cf-82b9-8a9c0d964e91}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

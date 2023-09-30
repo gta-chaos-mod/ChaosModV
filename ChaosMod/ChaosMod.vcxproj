@@ -55,7 +55,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
@@ -73,7 +73,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);CURL_STATICLIB;NOMINMAX;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor</AdditionalIncludeDirectories>
@@ -90,7 +90,7 @@
   <ItemGroup>
     <ClCompile Include="Components\DebugMenu.cpp" />
     <ClCompile Include="Components\DebugSocket.cpp" />
-    <ClCompile Include="Components\Shortcuts.cpp" />
+    <ClCompile Include="Components\EffectShortcuts.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Components\EffectDispatcher.cpp" />
     <ClCompile Include="Effects\db\Meta\MetaAdditionalEffects.cpp" />
@@ -162,7 +162,6 @@
     <ClCompile Include="Effects\db\Player\PlayerFakeDeath.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFireworks.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscFlamethrower.cpp" />
-    <ClCompile Include="Effects\db\Misc\MiscForcedFP.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscGravityController.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscIntenseMusic.cpp" />
     <ClCompile Include="Effects\db\Misc\MiscInvertVelocity.cpp" />
@@ -178,9 +177,11 @@
     <ClCompile Include="Effects\db\Player\PlayerVR.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerZoomZoomCam.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenBinoculars.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenBouncyRadar.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenDVDScreensaver.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipCamera.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenFlipUI.cpp" />
+    <ClCompile Include="Effects\db\Screen\ScreenRealFirstPerson.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenHeatVision.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenMaximap.cpp" />
     <ClCompile Include="Effects\db\Screen\ScreenNightVision.cpp" />
@@ -395,14 +396,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Effects\EffectThreads.cpp" />
-    <ClCompile Include="Components\TwitchVoting.cpp" />
+    <ClCompile Include="Components\Voting.cpp" />
     <ClCompile Include="Components\Mp3Manager.cpp" />
     <ClCompile Include="Util\PoolSpawner.cpp" />
     <ClCompile Include="Components\KeyStates.cpp" />
+    <ClCompile Include="Components\HelpTextQueue.cpp" />
+    <ClCompile Include="Memory\Hooks\GetLabelTextHook.cpp" />
+    <ClCompile Include="Components\Workshop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
-    <Library Include="..\vendor\minhook\build\VC16\lib\Release\libMinHook.x64.lib" />
+    <Library Include="..\vendor\minhook\build\VC17\lib\Release\libMinHook.x64.lib" />
     <Library Include="..\vendor\scripthookv\lib\ScriptHookV.lib" />
   </ItemGroup>
   <ItemGroup>
@@ -410,7 +414,7 @@
     <ClInclude Include="Components\DebugMenu.h" />
     <ClInclude Include="Components\DebugSocket.h" />
     <ClInclude Include="Components\EffectDispatcher.h" />
-    <ClInclude Include="Components\Shortcuts.h" />
+    <ClInclude Include="Components\EffectShortcuts.h" />
     <ClInclude Include="Effects\EffectCategory.h" />
     <ClInclude Include="Effects\EffectConfig.h" />
     <ClInclude Include="Effects\EffectAttributes.h" />
@@ -461,7 +465,7 @@
     <ClInclude Include="Util\Random.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Effects\EffectThreads.h" />
-    <ClInclude Include="Components\TwitchVoting.h" />
+    <ClInclude Include="Components\Voting.h" />
     <ClInclude Include="Util\Camera.h" />
     <ClInclude Include="Util\CrashHandler.h" />
     <ClInclude Include="Util\EntityIterator.h" />
@@ -469,6 +473,7 @@
     <ClInclude Include="Util\Logging.h" />
     <ClInclude Include="Util\Peds.h" />
     <ClInclude Include="Util\Text.h" />
+    <ClInclude Include="Util\ScriptText.h" />
     <ClInclude Include="Util\Model.h" />
     <ClInclude Include="Components\Mp3Manager.h" />
     <ClInclude Include="Util\OptionsManager.h" />
@@ -479,11 +484,14 @@
     <ClInclude Include="Util\Types.h" />
     <ClInclude Include="Util\Vehicle.h" />
     <ClInclude Include="Util\Weapon.h" />
-    <ClInclude Include="Util\Workshop.h" />
+    <ClInclude Include="Components\Workshop.h" />
     <ClInclude Include="Util\XInput.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Components\KeyStates.h" />
     <ClInclude Include="Util\Events.h" />
+    <ClInclude Include="Util\HelpText.h" />
+    <ClInclude Include="Components\HelpTextQueue.h" />
+    <ClInclude Include="Memory\Hooks\GetLabelTextHook.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

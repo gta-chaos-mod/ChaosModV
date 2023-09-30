@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Components/Component.h"
+
+#include "Util/ScriptText.h"
+
+#include <cstdint>
 #include <list>
 
-#include "Component.h"
-#include "Util/Text.h"
-
-#define SPLASH_TEXT_DUR_SECS 10
 
 class SplashTexts : public Component
 {
@@ -27,14 +28,18 @@ class SplashTexts : public Component
 
 	std::list<SplashText> m_ActiveSplashes;
 
+	bool m_EnableSplashTexts = true;
+
+  protected:
+	SplashTexts();
+
   public:
 	virtual void OnRun() override;
 	virtual void OnModPauseCleanup() override;
 
 	void ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale, ScreenTextColor textColor,
-	                float time);
-	void ShowInitSplash();
-	void ShowTwitchVotingSplash();
+	                std::uint8_t timeSecs = 10);
+	void ShowVotingSplash();
 	void ShowClearEffectsSplash();
 
 	template <class T>

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "HandleToEntityStructHook.h"
+
 #include "Memory/Hooks/Hook.h"
 
 static std::unordered_map<Entity, Entity> ms_VehicleMap;

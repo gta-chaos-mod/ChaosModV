@@ -164,7 +164,8 @@ REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Wanted Level",
 		.Id = "player_fakestars",
+		.HideRealNameOnStart = true,
 		.IncompatibleWith = { "player_neverwanted" },
-                .EffectGroupType = EffectGroupType::WantedLevel
+        .EffectGroupType = EffectGroupType::WantedLevel
 	}
 );

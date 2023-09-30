@@ -12,18 +12,21 @@
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatcher.h"
+#include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
+#include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
 #include "Components/MetaModifiers.h"
 #include "Components/Mp3Manager.h"
-#include "Components/Shortcuts.h"
 #include "Components/SplashTexts.h"
-#include "Components/TwitchVoting.h"
+#include "Components/Voting.h"
+#include "Components/Workshop.h"
 
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
+#include "Util/Text.h"
 
 static struct
 {
@@ -55,7 +58,7 @@ static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
 
-	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, "chaosmod/effects.ini");
+	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
 }
 
 static void Reset()
@@ -142,66 +145,87 @@ static void Init()
 	g_OptionsManager.Reset();
 
 	ms_Flags.ClearEffectsShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableClearEffectsShortcut", OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
+	    g_OptionsManager.GetConfigValue({ "EnableClearEffectsShortcut" }, OPTION_DEFAULT_SHORTCUT_CLEAR_EFFECTS);
 	ms_Flags.ToggleModShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableToggleModShortcut", OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
+	    g_OptionsManager.GetConfigValue({ "EnableToggleModShortcut" }, OPTION_DEFAULT_SHORTCUT_TOGGLE_MOD);
 	ms_Flags.PauseTimerShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnablePauseTimerShortcut", OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
+	    g_OptionsManager.GetConfigValue({ "EnablePauseTimerShortcut" }, OPTION_DEFAULT_SHORTCUT_PAUSE_TIMER);
 	ms_Flags.AntiSoftlockShortcutEnabled =
-	    g_OptionsManager.GetConfigValue<bool>("EnableAntiSoftlockShortcut", OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
+	    g_OptionsManager.GetConfigValue({ "EnableAntiSoftlockShortcut" }, OPTION_DEFAULT_SHORTCUT_ANTI_SOFTLOCK);
 
 	g_EnableGroupWeighting =
-	    g_OptionsManager.GetConfigValue<bool>("EnableGroupWeightingAdjustments", OPTION_DEFAULT_GROUP_WEIGHTING);
+	    g_OptionsManager.GetConfigValue({ "EnableGroupWeightingAdjustments" }, OPTION_DEFAULT_GROUP_WEIGHTING);
 
 	const auto &timerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTimerColor", OPTION_DEFAULT_BAR_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimerColor" }, OPTION_DEFAULT_BAR_COLOR));
 	const auto &textColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTextColor", OPTION_DEFAULT_TEXT_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTextColor" }, OPTION_DEFAULT_TEXT_COLOR));
 	const auto &effectTimerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>("EffectTimedTimerColor", OPTION_DEFAULT_TIMED_COLOR));
+	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
-	g_Random.SetSeed(g_OptionsManager.GetConfigValue<int>("Seed", 0));
+	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
 
-	LOG("Initializing effect sound system");
-	InitComponent<Mp3Manager>();
+	std::set<std::string> blacklistedComponentNames;
+	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
+	{
+		std::ifstream file("chaosmod\\.blacklistedcomponents");
+		if (!file.fail())
+		{
+			std::string line;
+			line.resize(64);
+			while (file.getline(line.data(), 64))
+			{
+				blacklistedComponentNames.insert(StringTrim(line.substr(0, line.find("\n"))));
+			}
+		}
+	}
 
-	LOG("Initializing meta modifier states");
-	InitComponent<MetaModifiers>();
+#define INIT_COMPONENT(componentName, logName, componentType, ...)             \
+	if (blacklistedComponentNames.contains(componentName))                     \
+	{                                                                          \
+		LOG(componentName << " component has been blacklisted from running!"); \
+		UninitComponent<componentType>();                                      \
+	}                                                                          \
+	else                                                                       \
+	{                                                                          \
+		LOG("Initializing " << logName << " component");                       \
+		InitComponent<componentType>(__VA_ARGS__);                             \
+	}
 
-	LOG("Initializing Lua scripts");
-	InitComponent<LuaScripts>();
+	INIT_COMPONENT("SplashTexts", "mod splash texts handler", SplashTexts);
 
-	LOG("Initializing effects dispatcher");
-	InitComponent<EffectDispatcher>(timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("Workshop", "workshop", Workshop);
 
-	InitComponent<DebugMenu>();
+	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
 
-	LOG("Initializing shortcuts handler");
-	InitComponent<Shortcuts>();
+	INIT_COMPONENT("MetaModifiers", "meta modifier states", MetaModifiers);
 
-	LOG("Initializing key state handler");
-	InitComponent<KeyStates>();
+	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	LOG("Initializing Twitch voting");
-	InitComponent<TwitchVoting>(textColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
 
-	LOG("Initializing Failsafe");
-	InitComponent<Failsafe>();
+	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
+
+	INIT_COMPONENT("EffectShortcuts", "effect shortcuts handler", EffectShortcuts);
+
+	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
+
+	INIT_COMPONENT("Voting", "voting", Voting, textColor);
+
+	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
+
+	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
 	{
-		LOG("Initializing Debug Websocket");
-		InitComponent<DebugSocket>();
+		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
 	}
 #endif
 
-	LOG("Completed init");
+#undef INIT_COMPONENT
 
-	if (ComponentExists<TwitchVoting>() && GetComponent<TwitchVoting>()->IsEnabled() && ComponentExists<SplashTexts>())
-	{
-		GetComponent<SplashTexts>()->ShowTwitchVotingSplash();
-	}
+	LOG("Completed init");
 }
 
 static void MainRun()
@@ -217,10 +241,7 @@ static void MainRun()
 
 	Reset();
 
-	InitComponent<SplashTexts>();
-	GetComponent<SplashTexts>()->ShowInitSplash();
-
-	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue<bool>("DisableStartup", OPTION_DEFAULT_DISABLE_STARTUP);
+	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
 	Init();
 
@@ -268,13 +289,13 @@ static void MainRun()
 			{
 				isDisabled = false;
 
-				LOG("Mod has been re-enabled");
-
 				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
 				{
 					// Clear log
 					g_Log = std::ofstream(CHAOS_LOG_FILE);
 				}
+
+				LOG("Mod has been re-enabled");
 
 				// Restart the main part of the mod completely
 				Init();
@@ -292,7 +313,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
-				GetComponent<EffectDispatcher>()->Reset(EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
+				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
 					GetComponent<EffectDispatcher>()->OnRun();
@@ -393,7 +414,7 @@ namespace Main
 
 		for (auto component : g_Components)
 		{
-			component->OnKeyInput(key, wasDownBefore, isUpNow);
+			component->OnKeyInput(key, wasDownBefore, isUpNow, isCtrlPressed, isShiftPressed, isWithAlt);
 		}
 	}
 }

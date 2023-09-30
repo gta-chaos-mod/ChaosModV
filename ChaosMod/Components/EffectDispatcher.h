@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.h"
+#include "Components/Component.h"
 
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
@@ -11,127 +11,16 @@
 #include "Util/Events.h"
 
 #include <array>
+#include <cstdint>
 #include <list>
 #include <memory>
 #include <queue>
 #include <string_view>
 #include <vector>
 
-using DWORD64 = unsigned long long;
-using WORD    = unsigned short;
-using BYTE    = unsigned char;
-
-enum class TwitchOverlayMode;
-
 class EffectDispatcher : public Component
 {
   public:
-	ChaosCancellableEvent<const EffectIdentifier &> OnPreDispatchEffect;
-	ChaosEvent<const EffectIdentifier &> OnPostDispatchEffect;
-
-	ChaosEvent<const EffectIdentifier &> OnPreRunEffect;
-	ChaosEvent<const EffectIdentifier &> OnPostRunEffect;
-
-  private:
-	struct ActiveEffect
-	{
-		EffectIdentifier Identifier;
-
-		LPVOID ThreadId = nullptr;
-
-		std::string Name;
-		std::string FakeName;
-
-		float Timer     = 0.f;
-		float MaxTime   = 0.f;
-
-		bool HideText   = true;
-		bool IsStopping = false;
-
-		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
-		             const std::string &name, const std::string &fakeName, float timer)
-		{
-			Identifier                 = effectIdentifier;
-			Name                       = name;
-			FakeName                   = fakeName;
-			Timer                      = timer;
-			MaxTime                    = timer;
-
-			EffectTimedType eTimedType = g_EnabledEffects.at(effectIdentifier).TimedType;
-
-			ThreadId = EffectThreads::CreateThread(registeredEffect, eTimedType != EffectTimedType::Unk
-			                                                             && eTimedType != EffectTimedType::NotTimed);
-		}
-	};
-
-	enum class TravelledDistanceType
-	{
-		Distance,
-		Displacement
-	};
-
-	std::array<BYTE, 3> m_TimerColor;
-	std::array<BYTE, 3> m_TextColor;
-	std::array<BYTE, 3> m_EffectTimerColor;
-
-	bool m_DisableDrawTimerBar    = false;
-	bool m_DisableDrawEffectTexts = false;
-
-  public:
-	WORD m_EffectSpawnTime     = 0;
-	WORD m_EffectTimedDur      = 0;
-	WORD m_EffectTimedShortDur = 0;
-
-	WORD m_MetaEffectSpawnTime = 0;
-	WORD m_MetaEffectTimedDur  = 0;
-	WORD m_MetaEffectShortDur  = 0;
-
-  private:
-	int m_MaxRunningEffects             = 0;
-
-	float m_TimerPercentage             = 0.f;
-	float m_EffectsInnerSpacingMax      = .075f;
-	float m_EffectsInnerSpacingMin      = .030f;
-	float m_EffectsTopSpacingDefault    = .2f;
-	float m_EffectsTopSpacingWithVoting = .35f;
-
-  public:
-	std::vector<ActiveEffect> m_ActiveEffects;
-	std::vector<LPVOID> m_PermanentEffects;
-	std::list<RegisteredEffect *> m_DispatchedEffectsLog;
-
-  private:
-	bool m_EnableDistanceBasedEffectDispatch = false;
-
-	float m_DistanceToActivateEffect         = 500.f;
-	Vector3 m_SavedPosition;
-	bool m_DeadFlag                      = true;
-	TravelledDistanceType m_DistanceType = TravelledDistanceType::Distance;
-
-	bool m_EnableNormalEffectDispatch    = false;
-
-	bool m_MetaEffectsEnabled            = true;
-	float m_MetaEffectTimerPercentage    = 0.f;
-
-	bool m_EnableTwitchVoting;
-	TwitchOverlayMode m_TwitchOverlayMode;
-
-	enum class ClearEffectsState
-	{
-		None,
-		All,
-		AllRestartPermanent
-	} m_ClearEffectsState = ClearEffectsState::None;
-
-  public:
-	DWORD64 Timer                = 0;
-
-	bool PauseTimer              = false;
-
-	bool DispatchEffectsOnTimer  = true;
-
-	float FakeTimerBarPercentage = 0.f;
-
 	enum DispatchEffectFlags
 	{
 		DispatchEffectFlag_None,
@@ -147,9 +36,113 @@ class EffectDispatcher : public Component
 	};
 	std::queue<EffectDispatchEntry> EffectDispatchQueue;
 
+	struct ActiveEffect
+	{
+		EffectIdentifier Identifier;
+
+		std::string Name;
+		std::string FakeName;
+
+		LPVOID ThreadId     = nullptr;
+
+		float Timer         = 0.f;
+		float MaxTime       = 0.f;
+
+		bool HideEffectName = false;
+		bool IsStopping     = false;
+
+		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
+		             const std::string &name, const EffectData &effectData, float effectDuration)
+		{
+			Identifier     = effectIdentifier;
+			Name           = name;
+			FakeName       = effectData.FakeName;
+			Timer          = effectDuration;
+			MaxTime        = effectDuration;
+			HideEffectName = effectData.ShouldHideRealNameOnStart();
+
+			auto timedType = g_EnabledEffects.at(effectIdentifier).TimedType;
+			ThreadId       = EffectThreads::CreateThread(registeredEffect, timedType != EffectTimedType::NotTimed);
+		}
+	};
+	struct
+	{
+		std::vector<ActiveEffect> ActiveEffects;
+		std::list<RegisteredEffect *> DispatchedEffectsLog;
+		float MetaEffectTimerPercentage   = 0.f;
+		std::uint16_t MetaEffectSpawnTime = 0;
+		std::uint16_t MetaEffectTimedDur  = 0;
+		std::uint16_t MetaEffectShortDur  = 0;
+		std::uint16_t EffectTimedDur      = 0;
+		std::uint16_t EffectTimedShortDur = 0;
+		bool MetaEffectsEnabled           = true;
+	} SharedState;
+
+  private:
+	struct DistanceChaosState
+	{
+		Vector3 SavedPosition = { 0.f, 0.f, 0.f };
+		enum class TravelledDistanceType
+		{
+			Distance,
+			Displacement
+		} DistanceType                         = TravelledDistanceType::Distance;
+		float DistanceToActivateEffect         = 500.f;
+		bool EnableDistanceBasedEffectDispatch = false;
+	} m_DistanceChaosState;
+
+  public:
+	ChaosCancellableEvent<const EffectIdentifier &> OnPreDispatchEffect;
+	ChaosEvent<const EffectIdentifier &> OnPostDispatchEffect;
+
+	ChaosEvent<const EffectIdentifier &> OnPreRunEffect;
+	ChaosEvent<const EffectIdentifier &> OnPostRunEffect;
+
+  private:
+	std::vector<LPVOID> m_PermanentEffects;
+
+	std::uint16_t m_EffectSpawnTime = 0;
+
+  public:
+	std::uint64_t Timer = 0;
+
+  private:
+	int m_MaxRunningEffects = 0;
+
+	float m_TimerPercentage = 0.f;
+
+	enum class ClearEffectsState
+	{
+		None,
+		All,
+		AllRestartPermanent
+	} m_ClearEffectsState = ClearEffectsState::None;
+
+  public:
+	float FakeTimerBarPercentage = 0.f;
+
+  private:
+	std::array<std::uint8_t, 3> m_TimerColor;
+	std::array<std::uint8_t, 3> m_TextColor;
+	std::array<std::uint8_t, 3> m_EffectTimerColor;
+
+	bool m_DisableDrawTimerBar        = false;
+	bool m_DisableDrawEffectTexts     = false;
+
+	bool m_DeadFlag                   = true;
+
+	bool m_EnableNormalEffectDispatch = false;
+
+  public:
+	bool PauseTimer                    = false;
+
+	bool DispatchEffectsOnTimer        = true;
+
+	bool EnableEffectTextExtraTopSpace = false;
+
   protected:
-	EffectDispatcher(const std::array<BYTE, 3> &timerColor, const std::array<BYTE, 3> &textColor,
-	                 const std::array<BYTE, 3> &effectTimerColor);
+	EffectDispatcher(const std::array<std::uint8_t, 3> &timerColor, const std::array<std::uint8_t, 3> &textColor,
+	                 const std::array<std::uint8_t, 3> &effectTimerColor);
 	virtual ~EffectDispatcher() override;
 
   private:

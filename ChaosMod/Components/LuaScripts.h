@@ -1,10 +1,14 @@
 #pragma once
 
-#include "Component.h"
+#include "Components/Component.h"
 
 #include <numeric>
 
+#define SOL_ALL_SAFETIES_ON 1
+#define SOL_SAFE_NUMERICS 1
 #include <sol3/sol.hpp>
+
+#include <json.hpp>
 
 #include <string>
 
@@ -96,7 +100,8 @@ class LuaScripts : public Component
 		Error_ThreadUnsafe
 	};
 	ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
-	                                       ParseScriptFlags flags = ParseScriptFlag_None);
+	                                       ParseScriptFlags flags = ParseScriptFlag_None,
+	                                       std::unordered_map<std::string, nlohmann::json> settingOverrides = {});
 	void RemoveScriptEntry(const std::string &effectId);
 
   public:

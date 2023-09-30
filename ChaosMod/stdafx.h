@@ -13,14 +13,18 @@
 #include "Util/TryParse.h"
 
 #include <Patterns/Patterns.h>
+#include <json.hpp>
 #include <minhook/include/MinHook.h>
 #include <scripthookv/inc/main.h>
 #include <scripthookv/inc/natives.h>
+
 #define SOL_ALL_SAFETIES_ON 1
 #define SOL_SAFE_NUMERICS 1
 #include <sol3/sol.hpp>
 
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <dbghelp.h>
@@ -28,7 +32,6 @@
 #include <mmsystem.h>
 #include <psapi.h>
 #include <tlhelp32.h>
-#include <windows.h>
 #include <winuser.h>
 
 #include <array>

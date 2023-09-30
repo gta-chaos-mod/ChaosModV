@@ -70,9 +70,14 @@ namespace Memory
 		SetRadarParams([](MinimapData &dst, MinimapData src) { dst = src; });
 	}
 
-	inline void SetRadarOffsetX(float xOffset)
+	inline void SetRadarOffset(float xOffset, float yOffset)
 	{
-		SetRadarParams([&](MinimapData &dst, MinimapData src) { dst.PosX = src.PosX + xOffset; });
+		SetRadarParams(
+		    [&](MinimapData &dst, MinimapData src)
+		    {
+			    dst.PosX = src.PosX + xOffset;
+			    dst.PosY = src.PosY + yOffset;
+		    });
 	}
 
 	inline void MultiplyRadarSize(float multiplier, float offsetX = 0.f, float offsetY = 0.f)

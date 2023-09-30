@@ -48,8 +48,6 @@ static void OnTickBright()
 	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 1, 255, 255, 255, 5000, 5, 0);
 	_DRAW_LIGHT_WITH_RANGE_AND_SHADOW(playerPos.x, playerPos.y, playerPos.z + 100, 255, 255, 255, 5000, 10, 0);
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
-	SET_TIMECYCLE_MODIFIER("mp_x17dlc_int_02");
-	PUSH_TIMECYCLE_MODIFIER();
 
 	for (auto car : GetAllVehs())
 	{

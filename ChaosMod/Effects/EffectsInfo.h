@@ -12,8 +12,9 @@ struct EffectInfo
 {
 	const char *Name;
 	const char *Id;
-	bool IsTimed         = false;
-	bool IsShortDuration = false;
+	bool IsTimed             = false;
+	bool IsShortDuration     = false;
+	bool HideRealNameOnStart = false;
 #ifdef _DEBUG
 	int DebugShortcutKeycode = 0;
 #endif

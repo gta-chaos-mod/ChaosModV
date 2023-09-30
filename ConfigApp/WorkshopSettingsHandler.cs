@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
@@ -35,14 +36,28 @@ namespace ConfigApp
 
             var submissionSettingsFile = $"workshop/{id}.json";
             var disabledFiles = new List<string>();
+            var scriptSettings = new Dictionary<string, EffectData>();
             if (File.Exists(submissionSettingsFile))
             {
                 try
                 {
-                    var json = JObject.Parse(File.ReadAllText(submissionSettingsFile));
-                    foreach (var file in json["disabled_files"])
+                    var fileText = File.ReadAllText(submissionSettingsFile);
+                    if (!string.IsNullOrWhiteSpace(fileText))
                     {
-                        disabledFiles.Add(file.Value<string>());
+                        var json = JObject.Parse(fileText);
+
+                        if (json.ContainsKey("disabled_files"))
+                        {
+                            foreach (var file in json["disabled_files"])
+                            {
+                                disabledFiles.Add(file.Value<string>());
+                            }
+                        }
+
+                        if (json.ContainsKey("effect_settings"))
+                        {
+                            scriptSettings = json["effect_settings"].ToObject<Dictionary<string, EffectData>>();
+                        }
                     }
                 }
                 catch (JsonException)
@@ -55,26 +70,50 @@ namespace ConfigApp
             foreach (var file in Directory.EnumerateFiles(submissionDir, "*", SearchOption.AllDirectories))
             {
                 var pathName = file.Replace(submissionDir, "");
-                files.Add(new WorkshopSubmissionFile(pathName, !disabledFiles.Contains(pathName)));
+                files.Add(new WorkshopSubmissionFile(pathName, !disabledFiles.Contains(pathName),
+                    scriptSettings.ContainsKey(pathName) ? scriptSettings[pathName] : null));
             }
 
             var editWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Edit);
-            if (!(bool)editWindow.ShowDialog())
-            {
-                return;
-            }
+            editWindow.ShowDialog();
 
             var disabledFilesArrayJson = new JArray();
+            var scriptSettingsObjectJson = new JObject();
             foreach (var state in editWindow.FileStates)
             {
                 if (!state.Item.IsChecked)
                 {
                     disabledFilesArrayJson.Add(state.FullPath);
                 }
+
+                if (state.EffectData != null)
+                {
+                    // Don't save settings if everything is set 1:1 as defaults
+                    if (JsonConvert.SerializeObject(state.EffectData) != JsonConvert.SerializeObject(new EffectData()))
+                    {
+                        scriptSettingsObjectJson[state.FullPath] = JToken.FromObject(state.EffectData);
+                    }
+                }
             }
 
-            var disabledFilesJson = new JObject(new JProperty("disabled_files", disabledFilesArrayJson));
-            File.WriteAllText(submissionSettingsFile, disabledFilesJson.ToString());
+            var newJson = new JObject();
+            if (disabledFilesArrayJson.Count > 0)
+            {
+                newJson.Add(new JProperty("disabled_files", disabledFilesArrayJson));
+            }
+            if (scriptSettingsObjectJson.Count > 0)
+            {
+                newJson.Add(new JProperty("effect_settings", scriptSettingsObjectJson));
+            }
+
+            if (newJson.Count == 0)
+            {
+                File.Delete(submissionSettingsFile);
+            }
+            else
+            {
+                File.WriteAllText(submissionSettingsFile, $"{newJson}");
+            }
         }
     }
 }

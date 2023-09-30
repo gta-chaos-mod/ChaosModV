@@ -13,11 +13,11 @@ namespace Memory
 	class RegisteredHook
 	{
 	  private:
+		std::string m_Name;
 		RegisteredHook *m_Next = nullptr;
-		const std::string m_Name;
 		bool (*m_HookFunc)();
 		void (*m_CleanupFunc)();
-		const bool m_IsLateHook = false;
+		bool m_IsLateHook = false;
 
 	  public:
 		RegisteredHook(bool (*hookFunc)(), void (*cleanupFunc)(), const std::string &name, bool isLateHook)

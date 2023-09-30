@@ -4,11 +4,11 @@
 
 enum class EffectAttributes
 {
-	ExcludedFromVoting = (1 << 0),
-	HasCustomName      = (1 << 1),
-	IsMeta             = (1 << 2),
-	IsUtility          = (1 << 3),
-	IsTemporary        = (1 << 4)
+	ExcludedFromVoting  = (1 << 0),
+	IsMeta              = (1 << 1),
+	IsUtility           = (1 << 2),
+	IsTemporary         = (1 << 3),
+	HideRealNameOnStart = (1 << 4)
 };
 
 inline EffectAttributes operator|(EffectAttributes lhs, EffectAttributes rhs)

@@ -81,8 +81,6 @@ static void OnStart()
 			SET_PLAYER_INVINCIBLE(playerPed, true);
 		}
 
-		// Eager assumption
-		std::string fakeEffectId = "player_suicide";
 		switch (currentMode)
 		{
 		case FakeDeathState::animation: // Play either the suicide animation or an explosion if in vehicle
@@ -90,6 +88,12 @@ static void OnStart()
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
+					if (ComponentExists<EffectDispatcher>())
+					{
+						// Set the fake name accordingly
+						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "player_suicide");
+					}
+
 					if (IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 					{
 						// Fake suicide
@@ -108,8 +112,11 @@ static void OnStart()
 				}
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					// Fake veh explosion
-					fakeEffectId      = "playerveh_explode";
+					if (ComponentExists<EffectDispatcher>())
+					{
+						// Set the fake name accordingly
+						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "playerveh_explode");
+					}
 
 					Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
@@ -174,12 +181,6 @@ static void OnStart()
 				}
 			}
 
-			if (ComponentExists<EffectDispatcher>())
-			{
-				// Set the fake name accordingly
-				GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", fakeEffectId);
-			}
-
 			nextModeTime = 0;
 
 			if (cancelledDeathAnim)
@@ -196,19 +197,19 @@ static void OnStart()
 			{
 			case 225514697: // Michael
 				deathAnimationName = "DeathFailMichaelIn";
-				playerDeathName    = "Micheal Died";
+				playerDeathName    = "Micheal Ded";
 				break;
 			case 2602752943: // Franklin
 				deathAnimationName = "DeathFailFranklinIn";
-				playerDeathName    = "Franklin Died";
+				playerDeathName    = "Fraklin Ded";
 				break;
 			case 2608926626: // Trevor
 				deathAnimationName = "DeathFailTrevorIn";
-				playerDeathName    = "Trever Died";
+				playerDeathName    = "Trever Ded";
 				break;
 			default: // default
 				deathAnimationName = "DeathFailNeutralIn";
-				playerDeathName    = "You Died";
+				playerDeathName    = "You Ded";
 				break;
 			}
 			START_AUDIO_SCENE(isOnMission ? "MISSION_FAILED_SCENE" : "DEATH_SCENE");
@@ -267,6 +268,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "Fake Death",
-		.Id = "player_fakedeath"
+		.Id = "player_fakedeath",
+		.HideRealNameOnStart = true
 	}
 );

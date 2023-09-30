@@ -6,6 +6,16 @@
 static void OnStop()
 {
 	SET_GRAVITY_LEVEL(0);
+
+	for (auto ped : GetAllPeds())
+	{
+		SET_ENTITY_INVINCIBLE(ped, false);
+	}
+
+	for (auto veh : GetAllVehs())
+	{
+		SET_ENTITY_INVINCIBLE(veh, false);
+	}
 }
 
 static void OnTickLow()
@@ -126,6 +136,8 @@ static void OnTickSideways()
 
 	for (auto ped : GetAllPeds())
 	{
+		SET_ENTITY_INVINCIBLE(ped, true);
+
 		if (!IS_PED_IN_ANY_VEHICLE(ped, false))
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
@@ -143,6 +155,8 @@ static void OnTickSideways()
 
 	for (auto veh : GetAllVehs())
 	{
+		SET_ENTITY_INVINCIBLE(veh, true);
+
 		Memory::ApplyForceToEntityCenterOfMass(veh, 1, sidewaysGravityForce.x, sidewaysGravityForce.y,
 		                                       sidewaysGravityForce.z, false, false, true, false);
 	}
@@ -180,6 +194,8 @@ static void OnTickRandom()
 
 	for (auto ped : GetAllPeds())
 	{
+		SET_ENTITY_INVINCIBLE(ped, true);
+
 		if (!IS_PED_IN_ANY_VEHICLE(ped, false))
 		{
 			SET_PED_TO_RAGDOLL(ped, 1000, 1000, 0, true, true, false);
@@ -197,6 +213,8 @@ static void OnTickRandom()
 
 	for (auto veh : GetAllVehs())
 	{
+		SET_ENTITY_INVINCIBLE(veh, true);
+
 		Memory::ApplyForceToEntityCenterOfMass(veh, 1, randomGravityForce.x, randomGravityForce.y, randomGravityForce.z,
 		                                       false, false, true, false);
 	}

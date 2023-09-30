@@ -5,25 +5,25 @@
 #include "EffectGroups.h"
 #include "EffectTimedType.h"
 
+#include <set>
 #include <string>
-#include <vector>
 
 inline bool g_EnableGroupWeighting = true;
 
 struct EffectData
 {
-	std::vector<std::string> IncompatibleIds;
 	std::string Name;
 	std::string FakeName;
 	std::string CustomName;
 	std::string Id;
+	std::string GroupType;
+	std::set<std::string> IncompatibleIds;
 	float Weight                  = 5.f;
 	int CustomTime                = -1;
 	int WeightMult                = 5;
 	int ShortcutKeycode           = 0;
-	EffectTimedType TimedType     = EffectTimedType::Unk;
+	EffectTimedType TimedType     = EffectTimedType::NotTimed;
 	EffectCategory EffectCategory = EffectCategory::None;
-	std::string GroupType;
 
   private:
 	EffectAttributes Attributes {};
@@ -52,11 +52,6 @@ struct EffectData
 		return IsTemporary() || TimedType == EffectTimedType::Permanent;
 	}
 
-	inline bool HasCustomName() const
-	{
-		return static_cast<bool>(Attributes & EffectAttributes::HasCustomName);
-	}
-
 	inline bool IsMeta() const
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::IsMeta);
@@ -71,14 +66,24 @@ struct EffectData
 	{
 		return static_cast<bool>(Attributes & EffectAttributes::IsTemporary);
 	}
+
+	inline bool ShouldHideRealNameOnStart() const
+	{
+		return static_cast<bool>(Attributes & EffectAttributes::HideRealNameOnStart);
+	}
+
+	inline bool HasCustomName() const
+	{
+		return !CustomName.empty();
+	}
+
+	float GetEffectWeight() const
+	{
+		const auto &effectGroup = GroupType;
+		auto effectWeight       = Weight;
+
+		return g_EnableGroupWeighting && !effectGroup.empty() && !g_EffectGroups.at(effectGroup).IsPlaceholder
+		         ? effectWeight / g_EffectGroups.at(effectGroup).MemberCount * g_EffectGroups.at(effectGroup).WeightMult
+		         : effectWeight;
+	}
 };
-
-inline float GetEffectWeight(const EffectData &effectData)
-{
-	const auto &effectGroup = effectData.GroupType;
-	auto effectWeight       = effectData.Weight;
-
-	return g_EnableGroupWeighting && !effectGroup.empty() && !g_EffectGroups.at(effectGroup).IsPlaceholder
-	         ? effectWeight / g_EffectGroups.at(effectGroup).MemberCount * g_EffectGroups.at(effectGroup).WeightMult
-	         : effectWeight;
-}

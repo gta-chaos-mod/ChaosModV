@@ -1,6 +1,8 @@
 #include <stdafx.h>
 
-#include "Hook.h"
+#include "AudioClearnessHook.h"
+
+#include "Memory/Hooks/Hook.h"
 
 static bool ms_EnabledHook = false;
 static int ms_Value        = 0;
@@ -25,7 +27,7 @@ static bool OnHook()
 	return true;
 }
 
-static RegisterHook registerHook(OnHook, nullptr, "rage__audRequestedSettings__SetClearness");
+static RegisterHook registerHook(OnHook, nullptr, "rage::audRequestedSettings::SetClearness");
 
 namespace Hooks
 {

@@ -1,10 +1,4 @@
-﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using TwitchLib.Api.Core.Enums;
-
-namespace TwitchChatVotingProxy
+﻿namespace TwitchChatVotingProxy
 {
     enum EVotingMode
     {
@@ -43,7 +37,7 @@ namespace TwitchChatVotingProxy
         {
             EVotingMode? votingMode = null;
 
-            foreach(var entry in Dict)
+            foreach (var entry in Dict)
             {
                 if (entry.Value == str)
                 {
