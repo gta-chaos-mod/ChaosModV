@@ -1,3 +1,6 @@
+/*
+	Effect By Rylxnd
+*/
 #include <stdafx.h>
 
 #include "Memory/Hooks/AudioClearnessHook.h"

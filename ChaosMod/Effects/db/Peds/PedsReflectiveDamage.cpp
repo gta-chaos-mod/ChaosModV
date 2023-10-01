@@ -1,3 +1,6 @@
+/*
+	Effect By Rylxnd
+*/
 #include <stdafx.h>
 
 static std::unordered_map<Ped, int> mappedPeds;
