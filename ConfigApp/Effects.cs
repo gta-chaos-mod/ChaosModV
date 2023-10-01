@@ -413,6 +413,7 @@ namespace ConfigApp
             { "veh_boostbrake", new EffectInfo("Boost Braking", EffectCategory.Vehicle, true) },
             { "cocktail_shaker", new EffectInfo("Cocktail Shaker", EffectCategory.Misc, true, true) },
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
+            { "pepega_traffic", new EffectInfo("Pepega Traffic", EffectCategory.Vehicle, true) },
         };
     }
 }
