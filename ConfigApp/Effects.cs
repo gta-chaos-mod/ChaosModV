@@ -414,6 +414,7 @@ namespace ConfigApp
             { "cocktail_shaker", new EffectInfo("Cocktail Shaker", EffectCategory.Misc, true, true) },
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
             { "pepega_traffic", new EffectInfo("Pepega Traffic", EffectCategory.Vehicle, true) },
+            { "screen_hueshift", new EffectInfo("Hue Shift", EffectCategory.Screen, true) },
         };
     }
 }
