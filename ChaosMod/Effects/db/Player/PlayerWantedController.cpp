@@ -176,7 +176,8 @@ REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
 // clang-format on
 
 //
-// Effect by Veloscocity and MoneyWasted
+// Effect by Veloscocity
+// and moneywasted too i guess but he didnt really do anything
 //
 
 struct Squad
