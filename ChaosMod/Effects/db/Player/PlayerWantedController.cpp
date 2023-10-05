@@ -820,7 +820,7 @@ static void OnStopSix(void)
 // clang-format off
 REGISTER_EFFECT(OnStartSix, OnStopSix, OnTickSix, EffectInfo
 	{
-		.Name = "!6 Wanted Stars",
+		.Name = "6 Wanted Stars",
 		.Id = "player_6stars",
 		.IsTimed = true,
 		.IncompatibleWith = { "player_neverwanted" },
