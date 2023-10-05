@@ -520,7 +520,7 @@ static Squad SpawnBuzzard(void)
 
 	squad.soldiers.push_back(AddVeteranSoldier(squad.veh, -1, false));
 
-	switch(g_Random.GetRandomInt(0, 2))
+	switch (g_Random.GetRandomInt(0, 2))
 	{
 	case 0:
 		squad.soldiers.push_back(AddMachineGunner(squad.veh, 1, true));
@@ -533,7 +533,7 @@ static Squad SpawnBuzzard(void)
 		break;
 	}
 
-	switch(g_Random.GetRandomInt(0, 4))
+	switch (g_Random.GetRandomInt(0, 4))
 	{
 	case 0:
 		squad.soldiers.push_back(AddMachineGunner(squad.veh, 2, true));
@@ -545,7 +545,7 @@ static Squad SpawnBuzzard(void)
 		squad.soldiers.push_back(AddSoldier(squad.veh, 2));
 		break;
 	}
-	
+
 	for (auto s : squad.soldiers)
 	{
 		TASK_COMBAT_HATED_TARGETS_AROUND_PED(s, 600, 0);
@@ -561,7 +561,7 @@ static Squad SpawnTank(void)
 	Ped playerPed = PLAYER_PED_ID();
 	squad.veh     = SpawnPersuingVehicle("rhino"_hash, 4, 0);
 
-	Ped ped = AddRocketeer(squad.veh, -1);
+	Ped ped       = AddRocketeer(squad.veh, -1);
 	TASK_COMBAT_HATED_TARGETS_AROUND_PED(ped, 600, 0);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 	squad.soldiers.push_back(ped);
@@ -594,13 +594,12 @@ static Squad SpawnDinghy(void)
 		squad.soldiers.push_back(AddSoldier(squad.veh, 0, false));
 	}
 	squad.soldiers.push_back(AddMachineGunner(squad.veh, 3, true));
-	
+
 	for (auto s : squad.soldiers)
 	{
 		TASK_COMBAT_HATED_TARGETS_AROUND_PED(s, 600, 0);
 		SET_PED_HEARING_RANGE(s, 9999.f);
 	}
-
 
 	return squad;
 }
@@ -719,14 +718,14 @@ static void OnTickSix(void)
 
 			while (i < squads.size())
 			{
-				Squad &squad = squads[i];
+				Squad &squad   = squads[i];
 				float distance = GET_ENTITY_COORDS(squad.veh, false).DistanceTo(playerPos);
-				int j = 0;
-				while(j < squad.soldiers.size())
+				int j          = 0;
+				while (j < squad.soldiers.size())
 				{
 					Ped ped = squad.soldiers[j];
-					if (!DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, false) 
-					 || GET_ENTITY_COORDS(ped, false).DistanceTo(playerPos) > 450.f)
+					if (!DOES_ENTITY_EXIST(ped) || IS_PED_DEAD_OR_DYING(ped, false)
+					    || GET_ENTITY_COORDS(ped, false).DistanceTo(playerPos) > 450.f)
 					{
 						SET_PED_AS_NO_LONGER_NEEDED(&ped);
 						squad.soldiers.erase(squad.soldiers.begin() + j);
@@ -737,7 +736,7 @@ static void OnTickSix(void)
 					}
 				}
 
-				if(squad.soldiers.empty())
+				if (squad.soldiers.empty())
 				{
 					SET_VEHICLE_AS_NO_LONGER_NEEDED(&squad.veh);
 					squads.erase(squads.begin() + i);
@@ -751,17 +750,18 @@ static void OnTickSix(void)
 
 		if (squads.size() < 4)
 		{
-			int waterCount = 0;
+			int waterCount    = 0;
 			Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 			float waterZ;
 
-			for(int i = 0; i < 3; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				GET_WATER_HEIGHT(playerPos.x + g_Random.GetRandomFloat(-100.f, 100.f), playerPos.y + g_Random.GetRandomFloat(-100.f, 100.f), playerPos.z + 100.f, &waterZ);
+				GET_WATER_HEIGHT(playerPos.x + g_Random.GetRandomFloat(-100.f, 100.f),
+				                 playerPos.y + g_Random.GetRandomFloat(-100.f, 100.f), playerPos.z + 100.f, &waterZ);
 				waterCount += (waterZ > 0);
 			}
 
-			if(waterCount < 2)
+			if (waterCount < 2)
 			{
 				switch (g_Random.GetRandomInt(0, 5))
 				{
@@ -785,7 +785,7 @@ static void OnTickSix(void)
 			else
 			{
 				int r = g_Random.GetRandomInt(0, 5);
-				
+
 				if (r == 0)
 				{
 					squads.push_back(SpawnPatrolBoat());
