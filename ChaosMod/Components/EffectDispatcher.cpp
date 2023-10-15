@@ -451,6 +451,14 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 		bool isEffectPaused = EffectThreads::IsThreadPaused(effect.ThreadId);
 
+		bool isMeta         = false;
+		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
+		if (g_EnabledEffects.contains(effect.Identifier))
+		{
+			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
+			isMeta                 = effectData.IsMeta();
+		}
+
 		if (!EffectThreads::DoesThreadExist(effect.ThreadId))
 		{
 			if (effect.MaxTime > 0.f
@@ -467,20 +475,15 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			EffectThreads::RunThread(effect.ThreadId);
 			OnPostRunEffect.Fire(effect.Identifier);
 
-			activeEffects++;
+			if (!isMeta)
+			{
+				activeEffects++;
+			}
 		}
 
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
 		{
 			effect.HideEffectName = false;
-		}
-
-		bool isMeta = false;
-		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
-		if (g_EnabledEffects.contains(effect.Identifier))
-		{
-			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isMeta                 = effectData.IsMeta();
 		}
 
 		if (effect.MaxTime > 0.f)
@@ -504,7 +507,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects)
+		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || (!isMeta && activeEffects > maxEffects))
 		{
 			if (effect.Timer < -60.f)
 			{
