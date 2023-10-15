@@ -53,8 +53,7 @@ inline const auto g_ModStartTime = std::time(nullptr);
 			slashPos        = fileName.find_last_of("/");                                    \
 			fileName        = fileName.substr(slashPos != fileName.npos ? slashPos + 1 : 0); \
 			return fileName;                                                                 \
-		}                                                                                    \
-		();                                                                                  \
+		}();                                                                                 \
 		COLOR_PREFIX_LOG("(" << fileName << ")", _text);                                     \
 	} while (0)
 
