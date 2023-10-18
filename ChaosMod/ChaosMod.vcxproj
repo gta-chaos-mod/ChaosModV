@@ -384,6 +384,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
+    <ClCompile Include="Memory\Hooks\ModelSpawnBypass.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
