@@ -4,7 +4,7 @@ struct Color
 {
 	uint8_t R, G, B, A;
 
-	uint32_t Get()
+	uint32_t Get() const
 	{
 		return A << 24 | R << 16 | G << 8 | B;
 	}
