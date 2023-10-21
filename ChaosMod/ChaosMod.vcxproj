@@ -463,7 +463,6 @@
     <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="..\vendor\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
-    <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
     <ClInclude Include="Util\Random.h" />
