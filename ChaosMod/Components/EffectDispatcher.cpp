@@ -467,7 +467,10 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			EffectThreads::RunThread(effect.ThreadId);
 			OnPostRunEffect.Fire(effect.Identifier);
 
-			activeEffects++;
+			if (!effect.IsMeta)
+			{
+				activeEffects++;
+			}
 		}
 
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
@@ -475,17 +478,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			effect.HideEffectName = false;
 		}
 
-		bool isMeta = false;
-		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
-		if (g_EnabledEffects.contains(effect.Identifier))
-		{
-			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isMeta                 = effectData.IsMeta();
-		}
-
 		if (effect.MaxTime > 0.f)
 		{
-			if (isMeta)
+			if (isEffectPaused)
 			{
 				effect.Timer -= adjustedDeltaTime;
 			}
@@ -504,7 +499,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects)
+		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || (!effect.IsMeta && activeEffects > maxEffects))
 		{
 			if (effect.Timer < -60.f)
 			{
@@ -769,33 +764,37 @@ void EffectDispatcher::ClearEffects(ClearEffectsFlags clearEffectFlags)
 	                        : ClearEffectsState::AllRestartPermanent;
 }
 
-void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
+void EffectDispatcher::ClearActiveEffects()
 {
-	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
+	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end(); it++)
 	{
-		ActiveEffect &effect = *it;
+		auto &effect = *it;
 
-		if (effect.Identifier != exclude)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(effect.ThreadId);
-			effect.IsStopping = true;
+			continue;
 		}
 
-		it++;
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
 	}
 }
 
 void EffectDispatcher::ClearMostRecentEffect()
 {
-	if (!SharedState.ActiveEffects.empty())
+	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend(); it++)
 	{
-		auto &mostRecentEffect = SharedState.ActiveEffects[SharedState.ActiveEffects.size() - 1];
+		auto &effect = *it;
 
-		if (mostRecentEffect.Timer > 0.f)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(mostRecentEffect.ThreadId);
-			mostRecentEffect.IsStopping = true;
+			continue;
 		}
+
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
+
+		break;
 	}
 }
 

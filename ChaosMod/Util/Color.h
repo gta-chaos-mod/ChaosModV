@@ -1,28 +1,35 @@
 #pragma once
 
+#include <cstdint>
+
 struct Color
 {
-	unsigned int R, G, B, A;
+	std::uint8_t R, G, B, A;
+
+	std::uint32_t Get() const
+	{
+		return A << 24 | R << 16 | G << 8 | B;
+	}
 };
 
 // Returns a random RGBA value without a random alpha: 255 or max.
-inline Color GetRandomColorRGB(unsigned int min = 0, unsigned int max = 255)
+inline Color GetRandomColorRGB(std::uint8_t min = 0, std::uint8_t max = 255)
 {
 	return {
-		(unsigned int)g_Random.GetRandomInt(min, max), // R
-		(unsigned int)g_Random.GetRandomInt(min, max), // G
-		(unsigned int)g_Random.GetRandomInt(min, max), // B
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // R
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // G
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // B
 		255                                            // A
 	};
 }
 
 // Returns a random RGBA value with a random alpha.
-inline Color GetRandomColorRGBA(unsigned int min = 0, unsigned int max = 255)
+inline Color GetRandomColorRGBA(std::uint8_t min = 0, std::uint8_t max = 255)
 {
 	return {
-		(unsigned int)g_Random.GetRandomInt(min, max), // R
-		(unsigned int)g_Random.GetRandomInt(min, max), // G
-		(unsigned int)g_Random.GetRandomInt(min, max), // B
-		(unsigned int)g_Random.GetRandomInt(min, max)  // A
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // R
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // G
+		(std::uint8_t)g_Random.GetRandomInt(min, max), // B
+		(std::uint8_t)g_Random.GetRandomInt(min, max)  // A
 	};
 }

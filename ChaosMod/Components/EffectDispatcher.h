@@ -48,6 +48,8 @@ class EffectDispatcher : public Component
 		float Timer         = 0.f;
 		float MaxTime       = 0.f;
 
+		bool IsMeta         = false;
+
 		bool HideEffectName = false;
 		bool IsStopping     = false;
 
@@ -60,6 +62,7 @@ class EffectDispatcher : public Component
 			Timer          = effectDuration;
 			MaxTime        = effectDuration;
 			HideEffectName = effectData.ShouldHideRealNameOnStart();
+			IsMeta         = effectData.IsMeta();
 
 			auto timedType = g_EnabledEffects.at(effectIdentifier).TimedType;
 			ThreadId       = EffectThreads::CreateThread(registeredEffect, timedType != EffectTimedType::NotTimed);
@@ -180,7 +183,7 @@ class EffectDispatcher : public Component
 		ClearEffectsFlag_NoRestartPermanentEffects = (1 << 0),
 	};
 	void ClearEffects(ClearEffectsFlags clearEffectFlags = ClearEffectsFlag_None);
-	void ClearActiveEffects(const EffectIdentifier &exclude = EffectIdentifier());
+	void ClearActiveEffects();
 	void ClearMostRecentEffect();
 
 	std::vector<RegisteredEffect *> GetRecentEffects(int distance, std::string_view ignoreEffect = {}) const;

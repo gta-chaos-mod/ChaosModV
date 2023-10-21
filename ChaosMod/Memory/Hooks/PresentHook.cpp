@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "PresentHook.h"
+
 #include "Memory/Hooks/Hook.h"
 #include "Memory/Hooks/ShaderHook.h"
 
@@ -10,7 +12,7 @@ HRESULT HK_IDXGISwapChain_Present(IDXGISwapChain *swapChain, UINT syncInterval, 
 {
 	if (!(flags & DXGI_PRESENT_TEST))
 	{
-		Hooks::OnPresentCallback();
+		Hooks::OnPresent.Fire();
 	}
 
 	return OG_IDXGISwapChain_Present(swapChain, syncInterval, flags);
