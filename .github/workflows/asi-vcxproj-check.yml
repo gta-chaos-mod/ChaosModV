@@ -1,6 +1,8 @@
 name: ChaosMod.vcxproj Check
 
-on: push
+on:
+  pull_request:
+  push:
 
 jobs:
   tests:
