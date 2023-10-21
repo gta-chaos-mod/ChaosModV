@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // Thanks CitizenFX!
 // Adapted by MoneyWasted for ChaosModV
 // https://github.com/citizenfx/fivem/blob/master/code/components/extra-natives-five/src/Draw2dNatives.cpp
@@ -11,7 +13,7 @@
 
 namespace Memory
 {
-	inline void DrawLine(float x1, float y1, float x2, float y2, float width, uint32_t color)
+	inline void DrawLine(float x1, float y1, float x2, float y2, float width, std::uint32_t color)
 	{
 		static char *(*AllocateDrawRect)(void *);
 		static void (*SetDrawRectCoords)(void *, float, float, float, float);
@@ -53,10 +55,10 @@ namespace Memory
 			SetDrawRectCoords(rect, x1, y1, x2, y2);
 
 			// Set unknown structure pointers.
-			*(uint32_t *)(rect + 0x34) &= 0xFA;
-			*(uint32_t *)(rect + 0x34) |= 0x8A;
+			*(std::uint32_t *)(rect + 0x34) &= 0xFA;
+			*(std::uint32_t *)(rect + 0x34) |= 0x8A;
 			*(float *)(rect + 0x1C)    = width;
-			*(uint32_t *)(rect + 0x28) = color;
+			*(std::uint32_t *)(rect + 0x28) = color;
 		}
 	}
 
