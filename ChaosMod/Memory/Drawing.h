@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // Thanks CitizenFX!
 // Adapted by MoneyWasted for ChaosModV
 // https://github.com/citizenfx/fivem/blob/master/code/components/extra-natives-five/src/Draw2dNatives.cpp
@@ -11,7 +13,7 @@
 
 namespace Memory
 {
-	inline void DrawLine(float x1, float y1, float x2, float y2, float width, int r, int g, int b, int a)
+	inline void DrawLine(float x1, float y1, float x2, float y2, float width, std::uint32_t color)
 	{
 		static char *(*AllocateDrawRect)(void *);
 		static void (*SetDrawRectCoords)(void *, float, float, float, float);
@@ -50,26 +52,18 @@ namespace Memory
 		// Analysis in IDA shows that the return value of AllocateDrawRect would be a structure.
 		if (auto rect = AllocateDrawRect(&drawRects[drawRectsSize * *mainThreadFrameIndex]))
 		{
-			// Clamp each color value then combine them.
-			uint32_t color = (
-				(std::clamp(a, 0, 255) << 24) |
-				(std::clamp(r, 0, 255) << 16) |
-				(std::clamp(g, 0, 255) << 8)  |
-				(std::clamp(b, 0, 255) << 0)
-			);
-
 			SetDrawRectCoords(rect, x1, y1, x2, y2);
 
 			// Set unknown structure pointers.
-			*(uint32_t *)(rect + 0x34) &= 0xFA;
-			*(uint32_t *)(rect + 0x34) |= 0x8A;
+			*(std::uint32_t *)(rect + 0x34) &= 0xFA;
+			*(std::uint32_t *)(rect + 0x34) |= 0x8A;
 			*(float *)(rect + 0x1C)    = width;
-			*(uint32_t *)(rect + 0x28) = color;
+			*(std::uint32_t *)(rect + 0x28) = color;
 		}
 	}
 
-	inline void DrawLine(ChaosVector2 firstPos, ChaosVector2 secondPos, Color color, float thickness)
+	inline void DrawLine(ChaosVector2 firstPos, ChaosVector2 secondPos, Color &color, float thickness)
 	{
-		DrawLine(firstPos.x, firstPos.y, secondPos.x, secondPos.y, thickness, color.R, color.G, color.B, color.A);
+		DrawLine(firstPos.x, firstPos.y, secondPos.x, secondPos.y, thickness, color.Get());
 	}
 }
