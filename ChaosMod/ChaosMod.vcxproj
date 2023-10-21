@@ -151,6 +151,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerCopyForce.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAFK.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
