@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-Vector3 playerVelocity;
+static Vector3 playerVelocity;
 
 static void OnStart()
 {
