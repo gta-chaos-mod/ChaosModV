@@ -170,7 +170,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 SendHeartBeat();
                 ReadPipe();
             }
-            catch (IOException exception)
+            catch (Exception exception)
             {
                 m_Logger.Information("Pipe disconnected: " + exception.Message);
                 DisconnectFromPipe();
@@ -182,7 +182,10 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void ReadPipe()
         {
             // If no reading task is active, create one
-            if (m_ReadPipeTask == null) m_ReadPipeTask = m_PipeReader.ReadLineAsync();
+            if (m_ReadPipeTask == null)
+            {
+                m_ReadPipeTask = m_PipeReader.ReadLineAsync();
+            }
             // If the reading task is created and complete, get its results
             else if (m_ReadPipeTask.IsCompleted)
             {

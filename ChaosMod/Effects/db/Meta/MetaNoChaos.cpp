@@ -9,7 +9,7 @@ static void OnStart()
 
 	if (ComponentExists<EffectDispatcher>())
 	{
-		GetComponent<EffectDispatcher>()->ClearActiveEffects({ "meta_nochaos" });
+		GetComponent<EffectDispatcher>()->ClearActiveEffects();
 	}
 }
 

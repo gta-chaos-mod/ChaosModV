@@ -7,7 +7,6 @@
 #include <cstdint>
 #include <list>
 
-
 class SplashTexts : public Component
 {
   private:

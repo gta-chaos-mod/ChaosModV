@@ -18,7 +18,8 @@
 
 static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDispatcher::EffectDispatchEntry &entry)
 {
-	EffectData &effectData = g_EnabledEffects.at(entry.Identifier);
+	auto &effectData = g_EnabledEffects.at(entry.Identifier);
+
 	if (effectData.TimedType == EffectTimedType::Permanent)
 	{
 		return;
@@ -57,65 +58,79 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 		}
 	}
 
+	auto playEffectDispatchSound = [&]()
+	{
+		if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+		    && ComponentExists<Mp3Manager>())
+		{
+			// Play global sound (if one exists)
+			// HACK: Force no global sound for "Fake Crash"
+			if (entry.Identifier.GetEffectId() != "misc_fakecrash")
+			{
+				GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
+			}
+
+			// Play a sound if corresponding .mp3 file exists
+			GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
+		}
+	};
+
 	// Check if timed effect already is active, reset timer if so
 	// Also check for incompatible effects
-	bool alreadyExists          = false;
+	bool alreadyExists = false;
 
-	const auto &incompatibleIds = effectData.IncompatibleIds;
-
-	for (auto it = effectDispatcher->SharedState.ActiveEffects.begin();
-	     it != effectDispatcher->SharedState.ActiveEffects.end();)
+	for (auto &activeEffect : effectDispatcher->SharedState.ActiveEffects)
 	{
-		auto &activeEffect     = *it;
-		auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
-
 		if (activeEffect.Identifier == entry.Identifier)
 		{
 			if (effectData.TimedType != EffectTimedType::NotTimed)
 			{
+				// Just extend timer of existing instance of timed effect
 				alreadyExists      = true;
 				activeEffect.Timer = activeEffect.MaxTime;
+
+				playEffectDispatchSound();
 			}
 			else
 			{
+				// Replace previous instance of non-timed effect with this new one
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
-				it = effectDispatcher->SharedState.ActiveEffects.erase(it);
 			}
 
 			break;
 		}
 
-		bool found = false;
-		if (std::find(incompatibleIds.begin(), incompatibleIds.end(), activeEffectData.Id) != incompatibleIds.end())
+		const auto &activeEffectData = g_EnabledEffects.at(activeEffect.Identifier);
+
+		bool isIncompatible          = false;
+		if (effectData.IncompatibleIds.contains(activeEffectData.Id))
 		{
-			found = true;
+			isIncompatible = true;
 		}
 
 		// Check if current effect is either the same effect category or marked as incompatible in active effect
-		if (!found)
+		if (!isIncompatible)
 		{
 			const auto &activeIncompatibleIds = activeEffectData.IncompatibleIds;
 			if ((effectData.EffectCategory != EffectCategory::None
 			     && effectData.EffectCategory == activeEffectData.EffectCategory)
-			    || std::find(activeIncompatibleIds.begin(), activeIncompatibleIds.end(), effectData.Id)
-			           != activeIncompatibleIds.end())
+			    || activeIncompatibleIds.contains(effectData.Id))
 			{
-				found = true;
+				isIncompatible = true;
 			}
 		}
 
-		if (found)
+		if (isIncompatible)
 		{
+			// No immediate effect thread stopping required here, do it gracefully
 			EffectThreads::StopThread(activeEffect.ThreadId);
 			activeEffect.IsStopping = true;
 		}
-
-		it++;
 	}
 
 	if (!alreadyExists)
 	{
-		RegisteredEffect *registeredEffect = GetRegisteredEffect(entry.Identifier);
+		auto *registeredEffect = GetRegisteredEffect(entry.Identifier);
 
 		if (registeredEffect)
 		{
@@ -127,19 +142,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectName << " " << entry.Suffix;
 			}
 
-			if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
-			    && ComponentExists<Mp3Manager>())
-			{
-				// Play global sound (if one exists)
-				// HACK: Force no global sound for "Fake Crash"
-				if (entry.Identifier.GetEffectId() != "misc_fakecrash")
-				{
-					GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
-				}
-
-				// Play a sound if corresponding .mp3 file exists
-				GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
-			}
+			playEffectDispatchSound();
 
 			int effectDuration;
 			switch (effectData.TimedType)
@@ -439,16 +442,35 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 	int maxEffects =
 	    std::min((int)(floor((1.0f - GetEffectTopSpace()) / EFFECT_TEXT_INNER_SPACING_MIN) - 1), m_MaxRunningEffects);
+	int activeEffects              = 0;
 	int effectCountToCheckCleaning = 3;
-	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
+	// Reverse order to ensure the effects on top of the list are removed if activeEffects > maxEffects
+	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
-		auto &effect = *it;
+		auto &effect        = *it;
 
-		if (EffectThreads::DoesThreadExist(effect.ThreadId) && !EffectThreads::IsThreadPaused(effect.ThreadId))
+		bool isEffectPaused = EffectThreads::IsThreadPaused(effect.ThreadId);
+
+		if (!EffectThreads::DoesThreadExist(effect.ThreadId))
+		{
+			if (effect.MaxTime > 0.f
+			    || (effect.MaxTime < 0.f && effect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
+			{
+				// Effect thread doesn't exist anymore so just remove the effect from list
+				it = static_cast<decltype(it)>(SharedState.ActiveEffects.erase(std::next(it).base()));
+				continue;
+			}
+		}
+		else if (!isEffectPaused)
 		{
 			OnPreRunEffect.Fire(effect.Identifier);
 			EffectThreads::RunThread(effect.ThreadId);
 			OnPostRunEffect.Fire(effect.Identifier);
+
+			if (!effect.IsMeta)
+			{
+				activeEffects++;
+			}
 		}
 
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
@@ -456,19 +478,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			effect.HideEffectName = false;
 		}
 
-		bool isTimed = false;
-		bool isMeta  = false;
-		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
-		if (g_EnabledEffects.contains(effect.Identifier))
+		if (effect.MaxTime > 0.f)
 		{
-			auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isTimed          = effectData.TimedType != EffectTimedType::NotTimed;
-			isMeta           = effectData.IsMeta();
-		}
-
-		if (effect.MaxTime > 0)
-		{
-			if (isMeta)
+			if (isEffectPaused)
 			{
 				effect.Timer -= adjustedDeltaTime;
 			}
@@ -479,31 +491,29 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
 			}
 		}
-		else if (!isTimed)
+		else
 		{
 			float t = SharedState.EffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
-			// ensure effects stay on screen for at least 5 seconds
+			// Ensure non-timed effects stay on screen for a certain amount of time
 			effect.Timer += adjustedDeltaTime / t
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if (effect.IsStopping)
+		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || (!effect.IsMeta && activeEffects > maxEffects))
 		{
-			EffectThreads::StopThreadImmediately(effect.ThreadId);
-			it = SharedState.ActiveEffects.erase(it);
-		}
-		else
-		{
-			if (effect.MaxTime > 0 && effect.Timer <= 0
-			    || !isTimed && (SharedState.ActiveEffects.size() > maxEffects || effect.Timer >= 0.f)
-			           && !effect.IsStopping)
+			if (effect.Timer < -60.f)
+			{
+				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
+				EffectThreads::StopThreadImmediately(effect.ThreadId);
+			}
+			else if (!effect.IsStopping)
 			{
 				EffectThreads::StopThread(effect.ThreadId);
 				effect.IsStopping = true;
 			}
-
-			it++;
 		}
+
+		it++;
 	}
 }
 
@@ -614,6 +624,11 @@ void EffectDispatcher::DrawEffectTexts()
 
 	for (const ActiveEffect &effect : SharedState.ActiveEffects)
 	{
+		if (effect.IsStopping)
+		{
+			continue;
+		}
+
 		const bool hasFake = !effect.FakeName.empty();
 
 		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
@@ -646,7 +661,7 @@ void EffectDispatcher::DrawEffectTexts()
 			               ScreenTextAdjust::Right, { .0f, .915f });
 		}
 
-		if (effect.MaxTime > 0)
+		if (effect.MaxTime > 0.f)
 		{
 			if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 			{
@@ -749,33 +764,37 @@ void EffectDispatcher::ClearEffects(ClearEffectsFlags clearEffectFlags)
 	                        : ClearEffectsState::AllRestartPermanent;
 }
 
-void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
+void EffectDispatcher::ClearActiveEffects()
 {
-	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
+	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end(); it++)
 	{
-		ActiveEffect &effect = *it;
+		auto &effect = *it;
 
-		if (effect.Identifier != exclude)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(effect.ThreadId);
-			effect.IsStopping = true;
+			continue;
 		}
 
-		it++;
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
 	}
 }
 
 void EffectDispatcher::ClearMostRecentEffect()
 {
-	if (!SharedState.ActiveEffects.empty())
+	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend(); it++)
 	{
-		ActiveEffect &mostRecentEffect = SharedState.ActiveEffects[SharedState.ActiveEffects.size() - 1];
+		auto &effect = *it;
 
-		if (mostRecentEffect.Timer > 0)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(mostRecentEffect.ThreadId);
-			mostRecentEffect.IsStopping = true;
+			continue;
 		}
+
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
+
+		break;
 	}
 }
 

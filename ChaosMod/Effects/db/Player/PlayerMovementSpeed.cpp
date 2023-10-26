@@ -1,9 +1,13 @@
 #include <stdafx.h>
 
+static void Override(float value)
+{
+	SET_PED_MOVE_RATE_OVERRIDE(PLAYER_PED_ID(), value);
+}
+
 static void OnTickx5()
 {
-	static Ped plr = PLAYER_PED_ID();
-	SET_PED_MOVE_RATE_OVERRIDE(plr, 5.f);
+	Override(5.f);
 }
 
 // clang-format off
@@ -19,8 +23,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx5, EffectInfo
 
 static void OnTickx10()
 {
-	static Ped plr = PLAYER_PED_ID();
-	SET_PED_MOVE_RATE_OVERRIDE(plr, 5.f);
+	Override(10.f);
 }
 
 // clang-format off
@@ -36,8 +39,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTickx10, EffectInfo
 
 static void OnTickx05()
 {
-	static Ped plr = PLAYER_PED_ID();
-	SET_PED_MOVE_RATE_OVERRIDE(plr, 0.5f);
+	Override(0.5f);
 }
 
 // clang-format off

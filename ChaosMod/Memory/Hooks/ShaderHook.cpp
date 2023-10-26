@@ -2,8 +2,10 @@
 
 #include "ShaderHook.h"
 
-#include "Memory/Hooks/Hook.h"
 #include "Memory/Shader.h"
+
+#include "Memory/Hooks/Hook.h"
+#include "Memory/Hooks/PresentHook.h"
 
 #define SHADER_CACHE_MAX_ENTRIES 20
 
@@ -41,6 +43,18 @@ void *HK_rage__CreateShader(const char *name, BYTE *data, DWORD size, DWORD type
 
 static bool OnHook()
 {
+	static CHAOS_EVENT_LISTENER(Hooks::OnPresent) onPresentListener;
+
+	onPresentListener.Register(Hooks::OnPresent,
+	                           []()
+	                           {
+		                           if (ms_RefreshShaders)
+		                           {
+			                           ms_RefreshShaders = false;
+			                           Memory::InvalidateShaderCache();
+		                           }
+	                           });
+
 	Handle handle;
 
 	//
@@ -127,14 +141,5 @@ namespace Hooks
 	{
 		ms_ShaderBytecode.clear();
 		ms_RefreshShaders = true;
-	}
-
-	void OnPresentCallback()
-	{
-		if (ms_RefreshShaders)
-		{
-			ms_RefreshShaders = false;
-			Memory::InvalidateShaderCache();
-		}
 	}
 }

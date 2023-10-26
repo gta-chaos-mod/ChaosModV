@@ -994,7 +994,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		{
 			if (entry.second.valid() && entry.second.is<std::string>())
 			{
-				effectData.IncompatibleIds.push_back(entry.second.as<std::string>());
+				effectData.IncompatibleIds.insert(entry.second.as<std::string>());
 			}
 		}
 	}
