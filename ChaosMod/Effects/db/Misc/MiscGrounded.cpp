@@ -21,9 +21,11 @@ static void OnTick()
 		}
 
 		Vector3 vel = GET_ENTITY_VELOCITY(entity);
-
-		if (GET_ENTITY_HEIGHT_ABOVE_GROUND(entity) > 2.f && vel.z > -25.f)
-			SET_ENTITY_VELOCITY(entity, vel.x, vel.y, std::min(vel.z * 0.66f, vel.z - 1.33f));
+		float h = GET_ENTITY_HEIGHT_ABOVE_GROUND(entity);
+		if(h > 2.f && vel.z > -h/2)
+			SET_ENTITY_VELOCITY(entity, vel.x, vel.y, -h);
+		else if (h > 1.f && vel.z > 0)
+			SET_ENTITY_VELOCITY(entity, vel.x, vel.y, -0.1f);
 	}
 }
 
