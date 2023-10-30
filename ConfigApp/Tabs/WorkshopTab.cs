@@ -88,19 +88,19 @@ namespace ConfigApp.Tabs
                 var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
                 if (duplicateSubmissionItem != null)
                 {
-                    if (!isLocal)
+                    if (isLocal)
                     {
-                        return;
+                        if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
+                        {
+                            duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
+                        }
+                        else
+                        {
+                            duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                        }
                     }
 
-                    if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
-                    {
-                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                    }
-                    else
-                    {
-                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                    }
+                    return;
                 }
 
                 var submissionItem = new WorkshopSubmissionItem()
