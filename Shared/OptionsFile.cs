@@ -96,7 +96,7 @@ namespace Shared
 
         public void WriteValue(string key, string value)
         {
-            m_Options[key] = value;
+            m_Options[key] = string.IsNullOrEmpty(value) ? null : value;
         }
 
         public void WriteValue(string key, int value)
