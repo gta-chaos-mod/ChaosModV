@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,74 @@ namespace ConfigApp.Tabs
 
         private void ParseWorkshopSubmissionsFile(byte[] compressedFileContent)
         {
+            void submitWorkshopSubmissionData(dynamic submissionData, bool isLocal)
+            {
+                T getDataItem<T>(dynamic item, T defaultValue)
+                {
+                    try
+                    {
+                        return item;
+                    }
+                    catch (RuntimeBinderException)
+                    {
+                        return defaultValue;
+                    }
+                }
+
+                var id = getDataItem<string>(submissionData.id, string.Empty);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return;
+                }
+
+                var version = getDataItem<string>(submissionData.version, string.Empty);
+                if (string.IsNullOrEmpty(version))
+                {
+                    return;
+                }
+
+                var lastUpdated = getDataItem<int>(submissionData.lastupdated, 0);
+                var sha256 = getDataItem<string>(submissionData.sha256, string.Empty);
+
+                var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
+                if (duplicateSubmissionItem != null)
+                {
+                    if (!isLocal)
+                    {
+                        return;
+                    }
+
+                    if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
+                    {
+                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
+                    }
+                    else
+                    {
+                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                    }
+                }
+
+                var submissionItem = new WorkshopSubmissionItem()
+                {
+                    Id = id,
+                    Name = getDataItem<string>(submissionData.name, "No Name"),
+                    Author = getDataItem<string>(submissionData.author, "No Author"),
+                    Description = getDataItem<string>(submissionData.description, "No Description"),
+                    Version = $"v{version}",
+                    LastUpdated = lastUpdated,
+                    Sha256 = sha256,
+                };
+
+                // Remote submissions are fetched before local ones so this submission only exists locally
+                if (isLocal)
+                {
+                    submissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                    submissionItem.IsAlien = true;
+                }
+
+                m_WorkshopSubmissionItems.Add(submissionItem);
+            }
+
             {
                 var decompressor = new Decompressor();
                 var decompressed = decompressor.Unwrap(compressedFileContent);
@@ -68,28 +137,11 @@ namespace ConfigApp.Tabs
                 foreach (var submissionObject in json["submissions"].ToObject<Dictionary<string, dynamic>>())
                 {
                     var submissionId = submissionObject.Key;
+
                     var submissionData = submissionObject.Value;
+                    submissionData.id = submissionId;
 
-                    // Submission has no data
-                    if (submissionData.lastupdated == 0)
-                    {
-                        continue;
-                    }
-
-                    WorkshopSubmissionItem submission = new WorkshopSubmissionItem();
-                    submission.Id = submissionId;
-                    submission.Name = submissionData.name;
-                    submission.Author = submissionData.author;
-                    submission.Description = submissionData.description;
-                    if (submission.Description.Length == 0)
-                    {
-                        submission.Description = "No Description";
-                    }
-                    submission.Version = $"v{submissionData.version}";
-                    submission.LastUpdated = submissionData.lastupdated;
-                    submission.Sha256 = submissionData.sha256;
-
-                    m_WorkshopSubmissionItems.Add(submission);
+                    submitWorkshopSubmissionData(submissionData, false);
                 }
             }
 
@@ -109,35 +161,14 @@ namespace ConfigApp.Tabs
                 {
                     var json = JObject.Parse(File.ReadAllText($"{directory}/metadata.json"));
 
-                    var version = (string)json["version"];
-                    var lastUpdated = (int)json["lastupdated"];
-                    var sha256 = (string)json["sha256"];
-
-                    var foundSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
-                    if (foundSubmissionItem == null)
+                    var submissionData = json.ToObject<dynamic>();
+                    if (submissionData == null)
                     {
-                        var result = MessageBox.Show($"Local submission \"{id}\" does not exist remotely. Remove submission?", "ChaosModV", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                Directory.Delete(directory, true);
-                            }
-                            catch (Exception)
-                            {
-                                MessageBox.Show($"Couldn't access \"{directory}\". Try deleting it manually!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        }
                         continue;
                     }
-                    else if (foundSubmissionItem.Version != version || foundSubmissionItem.LastUpdated != lastUpdated || foundSubmissionItem.Sha256 != sha256)
-                    {
-                        foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                    }
-                    else
-                    {
-                        foundSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                    }
+                    submissionData.id = id;
+
+                    submitWorkshopSubmissionData(submissionData, true);
                 }
                 catch (Exception exception) when (exception is JsonException || exception is ZstdException)
                 {

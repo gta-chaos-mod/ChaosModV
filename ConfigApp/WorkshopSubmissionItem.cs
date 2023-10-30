@@ -22,6 +22,7 @@ namespace ConfigApp
         public int LastUpdated { get; set; }
         public string Sha256 { get; set; }
         public BitmapSource SubmissionIcon { get; set; }
+        public bool IsAlien { get; set; } = false;
 
         // In order for sorting
         public enum SubmissionInstallState
@@ -48,7 +49,7 @@ namespace ConfigApp
                 {
                     case SubmissionInstallState.NotInstalled:
                         InstallButtonText = "Install";
-                        InstallButtonEnabled = true;
+                        InstallButtonEnabled = !IsAlien;
                         SettingsButtonVisibility = Visibility.Hidden;
                         break;
                     case SubmissionInstallState.Installed:
@@ -62,7 +63,7 @@ namespace ConfigApp
                         break;
                     case SubmissionInstallState.UpdateAvailable:
                         InstallButtonText = "Update";
-                        InstallButtonEnabled = true;
+                        InstallButtonEnabled = !IsAlien;
                         SettingsButtonVisibility = Visibility.Visible;
                         break;
                     case SubmissionInstallState.Removing:

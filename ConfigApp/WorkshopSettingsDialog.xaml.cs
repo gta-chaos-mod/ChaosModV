@@ -1,5 +1,4 @@
-﻿using Shared;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ConfigApp
 {
