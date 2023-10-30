@@ -94,7 +94,9 @@ namespace ConfigApp
             HttpClient httpClient = new HttpClient();
             try
             {
-                var result = await httpClient.GetAsync($"https://chaos.gopong.dev/workshop/fetch_submission_data?submission_id={m_SubmissionItem.Id}");
+                var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
+
+                var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submission_data?submission_id={m_SubmissionItem.Id}");
                 if (!result.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Error while fetching submission. Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
