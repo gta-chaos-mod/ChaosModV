@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 using ZstdSharp;
 
@@ -25,11 +26,6 @@ namespace ConfigApp.Tabs
 
         private WatermarkTextBox m_SearchBox;
         private ItemsControl m_ItemsControl;
-
-        private void DisplayWorkshopFetchContentFailure()
-        {
-            MessageBox.Show("Error occured while trying to fetch submissions from server! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
 
         private void HandleWorkshopSubmissionsSearchFilter()
         {
@@ -62,7 +58,7 @@ namespace ConfigApp.Tabs
             {
                 var decompressor = new Decompressor();
                 var decompressed = decompressor.Unwrap(compressedFileContent);
-                string fileContent = Encoding.UTF8.GetString(decompressed.ToArray());
+                var fileContent = Encoding.UTF8.GetString(decompressed.ToArray());
 
                 var json = JObject.Parse(fileContent);
 
@@ -159,11 +155,17 @@ namespace ConfigApp.Tabs
 
         private async Task ForceRefreshWorkshopContentFromRemote()
         {
+            var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
+
             HttpClient httpClient = new HttpClient();
             try
             {
-                var result = await httpClient.GetAsync("https://chaos.gopong.dev/workshop/fetch_submissions");
-                if (result.IsSuccessStatusCode)
+                var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
+                if (!result.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Remote server provided no master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
                 {
                     var compressedResult = await result.Content?.ReadAsByteArrayAsync();
 
@@ -175,11 +177,25 @@ namespace ConfigApp.Tabs
             }
             catch (HttpRequestException)
             {
-                DisplayWorkshopFetchContentFailure();
+                MessageBox.Show("Error occured while trying to fetch submissions from server! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show($"Specified workshop URL ({domain}) is invalid!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception exception) when (exception is JsonException || exception is ZstdException)
             {
-                MessageBox.Show($"Remote provided a malformed master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Remote server provided a malformed master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void OnSettingsClick(object sender, RoutedEventArgs eventArgs)
+        {
+            var dialog = new WorkshopSettingsDialog();
+            dialog.ShowDialog();
+            if (dialog.IsSaved)
+            {
+                await ForceRefreshWorkshopContentFromRemote();
             }
         }
 
@@ -209,12 +225,28 @@ namespace ConfigApp.Tabs
             {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Width = 250f,
-                Margin = new Thickness(0f, 0f, 50f, 0f),
+                Margin = new Thickness(0f, 0f, 70f, 0f),
                 Watermark = "Search",
                 KeepWatermarkOnGotFocus = true
             };
             m_SearchBox.TextChanged += OnTextChangeSearch;
             headerGrid.Children.Add(m_SearchBox);
+
+            var settingsButton = new Button()
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Width = 25f,
+                Margin = new Thickness(0f, 0f, 35f, 0f),
+                ToolTip = "Settings",
+                FontFamily = new FontFamily("Wingdings"),
+                Content = new TextBlock()
+                {
+                    Text = "]",
+                    FontSize = 19
+                }
+            };
+            settingsButton.Click += OnSettingsClick;
+            headerGrid.Children.Add(settingsButton);
 
             var refreshButton = new Button()
             {
