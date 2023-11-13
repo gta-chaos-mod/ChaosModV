@@ -35,7 +35,9 @@ namespace ConfigApp.Tabs
 
         private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>();
 
+        private CheckBox m_SortIntalledFirstToggle;
         private WatermarkTextBox m_SearchBox;
+
         private ItemsControl m_ItemsControl;
 
         private void SortSubmissionItems()
@@ -57,7 +59,12 @@ namespace ConfigApp.Tabs
                     throw new NotImplementedException();
             }
 
-            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items.OrderBy(item => item.InstallState));
+            if (m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
+            {
+                items = items.OrderBy(item => item.InstallState);
+            }
+
+            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items);
             m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
         }
 
@@ -301,12 +308,24 @@ namespace ConfigApp.Tabs
             var sortingModeBox = new ComboBox()
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
+                Width = 100f,
                 Margin = new Thickness(55f, 0f, 0f, 0f),
                 ItemsSource = m_SortingModeLabels.Values,
                 SelectedIndex = 0
             };
             sortingModeBox.SelectionChanged += OnSortingModeBoxSelectionChanged;
             headerGrid.Children.Add(sortingModeBox);
+
+            m_SortIntalledFirstToggle = new CheckBox()
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(165f, 0f, 0f, 0f),
+                IsChecked = true,
+                Content = "Show installed first"
+            };
+            m_SortIntalledFirstToggle.Click += (sender, eventArgs) => { SortSubmissionItems(); };
+            headerGrid.Children.Add(m_SortIntalledFirstToggle);
 
             m_SearchBox = new WatermarkTextBox()
             {
