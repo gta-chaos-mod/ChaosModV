@@ -1,14 +1,10 @@
 ﻿using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,10 +19,47 @@ namespace ConfigApp.Tabs
 {
     public class WorkshopTab : Tab
     {
+        enum SortingMode
+        {
+            Name,
+            LastUpdated,
+            Author
+        }
+        private Dictionary<SortingMode, string> m_SortingModeLabels = new Dictionary<SortingMode, string>()
+        {
+            { SortingMode.Name, "Name" },
+            { SortingMode.LastUpdated, "Last Updated" },
+            { SortingMode.Author, "Author" }
+        };
+        private SortingMode m_SortingMode = SortingMode.Name;
+
         private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>();
 
         private WatermarkTextBox m_SearchBox;
         private ItemsControl m_ItemsControl;
+
+        private void SortSubmissionItems()
+        {
+            IOrderedEnumerable<WorkshopSubmissionItem>? items = null;
+
+            switch (m_SortingMode)
+            {
+                case SortingMode.Name:
+                    items = m_WorkshopSubmissionItems.OrderBy(item => item.Name.ToLower());
+                    break;
+                case SortingMode.LastUpdated:
+                    items = m_WorkshopSubmissionItems.OrderByDescending(item => item.LastUpdated);
+                    break;
+                case SortingMode.Author:
+                    items = m_WorkshopSubmissionItems.OrderBy(item => item.Author.ToLower());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items.OrderBy(item => item.InstallState));
+            m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
+        }
 
         private void HandleWorkshopSubmissionsSearchFilter()
         {
@@ -177,9 +210,7 @@ namespace ConfigApp.Tabs
                 }
             }
 
-            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(m_WorkshopSubmissionItems.OrderBy(item => item.InstallState).ThenBy(item => item.Name));
-
-            m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
+            SortSubmissionItems();
 
             HandleWorkshopSubmissionsSearchFilter();
         }
@@ -198,7 +229,7 @@ namespace ConfigApp.Tabs
                 }
                 else
                 {
-                    var compressedResult = await result.Content?.ReadAsByteArrayAsync();
+                    var compressedResult = await result.Content.ReadAsByteArrayAsync();
 
                     ParseWorkshopSubmissionsFile(compressedResult);
 
@@ -244,6 +275,14 @@ namespace ConfigApp.Tabs
             HandleWorkshopSubmissionsSearchFilter();
         }
 
+        private void OnSortingModeBoxSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
+        {
+            var box = (ComboBox)sender;
+
+            m_SortingMode = (SortingMode)box.SelectedIndex;
+            SortSubmissionItems();
+        }
+
         protected override void InitContent()
         {
             PushNewColumn(new GridLength(1f, GridUnitType.Star));
@@ -251,6 +290,23 @@ namespace ConfigApp.Tabs
             SetRowHeight(new GridLength());
 
             var headerGrid = new Grid();
+
+            var sortingModeText = new TextBlock()
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(2f, 3f, 0f, 0f),
+                Text = "Sort By:"
+            };
+            headerGrid.Children.Add(sortingModeText);
+            var sortingModeBox = new ComboBox()
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(55f, 0f, 0f, 0f),
+                ItemsSource = m_SortingModeLabels.Values,
+                SelectedIndex = 0
+            };
+            sortingModeBox.SelectionChanged += OnSortingModeBoxSelectionChanged;
+            headerGrid.Children.Add(sortingModeBox);
 
             m_SearchBox = new WatermarkTextBox()
             {
