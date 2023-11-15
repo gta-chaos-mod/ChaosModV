@@ -19,6 +19,7 @@ static void OnStart()
 REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 	{
 		.Name = "All Nearby Peds Are Fleeing",
-		.Id = "peds_flee"
+		.Id = "peds_flee",
+		.IncompatibleWith = { "peds_reckless" }
 	}
 );
