@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,8 @@ namespace ConfigApp.Tabs
 {
     public class WorkshopTab : Tab
     {
+        public const string SUBMISSIONS_CACHED_FILENAME = "workshop/submissions_cached.json.zst";
+
         enum SortingMode
         {
             Name,
@@ -229,19 +232,36 @@ namespace ConfigApp.Tabs
             HttpClient httpClient = new HttpClient();
             try
             {
-                var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
-                if (!result.IsSuccessStatusCode)
+                if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
+                {
+                    var hashResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissionshash");
+                    if (hashResult.IsSuccessStatusCode)
+                    {
+                        var remoteHash = await hashResult.Content.ReadAsStringAsync();
+                        var localContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
+                        using var sha256 = SHA256.Create();
+                        if (remoteHash.ToLower() == Convert.ToHexString(sha256.ComputeHash(localContent)).ToLower())
+                        {
+                            ParseWorkshopSubmissionsFile(localContent);
+
+                            return;
+                        }
+                    }
+                }
+
+                var submissionsResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
+                if (!submissionsResult.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Remote server provided no master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
-                    var compressedResult = await result.Content.ReadAsByteArrayAsync();
+                    var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
 
-                    ParseWorkshopSubmissionsFile(compressedResult);
+                    ParseWorkshopSubmissionsFile(submissionsCompressedResult);
 
                     // Cache submissions
-                    File.WriteAllBytes("workshop/submissions_cached.json.zst", compressedResult);
+                    File.WriteAllBytes(SUBMISSIONS_CACHED_FILENAME, submissionsCompressedResult);
                 }
             }
             catch (HttpRequestException)
@@ -441,11 +461,11 @@ namespace ConfigApp.Tabs
 
             byte[] fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
-            if (File.Exists("workshop/submissions_cached.json.zst"))
+            if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
             {
                 try
                 {
-                    fileContent = File.ReadAllBytes("workshop/submissions_cached.json.zst");
+                    fileContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
                 }
                 catch (IOException)
                 {
