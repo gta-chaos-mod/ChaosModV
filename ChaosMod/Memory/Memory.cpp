@@ -225,18 +225,6 @@ namespace Memory
 		return scanPattern();
 	}
 
-	MH_STATUS AddHook(void *target, void *detour, void *orig)
-	{
-		auto result = MH_CreateHook(target, detour, reinterpret_cast<void **>(orig));
-
-		if (result == MH_OK)
-		{
-			MH_EnableHook(target);
-		}
-
-		return result;
-	}
-
 	const char *GetTypeName(__int64 vftAddr)
 	{
 		if (vftAddr)

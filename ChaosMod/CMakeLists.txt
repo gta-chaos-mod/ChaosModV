@@ -25,7 +25,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(ChaosMod PRIVATE -DUNICODE -D_UNICODE -DNOMINMAX /Zi)
     target_link_options(ChaosMod PRIVATE /DEBUG /OPT:REF /OPT:ICF)
 else()
-    target_compile_options(ChaosMod PRIVATE -municode -fpermissive)
+    target_compile_options(ChaosMod PRIVATE -municode)
     target_link_options(ChaosMod PRIVATE -static)
 endif()
 

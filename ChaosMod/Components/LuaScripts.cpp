@@ -260,9 +260,9 @@ _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_st
 		switch (returnType)
 		{
 		case LuaNativeReturnType::Bool:
-			return sol::make_object(lua, reinterpret_cast<bool>(*returned));
+			return sol::make_object(lua, *reinterpret_cast<bool *>(returned));
 		case LuaNativeReturnType::Int:
-			return sol::make_object(lua, reinterpret_cast<int>(*returned));
+			return sol::make_object(lua, *reinterpret_cast<int *>(returned));
 		case LuaNativeReturnType::Float:
 			return sol::make_object(lua, *reinterpret_cast<float *>(returned));
 		case LuaNativeReturnType::String:
