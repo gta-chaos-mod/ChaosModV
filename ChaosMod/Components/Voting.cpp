@@ -18,39 +18,6 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 	m_EnableVoting =
 	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
-
-	if (m_EnableVoting && !Init())
-	{
-		return;
-	}
-
-	m_PipeHandle =
-	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
-	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
-
-	if (m_PipeHandle == INVALID_HANDLE_VALUE)
-	{
-		ErrorOutWithMsg("Error while creating a named pipe, previous instance of voting proxy might be running. Try "
-		                "reloading the mod. Reverting to normal mode.");
-
-		return;
-	}
-
-	ConnectNamedPipe(m_PipeHandle, NULL);
-
-	if (m_EnableVoting)
-	{
-		if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
-		    && ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
-		}
-
-		if (ComponentExists<SplashTexts>())
-		{
-			GetComponent<SplashTexts>()->ShowVotingSplash();
-		}
-	}
 }
 
 Voting::~Voting()
@@ -74,6 +41,54 @@ void Voting::OnRun()
 {
 	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>())
 	{
+		return;
+	}
+
+	if (!m_HasInitializedVoting)
+	{
+		// Only initialize voting proxy after we are fully loaded in, otherwise some weird behaviour can occur from the
+		// voting proxy, e.g. OnFailureToReceiveJoinConfirmation being raised for whatever reason
+		if (GET_IS_LOADING_SCREEN_ACTIVE())
+		{
+			return;
+		}
+
+		m_HasInitializedVoting = true;
+
+		if (!Init())
+		{
+			return;
+		}
+
+		m_PipeHandle = CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
+		                               PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE,
+		                               BUFFER_SIZE, 0, NULL);
+
+		if (m_PipeHandle == INVALID_HANDLE_VALUE)
+		{
+			ErrorOutWithMsg(
+			    "Error while creating a named pipe, previous instance of voting proxy might be running. Try "
+			    "reloading the mod. Reverting to normal mode.");
+
+			return;
+		}
+
+		ConnectNamedPipe(m_PipeHandle, NULL);
+
+		if (m_EnableVoting)
+		{
+			if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
+			    && ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
+			}
+
+			if (ComponentExists<SplashTexts>())
+			{
+				GetComponent<SplashTexts>()->ShowVotingSplash();
+			}
+		}
+
 		return;
 	}
 
