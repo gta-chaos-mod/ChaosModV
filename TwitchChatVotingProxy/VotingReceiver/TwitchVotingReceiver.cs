@@ -16,15 +16,15 @@ namespace TwitchChatVotingProxy.VotingReceiver
     {
         public static readonly int RECONNECT_INTERVAL = 1000;
 
-        public event EventHandler<OnMessageArgs> OnMessage;
+        public event EventHandler<OnMessageArgs>? OnMessage = null;
 
-        private string m_ChannelName;
-        private string m_OAuth;
-        private string m_UserName;
+        private readonly string? m_ChannelName = null;
+        private readonly string? m_OAuth = null;
+        private readonly string? m_UserName = null;
 
-        private TwitchClient m_Client;
-        private ChaosPipeClient m_ChaosPipe;
-        private ILogger m_Logger = Log.Logger.ForContext<TwitchVotingReceiver>();
+        private TwitchClient? m_Client = null;
+        private readonly ChaosPipeClient m_ChaosPipe;
+        private readonly ILogger m_Logger = Log.Logger.ForContext<TwitchVotingReceiver>();
 
         private bool m_IsReady = false;
 
@@ -89,6 +89,11 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         public Task SendMessage(string message)
         {
+            if (m_Client is null)
+            {
+                return Task.FromResult(0);
+            }
+
             try
             {
                 foreach (var msg in message.Split("\n"))
@@ -101,55 +106,55 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 m_Logger.Error(e, $"Failed to send message \"{message}\" to channel \"{m_ChannelName}\"");
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// Called when the twitch client connects (callback)
         /// </summary>
-        private void OnConnected(object sender, OnConnectedArgs e)
+        private void OnConnected(object? sender, OnConnectedArgs e)
         {
             m_Logger.Information("Successfully connected to Twitch");
         }
         /// <summary>
         /// Called when the twitch client disconnects (callback)
         /// </summary>
-        private async void OnDisconnect(object sender, OnDisconnectedArgs e)
+        private async void OnDisconnect(object? sender, OnDisconnectedArgs e)
         {
             m_Logger.Error("Disconnected from the twitch channel, trying to reconnect");
             await Task.Delay(RECONNECT_INTERVAL);
-            m_Client.Connect();
+            m_Client?.Connect();
         }
         /// <summary>
         /// Called when the twitch clients errors (callback)
         /// </summary>
-        private void OnError(object sender, OnErrorEventArgs e)
+        private void OnError(object? sender, OnErrorEventArgs e)
         {
             m_Logger.Error(e.Exception, "Client error, disconnecting");
-            m_Client.Disconnect();
+            m_Client?.Disconnect();
         }
         /// <summary>
         /// Called when the twitch client has an failed login attempt (callback)
         /// </summary>
-        private void OnIncorrectLogin(object sender, OnIncorrectLoginArgs e)
+        private void OnIncorrectLogin(object? sender, OnIncorrectLoginArgs e)
         {
             m_Logger.Error("Invalid Twitch login credentials, check user name and oauth.");
             m_ChaosPipe.SendErrorMessage("Invalid Twitch credentials. Please verify your config.");
-            m_Client.Disconnect();
+            m_Client?.Disconnect();
         }
         /// <summary>
         /// Called when the twitch client has not received a join confirmation (callback)
         /// </summary>
-        private void OnFailureToReceiveJoinConfirmation(object sender, OnFailureToReceiveJoinConfirmationArgs e)
+        private void OnFailureToReceiveJoinConfirmation(object? sender, OnFailureToReceiveJoinConfirmationArgs e)
         {
             m_Logger.Error("Invalid Twitch channel, please check specified Twitch channel.");
             m_ChaosPipe.SendErrorMessage("Invalid Twitch channel. Please verify your config.");
-            m_Client.Disconnect();
+            m_Client?.Disconnect();
         }
         /// <summary>
         /// Called when the twitch client joins a channel (callback)
         /// </summary>
-        private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
+        private void OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
         {
             m_Logger.Information($"Successfully joined Twitch channel \"{m_ChannelName}\"");
             m_IsReady = true;
@@ -157,15 +162,17 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// <summary>
         /// Called when the twitch client receives a message
         /// </summary>
-        private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
+        private void OnMessageReceived(object? sender, OnMessageReceivedArgs e)
         {
             var chatMessage = e.ChatMessage;
 
-            var evnt = new OnMessageArgs();
-            evnt.Message = chatMessage.Message.Trim();
-            evnt.ClientId = chatMessage.UserId;
-            evnt.Username = chatMessage.Username.ToLower(); // lower case the username to allow case-insensitive comparisons
-            OnMessage.Invoke(this, evnt);
+            var evnt = new OnMessageArgs
+            {
+                Message = chatMessage.Message.Trim(),
+                ClientId = chatMessage.UserId,
+                Username = chatMessage.Username.ToLower() // lower case the username to allow case-insensitive comparisons
+            };
+            OnMessage?.Invoke(this, evnt);
         }
     }
 }

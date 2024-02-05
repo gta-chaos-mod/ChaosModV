@@ -12,15 +12,15 @@ namespace TwitchChatVotingProxy.VotingReceiver
     /// </summary>
     class DiscordVotingReceiver : IVotingReceiver
     {
-        public event EventHandler<OnMessageArgs> OnMessage;
+        public event EventHandler<OnMessageArgs>? OnMessage = null;
 
-        private string m_BotToken;
-        private ulong m_GuildId;
-        private ulong m_ChannelId;
+        private readonly string? m_BotToken = null;
+        private readonly ulong? m_GuildId = null;
+        private readonly ulong? m_ChannelId = null;
 
-        private DiscordSocketClient m_Client;
-        private ChaosPipeClient m_ChaosPipe;
-        private ILogger m_Logger = Log.Logger.ForContext<DiscordVotingReceiver>();
+        private DiscordSocketClient? m_Client = null;
+        private readonly ChaosPipeClient m_ChaosPipe;
+        private readonly ILogger m_Logger = Log.Logger.ForContext<DiscordVotingReceiver>();
 
         private bool m_IsReady = false;
 
@@ -69,7 +69,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         public async Task SendMessage(string message)
         {
-            if (m_GuildId == 0 || m_ChannelId == 0)
+            if (m_Client is null || m_GuildId is null || m_ChannelId is null)
             {
                 return;
             }
@@ -81,14 +81,14 @@ namespace TwitchChatVotingProxy.VotingReceiver
                     " Please verify if the server and channel IDs are correct and the bot has permissions to post to that channel.");
             }
 
-            var guild = m_Client.GetGuild(m_GuildId);
+            var guild = m_Client.GetGuild(m_GuildId.Value);
             if (guild == null || !guild.IsConnected)
             {
                 handleFatal();
                 return;
             }
 
-            var channel = guild.GetTextChannel(m_ChannelId);
+            var channel = guild.GetTextChannel(m_ChannelId.Value);
             if (channel == null)
             {
                 handleFatal();
@@ -134,6 +134,11 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// </summary>
         private async Task OnReady()
         {
+            if (m_Client is null)
+            {
+                return;
+            }
+
             m_Logger.Information("Successfully connected to discord");
 
             async void registerCommand(string name)
@@ -151,6 +156,8 @@ namespace TwitchChatVotingProxy.VotingReceiver
             registerCommand("v");
 
             m_IsReady = true;
+
+            await Task.FromResult(0);
         }
         /// <summary>
         /// Called when the discord client disconnects (callback)
@@ -159,7 +166,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         {
             m_Logger.Information($"Discord client disconnected: {exception}");
 
-            if (exception is HttpException && (exception as HttpException).HttpCode == System.Net.HttpStatusCode.Unauthorized)
+            if (exception is HttpException && exception is HttpException { HttpCode: System.Net.HttpStatusCode.Unauthorized })
             {
                 m_ChaosPipe.SendErrorMessage("Discord bot token is invalid. Please verify your config.");
             }
@@ -181,7 +188,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
             await command.RespondAsync($"Voted for {option}", ephemeral: true);
 
-            OnMessage.Invoke(this, new OnMessageArgs()
+            OnMessage?.Invoke(this, new OnMessageArgs()
             {
                 Message = option,
                 ClientId = $"{command.User.Id}",

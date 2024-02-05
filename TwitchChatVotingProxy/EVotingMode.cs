@@ -10,7 +10,7 @@
     // the number back to an enum in typescript.
     static class VotingMode
     {
-        private static Dictionary<EVotingMode, string> Dict = new Dictionary<EVotingMode, string>()
+        private static readonly Dictionary<EVotingMode, string> Dict = new()
         {
             { EVotingMode.MAJORITY, "MAJORITY" },
             { EVotingMode.PERCENTAGE, "PERCENTAGE" },
@@ -21,10 +21,9 @@
         /// </summary>
         /// <param name="votingMode">Desired voting option</param>
         /// <returns>String representation of the voting option</returns>
-        public static string Lookup(EVotingMode votingMode)
+        public static string? Lookup(EVotingMode votingMode)
         {
-            string str;
-            Dict.TryGetValue(votingMode, out str);
+            Dict.TryGetValue(votingMode, out string? str);
             return str;
         }
 

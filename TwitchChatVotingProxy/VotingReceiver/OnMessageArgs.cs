@@ -6,8 +6,8 @@
     /// </summary>
     class OnMessageArgs
     {
-        public string ClientId { get; set; }
-        public string Message { get; set; }
-        public string Username { get; set; }
+        public string? ClientId { get; set; } = null;
+        public string? Message { get; set; } = null;
+        public string? Username { get; set; } = null;
     }
 }

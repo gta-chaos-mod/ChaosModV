@@ -7,9 +7,9 @@ namespace TwitchChatVotingProxy.OverlayServer
 {
     class OverlayServer : IOverlayServer
     {
-        private OverlayServerConfig config;
-        private List<Fleck.IWebSocketConnection> connections = new List<Fleck.IWebSocketConnection>();
-        private ILogger logger = Log.Logger.ForContext<OverlayServer>();
+        private readonly OverlayServerConfig config;
+        private readonly List<Fleck.IWebSocketConnection> connections = new();
+        private readonly ILogger logger = Log.Logger.ForContext<OverlayServer>();
 
         public OverlayServer(OverlayServerConfig config)
         {
@@ -100,23 +100,25 @@ namespace TwitchChatVotingProxy.OverlayServer
         /// <param name="voteOptions">Vote options that should be sent</param>
         private void Request(string request, List<IVoteOption> voteOptions)
         {
-            var msg = new OverlayMessage();
-            msg.request = request;
-            msg.voteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray();
-            msg.retainInitialVotes = config.RetainInitialVotes;
+            var msg = new OverlayMessage
+            {
+                Request = request,
+                VoteOptions = voteOptions.ConvertAll(_ => new OverlayVoteOption(_)).ToArray(),
+                RetainInitialVotes = config.RetainInitialVotes
+            };
             var strVotingMode = VotingMode.Lookup(config.VotingMode);
             if (strVotingMode != null)
             {
-                msg.votingMode = strVotingMode;
+                msg.VotingMode = strVotingMode;
             }
             else
             {
                 logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
-                msg.votingMode = "UNKNOWN_VOTING_MODE";
+                msg.VotingMode = "UNKNOWN_VOTING_MODE";
             }
             // Count total votes      
-            msg.totalVotes = 0;
-            voteOptions.ForEach(_ => msg.totalVotes += _.Votes);
+            msg.TotalVotes = 0;
+            voteOptions.ForEach(_ => msg.TotalVotes += _.Votes);
             // Send the message to all clients
             Broadcast(JsonConvert.SerializeObject(msg));
         }
