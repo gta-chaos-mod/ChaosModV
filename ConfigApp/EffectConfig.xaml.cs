@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,8 +8,8 @@ namespace ConfigApp
 {
     public partial class EffectConfig : Window
     {
-        private EffectData m_EffectData;
-        private bool m_IsTimedEffect = false;
+        private readonly EffectData m_EffectData;
+        private readonly bool m_IsTimedEffect = false;
         private bool m_IsSaved = false;
         private int m_EffectShortcut = 0; // Win32Key + 2^10 (if CTRL) + 2^9 (if Shift) + 2^8 (if Alt)
 
@@ -27,10 +25,7 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            if (effectData == null)
-            {
-                effectData = new EffectData();
-            }
+            effectData ??= new EffectData();
 
             Title = effectInfo.Name;
 
@@ -46,22 +41,13 @@ namespace ConfigApp
                     "Short",
                     "Permanent"
                 };
-                switch (m_EffectData.TimedType.GetValueOrDefault(EffectTimedType.Normal))
+                effectconf_timer_type.SelectedIndex = m_EffectData.TimedType.GetValueOrDefault(EffectTimedType.Normal) switch
                 {
-                    case EffectTimedType.Normal:
-                        effectconf_timer_type.SelectedIndex = 0;
-                        break;
-                    case EffectTimedType.Short:
-                        effectconf_timer_type.SelectedIndex = 1;
-                        break;
-                    case EffectTimedType.Permanent:
-                        effectconf_timer_type.SelectedIndex = 2;
-                        break;
-                    default:
-                        effectconf_timer_type.SelectedIndex = 0;
-                        break;
-                }
-
+                    EffectTimedType.Normal => 0,
+                    EffectTimedType.Short => 1,
+                    EffectTimedType.Permanent => 2,
+                    _ => 0,
+                };
                 if (m_EffectData.CustomTime >= 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
@@ -83,7 +69,7 @@ namespace ConfigApp
                 ? (m_EffectData.ExcludedFromVoting.Value ? 2 : 1) : 0;
 
             effectconf_effect_custom_name.Text = m_EffectData.CustomName;
-            effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
+            effectconf_effect_custom_name.TextChanged += OnCustomEffectNameTextFieldTextChanged;
 
             if (!string.IsNullOrWhiteSpace(effectId))
             {
@@ -153,7 +139,7 @@ namespace ConfigApp
             CheckEnableConfigurables();
         }
 
-        private void CustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
+        private void OnCustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
         {
             effectconf_effect_custom_name.Text = effectconf_effect_custom_name.Text.Replace("\"", "");
         }
@@ -274,21 +260,13 @@ namespace ConfigApp
         {
             if (effectconf_timer_type_enable.IsChecked.HasValue && effectconf_timer_type_enable.IsChecked.Value)
             {
-                switch (effectconf_timer_type.SelectedIndex)
+                m_EffectData.TimedType = (object)effectconf_timer_type.SelectedIndex switch
                 {
-                    case 0:
-                        m_EffectData.TimedType = EffectTimedType.Normal;
-                        break;
-                    case 1:
-                        m_EffectData.TimedType = EffectTimedType.Short;
-                        break;
-                    case 2:
-                        m_EffectData.TimedType = EffectTimedType.Permanent;
-                        break;
-                    default:
-                        m_EffectData.TimedType = null;
-                        break;
-                }
+                    0 => (EffectTimedType?)EffectTimedType.Normal,
+                    1 => (EffectTimedType?)EffectTimedType.Short,
+                    2 => (EffectTimedType?)EffectTimedType.Permanent,
+                    _ => null,
+                };
             }
             else
             {
@@ -299,19 +277,12 @@ namespace ConfigApp
                 ? effectconf_timer_time.Text.Length > 0 ? int.Parse(effectconf_timer_time.Text) : null : null;
             m_EffectData.WeightMult = effectconf_effect_weight_mult.SelectedIndex > 0 ? effectconf_effect_weight_mult.SelectedIndex : null;
 
-            switch (effectconf_exclude_voting_state.SelectedIndex)
+            m_EffectData.ExcludedFromVoting = (object)effectconf_exclude_voting_state.SelectedIndex switch
             {
-                case 1:
-                    m_EffectData.ExcludedFromVoting = false;
-                    break;
-                case 2:
-                    m_EffectData.ExcludedFromVoting = true;
-                    break;
-                default:
-                    m_EffectData.ExcludedFromVoting = null;
-                    break;
-            }
-
+                1 => false,
+                2 => (bool?)true,
+                _ => null,
+            };
             m_EffectData.CustomName = effectconf_effect_custom_name.Text.Trim().Length > 0 ? effectconf_effect_custom_name.Text.Trim() : null;
             m_EffectData.ShortcutKeycode = effectconf_effect_shortcut_enable.IsChecked.GetValueOrDefault(false) ? m_EffectShortcut : null;
 

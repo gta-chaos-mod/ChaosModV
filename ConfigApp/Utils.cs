@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,40 +7,48 @@ namespace ConfigApp
 {
     public static class Utils
     {
-        public static EffectData ValueStringToEffectData(string value)
+        public static EffectData ValueStringToEffectData(string? value)
         {
+            var effectData = new EffectData();
+
+            if (value is null)
+            {
+                return effectData;
+            }
+
             // Split by comma, ignoring commas in between quotation marks
             var values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
-            var effectData = new EffectData();
 
             /* Has compatibility checks as previous mod versions had less options */
 
             if (values.Length >= 4)
             {
-                int.TryParse(values[0], out int enabled);
-                effectData.Enabled = enabled == 0 ? false : true;
-
-                Enum.TryParse(values[1], out Effects.EffectTimedType timedType);
-                effectData.TimedType = timedType;
-                int.TryParse(values[2], out int customTime);
-                effectData.CustomTime = customTime;
-                int.TryParse(values[3], out int weightMult);
-                effectData.WeightMult = weightMult;
-            }
-
-            if (values.Length >= 5)
-            {
-                int.TryParse(values[4], out int tmp);
-                if (tmp != 0)
+                if (int.TryParse(values[0], out int enabled))
                 {
-                    effectData.TimedType = Effects.EffectTimedType.Permanent;
+                    effectData.Enabled = enabled != 0;
+                }
+
+                if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
+                {
+                    effectData.TimedType = timedType;
+                }
+                if (int.TryParse(values[2], out int customTime))
+                {
+                    effectData.CustomTime = customTime;
+                }
+                if (int.TryParse(values[3], out int weightMult))
+                {
+                    effectData.WeightMult = weightMult;
                 }
             }
 
-            if (values.Length >= 6)
+            if (values.Length >= 5 && int.TryParse(values[4], out int tmp) && tmp != 0)
             {
-                int.TryParse(values[5], out int tmp);
+                effectData.TimedType = Effects.EffectTimedType.Permanent;
+            }
+
+            if (values.Length >= 6 && int.TryParse(values[5], out tmp))
+            {
                 effectData.ExcludedFromVoting = tmp != 0;
             }
 
@@ -50,9 +57,8 @@ namespace ConfigApp
                 effectData.CustomName = values[6] == "0" ? null : values[6].Trim('\"');
             }
 
-            if (values.Length >= 8)
+            if (values.Length >= 8 && int.TryParse(values[7], out int shortcut))
             {
-                int.TryParse(values[7], out int shortcut);
                 effectData.ShortcutKeycode = shortcut;
             }
 

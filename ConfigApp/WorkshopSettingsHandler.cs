@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -10,21 +8,21 @@ namespace ConfigApp
 {
     public class WorkshopSettingsHandler : ICommand
     {
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged = null;
 
-        private WorkshopSubmissionItem m_SubmissionItem;
+        private readonly WorkshopSubmissionItem m_SubmissionItem;
 
         public WorkshopSettingsHandler(WorkshopSubmissionItem submissionItem)
         {
             m_SubmissionItem = submissionItem;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             var id = m_SubmissionItem.Id;
             var submissionDir = $"workshop/{id}/";
@@ -47,15 +45,16 @@ namespace ConfigApp
 
                         if (json.ContainsKey("disabled_files"))
                         {
-                            foreach (var file in json["disabled_files"])
-                            {
-                                disabledFiles.Add(file.Value<string>());
-                            }
+                            disabledFiles.AddRange(json["disabled_files"]?.Select(file => file.Value<string>() ?? string.Empty) ?? Array.Empty<string>());
                         }
 
                         if (json.ContainsKey("effect_settings"))
                         {
-                            scriptSettings = json["effect_settings"].ToObject<Dictionary<string, EffectData>>();
+                            var scriptSettingsJson = json["effect_settings"]?.ToObject<Dictionary<string, EffectData>>();
+                            if (scriptSettingsJson is not null)
+                            {
+                                scriptSettings = scriptSettingsJson;
+                            }
                         }
                     }
                 }

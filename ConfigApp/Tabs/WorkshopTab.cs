@@ -28,7 +28,7 @@ namespace ConfigApp.Tabs
             LastUpdated,
             Author
         }
-        private Dictionary<SortingMode, string> m_SortingModeLabels = new Dictionary<SortingMode, string>()
+        private readonly Dictionary<SortingMode, string> m_SortingModeLabels = new()
         {
             { SortingMode.Name, "Name" },
             { SortingMode.LastUpdated, "Last Updated" },
@@ -36,49 +36,48 @@ namespace ConfigApp.Tabs
         };
         private SortingMode m_SortingMode = SortingMode.Name;
 
-        private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>();
+        private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new();
 
-        private CheckBox m_SortIntalledFirstToggle;
-        private WatermarkTextBox m_SearchBox;
+        private CheckBox? m_SortIntalledFirstToggle = null;
+        private WatermarkTextBox? m_SearchBox = null;
 
-        private ItemsControl m_ItemsControl;
+        private ItemsControl? m_ItemsControl = null;
 
         private void SortSubmissionItems()
         {
             IOrderedEnumerable<WorkshopSubmissionItem>? items = null;
 
-            switch (m_SortingMode)
+            items = m_SortingMode switch
             {
-                case SortingMode.Name:
-                    items = m_WorkshopSubmissionItems.OrderBy(item => item.Name.ToLower());
-                    break;
-                case SortingMode.LastUpdated:
-                    items = m_WorkshopSubmissionItems.OrderByDescending(item => item.LastUpdated);
-                    break;
-                case SortingMode.Author:
-                    items = m_WorkshopSubmissionItems.OrderBy(item => item.Author.ToLower());
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            if (m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
+                SortingMode.Name => m_WorkshopSubmissionItems.OrderBy(item => item.Name?.ToLower()),
+                SortingMode.LastUpdated => m_WorkshopSubmissionItems.OrderByDescending(item => item.LastUpdated),
+                SortingMode.Author => m_WorkshopSubmissionItems.OrderBy(item => item.Author?.ToLower()),
+                _ => throw new NotImplementedException(),
+            };
+            if (m_SortIntalledFirstToggle == null || m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
             {
                 items = items.OrderBy(item => item.InstallState);
             }
 
             m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items);
-            m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
+            if (m_ItemsControl is not null)
+            {
+                m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
+            }
         }
 
         private void HandleWorkshopSubmissionsSearchFilter()
         {
-            var transformedText = m_SearchBox.Text.Trim().ToLower();
+            var transformedText = m_SearchBox?.Text.Trim().ToLower();
             var view = CollectionViewSource.GetDefaultView(m_WorkshopSubmissionItems);
             view.Filter = (submissionItem) =>
             {
-                var item = (WorkshopSubmissionItem)submissionItem;
-                var texts = new string[]
+                if (submissionItem is not WorkshopSubmissionItem item || transformedText is null)
+                {
+                    return true;
+                }
+
+                var texts = new string?[]
                 {
                     item.Name,
                     item.Author,
@@ -87,7 +86,7 @@ namespace ConfigApp.Tabs
 
                 foreach (var text in texts)
                 {
-                    if (text.ToLower().Contains(transformedText))
+                    if (text is not null && text.ToLower().Contains(transformedText))
                     {
                         return true;
                     }
@@ -177,14 +176,18 @@ namespace ConfigApp.Tabs
                 // Only clear after trying to parse
                 m_WorkshopSubmissionItems.Clear();
 
-                foreach (var submissionObject in json["submissions"].ToObject<Dictionary<string, dynamic>>())
+                var dict = json["submissions"]?.ToObject<Dictionary<string, dynamic>?>();
+                if (dict is not null)
                 {
-                    var submissionId = submissionObject.Key;
+                    foreach (var submissionObject in dict)
+                    {
+                        var submissionId = submissionObject.Key;
 
-                    var submissionData = submissionObject.Value;
-                    submissionData.id = submissionId;
+                        var submissionData = submissionObject.Value;
+                        submissionData.id = submissionId;
 
-                    submitWorkshopSubmissionData(submissionData, false);
+                        submitWorkshopSubmissionData(submissionData, false);
+                    }
                 }
             }
 
@@ -229,7 +232,7 @@ namespace ConfigApp.Tabs
         {
             var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
 
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             try
             {
                 if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
@@ -459,7 +462,7 @@ namespace ConfigApp.Tabs
                 return;
             };
 
-            byte[] fileContent = null;
+            byte[]? fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
             if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
             {

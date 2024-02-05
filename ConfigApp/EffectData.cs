@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
+
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -11,9 +11,14 @@ namespace ConfigApp
         {
             public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
             {
-                if (value is bool)
+                if (value is null)
                 {
-                    writer.WriteValue(((bool)value) ? 1 : 0);
+                    return;
+                }
+
+                if (value is bool v)
+                {
+                    writer.WriteValue(v ? 1 : 0);
                 }
                 else
                 {
@@ -21,13 +26,13 @@ namespace ConfigApp
                 }
             }
 
-            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+            public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 if (typeof(T) == typeof(bool))
                 {
                     return $"{reader.Value}" != "0";
                 }
-                else if (typeof(T) == typeof(EffectTimedType))
+                else if (typeof(T) == typeof(EffectTimedType) && reader.Value is not null)
                 {
                     return Enum.ToObject(typeof(EffectTimedType), reader.Value);
                 }

@@ -37,7 +37,7 @@ namespace ConfigApp
 
         public static void DeleteCompatFiles()
         {
-            void deleteFiles(string[] files)
+            static void deleteFiles(string[] files)
             {
                 foreach (var file in files)
                 {

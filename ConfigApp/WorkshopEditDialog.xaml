@@ -35,10 +35,10 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="button_yes" Content="Yes" Height="40" Width="70" Margin="0,0,4,0" Grid.Row="2" Grid.Column="1"
                     HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"
-                    Click="yes_Click" />
+                    Click="OnWorkshopEditYesClick" />
             <Button x:Name="button_save_or_no" Content="Save" Height="40" Width="70" Margin="0,0,4,0" Grid.Row="2" Grid.Column="2"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Click="save_or_no_Click" />
+                    Click="OnWorkshopEditNoOrSaveClick" />
             <TextBlock x:Name="install_confirm_text" Text="Would you like to install this submission?" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="2" Margin="6,0"
                        Visibility="Hidden" />
         </Grid>

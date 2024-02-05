@@ -10,18 +10,18 @@ namespace ConfigApp
 {
     public class WorkshopSubmissionItem : INotifyPropertyChanged
     {
-        private static BitmapSource ms_DefaultIcon;
+        private static BitmapSource? ms_DefaultIcon = null;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged = null;
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Author { get; set; }
-        public string Description { get; set; }
-        public string Version { get; set; }
-        public int LastUpdated { get; set; }
-        public string Sha256 { get; set; }
-        public BitmapSource SubmissionIcon { get; set; }
+        public string? Id { get; set; } = null;
+        public string? Name { get; set; } = null;
+        public string? Author { get; set; } = null;
+        public string? Description { get; set; } = null;
+        public string? Version { get; set; } = null;
+        public int? LastUpdated { get; set; } = null;
+        public string? Sha256 { get; set; } = null;
+        public BitmapSource? SubmissionIcon { get; set; } = null;
         public bool IsAlien { get; set; } = false;
 
         // In order for sorting
@@ -110,9 +110,11 @@ namespace ConfigApp
         {
             if (ms_DefaultIcon == null)
             {
-                using (Icon ico = Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName))
+                var fileName = Process.GetCurrentProcess().MainModule?.FileName;
+                if (fileName is not null)
                 {
-                    if (ico != null)
+                    using var ico = Icon.ExtractAssociatedIcon(fileName);
+                    if (ico is not null)
                     {
                         ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                     }

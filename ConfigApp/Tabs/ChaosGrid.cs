@@ -1,36 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace ConfigApp.Tabs
 {
     public class ChaosGrid
     {
-        public Grid Grid { get; private set; }
+        public Grid Grid { get; private set; } = new Grid();
 
         private int m_CurrentRow = -1;
         private int m_CurrentColumn = 0;
 
-        private List<RowDefinition> m_RowDefinitions = new List<RowDefinition>();
-        private List<ColumnDefinition> m_ColumnDefinitions = new List<ColumnDefinition>();
+        private readonly List<RowDefinition> m_RowDefinitions = new();
+        private readonly List<ColumnDefinition> m_ColumnDefinitions = new();
 
-        public ChaosGrid(Grid grid = null)
+        public ChaosGrid(Grid? grid = null)
         {
-            Init(grid != null ? grid : new Grid());
+            Init(grid);
         }
 
-        public virtual void Init(Grid grid)
+        public virtual void Init(Grid? grid = null)
         {
-            if (grid == null)
-            {
-                throw new System.NullReferenceException("grid can't be null!");
-            }
-            if (grid == Grid)
+            if (grid is not null && grid == Grid)
             {
                 return;
             }
 
-            Grid = grid;
+            Grid = grid ?? new Grid();
 
             m_CurrentRow = -1;
             m_CurrentColumn = 0;
@@ -64,20 +59,19 @@ namespace ConfigApp.Tabs
             m_RowDefinitions[m_CurrentRow].Height = gridLength;
         }
 
-        private void PushRow(string text, UIElement control)
+        private void PushRow(string? text, UIElement? control)
         {
             if (text != null)
             {
                 CheckColumnValidity();
 
-                var textBlock = new TextBlock()
+                var textBlock = new TextBlock
                 {
                     Text = text,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = control != null && control.GetValue(FrameworkElement.VerticalAlignmentProperty) != null
+                        ? (VerticalAlignment)control.GetValue(FrameworkElement.VerticalAlignmentProperty) : VerticalAlignment.Center
                 };
-
-                textBlock.HorizontalAlignment = HorizontalAlignment.Right;
-                textBlock.VerticalAlignment = control != null && control.GetValue(FrameworkElement.VerticalAlignmentProperty) != null
-                    ? (VerticalAlignment)control.GetValue(FrameworkElement.VerticalAlignmentProperty) : VerticalAlignment.Center;
 
                 textBlock.SetValue(Grid.ColumnProperty, m_CurrentColumn);
                 textBlock.SetValue(Grid.RowProperty, m_CurrentRow);

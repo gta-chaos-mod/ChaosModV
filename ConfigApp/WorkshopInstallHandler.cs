@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Media;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -16,22 +13,22 @@ namespace ConfigApp
 {
     public class WorkshopInstallHandler : ICommand
     {
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged = null;
 
-        private WorkshopSubmissionItem m_SubmissionItem;
+        private readonly WorkshopSubmissionItem m_SubmissionItem;
 
         public WorkshopInstallHandler(WorkshopSubmissionItem submissionItem)
         {
             m_SubmissionItem = submissionItem;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return m_SubmissionItem.InstallState != WorkshopSubmissionItem.SubmissionInstallState.Installing
                 && m_SubmissionItem.InstallState != WorkshopSubmissionItem.SubmissionInstallState.Removing;
         }
 
-        public async void Execute(object parameter)
+        public async void Execute(object? parameter)
         {
             Directory.CreateDirectory("workshop");
 
@@ -82,7 +79,7 @@ namespace ConfigApp
                 m_SubmissionItem.InstallState = origInstallState;
             }
 
-            if (!m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c))))
+            if (m_SubmissionItem.Id is null || !m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c))))
             {
                 MessageBox.Show($"Invalid submission id! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                 fatalCleanup();
@@ -91,7 +88,7 @@ namespace ConfigApp
 
             m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installing;
 
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             try
             {
                 var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
@@ -141,51 +138,49 @@ namespace ConfigApp
 
                 try
                 {
-                    using (ZipArchive archive = new ZipArchive(fileStream))
+                    using ZipArchive archive = new(fileStream);
+                    if (archive.Entries.Count == 0)
                     {
-                        if (archive.Entries.Count == 0)
-                        {
-                            MessageBox.Show("Submission contains no data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                            fatalCleanup();
-                            return;
-                        }
-
-                        var files = new List<WorkshopSubmissionFile>();
-                        foreach (var entry in archive.Entries)
-                        {
-                            var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
-                            if (trimmedName.Length > 0)
-                            {
-                                files.Add(new WorkshopSubmissionFile(trimmedName, true));
-                            }
-                        }
-                        files.Sort();
-
-                        var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
-                        if (!(bool)installConfirmationWindow.ShowDialog())
-                        {
-                            fatalCleanup();
-                            return;
-                        }
-
-                        // Try deleting the directory first if it exists, otherwise extraction might fail if it hits a duplicate file
-                        try
-                        {
-                            Directory.Delete(targetDirName, true);
-                        }
-                        catch (DirectoryNotFoundException)
-                        {
-
-                        }
-                        catch (IOException)
-                        {
-                            MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                            fatalCleanup();
-                            return;
-                        }
-
-                        archive.ExtractToDirectory(targetDirName);
+                        MessageBox.Show("Submission contains no data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        fatalCleanup();
+                        return;
                     }
+
+                    var files = new List<WorkshopSubmissionFile>();
+                    foreach (var entry in archive.Entries)
+                    {
+                        var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
+                        if (trimmedName.Length > 0)
+                        {
+                            files.Add(new WorkshopSubmissionFile(trimmedName, true));
+                        }
+                    }
+                    files.Sort();
+
+                    var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
+                    if (!installConfirmationWindow.ShowDialog().GetValueOrDefault(false))
+                    {
+                        fatalCleanup();
+                        return;
+                    }
+
+                    // Try deleting the directory first if it exists, otherwise extraction might fail if it hits a duplicate file
+                    try
+                    {
+                        Directory.Delete(targetDirName, true);
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+
+                    }
+                    catch (IOException)
+                    {
+                        MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        fatalCleanup();
+                        return;
+                    }
+
+                    archive.ExtractToDirectory(targetDirName);
                 }
                 catch (Exception exception) when (exception is IOException || exception is InvalidDataException)
                 {
@@ -194,13 +189,15 @@ namespace ConfigApp
                     return;
                 }
 
-                var metadataJson = new JObject();
-                metadataJson["name"] = m_SubmissionItem.Name;
-                metadataJson["author"] = m_SubmissionItem.Author;
-                metadataJson["description"] = m_SubmissionItem.Description;
-                metadataJson["version"] = m_SubmissionItem.Version;
-                metadataJson["lastupdated"] = m_SubmissionItem.LastUpdated;
-                metadataJson["sha256"] = m_SubmissionItem.Sha256;
+                var metadataJson = new JObject
+                {
+                    ["name"] = m_SubmissionItem.Name,
+                    ["author"] = m_SubmissionItem.Author,
+                    ["description"] = m_SubmissionItem.Description,
+                    ["version"] = m_SubmissionItem.Version,
+                    ["lastupdated"] = m_SubmissionItem.LastUpdated,
+                    ["sha256"] = m_SubmissionItem.Sha256
+                };
                 File.WriteAllText($"{targetDirName}/metadata.json", metadataJson.ToString());
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
