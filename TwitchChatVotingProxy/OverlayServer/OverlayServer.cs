@@ -8,7 +8,7 @@ namespace TwitchChatVotingProxy.OverlayServer
     class OverlayServer : IOverlayServer
     {
         private readonly OverlayServerConfig config;
-        private readonly List<Fleck.IWebSocketConnection> connections = new();
+        private readonly List<IWebSocketConnection> connections = new();
         private readonly ILogger logger = Log.Logger.ForContext<OverlayServer>();
 
         public OverlayServer(OverlayServerConfig config)
@@ -17,7 +17,7 @@ namespace TwitchChatVotingProxy.OverlayServer
 
             try
             {
-                var WSS = new Fleck.WebSocketServer($"ws://0.0.0.0:{config.Port}");
+                var WSS = new WebSocketServer($"ws://0.0.0.0:{config.Port}");
                 // Set the websocket listeners
                 WSS.Start(connection =>
                 {
@@ -27,7 +27,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             }
             catch (Exception e)
             {
-                logger.Fatal(e, "failed so start websocket server");
+                logger.Fatal(e, "Failed so start websocket server");
             }
         }
 
@@ -57,8 +57,14 @@ namespace TwitchChatVotingProxy.OverlayServer
             connections.ForEach(connection =>
             {
                 // If the connection is not available for some reason, we just close it
-                if (!connection.IsAvailable) connection.Close();
-                else connection.Send(message);
+                if (!connection.IsAvailable)
+                {
+                    connection.Close();
+                }
+                else
+                {
+                    connection.Send(message);
+                }
             });
         }
         /// <summary>
@@ -69,12 +75,12 @@ namespace TwitchChatVotingProxy.OverlayServer
         {
             try
             {
-                logger.Information($"websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
+                logger.Information($"Websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Remove(connection);
             }
             catch (Exception e)
             {
-                logger.Error(e, "error occurred as client disconnected");
+                logger.Error(e, "Error occurred as client disconnected");
             }
         }
         /// <summary>
@@ -85,12 +91,12 @@ namespace TwitchChatVotingProxy.OverlayServer
         {
             try
             {
-                logger.Information($"new websocket client {connection.ConnectionInfo.ClientIpAddress}");
+                logger.Information($"New websocket client {connection.ConnectionInfo.ClientIpAddress}");
                 connections.Add(connection);
             }
             catch (Exception e)
             {
-                logger.Error(e, "error occurred as client connected");
+                logger.Error(e, "Error occurred as client connected");
             }
         }
         /// <summary>
@@ -113,7 +119,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             }
             else
             {
-                logger.Error($"could not find voting mode {config.VotingMode} in dictionary");
+                logger.Error($"Could not find voting mode {config.VotingMode} in dictionary");
                 msg.VotingMode = "UNKNOWN_VOTING_MODE";
             }
             // Count total votes      
