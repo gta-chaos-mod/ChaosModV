@@ -109,7 +109,7 @@ namespace TwitchChatVotingProxy
             chaosPipe.SendMessageToPipe("hello");
             while (!chaosPipe.GotHelloBack && chaosPipe.IsConnected())
             {
-                await Task.Delay(0);
+                await Task.Delay(100);
             }
 
             if (chaosPipe.GotHelloBack)

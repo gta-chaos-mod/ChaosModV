@@ -81,7 +81,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
             while (!m_IsReady)
             {
-                await Task.Delay(0);
+                await Task.Delay(100);
             }
 
             return true;
