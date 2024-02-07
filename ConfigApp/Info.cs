@@ -2,8 +2,8 @@
 {
     public static class Info
     {
-        public static string VERSION = "2.1-devel";
+        public const string VERSION = "2.1-devel";
 
-        public static string WORKSHOP_DEFAULT_URL = "https://chaos.gopong.dev";
+        public const string WORKSHOP_DEFAULT_URL = "https://chaos.gopong.dev";
     }
 }
