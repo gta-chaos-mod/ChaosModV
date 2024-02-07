@@ -1,5 +1,6 @@
 ﻿using Fleck;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 // TODO: fix voting mode
@@ -126,7 +127,9 @@ namespace TwitchChatVotingProxy.OverlayServer
             msg.TotalVotes = 0;
             voteOptions.ForEach(_ => msg.TotalVotes += _.Votes);
             // Send the message to all clients
-            Broadcast(JsonConvert.SerializeObject(msg));
+            Broadcast(JsonConvert.SerializeObject(msg, new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
         }
     }
 }

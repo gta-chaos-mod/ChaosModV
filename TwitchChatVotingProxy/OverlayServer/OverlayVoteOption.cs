@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Represents how the vote options are being sent to the client after
-    /// JSON serializing them.
+    /// JSON serializing them with properties converted to lower case after the fact.
     /// </summary>
     class OverlayVoteOption
     {
