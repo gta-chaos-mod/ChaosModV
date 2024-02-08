@@ -13,9 +13,12 @@ Mp3Manager::~Mp3Manager()
 	{
 		for (const auto &soundFilePath : soundFileNames)
 		{
-			std::ostringstream oss;
-			oss << "close \"" << soundFilePath << "\"";
-			mciSendString(reinterpret_cast<LPCWSTR>(oss.str().c_str()), NULL, 0, NULL);
+			std::ostringstream tmp;
+			std::string tmpStr;
+			tmp << "close \"" << soundFilePath << "\"";
+			tmpStr               = tmp.str();
+			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
+			mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		}
 	}
 
