@@ -8,9 +8,9 @@ namespace ConfigApp
     {
         private class TreeMenuItemAction : ICommand
         {
-            public event EventHandler? CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged = null;
 
-            private readonly Action? m_Action;
+            private readonly Action? m_Action = null;
 
             public TreeMenuItemAction(Action? action)
             {
