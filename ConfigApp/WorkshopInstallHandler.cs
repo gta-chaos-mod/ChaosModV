@@ -115,9 +115,12 @@ namespace ConfigApp
                     fileContent = File.ReadAllBytes(targetCacheDirName);
                     var cachedFileHash = getFileSha256(fileContent);
 
-                    isFileCached = cachedFileHash == m_SubmissionItem.Sha256;
-                    // Cached files are always compressed
-                    isFileCompressed = true;
+                    if (cachedFileHash == m_SubmissionItem.Sha256)
+                    {
+                        isFileCached = true;
+                        // Cached files are always compressed
+                        isFileCompressed = true;
+                    }
                 }
 
                 if (!isFileCached)
@@ -149,6 +152,25 @@ namespace ConfigApp
                     MessageBox.Show($"File is invalid. Refusing to install!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                     fatalCleanup();
                     return;
+                }
+
+                try
+                {
+                    Directory.CreateDirectory("workshopcache");
+
+                    // Recompress if necessary for caching
+                    var cachedFileContent = fileContent;
+                    if (!isFileCompressed)
+                    {
+                        var compressor = new Compressor(10);
+                        cachedFileContent = compressor.Wrap(fileContent).ToArray();
+                    }
+
+                    File.WriteAllBytes(targetCacheDirName, cachedFileContent);
+                }
+                catch (Exception)
+                {
+                    // Doesn't matter if this fails, it's just a cached file anyways
                 }
 
                 var fileStream = new MemoryStream(fileContent);
@@ -234,24 +256,6 @@ namespace ConfigApp
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
 
                 SystemSounds.Beep.Play();
-
-                try
-                {
-                    Directory.CreateDirectory("workshopcache");
-
-                    // Recompress if necessary for caching
-                    if (!isFileCompressed)
-                    {
-                        var compressor = new Compressor(10);
-                        fileContent = compressor.Wrap(fileContent).ToArray();
-                    }
-
-                    File.WriteAllBytes(targetCacheDirName, fileContent);
-                }
-                catch (Exception)
-                {
-                    // Doesn't matter if this fails, it's just a cached file anyways
-                }
             }
             catch (HttpRequestException)
             {
