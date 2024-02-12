@@ -1,9 +1,8 @@
+﻿using System.Timers;
 using Serilog;
-using System.Timers;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
-
 using Timer = System.Timers.Timer;
 
 namespace TwitchChatVotingProxy
@@ -130,12 +129,12 @@ namespace TwitchChatVotingProxy
             // Evaluate what result calculation to use
             switch (m_Config.VotingMode)
             {
-                case EVotingMode.MAJORITY:
-                    e.ChosenOption = GetVoteResultByMajority();
-                    break;
-                case EVotingMode.PERCENTAGE:
-                    e.ChosenOption = GetVoteResultByPercentage();
-                    break;
+            case EVotingMode.MAJORITY:
+                e.ChosenOption = GetVoteResultByMajority();
+                break;
+            case EVotingMode.PERCENTAGE:
+                e.ChosenOption = GetVoteResultByPercentage();
+                break;
             }
 
             // Vote round ended
@@ -163,37 +162,37 @@ namespace TwitchChatVotingProxy
             // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             switch (m_Config.OverlayMode)
             {
-                case EOverlayMode.CHAT_MESSAGES:
-                    string msg = "Time for a new effect! Vote between:";
-                    foreach (IVoteOption voteOption in m_ActiveVoteOptions)
+            case EOverlayMode.CHAT_MESSAGES:
+                string msg = "Time for a new effect! Vote between:";
+                foreach (IVoteOption voteOption in m_ActiveVoteOptions)
+                {
+                    msg += "\n";
+
+                    bool firstIndex = true;
+                    foreach (string match in voteOption.Matches)
                     {
-                        msg += "\n";
+                        msg += firstIndex ? $"{match} " : $" / {match}";
 
-                        bool firstIndex = true;
-                        foreach (string match in voteOption.Matches)
-                        {
-                            msg += firstIndex ? $"{match} " : $" / {match}";
-
-                            firstIndex = true;
-                        }
-
-                        msg += $": {voteOption.Label}";
+                        firstIndex = true;
                     }
 
-                    if (m_Config.VotingMode == EVotingMode.PERCENTAGE)
-                    {
-                        msg += "\nVotes will affect the chance for one of the effects to occur.";
-                    }
+                    msg += $": {voteOption.Label}";
+                }
 
-                    foreach (var votingReceiver in m_VotingReceivers)
-                    {
-                        await votingReceiver.SendMessage(msg);
-                    }
+                if (m_Config.VotingMode == EVotingMode.PERCENTAGE)
+                {
+                    msg += "\nVotes will affect the chance for one of the effects to occur.";
+                }
 
-                    break;
-                case EOverlayMode.OVERLAY_OBS:
-                    m_OverlayServer?.NewVoting(m_ActiveVoteOptions);
-                    break;
+                foreach (var votingReceiver in m_VotingReceivers)
+                {
+                    await votingReceiver.SendMessage(msg);
+                }
+
+                break;
+            case EOverlayMode.OVERLAY_OBS:
+                m_OverlayServer?.NewVoting(m_ActiveVoteOptions);
+                break;
             }
             // Clear the old voted for information
             m_UserVotedFor.Clear();

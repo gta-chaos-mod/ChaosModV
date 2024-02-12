@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using Serilog;
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using System.Timers;
-
+using Newtonsoft.Json;
+using Serilog;
 using Timer = System.Timers.Timer;
 
 namespace TwitchChatVotingProxy.ChaosPipe
@@ -201,24 +200,24 @@ namespace TwitchChatVotingProxy.ChaosPipe
                     var pipe = JsonConvert.DeserializeObject<PipeMessage>(message);
                     switch (pipe?.Identifier)
                     {
-                        case "hello_back":
-                            GotHelloBack = true;
-                            break;
-                        case "vote":
-                            StartNewVote(pipe.Options);
-                            break;
-                        case "getvoteresult":
-                            GetVoteResult();
-                            break;
-                        case "novoteround":
-                            StartNoVotingRound();
-                            break;
-                        case "getcurrentvotes":
-                            GetCurrentVotes();
-                            break;
-                        default:
-                            m_Logger.Warning($"Unknown request: {message}");
-                            break;
+                    case "hello_back":
+                        GotHelloBack = true;
+                        break;
+                    case "vote":
+                        StartNewVote(pipe.Options);
+                        break;
+                    case "getvoteresult":
+                        GetVoteResult();
+                        break;
+                    case "novoteround":
+                        StartNoVotingRound();
+                        break;
+                    case "getcurrentvotes":
+                        GetCurrentVotes();
+                        break;
+                    default:
+                        m_Logger.Warning($"Unknown request: {message}");
+                        break;
                     }
                 }
             }

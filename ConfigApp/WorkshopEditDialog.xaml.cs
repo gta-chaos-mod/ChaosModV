@@ -100,22 +100,22 @@ namespace ConfigApp
                 bool isConfigurable = false;
                 switch (pathName[^4..])
                 {
-                    case ".lua":
-                        targetItem = luaParentItem;
-                        isConfigurable = true;
-                        break;
-                    case ".mp3":
-                        targetItem = mp3ParentItem;
-                        break;
-                    case ".txt":
-                        if (m_DialogMode != WorkshopEditDialogMode.Install)
-                        {
-                            continue;
-                        }
-                        targetItem = txtParentItem;
-                        break;
-                    default:
+                case ".lua":
+                    targetItem = luaParentItem;
+                    isConfigurable = true;
+                    break;
+                case ".mp3":
+                    targetItem = mp3ParentItem;
+                    break;
+                case ".txt":
+                    if (m_DialogMode != WorkshopEditDialogMode.Install)
+                    {
                         continue;
+                    }
+                    targetItem = txtParentItem;
+                    break;
+                default:
+                    continue;
                 }
 
                 if (pathFragments.Length > 1)

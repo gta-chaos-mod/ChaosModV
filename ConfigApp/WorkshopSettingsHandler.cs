@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ConfigApp
 {

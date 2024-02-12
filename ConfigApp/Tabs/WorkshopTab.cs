@@ -1,7 +1,4 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -11,9 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Microsoft.CSharp.RuntimeBinder;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xceed.Wpf.Toolkit;
 using ZstdSharp;
-
 using MessageBox = System.Windows.MessageBox;
 
 namespace ConfigApp.Tabs

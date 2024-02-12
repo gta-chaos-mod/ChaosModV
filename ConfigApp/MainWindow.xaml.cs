@@ -1,12 +1,11 @@
-﻿using ConfigApp.Tabs;
-using ConfigApp.Tabs.Voting;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using ConfigApp.Tabs;
+using ConfigApp.Tabs.Voting;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -271,30 +270,30 @@ namespace ConfigApp
 
                 switch (effectMisc.EffectCategory)
                 {
-                    case EffectCategory.Player:
-                        playerParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Vehicle:
-                        vehicleParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Peds:
-                        pedsParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Screen:
-                        screenParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Time:
-                        timeParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Weather:
-                        weatherParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Misc:
-                        miscParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Meta:
-                        metaParentItem.AddChild(menuItem);
-                        break;
+                case EffectCategory.Player:
+                    playerParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Vehicle:
+                    vehicleParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Peds:
+                    pedsParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Screen:
+                    screenParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Time:
+                    timeParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Weather:
+                    weatherParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Misc:
+                    miscParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Meta:
+                    metaParentItem.AddChild(menuItem);
+                    break;
                 }
             }
 

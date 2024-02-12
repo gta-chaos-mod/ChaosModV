@@ -1,4 +1,4 @@
-namespace ConfigApp
+﻿namespace ConfigApp
 {
     public static class Effects
     {

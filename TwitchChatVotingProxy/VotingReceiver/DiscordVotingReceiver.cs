@@ -113,18 +113,18 @@ namespace TwitchChatVotingProxy.VotingReceiver
         {
             switch (log.Severity)
             {
-                case LogSeverity.Critical:
-                    m_Logger.Fatal($"{log.Message}");
-                    break;
-                case LogSeverity.Error:
-                    m_Logger.Error($"{log.Message}");
-                    break;
-                case LogSeverity.Warning:
-                    m_Logger.Warning($"{log.Message}");
-                    break;
-                case LogSeverity.Info:
-                    m_Logger.Information($"{log.Message}");
-                    break;
+            case LogSeverity.Critical:
+                m_Logger.Fatal($"{log.Message}");
+                break;
+            case LogSeverity.Error:
+                m_Logger.Error($"{log.Message}");
+                break;
+            case LogSeverity.Warning:
+                m_Logger.Warning($"{log.Message}");
+                break;
+            case LogSeverity.Info:
+                m_Logger.Information($"{log.Message}");
+                break;
             }
 
             return Task.CompletedTask;

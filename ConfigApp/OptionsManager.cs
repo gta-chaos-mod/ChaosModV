@@ -1,5 +1,5 @@
-﻿using Shared;
-using System.IO;
+﻿using System.IO;
+using Shared;
 
 namespace ConfigApp
 {
