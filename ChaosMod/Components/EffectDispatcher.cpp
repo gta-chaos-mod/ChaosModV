@@ -289,14 +289,16 @@ void EffectDispatcher::OnRun()
 		deltaTime = 0;
 	}
 
-	if (!PauseTimer && !m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
+	if (!PauseTimer)
 	{
-		UpdateTimer(deltaTime);
-	}
-
-	if (!PauseTimer && m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-	{
-		UpdateTravelledDistance();
+		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
+		{
+			UpdateTravelledDistance();
+		}
+		else
+		{
+			UpdateTimer(deltaTime);
+		}
 	}
 
 	DrawTimerBar();
@@ -335,13 +337,14 @@ void EffectDispatcher::UpdateTravelledDistance()
 		return;
 	}
 
-	float distance =
+	auto distance =
 	    GET_DISTANCE_BETWEEN_COORDS(position.x, position.y, position.z, m_DistanceChaosState.SavedPosition.x,
 	                                m_DistanceChaosState.SavedPosition.y, m_DistanceChaosState.SavedPosition.z, true);
 
 	if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Displacement)
 	{
-		if (distance >= m_DistanceChaosState.DistanceToActivateEffect)
+		if (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
+		    >= m_DistanceChaosState.DistanceToActivateEffect)
 		{
 			if (DispatchEffectsOnTimer)
 			{
