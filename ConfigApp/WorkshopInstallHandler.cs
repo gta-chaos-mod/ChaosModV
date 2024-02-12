@@ -88,52 +88,83 @@ namespace ConfigApp
 
             m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installing;
 
+            var targetCacheDirName = $"workshopcache/{m_SubmissionItem.Id}.zip.zst";
+
             HttpClient httpClient = new();
             try
             {
-                var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
-
-                var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submission_data?submission_id={m_SubmissionItem.Id}");
-                if (!result.IsSuccessStatusCode)
+                string getFileSha256(byte[] buffer)
                 {
-                    MessageBox.Show("Error while fetching submission. Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                    fatalCleanup();
-                    return;
-                }
-
-                var fileStream = await result.Content.ReadAsStreamAsync();
-
-                var sha256StrBuilder = new StringBuilder();
-                using (var hash = SHA256.Create())
-                {
-                    var resultHash = hash.ComputeHash(fileStream);
-                    foreach (var b in resultHash)
+                    var sha256StrBuilder = new StringBuilder();
+                    using (var hash = SHA256.Create())
                     {
-                        sha256StrBuilder.Append(b.ToString("x2"));
+                        var resultHash = hash.ComputeHash(buffer);
+                        foreach (var b in resultHash)
+                        {
+                            sha256StrBuilder.Append(b.ToString("x2"));
+                        }
                     }
+
+                    return sha256StrBuilder.ToString();
                 }
-                if (sha256StrBuilder.ToString() != m_SubmissionItem.Sha256)
+
+                byte[]? fileContent = null;
+                bool isFileCached = false, isFileCompressed = false;
+                if (File.Exists(targetCacheDirName))
                 {
-                    MessageBox.Show("SHA256 mismatch! Please refresh submissions and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    fileContent = File.ReadAllBytes(targetCacheDirName);
+                    var cachedFileHash = getFileSha256(fileContent);
+
+                    isFileCached = cachedFileHash == m_SubmissionItem.Sha256;
+                    // Cached files are always compressed
+                    isFileCompressed = true;
+                }
+
+                if (!isFileCached)
+                {
+                    var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
+
+                    var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submission_data?submission_id={m_SubmissionItem.Id}");
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Error while fetching submission. Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        fatalCleanup();
+                        return;
+                    }
+
+                    fileContent = await result.Content.ReadAsByteArrayAsync();
+                    var fileHash = getFileSha256(fileContent);
+                    if (fileHash != m_SubmissionItem.Sha256)
+                    {
+                        MessageBox.Show("SHA256 mismatch! Please refresh submissions and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        fatalCleanup();
+                        return;
+                    }
+
+                    isFileCompressed = result.Headers.Contains("compressed") && result.Headers.GetValues("Compressed").Contains("yes");
+                }
+
+                if (fileContent == null)
+                {
+                    MessageBox.Show($"File is invalid. Refusing to install!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
                     fatalCleanup();
                     return;
                 }
 
-                try
+                var fileStream = new MemoryStream(fileContent);
+                if (isFileCompressed)
                 {
-                    if (result.Headers.Contains("compressed") && result.Headers.GetValues("Compressed").Contains("yes"))
+                    try
                     {
-                        var fileContent = await result.Content.ReadAsByteArrayAsync();
-
                         var decompressor = new Decompressor();
                         var decompressed = decompressor.Unwrap(fileContent).ToArray();
                         fileStream = new MemoryStream(decompressed.ToArray());
                     }
-                }
-                catch (ZstdException)
-                {
-                    // File content is not (zstd) compressed even though compressed = yes?
-                    // Skip decompression
+                    catch (ZstdException)
+                    {
+                        // File content is not (zstd) compressed even though compressed = yes?
+                        // Skip decompression
+                    }
                 }
 
                 try
@@ -203,6 +234,24 @@ namespace ConfigApp
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
 
                 SystemSounds.Beep.Play();
+
+                try
+                {
+                    Directory.CreateDirectory("workshopcache");
+
+                    // Recompress if necessary for caching
+                    if (!isFileCompressed)
+                    {
+                        var compressor = new Compressor(10);
+                        fileContent = compressor.Wrap(fileContent).ToArray();
+                    }
+
+                    File.WriteAllBytes(targetCacheDirName, fileContent);
+                }
+                catch (Exception)
+                {
+                    // Doesn't matter if this fails, it's just a cached file anyways
+                }
             }
             catch (HttpRequestException)
             {
