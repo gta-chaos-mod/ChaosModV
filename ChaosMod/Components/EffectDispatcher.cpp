@@ -313,8 +313,14 @@ void EffectDispatcher::OnRun()
 
 void EffectDispatcher::UpdateTravelledDistance()
 {
-	Ped player       = PLAYER_PED_ID();
-	Vector3 position = GET_ENTITY_COORDS(player, false);
+	auto player   = PLAYER_PED_ID();
+	auto position = GET_ENTITY_COORDS(player, false);
+
+	if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos)
+	{
+		m_DistanceChaosState.SavedPosition = position;
+		return;
+	}
 
 	if (IS_ENTITY_DEAD(player, false))
 	{
