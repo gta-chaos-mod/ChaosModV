@@ -170,7 +170,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	// Also apply random upgrades
 	SET_VEHICLE_MOD_KIT(newVehicle, 0);
 
-	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_Random.GetRandomInt(0, 7));
+	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_Random.GetRandomInt(0, 12));
 
 	for (int i = 0; i < 50; i++)
 	{
