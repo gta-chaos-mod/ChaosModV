@@ -17,6 +17,8 @@ namespace Util
 		case 984333226:
 		case -275439685:
 		case 317205821:
+		case 1432025498:
+		case 94989220:
 			return true;
 		}
 
