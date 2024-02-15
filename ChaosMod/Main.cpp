@@ -62,26 +62,6 @@ static void ParseEffectsFile()
 	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
 }
 
-static void Reset()
-{
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->Reset();
-		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
-		{
-			GetComponent<EffectDispatcher>()->OnRun();
-			WAIT(0);
-		}
-	}
-
-	ClearEntityPool();
-
-	for (auto component : g_Components)
-	{
-		component->OnModPauseCleanup();
-	}
-}
-
 static void Init()
 {
 	// Attempt to print game build number
@@ -240,9 +220,7 @@ static void MainRun()
 		Memory::RunLateHooks();
 	}
 
-	g_MainThread = GetCurrentFiber();
-
-	Reset();
+	g_MainThread            = GetCurrentFiber();
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
@@ -287,7 +265,12 @@ static void MainRun()
 					}
 				}
 
-				Reset();
+				ClearEntityPool();
+
+				for (auto component : g_Components)
+				{
+					component->OnModPauseCleanup();
+				}
 			}
 			else
 			{
