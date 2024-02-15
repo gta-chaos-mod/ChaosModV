@@ -48,7 +48,7 @@ namespace ConfigApp
                     EffectTimedType.Permanent => 2,
                     _ => 0,
                 };
-                if (m_EffectData.CustomTime >= 0)
+                if (m_EffectData.CustomTime > 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
                     effectconf_timer_time.Text = $"{m_EffectData.CustomTime}";
