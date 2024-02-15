@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Components/Component.h"
-#include "Components/EffectDispatcher.h"
 
 #include <cstdint>
 #include <memory>

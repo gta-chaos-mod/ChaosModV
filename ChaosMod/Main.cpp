@@ -11,6 +11,7 @@
 
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
+#include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
@@ -59,26 +60,6 @@ static void ParseEffectsFile()
 	g_EnabledEffects.clear();
 
 	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
-}
-
-static void Reset()
-{
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->Reset();
-		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
-		{
-			GetComponent<EffectDispatcher>()->OnRun();
-			WAIT(0);
-		}
-	}
-
-	ClearEntityPool();
-
-	for (auto component : g_Components)
-	{
-		component->OnModPauseCleanup();
-	}
 }
 
 static void Init()
@@ -202,7 +183,9 @@ static void Init()
 
 	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, textColor, effectTimerColor);
+
+	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer, timerColor);
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
@@ -237,9 +220,7 @@ static void MainRun()
 		Memory::RunLateHooks();
 	}
 
-	g_MainThread = GetCurrentFiber();
-
-	Reset();
+	g_MainThread            = GetCurrentFiber();
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
@@ -274,6 +255,7 @@ static void MainRun()
 
 				if (ComponentExists<EffectDispatcher>())
 				{
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
 					GetComponent<EffectDispatcher>()->Reset(
 					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
@@ -283,7 +265,12 @@ static void MainRun()
 					}
 				}
 
-				Reset();
+				ClearEntityPool();
+
+				for (auto component : g_Components)
+				{
+					component->OnModPauseCleanup();
+				}
 			}
 			else
 			{
@@ -313,6 +300,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
+				GetComponent<EffectDispatchTimer>()->ResetTimer();
 				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
@@ -384,9 +372,10 @@ namespace Main
 			}
 			else if (key == VK_OEM_PERIOD)
 			{
-				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
+				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
 				{
-					GetComponent<EffectDispatcher>()->PauseTimer = !GetComponent<EffectDispatcher>()->PauseTimer;
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
+					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
 				}
 			}
 			else if (key == VK_OEM_COMMA)

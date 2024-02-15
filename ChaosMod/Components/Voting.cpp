@@ -2,6 +2,8 @@
 
 #include "Voting.h"
 
+#include "Components/EffectDispatchTimer.h"
+#include "Components/EffectDispatcher.h"
 #include "Components/MetaModifiers.h"
 #include "Components/SplashTexts.h"
 
@@ -39,7 +41,7 @@ void Voting::OnModPauseCleanup()
 
 void Voting::OnRun()
 {
-	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>())
+	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>() || !ComponentExists<EffectDispatchTimer>())
 	{
 		return;
 	}
@@ -140,7 +142,7 @@ void Voting::OnRun()
 		return;
 	}
 
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
+	if (GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -151,7 +153,7 @@ void Voting::OnRun()
 			SendToPipe("getvoteresult");
 		}
 	}
-	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
+	else if (GetComponent<EffectDispatchTimer>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
@@ -164,7 +166,7 @@ void Voting::OnRun()
 		{
 			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectIdentifier);
 		}
-		GetComponent<EffectDispatcher>()->ResetTimer();
+		GetComponent<EffectDispatchTimer>()->ResetTimer();
 
 		if (ComponentExists<MetaModifiers>())
 		{
@@ -178,7 +180,7 @@ void Voting::OnRun()
 	}
 	else if (!m_IsVotingRunning && m_ReceivedHello
 	         && (m_SecsBeforeVoting == 0
-	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
+	             || GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
 	         && m_IsVotingRoundDone)
 	{
 		// New voting round
@@ -407,9 +409,9 @@ void Voting::HandleMsg(std::string_view message)
 
 			LOG("Received hello from voting pipe");
 
-			if (ComponentExists<EffectDispatcher>())
+			if (ComponentExists<EffectDispatchTimer>())
 			{
-				GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = false;
+				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
 			}
 
 			SendToPipe("hello_back");
@@ -481,9 +483,10 @@ void Voting::ErrorOutWithMsg(std::string_view message)
 	CloseHandle(m_PipeHandle);
 	m_PipeHandle = INVALID_HANDLE_VALUE;
 
-	if (ComponentExists<EffectDispatcher>())
+	if (ComponentExists<EffectDispatchTimer>())
 	{
-		GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = true;
+		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
 	}
+
 	m_EnableVoting = false;
 }

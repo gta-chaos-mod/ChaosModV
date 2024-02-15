@@ -407,6 +407,7 @@
     <ClCompile Include="Components\HelpTextQueue.cpp" />
     <ClCompile Include="Memory\Hooks\GetLabelTextHook.cpp" />
     <ClCompile Include="Components\Workshop.cpp" />
+    <ClCompile Include="Components\EffectDispatchTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -496,6 +497,7 @@
     <ClInclude Include="Components\HelpTextQueue.h" />
     <ClInclude Include="Memory\Hooks\GetLabelTextHook.h" />
     <ClInclude Include="Memory\Hooks\PresentHook.h" />
+    <ClInclude Include="Components\EffectDispatchTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />
