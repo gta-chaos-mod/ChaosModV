@@ -81,19 +81,6 @@ class EffectDispatcher : public Component
 		bool MetaEffectsEnabled           = true;
 	} SharedState;
 
-  private:
-	struct DistanceChaosState
-	{
-		Vector3 SavedPosition = { 0.f, 0.f, 0.f };
-		enum class TravelledDistanceType
-		{
-			Distance,
-			Displacement
-		} DistanceType                         = TravelledDistanceType::Distance;
-		float DistanceToActivateEffect         = 500.f;
-		bool EnableDistanceBasedEffectDispatch = false;
-	} m_DistanceChaosState;
-
   public:
 	ChaosCancellableEvent<const EffectIdentifier &> OnPreDispatchEffect;
 	ChaosEvent<const EffectIdentifier &> OnPostDispatchEffect;
@@ -104,15 +91,8 @@ class EffectDispatcher : public Component
   private:
 	std::vector<LPVOID> m_PermanentEffects;
 
-	std::uint16_t m_EffectSpawnTime = 0;
-
-  public:
-	std::uint64_t Timer = 0;
-
   private:
 	int m_MaxRunningEffects = 0;
-
-	float m_TimerPercentage = 0.f;
 
 	enum class ClearEffectsState
 	{
@@ -121,31 +101,20 @@ class EffectDispatcher : public Component
 		AllRestartPermanent
 	} m_ClearEffectsState = ClearEffectsState::None;
 
-  public:
-	float FakeTimerBarPercentage = 0.f;
-
   private:
-	std::array<std::uint8_t, 3> m_TimerColor;
 	std::array<std::uint8_t, 3> m_TextColor;
 	std::array<std::uint8_t, 3> m_EffectTimerColor;
 
 	bool m_DisableDrawTimerBar        = false;
 	bool m_DisableDrawEffectTexts     = false;
 
-	bool m_DeadFlag                   = true;
-
 	bool m_EnableNormalEffectDispatch = false;
 
   public:
-	bool PauseTimer                    = false;
-
-	bool DispatchEffectsOnTimer        = true;
-
 	bool EnableEffectTextExtraTopSpace = false;
 
   protected:
-	EffectDispatcher(const std::array<std::uint8_t, 3> &timerColor, const std::array<std::uint8_t, 3> &textColor,
-	                 const std::array<std::uint8_t, 3> &effectTimerColor);
+	EffectDispatcher(const std::array<std::uint8_t, 3> &textColor, const std::array<std::uint8_t, 3> &effectTimerColor);
 	virtual ~EffectDispatcher() override;
 
   private:
@@ -157,12 +126,7 @@ class EffectDispatcher : public Component
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
 
-	void DrawTimerBar();
 	void DrawEffectTexts();
-
-	bool ShouldDispatchEffectNow() const;
-
-	int GetRemainingTimerTime() const;
 
 	void DispatchEffect(const EffectIdentifier &effectIdentifier,
 	                    DispatchEffectFlags dispatchEffectFlags = DispatchEffectFlag_None,
@@ -173,7 +137,6 @@ class EffectDispatcher : public Component
 	void UpdateTimer(int deltaTime);
 	void UpdateEffects(int deltaTime);
 	void UpdateMetaEffects(int deltaTime);
-	void UpdateTravelledDistance();
 
 	void ClearEffect(const EffectIdentifier &effectId);
 	enum ClearEffectsFlags
@@ -189,7 +152,6 @@ class EffectDispatcher : public Component
 	std::vector<RegisteredEffect *> GetRecentEffects(int distance, std::string_view ignoreEffect = {}) const;
 
 	void Reset(ClearEffectsFlags clearEffectFlags = ClearEffectsFlag_None);
-	void ResetTimer();
 
 	void OverrideEffectName(std::string_view effectId, const std::string &overrideName);
 	void OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId);

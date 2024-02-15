@@ -11,6 +11,7 @@
 
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
+#include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
@@ -202,7 +203,9 @@ static void Init()
 
 	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, textColor, effectTimerColor);
+
+	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer, timerColor);
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
@@ -274,6 +277,7 @@ static void MainRun()
 
 				if (ComponentExists<EffectDispatcher>())
 				{
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
 					GetComponent<EffectDispatcher>()->Reset(
 					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
@@ -313,6 +317,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
+				GetComponent<EffectDispatchTimer>()->ResetTimer();
 				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
@@ -384,9 +389,10 @@ namespace Main
 			}
 			else if (key == VK_OEM_PERIOD)
 			{
-				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
+				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
 				{
-					GetComponent<EffectDispatcher>()->PauseTimer = !GetComponent<EffectDispatcher>()->PauseTimer;
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
+					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
 				}
 			}
 			else if (key == VK_OEM_COMMA)
