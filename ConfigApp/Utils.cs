@@ -30,7 +30,7 @@ namespace ConfigApp
 
                 if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
                 {
-                    effectData.TimedType = timedType;
+                    effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
                 }
                 if (int.TryParse(values[2], out int customTime))
                 {
