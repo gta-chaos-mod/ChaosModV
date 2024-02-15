@@ -34,7 +34,7 @@ namespace ConfigApp
 
             if (m_IsTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType != null;
+                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue;
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
@@ -48,7 +48,7 @@ namespace ConfigApp
                     EffectTimedType.Permanent => 2,
                     _ => 0,
                 };
-                if (m_EffectData.CustomTime >= 0)
+                if (m_EffectData.CustomTime > 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
                     effectconf_timer_time.Text = $"{m_EffectData.CustomTime}";
@@ -211,8 +211,8 @@ namespace ConfigApp
                 effectconf_timer_time_enable.IsEnabled = false;
             }
 
-            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false);
-            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsChecked.GetValueOrDefault(false);
+            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsEnabled && effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false);
+            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsEnabled && effectconf_timer_time_enable.IsChecked.GetValueOrDefault(false);
         }
 
         private void OnClicked(object sender, RoutedEventArgs e)
@@ -258,7 +258,7 @@ namespace ConfigApp
 
         public EffectData GetNewData()
         {
-            if (effectconf_timer_type_enable.IsChecked.HasValue && effectconf_timer_type_enable.IsChecked.Value)
+            if (effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false))
             {
                 m_EffectData.TimedType = (object)effectconf_timer_type.SelectedIndex switch
                 {
