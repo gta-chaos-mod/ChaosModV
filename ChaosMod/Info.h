@@ -1,3 +1,3 @@
 #pragma once
 
-#define MOD_VERSION "2.1.2"
+#define MOD_VERSION "2.1.3"
