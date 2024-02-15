@@ -10,6 +10,7 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 {
 	m_TimerColor      = timerColor;
 
+	m_DrawTimerBar    = !g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue(
@@ -174,7 +175,7 @@ void EffectDispatchTimer::ResetFakeTimerPercentage()
 
 void EffectDispatchTimer::OnRun()
 {
-	if (!m_EnableTimer
+	if (!m_EnableTimer || !m_DrawTimerBar
 	    || (ComponentExists<MetaModifiers>()
 	        && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos)))
 	{
