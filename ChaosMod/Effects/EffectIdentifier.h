@@ -22,11 +22,6 @@ class EffectIdentifier
 		return m_EffectId == other.GetEffectId();
 	}
 
-	inline bool operator!=(const EffectIdentifier &other) const
-	{
-		return !(*this == other);
-	}
-
 	inline bool IsScript() const
 	{
 		return m_IsScript;
