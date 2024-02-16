@@ -99,7 +99,7 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
 	scriptName.resize(8);
 	for (int i = 0; i < 8; i++)
 	{
-		sprintf(scriptName.data() + i, "%x", g_Random.GetRandomInt(0, 16));
+		sprintf(scriptName.data() + i, "%x", g_RandomNoDeterm.GetRandomInt(0, 16));
 	}
 
 	json json;

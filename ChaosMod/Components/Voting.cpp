@@ -227,7 +227,7 @@ void Voting::OnRun()
 				totalWeight += effectData.GetEffectWeight();
 			}
 
-			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
+			float chosen = g_RandomNoDeterm.GetRandomFloat(0.f, totalWeight);
 
 			totalWeight  = 0.f;
 

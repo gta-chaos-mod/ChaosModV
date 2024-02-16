@@ -98,7 +98,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	Hash newVehModel = 0;
 	do
 	{
-		newVehModel = vehicleModels[g_Random.GetRandomInt(0, vehicleModels.size() - 1)];
+		newVehModel = vehicleModels[g_RandomNoDeterm.GetRandomInt(0, vehicleModels.size() - 1)];
 	} while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel) < seatPeds.size() || IS_THIS_MODEL_A_TRAIN(newVehModel)
 	         || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
 
@@ -170,35 +170,36 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	// Also apply random upgrades
 	SET_VEHICLE_MOD_KIT(newVehicle, 0);
 
-	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_Random.GetRandomInt(0, 12));
+	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 12));
 
 	for (int i = 0; i < 50; i++)
 	{
 		int max = GET_NUM_VEHICLE_MODS(newVehicle, i);
 		if (max > 0)
 		{
-			SET_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
+			SET_VEHICLE_MOD(newVehicle, i, g_RandomNoDeterm.GetRandomInt(0, max - 1),
+			                g_RandomNoDeterm.GetRandomInt(0, 1));
 		}
 
-		TOGGLE_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, 1));
+		TOGGLE_VEHICLE_MOD(newVehicle, i, g_RandomNoDeterm.GetRandomInt(0, 1));
 	}
 
-	SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_Random.GetRandomInt(0, 1));
-	SET_VEHICLE_WINDOW_TINT(newVehicle, g_Random.GetRandomInt(0, 6));
+	SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 1));
+	SET_VEHICLE_WINDOW_TINT(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 6));
 
-	SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                  g_Random.GetRandomInt(0, 255));
-	SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                    g_Random.GetRandomInt(0, 255));
+	SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                  g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
+	SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                    g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
 
-	_SET_VEHICLE_NEON_LIGHTS_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                g_Random.GetRandomInt(0, 255));
+	_SET_VEHICLE_NEON_LIGHTS_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
 	for (int i = 0; i < 4; i++)
 	{
 		_SET_VEHICLE_NEON_LIGHT_ENABLED(newVehicle, i, true);
 	}
 
-	_SET_VEHICLE_XENON_LIGHTS_COLOR(newVehicle, g_Random.GetRandomInt(0, 12));
+	_SET_VEHICLE_XENON_LIGHTS_COLOR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 12));
 
 	return newVehicle;
 }

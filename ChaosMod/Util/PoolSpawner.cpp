@@ -140,7 +140,7 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 	Ped ped;
 	if (!pedModels.empty())
 	{
-		Hash model = pedModels[g_Random.GetRandomInt(0, pedModels.size() - 1)];
+		Hash model = pedModels[g_RandomNoDeterm.GetRandomInt(0, pedModels.size() - 1)];
 
 		ped        = CreatePoolPed(4, model, x, y, z, heading);
 	}
@@ -154,20 +154,20 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 	for (int i = 0; i < 12; i++)
 	{
 		int drawableAmount = GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(ped, i);
-		int drawable       = drawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, drawableAmount - 1);
+		int drawable       = drawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, drawableAmount - 1);
 
 		int textureAmount  = GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(ped, i, drawable);
-		int texture        = textureAmount == 0 ? 0 : g_Random.GetRandomInt(0, textureAmount - 1);
+		int texture        = textureAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, textureAmount - 1);
 
-		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_Random.GetRandomInt(0, 3));
+		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_RandomNoDeterm.GetRandomInt(0, 3));
 
 		if (i < 4)
 		{
 			int propDrawableAmount = GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(ped, i);
-			int propDrawable       = propDrawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, propDrawableAmount - 1);
+			int propDrawable = propDrawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, propDrawableAmount - 1);
 
-			int propTextureAmount  = GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(ped, i, drawable);
-			int propTexture        = propTextureAmount == 0 ? 0 : g_Random.GetRandomInt(0, propTextureAmount - 1);
+			int propTextureAmount = GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(ped, i, drawable);
+			int propTexture = propTextureAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, propTextureAmount - 1);
 
 			SET_PED_PROP_INDEX(ped, i, propDrawable, propTexture, true);
 		}

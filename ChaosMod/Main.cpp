@@ -145,6 +145,7 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
+	g_RandomNoDeterm.SetSeed(GetTickCount64());
 
 	std::set<std::string> blacklistedComponentNames;
 	if (DoesFeatureFlagExist("blacklistedcomponents"))
