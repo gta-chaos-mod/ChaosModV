@@ -369,7 +369,7 @@ bool Voting::Init()
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD attributes = NULL;
-	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
+	if (DoesFeatureFlagExist("forcenovotingconsole"))
 	{
 		attributes = CREATE_NO_WINDOW;
 	}
