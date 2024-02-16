@@ -61,7 +61,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	auto playEffectDispatchSound = [&]()
 	{
-		if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+		if ((!ComponentExists<MetaModifiers>() || GetComponent<MetaModifiers>()->HideChaosUI)
 		    && ComponentExists<Mp3Manager>())
 		{
 			// Play global sound (if one exists)
