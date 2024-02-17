@@ -80,7 +80,7 @@ static void Init()
 	}();
 
 	static std::streambuf *oldStreamBuf;
-	if (DoesFileExist("chaosmod\\.enableconsole"))
+	if (DoesFeatureFlagExist("enableconsole"))
 	{
 		if (GetConsoleWindow())
 		{
@@ -145,9 +145,10 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
+	g_RandomNoDeterm.SetSeed(GetTickCount64());
 
 	std::set<std::string> blacklistedComponentNames;
-	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
+	if (DoesFeatureFlagExist("blacklistedcomponents"))
 	{
 		std::ifstream file("chaosmod\\.blacklistedcomponents");
 		if (!file.fail())
@@ -200,7 +201,7 @@ static void Init()
 	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
-	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
+	if (DoesFeatureFlagExist("enabledebugsocket"))
 	{
 		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
 	}
@@ -276,7 +277,7 @@ static void MainRun()
 			{
 				isDisabled = false;
 
-				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+				if (DoesFeatureFlagExist("clearlogfileonreset"))
 				{
 					// Clear log
 					g_Log = std::ofstream(CHAOS_LOG_FILE);

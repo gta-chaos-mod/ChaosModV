@@ -61,7 +61,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	auto playEffectDispatchSound = [&]()
 	{
-		if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+		if ((!ComponentExists<MetaModifiers>() || GetComponent<MetaModifiers>()->HideChaosUI)
 		    && ComponentExists<Mp3Manager>())
 		{
 			// Play global sound (if one exists)
@@ -220,10 +220,9 @@ static void _OnRunEffects(LPVOID data)
 EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const std::array<BYTE, 3> &effectTimerColor)
     : Component()
 {
-	m_TextColor           = textColor;
-	m_EffectTimerColor    = effectTimerColor;
+	m_TextColor        = textColor;
+	m_EffectTimerColor = effectTimerColor;
 
-	m_DisableDrawTimerBar = g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_DisableDrawEffectTexts =
 	    g_OptionsManager.GetConfigValue({ "DisableEffectTextDraw" }, OPTION_DEFAULT_NO_TEXT_DRAW);
 

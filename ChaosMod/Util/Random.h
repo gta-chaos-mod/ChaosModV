@@ -31,3 +31,4 @@ class Random
 };
 
 inline Random g_Random;
+inline Random g_RandomNoDeterm;

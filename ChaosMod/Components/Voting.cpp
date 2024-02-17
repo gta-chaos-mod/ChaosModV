@@ -227,7 +227,7 @@ void Voting::OnRun()
 				totalWeight += effectData.GetEffectWeight();
 			}
 
-			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
+			float chosen = g_RandomNoDeterm.GetRandomFloat(0.f, totalWeight);
 
 			totalWeight  = 0.f;
 
@@ -369,7 +369,7 @@ bool Voting::Init()
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD attributes = NULL;
-	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
+	if (DoesFeatureFlagExist("forcenovotingconsole"))
 	{
 		attributes = CREATE_NO_WINDOW;
 	}

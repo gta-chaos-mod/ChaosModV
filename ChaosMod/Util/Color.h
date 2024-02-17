@@ -16,10 +16,10 @@ struct Color
 inline Color GetRandomColorRGB(std::uint8_t min = 0, std::uint8_t max = 255)
 {
 	return {
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // R
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // G
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // B
-		255                                            // A
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // R
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // G
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // B
+		255                                                    // A
 	};
 }
 
@@ -27,9 +27,9 @@ inline Color GetRandomColorRGB(std::uint8_t min = 0, std::uint8_t max = 255)
 inline Color GetRandomColorRGBA(std::uint8_t min = 0, std::uint8_t max = 255)
 {
 	return {
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // R
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // G
-		(std::uint8_t)g_Random.GetRandomInt(min, max), // B
-		(std::uint8_t)g_Random.GetRandomInt(min, max)  // A
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // R
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // G
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max), // B
+		(std::uint8_t)g_RandomNoDeterm.GetRandomInt(min, max)  // A
 	};
 }

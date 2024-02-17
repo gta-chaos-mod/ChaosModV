@@ -144,7 +144,7 @@ class RegisterEffect
 	{
 		static bool disableEffectRegistration = []()
 		{
-			return DoesFileExist("chaosmod\\.disablebuiltineffects");
+			return DoesFeatureFlagExist("disablebuiltineffects");
 		}();
 
 		if (disableEffectRegistration)

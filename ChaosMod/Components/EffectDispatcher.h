@@ -105,7 +105,6 @@ class EffectDispatcher : public Component
 	std::array<std::uint8_t, 3> m_TextColor;
 	std::array<std::uint8_t, 3> m_EffectTimerColor;
 
-	bool m_DisableDrawTimerBar        = false;
 	bool m_DisableDrawEffectTexts     = false;
 
 	bool m_EnableNormalEffectDispatch = false;
@@ -134,7 +133,6 @@ class EffectDispatcher : public Component
 	void DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags = DispatchEffectFlag_None,
 	                          const std::string &suffix               = {});
 
-	void UpdateTimer(int deltaTime);
 	void UpdateEffects(int deltaTime);
 	void UpdateMetaEffects(int deltaTime);
 

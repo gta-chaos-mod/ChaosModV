@@ -87,7 +87,7 @@ void Mp3Manager::PlayChaosSoundFile(const std::string &soundFileName)
 	}
 
 	auto size        = cachedSoundFiles.size();
-	auto chosenSound = size > 1 ? cachedSoundFiles[g_Random.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
+	auto chosenSound = size > 1 ? cachedSoundFiles[g_RandomNoDeterm.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
 
 	int error;
 	{

@@ -26,7 +26,7 @@ namespace Memory
 
 		MH_Initialize();
 
-		if (DoesFileExist("chaosmod\\.skipintro"))
+		if (DoesFeatureFlagExist("skipintro"))
 		{
 			// Splash screen
 			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
@@ -58,7 +58,7 @@ namespace Memory
 			}
 		}
 
-		if (DoesFileExist("chaosmod\\.skipdlcs"))
+		if (DoesFeatureFlagExist("skipdlcs"))
 		{
 			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01");
 			if (!handle.IsValid())
@@ -73,7 +73,7 @@ namespace Memory
 			}
 		}
 
-		if (DoesFileExist("chaosmod\\.blacklistedhooks"))
+		if (DoesFeatureFlagExist("blacklistedhooks"))
 		{
 			std::ifstream file("chaosmod\\.blacklistedhooks");
 			if (!file.fail())

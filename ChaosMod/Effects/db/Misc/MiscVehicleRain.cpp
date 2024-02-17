@@ -31,6 +31,9 @@ static void OnTick()
 
 			// Also apply random upgrades
 			SET_VEHICLE_MOD_KIT(veh, 0);
+
+			SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 12));
+
 			for (int i = 0; i < 50; i++)
 			{
 				int max = GET_NUM_VEHICLE_MODS(veh, i);
