@@ -9,10 +9,14 @@ static int state = 0;
 
 static bool SafetyCheck()
 {
-	Ped playerPed = PLAYER_PED_ID();
+	Ped playerPed        = PLAYER_PED_ID();
+	Vector3 playerCoords = GET_ENTITY_COORDS(playerPed, true);
+	Vector3 cameraCoords = GET_CAM_COORD(eCamera);
 	// Removes camera on player switch, death, and potential non-existence
+	// 02/19/2024 - Added distance check for resets not covered by existing checks
 	if (IS_PLAYER_SWITCH_IN_PROGRESS() || IS_PLAYER_DEAD(PLAYER_ID()) || !ENTITY::DOES_ENTITY_EXIST(playerPed)
-	    || !ENTITY::IS_ENTITY_VISIBLE(playerPed))
+	    || !ENTITY::IS_ENTITY_VISIBLE(playerPed)
+	    || VDIST2(playerCoords.x, playerCoords.y, playerCoords.z, cameraCoords.x, cameraCoords.y, cameraCoords.z) > 3.f)
 	{
 		return true;
 	}
