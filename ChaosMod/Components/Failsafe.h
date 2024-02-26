@@ -19,9 +19,6 @@ class Failsafe : public Component
 	Failsafe();
 
   public:
-	static void SetGlobalIndex(int idx);
-	static int GetGlobalIndex();
-
 	virtual void OnRun() override;
 
 	template <class T>

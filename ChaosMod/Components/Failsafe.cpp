@@ -27,7 +27,7 @@ Failsafe::Failsafe() : Component()
 	    Hooks::OnScriptThreadRun,
 	    [](rage::scrThread *thread)
 	    {
-		    if (!ms_SearchedForMissionStateGlobal && !Failsafe::GetGlobalIndex() && !strcmp(thread->GetName(), "main"))
+		    if (!ms_SearchedForMissionStateGlobal && !ms_StateGlobalIdx && !strcmp(thread->GetName(), "main"))
 		    {
 			    auto program = Memory::ScriptThreadToProgram(thread);
 			    if (program->m_CodeBlocks)
@@ -50,25 +50,15 @@ Failsafe::Failsafe() : Component()
 				    }
 				    else
 				    {
-					    Failsafe::SetGlobalIndex(handle.At(8).Value<int>() & 0xFFFFFF);
+					    ms_StateGlobalIdx = handle.At(8).Value<int>() & 0xFFFFFF;
 
-					    LOG("Fail state global found (Global: " << Failsafe::GetGlobalIndex() << ")");
+					    LOG("Fail state global found (Global: " << ms_StateGlobalIdx << ")");
 				    }
 			    }
 		    }
 
 		    return true;
 	    });
-}
-
-void Failsafe::SetGlobalIndex(int idx)
-{
-	ms_StateGlobalIdx = idx;
-}
-
-int Failsafe::GetGlobalIndex()
-{
-	return ms_StateGlobalIdx;
 }
 
 void Failsafe::OnRun()
