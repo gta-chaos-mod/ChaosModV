@@ -42,6 +42,7 @@ REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
 		.Name = "Traffic Magnet",
 		.Id = "traffic_gtao",
-		.IsTimed = true
+		.IsTimed = true,
+		.IncompatibleWith = { "peds_reckless" }
 	}
 );
