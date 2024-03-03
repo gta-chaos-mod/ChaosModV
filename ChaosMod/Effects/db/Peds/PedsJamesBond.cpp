@@ -5,8 +5,6 @@
 #include <math.h>
 #include <stdafx.h>
 
-#define PI 3.14159265
-
 static void OnStart()
 {
 	Ped playerPed                 = PLAYER_PED_ID();
@@ -23,8 +21,8 @@ static void OnStart()
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
 	                                                                           : playerPed);
 
-	float xPos    = sin((360 - heading) * PI / 180) * 10;
-	float yPos    = cos((360 - heading) * PI / 180) * 10;
+	float xPos    = sin((360 - heading) * DEGREE) * 10;
+	float yPos    = cos((360 - heading) * DEGREE) * 10;
 
 	auto veh      = CreatePoolVehicle("JB700"_hash, playerPos.x - xPos, playerPos.y - yPos, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
