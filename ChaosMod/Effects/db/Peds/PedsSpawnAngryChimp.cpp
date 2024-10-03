@@ -9,7 +9,7 @@
 static void OnStart()
 {
 	static const Hash chimpHash  = 2825402133;
-	static const Hash weaponHash = "WEAPON_STONE_HATCHET"_hash;
+	static const Hash weaponHash = "WEAPON_RPG"_hash;
 	CreateHostilePed(chimpHash, weaponHash);
 }
 
