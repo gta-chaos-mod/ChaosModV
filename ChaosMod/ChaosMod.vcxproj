@@ -151,6 +151,7 @@
     <ClCompile Include="Effects\db\Peds\PedsMinions.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnAngryJimmy.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsSpawnRoastingLamar.cpp" />
+    <ClCompile Include="Effects\db\Player\PlayerCopyForce.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerAFK.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsReflectiveDamage.cpp" />
     <ClCompile Include="Effects\db\Peds\PedsToast.cpp" />
@@ -358,6 +359,7 @@
     <ClCompile Include="Effects\db\Player\PlayerFlingPlayer.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerJumpJump.cpp" />
     <ClCompile Include="Effects\db\Player\PlayerRandomVehSeat.cpp" />
+    <ClCompile Include="Effects\db\Vehs\VehsBoostBraking.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsPopTiresRandom.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsRotAll.cpp" />
     <ClCompile Include="Effects\db\Vehs\VehsSpamDoors.cpp" />
@@ -383,6 +385,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Hooks\AudioClearnessHook.cpp" />
     <ClCompile Include="Memory\Hooks\ApplyChangeSetEntryHook.cpp" />
+    <ClCompile Include="Memory\Hooks\ModelSpawnBypass.cpp" />
     <ClCompile Include="Memory\Hooks\PresentHook.cpp" />
     <ClCompile Include="Memory\Hooks\ScriptThreadRunHook.cpp" />
     <ClCompile Include="Memory\Hooks\HandleToEntityStructHook.cpp" />
@@ -404,6 +407,7 @@
     <ClCompile Include="Components\HelpTextQueue.cpp" />
     <ClCompile Include="Memory\Hooks\GetLabelTextHook.cpp" />
     <ClCompile Include="Components\Workshop.cpp" />
+    <ClCompile Include="Components\EffectDispatchTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\vendor\lua\lua54.lib" />
@@ -460,7 +464,6 @@
     <ClInclude Include="Util\Hash.h" />
     <ClInclude Include="..\vendor\json.hpp" />
     <ClInclude Include="Util\Natives.h" />
-    <ClInclude Include="Util\Macros.h" />
     <ClInclude Include="Util\OptionDefaults.h" />
     <ClInclude Include="Util\OptionsFile.h" />
     <ClInclude Include="Util\Random.h" />
@@ -493,6 +496,8 @@
     <ClInclude Include="Util\HelpText.h" />
     <ClInclude Include="Components\HelpTextQueue.h" />
     <ClInclude Include="Memory\Hooks\GetLabelTextHook.h" />
+    <ClInclude Include="Memory\Hooks\PresentHook.h" />
+    <ClInclude Include="Components\EffectDispatchTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChaosMod.rc" />

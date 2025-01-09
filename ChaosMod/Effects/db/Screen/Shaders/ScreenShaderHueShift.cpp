@@ -45,7 +45,7 @@ static void OnStop()
 	Hooks::ResetShader();
 }
 
-//clang-format off
+// clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo 
     { 
         .Name            = "Hue Shift",

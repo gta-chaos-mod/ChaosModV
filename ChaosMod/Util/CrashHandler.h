@@ -11,7 +11,7 @@
 
 inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 {
-	if (DoesFileExist("chaosmod\\.nodumps"))
+	if (DoesFeatureFlagExist("nodumps"))
 	{
 		return EXCEPTION_CONTINUE_SEARCH;
 	}
@@ -37,7 +37,7 @@ inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 
 	DWORD flags              = MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory;
 
-	if (DoesFileExist("chaosmod\\.fulldumps"))
+	if (DoesFeatureFlagExist("fulldumps"))
 	{
 		flags = MiniDumpWithFullMemory | MiniDumpWithHandleData | MiniDumpWithUnloadedModules
 		      | MiniDumpWithProcessThreadData | MiniDumpWithFullMemoryInfo | MiniDumpWithThreadInfo;

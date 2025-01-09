@@ -11,6 +11,7 @@
 
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
+#include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
 #include "Components/Failsafe.h"
@@ -61,26 +62,6 @@ static void ParseEffectsFile()
 	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
 }
 
-static void Reset()
-{
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->Reset();
-		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
-		{
-			GetComponent<EffectDispatcher>()->OnRun();
-			WAIT(0);
-		}
-	}
-
-	ClearEntityPool();
-
-	for (auto component : g_Components)
-	{
-		component->OnModPauseCleanup();
-	}
-}
-
 static void Init()
 {
 	// Attempt to print game build number
@@ -99,7 +80,7 @@ static void Init()
 	}();
 
 	static std::streambuf *oldStreamBuf;
-	if (DoesFileExist("chaosmod\\.enableconsole"))
+	if (DoesFeatureFlagExist("enableconsole"))
 	{
 		if (GetConsoleWindow())
 		{
@@ -164,9 +145,10 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
+	g_RandomNoDeterm.SetSeed(GetTickCount64());
 
 	std::set<std::string> blacklistedComponentNames;
-	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
+	if (DoesFeatureFlagExist("blacklistedcomponents"))
 	{
 		std::ifstream file("chaosmod\\.blacklistedcomponents");
 		if (!file.fail())
@@ -202,7 +184,9 @@ static void Init()
 
 	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, textColor, effectTimerColor);
+
+	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer, timerColor);
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
@@ -217,7 +201,7 @@ static void Init()
 	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
-	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
+	if (DoesFeatureFlagExist("enabledebugsocket"))
 	{
 		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
 	}
@@ -237,9 +221,7 @@ static void MainRun()
 		Memory::RunLateHooks();
 	}
 
-	g_MainThread = GetCurrentFiber();
-
-	Reset();
+	g_MainThread            = GetCurrentFiber();
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
@@ -274,6 +256,7 @@ static void MainRun()
 
 				if (ComponentExists<EffectDispatcher>())
 				{
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
 					GetComponent<EffectDispatcher>()->Reset(
 					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
@@ -283,13 +266,18 @@ static void MainRun()
 					}
 				}
 
-				Reset();
+				ClearEntityPool();
+
+				for (auto component : g_Components)
+				{
+					component->OnModPauseCleanup();
+				}
 			}
 			else
 			{
 				isDisabled = false;
 
-				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+				if (DoesFeatureFlagExist("clearlogfileonreset"))
 				{
 					// Clear log
 					g_Log = std::ofstream(CHAOS_LOG_FILE);
@@ -313,6 +301,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
+				GetComponent<EffectDispatchTimer>()->ResetTimer();
 				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
@@ -384,9 +373,10 @@ namespace Main
 			}
 			else if (key == VK_OEM_PERIOD)
 			{
-				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
+				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
 				{
-					GetComponent<EffectDispatcher>()->PauseTimer = !GetComponent<EffectDispatcher>()->PauseTimer;
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
+					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
 				}
 			}
 			else if (key == VK_OEM_COMMA)

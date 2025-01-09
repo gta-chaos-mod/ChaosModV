@@ -6,7 +6,6 @@
 
 #include <stdafx.h>
 
-#pragma region variable declarations
 #define WAIT_TIME 5000 // ms. before police are angry at your innocence
 
 static DWORD64 ms_TimeReserve;
@@ -14,21 +13,17 @@ static DWORD64 ms_LastTick = 0;
 
 static int ms_LastPlayerKills;
 static int ms_LastWantedLevel = 0;
-#pragma endregion
 
 static void OnStart()
 {
-#pragma region variable initializations
 	ms_LastWantedLevel = PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER_ID());
 	ms_LastTick        = GET_GAME_TIMER();
 	ms_TimeReserve     = WAIT_TIME;
 	ms_LastPlayerKills = -1;
-#pragma endregion
 }
 
 static void OnTick()
 {
-#pragma region variable updates
 	DWORD64 currentTick = GET_GAME_TIMER();
 	DWORD64 tickDelta   = currentTick - ms_LastTick;
 
@@ -36,9 +31,6 @@ static void OnTick()
 	int wantedLevel     = PLAYER::GET_PLAYER_WANTED_LEVEL(player);
 
 	Hash playerHash     = GET_ENTITY_MODEL(PLAYER_PED_ID());
-#pragma endregion
-
-#pragma region check if player ran over someone
 	if (GET_TIME_SINCE_PLAYER_HIT_PED(player) < 200 && GET_TIME_SINCE_PLAYER_HIT_PED(player) != -1)
 	{
 		ms_LastWantedLevel = 0;
@@ -46,9 +38,6 @@ static void OnTick()
 		SET_PLAYER_WANTED_LEVEL_NOW(player, true);
 		ms_TimeReserve = WAIT_TIME;
 	}
-#pragma endregion
-
-#pragma region check if player shot someone
 
 	int allPlayerKills = 0;
 	int curKills       = 0;
@@ -70,9 +59,7 @@ static void OnTick()
 		ms_TimeReserve = WAIT_TIME;
 	}
 	ms_LastPlayerKills = allPlayerKills;
-#pragma endregion
 
-#pragma region invert normal wanted level gains
 	// If wanted level has increased, decrease it instead
 
 	if (ms_LastWantedLevel < wantedLevel)
@@ -82,18 +69,11 @@ static void OnTick()
 		SET_PLAYER_WANTED_LEVEL_NOW(player, true);
 		ms_TimeReserve = WAIT_TIME;
 	}
-
-#pragma endregion
-
-#pragma region acknowledge wanted level decreases
 	else if (ms_LastWantedLevel > wantedLevel)
 	{
 		ms_LastWantedLevel = wantedLevel;
 		ms_TimeReserve     = WAIT_TIME;
 	}
-#pragma endregion
-
-#pragma region police responce to prologed innocence
 	else if (ms_LastWantedLevel < 4)
 	{
 		// Cap the police responce for innocence at 4 stars
@@ -115,7 +95,6 @@ static void OnTick()
 	}
 
 	ms_LastTick = currentTick;
-#pragma endregion
 }
 
 // clang-format off

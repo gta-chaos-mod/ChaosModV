@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
+#include "Components/EffectDispatchTimer.h"
 
 static void SleepAllThreads(DWORD ms)
 {
@@ -52,9 +52,9 @@ static void OnStart()
 
 	if (fakeTimer)
 	{
-		if (ComponentExists<EffectDispatcher>())
+		if (ComponentExists<EffectDispatchTimer>())
 		{
-			GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
+			GetComponent<EffectDispatchTimer>()->SetFakeTimerPercentage(g_Random.GetRandomFloat(0.f, 1.f));
 		}
 
 		WAIT(0);
@@ -74,9 +74,9 @@ static void OnStart()
 
 	SleepAllThreads(g_Random.GetRandomInt(3000, 10000));
 
-	if (fakeTimer && ComponentExists<EffectDispatcher>())
+	if (fakeTimer && ComponentExists<EffectDispatchTimer>())
 	{
-		GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = 0.f;
+		GetComponent<EffectDispatchTimer>()->ResetFakeTimerPercentage();
 	}
 }
 

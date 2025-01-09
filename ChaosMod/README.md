@@ -4,7 +4,33 @@ This is where the source code for the actual mod resides in. Note that the compi
 
 ## Building
 
-See the README.md situated in the project root.
+<details>
+  <summary>CMake (CLI)</summary>
+	
+  1. `mkdir build`
+
+  2. `cd build`
+
+  3. `cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..`
+
+  4. `ninja`
+	
+</details>
+
+<details>
+  <summary>CMake (Visual Studio)</summary>
+
+  Make sure the `C++ CMake tools for Windows` component is installed through the Visual Studio Installer.
+
+  1. Click on the `Switch between solutions and available views` button in the Solution Explorer (next to the home icon)
+
+  2. Click on `CMake Targets View`
+
+  3. Build the `ChaosMod Project` target
+
+  The .asi should be located inside the `out/build/<Configuration>` folder.
+	
+</details>
 
 ## Coding conventions
 
@@ -15,3 +41,4 @@ See the README.md situated in the project root.
     - Private member variables: `m_Foo`
     - Static global variables specific to a translation unit: `ms_Foo`
     - Global variables: `g_Foo`
+    - Global member inside struct: `Foo`

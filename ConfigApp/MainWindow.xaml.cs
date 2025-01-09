@@ -1,22 +1,18 @@
-﻿using ConfigApp.Tabs;
-using ConfigApp.Tabs.Voting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using ConfigApp.Tabs;
+using ConfigApp.Tabs.Voting;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        private Dictionary<string, Tab> m_Tabs = new Dictionary<string, Tab>
+        private readonly Dictionary<string, Tab> m_Tabs = new()
         {
             //{ "Meta", new MetaTab() },
             { "Misc", new MiscTab() },
@@ -24,15 +20,15 @@ namespace ConfigApp
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }
         };
-        private Dictionary<string, TabItem> m_TabItems = new Dictionary<string, TabItem>();
+        private readonly Dictionary<string, TabItem> m_TabItems = new();
 
         private bool m_bInitializedTitle = false;
 
-        private Dictionary<string, TreeMenuItem> m_TreeMenuItemsMap;
-        private List<TreeMenuItem> m_TreeMenuItemsAll;
-        private List<TreeMenuItem> m_TreeMenuItemsFiltered;
+        private Dictionary<string, TreeMenuItem>? m_TreeMenuItemsMap = null;
+        private List<TreeMenuItem>? m_TreeMenuItemsAll = null;
+        private List<TreeMenuItem>? m_TreeMenuItemsFiltered = null;
 
-        private Dictionary<string, EffectData> m_EffectDataMap;
+        private Dictionary<string, EffectData>? m_EffectDataMap = null;
 
         private bool m_InitializedTabs = false;
 
@@ -159,10 +155,10 @@ namespace ConfigApp
         private EffectData GetEffectData(string effectId)
         {
             // Create EffectData in case effect wasn't saved yet
-            if (!m_EffectDataMap.TryGetValue(effectId, out EffectData effectData))
+            if (m_EffectDataMap?.TryGetValue(effectId, out EffectData? effectData) is not true)
             {
                 effectData = new EffectData();
-                m_EffectDataMap.Add(effectId, effectData);
+                m_EffectDataMap?.Add(effectId, effectData);
             }
 
             return effectData;
@@ -191,7 +187,7 @@ namespace ConfigApp
                 var value = OptionsManager.EffectsFile.ReadValue(key);
                 var effectData = Utils.ValueStringToEffectData(value);
 
-                m_EffectDataMap.Add(key, effectData);
+                m_EffectDataMap?.Add(key, effectData);
             }
         }
 
@@ -201,7 +197,7 @@ namespace ConfigApp
             {
                 var effectData = GetEffectData(pair.Key);
 
-                OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap[pair.Key].IsChecked ? 1 : 0)}"
+                OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap?[pair.Key].IsChecked is true ? 1 : 0)}"
                     + $",{(int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed)}"
                     + $",{effectData.CustomTime.GetValueOrDefault(0)}"
                     + $",{effectData.WeightMult.GetValueOrDefault(0)}"
@@ -234,7 +230,12 @@ namespace ConfigApp
 
             foreach (var pair in EffectsMap)
             {
-                sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, EffectCategory: pair.Value.EffectCategory));
+                if (pair.Value.Name is null)
+                {
+                    continue;
+                }
+
+                sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, pair.Value.EffectCategory));
             }
 
             foreach (var effect in sortedEffects)
@@ -257,7 +258,10 @@ namespace ConfigApp
                     }
 
                     effectData = effectConfig.GetNewData();
-                    m_EffectDataMap[effectMisc.EffectId] = effectData;
+                    if (m_EffectDataMap is not null)
+                    {
+                        m_EffectDataMap[effectMisc.EffectId] = effectData;
+                    }
                     menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 };
                 menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
@@ -266,30 +270,30 @@ namespace ConfigApp
 
                 switch (effectMisc.EffectCategory)
                 {
-                    case EffectCategory.Player:
-                        playerParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Vehicle:
-                        vehicleParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Peds:
-                        pedsParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Screen:
-                        screenParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Time:
-                        timeParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Weather:
-                        weatherParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Misc:
-                        miscParentItem.AddChild(menuItem);
-                        break;
-                    case EffectCategory.Meta:
-                        metaParentItem.AddChild(menuItem);
-                        break;
+                case EffectCategory.Player:
+                    playerParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Vehicle:
+                    vehicleParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Peds:
+                    pedsParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Screen:
+                    screenParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Time:
+                    timeParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Weather:
+                    weatherParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Misc:
+                    miscParentItem.AddChild(menuItem);
+                    break;
+                case EffectCategory.Meta:
+                    metaParentItem.AddChild(menuItem);
+                    break;
                 }
             }
 
@@ -313,29 +317,32 @@ namespace ConfigApp
             }
         }
 
-        private void effects_user_effects_search_TextChanged(object sender, TextChangedEventArgs e)
+        private void OnUserEffectSearchTextChanged(object sender, TextChangedEventArgs e)
         {
             var filterText = effects_user_effects_search.Text?.Trim();
 
-            m_TreeMenuItemsFiltered.Clear();
-            foreach (var parentMenuItem in m_TreeMenuItemsAll)
+            if (m_TreeMenuItemsAll is not null && m_TreeMenuItemsFiltered is not null)
             {
-                if (string.IsNullOrWhiteSpace(filterText))
+                m_TreeMenuItemsFiltered.Clear();
+                foreach (var parentMenuItem in m_TreeMenuItemsAll)
                 {
-                    m_TreeMenuItemsFiltered.Add(parentMenuItem);
-                    continue;
-                }
-
-                if (parentMenuItem.Children == null)
-                {
-                    continue;
-                }
-
-                foreach (var childMenuItem in parentMenuItem.Children)
-                {
-                    if (childMenuItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.IsNullOrWhiteSpace(filterText))
                     {
-                        m_TreeMenuItemsFiltered.Add(childMenuItem);
+                        m_TreeMenuItemsFiltered.Add(parentMenuItem);
+                        continue;
+                    }
+
+                    if (parentMenuItem.Children == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var childMenuItem in parentMenuItem.Children)
+                    {
+                        if (childMenuItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            m_TreeMenuItemsFiltered.Add(childMenuItem);
+                        }
                     }
                 }
             }
@@ -357,7 +364,7 @@ namespace ConfigApp
             Utils.HandleNoCopyPastePreviewExecuted(sender, e);
         }
 
-        private void user_save_Click(object sender, RoutedEventArgs e)
+        private void OnUserSaveClick(object sender, RoutedEventArgs e)
         {
             if (OptionsManager.ConfigFile.HasCompatFile("config.ini") || OptionsManager.TwitchFile.HasCompatFile("twitch.ini")
                 || OptionsManager.EffectsFile.HasCompatFile("effects.ini"))
@@ -391,7 +398,7 @@ namespace ConfigApp
             MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void user_reset_Click(object sender, RoutedEventArgs e)
+        private void OnUserResetClick(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your config?", "ChaosModV",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);

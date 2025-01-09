@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 namespace Shared
 {
     public class OptionsFile
     {
-        private string m_FileName;
-        private string[] m_CompatFileNames;
-        private Dictionary<string, string> m_Options = new Dictionary<string, string>();
+        private readonly string m_FileName;
+        private readonly string[] m_CompatFileNames;
+        private Dictionary<string, string?> m_Options = new();
 
         public OptionsFile(string fileName, params string[] compatFileNames)
         {
@@ -37,12 +35,12 @@ namespace Shared
             }
         }
 
-        public string ReadValue(string key, string defaultValue = null, params string[] compatKeys)
+        public string? ReadValue(string key, string? defaultValue = null, params string[] compatKeys)
         {
             var keys = compatKeys.Prepend(key);
             foreach (var _key in keys)
             {
-                if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
+                if (!m_Options.ContainsKey(_key) || m_Options[_key] is null)
                 {
                     continue;
                 }
@@ -55,8 +53,7 @@ namespace Shared
 
         public int ReadValueInt(string key, int defaultValue, params string[] compatKeys)
         {
-            int result;
-            if (!int.TryParse(ReadValue(key, null, compatKeys), out result))
+            if (!int.TryParse(ReadValue(key, null, compatKeys), out int result))
             {
                 result = defaultValue;
             }
@@ -66,8 +63,7 @@ namespace Shared
 
         public long ReadValueLong(string key, long defaultValue, params string[] compatKeys)
         {
-            long result;
-            if (!long.TryParse(ReadValue(key, null, compatKeys), out result))
+            if (!long.TryParse(ReadValue(key, null, compatKeys), out long result))
             {
                 result = defaultValue;
             }
@@ -94,24 +90,24 @@ namespace Shared
             return defaultValue;
         }
 
-        public void WriteValue(string key, string value)
+        public void WriteValue(string key, string? value)
         {
-            m_Options[key] = value;
+            m_Options[key] = value is null || string.IsNullOrEmpty(value) ? null : value;
         }
 
-        public void WriteValue(string key, int value)
+        public void WriteValue(string key, int? value)
         {
             WriteValue(key, $"{value}");
         }
 
-        public void WriteValue(string key, bool value)
+        public void WriteValue(string key, bool? value)
         {
-            WriteValue(key, value ? 1 : 0);
+            WriteValue(key, value is true ? 1 : 0);
         }
 
         public void ReadFile()
         {
-            string readData(string fileName)
+            static string? readData(string fileName)
             {
                 if (!File.Exists(fileName))
                 {
@@ -127,7 +123,7 @@ namespace Shared
                 return _data;
             }
 
-            string data;
+            string? data;
             if ((data = readData(m_FileName)) == null)
             {
                 bool dataRead = false;
@@ -148,22 +144,30 @@ namespace Shared
 
             m_Options.Clear();
 
-            foreach (string line in data.Split('\n'))
+            if (data is not null)
             {
-                if (!line.Contains("="))
+                foreach (string line in data.Split('\n'))
                 {
-                    continue;
+                    if (!line.Contains('='))
+                    {
+                        continue;
+                    }
+
+                    var keyValuePair = line.Split('=', 2, System.StringSplitOptions.RemoveEmptyEntries
+                        | System.StringSplitOptions.TrimEntries);
+
+                    m_Options[keyValuePair[0]] = keyValuePair.Length == 2 ? keyValuePair[1] : null;
                 }
-
-                var keyValuePair = line.Split('=', 2, System.StringSplitOptions.RemoveEmptyEntries
-                    | System.StringSplitOptions.TrimEntries);
-
-                m_Options[keyValuePair[0]] = keyValuePair.Length == 2 ? keyValuePair[1] : null;
             }
         }
 
         public void WriteFile()
         {
+            if (m_FileName is null)
+            {
+                return;
+            }
+
             string data = string.Empty;
 
             foreach (var option in m_Options)
@@ -171,17 +175,30 @@ namespace Shared
                 data += $"{option.Key}={option.Value}\n";
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(m_FileName));
+            var directory = Path.GetDirectoryName(m_FileName);
+            if (directory is not null)
+            {
+                Directory.CreateDirectory(directory);
+            }
             File.WriteAllText(m_FileName, data);
         }
 
         public void ResetFile()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(m_FileName));
+            if (m_FileName is null)
+            {
+                return;
+            }
+
+            var directory = Path.GetDirectoryName(m_FileName);
+            if (directory is not null)
+            {
+                Directory.CreateDirectory(directory);
+            }
             File.WriteAllText(m_FileName, null);
 
             // Reset all options too
-            m_Options = new Dictionary<string, string>();
+            m_Options = new();
         }
 
         public bool HasCompatFile()

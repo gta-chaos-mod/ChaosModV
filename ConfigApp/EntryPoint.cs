@@ -1,14 +1,11 @@
-﻿using System;
-using System.Threading;
-
-namespace ConfigApp
+﻿namespace ConfigApp
 {
     public class EntryPoint
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
-            Mutex mutex = new Mutex(false, "ChaosModVConfigMutex");
+            Mutex mutex = new(false, "ChaosModVConfigMutex");
 
             if (!mutex.WaitOne(100))
             {
@@ -17,7 +14,7 @@ namespace ConfigApp
 
             try
             {
-                App app = new App();
+                App app = new();
                 app.InitializeComponent();
                 app.Run();
             }

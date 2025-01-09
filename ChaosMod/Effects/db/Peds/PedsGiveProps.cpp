@@ -1,5 +1,5 @@
 /*
-	Effect By Rylxnd
+    Effect By Rylxnd
 */
 #include <stdafx.h>
 

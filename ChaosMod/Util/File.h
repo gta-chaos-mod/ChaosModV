@@ -14,6 +14,11 @@ inline bool DoesFileExist(std::string_view fileName)
 	return stat(fileName.data(), &temp) == 0;
 }
 
+inline bool DoesFeatureFlagExist(const std::string &featureFlagName)
+{
+	return DoesFileExist("chaosmod\\." + featureFlagName);
+}
+
 inline std::vector<std::filesystem::directory_entry> GetFiles(std::string path, std::string extension, bool recursive,
                                                               std::vector<std::string> blacklistedFiles = {})
 {

@@ -25,39 +25,11 @@ git submodule init
 git submodule update --recursive
 ```
 
-Afterwards choose one of the following methods depending on the projects you want to build:
+## Building
 
-### ASI only
+Check the corresponding subdirectories for instructions on how to compile each project.
 
-<details>
-  <summary>CMake (CLI)</summary>
-	
-  1. `mkdir build`
-
-  2. `cd build`
-
-  3. `cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..`
-
-  4. `ninja`
-	
-</details>
-
-<details>
-  <summary>CMake (Visual Studio)</summary>
-
-  Make sure the `C++ CMake tools for Windows` component is installed through the Visual Studio Installer.
-
-  1. Click on the `Switch between solutions and available views` button in the Solution Explorer (next to the home icon)
-
-  2. Click on `CMake Targets View`
-
-  3. Build the `ChaosMod Project` target
-
-  The .asi should be located inside the `out/build/<Configuration>` folder.
-	
-</details>
-
-### All projects
+### Building all projects
 
 <details>
   <summary>MSBuild (Visual Studio)</summary>

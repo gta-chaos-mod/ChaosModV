@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Components/Component.h"
-#include "Components/EffectDispatcher.h"
 
 #include <cstdint>
 #include <memory>
@@ -46,7 +45,8 @@ class Voting : public Component
 
 	std::array<std::uint8_t, 3> m_TextColor;
 
-	bool m_EnableVoting;
+	bool m_EnableVoting                                = false;
+	bool m_HasInitializedVoting                        = false;
 
 	bool m_ReceivedHello                               = false;
 	bool m_HasReceivedResult                           = false;

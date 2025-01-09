@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ConfigApp
 {
@@ -24,8 +21,13 @@ namespace ConfigApp
             EffectData = effectData;
         }
 
-        public int CompareTo(WorkshopSubmissionFile obj)
+        public int CompareTo(WorkshopSubmissionFile? obj)
         {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
             return Name.CompareTo(obj.Name);
         }
     }
@@ -48,7 +50,7 @@ namespace ConfigApp
     {
         public List<WorkshopSubmissionFileState> FileStates { get; private set; } = new List<WorkshopSubmissionFileState>();
 
-        private WorkshopEditDialogMode m_DialogMode;
+        private readonly WorkshopEditDialogMode m_DialogMode;
 
         public WorkshopEditDialog(List<WorkshopSubmissionFile> files, WorkshopEditDialogMode dialogMode)
         {
@@ -66,7 +68,7 @@ namespace ConfigApp
                 button_save_or_no.Content = "No";
             }
 
-            TreeMenuItem generateItem(string text, TreeMenuItem parent = null)
+            TreeMenuItem generateItem(string text, TreeMenuItem? parent = null)
             {
                 var item = new TreeMenuItem(text, parent);
                 if (m_DialogMode == WorkshopEditDialogMode.Install)
@@ -92,28 +94,28 @@ namespace ConfigApp
                     continue;
                 }
 
-                var pathFragments = (pathName.StartsWith("sounds\\") ? pathName.Substring(7) : pathName).Split('\\');
+                var pathFragments = (pathName.StartsWith("sounds\\") ? pathName[7..] : pathName).Split('\\');
 
                 TreeMenuItem targetItem;
                 bool isConfigurable = false;
-                switch (pathName.Substring(pathName.Length - 4))
+                switch (pathName[^4..])
                 {
-                    case ".lua":
-                        targetItem = luaParentItem;
-                        isConfigurable = true;
-                        break;
-                    case ".mp3":
-                        targetItem = mp3ParentItem;
-                        break;
-                    case ".txt":
-                        if (m_DialogMode != WorkshopEditDialogMode.Install)
-                        {
-                            continue;
-                        }
-                        targetItem = txtParentItem;
-                        break;
-                    default:
+                case ".lua":
+                    targetItem = luaParentItem;
+                    isConfigurable = true;
+                    break;
+                case ".mp3":
+                    targetItem = mp3ParentItem;
+                    break;
+                case ".txt":
+                    if (m_DialogMode != WorkshopEditDialogMode.Install)
+                    {
                         continue;
+                    }
+                    targetItem = txtParentItem;
+                    break;
+                default:
+                    continue;
                 }
 
                 if (pathFragments.Length > 1)
@@ -187,19 +189,16 @@ namespace ConfigApp
 
         private void OnWindowClosed(object sender, EventArgs e)
         {
-            if (DialogResult == null)
-            {
-                DialogResult = false;
-            }
+            DialogResult ??= false;
         }
 
-        private void yes_Click(object sender, RoutedEventArgs e)
+        private void OnWorkshopEditYesClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
             Close();
         }
 
-        private void save_or_no_Click(object sender, RoutedEventArgs e)
+        private void OnWorkshopEditNoOrSaveClick(object sender, RoutedEventArgs e)
         {
             DialogResult = m_DialogMode == WorkshopEditDialogMode.Edit;
             Close();

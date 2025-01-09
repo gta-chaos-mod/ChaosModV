@@ -13,9 +13,12 @@ Mp3Manager::~Mp3Manager()
 	{
 		for (const auto &soundFilePath : soundFileNames)
 		{
-			std::ostringstream oss;
-			oss << "close \"" << soundFilePath << "\"";
-			mciSendString(reinterpret_cast<LPCWSTR>(oss.str().c_str()), NULL, 0, NULL);
+			std::ostringstream tmp;
+			std::string tmpStr;
+			tmp << "close \"" << soundFilePath << "\"";
+			tmpStr               = tmp.str();
+			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
+			mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
 		}
 	}
 
@@ -84,7 +87,7 @@ void Mp3Manager::PlayChaosSoundFile(const std::string &soundFileName)
 	}
 
 	auto size        = cachedSoundFiles.size();
-	auto chosenSound = size > 1 ? cachedSoundFiles[g_Random.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
+	auto chosenSound = size > 1 ? cachedSoundFiles[g_RandomNoDeterm.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
 
 	int error;
 	{

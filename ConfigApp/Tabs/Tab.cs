@@ -21,7 +21,7 @@ namespace ConfigApp.Tabs
 
         }
 
-        public override void Init(Grid grid)
+        public override void Init(Grid? grid)
         {
             base.Init(grid);
 

@@ -1,26 +1,25 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace ConfigApp
 {
     public class WorkshopInfoHandler : ICommand
     {
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged = null;
 
-        private WorkshopSubmissionItem m_SubmissionItem;
+        private readonly WorkshopSubmissionItem m_SubmissionItem;
 
         public WorkshopInfoHandler(WorkshopSubmissionItem submissionItem)
         {
             m_SubmissionItem = submissionItem;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             MessageBox.Show($@"Name: {m_SubmissionItem.Name}
 Author: {m_SubmissionItem.Author}

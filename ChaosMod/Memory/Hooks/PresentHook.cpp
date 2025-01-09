@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "PresentHook.h"
+
 #include "Memory/Hooks/Hook.h"
 #include "Memory/Hooks/ShaderHook.h"
 
@@ -10,7 +12,7 @@ HRESULT HK_IDXGISwapChain_Present(IDXGISwapChain *swapChain, UINT syncInterval, 
 {
 	if (!(flags & DXGI_PRESENT_TEST))
 	{
-		Hooks::OnPresentCallback();
+		Hooks::OnPresent.Fire();
 	}
 
 	return OG_IDXGISwapChain_Present(swapChain, syncInterval, flags);
@@ -31,7 +33,7 @@ static bool OnHook()
 
 	ms_PresentAddr            = handle.At(64).Get<void *>();
 	OG_IDXGISwapChain_Present = *(HRESULT(**)(IDXGISwapChain *, UINT, UINT))ms_PresentAddr;
-	Memory::Write<void *>(ms_PresentAddr, HK_IDXGISwapChain_Present);
+	Memory::Write<void *>(ms_PresentAddr, reinterpret_cast<void *>(HK_IDXGISwapChain_Present));
 
 	return true;
 }
@@ -41,7 +43,7 @@ static void OnCleanup()
 	// Only reset vftable entries if address still points to our retour
 	if (ms_PresentAddr && *ms_PresentAddr == HK_IDXGISwapChain_Present)
 	{
-		Memory::Write<void *>(ms_PresentAddr, OG_IDXGISwapChain_Present);
+		Memory::Write<void *>(ms_PresentAddr, reinterpret_cast<void *>(OG_IDXGISwapChain_Present));
 	}
 }
 

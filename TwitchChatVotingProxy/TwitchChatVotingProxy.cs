@@ -1,6 +1,5 @@
 ﻿using Serilog;
 using Shared;
-using System.Diagnostics;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
 using TwitchChatVotingProxy.VotingReceiver;
@@ -9,7 +8,7 @@ namespace TwitchChatVotingProxy
 {
     class TwitchChatVotingProxy
     {
-        private static ILogger m_Logger;
+        private static readonly ILogger m_Logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
 
         private static async Task Main(string[] args)
         {
@@ -28,7 +27,6 @@ namespace TwitchChatVotingProxy
                .WriteTo.File("chaosmod/chaosproxy.log",
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}")
                .CreateLogger();
-            m_Logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
 
             m_Logger.Information("===============================");
             m_Logger.Information("Starting chaos mod twitch proxy");
@@ -45,7 +43,7 @@ namespace TwitchChatVotingProxy
             var retainInitialVotes = config.ReadValueBool("VotingChanceSystemRetainChance", false, "TwitchVotingChanceSystemRetainChance");
 
             // Check if OBS overlay should be shown
-            OverlayServer.OverlayServer overlayServer = null;
+            OverlayServer.OverlayServer? overlayServer = null;
             if (overlayMode == EOverlayMode.OVERLAY_OBS)
             {
                 // Create component
@@ -93,7 +91,7 @@ namespace TwitchChatVotingProxy
             // Start the chaos mod controller
             m_Logger.Information("Initializing controller");
 
-            var permittedUsernames = config.ReadValue("PermittedUsernames", "", "TwitchPermittedUsernames").ToLower()
+            var permittedUsernames = config.ReadValue("PermittedUsernames", "", "TwitchPermittedUsernames")?.ToLower()
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToArray();
             var chaosModControllerConfig = new ChaosModControllerConfig()
             {
@@ -103,7 +101,7 @@ namespace TwitchChatVotingProxy
                 PermittedUsernames = permittedUsernames,
                 VoteablePrefix = config.ReadValue("VoteablePrefix", "")
             };
-            new ChaosModController(chaosPipe, overlayServer, votingReceivers.Select(item => item.VotingReceiver).ToArray(),
+            _ = new ChaosModController(chaosPipe, overlayServer, votingReceivers.Select(item => item.VotingReceiver).ToArray(),
                 chaosModControllerConfig);
 
             m_Logger.Information("Sending hello to mod");
@@ -111,7 +109,7 @@ namespace TwitchChatVotingProxy
             chaosPipe.SendMessageToPipe("hello");
             while (!chaosPipe.GotHelloBack && chaosPipe.IsConnected())
             {
-                await Task.Delay(0);
+                await Task.Delay(100);
             }
 
             if (chaosPipe.GotHelloBack)

@@ -2,6 +2,8 @@
 
 #include "Voting.h"
 
+#include "Components/EffectDispatchTimer.h"
+#include "Components/EffectDispatcher.h"
 #include "Components/MetaModifiers.h"
 #include "Components/SplashTexts.h"
 
@@ -18,39 +20,6 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 	m_EnableVoting =
 	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
-
-	if (m_EnableVoting && !Init())
-	{
-		return;
-	}
-
-	m_PipeHandle =
-	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
-	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
-
-	if (m_PipeHandle == INVALID_HANDLE_VALUE)
-	{
-		ErrorOutWithMsg("Error while creating a named pipe, previous instance of voting proxy might be running. Try "
-		                "reloading the mod. Reverting to normal mode.");
-
-		return;
-	}
-
-	ConnectNamedPipe(m_PipeHandle, NULL);
-
-	if (m_EnableVoting)
-	{
-		if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
-		    && ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
-		}
-
-		if (ComponentExists<SplashTexts>())
-		{
-			GetComponent<SplashTexts>()->ShowVotingSplash();
-		}
-	}
 }
 
 Voting::~Voting()
@@ -72,8 +41,56 @@ void Voting::OnModPauseCleanup()
 
 void Voting::OnRun()
 {
-	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>())
+	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>() || !ComponentExists<EffectDispatchTimer>())
 	{
+		return;
+	}
+
+	if (!m_HasInitializedVoting)
+	{
+		// Only initialize voting proxy after we are fully loaded in, otherwise some weird behaviour can occur from the
+		// voting proxy, e.g. OnFailureToReceiveJoinConfirmation being raised for whatever reason
+		if (GET_IS_LOADING_SCREEN_ACTIVE())
+		{
+			return;
+		}
+
+		m_HasInitializedVoting = true;
+
+		if (!Init())
+		{
+			return;
+		}
+
+		m_PipeHandle = CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
+		                               PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE,
+		                               BUFFER_SIZE, 0, NULL);
+
+		if (m_PipeHandle == INVALID_HANDLE_VALUE)
+		{
+			ErrorOutWithMsg(
+			    "Error while creating a named pipe, previous instance of voting proxy might be running. Try "
+			    "reloading the mod. Reverting to normal mode.");
+
+			return;
+		}
+
+		ConnectNamedPipe(m_PipeHandle, NULL);
+
+		if (m_EnableVoting)
+		{
+			if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
+			    && ComponentExists<EffectDispatcher>())
+			{
+				GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
+			}
+
+			if (ComponentExists<SplashTexts>())
+			{
+				GetComponent<SplashTexts>()->ShowVotingSplash();
+			}
+		}
+
 		return;
 	}
 
@@ -125,7 +142,7 @@ void Voting::OnRun()
 		return;
 	}
 
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
+	if (GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -136,7 +153,7 @@ void Voting::OnRun()
 			SendToPipe("getvoteresult");
 		}
 	}
-	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
+	else if (GetComponent<EffectDispatchTimer>()->ShouldDispatchEffectNow())
 	{
 		// End of voting round; dispatch resulted effect
 
@@ -149,7 +166,7 @@ void Voting::OnRun()
 		{
 			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectIdentifier);
 		}
-		GetComponent<EffectDispatcher>()->ResetTimer();
+		GetComponent<EffectDispatchTimer>()->ResetTimer();
 
 		if (ComponentExists<MetaModifiers>())
 		{
@@ -163,7 +180,7 @@ void Voting::OnRun()
 	}
 	else if (!m_IsVotingRunning && m_ReceivedHello
 	         && (m_SecsBeforeVoting == 0
-	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
+	             || GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
 	         && m_IsVotingRoundDone)
 	{
 		// New voting round
@@ -210,7 +227,7 @@ void Voting::OnRun()
 				totalWeight += effectData.GetEffectWeight();
 			}
 
-			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
+			float chosen = g_RandomNoDeterm.GetRandomFloat(0.f, totalWeight);
 
 			totalWeight  = 0.f;
 
@@ -352,7 +369,7 @@ bool Voting::Init()
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef _DEBUG
 	DWORD attributes = NULL;
-	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
+	if (DoesFeatureFlagExist("forcenovotingconsole"))
 	{
 		attributes = CREATE_NO_WINDOW;
 	}
@@ -392,9 +409,9 @@ void Voting::HandleMsg(std::string_view message)
 
 			LOG("Received hello from voting pipe");
 
-			if (ComponentExists<EffectDispatcher>())
+			if (ComponentExists<EffectDispatchTimer>())
 			{
-				GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = false;
+				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
 			}
 
 			SendToPipe("hello_back");
@@ -466,9 +483,10 @@ void Voting::ErrorOutWithMsg(std::string_view message)
 	CloseHandle(m_PipeHandle);
 	m_PipeHandle = INVALID_HANDLE_VALUE;
 
-	if (ComponentExists<EffectDispatcher>())
+	if (ComponentExists<EffectDispatchTimer>())
 	{
-		GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = true;
+		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
 	}
+
 	m_EnableVoting = false;
 }

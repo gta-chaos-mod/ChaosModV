@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
-namespace ConfigApp
+﻿namespace ConfigApp
 {
     public static class Effects
     {
         public struct EffectInfo
         {
-            public string Name { get; set; } = null;
+            public string? Name { get; set; } = null;
             public EffectCategory EffectCategory { get; set; } = EffectCategory.Unknown;
             public bool IsTimed { get; set; } = false;
             public bool IsShort { get; set; } = false;
@@ -47,7 +45,7 @@ namespace ConfigApp
             Short,
         }
 
-        public static readonly Dictionary<string, EffectInfo> EffectsMap = new Dictionary<string, EffectInfo>()
+        public static readonly Dictionary<string, EffectInfo> EffectsMap = new()
         {
             { "player_suicide", new EffectInfo("Suicide", EffectCategory.Player) },
             { "player_plus2stars", new EffectInfo("+2 Wanted Stars", EffectCategory.Player) },
@@ -415,6 +413,7 @@ namespace ConfigApp
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
             { "pepega_traffic", new EffectInfo("Pepega Traffic", EffectCategory.Vehicle, true) },
             { "screen_hueshift", new EffectInfo("Hue Shift", EffectCategory.Screen, true) },
+            { "player_copyforce", new EffectInfo("Use The Force", EffectCategory.Player, true, true) },
         };
     }
 }

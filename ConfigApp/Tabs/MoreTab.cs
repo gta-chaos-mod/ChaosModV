@@ -5,7 +5,7 @@ namespace ConfigApp.Tabs
 {
     public class MoreTab : Tab
     {
-        private Button GenerateInfoButton(string text, RoutedEventHandler eventHandler)
+        private static Button GenerateInfoButton(string text, RoutedEventHandler eventHandler)
         {
             var button = new Button()
             {

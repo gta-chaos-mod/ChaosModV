@@ -3,6 +3,7 @@
 #include "EffectDispatcher.h"
 #include "Mp3Manager.h"
 
+#include "Components/EffectDispatchTimer.h"
 #include "Components/MetaModifiers.h"
 
 #include "Effects/EffectCategory.h"
@@ -60,7 +61,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	auto playEffectDispatchSound = [&]()
 	{
-		if ((ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI)
+		if ((!ComponentExists<MetaModifiers>() || GetComponent<MetaModifiers>()->HideChaosUI)
 		    && ComponentExists<Mp3Manager>())
 		{
 			// Play global sound (if one exists)
@@ -190,7 +191,8 @@ static void _OnRunEffects(LPVOID data)
 	while (true)
 	{
 		auto currentUpdateTime = GetTickCount64();
-		int deltaTime          = currentUpdateTime - effectDispatcher->Timer;
+		int deltaTime          = currentUpdateTime
+		              - (ComponentExists<EffectDispatchTimer>() ? GetComponent<EffectDispatchTimer>()->GetTimer() : 0);
 
 		// the game was paused
 		if (deltaTime > 1000)
@@ -206,7 +208,7 @@ static void _OnRunEffects(LPVOID data)
 
 		effectDispatcher->UpdateEffects(deltaTime);
 
-		if (!effectDispatcher->PauseTimer)
+		if (!ComponentExists<EffectDispatchTimer>() || GetComponent<EffectDispatchTimer>()->IsTimerEnabled())
 		{
 			effectDispatcher->UpdateMetaEffects(deltaTime);
 		}
@@ -215,19 +217,15 @@ static void _OnRunEffects(LPVOID data)
 	}
 }
 
-EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const std::array<BYTE, 3> &textColor,
-                                   const std::array<BYTE, 3> &effectTimerColor)
+EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const std::array<BYTE, 3> &effectTimerColor)
     : Component()
 {
-	m_TimerColor          = timerColor;
-	m_TextColor           = textColor;
-	m_EffectTimerColor    = effectTimerColor;
+	m_TextColor        = textColor;
+	m_EffectTimerColor = effectTimerColor;
 
-	m_DisableDrawTimerBar = g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_DisableDrawEffectTexts =
 	    g_OptionsManager.GetConfigValue({ "DisableEffectTextDraw" }, OPTION_DEFAULT_NO_TEXT_DRAW);
 
-	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 	SharedState.EffectTimedDur = g_OptionsManager.GetConfigValue({ "EffectTimedDur" }, OPTION_DEFAULT_EFFECT_TIMED_DUR);
 	SharedState.EffectTimedShortDur =
 	    g_OptionsManager.GetConfigValue({ "EffectTimedShortDur" }, OPTION_DEFAULT_EFFECT_SHORT_TIMED_DUR);
@@ -238,13 +236,6 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &timerColor, const 
 	    g_OptionsManager.GetConfigValue({ "MetaEffectDur" }, OPTION_DEFAULT_EFFECT_META_TIMED_DUR);
 	SharedState.MetaEffectShortDur =
 	    g_OptionsManager.GetConfigValue({ "MetaShortEffectDur" }, OPTION_DEFAULT_EFFECT_META_SHORT_TIMED_DUR);
-
-	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue(
-	    { "EnableDistanceBasedEffectDispatch" }, OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
-	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
-	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
-	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 
 	m_MaxRunningEffects =
 	    g_OptionsManager.GetConfigValue({ "MaxParallelRunningEffects" }, OPTION_DEFAULT_MAX_RUNNING_PARALLEL_EFFECTS);
@@ -280,133 +271,12 @@ void EffectDispatcher::OnModPauseCleanup()
 
 void EffectDispatcher::OnRun()
 {
-	auto currentUpdateTime = GetTickCount64();
-	int deltaTime          = currentUpdateTime - Timer;
-
-	// the game was paused
-	if (deltaTime > 1000)
-	{
-		deltaTime = 0;
-	}
-
-	if (!PauseTimer && !m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-	{
-		UpdateTimer(deltaTime);
-	}
-
-	if (!PauseTimer && m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-	{
-		UpdateTravelledDistance();
-	}
-
-	DrawTimerBar();
-
 	if (g_EffectDispatcherThread)
 	{
 		SwitchToFiber(g_EffectDispatcherThread);
 	}
 
 	DrawEffectTexts();
-
-	Timer = currentUpdateTime;
-}
-
-void EffectDispatcher::UpdateTravelledDistance()
-{
-	Ped player       = PLAYER_PED_ID();
-	Vector3 position = GET_ENTITY_COORDS(player, false);
-
-	if (IS_ENTITY_DEAD(player, false))
-	{
-		m_DeadFlag = true;
-		return;
-	}
-
-	if (m_DeadFlag)
-	{
-		m_DeadFlag                         = false;
-		m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(player, false);
-		return;
-	}
-
-	float distance =
-	    GET_DISTANCE_BETWEEN_COORDS(position.x, position.y, position.z, m_DistanceChaosState.SavedPosition.x,
-	                                m_DistanceChaosState.SavedPosition.y, m_DistanceChaosState.SavedPosition.z, true);
-
-	if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Displacement)
-	{
-		if (distance >= m_DistanceChaosState.DistanceToActivateEffect)
-		{
-			if (DispatchEffectsOnTimer)
-			{
-				DispatchRandomEffect();
-
-				if (ComponentExists<MetaModifiers>())
-				{
-					for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-					{
-						DispatchRandomEffect();
-					}
-				}
-			}
-
-			m_DistanceChaosState.SavedPosition = position;
-		}
-
-		m_TimerPercentage =
-		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
-		    / m_DistanceChaosState.DistanceToActivateEffect;
-	}
-	else if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Distance)
-	{
-		m_DistanceChaosState.SavedPosition = position;
-		m_TimerPercentage +=
-		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
-		    / m_DistanceChaosState.DistanceToActivateEffect;
-
-		if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
-		{
-			DispatchRandomEffect();
-
-			if (ComponentExists<MetaModifiers>())
-			{
-				for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-				{
-					DispatchRandomEffect();
-				}
-			}
-
-			m_TimerPercentage = 0;
-		}
-	}
-}
-
-void EffectDispatcher::UpdateTimer(int deltaTime)
-{
-	if (!m_EnableNormalEffectDispatch
-	    || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-	{
-		return;
-	}
-
-	m_TimerPercentage += deltaTime
-	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-	                   / m_EffectSpawnTime / 1000;
-
-	if (m_TimerPercentage >= 1.f && DispatchEffectsOnTimer)
-	{
-		DispatchRandomEffect();
-
-		if (ComponentExists<MetaModifiers>())
-		{
-			for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-			{
-				DispatchRandomEffect();
-			}
-		}
-
-		m_TimerPercentage = 0.f;
-	}
 }
 
 void EffectDispatcher::UpdateEffects(int deltaTime)
@@ -467,7 +337,10 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			EffectThreads::RunThread(effect.ThreadId);
 			OnPostRunEffect.Fire(effect.Identifier);
 
-			activeEffects++;
+			if (!effect.IsMeta)
+			{
+				activeEffects++;
+			}
 		}
 
 		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
@@ -475,17 +348,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			effect.HideEffectName = false;
 		}
 
-		bool isMeta = false;
-		// Temporary non-timed effects will have their entries removed already since their OnStop is called immediately
-		if (g_EnabledEffects.contains(effect.Identifier))
-		{
-			const auto &effectData = g_EnabledEffects.at(effect.Identifier);
-			isMeta                 = effectData.IsMeta();
-		}
-
 		if (effect.MaxTime > 0.f)
 		{
-			if (isMeta)
+			if (isEffectPaused)
 			{
 				effect.Timer -= adjustedDeltaTime;
 			}
@@ -504,7 +369,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || activeEffects > maxEffects)
+		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || (!effect.IsMeta && activeEffects > maxEffects))
 		{
 			if (effect.Timer < -60.f)
 			{
@@ -580,33 +445,6 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 			SharedState.MetaEffectsEnabled        = false;
 			SharedState.MetaEffectTimerPercentage = 0.f;
 		}
-	}
-}
-
-void EffectDispatcher::DrawTimerBar()
-{
-	if (!m_EnableNormalEffectDispatch || m_DisableDrawTimerBar
-	    || (ComponentExists<MetaModifiers>()
-	        && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos)))
-	{
-		return;
-	}
-
-	float percentage =
-	    FakeTimerBarPercentage > 0.f && FakeTimerBarPercentage <= 1.f ? FakeTimerBarPercentage : m_TimerPercentage;
-
-	// New Effect Bar
-	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-
-	if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
-	{
-		DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2],
-		          255, false);
-	}
-	else
-	{
-		DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
-		          false);
 	}
 }
 
@@ -686,18 +524,6 @@ void EffectDispatcher::DrawEffectTexts()
 	}
 }
 
-bool EffectDispatcher::ShouldDispatchEffectNow() const
-{
-	return GetRemainingTimerTime() <= 0;
-}
-
-int EffectDispatcher::GetRemainingTimerTime() const
-{
-	return std::ceil(m_EffectSpawnTime
-	                 / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-	                 * (1 - m_TimerPercentage));
-}
-
 void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, DispatchEffectFlags dispatchEffectFlags,
                                       const std::string &suffix)
 {
@@ -769,33 +595,37 @@ void EffectDispatcher::ClearEffects(ClearEffectsFlags clearEffectFlags)
 	                        : ClearEffectsState::AllRestartPermanent;
 }
 
-void EffectDispatcher::ClearActiveEffects(const EffectIdentifier &exclude)
+void EffectDispatcher::ClearActiveEffects()
 {
-	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end();)
+	for (auto it = SharedState.ActiveEffects.begin(); it != SharedState.ActiveEffects.end(); it++)
 	{
-		ActiveEffect &effect = *it;
+		auto &effect = *it;
 
-		if (effect.Identifier != exclude)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(effect.ThreadId);
-			effect.IsStopping = true;
+			continue;
 		}
 
-		it++;
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
 	}
 }
 
 void EffectDispatcher::ClearMostRecentEffect()
 {
-	if (!SharedState.ActiveEffects.empty())
+	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend(); it++)
 	{
-		auto &mostRecentEffect = SharedState.ActiveEffects[SharedState.ActiveEffects.size() - 1];
+		auto &effect = *it;
 
-		if (mostRecentEffect.Timer > 0.f)
+		if (effect.IsMeta || effect.Timer <= 0.f)
 		{
-			EffectThreads::StopThread(mostRecentEffect.ThreadId);
-			mostRecentEffect.IsStopping = true;
+			continue;
 		}
+
+		EffectThreads::StopThread(effect.ThreadId);
+		effect.IsStopping = true;
+
+		break;
 	}
 }
 
@@ -822,16 +652,9 @@ std::vector<RegisteredEffect *> EffectDispatcher::GetRecentEffects(int distance,
 void EffectDispatcher::Reset(ClearEffectsFlags clearEffectFlags)
 {
 	ClearEffects(clearEffectFlags);
-	ResetTimer();
 
 	SharedState.MetaEffectsEnabled        = true;
 	SharedState.MetaEffectTimerPercentage = 0.f;
-}
-
-void EffectDispatcher::ResetTimer()
-{
-	m_TimerPercentage = 0.f;
-	Timer             = GetTickCount64();
 }
 
 float EffectDispatcher::GetEffectTopSpace()

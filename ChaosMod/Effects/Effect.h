@@ -6,6 +6,8 @@
 #include "Effects/EffectTimedType.h"
 #include "Effects/EffectsInfo.h"
 
+#include "Util/File.h"
+
 #include <algorithm>
 #include <string>
 
@@ -140,6 +142,16 @@ class RegisterEffect
   public:
 	RegisterEffect(void (*onStart)(), void (*onStop)(), void (*onTick)(), EffectInfo &&effectInfo)
 	{
+		static bool disableEffectRegistration = []()
+		{
+			return DoesFeatureFlagExist("disablebuiltineffects");
+		}();
+
+		if (disableEffectRegistration)
+		{
+			return;
+		}
+
 		m_RegisteredEffect = { effectInfo.Id, onStart, onStop, onTick };
 
 		g_RegisteredEffects.push_back(m_RegisteredEffect);

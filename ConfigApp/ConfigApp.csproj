@@ -3,17 +3,18 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-    <PlatformTarget>x64</PlatformTarget>
-    <StartupObject>ConfigApp.EntryPoint</StartupObject>
-    <PublishSingleFile>true</PublishSingleFile>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <AssemblyName>ChaosModVConfig</AssemblyName>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>false</SelfContained>
+    <StartupObject>ConfigApp.EntryPoint</StartupObject>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>ChaosModVConfig</AssemblyName>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.7.2" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.7.5" />
   </ItemGroup>
 
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
