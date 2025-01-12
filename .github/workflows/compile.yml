@@ -9,10 +9,10 @@ jobs:
 
     steps:
     - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
     - name: Enable Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1.10.0
-    - uses: actions/checkout@v3
+      uses: ilammy/msvc-dev-cmd@v1.13.0
+    - uses: actions/checkout@v4
 
     - name: Setup
       run: git submodule update --init --recursive
@@ -65,13 +65,13 @@ jobs:
         cp ../TwitchChatVotingProxy/bin/x64/Release/net6.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
 
     - name: Upload :)
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: chaosmod
         path: dist
 
     - name: Upload symbols too
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: symbols
         path: symbols
