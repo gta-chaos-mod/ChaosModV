@@ -29,7 +29,7 @@ else()
     target_link_options(ChaosMod PRIVATE -static)
 endif()
 
-target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor ${PROJECT_SOURCE_DIR}/../vendor/websocketpp)
+target_include_directories(ChaosMod PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor ${PROJECT_SOURCE_DIR}/../vendor/lua/include ${PROJECT_SOURCE_DIR}/../vendor/websocketpp)
 
 set(link_libs shv minhook lua54 winmm d3dcompiler xinput)
 
