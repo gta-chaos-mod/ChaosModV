@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdafx.h>
 
 #include "Components/EffectDispatcher.h"
@@ -116,6 +117,9 @@ static std::vector<FakeWantedInfo> ms_FakeWantedLevels = {
 	{ "+2 Wanted Stars", ADD, 2 },
 };
 
+static int lastLevel;
+static int lastLevelf;
+
 static void OnStartFake()
 {
 	FakeWantedInfo selectedInfo  = ms_FakeWantedLevels.at(g_Random.GetRandomInt(0, ms_FakeWantedLevels.size() - 1));
@@ -128,9 +132,9 @@ static void OnStartFake()
 		GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.Name);
 	}
 
-	Player player  = PLAYER_ID();
-	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);
-	int lastLevelf = GET_FAKE_WANTED_LEVEL();
+	Player player = PLAYER_ID();
+	lastLevel     = GET_PLAYER_WANTED_LEVEL(player);
+	lastLevelf    = GET_FAKE_WANTED_LEVEL();
 
 	switch (selectedType)
 	{
