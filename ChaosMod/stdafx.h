@@ -2,6 +2,7 @@
 
 #include "Effects/Effect.h"
 
+#include "Util/Constants.h"
 #include "Util/EntityIterator.h"
 #include "Util/Hash.h"
 #include "Util/Logging.h"

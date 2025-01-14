@@ -6,8 +6,6 @@
 
 #include "Util/Peds.h"
 
-#define PI 3.14159265
-
 static void OnStart()
 {
 	static const Hash bikerHash  = "G_M_Y_Lost_03"_hash;
@@ -21,8 +19,8 @@ static void OnStart()
 	float heading = GET_ENTITY_HEADING(IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false)
 	                                                                           : playerPed);
 
-	float x_pos   = sin((360 - heading) * PI / 180) * 10;
-	float y_pos   = cos((360 - heading) * PI / 180) * 10;
+	float x_pos   = sin((360 - heading) * DEGREE) * 10;
+	float y_pos   = cos((360 - heading) * DEGREE) * 10;
 
 	Vehicle veh   = CreatePoolVehicle(vehHash, playerPos.x - x_pos, playerPos.y - y_pos, playerPos.z, heading);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
