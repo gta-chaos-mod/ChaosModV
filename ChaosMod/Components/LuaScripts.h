@@ -14,10 +14,8 @@
 
 class LuaScripts : public Component
 {
-  private:
 	class LuaScript
 	{
-	  private:
 		std::string m_ScriptName;
 		sol::state m_Lua;
 		bool m_IsTemporary;
@@ -78,9 +76,10 @@ class LuaScripts : public Component
 	};
 	std::unordered_map<std::string, LuaScript> m_RegisteredEffects;
 
-  protected:
+  public:
 	LuaScripts();
-	virtual ~LuaScripts() override;
+
+	virtual void OnModPauseCleanup() override;
 
   private:
 	enum ParseScriptFlags
@@ -114,8 +113,4 @@ class LuaScripts : public Component
 	void Execute(const std::string &effectId, ExecuteFuncType funcType);
 
 	void RegisterScriptRawTemporary(std::string scriptName, std::string script);
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

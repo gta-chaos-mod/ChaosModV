@@ -461,7 +461,7 @@ LuaScripts::LuaScripts()
 	}
 }
 
-LuaScripts::~LuaScripts()
+void LuaScripts::OnModPauseCleanup()
 {
 	// Clean up all registered script effects
 	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)

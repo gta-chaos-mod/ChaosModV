@@ -6,7 +6,6 @@
 
 class HelpTextQueue : public Component
 {
-  private:
 	struct HelpText
 	{
 		std::string_view Text;
@@ -19,8 +18,4 @@ class HelpTextQueue : public Component
 
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

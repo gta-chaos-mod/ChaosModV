@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
+
 #include "DebugSocket.h"
 
 #include "Components/EffectDispatcher.h"
@@ -305,11 +306,6 @@ DebugSocket::DebugSocket()
 		                                   [&](const EffectIdentifier &identifier)
 		                                   { EventOnPostRunEffect(this, identifier); });
 	}
-}
-
-DebugSocket::~DebugSocket()
-{
-	Close();
 }
 
 void DebugSocket::Close()

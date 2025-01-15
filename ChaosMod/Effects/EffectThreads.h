@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Effects/Effect.h"
-
+#include "Effects/EffectSoundPlayOptions.h"
 #include "Util/CrashHandler.h"
+
+#include <scripthookv/inc/types.h>
 
 #include <memory>
 
@@ -30,6 +32,8 @@ namespace EffectThreads
 	bool HasThreadOnStartExecuted(LPVOID threadId);
 
 	bool IsThreadAnEffectThread();
+
+	EffectSoundPlayOptions *GetThreadEffectSoundPlayOptions(LPVOID threadId);
 };
 
 struct EffectThreadData
@@ -40,6 +44,8 @@ struct EffectThreadData
 	bool HasStopped          = false;
 
 	void *CallerFiber        = nullptr;
+
+	EffectSoundPlayOptions EffectSoundPlayOptions;
 
 	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
 	{
@@ -70,15 +76,15 @@ inline void EffectThreadFunc(LPVOID data)
 
 class EffectThread
 {
-  private:
-	EffectThreadData m_ThreadData;
-
   public:
 	DWORD64 PauseTimestamp = 0;
+	// NOTE: A previous fiber handle can be reused for a new one
+	// Do not assume they are uniquely identifiable for anything other than currently running fibers!
 	LPVOID Thread          = nullptr;
+	EffectThreadData ThreadData;
 
 	EffectThread(RegisteredEffect *effect, bool isTimed)
-	    : m_ThreadData(effect, isTimed), Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
+	    : ThreadData(effect, isTimed), Thread(CreateFiber(0, EffectThreadFunc, &ThreadData))
 	{
 	}
 
@@ -98,15 +104,15 @@ class EffectThread
 
 	inline void OnRun()
 	{
-		m_ThreadData.CallerFiber = GetCurrentFiber();
+		ThreadData.CallerFiber = GetCurrentFiber();
 		SwitchToFiber(Thread);
 	}
 
 	inline void Stop()
 	{
-		if (!m_ThreadData.HasStopped)
+		if (!ThreadData.HasStopped)
 		{
-			m_ThreadData.IsRunning = false;
+			ThreadData.IsRunning = false;
 
 			OnRun();
 		}
@@ -114,16 +120,21 @@ class EffectThread
 
 	inline bool HasStopped() const
 	{
-		return m_ThreadData.HasStopped;
+		return ThreadData.HasStopped;
 	}
 
 	inline bool HasOnStartExecuted() const
 	{
-		return m_ThreadData.HasOnStartExecuted;
+		return ThreadData.HasOnStartExecuted;
 	}
 
 	inline bool IsStopping() const
 	{
-		return !m_ThreadData.IsRunning;
+		return !ThreadData.IsRunning;
 	}
 };
+
+namespace CurrentEffect
+{
+	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions);
+}

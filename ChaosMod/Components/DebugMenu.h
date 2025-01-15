@@ -10,7 +10,6 @@ using DWORD = unsigned long;
 
 class DebugMenu : public Component
 {
-  private:
 	struct DebugEffect
 	{
 		EffectIdentifier Identifier;
@@ -32,10 +31,9 @@ class DebugMenu : public Component
 	DWORD m_RepeatTime    = 0;
 	bool m_DispatchEffect = false;
 
-  protected:
+  public:
 	DebugMenu();
 
-  public:
 	virtual void OnRun() override;
 
 	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
@@ -45,8 +43,4 @@ class DebugMenu : public Component
 
 	void SetVisible(bool state);
 	bool IsVisible() const;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

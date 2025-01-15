@@ -8,7 +8,6 @@
 
 class Voting : public Component
 {
-  private:
 	std::string m_VoteablePrefix;
 
 	struct ChoosableEffect
@@ -60,18 +59,11 @@ class Voting : public Component
 
 	bool m_IsVotingRunning                             = false;
 
-  protected:
-	Voting(const std::array<std::uint8_t, 3> &TextColor);
-	virtual ~Voting() override;
-
   public:
-	virtual void OnModPauseCleanup() override;
-	virtual void OnRun() override;
+	Voting(const std::array<std::uint8_t, 3> &TextColor);
 
 	bool Init();
-
 	bool IsEnabled() const;
-
 	void HandleMsg(std::string_view message);
 
   private:
@@ -79,10 +71,8 @@ class Voting : public Component
 
   public:
 	void SendToPipe(std::string_view identifier, std::vector<std::string> params = {});
-
 	void ErrorOutWithMsg(std::string_view message);
 
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
+	virtual void OnModPauseCleanup() override;
+	virtual void OnRun() override;
 };

@@ -1,31 +1,13 @@
 #include <stdafx.h>
 
-#include "Mp3Manager.h"
+#include "EffectSoundManager.h"
 
 #include "Components/Workshop.h"
 
 #define CHAOS_SOUNDFILES_USER_DIR "chaosmod"
 #define CHAOS_SOUNDFILES_WORKSHOP_DIR "chaosmod\\workshop"
 
-Mp3Manager::~Mp3Manager()
-{
-	for (const auto &[effectName, soundFileNames] : m_EffectSoundFilesCache)
-	{
-		for (const auto &soundFilePath : soundFileNames)
-		{
-			std::ostringstream tmp;
-			std::string tmpStr;
-			tmp << "close \"" << soundFilePath << "\"";
-			tmpStr               = tmp.str();
-			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
-			mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
-		}
-	}
-
-	m_EffectSoundFilesCache.clear();
-}
-
-void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soundName)
+void EffectSoundManager::HandleDirectory(const std::string &dir, const std::string &soundName)
 {
 	auto soundRootDirName = dir + "\\sounds\\";
 	if (!DoesFileExist(soundRootDirName))
@@ -42,7 +24,7 @@ void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soun
 		blacklistedFiles = GetComponent<Workshop>()->GetSubmissionBlacklistedFiles(dir);
 	}
 
-	auto &soundFiles    = m_EffectSoundFilesCache[soundName];
+	auto &soundFiles    = m_EffectSoundFileNamesCache[soundName];
 
 	const auto &entries = GetFiles(soundRootDirName, ".mp3", true, blacklistedFiles);
 	for (const auto &entry : entries)
@@ -60,9 +42,9 @@ void Mp3Manager::HandleDirectory(const std::string &dir, const std::string &soun
 	}
 }
 
-void Mp3Manager::PlayChaosSoundFile(const std::string &soundFileName)
+DWORD64 EffectSoundManager::PlaySoundFile(const std::string &soundFileName)
 {
-	if (m_EffectSoundFilesCache.find(soundFileName) == m_EffectSoundFilesCache.end())
+	if (m_EffectSoundFileNamesCache.find(soundFileName) == m_EffectSoundFileNamesCache.end())
 	{
 		HandleDirectory(CHAOS_SOUNDFILES_USER_DIR, soundFileName);
 
@@ -78,36 +60,16 @@ void Mp3Manager::PlayChaosSoundFile(const std::string &soundFileName)
 		}
 	}
 
-	const auto &cachedSoundFiles = m_EffectSoundFilesCache[soundFileName];
+	const auto &cachedSoundFiles = m_EffectSoundFileNamesCache[soundFileName];
 
 	if (cachedSoundFiles.empty())
 	{
 		// Nothing found :(
-		return;
+		return 0;
 	}
 
 	auto size        = cachedSoundFiles.size();
 	auto chosenSound = size > 1 ? cachedSoundFiles[g_RandomNoDeterm.GetRandomInt(0, size - 1)] : cachedSoundFiles[0];
 
-	int error;
-	{
-		std::ostringstream tmp;
-		std::string tmpStr;
-		tmp << "open \"" << chosenSound << "\" type mpegvideo";
-		tmpStr               = tmp.str();
-		std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
-		error                = mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
-	}
-
-	{
-		std::ostringstream ossTmp;
-		std::string tmpStr;
-		if (!error || error == MCIERR_DEVICE_OPEN)
-		{
-			ossTmp << "play \"" << chosenSound << "\" from 0";
-			tmpStr               = ossTmp.str();
-			std::wstring wTmpStr = { tmpStr.begin(), tmpStr.end() };
-			mciSendString(wTmpStr.c_str(), NULL, 0, NULL);
-		}
-	}
+	return HandleSound(chosenSound);
 }

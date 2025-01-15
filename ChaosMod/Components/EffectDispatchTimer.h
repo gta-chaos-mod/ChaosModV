@@ -4,7 +4,6 @@
 
 class EffectDispatchTimer : public Component
 {
-  private:
 	bool m_EnableTimer              = true;
 	bool m_PauseTimer               = false;
 	bool m_DispatchEffectsOnTimer   = true;
@@ -28,7 +27,7 @@ class EffectDispatchTimer : public Component
 		Vector3 SavedPosition = { 0.f, 0.f, 0.f };
 	} m_DistanceChaosState;
 
-  protected:
+  public:
 	EffectDispatchTimer(const std::array<BYTE, 3> &timerColor);
 
   private:
@@ -51,8 +50,4 @@ class EffectDispatchTimer : public Component
 	void ResetFakeTimerPercentage();
 
 	virtual void OnRun() override;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

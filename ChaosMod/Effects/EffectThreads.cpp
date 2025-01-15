@@ -30,6 +30,7 @@ namespace EffectThreads
 		auto thread         = std::make_unique<EffectThread>(effect, isTimed);
 		auto threadId       = thread->Thread;
 		m_Threads[threadId] = std::move(thread);
+		LOG(threadId);
 
 		return threadId;
 	}
@@ -138,5 +139,29 @@ namespace EffectThreads
 	bool IsThreadAnEffectThread()
 	{
 		return m_Threads.contains(GetCurrentFiber());
+	}
+
+	EffectSoundPlayOptions *GetThreadEffectSoundPlayOptions(LPVOID threadId)
+	{
+		if (!DoesThreadExist(threadId))
+		{
+			return nullptr;
+		}
+
+		return &m_Threads.at(threadId)->ThreadData.EffectSoundPlayOptions;
+	}
+}
+
+namespace CurrentEffect
+{
+	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions)
+	{
+		auto threadId               = GetCurrentFiber();
+		auto targetSoundPlayOptions = EffectThreads::GetThreadEffectSoundPlayOptions(threadId);
+		if (!targetSoundPlayOptions)
+		{
+			return;
+		}
+		*targetSoundPlayOptions = soundPlayOptions;
 	}
 }

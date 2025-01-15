@@ -14,12 +14,12 @@
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
+#include "Components/EffectSound/EffectSoundManagers.h"
 #include "Components/Failsafe.h"
 #include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
 #include "Components/MetaModifiers.h"
-#include "Components/Mp3Manager.h"
 #include "Components/SplashTexts.h"
 #include "Components/Voting.h"
 #include "Components/Workshop.h"
@@ -162,23 +162,37 @@ static void Init()
 		}
 	}
 
-#define INIT_COMPONENT(componentName, logName, componentType, ...)             \
-	if (blacklistedComponentNames.contains(componentName))                     \
-	{                                                                          \
-		LOG(componentName << " component has been blacklisted from running!"); \
-		UninitComponent<componentType>();                                      \
-	}                                                                          \
-	else                                                                       \
-	{                                                                          \
-		LOG("Initializing " << logName << " component");                       \
-		InitComponent<componentType>(__VA_ARGS__);                             \
-	}
+#define INIT_COMPONENT_BASE(componentName, logName, baseComponentType, componentType, ...) \
+	do                                                                                     \
+	{                                                                                      \
+		if (blacklistedComponentNames.contains(componentName))                             \
+		{                                                                                  \
+			LOG(componentName << " component has been blacklisted from running!");         \
+			UninitComponent<baseComponentType>();                                          \
+		}                                                                                  \
+		else                                                                               \
+		{                                                                                  \
+			LOG("Initializing " << logName << " component");                               \
+			InitComponent<baseComponentType, componentType>(__VA_ARGS__);                  \
+		}                                                                                  \
+	} while (0)
+
+#define INIT_COMPONENT(componentName, logName, componentType, ...) \
+	INIT_COMPONENT_BASE(componentName, logName, componentType, componentType, __VA_ARGS__)
 
 	INIT_COMPONENT("SplashTexts", "mod splash texts handler", SplashTexts);
 
 	INIT_COMPONENT("Workshop", "workshop", Workshop);
 
-	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
+	if (DoesFeatureFlagExist("uselegacyeffectsoundmanager"))
+	{
+		INIT_COMPONENT_BASE("EffectSoundManager", "effect sound system (legacy MCI)", EffectSoundManager,
+		                    EffectSoundMCI);
+	}
+	else
+	{
+		INIT_COMPONENT_BASE("EffectSoundManager", "effect sound system", EffectSoundManager, EffectSound3D);
+	}
 
 	INIT_COMPONENT("MetaModifiers", "meta modifier states", MetaModifiers);
 

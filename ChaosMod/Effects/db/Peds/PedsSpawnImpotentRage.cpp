@@ -18,6 +18,7 @@ static void OnStart()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped           = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 	SET_ENTITY_HEALTH(ped, 1000, 0);
 	SET_PED_ARMOUR(ped, 1000);
 

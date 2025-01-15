@@ -25,20 +25,15 @@ struct ComponentHolder
 		std::unique_ptr<T, Deleter> m_Ptr;
 
 	  public:
-		void operator=(auto &&args)
-		{
-			std::apply(
-			    [&](auto &&...args)
-			    {
-				    m_Ptr.reset();
-				    m_Ptr = std::unique_ptr<T, Deleter>(new T(args...));
-			    },
-			    args);
-		}
-
 		T *operator()() const
 		{
 			return m_Ptr.get();
+		}
+
+		void operator=(T *ptr)
+		{
+			m_Ptr.reset();
+			m_Ptr = std::unique_ptr<T, Deleter>(ptr);
 		}
 
 		void Reset()
@@ -64,13 +59,11 @@ inline bool ComponentExists()
 	return ComponentHolder<T>::Instance();
 }
 
-template <class T>
-requires std::is_base_of_v<Component, T>
+template <class T, class X = T>
+requires std::is_base_of_v<Component, T> && std::is_base_of_v<T, X>
 inline void InitComponent(auto &&...args)
 {
-	// For whatever reason the compiler prepends an additional template param to Args, breaking std::forward
-	// We're just going to perfect forward using a tuple instead
-	ComponentHolder<T>::Instance = std::forward_as_tuple(args...);
+	ComponentHolder<T>::Instance = new X(args...);
 }
 
 template <class T>
@@ -82,18 +75,17 @@ inline void UninitComponent()
 
 class Component
 {
-  protected:
+  public:
 	Component()
 	{
 		g_Components.insert(this);
 	}
 
-	virtual ~Component()
+	~Component()
 	{
 		g_Components.erase(this);
 	}
 
-  public:
 	Component(const Component &)            = delete;
 
 	Component &operator=(const Component &) = delete;
@@ -110,8 +102,4 @@ class Component
 	                        bool isAltPressed)
 	{
 	}
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

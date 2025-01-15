@@ -6,7 +6,6 @@
 
 class Failsafe : public Component
 {
-  private:
 	CHAOS_EVENT_LISTENER(Hooks::OnScriptThreadRun) m_SearchFailGlobalListener;
 
 	int *m_StateGlobal  = nullptr;
@@ -15,13 +14,8 @@ class Failsafe : public Component
 	char m_FailCounts   = 0;
 	bool m_Enabled      = false;
 
-  protected:
+  public:
 	Failsafe();
 
-  public:
 	virtual void OnRun() override;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

@@ -1,9 +1,8 @@
 #include <stdafx.h>
 
-#include "EffectDispatcher.h"
-#include "Mp3Manager.h"
-
 #include "Components/EffectDispatchTimer.h"
+#include "Components/EffectDispatcher.h"
+#include "Components/EffectSound/EffectSoundManager.h"
 #include "Components/MetaModifiers.h"
 
 #include "Effects/EffectCategory.h"
@@ -59,20 +58,20 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 		}
 	}
 
-	auto playEffectDispatchSound = [&]()
+	auto playEffectDispatchSound = [&](EffectDispatcher::ActiveEffect &activeEffect)
 	{
-		if ((!ComponentExists<MetaModifiers>() || GetComponent<MetaModifiers>()->HideChaosUI)
-		    && ComponentExists<Mp3Manager>())
+		if ((!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
+		    && ComponentExists<EffectSoundManager>())
 		{
 			// Play global sound (if one exists)
 			// HACK: Force no global sound for "Fake Crash"
 			if (entry.Identifier.GetEffectId() != "misc_fakecrash")
 			{
-				GetComponent<Mp3Manager>()->PlayChaosSoundFile("global_effectdispatch");
+				GetComponent<EffectSoundManager>()->PlaySoundFile("global_effectdispatch");
 			}
 
 			// Play a sound if corresponding .mp3 file exists
-			GetComponent<Mp3Manager>()->PlayChaosSoundFile(effectData.Id);
+			activeEffect.SoundId = GetComponent<EffectSoundManager>()->PlaySoundFile(effectData.Id);
 		}
 	};
 
@@ -90,7 +89,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				alreadyExists      = true;
 				activeEffect.Timer = activeEffect.MaxTime;
 
-				playEffectDispatchSound();
+				playEffectDispatchSound(activeEffect);
 			}
 			else
 			{
@@ -143,8 +142,6 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectName << " " << entry.Suffix;
 			}
 
-			playEffectDispatchSound();
-
 			int effectDuration;
 			switch (effectData.TimedType)
 			{
@@ -164,8 +161,10 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				break;
 			}
 
-			effectDispatcher->SharedState.ActiveEffects.emplace_back(entry.Identifier, registeredEffect,
-			                                                         effectName.str(), effectData, effectDuration);
+			auto &activeEffect = effectDispatcher->SharedState.ActiveEffects.emplace_back(
+			    entry.Identifier, registeredEffect, effectName.str(), effectData, effectDuration);
+
+			playEffectDispatchSound(activeEffect);
 
 			// There might be a reason to include meta effects in the future, for now we will just exclude them
 			if (!(entry.Flags & EffectDispatcher::DispatchEffectFlag_NoAddToLog) && !effectData.IsMeta()
@@ -259,11 +258,6 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 	g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 }
 
-EffectDispatcher::~EffectDispatcher()
-{
-	OnModPauseCleanup();
-}
-
 void EffectDispatcher::OnModPauseCleanup()
 {
 	ClearEffects();
@@ -317,14 +311,15 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 	// Reverse order to ensure the effects on top of the list are removed if activeEffects > maxEffects
 	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
-		auto &effect        = *it;
+		auto &activeEffect  = *it;
 
-		bool isEffectPaused = EffectThreads::IsThreadPaused(effect.ThreadId);
+		bool isEffectPaused = EffectThreads::IsThreadPaused(activeEffect.ThreadId);
 
-		if (!EffectThreads::DoesThreadExist(effect.ThreadId))
+		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId))
 		{
-			if (effect.MaxTime > 0.f
-			    || (effect.MaxTime < 0.f && effect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
+			if (activeEffect.MaxTime > 0.f
+			    || (activeEffect.MaxTime < 0.f
+			        && activeEffect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
 			{
 				// Effect thread doesn't exist anymore so just remove the effect from list
 				it = static_cast<decltype(it)>(SharedState.ActiveEffects.erase(std::next(it).base()));
@@ -333,30 +328,41 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		}
 		else if (!isEffectPaused)
 		{
-			OnPreRunEffect.Fire(effect.Identifier);
-			EffectThreads::RunThread(effect.ThreadId);
-			OnPostRunEffect.Fire(effect.Identifier);
+			OnPreRunEffect.Fire(activeEffect.Identifier);
+			EffectThreads::RunThread(activeEffect.ThreadId);
+			OnPostRunEffect.Fire(activeEffect.Identifier);
 
-			if (!effect.IsMeta)
+			if (!activeEffect.IsMeta)
 			{
 				activeEffects++;
 			}
 		}
 
-		if (effect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(effect.ThreadId))
+		if (activeEffect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(activeEffect.ThreadId))
 		{
-			effect.HideEffectName = false;
+			activeEffect.HideEffectName = false;
 		}
 
-		if (effect.MaxTime > 0.f)
+		if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
+		{
+			activeEffect.HasSetSoundOptions = true;
+
+			auto effectSoundPlayOptions     = EffectThreads::GetThreadEffectSoundPlayOptions(activeEffect.ThreadId);
+			if (effectSoundPlayOptions)
+			{
+				GetComponent<EffectSoundManager>()->SetSoundOptions(activeEffect.SoundId, *effectSoundPlayOptions);
+			}
+		}
+
+		if (activeEffect.MaxTime > 0.f)
 		{
 			if (isEffectPaused)
 			{
-				effect.Timer -= adjustedDeltaTime;
+				activeEffect.Timer -= adjustedDeltaTime;
 			}
 			else
 			{
-				effect.Timer -=
+				activeEffect.Timer -=
 				    adjustedDeltaTime
 				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
 			}
@@ -365,21 +371,22 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		{
 			float t = SharedState.EffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
 			// Ensure non-timed effects stay on screen for a certain amount of time
-			effect.Timer += adjustedDeltaTime / t
-			              * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
+			activeEffect.Timer += adjustedDeltaTime / t
+			                    * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
 		}
 
-		if ((effect.MaxTime > 0.f && effect.Timer <= 0.f) || (!effect.IsMeta && activeEffects > maxEffects))
+		if ((activeEffect.MaxTime > 0.f && activeEffect.Timer <= 0.f)
+		    || (!activeEffect.IsMeta && activeEffects > maxEffects))
 		{
-			if (effect.Timer < -60.f)
+			if (activeEffect.Timer < -60.f)
 			{
 				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
-				EffectThreads::StopThreadImmediately(effect.ThreadId);
+				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
 			}
-			else if (!effect.IsStopping)
+			else if (!activeEffect.IsStopping)
 			{
-				EffectThreads::StopThread(effect.ThreadId);
-				effect.IsStopping = true;
+				EffectThreads::StopThread(activeEffect.ThreadId);
+				activeEffect.IsStopping = true;
 			}
 		}
 

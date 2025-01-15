@@ -43,9 +43,8 @@ class DebugSocket : public Component
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreRunEffect) m_OnPreRunEffectListener;
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPostRunEffect) m_OnPostRunEffectListener;
 
-  protected:
+  public:
 	DebugSocket();
-	virtual ~DebugSocket() override;
 
   private:
 	void Connect();
@@ -57,10 +56,6 @@ class DebugSocket : public Component
 
 	virtual void OnModPauseCleanup() override;
 	virtual void OnRun() override;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };
 
 #endif

@@ -13,7 +13,6 @@
 #include <array>
 #include <cstdint>
 #include <list>
-#include <memory>
 #include <queue>
 #include <string_view>
 #include <vector>
@@ -43,15 +42,18 @@ class EffectDispatcher : public Component
 		std::string Name;
 		std::string FakeName;
 
-		LPVOID ThreadId     = nullptr;
+		LPVOID ThreadId         = nullptr;
 
-		float Timer         = 0.f;
-		float MaxTime       = 0.f;
+		float Timer             = 0.f;
+		float MaxTime           = 0.f;
 
-		bool IsMeta         = false;
+		bool IsMeta             = false;
 
-		bool HideEffectName = false;
-		bool IsStopping     = false;
+		bool HideEffectName     = false;
+		bool IsStopping         = false;
+
+		DWORD64 SoundId         = 0;
+		bool HasSetSoundOptions = false;
 
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
 		             const std::string &name, const EffectData &effectData, float effectDuration)
@@ -112,9 +114,7 @@ class EffectDispatcher : public Component
   public:
 	bool EnableEffectTextExtraTopSpace = false;
 
-  protected:
 	EffectDispatcher(const std::array<std::uint8_t, 3> &textColor, const std::array<std::uint8_t, 3> &effectTimerColor);
-	virtual ~EffectDispatcher() override;
 
   private:
 	float GetEffectTopSpace();
@@ -155,8 +155,4 @@ class EffectDispatcher : public Component
 	void OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId);
 
 	bool IsClearingEffects() const;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

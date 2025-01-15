@@ -9,7 +9,6 @@ using BYTE  = unsigned char;
 
 class KeyStates : public Component
 {
-  private:
 	enum class KeyState
 	{
 		Released,
@@ -23,8 +22,4 @@ class KeyStates : public Component
 
 	bool IsKeyPressed(BYTE key) const;
 	bool IsKeyJustPressed(BYTE key) const;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };
