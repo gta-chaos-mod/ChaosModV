@@ -28,23 +28,6 @@ git submodule update --recursive
 ## Building
 
 Check the corresponding subdirectories for instructions on how to compile each project.
-
-### Building all projects
-
-<details>
-  <summary>MSBuild (Visual Studio)</summary>
-
-  NOTE: The methods above are preferred over this one for the ASI (the ChaosMod project). There may be components of the ASI only available to CMake due to complications with third-party libraries.
-
-  1. Open `vendor/minhook/build/VC17/MinHookVC17.sln` in Visual Studio (or click on the "Switch between solutions and available views" button and load `MinHookVC17.sln`)
-
-  2. Compile libMinHook as x64 Release build
-
-  3. Open `ChaosMod.sln` in the root folder in Visual Studio (if not open already)
-
-  4. Compiling should work now. If there's an error referencing `MsBuildMajorVersion` when building either the ConfigApp or TwitchChatProxy projects, close and open Visual Studio again.
-	
-</details>
 	
 ## Adding new effects
 
