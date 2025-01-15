@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Components/EffectSound/EffectSoundManager.h"
-#include "Effects/EffectIdentifier.h"
 
 #include <miniaudio.h>
 #include <scripthookv/inc/types.h>
