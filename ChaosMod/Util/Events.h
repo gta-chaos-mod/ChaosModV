@@ -36,9 +36,7 @@ template <typename CallbackT> class ChaosBaseEvent : public _ChaosBaseEvent
 	virtual ~ChaosBaseEvent()
 	{
 		for (auto &listener : m_Listeners)
-		{
 			listener->IsEventStillValid = false;
-		}
 	}
 
 	void RegisterListener(Listener *listener)
@@ -63,9 +61,7 @@ template <typename... Args> class ChaosEvent : public ChaosBaseEvent<std::functi
 	void Fire(Args... args)
 	{
 		for (const auto &listener : ChaosEvent::m_Listeners)
-		{
 			listener->Callback(args...);
-		}
 	}
 };
 
@@ -76,12 +72,8 @@ template <typename... Args> class ChaosCancellableEvent : public ChaosBaseEvent<
 	{
 		bool result = true;
 		for (const auto &listener : ChaosCancellableEvent::m_Listeners)
-		{
 			if (!listener->Callback(args...))
-			{
 				result = false;
-			}
-		}
 
 		return result;
 	}
@@ -103,12 +95,8 @@ class ChaosEventListener
 	~ChaosEventListener()
 	{
 		for (auto &event : m_Events)
-		{
 			if (event.Listener.IsEventStillValid)
-			{
 				event.Event->RemoveListener(&event.Listener);
-			}
-		}
 	}
 
 	void Register(ChaosEventType &event, typename ChaosEventType::CallbackType callback)

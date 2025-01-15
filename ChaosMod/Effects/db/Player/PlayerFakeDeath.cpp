@@ -53,14 +53,10 @@ static void OnStart()
 		WAIT(0);
 
 		if (currentMode > FakeDeathState::animation)
-		{
 			HIDE_HUD_AND_RADAR_THIS_FRAME();
-		}
 
 		if (scaleForm > 0)
-		{
 			DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);
-		}
 
 		int current_time = GetTickCount64();
 		if (current_time - lastModeTime > nextModeTime)
@@ -77,9 +73,7 @@ static void OnStart()
 		Ped playerPed = PLAYER_PED_ID();
 
 		if (currentMode != FakeDeathState::cleanup)
-		{
 			SET_PLAYER_INVINCIBLE(playerPed, true);
-		}
 
 		switch (currentMode)
 		{
@@ -99,9 +93,7 @@ static void OnStart()
 						// Fake suicide
 						REQUEST_ANIM_DICT("mp_suicide");
 						while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
-						{
 							WAIT(0);
-						}
 						Hash pistolHash = "WEAPON_PISTOL"_hash;
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
 						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150.f, 1, 0.f, false, false,
@@ -146,9 +138,7 @@ static void OnStart()
 								Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
 
 								if (!ped)
-								{
 									continue;
-								}
 
 								TASK_LEAVE_VEHICLE(ped, veh, 4160);
 							}
@@ -157,9 +147,7 @@ static void OnStart()
 						if (detonateTimer <= 0)
 						{
 							for (int i = 0; i < 6; i++)
-							{
 								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
-							}
 							Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
 							Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, false);
 							if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x,

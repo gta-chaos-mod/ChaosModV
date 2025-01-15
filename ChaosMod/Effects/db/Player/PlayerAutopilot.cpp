@@ -41,9 +41,7 @@ static void OnStop()
 	CLEAR_PED_TASKS(playerPed);
 
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
-	}
 }
 
 static void OnTick()
@@ -61,9 +59,7 @@ static void OnTick()
 		SET_PLAYER_CONTROL(player, false, 7001);
 
 		if (playerDead)
-		{
 			return;
-		}
 	}
 
 #ifdef _DEBUG
@@ -93,9 +89,7 @@ static void OnTick()
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	DWORD64 curTick         = GET_GAME_TIMER();
 	if (lastTick > curTick - 300)
-	{
 		return;
-	}
 	lastTick                   = curTick;
 
 	// Try to fetch waypoint coords (if waypoint exists)
@@ -115,9 +109,7 @@ static void OnTick()
 		ms_CustomWaypoint   = true;
 
 		if (ms_State != STATE_ROAMING && !VectorEqualRoughZ(ms_WaypointCoords, lastWaypointCoords))
-		{
 			ms_State = STATE_NONE;
-		}
 	}
 	else
 	{
@@ -148,9 +140,7 @@ static void OnTick()
 			ms_CustomWaypoint = true;
 
 			if (ms_State != STATE_ROAMING && !VectorEqualRoughZ(ms_WaypointCoords, lastWaypointCoords))
-			{
 				ms_State = STATE_NONE;
-			}
 		}
 	}
 
@@ -201,15 +191,11 @@ static void OnTick()
 			if (targetBlip)
 			{
 				if (GET_BLIP_INFO_ID_ENTITY_INDEX(targetBlip) == playerVeh)
-				{
 					isTargetThisVehicle = true;
-				}
 			}
 
 			if (!vehDrivable || (!isTargetThisVehicle && GET_IS_VEHICLE_ENGINE_RUNNING(playerVeh)))
-			{
 				TASK_LEAVE_ANY_VEHICLE(playerPed, 0, 0);
-			}
 
 			ms_State = STATE_NONE;
 		}
@@ -232,9 +218,7 @@ static void OnTick()
 				_GET_ENTITY_PROOFS(ped, &bulletproof, &dummy, &dummy, &dummy, &dummy, &dummy, &dummy, &dummy);
 
 				if (bulletproof)
-				{
 					continue;
-				}
 
 				int rel     = GET_RELATIONSHIP_BETWEEN_PEDS(playerPed, ped);
 				int pedType = GET_PED_TYPE(ped);

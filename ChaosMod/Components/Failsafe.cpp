@@ -36,13 +36,9 @@ Failsafe::Failsafe() : Component()
 
 				    Handle handle;
 				    if (getGameVersion() < VER_1_0_2802_0)
-				    {
 					    handle = Memory::FindScriptPattern("2D ? ? 00 00 25 0D 60 ? ? ? 6D 5E", program);
-				    }
 				    else
-				    {
 					    handle = Memory::FindScriptPattern("2D ? ? 00 00 25 0D 63 ? ? ? 70 61", program);
-				    }
 
 				    if (!handle.IsValid())
 				    {
@@ -64,14 +60,10 @@ Failsafe::Failsafe() : Component()
 void Failsafe::OnRun()
 {
 	if (!m_Enabled || !ms_StateGlobalIdx || !ComponentExists<EffectDispatcher>())
-	{
 		return;
-	}
 
 	if (!m_StateGlobal)
-	{
 		m_StateGlobal = reinterpret_cast<int *>(Memory::GetGlobalPtr(ms_StateGlobalIdx));
-	}
 
 	if (!*m_StateGlobal && m_LastState)
 	{
@@ -79,9 +71,7 @@ void Failsafe::OnRun()
 		int curTimestamp = GET_GAME_TIMER();
 
 		if (m_FailTimestamp < curTimestamp - 10000)
-		{
 			m_FailCounts = 0;
-		}
 
 		switch (++m_FailCounts)
 		{

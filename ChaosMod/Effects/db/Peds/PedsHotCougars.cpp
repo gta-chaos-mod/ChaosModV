@@ -17,9 +17,7 @@ static void OnStop()
 	REMOVE_NAMED_PTFX_ASSET("des_trailerpark");
 
 	for (Ped ped : cougarEnemies)
-	{
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-	}
 
 	cougarEnemies.clear();
 }
@@ -28,9 +26,7 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
-	{
 		WAIT(0);
-	}
 
 	Ped playerPed           = PLAYER_PED_ID();
 	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
@@ -63,13 +59,9 @@ static void OnTick()
 				it++;
 
 				if (IS_PED_IN_ANY_VEHICLE(playerPed, true))
-				{
 					TASK_ENTER_VEHICLE(cougar, GET_VEHICLE_PED_IS_IN(playerPed, false), -1, -2, 2.f, 1, 0);
-				}
 				else
-				{
 					TASK_COMBAT_PED(cougar, playerPed, 0, 16);
-				}
 
 				SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cougar, true);
 			}

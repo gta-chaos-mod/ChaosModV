@@ -3,9 +3,7 @@
 inline std::string StringTrim(std::string str)
 {
 	if (str.find_first_not_of(' ') == str.npos)
-	{
 		return "";
-	}
 
 	str = str.substr(str.find_first_not_of(' '));
 	str = str.substr(0, str.find_first_of('\0'));

@@ -7,9 +7,7 @@ static void OnTick()
 		Ped pedType = GET_PED_TYPE(ped);
 
 		if (!IS_PED_A_PLAYER(ped) && pedType != 0 && pedType != 1 && pedType != 2)
-		{
 			SET_PED_AS_COP(ped, true);
-		}
 	}
 }
 

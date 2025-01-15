@@ -84,9 +84,7 @@ static void OnTick()
 		}
 
 		if (IS_ENTITY_DEAD(ped, false))
-		{
 			it = mappedPeds.erase(it);
-		}
 
 		it++;
 	}

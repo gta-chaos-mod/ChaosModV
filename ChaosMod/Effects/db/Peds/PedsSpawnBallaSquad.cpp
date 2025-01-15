@@ -33,13 +33,9 @@ static void OnStart()
 		Ped ped =
 		    CreatePoolPed(4, choosenPropHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 		if (i == 0)
-		{
 			SET_PED_INTO_VEHICLE(ped, veh, -1);
-		}
 		else
-		{
 			SET_PED_INTO_VEHICLE(ped, veh, -2);
-		}
 		SET_PED_COMBAT_ATTRIBUTES(ped, 3, false);
 		SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 		SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);

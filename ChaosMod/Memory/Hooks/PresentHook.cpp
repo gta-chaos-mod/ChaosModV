@@ -11,9 +11,7 @@ HRESULT (*OG_IDXGISwapChain_Present)(IDXGISwapChain *, UINT, UINT);
 HRESULT HK_IDXGISwapChain_Present(IDXGISwapChain *swapChain, UINT syncInterval, UINT flags)
 {
 	if (!(flags & DXGI_PRESENT_TEST))
-	{
 		Hooks::OnPresent.Fire();
-	}
 
 	return OG_IDXGISwapChain_Present(swapChain, syncInterval, flags);
 }
@@ -24,9 +22,7 @@ static bool OnHook()
 
 	handle = Memory::FindPattern("80 7E 10 00 48 8B");
 	if (!handle.IsValid())
-	{
 		return false;
-	}
 
 	// IDXGISwapChain
 	handle                    = *handle.At(6).Into().Value<DWORD64 *>();
@@ -42,9 +38,7 @@ static void OnCleanup()
 {
 	// Only reset vftable entries if address still points to our retour
 	if (ms_PresentAddr && *ms_PresentAddr == HK_IDXGISwapChain_Present)
-	{
 		Memory::Write<void *>(ms_PresentAddr, reinterpret_cast<void *>(OG_IDXGISwapChain_Present));
-	}
 }
 
 static RegisterHook registerHook(OnHook, OnCleanup, "IDXGISwapChain::Present", true);

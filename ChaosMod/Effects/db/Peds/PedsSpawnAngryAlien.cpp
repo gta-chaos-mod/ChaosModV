@@ -36,9 +36,7 @@ static void OnStart()
 	SET_ENTITY_HEALTH(ped, 500, 0);
 	SET_PED_ARMOUR(ped, 500);
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);

@@ -39,9 +39,7 @@ namespace TwitchChatVotingProxy
 
             // Setup receiver listeners
             foreach (var votingReceiver in m_VotingReceivers)
-            {
                 votingReceiver.OnMessage += OnVoteReceiverMessage;
-            }
 
             // Setup display update tick
             m_DisplayUpdateTick.Elapsed += DisplayUpdateTick;
@@ -84,7 +82,8 @@ namespace TwitchChatVotingProxy
             var totalVotes = 0;
             votes.ForEach(_ => totalVotes += _);
             // If we have no votes, choose one at random
-            if (totalVotes == 0) return m_Random.Next(0, votes.Count);
+            if (totalVotes == 0)
+                return m_Random.Next(0, votes.Count);
             // Select a random vote from all votes
             var selectedVote = m_Random.Next(1, totalVotes + 1);
             // Now find out in what vote range/option that vote is
@@ -119,7 +118,6 @@ namespace TwitchChatVotingProxy
             try
             {
                 m_OverlayServer?.EndVoting();
-
             }
             catch (Exception err)
             {
@@ -180,14 +178,10 @@ namespace TwitchChatVotingProxy
                 }
 
                 if (m_Config.VotingMode == EVotingMode.PERCENTAGE)
-                {
                     msg += "\nVotes will affect the chance for one of the effects to occur.";
-                }
 
                 foreach (var votingReceiver in m_VotingReceivers)
-                {
                     await votingReceiver.SendMessage(msg);
-                }
 
                 break;
             case EOverlayMode.OVERLAY_OBS:
@@ -215,9 +209,7 @@ namespace TwitchChatVotingProxy
         private void OnVoteReceiverMessage(object? sender, OnMessageArgs e)
         {
             if (!m_VoteRunning || e.ClientId is null || e.Message is null)
-            {
                 return;
-            }
 
             if (m_Config.PermittedUsernames?.Length > 0 && e.Username is not null)
             {
@@ -234,9 +226,7 @@ namespace TwitchChatVotingProxy
                 }
 
                 if (!found)
-                {
                     return;
-                }
             }
 
             for (int i = 0; i < m_ActiveVoteOptions.Count; i++)

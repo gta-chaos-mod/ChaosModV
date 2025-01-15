@@ -48,9 +48,7 @@ static void OnTick()
 	}
 	Entity entityToCircle = player;
 	if (IS_PED_IN_ANY_VEHICLE(player, false))
-	{
 		entityToCircle = GET_VEHICLE_PED_IS_IN(player, false);
-	}
 	Vector3 pos = GET_ENTITY_COORDS(entityToCircle, false);
 	Vector3 min;
 	Vector3 max;

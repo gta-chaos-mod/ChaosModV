@@ -25,13 +25,9 @@ static void OnStart()
 
 			Ped clone;
 			if (isMissionEntityCorpse)
-			{
 				clone = CreatePoolPed(pedType, pedModel, .0f, .0f, .0f, .0f);
-			}
 			else
-			{
 				clone = CREATE_PED(pedType, pedModel, .0f, .0f, .0f, .0f, true, false);
-			}
 
 			CLONE_PED_TO_TARGET(ped, clone);
 
@@ -68,13 +64,9 @@ static void OnStart()
 			DELETE_PED(&ped);
 
 			if (targetVeh)
-			{
 				SET_PED_INTO_VEHICLE(clone, targetVeh, targetSeat);
-			}
 			else
-			{
 				SET_ENTITY_COORDS(clone, pedPos.x, pedPos.y, pedPos.z, false, false, false, false);
-			}
 
 			SET_PED_RELATIONSHIP_GROUP_HASH(clone, relationshipGroup);
 			SET_PED_HEARING_RANGE(clone, 9999.f);
@@ -92,9 +84,7 @@ static void OnStart()
 			SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
 
 			if (!isMissionEntityCorpse)
-			{
 				SET_PED_AS_NO_LONGER_NEEDED(&clone);
-			}
 		}
 	}
 }

@@ -61,29 +61,21 @@ static void OnTick()
 		}
 
 		if (HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped) && !isFrozen(ped))
-		{
 			frozenPeds.push_back(ped);
-		}
 
 		if (isFrozen(ped))
-		{
 			FREEZE_ENTITY_POSITION(ped, true);
-		}
 	}
 }
 
 static void OnStop()
 {
 	for (const Ped ped : frozenPeds)
-	{
 		FREEZE_ENTITY_POSITION(ped, false);
-	}
 
 	// (kolyaventuri): Reshow weapons
 	for (std::map<Ped, Entity>::iterator it = heldWeapons.begin(); it != heldWeapons.end(); ++it)
-	{
 		SET_ENTITY_VISIBLE(it->second, true, 0);
-	}
 
 	// (kolyaventuri): Remove weapons
 	for (std::map<Ped, Entity>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it)

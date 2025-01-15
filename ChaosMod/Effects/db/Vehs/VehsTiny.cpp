@@ -28,14 +28,10 @@ static void OnTick()
 			Vector3 vehicleSize = Vector3(rightVector.Length(), forwardVector.Length(), upVector.Length());
 
 			if (!vehicleDefaultSizes.contains(veh))
-			{
 				vehicleDefaultSizes[veh] = vehicleSize;
-			}
 
 			if (VectorEquals(vehicleDefaultSizes[veh], vehicleSize))
-			{
 				Memory::SetVehicleScale(veh, 0.5f);
-			}
 		}
 	}
 }

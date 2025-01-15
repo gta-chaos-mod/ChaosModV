@@ -16,9 +16,7 @@ static Hash toastModels[TOAST_MODEL_COUNT] = { "v_res_fa_bread01"_hash, "v_res_f
 static void RemoveHead()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_PED_RESET_FLAG(ped, 166, true);
-	}
 }
 
 static void OnStart()
@@ -76,9 +74,7 @@ static void OnTick()
 			if (!DOES_ENTITY_EXIST(ped))
 			{
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = pedPropsMap.erase(it);
 			}
@@ -114,17 +110,13 @@ static void OnStop()
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(prop))
-		{
 			DELETE_OBJECT(&prop);
-		}
 	}
 
 	pedPropsMap.clear();
 
 	for (int i = 0; i < TOAST_MODEL_COUNT; ++i)
-	{
 		availablePropModels[i] = 0;
-	}
 }
 
 // clang-format off

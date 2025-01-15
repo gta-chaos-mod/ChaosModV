@@ -6,27 +6,18 @@ namespace ConfigApp.Tabs.Voting
     public class DiscordTab : Tab
     {
         private CheckBox? m_EnableDiscordVoting = null;
-
         private PasswordBox? m_Token = null;
-
         private TextBox? m_GuildId = null;
         private TextBox? m_ChannelId = null;
 
         private void SetElementsEnabled(bool state)
         {
             if (m_Token is not null)
-            {
                 m_Token.IsEnabled = state;
-            }
-
             if (m_GuildId is not null)
-            {
                 m_GuildId.IsEnabled = state;
-            }
             if (m_ChannelId is not null)
-            {
                 m_ChannelId.IsEnabled = state;
-            }
         }
 
         protected override void InitContent()
@@ -103,26 +94,17 @@ namespace ConfigApp.Tabs.Voting
             }
 
             if (m_Token is not null)
-            {
                 m_Token.Password = OptionsManager.TwitchFile.ReadValue("DiscordBotToken");
-            }
-
             if (m_GuildId is not null)
-            {
                 m_GuildId.Text = OptionsManager.TwitchFile.ReadValue("DiscordGuildId");
-            }
             if (m_ChannelId is not null)
-            {
                 m_ChannelId.Text = OptionsManager.TwitchFile.ReadValue("DiscordChannelId");
-            }
         }
 
         public override void OnSaveValues()
         {
             OptionsManager.TwitchFile.WriteValue("EnableVotingDiscord", m_EnableDiscordVoting?.IsChecked);
-
             OptionsManager.TwitchFile.WriteValue("DiscordBotToken", m_Token?.Password);
-
             OptionsManager.TwitchFile.WriteValue("DiscordGuildId", m_GuildId?.Text);
             OptionsManager.TwitchFile.WriteValue("DiscordChannelId", m_ChannelId?.Text);
         }

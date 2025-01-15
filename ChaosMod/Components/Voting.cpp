@@ -65,9 +65,7 @@ bool Voting::Init()
 #ifdef _DEBUG
 	DWORD attributes = NULL;
 	if (DoesFeatureFlagExist("forcenovotingconsole"))
-	{
 		attributes = CREATE_NO_WINDOW;
-	}
 
 	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
 #else
@@ -105,9 +103,7 @@ void Voting::HandleMsg(std::string_view message)
 			LOG("Received hello from voting pipe");
 
 			if (ComponentExists<EffectDispatchTimer>())
-			{
 				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
-			}
 
 			SendToPipe("hello_back");
 		}
@@ -179,9 +175,7 @@ void Voting::ErrorOutWithMsg(std::string_view message)
 	m_PipeHandle = INVALID_HANDLE_VALUE;
 
 	if (ComponentExists<EffectDispatchTimer>())
-	{
 		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
-	}
 
 	m_EnableVoting = false;
 }
@@ -201,25 +195,19 @@ void Voting::OnModPauseCleanup()
 void Voting::OnRun()
 {
 	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>() || !ComponentExists<EffectDispatchTimer>())
-	{
 		return;
-	}
 
 	if (!m_HasInitializedVoting)
 	{
 		// Only initialize voting proxy after we are fully loaded in, otherwise some weird behaviour can occur from the
 		// voting proxy, e.g. OnFailureToReceiveJoinConfirmation being raised for whatever reason
 		if (GET_IS_LOADING_SCREEN_ACTIVE())
-		{
 			return;
-		}
 
 		m_HasInitializedVoting = true;
 
 		if (!Init())
-		{
 			return;
-		}
 
 		m_PipeHandle = CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
 		                               PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE,
@@ -245,9 +233,7 @@ void Voting::OnRun()
 			}
 
 			if (ComponentExists<SplashTexts>())
-			{
 				GetComponent<SplashTexts>()->ShowVotingSplash();
-			}
 		}
 
 		return;
@@ -284,22 +270,14 @@ void Voting::OnRun()
 	char buffer[BUFFER_SIZE];
 	DWORD bytesRead;
 	if (!ReadFile(m_PipeHandle, buffer, BUFFER_SIZE, &bytesRead, NULL))
-	{
 		while (GetLastError() == ERROR_IO_PENDING)
-		{
 			WAIT(0);
-		}
-	}
 
 	if (bytesRead > 0)
-	{
 		HandleMsg(buffer);
-	}
 
 	if (!m_ReceivedHello)
-	{
 		return;
-	}
 
 	if (GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
 	{
@@ -318,22 +296,14 @@ void Voting::OnRun()
 
 		// Should be random effect voteable, so just dispatch random effect
 		if (m_ChosenEffectIdentifier->GetEffectId().empty())
-		{
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-		}
 		else
-		{
 			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectIdentifier);
-		}
 		GetComponent<EffectDispatchTimer>()->ResetTimer();
 
 		if (ComponentExists<MetaModifiers>())
-		{
 			for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-		}
 
 		m_IsVotingRoundDone = true;
 	}
@@ -423,9 +393,7 @@ void Voting::OnRun()
 
 		std::vector<std::string> effectNames;
 		for (const auto &pChoosableEffect : m_EffectChoices)
-		{
 			effectNames.push_back(pChoosableEffect->m_EffectName);
-		}
 
 		SendToPipe("vote", effectNames);
 

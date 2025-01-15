@@ -48,9 +48,7 @@ static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
-	{
 		Util::TryParse<BYTE>(colorText.substr(i, 2), colors[j++], 16);
-	}
 
 	return colors;
 }
@@ -70,9 +68,7 @@ static void Init()
 	{
 		auto gameBuild = Memory::GetGameBuild();
 		if (gameBuild.empty())
-		{
 			gameBuild = "Unknown";
-		}
 
 		LOG("Game Build: " << gameBuild);
 
@@ -156,9 +152,7 @@ static void Init()
 			std::string line;
 			line.resize(64);
 			while (file.getline(line.data(), 64))
-			{
 				blacklistedComponentNames.insert(StringTrim(line.substr(0, line.find("\n"))));
-			}
 		}
 	}
 
@@ -216,9 +210,7 @@ static void Init()
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (DoesFeatureFlagExist("enabledebugsocket"))
-	{
 		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
-	}
 #endif
 
 #undef INIT_COMPONENT
@@ -283,9 +275,7 @@ static void MainRun()
 				ClearEntityPool();
 
 				for (auto component : g_Components)
-				{
 					component->OnModPauseCleanup();
-				}
 			}
 			else
 			{
@@ -305,9 +295,7 @@ static void MainRun()
 		}
 
 		if (isDisabled)
-		{
 			continue;
-		}
 
 		if (ms_Flags.ClearAllEffects)
 		{
@@ -338,9 +326,7 @@ static void MainRun()
 		}
 
 		for (auto component : g_Components)
-		{
 			component->OnRun();
-		}
 	}
 }
 
@@ -380,9 +366,7 @@ namespace Main
 					ms_Flags.ClearAllEffects = true;
 
 					if (ComponentExists<SplashTexts>())
-					{
 						GetComponent<SplashTexts>()->ShowClearEffectsSplash();
-					}
 				}
 			}
 			else if (key == VK_OEM_PERIOD)
@@ -396,29 +380,21 @@ namespace Main
 			else if (key == VK_OEM_COMMA)
 			{
 				if (ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
-				{
 					GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
-				}
 			}
 			else if (key == 0x4B) // K
 			{
 				if (ms_Flags.AntiSoftlockShortcutEnabled && isShiftPressed)
-				{
 					ms_Flags.RunAntiSoftlock = true;
-				}
 			}
 			else if (key == 0x4C) // L
 			{
 				if (ms_Flags.ToggleModShortcutEnabled)
-				{
 					ms_Flags.ToggleModState = true;
-				}
 			}
 		}
 
 		for (auto component : g_Components)
-		{
 			component->OnKeyInput(key, wasDownBefore, isUpNow, isCtrlPressed, isShiftPressed, isWithAlt);
-		}
 	}
 }

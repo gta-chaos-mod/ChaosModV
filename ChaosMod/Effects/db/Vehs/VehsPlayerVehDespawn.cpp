@@ -15,9 +15,7 @@ static void OnStart()
 		for (int i = -1; i < maxSeats - 1; i++)
 		{
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
-			{
 				continue;
-			}
 
 			Ped ped = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
@@ -36,9 +34,7 @@ static void OnStart()
 		WAIT(0);
 
 		for (Ped ped : vehPeds)
-		{
 			SET_ENTITY_VELOCITY(ped, vehVel.x, vehVel.y, vehVel.z);
-		}
 	}
 }
 

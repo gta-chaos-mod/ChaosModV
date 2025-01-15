@@ -14,9 +14,7 @@ static void OnTick()
 		if (timeSinceDmg && curTime - timeSinceDmg < 200)
 		{
 			if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-			{
 				CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
-			}
 
 			SET_PED_TO_RAGDOLL(playerPed, 500, 1000, 0, true, true, false);
 

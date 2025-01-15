@@ -3,9 +3,7 @@
 static void OnStart()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		REMOVE_ALL_PED_WEAPONS(ped, false);
-	}
 }
 
 // clang-format off

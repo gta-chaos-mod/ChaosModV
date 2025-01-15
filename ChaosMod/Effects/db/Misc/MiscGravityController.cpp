@@ -8,14 +8,10 @@ static void OnStop()
 	SET_GRAVITY_LEVEL(0);
 
 	for (auto ped : GetAllPeds())
-	{
 		SET_ENTITY_INVINCIBLE(ped, false);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		SET_ENTITY_INVINCIBLE(veh, false);
-	}
 }
 
 static void OnTickLow()
@@ -67,9 +63,7 @@ static void OnTickInsane()
 	}
 
 	for (auto object : GetAllProps())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, -200.f, false, false, true, false);
-	}
 }
 
 // clang-format off
@@ -104,9 +98,7 @@ static void OnTickInvert()
 	}
 
 	for (auto object : GetAllProps())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, 100.f, false, false, true, false);
-	}
 }
 
 // clang-format off

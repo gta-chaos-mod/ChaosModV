@@ -31,14 +31,10 @@ static void OnTick()
 	}
 
 	for (auto object : GetAllProps())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 1, y, x, 0, false, false, true, false);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(veh, 1, y, x, 0, false, false, true, false);
-	}
 }
 
 // clang-format off

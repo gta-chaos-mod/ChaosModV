@@ -30,9 +30,7 @@ static void SleepAllThreads(DWORD ms)
 	} while (Thread32Next(handle, &threadEntry));
 
 	for (HANDLE thread : threads)
-	{
 		SuspendThread(thread);
-	}
 
 	Sleep(ms);
 
@@ -53,9 +51,7 @@ static void OnStart()
 	if (fakeTimer)
 	{
 		if (ComponentExists<EffectDispatchTimer>())
-		{
 			GetComponent<EffectDispatchTimer>()->SetFakeTimerPercentage(g_Random.GetRandomFloat(0.f, 1.f));
-		}
 
 		WAIT(0);
 	}
@@ -75,9 +71,7 @@ static void OnStart()
 	SleepAllThreads(g_Random.GetRandomInt(3000, 10000));
 
 	if (fakeTimer && ComponentExists<EffectDispatchTimer>())
-	{
 		GetComponent<EffectDispatchTimer>()->ResetFakeTimerPercentage();
-	}
 }
 
 // clang-format off

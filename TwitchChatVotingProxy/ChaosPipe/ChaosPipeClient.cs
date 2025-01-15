@@ -132,9 +132,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
             var args = new OnGetCurrentVotesArgs();
             OnGetCurrentVotes?.Invoke(this, args);
             if (args.CurrentVotes == null)
-            {
                 m_Logger.Error("Listeners failed to supply on get current vote args");
-            }
             else
             {
                 CurrentVotesResult res = new(args.CurrentVotes);
@@ -183,9 +181,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         {
             // If no reading task is active, create one
             if (m_ReadPipeTask == null)
-            {
                 m_ReadPipeTask = m_PipeReader?.ReadLineAsync();
-            }
             // If the reading task is created and complete, get its results
             else if (m_ReadPipeTask.IsCompleted)
             {
@@ -238,9 +234,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         private void StartNewVote(List<string>? options)
         {
             if (options is null)
-            {
                 return;
-            }
 
             // Dispatch information to listeners
             OnNewVote?.Invoke(this, new OnNewVoteArgs(options.ToArray()));

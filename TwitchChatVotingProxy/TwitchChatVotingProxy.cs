@@ -57,13 +57,9 @@ namespace TwitchChatVotingProxy
 
             var votingReceivers = new List<(string Name, IVotingReceiver VotingReceiver)>();
             if (config.ReadValueBool("EnableVotingTwitch", false))
-            {
                 votingReceivers.Add(("Twitch", new TwitchVotingReceiver(config, chaosPipe)));
-            }
             if (config.ReadValueBool("EnableVotingDiscord", false))
-            {
                 votingReceivers.Add(("Discord", new DiscordVotingReceiver(config, chaosPipe)));
-            }
 
             foreach (var votingReceiver in votingReceivers)
             {
@@ -108,19 +104,13 @@ namespace TwitchChatVotingProxy
 
             chaosPipe.SendMessageToPipe("hello");
             while (!chaosPipe.GotHelloBack && chaosPipe.IsConnected())
-            {
                 await Task.Delay(100);
-            }
 
             if (chaosPipe.GotHelloBack)
-            {
                 m_Logger.Information("Received hello_back from mod!");
-            }
 
             while (chaosPipe.IsConnected())
-            {
                 await Task.Delay(100);
-            }
 
             m_Logger.Information("Pipe disconnected, ending program.");
         }

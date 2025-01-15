@@ -32,9 +32,7 @@ void EffectSound3D::OnModPauseCleanup()
 void EffectSound3D::OnRun()
 {
 	if (m_Sounds.empty())
-	{
 		return;
-	}
 
 	auto playerPed       = PLAYER_PED_ID();
 

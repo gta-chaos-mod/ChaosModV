@@ -12,25 +12,15 @@ static void OnTick()
 	std::vector<Entity> entities;
 
 	for (Ped ped : GetAllPeds())
-	{
 		if (ped != player)
-		{
 			entities.push_back(ped);
-		}
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (!IS_PED_IN_VEHICLE(player, veh, false))
-		{
 			entities.push_back(veh);
-		}
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	Vector3 playerCoord = GET_ENTITY_COORDS(player, false);
 	for (Entity entity : entities)
@@ -44,9 +34,7 @@ static void OnTick()
 		if (distance < startDistance)
 		{
 			if (IS_ENTITY_A_PED(entity) && !IS_PED_RAGDOLL(entity))
-			{
 				SET_PED_TO_RAGDOLL(entity, 5000, 5000, 0, true, true, false);
-			}
 			float forceDistance = std::min(std::max(0.f, (startDistance - distance)), maxForceDistance);
 			float force         = (forceDistance / maxForceDistance) * maxForce;
 			Memory::ApplyForceToEntity(entity, 3, entityCoord.x - playerCoord.x, entityCoord.y - playerCoord.y,

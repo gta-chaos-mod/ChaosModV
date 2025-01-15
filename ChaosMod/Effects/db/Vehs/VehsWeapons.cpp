@@ -32,9 +32,7 @@ static void OnTick()
 				{
 					REQUEST_WEAPON_ASSET(weaponHash, 31, 0);
 					while (!HAS_WEAPON_ASSET_LOADED(weaponHash))
-					{
 						WAIT(0);
-					}
 				}
 				Vehicle veh             = GET_VEHICLE_PED_IS_IN(player, false);
 				Vector3 vehPos          = GET_ENTITY_COORDS(veh, false);

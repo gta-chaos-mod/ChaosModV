@@ -26,27 +26,17 @@ static void OnTick()
 
 		std::vector<Entity> allEntities = {};
 		for (Ped ped : GetAllPeds())
-		{
 			if (!IS_PED_A_PLAYER(ped))
-			{
 				allEntities.push_back(ped);
-			}
-		}
 
 		Vehicle playerVeh =
 		    IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false) ? GET_VEHICLE_PED_IS_IN(PLAYER_PED_ID(), false) : 0;
 		for (Vehicle veh : GetAllVehs())
-		{
 			if (!playerVeh || veh != playerVeh)
-			{
 				allEntities.push_back(veh);
-			}
-		}
 
 		for (Object prop : GetAllProps())
-		{
 			allEntities.push_back(prop);
-		}
 
 		if (!allEntities.empty())
 		{

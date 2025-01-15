@@ -19,9 +19,7 @@ static void OnTick()
 		Vector3 coords = GET_ENTITY_COORDS(prop, 0);
 
 		if (!propDataMap.contains(prop))
-		{
 			propDataMap[prop] = PropData { coords.z, GET_GAME_TIMER() + prop };
-		}
 
 		PropData data = propDataMap[prop];
 

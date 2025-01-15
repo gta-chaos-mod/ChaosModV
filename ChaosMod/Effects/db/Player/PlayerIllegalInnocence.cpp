@@ -51,9 +51,7 @@ static void OnTick()
 	if (ms_LastPlayerKills >= 0 && allPlayerKills > ms_LastPlayerKills)
 	{
 		if (ms_LastWantedLevel > 0)
-		{
 			ms_LastWantedLevel = ms_LastWantedLevel - 1;
-		}
 		SET_PLAYER_WANTED_LEVEL(player, ms_LastWantedLevel, false);
 		SET_PLAYER_WANTED_LEVEL_NOW(player, true);
 		ms_TimeReserve = WAIT_TIME;

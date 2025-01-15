@@ -26,20 +26,12 @@ static void OnStart()
 	excludeEntities = {};
 
 	for (Ped ped : GetAllPeds())
-	{
 		if (!DOES_ENTITY_EXIST(ped) || IS_ENTITY_DEAD(ped, 0))
-		{
 			excludeEntities.push_back(ped);
-		}
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (!DOES_ENTITY_EXIST(veh) || IS_ENTITY_DEAD(veh, 0))
-		{
 			excludeEntities.push_back(veh);
-		}
-	}
 
 	temporarilyInvincibleEntities = {};
 }
@@ -94,17 +86,11 @@ static void OnTick()
 
 			int maxSeats     = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 			for (int i = -1; i < maxSeats; i++)
-			{
 				if (!IS_VEHICLE_SEAT_FREE(veh, i, false))
-				{
 					SET_PED_INTO_VEHICLE(GET_PED_IN_VEHICLE_SEAT(veh, i, 0), cloneVeh, i);
-				}
-			}
 
 			if (GET_IS_VEHICLE_ENGINE_RUNNING(veh))
-			{
 				SET_VEHICLE_ENGINE_ON(cloneVeh, true, true, false);
-			}
 
 			// Prevent vehicle from blowing up instantly on spawn, creating an infinite feedback loop of spawning and
 			// exploding vehicles
@@ -120,9 +106,7 @@ static void OnTick()
 		if (!DOES_ENTITY_EXIST(invincibleEntity.entity) || GET_GAME_TIMER() >= invincibleEntity.endInvincibilityTick)
 		{
 			if (DOES_ENTITY_EXIST(invincibleEntity.entity))
-			{
 				SET_ENTITY_INVINCIBLE(invincibleEntity.entity, false);
-			}
 
 			it = temporarilyInvincibleEntities.erase(it);
 		}

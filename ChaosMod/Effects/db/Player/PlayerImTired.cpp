@@ -71,22 +71,16 @@ static void OnTick()
 		alpha += closingIterator;
 		// Chance for player who's on foot to ragdoll halfway through blinking
 		if (alpha >= 127 && alpha - closingIterator < 127 && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
-		{
 			RagdollOnFoot();
-		}
 		// Fall asleep at the wheel near the end of blinking
 		if (alpha > 200)
-		{
 			SteerVehicle();
-		}
 		if (alpha >= 255)
 		{
 			currentMode   = TiredMode::openingEyes;
 			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
 			if (closingIterator > 1)
-			{
 				closingIterator = std::max(1, closingIterator - 2);
-			}
 		}
 		break;
 	case TiredMode::openingEyes:

@@ -8,9 +8,7 @@ static void OnStart()
 	for (auto ped : GetAllPeds())
 	{
 		if (maxEntities == 10)
-		{
 			break;
-		}
 
 		maxEntities--;
 
@@ -26,9 +24,7 @@ static void OnStart()
 	for (auto veh : GetAllVehs())
 	{
 		if (maxEntities == 0)
-		{
 			break;
-		}
 
 		maxEntities--;
 
@@ -43,9 +39,7 @@ static void OnStart()
 	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	for (auto entity : entities)
-	{
 		SET_ENTITY_COORDS(entity, playerPos.x, playerPos.y, playerPos.z, false, false, false, false);
-	}
 
 	WAIT(0);
 

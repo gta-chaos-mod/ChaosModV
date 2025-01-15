@@ -25,21 +25,15 @@ static void OnTick()
 	{
 		lastTick = currentTick;
 		for (auto veh : GetAllVehs())
-		{
 			SET_VEHICLE_DOORS_SHUT(veh, false); // Closes ALL doors of vehicle
-		}
 	}
 }
 
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		for (int i = 0; i < 7; i++)
-		{
 			_SET_VEHICLE_DOOR_CAN_BREAK(veh, i, true);
-		}
-	}
 }
 
 // clang-format off

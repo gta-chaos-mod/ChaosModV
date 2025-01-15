@@ -81,9 +81,7 @@ namespace Memory
 				std::string line;
 				line.resize(64);
 				while (file.getline(line.data(), 64))
-				{
 					ms_BlacklistedHookNames.insert(StringTrim(line.substr(0, line.find("\n"))));
-				}
 			}
 		}
 
@@ -95,9 +93,7 @@ namespace Memory
 			         registeredHook      = registeredHook->GetNext())
 			    {
 				    if (registeredHook->IsLateHook())
-				    {
 					    continue;
-				    }
 
 				    const auto &hookName = registeredHook->GetName();
 
@@ -110,9 +106,7 @@ namespace Memory
 				    LOG("Running " << hookName << " hook");
 
 				    if (!registeredHook->RunHook())
-				    {
 					    LOG(hookName << " hook failed!");
-				    }
 			    }
 
 			    MH_EnableHook(MH_ALL_HOOKS);
@@ -128,9 +122,7 @@ namespace Memory
 			const auto &hookName = registeredHook->GetName();
 
 			if (ms_BlacklistedHookNames.contains(hookName))
-			{
 				continue;
-			}
 
 			LOG("Running " << hookName << " hook cleanup");
 
@@ -153,9 +145,7 @@ namespace Memory
 			         registeredHook      = registeredHook->GetNext())
 			    {
 				    if (!registeredHook->IsLateHook())
-				    {
 					    continue;
-				    }
 
 				    const auto &hookName = registeredHook->GetName();
 
@@ -168,9 +158,7 @@ namespace Memory
 				    LOG("Running " << hookName << " hook");
 
 				    if (!registeredHook->RunHook())
-				    {
 					    LOG(hookName << " hook failed!");
-				    }
 			    }
 
 			    MH_EnableHook(MH_ALL_HOOKS);
@@ -192,17 +180,13 @@ namespace Memory
 		{
 			auto copy = pattern;
 			for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
-			{
 				copy.replace(pos, 2, "?");
-			}
 
 			auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
 			                    ? hook::pattern(copy)
 			                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
 			if (!thePattern.size())
-			{
 				return Handle();
-			}
 
 			return Handle(uintptr_t(thePattern.get_first()));
 		};
@@ -215,9 +199,7 @@ namespace Memory
 
 			using namespace std::chrono_literals;
 			while (future.wait_for(0ms) != std::future_status::ready)
-			{
 				WAIT(0);
-			}
 
 			return handle;
 		}
@@ -240,9 +222,7 @@ namespace Memory
 					{
 						auto typeDesc = ms_BaseAddr + rva;
 						if (typeDesc)
-						{
 							return reinterpret_cast<const char *>(typeDesc + 16);
-						}
 					}
 				}
 			}
@@ -257,9 +237,7 @@ namespace Memory
 		{
 			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
 			if (!handle.IsValid())
-			{
 				return nullptr;
-			}
 
 			return handle.At(2).Into().Get<DWORD64 *>();
 		}();
@@ -298,9 +276,7 @@ namespace Memory
 			}
 
 			if (fallbackToSHV)
-			{
 				LOG("Warning: FiveM (non-sp) detected, features such as Failsafe will not work!");
-			}
 
 			return fallbackToSHV;
 		}();
@@ -314,21 +290,15 @@ namespace Memory
 		{
 			auto handle = Memory::FindPattern("33 DB 38 1D ? ? ? ? 89 5C 24 38");
 			if (!handle.IsValid())
-			{
 				return {};
-			}
 
 			std::string buildStr = handle.At(3).Into().Get<char>();
 			if (buildStr.empty())
-			{
 				return {};
-			}
 
 			auto splitIndex = buildStr.find("-dev");
 			if (splitIndex == buildStr.npos)
-			{
 				return {};
-			}
 
 			return buildStr.substr(0, splitIndex);
 		}();

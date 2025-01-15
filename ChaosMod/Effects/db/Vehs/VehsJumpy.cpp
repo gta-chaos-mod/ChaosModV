@@ -13,12 +13,8 @@ static void OnTick()
 		lastTick = curTick;
 
 		for (Vehicle veh : GetAllVehs())
-		{
 			if (veh != playerVeh && !IS_ENTITY_IN_AIR(veh))
-			{
 				Memory::ApplyForceToEntityCenterOfMass(veh, 0, .0f, .0f, 500.f, true, false, true, true);
-			}
-		}
 	}
 }
 

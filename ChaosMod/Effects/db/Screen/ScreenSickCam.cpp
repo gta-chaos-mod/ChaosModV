@@ -42,21 +42,15 @@ static void OnTick()
 		lastTick = curTick;
 
 		if (camZoom < 60 || camZoom > 100)
-		{
 			camZoomRate = camZoomRate * -1;
-		}
 		camZoom += camZoomRate;
 
 		if (camRotX < -25 || camRotX > 25)
-		{
 			camRotXRate = camRotXRate * -1;
-		}
 		camRotX += camRotXRate;
 
 		if (camRotY < -35 || camRotY > 35)
-		{
 			camRotYRate = camRotYRate * -1;
-		}
 		camRotY += camRotYRate;
 	}
 

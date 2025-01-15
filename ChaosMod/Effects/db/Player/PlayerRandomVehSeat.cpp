@@ -60,12 +60,8 @@ static void OnStart()
 		{
 			std::vector<int> choosableSeats;
 			for (int i = -1; i < maxSeats - 1; i++)
-			{
 				if (IS_VEHICLE_SEAT_FREE(veh, i, false) || GET_PED_IN_VEHICLE_SEAT(veh, i, false) != playerPed)
-				{
 					choosableSeats.push_back(i);
-				}
-			}
 
 			int seat = choosableSeats[g_Random.GetRandomInt(0, choosableSeats.size() - 1)];
 			if (!IS_VEHICLE_SEAT_FREE(veh, seat, false))

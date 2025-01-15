@@ -29,9 +29,7 @@ static void OnStart()
 	const auto &effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->OverrideEffectName("nothing", effectOverride);
-	}
 
 	WAIT(25000);
 }

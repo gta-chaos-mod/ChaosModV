@@ -9,9 +9,7 @@
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		Memory::SetVehicleOutOfControl(veh, false);
-	}
 }
 
 static void OnTick()
@@ -24,9 +22,7 @@ static void OnTick()
 		lastTick = curTick;
 
 		for (Vehicle veh : GetAllVehs())
-		{
 			Memory::SetVehicleOutOfControl(veh, true);
-		}
 	}
 }
 

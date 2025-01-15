@@ -14,9 +14,7 @@ const char *HK_GetLabelText(void *text, Hash hash)
 {
 	const auto &result = ms_CustomLabels.find(hash);
 	if (result != ms_CustomLabels.end())
-	{
 		return result->second.data();
-	}
 
 	return OG_GetLabelText(text, hash);
 }
@@ -25,9 +23,7 @@ static bool OnHook()
 {
 	auto handle = Memory::FindPattern("48 8B CB 8B D0 E8 ? ? ? ? 48 85 C0 0F 95 C0");
 	if (!handle.IsValid())
-	{
 		return false;
-	}
 
 	Memory::AddHook(handle.At(5).Into().Get<void>(), HK_GetLabelText, &OG_GetLabelText);
 
@@ -43,9 +39,7 @@ namespace Hooks
 		auto hash = GET_HASH_KEY(label.data());
 
 		if (ms_CustomLabels.contains(hash))
-		{
 			return;
-		}
 
 		ms_CustomLabels[hash] = text;
 		ms_CustomLabelHashes.push(hash);

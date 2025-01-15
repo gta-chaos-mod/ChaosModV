@@ -29,17 +29,11 @@ static void OnTick()
 	Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (veh != playerVeh)
-		{
 			Memory::ApplyForceToEntity(veh, 3, 10.f, .1f, .1f, 0, 0, 0, 0, true, true, true, false, true);
-		}
-	}
 
 	for (Object prop : GetAllProps())
-	{
 		Memory::ApplyForceToEntity(prop, 3, 10.f, 5.f, .1f, 0, 0, 0, 0, true, true, true, false, true);
-	}
 
 	DWORD64 curTick         = GET_GAME_TIMER();
 
@@ -53,27 +47,21 @@ static void OnTick()
 
 	// Make sure weather is always set to thunder after the transition
 	if (ms_AnchorTick < curTick - 2000)
-	{
 		SET_WEATHER_TYPE_NOW("THUNDER");
-	}
 
 	// Random right / left steering
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
-		{
 			return;
-		}
 
 		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
 		if (enableDrunkSteering)
-		{
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
-		}
 
 		DWORD64 curTick = GET_GAME_TIMER();
 

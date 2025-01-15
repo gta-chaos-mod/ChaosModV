@@ -3,9 +3,7 @@
 static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_VEHICLE_ENGINE_HEALTH(veh, 0.f);
-	}
 }
 
 // clang-format off

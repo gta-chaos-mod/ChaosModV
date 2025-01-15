@@ -12,9 +12,7 @@ DebugMenu::DebugMenu() : Component()
 {
 	m_IsEnabled = g_OptionsManager.GetConfigValue({ "EnableDebugMenu" }, OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_IsEnabled)
-	{
 		return;
-	}
 
 	for (const auto &pair : g_EnabledEffects)
 	{
@@ -38,27 +36,19 @@ DebugMenu::DebugMenu() : Component()
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
 		          for (int idx = 0;; idx++)
-		          {
 			          if (idx >= a.EffectName.size()
 			              || std::toupper(a.EffectName[idx]) < std::toupper(b.EffectName[idx]))
-			          {
 				          return true;
-			          }
 			          else if (idx >= b.EffectName.size()
 			                   || std::toupper(b.EffectName[idx]) < std::toupper(a.EffectName[idx]))
-			          {
 				          return false;
-			          }
-		          }
 	          });
 }
 
 void DebugMenu::OnRun()
 {
 	if (!m_IsEnabled || !m_Visible)
-	{
 		return;
-	}
 
 	// Arrow Up
 	DISABLE_CONTROL_ACTION(1, 27, true);
@@ -88,9 +78,7 @@ void DebugMenu::OnRun()
 		m_DispatchEffect = false;
 
 		if (ComponentExists<EffectDispatcher>())
-		{
 			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
-		}
 	}
 
 	float y                 = .1f;
@@ -101,13 +89,9 @@ void DebugMenu::OnRun()
 		short overflow = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
 
 		if (i < 0 || i < m_SelectedIdx - remainingDrawItems / 2 - (overflow > 0 ? overflow : 0))
-		{
 			continue;
-		}
 		else if (i >= m_Effects.size())
-		{
 			break;
-		}
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_Effects[i].EffectName.c_str());
@@ -145,18 +129,14 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
                            bool isAltPressed)
 {
 	if (!m_IsEnabled || !m_Visible)
-	{
 		return;
-	}
 
 	if (repeated)
 	{
 		auto curTime = GetTickCount64();
 
 		if (key == VK_RETURN || m_RepeatTime > curTime - 250)
-		{
 			return;
-		}
 	}
 	else
 	{
@@ -167,16 +147,12 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 	{
 	case VK_UP:
 		if (--m_SelectedIdx < 0)
-		{
 			m_SelectedIdx = m_Effects.size() - 1;
-		}
 
 		break;
 	case VK_DOWN:
 		if (++m_SelectedIdx >= m_Effects.size())
-		{
 			m_SelectedIdx = 0;
-		}
 
 		break;
 	case VK_RIGHT:
@@ -187,9 +163,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		while (!found)
 		{
 			if (searchChar++ == SCHAR_MAX)
-			{
 				searchChar = SCHAR_MIN;
-			}
 
 			for (int idx = 0; idx < m_Effects.size(); idx++)
 			{
@@ -214,9 +188,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		while (!found)
 		{
 			if (searchChar-- == SCHAR_MIN)
-			{
 				searchChar = SCHAR_MAX;
-			}
 
 			for (int idx = 0; idx < m_Effects.size(); idx++)
 			{
@@ -235,9 +207,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 	}
 	case VK_RETURN:
 		if (!m_Effects[m_SelectedIdx].Identifier.GetEffectId().empty())
-		{
 			m_DispatchEffect = true;
-		}
 
 		break;
 	case VK_BACK:

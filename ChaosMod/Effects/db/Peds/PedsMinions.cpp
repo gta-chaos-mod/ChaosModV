@@ -11,12 +11,8 @@ static void OnStop()
 	Hooks::ResetAudioPitch();
 
 	for (Ped pd : GetAllPeds())
-	{
 		if (GET_PED_CONFIG_FLAG(pd, 223, true))
-		{
 			SET_PED_CONFIG_FLAG(pd, 223, false);
-		}
-	}
 }
 
 static void OnTick()
@@ -24,12 +20,8 @@ static void OnTick()
 	Hooks::SetAudioPitch(300);
 
 	for (Ped pd : GetAllPeds())
-	{
 		if (!GET_PED_CONFIG_FLAG(pd, 223, true))
-		{
 			SET_PED_CONFIG_FLAG(pd, 223, true);
-		}
-	}
 }
 
 // clang-format off

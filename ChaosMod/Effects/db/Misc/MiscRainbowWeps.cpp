@@ -17,12 +17,8 @@ static void OnTick()
 		}
 
 		for (auto prop : GetAllProps())
-		{
 			if (IS_PICKUP_WEAPON_OBJECT_VALID(prop))
-			{
 				SET_WEAPON_OBJECT_TINT_INDEX(prop, g_Random.GetRandomInt(1, 7));
-			}
-		}
 	}
 }
 

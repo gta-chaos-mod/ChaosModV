@@ -148,9 +148,7 @@ class RegisterEffect
 		}();
 
 		if (disableEffectRegistration)
-		{
 			return;
-		}
 
 		m_RegisteredEffect = { effectInfo.Id, onStart, onStop, onTick };
 

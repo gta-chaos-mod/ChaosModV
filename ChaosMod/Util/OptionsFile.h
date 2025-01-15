@@ -31,9 +31,7 @@ class OptionsFile
 		{
 			std::ifstream file(fileName);
 			if (file.fail())
-			{
 				return false;
-			}
 
 			std::string line;
 			line.resize(128);
@@ -43,9 +41,7 @@ class OptionsFile
 
 				// Ignore line if there's no "="
 				if (line == key)
-				{
 					continue;
-				}
 
 				const auto &value = StringTrim(
 				    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
@@ -60,17 +56,11 @@ class OptionsFile
 		{
 			bool dataRead = false;
 			for (auto compatFileName : m_CompatFileNames)
-			{
 				if ((dataRead = readData(compatFileName)))
-				{
 					break;
-				}
-			}
 
 			if (!dataRead)
-			{
 				LOG("Config file " << m_FileName << " not found!");
-			}
 		}
 	}
 
@@ -84,9 +74,7 @@ class OptionsFile
 			{
 				T parsedResult;
 				if (Util::TryParse<T>(result->second, parsedResult))
-				{
 					return parsedResult;
-				}
 			}
 		}
 
@@ -100,9 +88,7 @@ class OptionsFile
 			const auto &result = m_Options.find(key);
 
 			if (result != m_Options.end())
-			{
 				return result->second;
-			}
 		}
 
 		return defaultValue;

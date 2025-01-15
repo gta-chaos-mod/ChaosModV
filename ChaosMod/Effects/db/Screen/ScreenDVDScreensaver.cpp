@@ -28,33 +28,25 @@ static void OnTick()
 	{
 		offsetX += SPEED;
 		if (offsetX + boxWidth >= 1)
-		{
 			goingRight = false;
-		}
 	}
 	else
 	{
 		offsetX -= SPEED;
 		if (offsetX <= 0)
-		{
 			goingRight = true;
-		}
 	}
 	if (goingDown)
 	{
 		offsetY += SPEED;
 		if (offsetY + boxHeight >= 1)
-		{
 			goingDown = false;
-		}
 	}
 	else
 	{
 		offsetY -= SPEED;
 		if (offsetY <= 0)
-		{
 			goingDown = true;
-		}
 	}
 	DRAW_RECT(0.5, offsetY / 2, 1, offsetY, 0, 0, 0, 255, false); // Top bar
 	double lowerHeight = (1 - offsetY - boxHeight);

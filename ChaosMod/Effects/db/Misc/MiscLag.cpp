@@ -21,9 +21,7 @@ static void OnTickLag()
 		lastTick = curTick;
 
 		if (++ms_State == 4)
-		{
 			ms_State = 0;
-		}
 
 		if (ms_State == 2)
 		{
@@ -59,9 +57,7 @@ static void OnTickLag()
 
 				// if the vehicle is reversing use a negative forward speed
 				if (GET_ENTITY_SPEED_VECTOR(veh, true).y < 0)
-				{
 					forwardSpeed *= -1;
-				}
 
 				const Vector3 &tpPos = pair.second;
 

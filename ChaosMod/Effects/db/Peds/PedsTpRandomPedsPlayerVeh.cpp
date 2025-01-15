@@ -12,19 +12,13 @@ static void OnStart()
 
 		std::vector<Ped> pedPool;
 		for (Ped ped : GetAllPeds())
-		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
-			{
 				pedPool.push_back(ped);
-			}
-		}
 
 		for (int i = -1; i < seats; i++)
 		{
 			if (pedPool.empty())
-			{
 				break;
-			}
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
 			{
 				int randomIndex = g_Random.GetRandomInt(0, pedPool.size() - 1);

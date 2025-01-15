@@ -19,9 +19,7 @@ namespace Shared
             foreach (var key in keys)
             {
                 if (m_Options.ContainsKey(key))
-                {
                     return true;
-                }
             }
 
             return false;
@@ -30,9 +28,7 @@ namespace Shared
         public IEnumerable<string> GetKeys()
         {
             foreach (var option in m_Options)
-            {
                 yield return option.Key;
-            }
         }
 
         public string? ReadValue(string key, string? defaultValue = null, params string[] compatKeys)
@@ -41,9 +37,7 @@ namespace Shared
             foreach (var _key in keys)
             {
                 if (!m_Options.ContainsKey(_key) || m_Options[_key] is null)
-                {
                     continue;
-                }
 
                 return m_Options[_key];
             }
@@ -54,9 +48,7 @@ namespace Shared
         public int ReadValueInt(string key, int defaultValue, params string[] compatKeys)
         {
             if (!int.TryParse(ReadValue(key, null, compatKeys), out int result))
-            {
                 result = defaultValue;
-            }
 
             return result;
         }
@@ -64,9 +56,7 @@ namespace Shared
         public long ReadValueLong(string key, long defaultValue, params string[] compatKeys)
         {
             if (!long.TryParse(ReadValue(key, null, compatKeys), out long result))
-            {
                 result = defaultValue;
-            }
 
             return result;
         }
@@ -77,14 +67,10 @@ namespace Shared
             foreach (var _key in keys)
             {
                 if (!m_Options.ContainsKey(_key) || m_Options[_key] == null)
-                {
                     continue;
-                }
 
                 if (int.TryParse(ReadValue(_key), out int result))
-                {
                     return result != 0;
-                }
             }
 
             return defaultValue;
@@ -110,15 +96,11 @@ namespace Shared
             static string? readData(string fileName)
             {
                 if (!File.Exists(fileName))
-                {
                     return null;
-                }
 
                 string _data = File.ReadAllText(fileName);
                 if (_data.Length == 0)
-                {
                     return null;
-                }
 
                 return _data;
             }
@@ -137,9 +119,7 @@ namespace Shared
                 }
 
                 if (!dataRead)
-                {
                     return;
-                }
             }
 
             m_Options.Clear();
@@ -149,9 +129,7 @@ namespace Shared
                 foreach (string line in data.Split('\n'))
                 {
                     if (!line.Contains('='))
-                    {
                         continue;
-                    }
 
                     var keyValuePair = line.Split('=', 2, System.StringSplitOptions.RemoveEmptyEntries
                         | System.StringSplitOptions.TrimEntries);
@@ -164,37 +142,27 @@ namespace Shared
         public void WriteFile()
         {
             if (m_FileName is null)
-            {
                 return;
-            }
 
             string data = string.Empty;
 
             foreach (var option in m_Options)
-            {
                 data += $"{option.Key}={option.Value}\n";
-            }
 
             var directory = Path.GetDirectoryName(m_FileName);
             if (directory is not null)
-            {
                 Directory.CreateDirectory(directory);
-            }
             File.WriteAllText(m_FileName, data);
         }
 
         public void ResetFile()
         {
             if (m_FileName is null)
-            {
                 return;
-            }
 
             var directory = Path.GetDirectoryName(m_FileName);
             if (directory is not null)
-            {
                 Directory.CreateDirectory(directory);
-            }
             File.WriteAllText(m_FileName, null);
 
             // Reset all options too
@@ -206,9 +174,7 @@ namespace Shared
             foreach (var compatFileName in m_CompatFileNames)
             {
                 if (File.Exists(compatFileName))
-                {
                     return true;
-                }
             }
 
             return false;

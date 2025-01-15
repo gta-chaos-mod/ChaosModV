@@ -42,9 +42,7 @@ static void OnStart()
 	}
 
 	if (!shaderSrcSuffix.empty())
-	{
 		Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrcPrefix + shaderSrcSuffix);
-	}
 }
 
 static void OnStop()

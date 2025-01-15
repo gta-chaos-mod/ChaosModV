@@ -17,9 +17,7 @@ static void OnStart()
 	LoadModel(blimpHash);
 
 	if (!cutscenePlaying)
-	{
 		REQUEST_CUTSCENE("fbi_1_int", 8);
-	}
 
 	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490f, 1029.085f, 345.090f, 53.824f, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
@@ -44,9 +42,7 @@ static void OnStart()
 		REQUEST_MODEL(daveHash);
 
 		while (!HAS_CUTSCENE_LOADED()) // for proper cutscene play
-		{
 			WAIT(0);
-		}
 
 		REGISTER_ENTITY_FOR_CUTSCENE(player, "MICHAEL", 0, 0, 64);
 

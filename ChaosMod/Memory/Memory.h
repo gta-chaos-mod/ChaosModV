@@ -35,9 +35,7 @@ namespace Memory
 		auto result = MH_CreateHook(target, reinterpret_cast<void *>(detour), reinterpret_cast<void **>(orig));
 
 		if (result == MH_OK)
-		{
 			MH_EnableHook(target);
-		}
 
 		return result;
 	}
@@ -48,9 +46,7 @@ namespace Memory
 		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
 
 		for (int i = 0; i < count; i++)
-		{
 			addr[i] = value;
-		}
 
 		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
 	}

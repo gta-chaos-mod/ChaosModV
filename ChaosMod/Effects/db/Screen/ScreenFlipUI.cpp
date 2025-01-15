@@ -33,12 +33,8 @@ static std::map<int, float> hudComponentXValues = {
 static void OnStart()
 {
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
-	{
 		if (hudComponentXValues.contains(i))
-		{
 			originalHudComponentX[i] = GET_HUD_COMPONENT_POSITION(i).x;
-		}
-	}
 
 	Vector3 originalMobilePhonePos;
 	GET_MOBILE_PHONE_POSITION(&originalMobilePhonePos);
@@ -48,9 +44,7 @@ static void OnStart()
 static void OnTick()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->FlipChaosUI = true;
-	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -73,17 +67,11 @@ static void OnTick()
 static void OnStop()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->FlipChaosUI = false;
-	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
-	{
 		if (hudComponentXValues.contains(i))
-		{
 			SET_HUD_COMPONENT_POSITION(i, originalHudComponentX[i], GET_HUD_COMPONENT_POSITION(i).y);
-		}
-	}
 
 	Vector3 mobilePos;
 	GET_MOBILE_PHONE_POSITION(&mobilePos);

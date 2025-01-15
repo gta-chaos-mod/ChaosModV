@@ -63,9 +63,7 @@ namespace Memory
 			{
 				auto shader = rage_sgaShader_ResolveShader(hash);
 				if (shader)
-				{
 					rage_sgaShader_destructor(shader);
-				}
 			}
 
 			reloadShaders();

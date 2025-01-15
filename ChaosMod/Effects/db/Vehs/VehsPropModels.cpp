@@ -47,9 +47,7 @@ static void OnTick()
 
 			// Don't include models that are either very small or very large
 			if (modelSize > 0.75f && modelSize < 6.f)
-			{
 				availablePropModels.push_back(model);
-			}
 		}
 	}
 
@@ -94,9 +92,7 @@ static void OnTick()
 			if (!DOES_ENTITY_EXIST(veh))
 			{
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = vehPropsMap.erase(it);
 			}
@@ -128,14 +124,10 @@ static void OnStop()
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(veh))
-		{
 			RESET_ENTITY_ALPHA(veh);
-		}
 
 		if (DOES_ENTITY_EXIST(prop))
-		{
 			DELETE_OBJECT(&prop);
-		}
 	}
 
 	vehPropsMap.clear();

@@ -3,12 +3,8 @@
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		for (int i = 0; i < 47; i++)
-		{
 			SET_VEHICLE_TYRE_FIXED(veh, i);
-		}
-	}
 }
 
 static void OnTick()

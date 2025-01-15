@@ -36,14 +36,17 @@ namespace TwitchChatVotingProxy.OverlayServer
         {
             Request("END", new List<IVoteOption>());
         }
+
         public void NewVoting(List<IVoteOption> voteOptions)
         {
             Request("CREATE", voteOptions);
         }
+
         public void NoVotingRound()
         {
             Request("NO_VOTING_ROUND", new List<IVoteOption>());
         }
+
         public void UpdateVoting(List<IVoteOption> voteOptions)
         {
             Request("UPDATE", voteOptions);
@@ -59,13 +62,9 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 // If the connection is not available for some reason, we just close it
                 if (!connection.IsAvailable)
-                {
                     connection.Close();
-                }
                 else
-                {
                     connection.Send(message);
-                }
             });
         }
         /// <summary>
@@ -115,9 +114,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             };
             var strVotingMode = VotingMode.Lookup(config.VotingMode);
             if (strVotingMode != null)
-            {
                 msg.VotingMode = strVotingMode;
-            }
             else
             {
                 logger.Error($"Could not find voting mode {config.VotingMode} in dictionary");

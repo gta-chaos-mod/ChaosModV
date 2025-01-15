@@ -8,25 +8,19 @@ static void OnStart()
 	ClearEntityPool();
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->ClearActiveEffects();
-	}
 }
 
 static void OnStop()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->DisableChaos = false;
-	}
 }
 
 static void OnTick()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->DisableChaos = true;
-	}
 }
 
 // clang-format off

@@ -39,15 +39,11 @@ static void OnTick()
 			for (int i = 0; i < catCount; i++)
 			{
 				if (i > 0)
-				{
 					WAIT(0);
-				}
 
 				Vector3 spawnPos = spawnBasePos;
 				if (isShotgun)
-				{
 					spawnPos.z = spawnBasePos.z - .25f + i * .25f;
-				}
 
 				Ped cat = CREATE_PED(28, catHash, spawnPos.x, spawnPos.y, spawnPos.z, .0f, true, false);
 				SET_ENTITY_ROTATION(cat, spawnRot.x, spawnRot.y, spawnRot.z, 2, true);

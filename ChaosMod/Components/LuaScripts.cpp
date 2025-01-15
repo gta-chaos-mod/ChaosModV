@@ -92,9 +92,7 @@ _LUAFUNC void LuaPrint(const std::string &name, const std::string &text)
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (ComponentExists<DebugSocket>())
-	{
 		GetComponent<DebugSocket>()->ScriptLog(name, text);
-	}
 #endif
 }
 
@@ -165,9 +163,7 @@ class LuaHolder
 	~LuaHolder()
 	{
 		if (m_Obj.valid())
-		{
 			m_Obj.abandon();
-		}
 	}
 
 	template <typename T> __forceinline T As()
@@ -271,9 +267,7 @@ _LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_st
 		{
 			LuaVector3 vector3;
 			if (_TryParseVector3(returned, vector3.X, vector3.Y, vector3.Z))
-			{
 				return sol::make_object(lua, vector3);
-			}
 		}
 		break;
 		default:
@@ -336,9 +330,7 @@ LuaScripts::LuaScripts()
 		auto currentThread   = std::this_thread::get_id();
 		int parseScriptFlags = ParseScriptFlag_None;
 		if (currentThread != mainThread)
-		{
 			parseScriptFlags |= ParseScriptFlag_IsAlienThread;
-		}
 
 		std::unordered_map<std::string, nlohmann::json> userEffectSettings;
 		if (pathStr.starts_with("chaosmod\\workshop") && ComponentExists<Workshop>())
@@ -372,9 +364,7 @@ LuaScripts::LuaScripts()
 		for (auto &workerThread : workerThreadPool)
 		{
 			if (workerThread)
-			{
 				continue;
-			}
 
 			workerThread         = std::make_unique<WorkerThread>();
 			workerThread->Thread = std::thread(
@@ -385,14 +375,10 @@ LuaScripts::LuaScripts()
 				    while (!isDone || !entryQueue.empty())
 				    {
 					    if (entryQueue.empty())
-					    {
 						    continue;
-					    }
 					    std::unique_lock lock(entryQueueMutex);
 					    if (entryQueue.empty())
-					    {
 						    continue;
-					    }
 
 					    auto entry = entryQueue.front();
 					    entryQueue.pop();
@@ -408,17 +394,13 @@ LuaScripts::LuaScripts()
 		}
 
 		if (!foundNewThread)
-		{
 			entryQueue.push(entry);
-		}
 	};
 
 	for (auto dir : ms_ScriptDirs)
 	{
 		if (!DoesFileExist(dir))
-		{
 			continue;
-		}
 
 		if (!strcmp(dir, "chaosmod\\workshop"))
 		{
@@ -437,21 +419,15 @@ LuaScripts::LuaScripts()
 		else
 		{
 			for (const auto &entry : GetFiles(dir, ".lua", true))
-			{
 				parseScriptThreaded(entry);
-			}
 		}
 	}
 
 	isDone = true;
 
 	for (auto &workerThread : workerThreadPool)
-	{
 		if (workerThread && workerThread->Thread.joinable())
-		{
 			workerThread->Thread.join();
-		}
-	}
 
 	while (!threadUnsafeEntryQueue.empty())
 	{
@@ -465,29 +441,19 @@ void LuaScripts::OnModPauseCleanup()
 {
 	// Clean up all registered script effects
 	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
-	{
 		if (it->IsScript())
-		{
 			it = g_RegisteredEffects.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 
 	// Clean up all effect groups registered by scripts
 	for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
 	{
 		const auto &[groupName, groupData] = *it;
 		if (groupData.WasRegisteredByScript)
-		{
 			it = g_EffectGroups.erase(it);
-		}
 		else
-		{
 			it++;
-		}
 	}
 }
 
@@ -541,9 +507,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	}
 
 	if (!ms_NativesDefCache.empty())
-	{
 		lua.unsafe_script(ms_NativesDefCache);
-	}
 
 	lua["GetTickCount"] = GetTickCount64;
 	lua["GET_HASH_KEY"] = GET_HASH_KEY;
@@ -591,9 +555,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		  [](unsigned char key)
 		  {
 		      if (ComponentExists<KeyStates>())
-		      {
 			      return GetComponent<KeyStates>()->IsKeyPressed(key);
-		      }
 
 		      return false;
 		  }),
@@ -601,9 +563,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		  [](unsigned char key)
 		  {
 		      if (ComponentExists<KeyStates>())
-		      {
 			      return GetComponent<KeyStates>()->IsKeyJustPressed(key);
-		      }
 
 		      return false;
 		  }),
@@ -707,17 +667,11 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	}
 
 	if (threadUnsafeFuncCalled)
-	{
 		return ParseScriptReturnReason::Error_ThreadUnsafe;
-	}
 
 	if (flags & ParseScriptFlag_IsAlienThread)
-	{
 		for (auto exposable : exposables)
-		{
 			exposable(lua);
-		}
-	}
 
 	static std::mutex effectGroupMutex;
 	const sol::optional<sol::table> &effectGroupInfoOpt = lua["EffectGroupInfo"];
@@ -769,9 +723,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		// Backwards compatibility
 		effectInfoOpt = lua["ScriptInfo"].get<sol::optional<sol::table>>();
 		if (!effectInfoOpt)
-		{
 			return ParseScriptReturnReason::Error;
-		}
 	}
 
 	const auto &effectInfo                          = *effectInfoOpt;
@@ -820,9 +772,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 				/* Replace existing temporary effect with this one */
 
 				if (ComponentExists<EffectDispatcher>())
-				{
 					GetComponent<EffectDispatcher>()->ClearEffect(effectId);
-				}
 
 				RemoveScriptEntry(effectId);
 
@@ -855,16 +805,12 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
 	{
 		if (ComponentExists<EffectDispatcher>())
-		{
 			GetComponent<EffectDispatcher>()->OverrideEffectName(effectId, name);
-		}
 	};
 	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
 	{
 		if (ComponentExists<EffectDispatcher>())
-		{
 			GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, overrideId);
-		}
 	};
 
 	EffectData effectData;
@@ -933,9 +879,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		effectData.CustomTime = settingOverrides["CustomTime"];
 		if (effectData.CustomTime > 0)
-		{
 			effectData.TimedType = EffectTimedType::Custom;
-		}
 	}
 	catch (nlohmann::json::exception)
 	{
@@ -957,15 +901,11 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	const sol::optional<bool> &isMetaOpt = effectInfo["IsMeta"];
 	if (isMetaOpt)
-	{
 		effectData.SetAttribute(EffectAttributes::IsMeta, *isMetaOpt);
-	}
 
 	const sol::optional<bool> &excludeFromVotingOpt = effectInfo["ExcludeFromVoting"];
 	if (excludeFromVotingOpt)
-	{
 		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, *excludeFromVotingOpt);
-	}
 	try
 	{
 		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, settingOverrides["ExcludedFromVoting"]);
@@ -976,27 +916,19 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	const sol::optional<bool> &isUtilityOpt = effectInfo["IsUtility"];
 	if (isUtilityOpt)
-	{
 		effectData.SetAttribute(EffectAttributes::IsUtility, *isUtilityOpt);
-	}
 
 	const sol::optional<bool> &hideRealNameOnStartOpt = effectInfo["HideRealNameOnStart"];
 	if (hideRealNameOnStartOpt)
-	{
 		effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, *hideRealNameOnStartOpt);
-	}
 
 	const sol::optional<sol::table> &incompatibleIdsOpt = effectInfo["IncompatibleIds"];
 	if (incompatibleIdsOpt)
 	{
 		const auto &incompatibleIds = *incompatibleIdsOpt;
 		for (const auto &entry : incompatibleIds)
-		{
 			if (entry.second.valid() && entry.second.is<std::string>())
-			{
 				effectData.IncompatibleIds.insert(entry.second.as<std::string>());
-			}
-		}
 	}
 
 	const sol::optional<std::string> &effectCategoryOpt = effectInfo["EffectCategory"];
@@ -1005,9 +937,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		const auto &effectCategoryStr = *effectCategoryOpt;
 		auto effectCategoryIt         = g_NameToEffectCategory.find(effectCategoryStr);
 		if (effectCategoryIt != g_NameToEffectCategory.end())
-		{
 			effectData.EffectCategory = effectCategoryIt->second;
-		}
 	}
 
 	const sol::optional<std::string> &effectGroupOpt = effectInfo["EffectGroup"];
@@ -1019,9 +949,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		std::lock_guard lock(effectGroupMutex);
 
 		if (!g_EffectGroups.contains(effectGroup))
-		{
 			g_EffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
-		}
 
 		g_EffectGroups[effectGroup].MemberCount++;
 	}
@@ -1051,9 +979,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		std::string name = StringTrim(settingOverrides["CustomName"]);
 		if (!name.empty())
-		{
 			effectData.CustomName = name;
-		}
 	}
 	catch (nlohmann::json::exception)
 	{
@@ -1073,9 +999,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	{
 		// Immediately dispatch it too
 		if (ComponentExists<EffectDispatcher>())
-		{
 			GetComponent<EffectDispatcher>()->DispatchEffect(effectId, EffectDispatcher::DispatchEffectFlag_NoAddToLog);
-		}
 	}
 	else
 	{
@@ -1092,9 +1016,7 @@ void LuaScripts::RemoveScriptEntry(const std::string &effectId)
 
 	auto result = std::find(g_RegisteredEffects.begin(), g_RegisteredEffects.end(), effectId);
 	if (result != g_RegisteredEffects.end())
-	{
 		g_RegisteredEffects.erase(result);
-	}
 }
 
 void LuaScripts::Execute(const std::string &effectId, ExecuteFuncType funcType)
@@ -1111,9 +1033,7 @@ void LuaScripts::Execute(const std::string &effectId, ExecuteFuncType funcType)
 
 		// Yes, OnStop also gets called on non-timed effects
 		if (script.IsTemporary())
-		{
 			RemoveScriptEntry(effectId);
-		}
 
 		break;
 	case ExecuteFuncType::Tick:

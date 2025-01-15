@@ -9,19 +9,13 @@ static void OnStart()
 	std::vector<Entity> entities;
 
 	for (Ped ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (Object prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (Entity ent : entities)
 	{

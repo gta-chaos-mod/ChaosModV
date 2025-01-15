@@ -8,15 +8,11 @@ namespace ConfigApp.Tabs.Voting
         private readonly List<Grid> m_Grids = new();
 
         private CheckBox? m_EnableVoting = null;
-
         private ComboBox? m_OverlayMode = null;
         private CheckBox? m_EnableRandomEffect = null;
-
         private TextBox? m_SecsBeforeVoting = null;
         private TextBox? m_PermittedUserNames = null;
-
         private TextBox? m_VoteablePrefix = null;
-
         private CheckBox? m_EnableProportionalVoting = null;
         private CheckBox? m_EnableProportionalVotingRetainInitialChance = null;
 
@@ -33,9 +29,7 @@ namespace ConfigApp.Tabs.Voting
         private void SetGridsEnabled(bool state)
         {
             foreach (var grid in m_Grids)
-            {
                 grid.IsEnabled = state;
-            }
         }
 
         protected override void InitContent()
@@ -141,53 +135,31 @@ namespace ConfigApp.Tabs.Voting
                 m_EnableVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableVoting", false, "EnableTwitchVoting");
                 SetGridsEnabled(m_EnableVoting.IsChecked.GetValueOrDefault());
             }
-
             if (m_OverlayMode is not null)
-            {
                 m_OverlayMode.SelectedIndex = OptionsManager.TwitchFile.ReadValueInt("VotingOverlayMode", 0, "TwitchVotingOverlayMode");
-            }
             if (m_EnableRandomEffect is not null)
-            {
                 m_EnableRandomEffect.IsChecked = OptionsManager.TwitchFile.ReadValueBool("RandomEffectVoteableEnable", true, "TwitchRandomEffectVoteableEnable");
-            }
-
             if (m_SecsBeforeVoting is not null)
-            {
                 m_SecsBeforeVoting.Text = OptionsManager.TwitchFile.ReadValue("VotingSecsBeforeVoting", "0", "TwitchVotingSecsBeforeVoting");
-            }
             if (m_PermittedUserNames is not null)
-            {
                 m_PermittedUserNames.Text = OptionsManager.TwitchFile.ReadValue("PermittedUsernames", null, "TwitchPermittedUsernames");
-            }
-
             if (m_VoteablePrefix is not null)
-            {
                 m_VoteablePrefix.Text = OptionsManager.TwitchFile.ReadValue("VoteablePrefix", "");
-            }
-
             if (m_EnableProportionalVoting is not null)
-            {
                 m_EnableProportionalVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("VotingChanceSystem", false, "TwitchVotingChanceSystem");
-            }
             if (m_EnableProportionalVotingRetainInitialChance is not null)
-            {
                 m_EnableProportionalVotingRetainInitialChance.IsChecked = OptionsManager.TwitchFile.ReadValueBool("VotingChanceSystemRetainChance", true,
                     "TwitchVotingChanceSystemRetainChance");
-            }
         }
 
         public override void OnSaveValues()
         {
             OptionsManager.TwitchFile.WriteValue("EnableVoting", m_EnableVoting?.IsChecked);
-
             OptionsManager.TwitchFile.WriteValue("VotingOverlayMode", m_OverlayMode?.SelectedIndex);
             OptionsManager.TwitchFile.WriteValue("RandomEffectVoteableEnable", m_EnableRandomEffect?.IsChecked);
-
             OptionsManager.TwitchFile.WriteValue("VotingSecsBeforeVoting", m_SecsBeforeVoting?.Text);
             OptionsManager.TwitchFile.WriteValue("PermittedUsernames", m_PermittedUserNames?.Text);
-
             OptionsManager.TwitchFile.WriteValue("VoteablePrefix", m_VoteablePrefix?.Text);
-
             OptionsManager.TwitchFile.WriteValue("VotingChanceSystem", m_EnableProportionalVoting?.IsChecked);
             OptionsManager.TwitchFile.WriteValue("VotingChanceSystemRetainChance", m_EnableProportionalVotingRetainInitialChance?.IsChecked);
         }

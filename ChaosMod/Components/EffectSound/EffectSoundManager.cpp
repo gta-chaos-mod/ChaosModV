@@ -11,18 +11,14 @@ void EffectSoundManager::HandleDirectory(const std::string &dir, const std::stri
 {
 	auto soundRootDirName = dir + "\\sounds\\";
 	if (!DoesFileExist(soundRootDirName))
-	{
 		return;
-	}
 
 	auto soundDirPath  = soundRootDirName + soundName;
 	auto soundFilePath = soundDirPath + ".mp3";
 
 	std::vector<std::string> blacklistedFiles;
 	if (dir.starts_with(CHAOS_SOUNDFILES_WORKSHOP_DIR) && ComponentExists<Workshop>())
-	{
 		blacklistedFiles = GetComponent<Workshop>()->GetSubmissionBlacklistedFiles(dir);
-	}
 
 	auto &soundFiles    = m_EffectSoundFileNamesCache[soundName];
 
@@ -51,12 +47,8 @@ DWORD64 EffectSoundManager::PlaySoundFile(const std::string &soundFileName)
 		if (DoesFileExist(CHAOS_SOUNDFILES_WORKSHOP_DIR))
 		{
 			for (const auto &entry : std::filesystem::directory_iterator(CHAOS_SOUNDFILES_WORKSHOP_DIR))
-			{
 				if (entry.is_directory() && DoesFileExist(entry.path().string() + "\\sounds"))
-				{
 					HandleDirectory(entry.path().string(), soundFileName);
-				}
-			}
 		}
 	}
 

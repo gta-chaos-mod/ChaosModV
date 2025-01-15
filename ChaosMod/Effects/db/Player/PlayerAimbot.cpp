@@ -33,9 +33,7 @@ static void OnTick()
 					SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
 					// Only 5 shots per Tick
 					if (--count <= 0)
-					{
 						break;
-					}
 				}
 			}
 		}

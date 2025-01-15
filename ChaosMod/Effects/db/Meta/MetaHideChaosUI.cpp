@@ -9,17 +9,13 @@
 static void OnStop()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->HideChaosUI = false;
-	}
 }
 
 static void OnTick()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->HideChaosUI = true;
-	}
 }
 
 // clang-format off

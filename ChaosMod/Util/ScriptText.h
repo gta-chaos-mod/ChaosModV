@@ -53,9 +53,7 @@ inline void DrawScreenText(const std::string &text, const ScreenTextVector &text
 	SET_TEXT_COLOUR(textColor.R, textColor.G, textColor.B, 255);
 
 	if (outline)
-	{
 		SET_TEXT_OUTLINE();
-	}
 
 	SET_TEXT_JUSTIFICATION(static_cast<int>(textAdjust));
 	SET_TEXT_WRAP(textWrap.X, textWrap.Y);

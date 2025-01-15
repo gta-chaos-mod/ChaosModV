@@ -21,12 +21,8 @@ inline void WAIT(DWORD timeMs)
 		EffectThreads::PauseThisThread(timeMs);
 
 		if (g_EffectDispatcherThread)
-		{
 			SwitchToFiber(g_EffectDispatcherThread);
-		}
 		else
-		{
 			SwitchToFiber(g_MainThread);
-		}
 	}
 }

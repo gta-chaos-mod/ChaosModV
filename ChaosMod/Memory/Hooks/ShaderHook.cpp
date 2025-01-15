@@ -33,9 +33,7 @@ void *HK_rage__CreateShader(const char *name, BYTE *data, DWORD size, DWORD type
 		}
 
 		if (nameFilter && std::string_view(name).find(nameFilter) != std::string_view::npos)
-		{
 			return OG_rage__CreateShader(name, ms_ShaderBytecode.data(), ms_ShaderBytecode.size(), type, out);
-		}
 	}
 
 	return OG_rage__CreateShader(name, data, size, type, out);
@@ -61,9 +59,7 @@ static bool OnHook()
 
 	handle = Memory::FindPattern("E8 ? ? ? ? 48 89 83 28 02 00 00 8B 44 24 30 89 83 30 02 00 00 EB 0F");
 	if (!handle.IsValid())
-	{
 		return false;
-	}
 
 	Memory::AddHook(handle.Into().Get<void>(), HK_rage__CreateShader, &OG_rage__CreateShader);
 
@@ -99,9 +95,7 @@ namespace Hooks
 					    std::copy(ptr, ptr + shader->GetBufferSize(), std::back_inserter(shaderBytecode));
 
 					    if (shaderCache.size() > SHADER_CACHE_MAX_ENTRIES)
-					    {
 						    shaderCache.erase(shaderCache.begin());
-					    }
 
 					    shaderCache[hash] = shaderBytecode;
 					    result            = shaderCache.find(hash);
@@ -124,9 +118,7 @@ namespace Hooks
 
 			using namespace std::chrono_literals;
 			while (future.wait_for(0ms) != std::future_status::ready)
-			{
 				WAIT(0);
-			}
 		}
 
 		if (result != shaderCache.end())

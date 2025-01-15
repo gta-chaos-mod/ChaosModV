@@ -75,12 +75,8 @@ static void OnTickKifflom()
 		lastTick = curTick;
 
 		for (Ped ped : GetAllPeds())
-		{
 			if (!IS_PED_A_PLAYER(ped) && IS_PED_HUMAN(ped))
-			{
 				PLAY_PED_AMBIENT_SPEECH_NATIVE(ped, "KIFFLOM_GREET", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
-			}
-		}
 	}
 }
 

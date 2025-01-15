@@ -12,37 +12,25 @@ static int GetAlphaForEntity(Entity entity)
 static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_ENTITY_ALPHA(ped, GetAlphaForEntity(ped), false);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_ENTITY_ALPHA(veh, GetAlphaForEntity(veh), false);
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		SET_ENTITY_ALPHA(prop, GetAlphaForEntity(prop), false);
-	}
 }
 
 static void OnStop()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		RESET_ENTITY_ALPHA(ped);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		RESET_ENTITY_ALPHA(veh);
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		RESET_ENTITY_ALPHA(prop);
-	}
 }
 
 // clang-format off

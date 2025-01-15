@@ -75,9 +75,7 @@ static void OnTick()
 {
 	// (kolyaventuri): Apply camera effects
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
-	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
-	}
 
 	Ped player = PLAYER_PED_ID();
 

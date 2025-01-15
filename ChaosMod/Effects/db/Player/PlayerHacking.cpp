@@ -132,9 +132,7 @@ static void OnStart()
 
 	scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
 	while (!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleform))
-	{
 		WAIT(0);
-	}
 
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_BACKGROUND");
 	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
@@ -227,9 +225,7 @@ static void OnStart()
 		}
 
 		if (!IS_SCREEN_FADED_IN())
-		{
 			act = TimerAction::REMOVE;
-		}
 
 		if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
 		{

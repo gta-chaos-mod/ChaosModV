@@ -12,19 +12,13 @@ static void OnStart()
 	float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 
 	for (auto ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (auto prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (auto veh : entities)
 	{
@@ -45,9 +39,7 @@ static void OnStartFake()
 	OnStart();
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fakeuturn", "misc_uturn");
-	}
 
 	WAIT(g_Random.GetRandomInt(6000, 9000));
 

@@ -19,9 +19,7 @@ static void OnStop()
 static void OnTick()
 {
 	if (!IS_GAMEPLAY_CAM_SHAKING())
-	{
 		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
-	}
 
 	Ped playerPed = PLAYER_PED_ID();
 
@@ -41,18 +39,14 @@ static void OnTick()
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
-		{
 			return;
-		}
 
 		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
 		static bool enableDrunkSteering = false;
 		static float steering;
 
 		if (enableDrunkSteering)
-		{
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
-		}
 
 		DWORD64 curTick = GET_GAME_TIMER();
 

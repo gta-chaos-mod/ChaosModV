@@ -22,13 +22,9 @@ static void OnStart()
 
 	Ped ped       = CreatePoolClonePed(playerPed);
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 	else
-	{
 		SET_ENTITY_HEADING(ped, GET_ENTITY_HEADING(playerPed));
-	}
 
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
@@ -39,9 +35,7 @@ static void OnStart()
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 
 	if (friendly)
-	{
 		SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
-	}
 
 	SET_PED_COMBAT_ATTRIBUTES(ped, 5, true);
 	SET_PED_COMBAT_ATTRIBUTES(ped, 46, true);

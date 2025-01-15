@@ -7,9 +7,7 @@
 static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_PED_RESET_FLAG(ped, 50, true);
-	}
 }
 
 // clang-format off

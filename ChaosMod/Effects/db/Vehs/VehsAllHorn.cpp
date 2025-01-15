@@ -3,9 +3,7 @@
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_HORN_PERMANENTLY_ON(veh);
-	}
 }
 
 // clang-format off

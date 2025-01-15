@@ -24,9 +24,7 @@ static void OnStart()
 	SET_MODEL_AS_NO_LONGER_NEEDED(lamarModel);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(lamarPed, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(lamarPed, relationshipGroup);
 	SET_PED_AS_GROUP_MEMBER(lamarPed, GET_PLAYER_GROUP(PLAYER_ID()));
@@ -80,9 +78,7 @@ static void OnTick()
 		lastTick = curTick;
 
 		if (DOES_ENTITY_EXIST(lamarPed))
-		{
 			PLAY_PED_AMBIENT_SPEECH_NATIVE(lamarPed, "GENERIC_INSULT_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
-		}
 	}
 }
 

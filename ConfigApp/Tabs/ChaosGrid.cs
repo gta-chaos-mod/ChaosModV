@@ -9,7 +9,6 @@ namespace ConfigApp.Tabs
 
         private int m_CurrentRow = -1;
         private int m_CurrentColumn = 0;
-
         private readonly List<RowDefinition> m_RowDefinitions = new();
         private readonly List<ColumnDefinition> m_ColumnDefinitions = new();
 
@@ -21,9 +20,7 @@ namespace ConfigApp.Tabs
         public virtual void Init(Grid? grid = null)
         {
             if (grid is not null && grid == Grid)
-            {
                 return;
-            }
 
             Grid = grid ?? new Grid();
 
@@ -49,9 +46,7 @@ namespace ConfigApp.Tabs
         private void CheckColumnValidity()
         {
             if (m_ColumnDefinitions.Count <= m_CurrentColumn)
-            {
                 throw new System.IndexOutOfRangeException("m_CurrentColumn > max columns!");
-            }
         }
 
         public void SetRowHeight(GridLength gridLength)
@@ -87,13 +82,9 @@ namespace ConfigApp.Tabs
                 if (text != null)
                 {
                     if (control.GetValue(FrameworkElement.HorizontalAlignmentProperty) == null)
-                    {
                         control.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-                    }
                     if (control.GetValue(FrameworkElement.VerticalAlignmentProperty) == null)
-                    {
                         control.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
-                    }
                 }
 
                 control.SetValue(Grid.ColumnProperty, m_CurrentColumn);

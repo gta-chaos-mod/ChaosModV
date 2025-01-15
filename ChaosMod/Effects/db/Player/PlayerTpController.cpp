@@ -39,13 +39,9 @@ REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, EffectInfo
 static void OnStartFortZancudo()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
-	{
 		TeleportPlayer(-2360.3f, 3244.83f, 92.9f);
-	}
 	else
-	{
 		TeleportPlayer(-2267.89f, 3121.04f, 32.5f);
-	}
 }
 
 // clang-format off
@@ -61,13 +57,9 @@ REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, EffectInfo
 static void OnStartMountChilliad()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
-	{
 		TeleportPlayer(501.77f, 5604.85f, 797.91f);
-	}
 	else
-	{
 		TeleportPlayer(503.33f, 5531.91f, 777.45f);
-	}
 }
 
 // clang-format off
@@ -139,15 +131,11 @@ static void OnStartWaypoint()
 
 				TeleportPlayer(coords.x, coords.y, testZ);
 				if (i % 5 == 0)
-				{
 					WAIT(0);
-				}
 
 				useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
 				if (useGroundZ)
-				{
 					break;
-				}
 			}
 
 			if (useGroundZ)
@@ -215,15 +203,11 @@ static void OnStartRandom()
 
 		TeleportPlayer(x, y, testZ);
 		if (i % 5 == 0)
-		{
 			WAIT(0);
-		}
 
 		useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
 		if (useGroundZ)
-		{
 			break;
-		}
 	}
 
 	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
@@ -270,9 +254,7 @@ static void OnStartMission()
 			int color = GET_BLIP_COLOUR(nextBlip);
 			// Filter out missions for other players (ignore Trevor- and Franklin-Blips for Michael)
 			if (std::find(excludedColors.begin(), excludedColors.end(), color) == excludedColors.end())
-			{
 				validBlips.push_back(nextBlip);
-			}
 			nextBlip = GET_NEXT_BLIP_INFO_ID(i);
 		}
 	}
@@ -311,13 +293,9 @@ static const std::vector<FakeTeleportInfo> tpLocations = {
 static int GetFakeWantedLevel(std::string_view effect)
 {
 	if (effect == "tp_lsairport")
-	{
 		return 3;
-	}
 	else if (effect == "tp_fortzancudo")
-	{
 		return 4;
-	}
 
 	return 0;
 }
@@ -328,9 +306,7 @@ static void OnStartFakeTp()
 	auto overrideId                       = selectedLocationInfo.type;
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
-	}
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -345,18 +321,14 @@ static void OnStartFakeTp()
 	if (playerVeh)
 	{
 		if (!selectedLocationInfo.vehiclePos.IsDefault())
-		{
 			destinationPos = selectedLocationInfo.vehiclePos;
-		}
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
 	}
 
 	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
 	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
 	if (wanted == 0 || wanted < currentWanted)
-	{
 		wanted = currentWanted;
-	}
 
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
@@ -372,9 +344,7 @@ static void OnStartFakeTp()
 
 	SET_ENTITY_INVINCIBLE(playerPed, false);
 	if (playerVeh)
-	{
 		SET_ENTITY_INVINCIBLE(playerVeh, false);
-	}
 
 	SET_FAKE_WANTED_LEVEL(0);
 	SET_MAX_WANTED_LEVEL(5);
@@ -400,9 +370,7 @@ static void OnStartFakeFakeTp()
 	auto overrideId                       = selectedLocationInfo.type;
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
-	}
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -417,18 +385,14 @@ static void OnStartFakeFakeTp()
 	if (playerVeh)
 	{
 		if (!selectedLocationInfo.vehiclePos.IsDefault())
-		{
 			destinationPos = selectedLocationInfo.vehiclePos;
-		}
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
 	}
 
 	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
 	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
 	if (wanted == 0 || wanted < currentWanted)
-	{
 		wanted = currentWanted;
-	}
 
 	SET_PLAYER_WANTED_LEVEL(player, 0, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
@@ -444,9 +408,7 @@ static void OnStartFakeFakeTp()
 
 	SET_ENTITY_INVINCIBLE(playerPed, false);
 	if (playerVeh)
-	{
 		SET_ENTITY_INVINCIBLE(playerVeh, false);
-	}
 
 	SET_FAKE_WANTED_LEVEL(0);
 	SET_MAX_WANTED_LEVEL(5);
@@ -454,9 +416,7 @@ static void OnStartFakeFakeTp()
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 
 	if (ComponentExists<EffectDispatcher>())
-	{
 		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
-	}
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 

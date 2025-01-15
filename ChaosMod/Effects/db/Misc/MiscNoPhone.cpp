@@ -5,9 +5,7 @@ static void OnStop()
 	REQUEST_SCRIPT("cellphone_controller");
 
 	while (!HAS_SCRIPT_LOADED("cellphone_controller"))
-	{
 		WAIT(0);
-	}
 
 	START_NEW_SCRIPT("cellphone_controller", 1424);
 

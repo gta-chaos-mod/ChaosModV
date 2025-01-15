@@ -37,10 +37,7 @@ namespace ConfigApp
 
         public SubmissionInstallState InstallState
         {
-            get
-            {
-                return m_InstallState;
-            }
+            get => m_InstallState;
             set
             {
                 m_InstallState = value;
@@ -81,28 +78,19 @@ namespace ConfigApp
 
         public ICommand InstallButtonCommand
         {
-            get
-            {
-                return new WorkshopInstallHandler(this);
-            }
+            get => new WorkshopInstallHandler(this);
         }
         public string InstallButtonText { get; private set; } = "Install";
         public bool InstallButtonEnabled { get; private set; } = true;
 
         public ICommand InfoButtonCommand
         {
-            get
-            {
-                return new WorkshopInfoHandler(this);
-            }
+            get => new WorkshopInfoHandler(this);
         }
 
         public ICommand SettingsButtonCommand
         {
-            get
-            {
-                return new WorkshopSettingsHandler(this);
-            }
+            get => new WorkshopSettingsHandler(this);
         }
         public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Hidden;
 
@@ -115,9 +103,7 @@ namespace ConfigApp
                 {
                     using var ico = Icon.ExtractAssociatedIcon(fileName);
                     if (ico is not null)
-                    {
                         ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    }
                 }
             }
 

@@ -12,9 +12,7 @@ namespace ConfigApp
             var effectData = new EffectData();
 
             if (value is null)
-            {
                 return effectData;
-            }
 
             // Split by comma, ignoring commas in between quotation marks
             var values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
@@ -24,43 +22,27 @@ namespace ConfigApp
             if (values.Length >= 4)
             {
                 if (int.TryParse(values[0], out int enabled))
-                {
                     effectData.Enabled = enabled != 0;
-                }
 
                 if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
-                {
                     effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
-                }
                 if (int.TryParse(values[2], out int customTime))
-                {
                     effectData.CustomTime = customTime;
-                }
                 if (int.TryParse(values[3], out int weightMult))
-                {
                     effectData.WeightMult = weightMult;
-                }
             }
 
             if (values.Length >= 5 && int.TryParse(values[4], out int tmp) && tmp != 0)
-            {
                 effectData.TimedType = Effects.EffectTimedType.Permanent;
-            }
 
             if (values.Length >= 6 && int.TryParse(values[5], out tmp))
-            {
                 effectData.ExcludedFromVoting = tmp != 0;
-            }
 
             if (values.Length >= 7)
-            {
                 effectData.CustomName = values[6] == "0" ? null : values[6].Trim('\"');
-            }
 
             if (values.Length >= 8 && int.TryParse(values[7], out int shortcut))
-            {
                 effectData.ShortcutKeycode = shortcut;
-            }
 
             return effectData;
         }
@@ -68,26 +50,20 @@ namespace ConfigApp
         public static void HandleOnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs eventArgs)
         {
             if (eventArgs.Text.Length == 0 || !char.IsDigit(eventArgs.Text[0]))
-            {
                 eventArgs.Handled = true;
-            }
         }
 
         public static void HandleNoSpacePreviewKeyDown(object sender, KeyEventArgs eventArgs)
         {
             if (eventArgs.Key == Key.Space)
-            {
                 eventArgs.Handled = true;
-            }
         }
 
         public static void HandleNoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             if (eventArgs.Command == ApplicationCommands.Copy || eventArgs.Command == ApplicationCommands.Cut
                 || eventArgs.Command == ApplicationCommands.Paste)
-            {
                 eventArgs.Handled = true;
-            }
         }
 
         public static CheckBox GenerateCommonCheckBox()

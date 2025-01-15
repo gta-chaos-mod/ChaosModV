@@ -10,9 +10,7 @@ static void OnStart()
 {
 	REQUEST_NAMED_PTFX_ASSET("core");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("core"))
-	{
 		WAIT(0);
-	}
 
 	Ped player = PLAYER_PED_ID();
 	USE_PARTICLE_FX_ASSET("core");
@@ -24,9 +22,7 @@ static void OnStart()
 static void ApplyVig()
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
-	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("fp_vig_red", 0.25f);
-	}
 }
 
 // (kolyaventuri) There's gotta be a better way of doing this...

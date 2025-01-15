@@ -25,12 +25,8 @@ template <typename T> class PoolIterator
 	PoolIterator &operator++()
 	{
 		for (Index++; Index < Pool->m_Size; Index++)
-		{
 			if (Pool->IsValid(Index))
-			{
 				return *this;
-			}
-		}
 
 		Index = Pool->m_Size;
 		return *this;
@@ -63,9 +59,7 @@ template <typename T> class PoolUtils
 	{
 		std::vector<Entity> arr;
 		for (auto entity : *static_cast<T *>(this))
-		{
 			arr.push_back(entity);
-		}
 
 		return arr;
 	}

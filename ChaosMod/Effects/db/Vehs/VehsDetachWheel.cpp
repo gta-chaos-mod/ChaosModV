@@ -21,15 +21,11 @@ static void OnStart()
 		{
 			int index = GET_ENTITY_BONE_INDEX_BY_NAME(veh, wheel);
 			if (index != -1)
-			{
 				presentWheels.push_back(index);
-			}
 		}
 
 		if (!presentWheels.empty())
-		{
 			Memory::DetachBone(veh, presentWheels[g_Random.GetRandomInt(0, presentWheels.size() - 1)]);
-		}
 	}
 }
 

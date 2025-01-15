@@ -66,9 +66,7 @@ void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 	};
 
 	if (entry->type == 6 || entry->type == 7 || !entry->dataFile || !badFiles.contains(entry->dataFile->name))
-	{
 		OG_ApplyChangeSetEntryStub(entry);
-	}
 }
 
 static bool OnHook()
@@ -77,9 +75,7 @@ static bool OnHook()
 
 	handle = Memory::FindPattern("48 8D 0C 40 48 8D 0C CE E8 ? ? ? ? FF C3");
 	if (!handle.IsValid())
-	{
 		return false;
-	}
 
 	Memory::AddHook(handle.At(8).Into().Get<void>(), HK_ApplyChangeSetEntryStub, &OG_ApplyChangeSetEntryStub);
 

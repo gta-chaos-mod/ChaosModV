@@ -7,9 +7,7 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		return;
-	}
 
 	Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
@@ -39,9 +37,7 @@ static void OnStart()
 				Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
 
 				if (!ped)
-				{
 					continue;
-				}
 
 				TASK_LEAVE_VEHICLE(ped, veh, 4160);
 			}

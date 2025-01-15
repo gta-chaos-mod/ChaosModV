@@ -24,9 +24,7 @@ namespace ConfigApp
         public int CompareTo(WorkshopSubmissionFile? obj)
         {
             if (obj is null)
-            {
                 throw new ArgumentNullException(nameof(obj));
-            }
 
             return Name.CompareTo(obj.Name);
         }
@@ -72,9 +70,7 @@ namespace ConfigApp
             {
                 var item = new TreeMenuItem(text, parent);
                 if (m_DialogMode == WorkshopEditDialogMode.Install)
-                {
                     item.CheckBoxVisiblity = Visibility.Collapsed;
-                }
                 return item;
             }
 
@@ -90,9 +86,7 @@ namespace ConfigApp
 
                 // practically impossible, but I still have gotten errors when trying to substring. So just to be safe :)
                 if (pathName.Length - 4 <= 0)
-                {
                     continue;
-                }
 
                 var pathFragments = (pathName.StartsWith("sounds\\") ? pathName[7..] : pathName).Split('\\');
 
@@ -109,9 +103,7 @@ namespace ConfigApp
                     break;
                 case ".txt":
                     if (m_DialogMode != WorkshopEditDialogMode.Install)
-                    {
                         continue;
-                    }
                     targetItem = txtParentItem;
                     break;
                 default:
@@ -132,9 +124,7 @@ namespace ConfigApp
                         }
 
                         if (i == pathFragments.Length - 1)
-                        {
                             targetItem = parentFolderItems[prevFragment];
-                        }
                         else
                         {
                             if (!parentFolderItems.ContainsKey(curFragment))
@@ -160,9 +150,7 @@ namespace ConfigApp
                     effectConfig.ShowDialog();
 
                     if (!effectConfig.IsSaved)
-                    {
                         return;
-                    }
 
                     fileState.EffectData = effectConfig.GetNewData();
                 };
@@ -181,9 +169,7 @@ namespace ConfigApp
             {
                 var child = (TreeMenuItem)files_tree_view.Items.GetItemAt(i);
                 if (child.Children.Count == 0)
-                {
                     files_tree_view.Items.RemoveAt(i);
-                }
             }
         }
 

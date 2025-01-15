@@ -100,9 +100,7 @@ namespace ConfigApp
                     {
                         var resultHash = hash.ComputeHash(buffer);
                         foreach (var b in resultHash)
-                        {
                             sha256StrBuilder.Append(b.ToString("x2"));
-                        }
                     }
 
                     return sha256StrBuilder.ToString();
@@ -204,9 +202,7 @@ namespace ConfigApp
                     {
                         var trimmedName = (entry.FullName.StartsWith("sounds/") ? entry.FullName : entry.Name).Trim();
                         if (trimmedName.Length > 0)
-                        {
                             files.Add(new WorkshopSubmissionFile(trimmedName, true));
-                        }
                     }
                     files.Sort();
 

@@ -25,9 +25,7 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("core");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("core"))
-	{
 		WAIT(0);
-	}
 	std::vector<Ped> firingPeds;
 
 	for (Ped ped : GetAllPeds())
@@ -36,9 +34,7 @@ static void OnTick()
 		{
 			Entity weapon = GET_SELECTED_PED_WEAPON(ped);
 			if (GET_WEAPON_DAMAGE_TYPE(weapon) == 3)
-			{
 				firingPeds.push_back(ped);
-			}
 		}
 	}
 

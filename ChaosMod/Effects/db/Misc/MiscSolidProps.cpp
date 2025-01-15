@@ -7,17 +7,13 @@
 static void OnTick()
 {
 	for (Entity prop : GetAllProps())
-	{
 		SET_DISABLE_BREAKING(prop, true);
-	}
 }
 
 static void OnStop()
 {
 	for (Entity prop : GetAllProps())
-	{
 		SET_DISABLE_BREAKING(prop, false);
-	}
 }
 
 // clang-format off

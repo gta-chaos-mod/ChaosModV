@@ -20,9 +20,7 @@ static void OnTick()
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_VEHICLE_ALARM(veh, false);
-	}
 }
 
 // clang-format off

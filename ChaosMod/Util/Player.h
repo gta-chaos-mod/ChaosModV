@@ -13,9 +13,7 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 	float groundHeight = GET_ENTITY_HEIGHT_ABOVE_GROUND(playerVeh);
 	float forwardSpeed;
 	if (isInVeh)
-	{
 		forwardSpeed = GET_ENTITY_SPEED(playerVeh);
-	}
 
 	if (noOffset)
 	{
@@ -32,9 +30,7 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 	SET_ENTITY_VELOCITY(isInVeh ? playerVeh : playerPed, vel.x, vel.y, vel.z);
 
 	if (isInVeh)
-	{
 		SET_VEHICLE_FORWARD_SPEED(playerVeh, forwardSpeed);
-	}
 }
 
 inline void TeleportPlayer(const Vector3 &coords, bool noOffset = false)

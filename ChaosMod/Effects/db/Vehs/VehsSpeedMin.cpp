@@ -81,9 +81,7 @@ static void OnTick()
 			}
 
 			if (Beepable(ms_TimeReserve - tickDelta) && !Beepable(ms_TimeReserve))
-			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
-			}
 
 			ms_TimeReserve -= tickDelta;
 		}
@@ -92,9 +90,7 @@ static void OnTick()
 			overlaycolor = 25;
 			ms_TimeReserve += tickDelta / 2; // slows down regaining time
 			if (ms_TimeReserve > WAIT_TIME)
-			{
 				ms_TimeReserve = WAIT_TIME;
-			}
 		}
 
 		ms_LastTick = currentTick;
@@ -136,9 +132,7 @@ static void OnStart()
 {
 	ms_Overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(ms_Overlay))
-	{
 		WAIT(0);
-	}
 	ms_EnteredVehicle = false;
 	ms_LastTick       = GET_GAME_TIMER();
 	ms_LastVeh        = 0;

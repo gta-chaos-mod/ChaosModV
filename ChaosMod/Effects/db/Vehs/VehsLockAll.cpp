@@ -3,9 +3,7 @@
 static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_VEHICLE_DOORS_LOCKED(veh, 2);
-	}
 }
 
 // clang-format off

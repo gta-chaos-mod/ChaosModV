@@ -120,9 +120,7 @@ static void OnStart()
 	RENDER_SCRIPT_CAMS(true, true, 1000, true, true, true);
 	scaleForm = REQUEST_SCALEFORM_MOVIE("breaking_news");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
-	{
 		WAIT(0);
-	}
 
 	int chosenIndex = g_Random.GetRandomInt(0, sizeof(ms_TextPairs) / sizeof(ms_TextPairs[0]) * .5f - 1) * 2;
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
@@ -158,9 +156,7 @@ static void OnTick()
 		SET_PED_KEEP_TASK(pilot, true);
 	}
 	if (scaleForm > 0)
-	{
 		DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);
-	}
 }
 
 // clang-format off

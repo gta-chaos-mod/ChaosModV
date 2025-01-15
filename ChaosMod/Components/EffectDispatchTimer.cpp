@@ -24,9 +24,7 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
 	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-	{
 		return;
-	}
 
 	m_TimerPercentage += deltaTime
 	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
@@ -37,12 +35,8 @@ void EffectDispatchTimer::UpdateTimer(int deltaTime)
 		GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 
 		if (ComponentExists<MetaModifiers>())
-		{
 			for (std::uint8_t i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-		}
 
 		m_TimerPercentage = 0.f;
 	}
@@ -86,12 +80,8 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 
 				if (ComponentExists<MetaModifiers>())
-				{
 					for (std::uint8_t i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-					{
 						GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-					}
-				}
 			}
 
 			m_DistanceChaosState.SavedPosition = position;
@@ -113,12 +103,8 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 
 			if (ComponentExists<MetaModifiers>())
-			{
 				for (std::uint8_t i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-				{
 					GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-				}
-			}
 
 			m_TimerPercentage = 0;
 		}
@@ -204,20 +190,14 @@ void EffectDispatchTimer::OnRun()
 
 	// the game was paused
 	if (deltaTime > 1000)
-	{
 		deltaTime = 0;
-	}
 
 	if (!m_PauseTimer)
 	{
 		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-		{
 			UpdateTravelledDistance();
-		}
 		else
-		{
 			UpdateTimer(deltaTime);
-		}
 	}
 
 	m_Timer = currentUpdateTime;

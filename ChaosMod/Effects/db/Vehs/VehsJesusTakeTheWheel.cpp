@@ -58,13 +58,9 @@ static void OnStart()
 	}
 
 	if (found)
-	{
 		TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(jesus, veh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);
-	}
 	else
-	{
 		TASK_VEHICLE_DRIVE_WANDER(jesus, veh, 9999.f, 4176732);
-	}
 
 	SET_PED_KEEP_TASK(jesus, true);
 	SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(jesus, true);

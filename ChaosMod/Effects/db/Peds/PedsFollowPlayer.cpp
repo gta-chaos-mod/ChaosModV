@@ -10,12 +10,8 @@ static void OnStart()
 static void OnStop()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		if (!IS_PED_A_PLAYER(ped))
-		{
 			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, false);
-		}
-	}
 }
 
 static void OnTick()
@@ -25,9 +21,7 @@ static void OnTick()
 	Vehicle playerVeh     = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
 	if (isPlayerInAnyVeh)
-	{
 		ms_SavedPlayerVeh = playerVeh;
-	}
 
 	static DWORD64 lastTick = GET_GAME_TIMER();
 	DWORD64 curTick         = GET_GAME_TIMER();
@@ -56,9 +50,7 @@ static void OnTick()
 				         || (isPedGettingInAnyVeh && pedTargetVeh == ms_SavedPlayerVeh))
 				{
 					if (GET_PED_IN_VEHICLE_SEAT(ms_SavedPlayerVeh, -1, 0) == ped)
-					{
 						TASK_VEHICLE_DRIVE_WANDER(ped, ms_SavedPlayerVeh, 9999.f, 10);
-					}
 				}
 				else
 				{

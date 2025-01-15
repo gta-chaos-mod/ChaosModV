@@ -14,16 +14,10 @@ static void HandleEntity(Entity entity)
 
 	// Clean up entities which don't exist anymore first
 	for (auto it = m_Entities.begin(); it != m_Entities.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = m_Entities.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 
 	// Delete front entity if size above limit
 	if (m_Entities.size() > ENTITY_POOL_MAX)
@@ -31,9 +25,7 @@ static void HandleEntity(Entity entity)
 		auto frontEntity = m_Entities.front();
 
 		if (DOES_ENTITY_EXIST(frontEntity))
-		{
 			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
-		}
 
 		m_Entities.pop_front();
 	}
@@ -87,32 +79,22 @@ Ped CreatePoolClonePed(Ped pedToClone)
 	CLONE_PED_TO_TARGET(pedToClone, clone);
 
 	for (int i = 0; i < 411; i++)
-	{
 		SET_PED_CONFIG_FLAG(clone, i, GET_PED_CONFIG_FLAG(pedToClone, i, 1));
-	}
 
 	for (int i = 0; i < 300; i++)
-	{
 		SET_PED_RESET_FLAG(clone, i, GET_PED_RESET_FLAG(pedToClone, i));
-	}
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(clone, GET_PED_RELATIONSHIP_GROUP_HASH(pedToClone));
 
 	int groupIndex = GET_PED_GROUP_INDEX(pedToClone);
 	if (GET_PED_AS_GROUP_LEADER(groupIndex) == pedToClone)
-	{
 		SET_PED_AS_GROUP_LEADER(clone, groupIndex);
-	}
 	else
-	{
 		SET_PED_AS_GROUP_MEMBER(clone, groupIndex);
-	}
 
 	Hash weaponHash;
 	if (GET_CURRENT_PED_WEAPON(pedToClone, &weaponHash, 0))
-	{
 		GIVE_WEAPON_TO_PED(clone, weaponHash, 9999, false, true);
-	}
 
 	SET_PED_ACCURACY(clone, GET_PED_ACCURACY(pedToClone));
 	SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);

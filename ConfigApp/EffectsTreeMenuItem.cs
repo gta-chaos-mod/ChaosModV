@@ -25,9 +25,7 @@ namespace ConfigApp
             public void Execute(object? parameter)
             {
                 if (m_Action is null)
-                {
                     return;
-                }
 
                 m_Action();
             }
@@ -44,10 +42,7 @@ namespace ConfigApp
         private bool m_isChecked;
         public bool IsChecked
         {
-            get
-            {
-                return m_isChecked;
-            }
+            get => m_isChecked;
             set
             {
                 m_isChecked = value;
@@ -55,9 +50,7 @@ namespace ConfigApp
                 NotifyFieldsUpdated();
 
                 foreach (TreeMenuItem menuItem in Children)
-                {
                     menuItem.IsChecked = value;
-                }
 
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
@@ -65,10 +58,7 @@ namespace ConfigApp
         private bool m_isColored;
         public bool IsColored
         {
-            get
-            {
-                return m_isColored;
-            }
+            get => m_isColored;
             set
             {
                 m_isColored = value;
@@ -79,10 +69,7 @@ namespace ConfigApp
         private bool m_ForceConfigHidden = false;
         public string IsConfigVisible
         {
-            get
-            {
-                return Children.Count == 0 && !m_ForceConfigHidden ? "Visible" : "Hidden";
-            }
+            get => Children.Count == 0 && !m_ForceConfigHidden ? "Visible" : "Hidden";
         }
         public bool ForceConfigHidden
         {
@@ -93,18 +80,12 @@ namespace ConfigApp
         }
         public bool IsConfigEnabled
         {
-            get
-            {
-                return IsChecked;
-            }
+            get => IsChecked;
         }
         public Action? OnConfigureClick { get; set; }
         public ICommand OnConfigureCommand
         {
-            get
-            {
-                return new TreeMenuItemAction(OnConfigureClick);
-            }
+            get => new TreeMenuItemAction(OnConfigureClick);
         }
 
         public TreeMenuItem(string text, TreeMenuItem? parent = null)
@@ -134,30 +115,20 @@ namespace ConfigApp
                 {
                     totalChildren++;
                     if (menuItem.IsChecked)
-                    {
                         enabledChildren++;
-                    }
                 }
 
                 foreach (var _menuItem in menuItem.Children)
-                {
                     countChildrenRecursive(_menuItem);
-                }
             }
 
             foreach (var menuItem in Children)
-            {
                 countChildrenRecursive(menuItem);
-            }
 
             if (CheckBoxVisiblity == Visibility.Visible)
-            {
                 Text = $"{BaseText} ({enabledChildren}/{totalChildren})";
-            }
             else
-            {
                 Text = $"{BaseText} ({totalChildren})";
-            }
             m_isChecked = enabledChildren > 0;
 
             NotifyFieldsUpdated();

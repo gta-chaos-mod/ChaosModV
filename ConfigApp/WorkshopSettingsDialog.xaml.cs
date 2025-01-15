@@ -8,10 +8,7 @@ namespace ConfigApp
 
         public bool IsSaved
         {
-            get
-            {
-                return m_IsSaved;
-            }
+            get => m_IsSaved;
         }
 
         public WorkshopSettingsDialog()

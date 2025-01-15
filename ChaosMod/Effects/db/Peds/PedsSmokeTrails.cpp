@@ -13,9 +13,7 @@ static void OnStart()
 {
 	REQUEST_NAMED_PTFX_ASSET(ptfxDict);
 	while (!HAS_NAMED_PTFX_ASSET_LOADED(ptfxDict))
-	{
 		WAIT(0);
-	}
 }
 
 static void OnStop()

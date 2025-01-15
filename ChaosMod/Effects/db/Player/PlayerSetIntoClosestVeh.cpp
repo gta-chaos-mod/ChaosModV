@@ -12,9 +12,7 @@ static void OnStart()
 	for (Vehicle veh : GetAllVehs())
 	{
 		if (veh == playerVeh)
-		{
 			continue;
-		}
 
 		Vector3 coords = GET_ENTITY_COORDS(veh, false);
 		float dist =
@@ -45,9 +43,7 @@ static void OnStart()
 					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
 					if (seatPed != playerPed)
-					{
 						teleportPeds.push_back(seatPed);
-					}
 				}
 			}
 		}
@@ -58,9 +54,7 @@ static void OnStart()
 		for (int i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= closestVehMaxSeats)
-			{
 				break;
-			}
 
 			Ped ped = teleportPeds[i];
 

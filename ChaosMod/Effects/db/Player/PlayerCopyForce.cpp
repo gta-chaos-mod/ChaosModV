@@ -11,13 +11,9 @@ static void OnStart()
 	Ped playerPed = PLAYER_PED_ID();
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		playerVelocity = GET_ENTITY_VELOCITY(GET_VEHICLE_PED_IS_IN(playerPed, false));
-	}
 	else
-	{
 		playerVelocity = GET_ENTITY_VELOCITY(playerPed);
-	}
 }
 
 static void OnTick()
@@ -26,37 +22,23 @@ static void OnTick()
 	Vector3 newVelocity;
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		newVelocity = GET_ENTITY_VELOCITY(GET_VEHICLE_PED_IS_IN(playerPed, false));
-	}
 	else
-	{
 		newVelocity = GET_ENTITY_VELOCITY(playerPed);
-	}
 	Vector3 newForce = newVelocity - playerVelocity;
 	playerVelocity   = newVelocity;
 	std::vector<Entity> entities;
 
 	for (Ped ped : GetAllPeds())
-	{
 		if (ped != playerPed && !IS_PED_IN_ANY_VEHICLE(ped, false))
-		{
 			entities.push_back(ped);
-		}
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (!IS_PED_IN_VEHICLE(playerPed, veh, false))
-		{
 			entities.push_back(veh);
-		}
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	Vector3 playerCoord = GET_ENTITY_COORDS(playerPed, false);
 	for (Entity entity : entities)

@@ -3,9 +3,7 @@
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_VEHICLE_DOORS_LOCKED(veh, 1);
-	}
 }
 
 static void OnTick()

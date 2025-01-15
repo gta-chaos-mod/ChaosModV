@@ -39,7 +39,6 @@ namespace ConfigApp.Tabs
 
         private CheckBox? m_SortIntalledFirstToggle = null;
         private WatermarkTextBox? m_SearchBox = null;
-
         private ItemsControl? m_ItemsControl = null;
 
         private void SortSubmissionItems()
@@ -54,15 +53,11 @@ namespace ConfigApp.Tabs
                 _ => throw new NotImplementedException(),
             };
             if (m_SortIntalledFirstToggle == null || m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
-            {
                 items = items.OrderBy(item => item.InstallState);
-            }
 
             m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items);
             if (m_ItemsControl is not null)
-            {
                 m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
-            }
         }
 
         private void HandleWorkshopSubmissionsSearchFilter()
@@ -72,9 +67,7 @@ namespace ConfigApp.Tabs
             view.Filter = (submissionItem) =>
             {
                 if (submissionItem is not WorkshopSubmissionItem item || transformedText is null)
-                {
                     return true;
-                }
 
                 var texts = new string?[]
                 {
@@ -86,9 +79,7 @@ namespace ConfigApp.Tabs
                 foreach (var text in texts)
                 {
                     if (text is not null && text.ToLower().Contains(transformedText))
-                    {
                         return true;
-                    }
                 };
 
                 return false;
@@ -113,15 +104,11 @@ namespace ConfigApp.Tabs
 
                 var id = getDataItem<string>(submissionData.id, string.Empty);
                 if (string.IsNullOrEmpty(id))
-                {
                     return;
-                }
 
                 var version = getDataItem<string>(submissionData.version, string.Empty);
                 if (string.IsNullOrEmpty(version))
-                {
                     return;
-                }
 
                 var lastUpdated = getDataItem<int>(submissionData.lastupdated, 0);
                 var sha256 = getDataItem<string>(submissionData.sha256, string.Empty);
@@ -130,17 +117,10 @@ namespace ConfigApp.Tabs
                 if (duplicateSubmissionItem != null)
                 {
                     if (isLocal)
-                    {
                         if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
-                        {
                             duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                        }
                         else
-                        {
                             duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                        }
-                    }
-
                     return;
                 }
 
@@ -208,9 +188,7 @@ namespace ConfigApp.Tabs
 
                     var submissionData = json.ToObject<dynamic>();
                     if (submissionData == null)
-                    {
                         continue;
-                    }
                     submissionData.id = id;
 
                     submitWorkshopSubmissionData(submissionData, true);
@@ -245,7 +223,6 @@ namespace ConfigApp.Tabs
                         if (remoteHash.ToLower() == Convert.ToHexString(sha256.ComputeHash(localContent)).ToLower())
                         {
                             ParseWorkshopSubmissionsFile(localContent);
-
                             return;
                         }
                     }
@@ -253,9 +230,7 @@ namespace ConfigApp.Tabs
 
                 var submissionsResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
                 if (!submissionsResult.IsSuccessStatusCode)
-                {
                     MessageBox.Show("Remote server provided no master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
                 else
                 {
                     var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
@@ -285,9 +260,7 @@ namespace ConfigApp.Tabs
             var dialog = new WorkshopSettingsDialog();
             dialog.ShowDialog();
             if (dialog.IsSaved)
-            {
                 await ForceRefreshWorkshopContentFromRemote();
-            }
         }
 
         private async void OnRefreshClick(object sender, RoutedEventArgs eventArgs)
@@ -457,14 +430,11 @@ namespace ConfigApp.Tabs
         {
             // Only fetch them once
             if (m_WorkshopSubmissionItems.Count > 0)
-            {
                 return;
-            };
 
             byte[]? fileContent = null;
             // Use cached content if existing (and accessible), otherwise fall back to server request
             if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
-            {
                 try
                 {
                     fileContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
@@ -473,10 +443,8 @@ namespace ConfigApp.Tabs
                 {
 
                 }
-            }
 
             if (fileContent != null)
-            {
                 try
                 {
                     ParseWorkshopSubmissionsFile(fileContent);
@@ -486,11 +454,8 @@ namespace ConfigApp.Tabs
                     // Cached file is corrupt, force reload
                     await ForceRefreshWorkshopContentFromRemote();
                 }
-            }
             else
-            {
                 await ForceRefreshWorkshopContentFromRemote();
-            }
         }
     }
 }

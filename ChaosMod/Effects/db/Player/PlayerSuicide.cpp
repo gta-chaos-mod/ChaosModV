@@ -8,9 +8,7 @@ static void OnStart()
 	{
 		REQUEST_ANIM_DICT("mp_suicide");
 		while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
-		{
 			WAIT(0);
-		}
 		Hash pistolHash = "WEAPON_PISTOL"_hash;
 		GIVE_WEAPON_TO_PED(playerPed, pistolHash, 9999, true, true);
 		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 800.f, 1, 0.f, false, false, false);

@@ -39,12 +39,8 @@ static void OnStart()
 	deadPeds = {};
 
 	for (Ped ped : GetAllPeds())
-	{
 		if (IS_ENTITY_DEAD(ped, false))
-		{
 			deadPeds.insert(ped);
-		}
-	}
 }
 
 // clang-format off

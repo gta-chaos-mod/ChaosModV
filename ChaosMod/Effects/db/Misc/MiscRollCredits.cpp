@@ -14,9 +14,7 @@ static void OnStart()
 
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
 	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
-	{
 		WAIT(0);
-	}
 
 	PLAY_END_CREDITS_MUSIC(true);
 	SET_CREDITS_ACTIVE(true);
@@ -24,17 +22,11 @@ static void OnStart()
 
 	int song = g_Random.GetRandomInt(0, 2);
 	if (song == 0)
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
-	}
 	else if (song == 1)
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_MICHAEL", 1);
-	}
 	else
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_TREVOR", 1);
-	}
 }
 
 static void OnStop()

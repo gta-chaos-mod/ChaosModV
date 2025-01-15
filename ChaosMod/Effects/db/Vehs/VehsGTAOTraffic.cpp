@@ -25,16 +25,10 @@ static void OnTick()
 
 	std::vector<Ped>::iterator it;
 	for (it = goneThrough.begin(); it != goneThrough.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = goneThrough.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 }
 
 // clang-format off

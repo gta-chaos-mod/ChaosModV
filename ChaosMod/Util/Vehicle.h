@@ -57,9 +57,7 @@ inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
 
 					if (GET_ENTITY_MODEL(veh) == vehicleHash)
-					{
 						continue;
-					}
 				}
 
 				float pedHeading = GET_ENTITY_HEADING(ped);
@@ -134,17 +132,13 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 		SeatPed seatPed = seatPeds.at(i);
 		int seatIndex   = seatPed.SeatIndex;
 		if (seatIndex >= numberOfSeats || !IS_VEHICLE_SEAT_FREE(newVehicle, seatIndex, 0))
-		{
 			seatIndex = -2;
-		}
 
 		SET_PED_INTO_VEHICLE(seatPed.Ped, newVehicle, seatIndex);
 	}
 
 	if (engineRunning)
-	{
 		SET_VEHICLE_ENGINE_ON(newVehicle, true, true, false);
-	}
 
 	SET_ENTITY_VELOCITY(newVehicle, velocity.x, velocity.y, velocity.z);
 	SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
@@ -156,9 +150,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 		SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
 
 		if (shouldUseHook)
-		{
 			Hooks::EnableScriptThreadBlock();
-		}
 		DELETE_VEHICLE(&copy);
 		if (shouldUseHook)
 		{
@@ -195,9 +187,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	_SET_VEHICLE_NEON_LIGHTS_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
 	                                g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
 	for (int i = 0; i < 4; i++)
-	{
 		_SET_VEHICLE_NEON_LIGHT_ENABLED(newVehicle, i, true);
-	}
 
 	_SET_VEHICLE_XENON_LIGHTS_COLOR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 12));
 

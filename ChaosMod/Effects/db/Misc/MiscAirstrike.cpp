@@ -28,9 +28,7 @@ static void OnTick()
 {
 	REQUEST_WEAPON_ASSET(airstrikeHash, 31, 0);
 	while (!HAS_WEAPON_ASSET_LOADED(airstrikeHash))
-	{
 		WAIT(0);
-	}
 	int current_time = GET_GAME_TIMER();
 	if (current_time - lastAirStrike > 1000)
 	{

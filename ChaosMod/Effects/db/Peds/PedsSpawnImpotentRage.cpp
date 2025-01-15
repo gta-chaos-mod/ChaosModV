@@ -36,9 +36,7 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	DWORD64 lastTick = GET_GAME_TIMER();
 
@@ -47,17 +45,13 @@ static void OnStart()
 		DWORD64 curTick = GET_GAME_TIMER();
 
 		if (lastTick < curTick - 500)
-		{
 			break;
-		}
 
 		WAIT(0);
 	}
 
 	for (int i = 0; i < 3; i++)
-	{
 		PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
-	}
 
 	RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
 }

@@ -60,9 +60,7 @@ class LuaScripts : public Component
 		{
 			const sol::protected_function &func = m_Lua[funcName];
 			if (!func.valid())
-			{
 				return;
-			}
 
 			const sol::protected_function_result &result = func();
 			if (!result.valid())

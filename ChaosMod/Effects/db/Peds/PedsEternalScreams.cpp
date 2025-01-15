@@ -7,9 +7,7 @@
 static void OnTick()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		PLAY_PAIN(ped, 8, 0, 0);
-	}
 }
 
 // clang-format off

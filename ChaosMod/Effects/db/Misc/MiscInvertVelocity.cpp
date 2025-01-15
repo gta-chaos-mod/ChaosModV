@@ -5,19 +5,13 @@ static void OnStart()
 	std::vector<Entity> entities;
 
 	for (auto ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (auto prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (auto entity : entities)
 	{

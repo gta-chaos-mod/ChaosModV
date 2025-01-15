@@ -26,9 +26,7 @@ static CWaterQuad *GetWaterQuads()
 {
 	static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
 	if (handle.IsValid())
-	{
 		return *handle.At(6).Into().Get<CWaterQuad *>();
-	}
 	return nullptr;
 }
 
@@ -49,11 +47,9 @@ static void OnStop()
 {
 	if (WaterQuads)
 	{
-		for (int i = 0; i < 821; i++) // 821 = Max Water Items
-		{
+		for (int i = 0; i < 821; i++)             // 821 = Max Water Items
 			WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
-		}
-		WaterHeights.clear(); // Clear Storage Vector
+		WaterHeights.clear();                     // Clear Storage Vector
 	}
 }
 

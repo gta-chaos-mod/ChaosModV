@@ -14,9 +14,7 @@ SplashTexts::SplashTexts()
 	    g_OptionsManager.GetConfigValue({ "EnableModSplashTexts" }, OPTION_DEFAULT_ENABLE_SPLASH_TEXTS);
 
 	if (ms_InitalSplashShown)
-	{
 		return;
-	}
 
 	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
 	           { 60, 245, 190 });
@@ -42,13 +40,9 @@ void SplashTexts::OnRun()
 		it->Time -= frameTime;
 
 		if (it->Time <= 0)
-		{
 			it = m_ActiveSplashes.erase(it);
-		}
 		else
-		{
 			it++;
-		}
 	}
 }
 
@@ -56,9 +50,7 @@ void SplashTexts::ShowSplash(const std::string &text, const ScreenTextVector &te
                              ScreenTextColor textColor, std::uint8_t time)
 {
 	if (!m_EnableSplashTexts)
-	{
 		return;
-	}
 
 	m_ActiveSplashes.emplace_back(text, textPos, scale, textColor, time);
 }

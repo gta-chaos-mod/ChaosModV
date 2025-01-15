@@ -13,9 +13,7 @@ static void OnStart()
 
 	Hash weaponHash = "weapon_firework"_hash;
 	for (Ped pd : GetAllPeds())
-	{
 		GIVE_WEAPON_TO_PED(pd, weaponHash, 9999, true, true);
-	}
 }
 
 static void OnTick()
@@ -30,9 +28,7 @@ static void OnTick()
 		Vector3 pos   = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
 		REQUEST_NAMED_PTFX_ASSET("proj_indep_firework_v2");
 		while (!HAS_NAMED_PTFX_ASSET_LOADED("proj_indep_firework_v2"))
-		{
 			WAIT(0);
-		}
 		USE_PARTICLE_FX_ASSET("proj_indep_firework_v2");
 
 		int x = pos.x + g_Random.GetRandomInt(-220, 220);

@@ -9,17 +9,13 @@
 static void OnStop()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch = 0;
-	}
 }
 
 static void OnTick()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch = 2;
-	}
 }
 
 // clang-format off

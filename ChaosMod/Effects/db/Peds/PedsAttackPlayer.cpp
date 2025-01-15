@@ -23,9 +23,7 @@ static void OnTick()
 		if (!IS_PED_A_PLAYER(ped))
 		{
 			if (IS_PED_IN_GROUP(ped) && GET_PED_GROUP_INDEX(ped) == playerGroup)
-			{
 				REMOVE_PED_FROM_GROUP(ped);
-			}
 
 			SET_PED_RELATIONSHIP_GROUP_HASH(ped, enemyGroupHash);
 

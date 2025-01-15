@@ -17,9 +17,7 @@ static void OnStart()
 
 	REQUEST_SCRIPT(scriptName);
 	while (!HAS_SCRIPT_LOADED(scriptName))
-	{
 		WAIT(0);
-	}
 	START_NEW_SCRIPT_WITH_ARGS(scriptName, (Any *)&obj, 1, 512);
 }
 

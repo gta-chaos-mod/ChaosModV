@@ -12,26 +12,18 @@ static void OnStart()
 			// Horizontal flip
 
 			if (rot.x < 180.f)
-			{
 				SET_ENTITY_ROTATION(veh, rot.x + 180.f, rot.y, rot.z, 2, true);
-			}
 			else
-			{
 				SET_ENTITY_ROTATION(veh, rot.x - 180.f, rot.y, rot.z, 2, true);
-			}
 		}
 		else
 		{
 			// Vertical flip
 
 			if (rot.y < 180.f)
-			{
 				SET_ENTITY_ROTATION(veh, rot.x, rot.y + 180.f, rot.z, 2, true);
-			}
 			else
-			{
 				SET_ENTITY_ROTATION(veh, rot.x, rot.y - 180.f, rot.z, 2, true);
-			}
 		}
 
 		SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);

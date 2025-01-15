@@ -9,9 +9,7 @@ static void OnStartMaxUpgrades()
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			if (max > 0)
-			{
 				SET_VEHICLE_MOD(veh, i, max - 1, true);
-			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, true);
 		}
@@ -27,9 +25,7 @@ static void OnStartMaxUpgrades()
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
 		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 
@@ -58,9 +54,7 @@ static void OnStartRandomUpgrades()
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			if (max > 0)
-			{
 				SET_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
-			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 		}
@@ -76,9 +70,7 @@ static void OnStartRandomUpgrades()
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
 		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 

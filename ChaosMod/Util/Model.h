@@ -10,8 +10,6 @@ inline void LoadModel(Hash model)
 	{
 		REQUEST_MODEL(model);
 		while (!HAS_MODEL_LOADED(model))
-		{
 			WAIT(0);
-		}
 	}
 }

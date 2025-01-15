@@ -78,9 +78,7 @@ namespace ConfigApp
             OptionsManager.ReadFiles();
 
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnLoadValues();
-            }
 
             m_EffectDataMap = new Dictionary<string, EffectData>();
 
@@ -115,9 +113,7 @@ namespace ConfigApp
         private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
         {
             if (eventArgs.OriginalSource is not TabControl)
-            {
                 return;
-            }
 
             foreach (var tab in m_TabItems)
             {
@@ -138,13 +134,9 @@ namespace ConfigApp
                 string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
 
                 if (Info.VERSION != newVersion)
-                {
                     update_available_button.Visibility = Visibility.Visible;
-                }
                 else
-                {
                     update_available_label.Text = "You are on the newest version of the mod!";
-                }
             }
             catch (HttpRequestException)
             {
@@ -231,9 +223,7 @@ namespace ConfigApp
             foreach (var pair in EffectsMap)
             {
                 if (pair.Value.Name is null)
-                {
                     continue;
-                }
 
                 sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, pair.Value.EffectCategory));
             }
@@ -253,15 +243,11 @@ namespace ConfigApp
                     effectConfig.ShowDialog();
 
                     if (!effectConfig.IsSaved)
-                    {
                         return;
-                    }
 
                     effectData = effectConfig.GetNewData();
                     if (m_EffectDataMap is not null)
-                    {
                         m_EffectDataMap[effectMisc.EffectId] = effectData;
-                    }
                     menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 };
                 menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
@@ -312,9 +298,7 @@ namespace ConfigApp
             meta_effects_tree_view.Items.Add(metaParentItem);
 
             foreach (var treeMenuItem in m_TreeMenuItemsAll.Append(metaParentItem))
-            {
                 treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
-            }
         }
 
         private void OnUserEffectSearchTextChanged(object sender, TextChangedEventArgs e)
@@ -333,16 +317,12 @@ namespace ConfigApp
                     }
 
                     if (parentMenuItem.Children == null)
-                    {
                         continue;
-                    }
 
                     foreach (var childMenuItem in parentMenuItem.Children)
                     {
                         if (childMenuItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
-                        {
                             m_TreeMenuItemsFiltered.Add(childMenuItem);
-                        }
                     }
                 }
             }
@@ -368,30 +348,22 @@ namespace ConfigApp
         {
             if (OptionsManager.ConfigFile.HasCompatFile("config.ini") || OptionsManager.TwitchFile.HasCompatFile("twitch.ini")
                 || OptionsManager.EffectsFile.HasCompatFile("effects.ini"))
-            {
                 if (MessageBox.Show("Note: Config files reside inside the configs/ subdirectory now. Clicking OK will move the files there. " +
                     "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
                     != MessageBoxResult.OK)
-                {
                     return;
-                }
-            }
 
             WriteConfigFile();
             WriteEffectsFile();
 
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnSaveValues();
-            }
 
             OptionsManager.WriteFiles();
 
             // Reload saved config to show the "new" (saved) settings
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnLoadValues();
-            }
 
             OptionsManager.DeleteCompatFiles();
 
@@ -411,9 +383,7 @@ namespace ConfigApp
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
-                {
                     OptionsManager.TwitchFile.ResetFile();
-                }
 
                 Init();
 

@@ -24,9 +24,7 @@ namespace Memory
 		    : m_HookFunc(hookFunc), m_CleanupFunc(cleanupFunc), m_Name(name), m_IsLateHook(isLateHook)
 		{
 			if (g_pRegisteredHooks)
-			{
 				m_Next = g_pRegisteredHooks;
-			}
 
 			g_pRegisteredHooks = this;
 		}
@@ -43,9 +41,7 @@ namespace Memory
 		inline void RunCleanup()
 		{
 			if (m_CleanupFunc)
-			{
 				m_CleanupFunc();
-			}
 		}
 
 		inline const std::string &GetName() const

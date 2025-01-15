@@ -80,9 +80,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             }
 
             while (!m_IsReady)
-            {
                 await Task.Delay(100);
-            }
 
             return true;
         }
@@ -90,16 +88,12 @@ namespace TwitchChatVotingProxy.VotingReceiver
         public Task SendMessage(string message)
         {
             if (m_Client is null)
-            {
                 return Task.FromResult(0);
-            }
 
             try
             {
                 foreach (var msg in message.Split("\n"))
-                {
                     m_Client.SendMessage(m_ChannelName, msg);
-                }
             }
             catch (Exception e)
             {

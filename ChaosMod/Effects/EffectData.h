@@ -32,13 +32,9 @@ struct EffectData
 	inline void SetAttribute(EffectAttributes attribute, bool state)
 	{
 		if (state)
-		{
 			Attributes |= attribute;
-		}
 		else
-		{
 			Attributes &= ~attribute;
-		}
 	}
 
 	inline bool IsExcludedFromVoting() const

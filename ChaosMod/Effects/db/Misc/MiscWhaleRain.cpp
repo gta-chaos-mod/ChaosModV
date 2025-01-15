@@ -64,9 +64,7 @@ static void OnTick()
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(whale))
 					{
 						if (lastTick2 < curTick - 1000)
-						{
 							whaleDespawnTime[i]--;
-						}
 					}
 					continue;
 				}
@@ -81,9 +79,7 @@ static void OnTick()
 	}
 
 	if (lastTick2 < curTick - 1000)
-	{
 		lastTick2 = curTick;
-	}
 }
 
 // clang-format off

@@ -119,9 +119,7 @@ static void OnStopLSD()
 static void OnTickLSD()
 {
 	if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
-	{
 		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
-	}
 
 	StartTransitionTimecycle("ArenaEMP");
 
@@ -139,9 +137,7 @@ static void OnTickLSD()
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
-		{
 			return;
-		}
 
 		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
 		;
@@ -149,9 +145,7 @@ static void OnTickLSD()
 		static float steering;
 
 		if (enableDrunkSteering)
-		{
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
-		}
 
 		DWORD64 curTick = GET_GAME_TIMER();
 

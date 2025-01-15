@@ -23,9 +23,7 @@ namespace Memory
 
 			handle = FindPattern("41 F7 F0 48 8B 05 ? ? ? 00 4C");
 			if (!handle.IsValid())
-			{
 				return pedModels;
-			}
 
 			DWORD64 qword_7FF69DB37F30 = handle.At(5).Into().Value<DWORD64>();
 
@@ -33,18 +31,14 @@ namespace Memory
 
 			handle                     = FindPattern("73 17 4C 0F AF 05");
 			if (!handle.IsValid())
-			{
 				return pedModels;
-			}
 
 			DWORD64 qword_7FF69DB37EE8 = handle.At(5).Into().Value<DWORD64>();
 			DWORD64 qword_7FF69DB37ED0 = handle.At(12).Into().Value<DWORD64>();
 
 			handle                     = FindPattern("3B 05 ? ? ? 00 7D 35");
 			if (!handle.IsValid())
-			{
 				return pedModels;
-			}
 
 			DWORD dword_7FF69DB37ED8   = handle.At(1).Into().Value<DWORD>();
 			DWORD64 qword_7FF69DB37F00 = handle.At(18).Into().Value<DWORD64>();
@@ -53,9 +47,7 @@ namespace Memory
 			{
 				auto model = *reinterpret_cast<Hash **>(qword_7FF69DB37F30 + 8 * i);
 				if (!model)
-				{
 					continue;
-				}
 
 				// These will crash the game, avoid at all costs !!!!
 				static const Hash badModels[] = { 0x2D7030F3, 0x3F039CBA, 0x856CFB02 };
@@ -77,9 +69,7 @@ namespace Memory
 					}
 
 					if (v2 && (*reinterpret_cast<BYTE *>(v2 + 157) & 31) == 6) // is a ped model
-					{
 						pedModels.push_back(*model);
-					}
 				}
 			}
 		}

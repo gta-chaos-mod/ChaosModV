@@ -3,9 +3,7 @@
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_VEHICLE_REDUCE_GRIP(veh, false);
-	}
 }
 
 static void OnTick()

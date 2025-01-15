@@ -40,23 +40,15 @@ namespace ConfigApp
             static void deleteFiles(string[] files)
             {
                 foreach (var file in files)
-                {
                     File.Delete(file);
-                }
             }
 
             if (ConfigFile.HasCompatFile())
-            {
                 deleteFiles(ConfigFile.GetCompatFiles());
-            }
             if (TwitchFile.HasCompatFile())
-            {
                 deleteFiles(TwitchFile.GetCompatFiles());
-            }
             if (EffectsFile.HasCompatFile())
-            {
                 deleteFiles(EffectsFile.GetCompatFiles());
-            }
         }
     }
 }

@@ -38,9 +38,7 @@ static void OnStart()
 					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
 					if (seatPed != playerPed)
-					{
 						teleportPeds.push_back(seatPed);
-					}
 				}
 			}
 		}
@@ -53,9 +51,7 @@ static void OnStart()
 		for (int i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= targetVehMaxSeats)
-			{
 				break;
-			}
 
 			Ped ped = teleportPeds[i];
 

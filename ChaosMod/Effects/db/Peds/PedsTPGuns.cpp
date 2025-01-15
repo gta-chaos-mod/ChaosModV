@@ -7,9 +7,7 @@
 static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(veh);
-	}
 }
 
 static void OnTick()
@@ -62,9 +60,7 @@ static void OnTick()
 				Entity toTeleport = ped;
 
 				if (IS_PED_IN_ANY_VEHICLE(ped, false))
-				{
 					toTeleport = GET_VEHICLE_PED_IS_IN(ped, false);
-				}
 
 				float heading = GET_ENTITY_HEADING(toTeleport);
 				Vector3 vel   = GET_ENTITY_VELOCITY(toTeleport);
@@ -74,9 +70,7 @@ static void OnTick()
 				SET_ENTITY_VELOCITY(toTeleport, vel.x, vel.y, vel.z);
 
 				if (IS_ENTITY_A_VEHICLE(toTeleport))
-				{
 					SET_VEHICLE_FORWARD_SPEED(toTeleport, forward);
-				}
 			}
 		}
 	}

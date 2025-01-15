@@ -20,12 +20,8 @@ static void OnStart()
 static void OnStop()
 {
 	for (Ped ped : ms_Zombies)
-	{
 		if (DOES_ENTITY_EXIST(ped))
-		{
 			SET_PED_AS_NO_LONGER_NEEDED(&ped);
-		}
-	}
 }
 
 static void OnTick()

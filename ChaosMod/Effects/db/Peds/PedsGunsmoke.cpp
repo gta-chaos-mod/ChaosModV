@@ -8,9 +8,7 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("scr_sr_tr");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("scr_sr_tr"))
-	{
 		WAIT(0);
-	}
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_PED_SHOOTING(ped))

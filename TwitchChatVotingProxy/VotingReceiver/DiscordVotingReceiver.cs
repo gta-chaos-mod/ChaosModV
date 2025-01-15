@@ -60,9 +60,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             await m_Client.StartAsync();
 
             while (!m_IsReady)
-            {
                 await Task.Delay(100);
-            }
 
             return true;
         }
@@ -70,9 +68,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         public async Task SendMessage(string message)
         {
             if (m_Client is null || m_GuildId is null || m_ChannelId is null)
-            {
                 return;
-            }
 
             void handleFatal()
             {
@@ -135,9 +131,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private async Task OnReady()
         {
             if (m_Client is null)
-            {
                 return;
-            }
 
             m_Logger.Information("Successfully connected to discord");
 
@@ -167,9 +161,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             m_Logger.Information($"Discord client disconnected: {exception}");
 
             if (exception is HttpException && exception is HttpException { HttpCode: System.Net.HttpStatusCode.Unauthorized })
-            {
                 m_ChaosPipe.SendErrorMessage("Discord bot token is invalid. Please verify your config.");
-            }
 
             return Task.CompletedTask;
         }

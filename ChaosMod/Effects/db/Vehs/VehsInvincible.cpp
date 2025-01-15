@@ -3,17 +3,13 @@
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_ENTITY_INVINCIBLE(veh, false);
-	}
 }
 
 static void OnTick()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_ENTITY_INVINCIBLE(veh, true);
-	}
 }
 
 // clang-format off

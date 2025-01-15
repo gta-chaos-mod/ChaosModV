@@ -21,25 +21,17 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	auto &effectData = g_EnabledEffects.at(entry.Identifier);
 
 	if (effectData.TimedType == EffectTimedType::Permanent)
-	{
 		return;
-	}
 
 	if (!effectDispatcher->OnPreDispatchEffect.Fire(entry.Identifier))
-	{
 		return;
-	}
 
 	LOG("Dispatching effect \"" << effectData.Name << "\"");
 
 	// Increase weight for all effects first
 	for (auto &[effectId, effectData] : g_EnabledEffects)
-	{
 		if (!effectData.IsMeta())
-		{
 			effectData.Weight += effectData.WeightMult;
-		}
-	}
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
 	// times in a row
@@ -50,12 +42,8 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	else
 	{
 		for (auto &[effectId, effectData] : g_EnabledEffects)
-		{
 			if (effectData.GroupType == effectData.GroupType)
-			{
 				effectData.Weight = effectData.WeightMult;
-			}
-		}
 	}
 
 	auto playEffectDispatchSound = [&](EffectDispatcher::ActiveEffect &activeEffect)
@@ -66,9 +54,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			// Play global sound (if one exists)
 			// HACK: Force no global sound for "Fake Crash"
 			if (entry.Identifier.GetEffectId() != "misc_fakecrash")
-			{
 				GetComponent<EffectSoundManager>()->PlaySoundFile("global_effectdispatch");
-			}
 
 			// Play a sound if corresponding .mp3 file exists
 			activeEffect.SoundId = GetComponent<EffectSoundManager>()->PlaySoundFile(effectData.Id);
@@ -104,9 +90,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 		bool isIncompatible          = false;
 		if (effectData.IncompatibleIds.contains(activeEffectData.Id))
-		{
 			isIncompatible = true;
-		}
 
 		// Check if current effect is either the same effect category or marked as incompatible in active effect
 		if (!isIncompatible)
@@ -138,9 +122,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			effectName << (effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
 
 			if (!entry.Suffix.empty())
-			{
 				effectName << " " << entry.Suffix;
-			}
 
 			int effectDuration;
 			switch (effectData.TimedType)
@@ -195,9 +177,7 @@ static void _OnRunEffects(LPVOID data)
 
 		// the game was paused
 		if (deltaTime > 1000)
-		{
 			deltaTime = 0;
-		}
 
 		while (!effectDispatcher->EffectDispatchQueue.empty())
 		{
@@ -208,9 +188,7 @@ static void _OnRunEffects(LPVOID data)
 		effectDispatcher->UpdateEffects(deltaTime);
 
 		if (!ComponentExists<EffectDispatchTimer>() || GetComponent<EffectDispatchTimer>()->IsTimerEnabled())
-		{
 			effectDispatcher->UpdateMetaEffects(deltaTime);
-		}
 
 		SwitchToFiber(g_MainThread);
 	}
@@ -252,9 +230,7 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 	}
 
 	if (g_EffectDispatcherThread)
-	{
 		DeleteFiber(g_EffectDispatcherThread);
-	}
 	g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 }
 
@@ -266,9 +242,7 @@ void EffectDispatcher::OnModPauseCleanup()
 void EffectDispatcher::OnRun()
 {
 	if (g_EffectDispatcherThread)
-	{
 		SwitchToFiber(g_EffectDispatcherThread);
-	}
 
 	DrawEffectTexts();
 }
@@ -290,17 +264,13 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		POP_TIMECYCLE_MODIFIER();
 
 		if (m_ClearEffectsState == ClearEffectsState::AllRestartPermanent)
-		{
 			RegisterPermanentEffects();
-		}
 
 		m_ClearEffectsState = ClearEffectsState::None;
 	}
 
 	for (auto threadId : m_PermanentEffects)
-	{
 		EffectThreads::RunThread(threadId);
-	}
 
 	float adjustedDeltaTime = (float)deltaTime / 1000;
 
@@ -333,15 +303,11 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			OnPostRunEffect.Fire(activeEffect.Identifier);
 
 			if (!activeEffect.IsMeta)
-			{
 				activeEffects++;
-			}
 		}
 
 		if (activeEffect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(activeEffect.ThreadId))
-		{
 			activeEffect.HideEffectName = false;
-		}
 
 		if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
 		{
@@ -349,9 +315,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 			auto effectSoundPlayOptions     = EffectThreads::GetThreadEffectSoundPlayOptions(activeEffect.ThreadId);
 			if (effectSoundPlayOptions)
-			{
 				GetComponent<EffectSoundManager>()->SetSoundOptions(activeEffect.SoundId, *effectSoundPlayOptions);
-			}
 		}
 
 		if (activeEffect.MaxTime > 0.f)
@@ -397,9 +361,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 {
 	if (!SharedState.MetaEffectsEnabled)
-	{
 		return;
-	}
 
 	SharedState.MetaEffectTimerPercentage += (float)deltaTime / SharedState.MetaEffectSpawnTime / 1000;
 
@@ -435,9 +397,7 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 				effectData->Weight += effectData->WeightMult;
 
 				if (!targetEffectIdentifier && chosen <= totalWeight)
-				{
 					targetEffectIdentifier = &effectIdentifier;
-				}
 			}
 
 			if (targetEffectIdentifier)
@@ -458,9 +418,7 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 void EffectDispatcher::DrawEffectTexts()
 {
 	if (m_DisableDrawEffectTexts)
-	{
 		return;
-	}
 
 	float y             = GetEffectTopSpace();
 	float effectSpacing = EFFECT_TEXT_INNER_SPACING_MAX;
@@ -475,9 +433,7 @@ void EffectDispatcher::DrawEffectTexts()
 	for (const ActiveEffect &effect : SharedState.ActiveEffects)
 	{
 		if (effect.IsStopping)
-		{
 			continue;
-		}
 
 		const bool hasFake = !effect.FakeName.empty();
 
@@ -496,9 +452,7 @@ void EffectDispatcher::DrawEffectTexts()
 
 		auto effectName = effect.Name;
 		if (effect.HideEffectName && hasFake)
-		{
 			effectName = effect.FakeName;
-		}
 
 		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 		{
@@ -540,24 +494,16 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectIdentifier, 
 void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags, const std::string &suffix)
 {
 	if (!m_EnableNormalEffectDispatch)
-	{
 		return;
-	}
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
 	for (const auto &[effectIdentifier, effectData] : g_EnabledEffects)
-	{
 		if (!effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
-		{
 			choosableEffects.emplace(effectIdentifier, effectData);
-		}
-	}
 
 	float totalWeight = 0.f;
 	for (const auto &[effectIdentifier, effectData] : choosableEffects)
-	{
 		totalWeight += effectData.GetEffectWeight();
-	}
 
 	float chosen                                   = g_Random.GetRandomFloat(0.f, totalWeight);
 
@@ -577,9 +523,7 @@ void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFl
 	}
 
 	if (targetEffectIdentifier)
-	{
 		DispatchEffect(*targetEffectIdentifier, dispatchEffectFlags, suffix);
-	}
 }
 
 void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
@@ -587,9 +531,7 @@ void EffectDispatcher::ClearEffect(const EffectIdentifier &effectId)
 	auto result = std::find_if(SharedState.ActiveEffects.begin(), SharedState.ActiveEffects.end(),
 	                           [effectId](auto &activeEffect) { return activeEffect.Identifier == effectId; });
 	if (result == SharedState.ActiveEffects.end())
-	{
 		return;
-	}
 
 	EffectThreads::StopThread(result->ThreadId);
 	result->IsStopping = true;
@@ -609,9 +551,7 @@ void EffectDispatcher::ClearActiveEffects()
 		auto &effect = *it;
 
 		if (effect.IsMeta || effect.Timer <= 0.f)
-		{
 			continue;
-		}
 
 		EffectThreads::StopThread(effect.ThreadId);
 		effect.IsStopping = true;
@@ -625,9 +565,7 @@ void EffectDispatcher::ClearMostRecentEffect()
 		auto &effect = *it;
 
 		if (effect.IsMeta || effect.Timer <= 0.f)
-		{
 			continue;
-		}
 
 		EffectThreads::StopThread(effect.ThreadId);
 		effect.IsStopping = true;
@@ -682,9 +620,7 @@ void EffectDispatcher::RegisterPermanentEffects()
 	};
 
 	if (g_OptionsManager.GetConfigValue({ "Australia" }, false))
-	{
 		registerEffect({ "player_flip_camera" });
-	}
 
 	for (const auto &[effectIdentifier, effectData] : g_EnabledEffects)
 	{
@@ -700,12 +636,8 @@ void EffectDispatcher::RegisterPermanentEffects()
 void EffectDispatcher::OverrideEffectName(std::string_view effectId, const std::string &overrideName)
 {
 	for (auto &effect : SharedState.ActiveEffects)
-	{
 		if (effect.Identifier.GetEffectId() == effectId)
-		{
 			effect.FakeName = overrideName;
-		}
-	}
 }
 
 // (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
@@ -726,9 +658,7 @@ void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::stri
 			{
 				auto result = g_EffectsMap.find(fakeEffectId);
 				if (result != g_EffectsMap.end())
-				{
 					effect.FakeName = result->second.Name;
-				}
 			}
 		}
 	}

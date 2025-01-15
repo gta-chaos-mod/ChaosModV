@@ -65,9 +65,7 @@ static void OnTick()
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(prop))
 					{
 						if (lastTick2 < curTick - 1000)
-						{
 							meteorDespawnTime[i]--;
-						}
 					}
 					continue;
 				}
@@ -82,9 +80,7 @@ static void OnTick()
 	}
 
 	if (lastTick2 < curTick - 1000)
-	{
 		lastTick2 = curTick;
-	}
 }
 
 // clang-format off

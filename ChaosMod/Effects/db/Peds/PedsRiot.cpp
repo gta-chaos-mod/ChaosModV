@@ -49,16 +49,10 @@ static void OnTick()
 	}
 
 	for (std::list<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = goneThroughPeds.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 }
 
 // clang-format off

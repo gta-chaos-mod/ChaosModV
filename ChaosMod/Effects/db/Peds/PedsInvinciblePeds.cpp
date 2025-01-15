@@ -3,17 +3,13 @@
 static void OnStop()
 {
 	for (auto ped : GetAllPeds())
-	{
 		SET_ENTITY_INVINCIBLE(ped, false);
-	}
 }
 
 static void OnTick()
 {
 	for (auto ped : GetAllPeds())
-	{
 		SET_ENTITY_INVINCIBLE(ped, true);
-	}
 }
 
 // clang-format off

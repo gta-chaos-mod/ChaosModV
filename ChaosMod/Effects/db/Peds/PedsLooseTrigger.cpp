@@ -7,9 +7,7 @@
 static void OnStop()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_PED_INFINITE_AMMO_CLIP(ped, false);
-	}
 }
 
 static void OnTick()

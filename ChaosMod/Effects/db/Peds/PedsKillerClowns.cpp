@@ -17,21 +17,13 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOf
 	for (int i = 0; i < 10; i++)
 	{
 		if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-		{
 			randomCoord.x = startCoord.x + g_Random.GetRandomInt(minOffset, maxOffset);
-		}
 		else
-		{
 			randomCoord.x = startCoord.x - g_Random.GetRandomInt(minOffset, maxOffset);
-		}
 		if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-		{
 			randomCoord.y = startCoord.y + g_Random.GetRandomInt(minOffset, maxOffset);
-		}
 		else
-		{
 			randomCoord.y = startCoord.y - g_Random.GetRandomInt(minOffset, maxOffset);
-		}
 		randomCoord.z = startCoord.z;
 		if (GET_GROUND_Z_FOR_3D_COORD(randomCoord.x, randomCoord.y, randomCoord.z, &groundZ, false, false))
 		{
@@ -47,9 +39,7 @@ static void OnStop()
 	REMOVE_NAMED_PTFX_ASSET("scr_rcbarry2");
 
 	for (Ped ped : clownEnemies)
-	{
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-	}
 
 	clownEnemies.clear();
 }
@@ -67,9 +57,7 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("scr_rcbarry2");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("scr_rcbarry2"))
-	{
 		WAIT(0);
-	}
 
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);

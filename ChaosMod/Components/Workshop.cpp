@@ -5,15 +5,11 @@
 nlohmann::json Workshop::GetSubmissionSettingJson(const std::string &submissionPath)
 {
 	if (m_CachedSubmissionSettings.contains(submissionPath))
-	{
 		return m_CachedSubmissionSettings.at(submissionPath);
-	}
 
 	auto submissionSettingsFile = submissionPath + ".json";
 	if (!DoesFileExist(submissionSettingsFile))
-	{
 		return {};
-	}
 
 	std::ifstream file(submissionSettingsFile);
 	std::stringstream buffer;
@@ -39,9 +35,7 @@ std::vector<std::string> Workshop::GetSubmissionBlacklistedFiles(const std::stri
 	try
 	{
 		for (const std::string &file : json["disabled_files"])
-		{
 			blacklistedFiles.push_back(file);
-		}
 	}
 	catch (nlohmann::json::exception)
 	{

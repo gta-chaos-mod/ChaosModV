@@ -127,9 +127,7 @@ static void OnTickPink()
 {
 	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
-	{
 		WAIT(0);
-	}
 	for (auto it = flameByCar.cbegin(); it != flameByCar.cend();)
 	{
 		Vehicle veh = it->first;
@@ -180,9 +178,7 @@ REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 static void OnStopRainbow()
 {
 	for (int i = 0; i < 13; i++)
-	{
 		Memory::OverrideVehicleHeadlightColor(i, false, 0, 0, 0);
-	}
 }
 
 static void OnTickRainbow()
@@ -193,9 +189,7 @@ static void OnTickRainbow()
 	static const float freq   = .1f;
 
 	if (++cnt >= (ULONG)-1)
-	{
 		cnt = 0;
-	}
 
 	for (Vehicle veh : GetAllVehs())
 	{
@@ -210,9 +204,7 @@ static void OnTickRainbow()
 
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, r, g, b);
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		// Headlights too
 
@@ -233,9 +225,7 @@ static void OnTickRainbow()
 	int b = std::sin(freq * cnt + 4) * 127 + 128;
 
 	for (int i = 0; i < 13; i++)
-	{
 		Memory::OverrideVehicleHeadlightColor(i, true, r, g, b);
-	}
 }
 
 // clang-format off

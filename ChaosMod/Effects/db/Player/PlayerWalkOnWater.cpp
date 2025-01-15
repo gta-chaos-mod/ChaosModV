@@ -50,9 +50,7 @@ static void OnTick()
 static void OnStop()
 {
 	if (DOES_ENTITY_EXIST(waterObj))
-	{
 		DELETE_OBJECT(&waterObj);
-	}
 }
 
 // clang-format off

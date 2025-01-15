@@ -24,9 +24,7 @@ namespace XInput
 	inline void SetAllControllersRumble(int leftMotorSpeed, int rightMotorSpeed)
 	{
 		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
-		{
 			SetControllerRumble(i, leftMotorSpeed, rightMotorSpeed);
-		}
 	}
 
 	inline void StopControllerRumble(DWORD controllerId)
@@ -45,8 +43,6 @@ namespace XInput
 	inline void StopAllControllersRumble()
 	{
 		for (DWORD i = 0; i < XUSER_MAX_COUNT; i++)
-		{
 			StopControllerRumble(i);
-		}
 	}
 }

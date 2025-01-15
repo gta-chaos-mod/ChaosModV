@@ -13,9 +13,7 @@ static void OnTick()
 	auto playerPed = PLAYER_PED_ID();
 	auto veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false) || !IS_VEHICLE_ON_ALL_WHEELS(veh))
-	{
 		return;
-	}
 
 	DisplayHelpText("Press ~INPUT_JUMP~ to do a sick ramp jump in your vehicle.");
 

@@ -33,9 +33,7 @@ static void OnTick()
 		int overlaycolor    = 0;
 
 		if (IS_CONTROL_JUST_PRESSED(0, 23))
-		{
 			ms_LastPressTick = currentTick;
-		}
 
 		if (ms_LastPressTick < currentTick - ms_MaxPressInterval)
 		{
@@ -48,9 +46,7 @@ static void OnTick()
 			}
 
 			if (Beepable(ms_TimeReserve - tickDelta) && !Beepable(ms_TimeReserve))
-			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
-			}
 
 			ms_TimeReserve -= tickDelta;
 		}
@@ -59,9 +55,7 @@ static void OnTick()
 			overlaycolor = 25;
 			ms_TimeReserve += tickDelta / 2; // slows down regaining time
 			if (ms_TimeReserve > WAIT_TIME)
-			{
 				ms_TimeReserve = WAIT_TIME;
-			}
 		}
 
 		ms_LastTick = currentTick;
@@ -70,17 +64,11 @@ static void OnTick()
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING("PAY RESPECTS");
 		char charBuf[64];
 		if (ms_TimeReserve != WAIT_TIME && ms_LastPressTick < currentTick - ms_MaxPressInterval)
-		{
 			sprintf_s(charBuf, "Press F\nFailure In: %.1fs", float(ms_TimeReserve) / 1000);
-		}
 		else if (ms_TimeReserve != WAIT_TIME && ms_LastPressTick >= currentTick - ms_MaxPressInterval)
-		{
 			sprintf_s(charBuf, "Press F\nFailure In: %.1fs (Recovering)", float(ms_TimeReserve) / 1000);
-		}
 		else
-		{
 			sprintf_s(charBuf, "Press F");
-		}
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(charBuf);
 		SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(overlaycolor);
 		END_SCALEFORM_MOVIE_METHOD();
@@ -92,9 +80,7 @@ static void OnStart()
 {
 	ms_Overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(ms_Overlay))
-	{
 		WAIT(0);
-	}
 	ms_LastTick    = GET_GAME_TIMER();
 	ms_TimeReserve = WAIT_TIME;
 }

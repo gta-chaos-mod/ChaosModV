@@ -50,17 +50,13 @@ namespace ConfigApp.Tabs.Voting
         public override void OnLoadValues()
         {
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnLoadValues();
-            }
         }
 
         public override void OnSaveValues()
         {
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnSaveValues();
-            }
         }
     }
 }
