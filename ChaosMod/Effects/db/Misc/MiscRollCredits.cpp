@@ -4,14 +4,8 @@
 
 #include <stdafx.h>
 
-static int s_alpha;
-static float s_alphaTimer;
-
 static void OnStart()
 {
-	s_alpha      = 0;
-	s_alphaTimer = 0.f;
-
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
 	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
 		WAIT(0);
@@ -48,13 +42,8 @@ static void OnTick()
 
 	SET_USER_RADIO_CONTROL_ENABLED(false);
 
-	if (s_alpha < 255 && (s_alphaTimer += GET_FRAME_TIME()) > 0.1f)
-	{
-		s_alphaTimer = 0;
-		s_alpha++;
-	}
-
-	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, s_alpha, false);
+	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0,
+	          std::lerp(0, 255, std::min(CurrentEffect::GetEffectCompletionPercentage(), 1.f)), false);
 }
 
 // clang-format off
