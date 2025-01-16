@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Natives.h"
-
 namespace Util
 {
 	inline Vector3 GetGameplayCamOffsetInWorldCoords(const Vector3 &offset)
