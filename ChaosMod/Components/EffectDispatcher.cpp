@@ -312,6 +312,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		auto effectSharedData = EffectThreads::GetThreadSharedData(activeEffect.ThreadId);
 		if (effectSharedData)
 		{
+			effectSharedData->EffectCompletionPercentage =
+			    activeEffect.Timer <= 0.f ? 1.f : 1.f - activeEffect.Timer / activeEffect.MaxTime;
+
 			if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
 			{
 				activeEffect.HasSetSoundOptions = true;

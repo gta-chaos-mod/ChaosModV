@@ -138,6 +138,12 @@ namespace CurrentEffect
 		return EffectThreads::GetThreadSharedData(threadId);
 	}
 
+	float GetEffectCompletionPercentage()
+	{
+		auto sharedData = GetCurrentThreadSharedData();
+		return !sharedData ? 0.f : sharedData->EffectCompletionPercentage;
+	}
+
 	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions)
 	{
 		auto sharedData = GetCurrentThreadSharedData();

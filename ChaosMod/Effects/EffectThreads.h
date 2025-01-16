@@ -15,6 +15,7 @@ using LPVOID  = void *;
 
 struct EffectThreadSharedData
 {
+	float EffectCompletionPercentage = 0.f;
 	EffectSoundPlayOptions EffectSoundPlayOptions;
 	std::string OverrideEffectName;
 	std::string OverrideEffectId;
@@ -143,6 +144,7 @@ class EffectThread
 
 namespace CurrentEffect
 {
+	float GetEffectCompletionPercentage();
 	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions);
 	void OverrideEffectName(const std::string &effectName);
 	void OverrideEffectNameFromId(const std::string &effectId);
