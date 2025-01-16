@@ -62,7 +62,7 @@ static void OnTick()
 			return;
 	}
 
-#ifdef _DEBUG
+#ifdef CHAOSDEBUG
 	// Draw debug go to line
 	if (ms_State == STATE_TO_COORDS)
 	{

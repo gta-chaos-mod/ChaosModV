@@ -15,6 +15,7 @@
 #define EFFECT_TEXT_INNER_SPACING_MAX .075f
 #define EFFECT_TEXT_TOP_SPACING .2f
 #define EFFECT_TEXT_TOP_SPACING_EXTRA .35f
+#define EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS 3
 
 static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDispatcher::EffectDispatchEntry &entry)
 {
@@ -26,7 +27,11 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	if (!effectDispatcher->OnPreDispatchEffect.Fire(entry.Identifier))
 		return;
 
-	LOG("Dispatching effect \"" << effectData.Name << "\"");
+	LOG("Dispatching effect \"" << effectData.Name << "\""
+#ifdef CHAOSDEBUG
+	                            << " (" << effectData.Id << ")"
+#endif
+	);
 
 	// Increase weight for all effects first
 	for (auto &[effectId, effectData] : g_EnabledEffects)
@@ -139,12 +144,14 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectDuration = effectData.CustomTime;
 				break;
 			default:
-				effectDuration = -1;
+				effectDuration = effectData.IsMeta() ? effectDispatcher->SharedState.MetaEffectTimedDur
+				                                     : effectDispatcher->SharedState.EffectTimedDur;
 				break;
 			}
 
 			auto &activeEffect = effectDispatcher->SharedState.ActiveEffects.emplace_back(
-			    entry.Identifier, registeredEffect, effectName.str(), effectData, effectDuration);
+			    entry.Identifier, registeredEffect, effectName.str(), effectData, effectDuration,
+			    effectData.TimedType != EffectTimedType::NotTimed);
 
 			playEffectDispatchSound(activeEffect);
 
@@ -171,11 +178,9 @@ static void _OnRunEffects(LPVOID data)
 	auto effectDispatcher = reinterpret_cast<EffectDispatcher *>(data);
 	while (true)
 	{
-		auto currentUpdateTime = GetTickCount64();
-		int deltaTime          = currentUpdateTime
-		              - (ComponentExists<EffectDispatchTimer>() ? GetComponent<EffectDispatchTimer>()->GetTimer() : 0);
-
-		// the game was paused
+		int deltaTime = GetTickCount64()
+		              - (!ComponentExists<EffectDispatchTimer>() ? 0 : GetComponent<EffectDispatchTimer>()->GetTimer());
+		// The game was paused
 		if (deltaTime > 1000)
 			deltaTime = 0;
 
@@ -272,26 +277,21 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 	for (auto threadId : m_PermanentEffects)
 		EffectThreads::RunThread(threadId);
 
-	float adjustedDeltaTime = (float)deltaTime / 1000;
+	float adjustedDeltaTime = deltaTime / 1000.f;
 
-	int maxEffects =
-	    std::min((int)(floor((1.0f - GetEffectTopSpace()) / EFFECT_TEXT_INNER_SPACING_MIN) - 1), m_MaxRunningEffects);
-	int activeEffects              = 0;
-	int effectCountToCheckCleaning = 3;
+	int maxEffects          = m_MaxRunningEffects;
+	int activeEffects       = 0;
 	// Reverse order to ensure the effects on top of the list are removed if activeEffects > maxEffects
 	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
 		auto &activeEffect  = *it;
-
 		bool isEffectPaused = EffectThreads::IsThreadPaused(activeEffect.ThreadId);
 
 		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId))
 		{
-			if (activeEffect.MaxTime > 0.f
-			    || (activeEffect.MaxTime < 0.f
-			        && activeEffect.Timer >= 0.f /* Timer > 0 for non-timed effects = remove */))
+			if (activeEffect.IsTimed || activeEffect.Timer <= 0.f)
 			{
-				// Effect thread doesn't exist anymore so just remove the effect from list
+				DEBUG_LOG("Discarding ActiveEffect " << activeEffect.Identifier.GetEffectId());
 				it = static_cast<decltype(it)>(SharedState.ActiveEffects.erase(std::next(it).base()));
 				continue;
 			}
@@ -315,12 +315,9 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			effectSharedData->EffectCompletionPercentage =
 			    activeEffect.Timer <= 0.f ? 1.f : 1.f - activeEffect.Timer / activeEffect.MaxTime;
 
-			if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
-			{
-				activeEffect.HasSetSoundOptions = true;
+			if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId)
 				GetComponent<EffectSoundManager>()->SetSoundOptions(activeEffect.SoundId,
 				                                                    effectSharedData->EffectSoundPlayOptions);
-			}
 
 			if (!effectSharedData->OverrideEffectName.empty())
 			{
@@ -346,34 +343,24 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			}
 		}
 
-		if (activeEffect.MaxTime > 0.f)
-		{
-			if (isEffectPaused)
-				activeEffect.Timer -= adjustedDeltaTime;
+		activeEffect.Timer -=
+		    (adjustedDeltaTime
+		     / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->EffectDurationModifier))
+		    * (activeEffect.IsTimed
+		           ? 1.f
+		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
 
-			else
-				activeEffect.Timer -=
-				    adjustedDeltaTime
-				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
-		}
-		else
-		{
-			float t = SharedState.EffectTimedDur, m = maxEffects, n = effectCountToCheckCleaning;
-			// Ensure non-timed effects stay on screen for a certain amount of time
-			activeEffect.Timer += adjustedDeltaTime / t
-			                    * (1.f + (t / 5 - 1) * std::max(0.f, SharedState.ActiveEffects.size() - n) / (m - n));
-		}
-
-		if ((activeEffect.MaxTime > 0.f && activeEffect.Timer <= 0.f)
-		    || (!activeEffect.IsMeta && activeEffects > maxEffects))
+		if (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > maxEffects))
 		{
 			if (activeEffect.Timer < -60.f)
 			{
 				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
+				DEBUG_LOG("Tiemout reached, forcefully stopping effect " << activeEffect.Identifier.GetEffectId());
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
 			}
 			else if (!activeEffect.IsStopping)
 			{
+				DEBUG_LOG("Stopping effect " << activeEffect.Identifier.GetEffectId());
 				EffectThreads::StopThread(activeEffect.ThreadId);
 				activeEffect.IsStopping = true;
 			}
@@ -490,7 +477,7 @@ void EffectDispatcher::DrawEffectTexts()
 			               ScreenTextAdjust::Right, { .0f, .915f });
 		}
 
-		if (effect.MaxTime > 0.f)
+		if (effect.IsTimed)
 		{
 			if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 			{
@@ -639,7 +626,7 @@ void EffectDispatcher::RegisterPermanentEffects()
 		auto *registeredEffect = GetRegisteredEffect(effectIdentifier);
 		if (registeredEffect)
 		{
-			auto threadId = EffectThreads::CreateThread(registeredEffect, true);
+			auto threadId = EffectThreads::CreateThread(registeredEffect);
 			m_PermanentEffects.push_back(threadId);
 		}
 	};

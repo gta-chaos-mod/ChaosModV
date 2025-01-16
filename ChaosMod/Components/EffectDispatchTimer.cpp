@@ -23,6 +23,9 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
+	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
+		return;
+
 	m_TimerPercentage += deltaTime
 	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
 	                   / m_EffectSpawnTime / 1000;
@@ -44,7 +47,7 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 	auto player   = PLAYER_PED_ID();
 	auto position = GET_ENTITY_COORDS(player, false);
 
-	if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos)
+	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
 	{
 		m_DistanceChaosState.SavedPosition = position;
 		return;
@@ -160,13 +163,9 @@ void EffectDispatchTimer::OnRun()
 {
 	auto currentUpdateTime = GetTickCount64();
 
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-	{
-		m_Timer = std::numeric_limits<std::uint64_t>::max();
-		return;
-	}
-
-	if (m_DrawTimerBar && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI))
+	if (m_EnableTimer && m_DrawTimerBar
+	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
+	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->DisableChaos))
 	{
 		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
 

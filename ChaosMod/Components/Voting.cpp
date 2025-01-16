@@ -62,7 +62,7 @@ bool Voting::Init()
 	PROCESS_INFORMATION procInfo = {};
 
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
-#ifdef _DEBUG
+#ifdef CHAOSDEBUG
 	DWORD attributes = NULL;
 	if (DoesFeatureFlagExist("forcenovotingconsole"))
 		attributes = CREATE_NO_WINDOW;

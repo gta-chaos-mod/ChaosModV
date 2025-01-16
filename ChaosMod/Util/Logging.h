@@ -57,7 +57,7 @@ inline const auto g_ModStartTime = std::time(nullptr);
 		COLOR_PREFIX_LOG("(" << fileName << ")", _text);                                     \
 	} while (0)
 
-#ifdef _DEBUG
+#ifdef CHAOSDEBUG
 #define DEBUG_LOG(_text) LOG(_text)
 #else
 #define DEBUG_LOG(_text)
