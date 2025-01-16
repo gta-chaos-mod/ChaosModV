@@ -12,6 +12,7 @@
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
+#include "Components/EffectSound/EffectSoundManagers.h"
 #include "Components/Failsafe.h"
 #include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
