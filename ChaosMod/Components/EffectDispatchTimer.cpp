@@ -166,7 +166,7 @@ void EffectDispatchTimer::OnRun()
 		return;
 	}
 
-	if (m_DrawTimerBar || (ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI))
+	if (m_DrawTimerBar && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI))
 	{
 		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
 
