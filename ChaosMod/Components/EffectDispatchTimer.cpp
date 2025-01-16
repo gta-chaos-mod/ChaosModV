@@ -23,9 +23,6 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-		return;
-
 	m_TimerPercentage += deltaTime
 	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
 	                   / m_EffectSpawnTime / 1000;
@@ -161,34 +158,32 @@ void EffectDispatchTimer::ResetFakeTimerPercentage()
 
 void EffectDispatchTimer::OnRun()
 {
-	if (!m_EnableTimer || !m_DrawTimerBar
-	    || (ComponentExists<MetaModifiers>()
-	        && (GetComponent<MetaModifiers>()->HideChaosUI || GetComponent<MetaModifiers>()->DisableChaos)))
+	auto currentUpdateTime = GetTickCount64();
+
+	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
 	{
+		m_Timer = std::numeric_limits<std::uint64_t>::max();
 		return;
 	}
 
-	float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
-
-	// New Effect Bar
-	DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-
-	if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
+	if (m_DrawTimerBar || (ComponentExists<MetaModifiers>() && !GetComponent<MetaModifiers>()->HideChaosUI))
 	{
-		DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2],
-		          255, false);
-	}
-	else
-	{
-		DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
-		          false);
+		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
+
+		// Timer bar at the top
+		DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+
+		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
+			DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1],
+			          m_TimerColor[2], 255, false);
+		else
+			DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
+			          false);
 	}
 
-	auto currentUpdateTime = GetTickCount64();
-	int deltaTime          = currentUpdateTime
-	              - (ComponentExists<EffectDispatchTimer>() ? GetComponent<EffectDispatchTimer>()->GetTimer() : 0);
+	int deltaTime = currentUpdateTime - m_Timer;
 
-	// the game was paused
+	// The game was paused
 	if (deltaTime > 1000)
 		deltaTime = 0;
 
