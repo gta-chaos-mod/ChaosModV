@@ -228,9 +228,7 @@ void Voting::OnRun()
 		{
 			if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
 			    && ComponentExists<EffectDispatcher>())
-			{
 				GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
-			}
 
 			if (ComponentExists<SplashTexts>())
 				GetComponent<SplashTexts>()->ShowVotingSplash();

@@ -5,16 +5,13 @@
 #include "Effects/EffectConfig.h"
 
 #include "Memory/Hooks/ScriptThreadRunHook.h"
-#include "Memory/Hooks/ShaderHook.h"
 #include "Memory/Misc.h"
-#include "Memory/Shader.h"
 
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
-#include "Components/EffectSound/EffectSoundManagers.h"
 #include "Components/Failsafe.h"
 #include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
@@ -372,10 +369,8 @@ namespace Main
 			else if (key == VK_OEM_PERIOD)
 			{
 				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
-				{
 					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
 					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
-				}
 			}
 			else if (key == VK_OEM_COMMA)
 			{

@@ -1,7 +1,5 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
-
 static const std::array options = { "Nothing",
 	                                "All Peds Are Peds",
 	                                "Teleport To Current Location",
@@ -28,8 +26,7 @@ static void OnStart()
 {
 	const auto &effectOverride = options[g_Random.GetRandomInt(0, options.size() - 1)];
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectName("nothing", effectOverride);
+	CurrentEffect::OverrideEffectName(effectOverride);
 
 	WAIT(25000);
 }

@@ -121,23 +121,41 @@ namespace EffectThreads
 		return m_Threads.contains(GetCurrentFiber());
 	}
 
-	EffectSoundPlayOptions *GetThreadEffectSoundPlayOptions(LPVOID threadId)
+	EffectThreadSharedData *GetThreadSharedData(LPVOID threadId)
 	{
 		if (!DoesThreadExist(threadId))
 			return nullptr;
 
-		return &m_Threads.at(threadId)->ThreadData.EffectSoundPlayOptions;
+		return &m_Threads.at(threadId)->ThreadData.SharedData;
 	}
 }
 
 namespace CurrentEffect
 {
+	static EffectThreadSharedData *GetCurrentThreadSharedData()
+	{
+		auto threadId = GetCurrentFiber();
+		return EffectThreads::GetThreadSharedData(threadId);
+	}
+
 	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions)
 	{
-		auto threadId               = GetCurrentFiber();
-		auto targetSoundPlayOptions = EffectThreads::GetThreadEffectSoundPlayOptions(threadId);
-		if (!targetSoundPlayOptions)
-			return;
-		*targetSoundPlayOptions = soundPlayOptions;
+		auto sharedData = GetCurrentThreadSharedData();
+		if (sharedData)
+			sharedData->EffectSoundPlayOptions = soundPlayOptions;
+	}
+
+	void OverrideEffectName(const std::string &effectName)
+	{
+		auto sharedData = GetCurrentThreadSharedData();
+		if (sharedData)
+			sharedData->OverrideEffectName = effectName;
+	}
+
+	void OverrideEffectNameFromId(const std::string &effectId)
+	{
+		auto sharedData = GetCurrentThreadSharedData();
+		if (sharedData)
+			sharedData->OverrideEffectId = effectId;
 	}
 }

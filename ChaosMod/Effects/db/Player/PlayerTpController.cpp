@@ -1,7 +1,5 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
-
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
 #include "Util/Player.h"
@@ -302,11 +300,10 @@ static int GetFakeWantedLevel(std::string_view effect)
 
 static void OnStartFakeTp()
 {
-	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId                       = selectedLocationInfo.type;
+	auto selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	auto overrideId           = selectedLocationInfo.type;
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
+	CurrentEffect::OverrideEffectNameFromId(std::string(overrideId));
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -366,11 +363,10 @@ REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
 
 static void OnStartFakeFakeTp()
 {
-	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId                       = selectedLocationInfo.type;
+	auto selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
+	auto overrideId           = selectedLocationInfo.type;
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
+	CurrentEffect::OverrideEffectNameFromId(std::string(overrideId));
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -415,8 +411,7 @@ static void OnStartFakeFakeTp()
 	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
 	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
+	CurrentEffect::OverrideEffectNameFromId("tp_fake");
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 

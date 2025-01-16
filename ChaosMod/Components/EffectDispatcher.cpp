@@ -309,27 +309,49 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		if (activeEffect.HideEffectName && EffectThreads::HasThreadOnStartExecuted(activeEffect.ThreadId))
 			activeEffect.HideEffectName = false;
 
-		if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
+		auto effectSharedData = EffectThreads::GetThreadSharedData(activeEffect.ThreadId);
+		if (effectSharedData)
 		{
-			activeEffect.HasSetSoundOptions = true;
+			if (ComponentExists<EffectSoundManager>() && activeEffect.SoundId && !activeEffect.HasSetSoundOptions)
+			{
+				activeEffect.HasSetSoundOptions = true;
+				GetComponent<EffectSoundManager>()->SetSoundOptions(activeEffect.SoundId,
+				                                                    effectSharedData->EffectSoundPlayOptions);
+			}
 
-			auto effectSoundPlayOptions     = EffectThreads::GetThreadEffectSoundPlayOptions(activeEffect.ThreadId);
-			if (effectSoundPlayOptions)
-				GetComponent<EffectSoundManager>()->SetSoundOptions(activeEffect.SoundId, *effectSoundPlayOptions);
+			if (!effectSharedData->OverrideEffectName.empty())
+			{
+				activeEffect.FakeName = effectSharedData->OverrideEffectName;
+				effectSharedData->OverrideEffectId.clear();
+			}
+
+			if (!effectSharedData->OverrideEffectId.empty())
+			{
+				if (g_EnabledEffects.contains(effectSharedData->OverrideEffectId))
+				{
+					auto &fakeEffect      = g_EnabledEffects.at(effectSharedData->OverrideEffectId);
+					activeEffect.FakeName = fakeEffect.HasCustomName() ? fakeEffect.CustomName : fakeEffect.Name;
+				}
+				else
+				{
+					auto result = g_EffectsMap.find(effectSharedData->OverrideEffectId);
+					if (result != g_EffectsMap.end())
+						activeEffect.FakeName = result->second.Name;
+				}
+
+				effectSharedData->OverrideEffectId.clear();
+			}
 		}
 
 		if (activeEffect.MaxTime > 0.f)
 		{
 			if (isEffectPaused)
-			{
 				activeEffect.Timer -= adjustedDeltaTime;
-			}
+
 			else
-			{
 				activeEffect.Timer -=
 				    adjustedDeltaTime
 				    / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier : 1.f);
-			}
 		}
 		else
 		{
@@ -628,38 +650,6 @@ void EffectDispatcher::RegisterPermanentEffects()
 		{
 			// Always run permanent timed effects in background
 			registerEffect(effectIdentifier);
-		}
-	}
-}
-
-// (kolyaventuri): Forces the name of the provided effect to change, using any given string
-void EffectDispatcher::OverrideEffectName(std::string_view effectId, const std::string &overrideName)
-{
-	for (auto &effect : SharedState.ActiveEffects)
-		if (effect.Identifier.GetEffectId() == effectId)
-			effect.FakeName = overrideName;
-}
-
-// (kolyaventuri): Forces the name of the provided effect to change, using the defined name of another effect
-void EffectDispatcher::OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId)
-{
-	for (auto &effect : SharedState.ActiveEffects)
-	{
-		if (effect.Identifier.GetEffectId() == effectId)
-		{
-			auto effectIdentifier = EffectIdentifier(std::string(fakeEffectId));
-
-			if (g_EnabledEffects.contains(effectIdentifier))
-			{
-				auto &fakeEffect = g_EnabledEffects.at(effectIdentifier);
-				effect.FakeName  = fakeEffect.HasCustomName() ? fakeEffect.CustomName : fakeEffect.Name;
-			}
-			else
-			{
-				auto result = g_EffectsMap.find(fakeEffectId);
-				if (result != g_EffectsMap.end())
-					effect.FakeName = result->second.Name;
-			}
 		}
 	}
 }

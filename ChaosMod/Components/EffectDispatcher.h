@@ -151,8 +151,5 @@ class EffectDispatcher : public Component
 
 	void Reset(ClearEffectsFlags clearEffectFlags = ClearEffectsFlag_None);
 
-	void OverrideEffectName(std::string_view effectId, const std::string &overrideName);
-	void OverrideEffectNameId(std::string_view effectId, std::string_view fakeEffectId);
-
 	bool IsClearingEffects() const;
 };

@@ -1,7 +1,5 @@
 #include <stdafx.h>
 
-#include <Components/EffectDispatcher.h>
-
 /*
  * Effect by juhana
  */
@@ -38,8 +36,7 @@ static void OnStartFake()
 {
 	OnStart();
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fakeuturn", "misc_uturn");
+	CurrentEffect::OverrideEffectNameFromId("misc_uturn");
 
 	WAIT(g_Random.GetRandomInt(6000, 9000));
 

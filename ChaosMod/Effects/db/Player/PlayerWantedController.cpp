@@ -1,6 +1,5 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStartFive()
@@ -123,8 +122,7 @@ static void OnStartFake()
 
 	Hooks::EnableScriptThreadBlock();
 
-	if (ComponentExists<EffectDispatcher>())
-		GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.Name);
+	CurrentEffect::OverrideEffectName(selectedInfo.Name);
 
 	Player player  = PLAYER_ID();
 	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);

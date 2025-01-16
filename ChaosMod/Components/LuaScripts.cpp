@@ -27,7 +27,6 @@
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
 #include "Util/HelpText.h"
-#include "Util/Peds.h"
 #include "Util/Player.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
@@ -804,13 +803,11 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
 	{
-		if (ComponentExists<EffectDispatcher>())
-			GetComponent<EffectDispatcher>()->OverrideEffectName(effectId, name);
+		CurrentEffect::OverrideEffectName(name);
 	};
 	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
 	{
-		if (ComponentExists<EffectDispatcher>())
-			GetComponent<EffectDispatcher>()->OverrideEffectNameId(effectId, overrideId);
+		CurrentEffect::OverrideEffectNameFromId(overrideId);
 	};
 
 	EffectData effectData;

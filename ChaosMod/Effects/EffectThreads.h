@@ -13,6 +13,29 @@ using DWORD64 = unsigned long long;
 
 using LPVOID  = void *;
 
+struct EffectThreadSharedData
+{
+	EffectSoundPlayOptions EffectSoundPlayOptions;
+	std::string OverrideEffectName;
+	std::string OverrideEffectId;
+};
+
+struct EffectThreadData
+{
+	RegisteredEffect *Effect = nullptr;
+	bool HasOnStartExecuted  = false;
+	bool IsRunning           = false;
+	bool HasStopped          = false;
+
+	void *CallerFiber        = nullptr;
+
+	EffectThreadSharedData SharedData;
+
+	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
+	{
+	}
+};
+
 namespace EffectThreads
 {
 	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed);
@@ -33,23 +56,7 @@ namespace EffectThreads
 
 	bool IsThreadAnEffectThread();
 
-	EffectSoundPlayOptions *GetThreadEffectSoundPlayOptions(LPVOID threadId);
-};
-
-struct EffectThreadData
-{
-	RegisteredEffect *Effect = nullptr;
-	bool HasOnStartExecuted  = false;
-	bool IsRunning           = false;
-	bool HasStopped          = false;
-
-	void *CallerFiber        = nullptr;
-
-	EffectSoundPlayOptions EffectSoundPlayOptions;
-
-	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
-	{
-	}
+	EffectThreadSharedData *GetThreadSharedData(LPVOID threadId);
 };
 
 inline void EffectThreadFunc(LPVOID data)
@@ -137,4 +144,6 @@ class EffectThread
 namespace CurrentEffect
 {
 	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions);
+	void OverrideEffectName(const std::string &effectName);
+	void OverrideEffectNameFromId(const std::string &effectId);
 }
