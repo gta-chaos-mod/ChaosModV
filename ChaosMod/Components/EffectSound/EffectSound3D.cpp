@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Util/Camera.h"
+
 #include "EffectSound3D.h"
 
 #define MINIAUDIO_IMPLEMENTATION
@@ -39,8 +41,8 @@ void EffectSound3D::OnRun()
 	auto adjPlayerCoords = GET_ENTITY_COORDS(playerPed, true) * SOUND_RANGE_MULT;
 	ma_engine_listener_set_position(&m_maEngine, 0, adjPlayerCoords.x, adjPlayerCoords.y, adjPlayerCoords.z);
 
-	auto playerForward = GET_ENTITY_FORWARD_VECTOR(playerPed);
-	ma_engine_listener_set_direction(&m_maEngine, 0, playerForward.x, playerForward.y, playerForward.z);
+	auto camRot = Util::DegToRadian(GET_GAMEPLAY_CAM_ROT(2));
+	ma_engine_listener_set_direction(&m_maEngine, 0, camRot.x, camRot.y, camRot.z);
 
 	auto playerVeh        = GET_VEHICLE_PED_IS_IN(playerPed, false);
 	auto playerIsInAnyVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false);
