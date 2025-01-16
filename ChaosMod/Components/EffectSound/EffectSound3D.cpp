@@ -108,6 +108,7 @@ void EffectSound3D::OnRun()
 DWORD64 EffectSound3D::HandleSound(const std::string &soundFile)
 {
 	auto &sound = m_Sounds[m_SoundIdCounter];
+	DEBUG_LOG("Playing sound for \"" << soundFile << "\" with ID " << m_SoundIdCounter);
 	if (ma_sound_init_from_file(&m_maEngine, soundFile.c_str(), MA_SOUND_FLAG_ASYNC, nullptr, nullptr, &sound.Handle)
 	    != MA_SUCCESS)
 	{

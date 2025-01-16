@@ -15,7 +15,7 @@ struct EffectInfo
 	bool IsTimed             = false;
 	bool IsShortDuration     = false;
 	bool HideRealNameOnStart = false;
-#ifdef _DEBUG
+#ifdef CHAOSDEBUG
 	int DebugShortcutKeycode = 0;
 #endif
 	std::vector<std::string_view> IncompatibleWith;

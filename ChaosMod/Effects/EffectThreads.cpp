@@ -25,12 +25,12 @@ static auto _StopThreadImmediately(auto it)
 
 namespace EffectThreads
 {
-	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed)
+	LPVOID CreateThread(RegisteredEffect *effect)
 	{
-		auto thread         = std::make_unique<EffectThread>(effect, isTimed);
+		auto thread         = std::make_unique<EffectThread>(effect);
 		auto threadId       = thread->Thread;
 		m_Threads[threadId] = std::move(thread);
-		LOG(threadId);
+		DEBUG_LOG("Created Effect Thread " << threadId);
 
 		return threadId;
 	}

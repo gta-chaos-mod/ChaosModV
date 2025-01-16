@@ -35,8 +35,9 @@ class EffectDispatcher : public Component
 	};
 	std::queue<EffectDispatchEntry> EffectDispatchQueue;
 
-	struct ActiveEffect
+	class ActiveEffect
 	{
+	  public:
 		EffectIdentifier Identifier;
 
 		std::string Name;
@@ -46,6 +47,7 @@ class EffectDispatcher : public Component
 
 		float Timer             = 0.f;
 		float MaxTime           = 0.f;
+		bool IsTimed            = false;
 
 		bool IsMeta             = false;
 
@@ -56,18 +58,17 @@ class EffectDispatcher : public Component
 		bool HasSetSoundOptions = false;
 
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
-		             const std::string &name, const EffectData &effectData, float effectDuration)
+		             const std::string &name, const EffectData &effectData, float effectDuration, bool isTimed)
 		{
 			Identifier     = effectIdentifier;
 			Name           = name;
 			FakeName       = effectData.FakeName;
 			Timer          = effectDuration;
 			MaxTime        = effectDuration;
+			IsTimed        = isTimed;
 			HideEffectName = effectData.ShouldHideRealNameOnStart();
 			IsMeta         = effectData.IsMeta();
-
-			auto timedType = g_EnabledEffects.at(effectIdentifier).TimedType;
-			ThreadId       = EffectThreads::CreateThread(registeredEffect, timedType != EffectTimedType::NotTimed);
+			ThreadId       = EffectThreads::CreateThread(registeredEffect);
 		}
 	};
 	struct

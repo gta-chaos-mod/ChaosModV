@@ -168,7 +168,14 @@ namespace Memory
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
 	{
-		DEBUG_LOG("Searching for pattern: " << pattern);
+		DEBUG_LOG("Searching for pattern \""
+		          << pattern
+		          << (scanRange.StartAddr == 0 && scanRange.EndAddr == 0
+		                  ? "\""
+		                  : (std::stringstream()
+		                     << "\" within address range 0x" << std::uppercase << std::hex << std::setfill(' ')
+		                     << scanRange.StartAddr << " to 0x" << std::uppercase << std::hex << scanRange.EndAddr)
+		                        .str()));
 
 		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)
 		{
@@ -176,7 +183,7 @@ namespace Memory
 			return Handle();
 		}
 
-		auto scanPattern = [&]()
+		auto scanPattern = [&]() -> Handle
 		{
 			auto copy = pattern;
 			for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
@@ -186,9 +193,11 @@ namespace Memory
 			                    ? hook::pattern(copy)
 			                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
 			if (!thePattern.size())
-				return Handle();
+				return {};
 
-			return Handle(uintptr_t(thePattern.get_first()));
+			auto resultAddr = reinterpret_cast<uintptr_t>(thePattern.get_first());
+			DEBUG_LOG("Found pattern \"" << pattern << "\" at address 0x" << std::uppercase << std::hex << resultAddr);
+			return resultAddr;
 		};
 
 		if (EffectThreads::IsThreadAnEffectThread())

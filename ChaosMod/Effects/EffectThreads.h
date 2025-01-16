@@ -25,21 +25,21 @@ struct EffectThreadData
 {
 	RegisteredEffect *Effect = nullptr;
 	bool HasOnStartExecuted  = false;
-	bool IsRunning           = false;
+	bool IsRunning           = true;
 	bool HasStopped          = false;
 
 	void *CallerFiber        = nullptr;
 
 	EffectThreadSharedData SharedData;
 
-	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
+	EffectThreadData(RegisteredEffect *effect) : Effect(effect)
 	{
 	}
 };
 
 namespace EffectThreads
 {
-	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed);
+	LPVOID CreateThread(RegisteredEffect *effect);
 
 	void StopThread(LPVOID threadId);
 	void StopThreadImmediately(LPVOID threadId);
@@ -75,7 +75,6 @@ inline void EffectThreadFunc(LPVOID data)
 		threadData.Effect->Tick();
 	}
 
-	SwitchToFiber(threadData.CallerFiber);
 	threadData.Effect->Stop();
 
 	threadData.HasStopped = true;
@@ -91,8 +90,7 @@ class EffectThread
 	LPVOID Thread          = nullptr;
 	EffectThreadData ThreadData;
 
-	EffectThread(RegisteredEffect *effect, bool isTimed)
-	    : ThreadData(effect, isTimed), Thread(CreateFiber(0, EffectThreadFunc, &ThreadData))
+	EffectThread(RegisteredEffect *effect) : ThreadData(effect), Thread(CreateFiber(0, EffectThreadFunc, &ThreadData))
 	{
 	}
 

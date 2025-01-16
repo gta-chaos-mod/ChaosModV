@@ -6,13 +6,11 @@ using DWORD   = unsigned long;
 class Handle
 {
   private:
-	DWORD64 m_Addr;
+	uintptr_t m_Addr = 0;
 
   public:
-	Handle() : m_Addr(0)
-	{
-	}
-	Handle(DWORD64 addr) : m_Addr(addr)
+	Handle() = default;
+	Handle(uintptr_t addr) : m_Addr(addr)
 	{
 	}
 
