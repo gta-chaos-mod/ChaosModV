@@ -95,7 +95,7 @@ _LUAFUNC void LuaPrint(const std::string &name, const std::string &text)
 #endif
 }
 
-_LUAFUNC char *_TryParseString(void *str)
+_LUAFUNC static char *_TryParseString(void *str)
 {
 	auto string = reinterpret_cast<char *>(str);
 
@@ -109,7 +109,7 @@ _LUAFUNC char *_TryParseString(void *str)
 	return string;
 }
 
-_LUAFUNC bool _TryParseVector3(void **vector, float &x, float &y, float &z)
+_LUAFUNC static bool _TryParseVector3(void **vector, float &x, float &y, float &z)
 {
 	MAGIC_CATCH_BEGIN
 	x = *reinterpret_cast<float *>(vector);
@@ -120,7 +120,7 @@ _LUAFUNC bool _TryParseVector3(void **vector, float &x, float &y, float &z)
 	return true;
 }
 
-_LUAFUNC bool _CallNative(void ***result)
+_LUAFUNC static bool _CallNative(void ***result)
 {
 	MAGIC_CATCH_BEGIN
 	*result = reinterpret_cast<void **>(nativeCall());
@@ -129,7 +129,7 @@ _LUAFUNC bool _CallNative(void ***result)
 	return true;
 }
 
-template <typename T, typename... A> _LUAFUNC T Generate(const A &...args)
+template <typename T, typename... A> _LUAFUNC static T Generate(const A &&...args)
 {
 	return T(args...);
 }
@@ -197,8 +197,8 @@ enum class LuaNativeReturnType
 	Vector3
 };
 
-_LUAFUNC sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 nativeHash,
-                               LuaNativeReturnType returnType, const sol::variadic_args &args)
+_LUAFUNC static sol::object LuaInvoke(const std::string &scriptName, const sol::this_state &lua, DWORD64 nativeHash,
+                                      LuaNativeReturnType returnType, const sol::variadic_args &args)
 {
 	if (nativeHash == 0x213AEB2B90CBA7AC || nativeHash == 0x5A5F40FE637EB584 || nativeHash == 0x933D6A9EEC1BACD0
 	    || nativeHash == 0xE80492A9AC099A93 || nativeHash == 0x8EF07E15701D61ED)
@@ -519,6 +519,12 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::X, "y", &LuaVector3::Y, "z", &LuaVector3::Z);
 	lua["Vector3"] = sol::overload(Generate<LuaVector3>, Generate<LuaVector3, float, float, float>);
 
+	lua.new_enum("OverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
+	             OverrideShaderType::Snow);
+	// Backwards compat
+	lua.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
+	             OverrideShaderType::Snow);
+
 #define E(x, y)                 \
 	{                           \
 		x, [=](sol::state &lua) \
@@ -652,9 +658,6 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 			exposable(lua);
 		}
 	}
-
-	lua.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
-	             OverrideShaderType::Snow);
 
 	const auto &result = lua.safe_script(script);
 	if (!result.valid())
@@ -799,8 +802,12 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		}
 	}
 
-	lua["WAIT"]               = WAIT;
+	lua["WAIT"]                          = WAIT;
 
+	lua["GetEffectCompletionPercentage"] = [effectId](const sol::this_state &lua)
+	{
+		CurrentEffect::GetEffectCompletionPercentage();
+	};
 	lua["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
 	{
 		CurrentEffect::OverrideEffectName(name);
@@ -808,6 +815,20 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
 	{
 		CurrentEffect::OverrideEffectNameFromId(overrideId);
+	};
+
+	lua["SetEffectSoundFollowPlayer"] = [effectId](const sol::this_state &lua)
+	{
+		CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowPlayer });
+	};
+	lua["SetEffectSoundFollowEntity"] = [effectId](const sol::this_state &lua, Entity entity)
+	{
+		CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = entity });
+	};
+	lua["SetEffectSoundAtCoords"] = [effectId](const sol::this_state &lua, const LuaVector3 &coords)
+	{
+		CurrentEffect::SetEffectSoundPlayOptions(
+		    { .PlayType = EffectSoundPlayType::AtCoords, .Coords = Vector3(coords.X, coords.Y, coords.Z) });
 	};
 
 	EffectData effectData;
