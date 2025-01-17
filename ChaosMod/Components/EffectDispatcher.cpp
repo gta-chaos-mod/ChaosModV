@@ -27,11 +27,11 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	if (!effectDispatcher->OnPreDispatchEffect.Fire(entry.Identifier))
 		return;
 
-	LOG("Dispatching effect \"" << effectData.Name << "\""
 #ifdef CHAOSDEBUG
-	                            << " (" << effectData.Id << ")"
+	DEBUG_LOG("Dispatching effect \"" << effectData.Name << "\"" << " (" << effectData.Id << ")");
+#else
+	LOG("Dispatching effect \"" << effectData.Name << "\"");
 #endif
-	);
 
 	// Increase weight for all effects first
 	for (auto &[effectId, effectData] : g_EnabledEffects)
