@@ -36,6 +36,11 @@ namespace Hooks
 		ms_TargetPitch = pitch;
 	}
 
+	int GetTargetAudioPitch()
+	{
+		return !ms_EnabledHook ? 0.f : ms_TargetPitch;
+	}
+
 	void ResetAudioPitch()
 	{
 		ms_EnabledHook = false;

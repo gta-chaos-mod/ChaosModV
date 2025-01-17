@@ -1,8 +1,9 @@
 #include <stdafx.h>
 
-#include "Util/Camera.h"
-
 #include "EffectSound3D.h"
+
+#include "Memory/Hooks/AudioPitchHook.h"
+#include "Util/Camera.h"
 
 #define MINIAUDIO_IMPLEMENTATION
 #include <miniaudio.h>
@@ -92,6 +93,8 @@ void EffectSound3D::OnRun()
 			ma_sound_start(&sound.Handle);
 
 		ma_sound_set_rolloff(&sound.Handle, .1f);
+		ma_sound_set_pitch(&sound.Handle,
+		                   1.f + (!Hooks::GetTargetAudioPitch() ? 0.f : Hooks::GetTargetAudioPitch() * .0001f));
 
 		switch (sound.PlayOptions.PlayType)
 		{
