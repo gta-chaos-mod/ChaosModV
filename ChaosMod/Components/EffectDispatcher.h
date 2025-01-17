@@ -43,19 +43,18 @@ class EffectDispatcher : public Component
 		std::string Name;
 		std::string FakeName;
 
-		LPVOID ThreadId         = nullptr;
+		LPVOID ThreadId     = nullptr;
 
-		float Timer             = 0.f;
-		float MaxTime           = 0.f;
-		bool IsTimed            = false;
+		float Timer         = 0.f;
+		float MaxTime       = 0.f;
+		bool IsTimed        = false;
 
-		bool IsMeta             = false;
+		bool IsMeta         = false;
 
-		bool HideEffectName     = false;
-		bool IsStopping         = false;
+		bool HideEffectName = false;
+		bool IsStopping     = false;
 
-		DWORD64 SoundId         = 0;
-		bool HasSetSoundOptions = false;
+		DWORD64 SoundId     = 0;
 
 		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
 		             const std::string &name, const EffectData &effectData, float effectDuration, bool isTimed)
