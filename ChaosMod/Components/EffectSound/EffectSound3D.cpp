@@ -10,6 +10,22 @@
 EffectSound3D::EffectSound3D()
 {
 	ma_engine_init(nullptr, &m_maEngine);
+
+	m_PauseSoundsThread = std::thread(
+	    [&]()
+	    {
+		    while (!m_IsStopping)
+		    {
+			    Sleep(100);
+
+			    if (IS_PAUSE_MENU_ACTIVE())
+			    {
+				    std::lock_guard lock(m_SoundsMutex);
+				    for (auto &[soundId, sound] : m_Sounds)
+					    ma_sound_stop(&sound.Handle);
+			    }
+		    }
+	    });
 }
 
 void EffectSound3D::FreeSounds()
@@ -23,6 +39,9 @@ void EffectSound3D::FreeSounds()
 
 void EffectSound3D::OnModPauseCleanup()
 {
+	m_IsStopping = true;
+	m_PauseSoundsThread.detach();
+
 	FreeSounds();
 
 	ma_engine_uninit(&m_maEngine);
@@ -52,6 +71,8 @@ void EffectSound3D::OnRun()
 
 	for (auto it = m_Sounds.begin(); it != m_Sounds.end();)
 	{
+		std::lock_guard lock(m_SoundsMutex);
+
 		auto &[soundId, sound] = *it;
 
 		auto uninitSound       = [&]()
@@ -66,6 +87,9 @@ void EffectSound3D::OnRun()
 			uninitSound();
 			continue;
 		}
+
+		if (!ma_sound_is_playing(&sound.Handle))
+			ma_sound_start(&sound.Handle);
 
 		ma_sound_set_rolloff(&sound.Handle, .1f);
 
