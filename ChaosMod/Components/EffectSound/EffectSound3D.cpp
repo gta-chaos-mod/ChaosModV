@@ -95,6 +95,7 @@ void EffectSound3D::OnRun()
 		ma_sound_set_rolloff(&sound.Handle, .1f);
 		ma_sound_set_pitch(&sound.Handle,
 		                   1.f + (!Hooks::GetTargetAudioPitch() ? 0.f : Hooks::GetTargetAudioPitch() * .0001f));
+		ma_sound_set_looping(&sound.Handle, sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_Looping);
 
 		switch (sound.PlayOptions.PlayType)
 		{
@@ -103,7 +104,9 @@ void EffectSound3D::OnRun()
 			break;
 		case EffectSoundPlayType::FollowEntity:
 		{
-			if (!sound.PlayOptions.Entity || !DOES_ENTITY_EXIST(sound.PlayOptions.Entity))
+			if (!sound.PlayOptions.Entity || !DOES_ENTITY_EXIST(sound.PlayOptions.Entity)
+			    || (sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_StopOnEntityDeath
+			        && IS_ENTITY_DEAD(sound.PlayOptions.Entity, false)))
 			{
 				uninitSound();
 				continue;
