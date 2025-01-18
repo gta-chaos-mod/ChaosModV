@@ -312,18 +312,11 @@ LuaScripts::LuaScripts()
 		const auto &pathStr  = path.string();
 		auto scriptName      = pathStr.substr(pathStr.find("\\") + 1);
 
-		std::ifstream fileStream(path.c_str());
-		std::stringstream buffer;
-		buffer << fileStream.rdbuf();
-
 		if (printRunningLog)
-		{
-			// Don't include chaosmod directory
 			LUA_LOG("Running script " << scriptName);
-		}
 
 		auto currentThread   = std::this_thread::get_id();
-		int parseScriptFlags = ParseScriptFlag_None;
+		int parseScriptFlags = ParseScriptFlag_ScriptIsFilePath;
 		if (currentThread != mainThread)
 			parseScriptFlags |= ParseScriptFlag_IsAlienThread;
 
@@ -337,7 +330,7 @@ LuaScripts::LuaScripts()
 			    tmp.substr(tmp.find("\\") + 1));
 		}
 
-		if (ParseScriptRaw(fileName, buffer.str(), static_cast<LuaScripts::ParseScriptFlags>(parseScriptFlags),
+		if (ParseScriptRaw(fileName, path.string(), static_cast<LuaScripts::ParseScriptFlags>(parseScriptFlags),
 		                   userEffectSettings)
 		    == ParseScriptReturnReason::Error_ThreadUnsafe)
 		{
@@ -453,7 +446,7 @@ void LuaScripts::OnModPauseCleanup()
 }
 
 LuaScripts::ParseScriptReturnReason
-LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, ParseScriptFlags flags,
+LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, ParseScriptFlags flags,
                            std::unordered_map<std::string, nlohmann::json> settingOverrides)
 {
 	sol::state lua;
@@ -673,7 +666,8 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 		}
 	}
 
-	const auto &result = lua.safe_script(script);
+	const auto &result =
+	    flags & ParseScriptFlag_ScriptIsFilePath ? lua.safe_script_file(std::string(script)) : lua.safe_script(script);
 	if (!result.valid())
 	{
 		const sol::error &error = result;

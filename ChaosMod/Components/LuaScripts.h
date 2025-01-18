@@ -83,10 +83,12 @@ class LuaScripts : public Component
 		ParseScriptFlag_None,
 		// Immediately dispatch effect (if script registers one) and remove it OnStop
 		// Assumes this is only being called from the main thread!
-		ParseScriptFlag_IsTemporary   = (1 << 0),
+		ParseScriptFlag_IsTemporary      = (1 << 0),
 		// Whether this is called from an alien thread, aborts and returns ParseScriptReturnReason::Error_ThreadUnsafe
 		// if thread-unsafe function was called
-		ParseScriptFlag_IsAlienThread = (1 << 1),
+		ParseScriptFlag_IsAlienThread    = (1 << 1),
+		// Whether the script parameter is not the code but rather a file path to it
+		ParseScriptFlag_ScriptIsFilePath = (1 << 2)
 	};
 	enum class ParseScriptReturnReason
 	{
@@ -94,7 +96,7 @@ class LuaScripts : public Component
 		Error,
 		Error_ThreadUnsafe
 	};
-	ParseScriptReturnReason ParseScriptRaw(std::string scriptName, std::string_view script,
+	ParseScriptReturnReason ParseScriptRaw(std::string scriptName, const std::string &script,
 	                                       ParseScriptFlags flags = ParseScriptFlag_None,
 	                                       std::unordered_map<std::string, nlohmann::json> settingOverrides = {});
 	void RemoveScriptEntry(const std::string &effectId);
