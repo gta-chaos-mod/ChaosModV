@@ -92,7 +92,8 @@ void EffectSound3D::OnRun()
 		if (!ma_sound_is_playing(&sound.Handle))
 			ma_sound_start(&sound.Handle);
 
-		ma_sound_set_rolloff(&sound.Handle, .1f);
+		ma_sound_set_attenuation_model(&sound.Handle, ma_attenuation_model_linear);
+		ma_sound_set_max_distance(&sound.Handle, 125.f);
 		ma_sound_set_pitch(&sound.Handle,
 		                   1.f + (!Hooks::GetTargetAudioPitch() ? 0.f : Hooks::GetTargetAudioPitch() * .0001f));
 		ma_sound_set_looping(&sound.Handle, sound.PlayOptions.PlayType == EffectSoundPlayType::FollowEntity
