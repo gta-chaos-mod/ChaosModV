@@ -106,7 +106,7 @@ void EffectSound3D::OnRun()
 		case EffectSoundPlayType::FollowEntity:
 		{
 			if (!sound.PlayOptions.Entity || !DOES_ENTITY_EXIST(sound.PlayOptions.Entity)
-			    || (sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_StopOnEntityDeath
+			    || (!(sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_DontStopOnEntityDeath)
 			        && IS_ENTITY_DEAD(sound.PlayOptions.Entity, false)))
 			{
 				uninitSound();

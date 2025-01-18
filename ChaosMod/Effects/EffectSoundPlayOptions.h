@@ -11,8 +11,8 @@ enum class EffectSoundPlayType
 
 enum EffectSoundPlayFlags
 {
-	EffectSoundPlayFlags_Looping           = (1 << 0),
-	EffectSoundPlayFlags_StopOnEntityDeath = (1 << 1)
+	EffectSoundPlayFlags_Looping               = (1 << 0),
+	EffectSoundPlayFlags_DontStopOnEntityDeath = (1 << 1)
 };
 
 struct EffectSoundPlayOptions

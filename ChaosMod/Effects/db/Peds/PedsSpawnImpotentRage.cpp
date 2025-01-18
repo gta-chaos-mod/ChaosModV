@@ -19,9 +19,7 @@ static void OnStart()
 
 	Ped ped           = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 	CurrentEffect::SetEffectSoundPlayOptions(
-	    { .PlayType  = EffectSoundPlayType::FollowEntity,
-	      .PlayFlags = EffectSoundPlayFlags_Looping | EffectSoundPlayFlags_StopOnEntityDeath,
-	      .Entity    = ped });
+	    { .PlayType = EffectSoundPlayType::FollowEntity, .PlayFlags = EffectSoundPlayFlags_Looping, .Entity = ped });
 	SET_ENTITY_HEALTH(ped, 1000, 0);
 	SET_PED_ARMOUR(ped, 1000);
 

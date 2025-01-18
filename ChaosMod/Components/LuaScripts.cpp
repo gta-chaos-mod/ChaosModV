@@ -852,8 +852,8 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	    [effectId, getEffectSoundPlayOptions](const sol::this_state &lua, bool state)
 	{
 		auto soundPlayOptions       = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayFlags = state ? soundPlayOptions->PlayFlags | EffectSoundPlayFlags_StopOnEntityDeath
-		                                    : soundPlayOptions->PlayFlags & ~EffectSoundPlayFlags_StopOnEntityDeath;
+		soundPlayOptions->PlayFlags = state ? soundPlayOptions->PlayFlags & ~EffectSoundPlayFlags_DontStopOnEntityDeath
+		                                    : soundPlayOptions->PlayFlags | EffectSoundPlayFlags_DontStopOnEntityDeath;
 	};
 
 	EffectData effectData;

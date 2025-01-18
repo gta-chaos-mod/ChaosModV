@@ -19,9 +19,7 @@ static void OnStart()
 
 	auto ped = CreatePoolPed(4, modelHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
 	CurrentEffect::SetEffectSoundPlayOptions(
-	    { .PlayType  = EffectSoundPlayType::FollowEntity,
-	      .PlayFlags = EffectSoundPlayFlags_Looping | EffectSoundPlayFlags_StopOnEntityDeath,
-	      .Entity    = ped });
+	    { .PlayType = EffectSoundPlayType::FollowEntity, .PlayFlags = EffectSoundPlayFlags_Looping, .Entity = ped });
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
 
