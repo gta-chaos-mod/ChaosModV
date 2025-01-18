@@ -95,7 +95,8 @@ void EffectSound3D::OnRun()
 		ma_sound_set_rolloff(&sound.Handle, .1f);
 		ma_sound_set_pitch(&sound.Handle,
 		                   1.f + (!Hooks::GetTargetAudioPitch() ? 0.f : Hooks::GetTargetAudioPitch() * .0001f));
-		ma_sound_set_looping(&sound.Handle, sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_Looping);
+		ma_sound_set_looping(&sound.Handle, sound.PlayOptions.PlayType == EffectSoundPlayType::FollowEntity
+		                                        && sound.PlayOptions.PlayFlags & EffectSoundPlayFlags_Looping);
 
 		switch (sound.PlayOptions.PlayType)
 		{
