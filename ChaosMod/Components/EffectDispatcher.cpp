@@ -157,17 +157,17 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				break;
 			}
 
-			EffectDispatcher::ActiveEffect activeEffect = {
-				.Identifier     = entry.Identifier,
-				.Name           = effectName.str(),
-				.ThreadId       = EffectThreads::CreateThread(registeredEffect),
-				.Timer          = static_cast<float>(effectDuration),
-				.MaxTime        = static_cast<float>(effectDuration),
-				.IsTimed        = effectData.TimedType != EffectTimedType::NotTimed,
-				.IsMeta         = effectData.IsMeta(),
-				.HideEffectName = effectData.ShouldHideRealNameOnStart(),
-			};
-			effectDispatcher->SharedState.ActiveEffects.push_back(activeEffect);
+			effectDispatcher->SharedState.ActiveEffects.push_back({
+			    .Identifier     = entry.Identifier,
+			    .Name           = effectName.str(),
+			    .ThreadId       = EffectThreads::CreateThread(registeredEffect),
+			    .Timer          = static_cast<float>(effectDuration),
+			    .MaxTime        = static_cast<float>(effectDuration),
+			    .IsTimed        = effectData.TimedType != EffectTimedType::NotTimed,
+			    .IsMeta         = effectData.IsMeta(),
+			    .HideEffectName = effectData.ShouldHideRealNameOnStart(),
+			});
+			auto &activeEffect = effectDispatcher->SharedState.ActiveEffects.back();
 
 			playEffectDispatchSound(activeEffect);
 
