@@ -1,6 +1,5 @@
 #include <stdafx.h>
 
-#include "Info.h"
 #include "LuaScripts.h"
 
 #include "Components/DebugSocket.h"
@@ -8,21 +7,18 @@
 #include "Components/KeyStates.h"
 #include "Components/MetaModifiers.h"
 #include "Components/Workshop.h"
-
 #include "Effects/Effect.h"
 #include "Effects/EffectData.h"
 #include "Effects/EnabledEffectsMap.h"
-
+#include "Info.h"
 #include "Memory/Hooks/AudioClearnessHook.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 #include "Memory/Hooks/GetLabelTextHook.h"
 #include "Memory/Hooks/ShaderHook.h"
-
 #include "Memory/PedModels.h"
 #include "Memory/Snow.h"
 #include "Memory/Vehicle.h"
 #include "Memory/WeaponPool.h"
-
 #include "Util/Camera.h"
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
