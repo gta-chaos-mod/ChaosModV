@@ -129,9 +129,14 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			if (!entry.Suffix.empty())
 				effectName << " " << entry.Suffix;
 
-			int effectDuration;
+			int effectDuration = 0;
 			switch (effectData.TimedType)
 			{
+			case EffectTimedType::NotTimed:
+				effectDuration = (effectData.IsMeta() ? effectDispatcher->SharedState.MetaEffectTimedDur
+				                                      : effectDispatcher->SharedState.EffectTimedDur)
+				               * 3.f;
+				break;
 			case EffectTimedType::Normal:
 				effectDuration = effectData.IsMeta() ? effectDispatcher->SharedState.MetaEffectTimedDur
 				                                     : effectDispatcher->SharedState.EffectTimedDur;
@@ -144,14 +149,25 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 				effectDuration = effectData.CustomTime;
 				break;
 			default:
+				LOG("WARNING: No effectDuration set for effect "
+				    << entry.Identifier.GetEffectId() << " with EffectTimedType "
+				    << static_cast<int>(effectData.TimedType) << ", reverting to default!");
 				effectDuration = effectData.IsMeta() ? effectDispatcher->SharedState.MetaEffectTimedDur
 				                                     : effectDispatcher->SharedState.EffectTimedDur;
 				break;
 			}
 
-			auto &activeEffect = effectDispatcher->SharedState.ActiveEffects.emplace_back(
-			    entry.Identifier, registeredEffect, effectName.str(), effectData, effectDuration,
-			    effectData.TimedType != EffectTimedType::NotTimed);
+			EffectDispatcher::ActiveEffect activeEffect = {
+				.Identifier     = entry.Identifier,
+				.Name           = effectName.str(),
+				.ThreadId       = EffectThreads::CreateThread(registeredEffect),
+				.Timer          = static_cast<float>(effectDuration),
+				.MaxTime        = static_cast<float>(effectDuration),
+				.IsTimed        = effectData.TimedType != EffectTimedType::NotTimed,
+				.IsMeta         = effectData.IsMeta(),
+				.HideEffectName = effectData.ShouldHideRealNameOnStart(),
+			};
+			effectDispatcher->SharedState.ActiveEffects.push_back(activeEffect);
 
 			playEffectDispatchSound(activeEffect);
 
@@ -330,7 +346,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 				if (g_EnabledEffects.contains(effectSharedData->OverrideEffectId))
 				{
 					auto &fakeEffect      = g_EnabledEffects.at(effectSharedData->OverrideEffectId);
-					activeEffect.FakeName = fakeEffect.HasCustomName() ? fakeEffect.CustomName : fakeEffect.Name;
+					activeEffect.FakeName = !fakeEffect.HasCustomName() ? "" : fakeEffect.CustomName;
 				}
 				else
 				{

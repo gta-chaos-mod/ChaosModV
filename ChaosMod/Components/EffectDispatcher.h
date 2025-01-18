@@ -35,9 +35,8 @@ class EffectDispatcher : public Component
 	};
 	std::queue<EffectDispatchEntry> EffectDispatchQueue;
 
-	class ActiveEffect
+	struct ActiveEffect
 	{
-	  public:
 		EffectIdentifier Identifier;
 
 		std::string Name;
@@ -55,20 +54,6 @@ class EffectDispatcher : public Component
 		bool IsStopping     = false;
 
 		DWORD64 SoundId     = 0;
-
-		ActiveEffect(const EffectIdentifier &effectIdentifier, RegisteredEffect *registeredEffect,
-		             const std::string &name, const EffectData &effectData, float effectDuration, bool isTimed)
-		{
-			Identifier     = effectIdentifier;
-			Name           = name;
-			FakeName       = effectData.FakeName;
-			Timer          = effectDuration;
-			MaxTime        = effectDuration;
-			IsTimed        = isTimed;
-			HideEffectName = effectData.ShouldHideRealNameOnStart();
-			IsMeta         = effectData.IsMeta();
-			ThreadId       = EffectThreads::CreateThread(registeredEffect);
-		}
 	};
 	struct
 	{

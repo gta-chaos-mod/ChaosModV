@@ -13,9 +13,7 @@ inline void WAIT(DWORD timeMs)
 {
 	auto currentFiber = GetCurrentFiber();
 	if (currentFiber == g_MainThread || currentFiber == g_EffectDispatcherThread)
-	{
 		scriptWait(timeMs);
-	}
 	else
 	{
 		EffectThreads::PauseThisThread(timeMs);
