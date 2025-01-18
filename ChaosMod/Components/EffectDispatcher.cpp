@@ -281,7 +281,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 	int maxEffects          = m_MaxRunningEffects;
 	int activeEffects       = 0;
-	// Reverse order to ensure the effects on top of the list are removed if activeEffects > maxEffects
+	// Reverse order to ensure the first effects are removed if activeEffects > maxEffects
 	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
 		auto &activeEffect  = *it;

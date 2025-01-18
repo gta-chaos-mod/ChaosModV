@@ -8,6 +8,8 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include <miniaudio.h>
 
+#define MAX_ACTIVE_SOUNDS 10
+
 EffectSound3D::EffectSound3D()
 {
 	ma_engine_init(nullptr, &m_maEngine);
@@ -70,17 +72,19 @@ void EffectSound3D::OnRun()
 	auto adjPlayerVel     = GET_ENTITY_VELOCITY(playerIsInAnyVeh ? playerVeh : playerPed);
 	ma_engine_listener_set_velocity(&m_maEngine, 0, adjPlayerVel.x, adjPlayerVel.y, adjPlayerVel.z);
 
-	for (auto it = m_Sounds.begin(); it != m_Sounds.end();)
+	int activeSounds = 0;
+	std::lock_guard lock(m_SoundsMutex);
+	// Reverse order to ensure the first sounds are removed if MAX_ACTIVE_SOUNDS has been reached
+	for (auto it = m_Sounds.rbegin(); it != m_Sounds.rend();)
 	{
-		std::lock_guard lock(m_SoundsMutex);
-
 		auto &[soundId, sound] = *it;
 
 		auto uninitSound       = [&]()
 		{
 			ma_sound_stop(&sound.Handle);
 			ma_sound_uninit(&sound.Handle);
-			it = m_Sounds.erase(it);
+			it = static_cast<decltype(it)>(m_Sounds.erase(std::next(it).base()));
+			activeSounds--;
 		};
 
 		if (ma_sound_at_end(&sound.Handle))
@@ -131,6 +135,12 @@ void EffectSound3D::OnRun()
 		break;
 		default:
 			LOG("ERROR: Unhandled sound play type!");
+			uninitSound();
+			continue;
+		}
+
+		if (++activeSounds > MAX_ACTIVE_SOUNDS)
+		{
 			uninitSound();
 			continue;
 		}

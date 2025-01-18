@@ -5,9 +5,9 @@
 #include <miniaudio.h>
 #include <scripthookv/inc/types.h>
 
+#include <map>
 #include <mutex>
 #include <string>
-#include <unordered_map>
 
 class EffectSound3D : public EffectSoundManager
 {
@@ -19,7 +19,7 @@ class EffectSound3D : public EffectSoundManager
 		ma_sound Handle;
 		EffectSoundPlayOptions PlayOptions;
 	};
-	std::unordered_map<DWORD64, Sound> m_Sounds;
+	std::map<DWORD64, Sound> m_Sounds;
 	std::mutex m_SoundsMutex;
 	bool m_IsStopping = false;
 	std::thread m_PauseSoundsThread;
