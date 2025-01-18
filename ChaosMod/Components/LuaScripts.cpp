@@ -628,7 +628,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 		E("DisplayHelpText", DisplayHelpText),
 
 		E("GetRandomInt",
-		  [](int lower, int upper)
+		  [](int lower, int upper) -> int
 		  {
 		      if (lower > upper)
 			      return 0;
@@ -638,7 +638,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 		  }),
 
 		E("GetRandomFloat",
-		  [](float lower, float upper)
+		  [](float lower, float upper) -> float
 		  {
 		      if (lower > upper)
 			      return 0.f;
