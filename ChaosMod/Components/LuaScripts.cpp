@@ -525,13 +525,11 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 	lua.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
 	             OverrideShaderType::Snow);
 
-#define E(x, y)                 \
-	{                           \
-		x, [=](sol::state &lua) \
-		{                       \
-			lua[x] = y;         \
-		}                       \
-	}
+#define E(x, y)               \
+	{ x, [=](sol::state &lua) \
+	  {                       \
+		  lua[x] = y;         \
+	  } }
 	struct ExposableFunc
 	{
 		const char *Name;
@@ -639,6 +637,26 @@ LuaScripts::ParseScriptRaw(std::string scriptName, std::string_view script, Pars
 
 		E("AddCustomLabel", Hooks::AddCustomLabel),
 		E("DisplayHelpText", DisplayHelpText),
+
+		E("GetRandomInt",
+		  [](int lower, int upper)
+		  {
+		      if (lower > upper)
+			      return 0;
+		      else if (lower == upper)
+			      return lower;
+		      return g_Random.GetRandomInt(lower, upper);
+		  }),
+
+		E("GetRandomFloat",
+		  [](float lower, float upper)
+		  {
+		      if (lower > upper)
+			      return 0.f;
+		      else if (lower == upper)
+			      return lower;
+		      return g_Random.GetRandomFloat(lower, upper);
+		  }),
 	};
 #undef E
 
