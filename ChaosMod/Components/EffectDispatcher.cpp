@@ -303,9 +303,8 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 
 	float adjustedDeltaTime = deltaTime / 1000.f;
 
-	int maxEffects          = m_MaxRunningEffects;
 	int activeEffects       = 0;
-	// Reverse order to ensure the first effects are removed if activeEffects > maxEffects
+	// Reverse order to ensure the first effects are removed if activeEffects > m_MaxRunningEffects
 	for (auto it = SharedState.ActiveEffects.rbegin(); it != SharedState.ActiveEffects.rend();)
 	{
 		auto &activeEffect  = *it;
@@ -374,7 +373,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		           ? 1.f
 		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
 
-		if (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > maxEffects))
+		if (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > m_MaxRunningEffects))
 		{
 			if (activeEffect.Timer < -60.f)
 			{
