@@ -1,7 +1,7 @@
 #include <stdafx.h>
 // Effect by ProfessorBiddle, requested thousands of times on discord
 
-static int lastPlayerKills;
+CHAOS_VAR int lastPlayerKills;
 
 static void OnStart()
 {

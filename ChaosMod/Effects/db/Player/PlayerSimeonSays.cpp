@@ -5,7 +5,7 @@
 #include <stdafx.h>
 
 // clang-format off
-static std::vector<std::string> actions = {
+CHAOS_VAR std::vector<std::string> actions = {
 	"hold forwards",
 	"hold backwards",
 	"hold left",
@@ -14,7 +14,7 @@ static std::vector<std::string> actions = {
 	"hold look behind (c)"
 };
 
-static std::map<std::string, std::vector<int>> actionKeys = {
+CHAOS_VAR std::map<std::string, std::vector<int>> actionKeys = {
 	{"hold forwards", {32, 71, 77, 87, 129, 136, 150, 232}},
 	{"hold backwards", {33, 72, 78, 88, 130, 139, 151, 233}},
 	{"hold left", {34, 63, 89, 133, 147, 234}},
@@ -30,14 +30,14 @@ static std::map<std::string, std::vector<int>> actionKeys = {
 };
 // clang-format on
 
-static int scaleForm = 0;
-static int lastTime  = 0;
-static int waitTime  = 2000;
-static bool dead     = false;
+CHAOS_VAR int scaleForm = 0;
+CHAOS_VAR int lastTime  = 0;
+CHAOS_VAR int waitTime  = 2000;
+CHAOS_VAR bool dead     = false;
 
-static std::string action;
+CHAOS_VAR std::string action;
 
-static bool opposite;
+CHAOS_VAR bool opposite;
 
 static void ShowPopup()
 {

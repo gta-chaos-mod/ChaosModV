@@ -6,8 +6,7 @@
 
 #include "Util/Player.h"
 
-static std::vector<Vector3> allPossibleStores = {
-
+CHAOS_VAR std::vector<Vector3> allPossibleStores = {
 	// Convenience Stores
 	{ 372.29217529297f, 326.39370727539f, 103.56636047363f },   // 247 Clinton
 	{ 24.215274810791f, -1347.2624511719f, 29.497016906738f },  // 247 Strawberry

@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static Cam eCamera;
-static int state = 0;
+CHAOS_VAR Cam eCamera;
+CHAOS_VAR int state = 0;
 
 static bool SafetyCheck()
 {

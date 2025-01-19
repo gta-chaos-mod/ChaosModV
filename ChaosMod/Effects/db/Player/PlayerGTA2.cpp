@@ -6,9 +6,9 @@
 
 #define CAMERA_OFFSET_MAX 20.f
 
-static Cam camera;
-static Vector3 lastPos;
-static Vector3 cameraOffset;
+CHAOS_VAR Cam camera;
+CHAOS_VAR Vector3 lastPos;
+CHAOS_VAR Vector3 cameraOffset;
 
 static void OnStart()
 {

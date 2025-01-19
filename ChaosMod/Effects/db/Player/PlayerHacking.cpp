@@ -8,7 +8,7 @@
 
 // These should be 8 characters all uppercase.
 // But there isn't anything enforcing that :^)
-const char *ROULETTE_WORDS[] = {
+CHAOS_VAR const char *ROULETTE_WORDS[] = {
 	"ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG", "TAKE_TWO", "DAVEYYYY", "MWEATHER", "RED_DEAD", "CHAOSMOD",
 	"HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS", "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY",
 	"ELIAS_GR", "KOLYA_VE", "LU7YOSHI", "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH",
@@ -17,7 +17,7 @@ const char *ROULETTE_WORDS[] = {
 	"/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__", "LESTER__", "SYNFETIC",
 };
 
-const char *WIN_PHRASES[] = {
+CHAOS_VAR const char *WIN_PHRASES[] = {
 	"Rockstar: Creating realistic hacking since 1998.",
 	"I swear that was made for a child, by a child.",
 	"I wonder what would happen if you failed...",
@@ -69,12 +69,12 @@ enum class TimerAction
 	KILL
 };
 
-static int lives             = 0;
-static int scaleform         = 0;
-static int timer             = 0;
-static TimerAction act       = TimerAction::NONE;
-static int selectInputReturn = 0;
-static bool finished         = false;
+CHAOS_VAR int lives             = 0;
+CHAOS_VAR int scaleform         = 0;
+CHAOS_VAR int timer             = 0;
+CHAOS_VAR TimerAction act       = TimerAction::NONE;
+CHAOS_VAR int selectInputReturn = 0;
+CHAOS_VAR bool finished         = false;
 
 static void ScaleformPushString(const char *text)
 {

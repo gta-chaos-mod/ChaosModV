@@ -8,13 +8,13 @@
 
 #include "Memory/UI.h"
 
-static constexpr int NUM_HUD_COMPONENTS = 21;
+CHAOS_VAR constexpr int NUM_HUD_COMPONENTS = 21;
 
-static float originalMobilePhoneX;
+CHAOS_VAR float originalMobilePhoneX;
 
-static std::map<int, float> originalHudComponentX;
+CHAOS_VAR std::map<int, float> originalHudComponentX;
 
-static std::map<int, float> hudComponentXValues = {
+CHAOS_VAR std::map<int, float> hudComponentXValues = {
 	{ 1, -0.9f },  // HUD_WANTED_STARS
 	{ 2, -0.9f },  // HUD_WEAPON_ICON
 	{ 3, -0.9f },  // HUD_CASH

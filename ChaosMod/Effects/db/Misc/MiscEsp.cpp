@@ -9,12 +9,12 @@
 // This file is manually formatted.
 // clang-format off
 
-static const float maxDistance = 75.0f;
-static const float thickness   = 0.001f;
+CHAOS_VAR const float maxDistance = 75.0f;
+CHAOS_VAR const float thickness   = 0.001f;
 
-static Color lineColor;
+CHAOS_VAR Color lineColor;
 
-static const std::array<int, 19> BONE_IDS = {
+CHAOS_VAR const std::array<int, 19> BONE_IDS = {
 	0x796e, 0x9995, 0xfcd9, 0x58b7,
 	0xb1c5, 0xeeeb, 0x49d9, 0x29d2,
 	0x0bb0, 0x9d4d, 0x6e5c, 0xdead,
@@ -22,7 +22,7 @@ static const std::array<int, 19> BONE_IDS = {
 	0x9000, 0x3779, 0xcc4d
 };
 
-constexpr std::array<std::array<int, 2>, 14> connections = {{
+CHAOS_VAR std::array<std::array<int, 2>, 14> connections = {{
 	{  0,  1 }, {  1,  4 }, {  4,  5 }, {  5,  6 },
 	{  1,  9 }, {  9, 10 }, { 10, 11 }, {  1, 12 },
 	{ 12, 13 }, { 13, 14 }, { 12, 15 }, { 15, 16 },

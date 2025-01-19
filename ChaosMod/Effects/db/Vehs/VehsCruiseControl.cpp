@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-float currentVel = -1;
+CHAOS_VAR float currentVel = -1;
 
 static void OnStop()
 {

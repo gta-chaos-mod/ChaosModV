@@ -12,9 +12,9 @@ struct PedHitInfo
 	int boneIdx;
 };
 
-static bool didSelect = false;
-static std::vector<PedHitInfo> selectedOffsets;
-static bool isBlocked = false;
+CHAOS_VAR bool didSelect = false;
+CHAOS_VAR std::vector<PedHitInfo> selectedOffsets;
+CHAOS_VAR bool isBlocked = false;
 
 static void OnStop()
 {

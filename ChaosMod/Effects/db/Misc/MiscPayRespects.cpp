@@ -9,12 +9,12 @@
 
 #define WAIT_TIME 10000 // ms
 
-static int ms_Overlay                = 0;
-static const int ms_MaxPressInterval = 1000;
-static int ms_LastPressTick          = 0;
+CHAOS_VAR int ms_Overlay                = 0;
+CHAOS_VAR const int ms_MaxPressInterval = 1000;
+CHAOS_VAR int ms_LastPressTick          = 0;
 
-static DWORD64 ms_TimeReserve;
-static DWORD64 ms_LastTick = 0;
+CHAOS_VAR DWORD64 ms_TimeReserve;
+CHAOS_VAR DWORD64 ms_LastTick = 0;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {

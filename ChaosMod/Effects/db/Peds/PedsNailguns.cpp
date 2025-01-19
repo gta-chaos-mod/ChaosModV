@@ -1,8 +1,8 @@
 #include <stdafx.h>
 
-static std::vector<Ped> frozenPeds;
-static std::map<Ped, Entity> pedGuns;
-static std::map<Ped, Entity> heldWeapons;
+CHAOS_VAR std::vector<Ped> frozenPeds;
+CHAOS_VAR std::map<Ped, Entity> pedGuns;
+CHAOS_VAR std::map<Ped, Entity> heldWeapons;
 
 static bool isFrozen(const Ped ped)
 {

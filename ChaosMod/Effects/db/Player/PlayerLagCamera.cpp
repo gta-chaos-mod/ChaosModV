@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static int constexpr CAM_DELAY_NORMAL  = 250;
-static int constexpr CAM_DELAY_VEHICLE = 1000;
+CHAOS_VAR int constexpr CAM_DELAY_NORMAL  = 250;
+CHAOS_VAR int constexpr CAM_DELAY_VEHICLE = 1000;
 
 static int GetTargetCamDelay()
 {
@@ -29,11 +29,11 @@ struct CameraSnapshot
 	}
 };
 
-static std::vector<CameraSnapshot> cameraSnapshots;
+CHAOS_VAR std::vector<CameraSnapshot> cameraSnapshots;
 
-static int currentCamDelay;
-static int targetCamDelay;
-static Cam camera;
+CHAOS_VAR int currentCamDelay;
+CHAOS_VAR int targetCamDelay;
+CHAOS_VAR Cam camera;
 
 static void TakeCameraSnapshot()
 {

@@ -4,10 +4,10 @@
 
 #include <stdafx.h>
 
-static const char *ptfxDict  = "scr_ar_planes";
-static const char *ptfxName  = "scr_ar_trail_smoke";
+CHAOS_VAR const char *ptfxDict  = "scr_ar_planes";
+CHAOS_VAR const char *ptfxName  = "scr_ar_trail_smoke";
 
-static std::vector<Ped> peds = {};
+CHAOS_VAR std::vector<Ped> peds = {};
 
 static void OnStart()
 {

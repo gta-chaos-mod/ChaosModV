@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_ShaderSrcPrefix = R"SRC(
+CHAOS_VAR const char *ms_ShaderSrcPrefix = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {

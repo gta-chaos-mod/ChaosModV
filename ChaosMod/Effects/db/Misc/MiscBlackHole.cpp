@@ -2,8 +2,8 @@
 
 #include "Util/XInput.h"
 
-static Vector3 ms_BlackHolePos;
-static float ms_CurRadius;
+CHAOS_VAR Vector3 ms_BlackHolePos;
+CHAOS_VAR float ms_CurRadius;
 
 static void OnStart()
 {

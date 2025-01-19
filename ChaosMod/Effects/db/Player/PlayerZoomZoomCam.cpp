@@ -3,13 +3,13 @@
 */
 
 #include <stdafx.h>
-static Camera zoomCamera          = 0;
-static float camZoom              = 80.f;
-const static float camZoomRate    = 0.15f;
-const static float minZoom        = 10.f;
-const static float maxZoom        = 120.f;
-const static float zoomMidpoint   = (maxZoom - minZoom) / 2 + minZoom;
-const static float zoomMultiplier = maxZoom - zoomMidpoint;
+CHAOS_VAR Camera zoomCamera          = 0;
+CHAOS_VAR float camZoom              = 80.f;
+CHAOS_VAR const float camZoomRate    = 0.15f;
+CHAOS_VAR const float minZoom        = 10.f;
+CHAOS_VAR const float maxZoom        = 120.f;
+CHAOS_VAR const float zoomMidpoint   = (maxZoom - minZoom) / 2 + minZoom;
+CHAOS_VAR const float zoomMultiplier = maxZoom - zoomMidpoint;
 
 static void UpdateCamera()
 {

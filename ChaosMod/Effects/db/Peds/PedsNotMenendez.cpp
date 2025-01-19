@@ -7,7 +7,7 @@
 #include "Memory/Audio.h"
 #include <set>
 
-static std::set<Ped> deadPeds;
+CHAOS_VAR std::set<Ped> deadPeds;
 
 static void OnTick()
 {

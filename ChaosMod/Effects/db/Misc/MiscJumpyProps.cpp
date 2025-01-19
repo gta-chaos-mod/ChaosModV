@@ -10,7 +10,7 @@ struct PropData
 	int startOffset;
 };
 
-static std::map<Object, PropData> propDataMap = {};
+CHAOS_VAR std::map<Object, PropData> propDataMap = {};
 
 static void OnTick()
 {

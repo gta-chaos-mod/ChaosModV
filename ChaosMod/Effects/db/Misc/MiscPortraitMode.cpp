@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static const double maxBoxWidth = 0.35;
-static double currentBoxWidth   = 0;
+CHAOS_VAR const double maxBoxWidth = 0.35;
+CHAOS_VAR double currentBoxWidth   = 0;
 
 static void OnStart()
 {

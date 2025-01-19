@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-static Vehicle ms_SavedPlayerVeh;
+CHAOS_VAR Vehicle ms_SavedPlayerVeh;
 
 static void OnStart()
 {

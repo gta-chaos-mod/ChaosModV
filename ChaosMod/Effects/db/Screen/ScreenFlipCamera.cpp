@@ -6,7 +6,7 @@
 // TODO: SHVDN has a memory pattern for the gameplay camera, so it might be wise at some point
 // to use it to directly modify the rotation of the camera, but that's for a later date :^)
 
-static Camera flippedCamera = 0;
+CHAOS_VAR Camera flippedCamera = 0;
 
 static void UpdateCamera()
 {

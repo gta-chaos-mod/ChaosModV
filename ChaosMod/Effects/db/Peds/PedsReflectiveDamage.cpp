@@ -3,7 +3,7 @@
 */
 #include <stdafx.h>
 
-static std::unordered_map<Ped, int> mappedPeds;
+CHAOS_VAR std::unordered_map<Ped, int> mappedPeds;
 
 static void OnStop()
 {

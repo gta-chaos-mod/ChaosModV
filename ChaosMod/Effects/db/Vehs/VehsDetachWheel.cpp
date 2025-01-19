@@ -6,8 +6,8 @@ Effect by Reguas
 
 #include "Memory/EntityFragments.h"
 
-static const char *wheels[12] { "wheel_lf",  "wheel_rf",  "wheel_lm1", "wheel_rm1", "wheel_lm2", "wheel_rm2",
-	                            "wheel_lm3", "wheel_rm3", "wheel_lr",  "wheel_rr",  "wheel_f",   "wheel_r" };
+CHAOS_VAR const char *wheels[12] { "wheel_lf",  "wheel_rf",  "wheel_lm1", "wheel_rm1", "wheel_lm2", "wheel_rm2",
+	                               "wheel_lm3", "wheel_rm3", "wheel_lr",  "wheel_rr",  "wheel_f",   "wheel_r" };
 
 static void OnStart()
 {

@@ -3,9 +3,9 @@
 */
 
 #include <stdafx.h>
-static Camera spinningCamera = 0;
-float camRot                 = 0.f;
-const float camRotRate       = 1.2f;
+CHAOS_VAR Camera spinningCamera = 0;
+CHAOS_VAR float camRot          = 0.f;
+CHAOS_VAR float camRotRate      = 1.2f;
 
 static void UpdateCamera()
 {

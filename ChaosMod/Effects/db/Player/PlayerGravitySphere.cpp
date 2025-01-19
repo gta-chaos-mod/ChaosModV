@@ -6,7 +6,7 @@
 
 #include "Memory/Physics.h"
 
-static float sphereRadius = 10.f;
+CHAOS_VAR float sphereRadius = 10.f;
 
 static void OnTick()
 {

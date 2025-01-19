@@ -4,10 +4,10 @@
 
 #include <stdafx.h>
 
-static std::list<Ped> clownEnemies;
-static int spawnTimer = -1;
-static Hash relationshipGroup;
-static int maxClownsToSpawn = 3;
+CHAOS_VAR std::list<Ped> clownEnemies;
+CHAOS_VAR int spawnTimer = -1;
+CHAOS_VAR Hash relationshipGroup;
+CHAOS_VAR int maxClownsToSpawn = 3;
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, int minOffset, int maxOffset)
 {

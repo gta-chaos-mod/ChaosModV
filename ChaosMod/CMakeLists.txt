@@ -36,7 +36,7 @@ target_link_directories(ChaosMod PUBLIC ${PROJECT_SOURCE_DIR}/../vendor/lua)
 target_link_libraries(ChaosMod PUBLIC ${link_libs})
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(ChaosMod PUBLIC -DUNICODE -D_UNICODE -DNOMINMAX /Zi)
+    target_compile_options(ChaosMod PUBLIC -DUNICODE -D_UNICODE -DNOMINMAX /Zi /GT)
     target_link_options(ChaosMod PUBLIC /DEBUG /OPT:REF /OPT:ICF)
 else()
     target_compile_options(ChaosMod PUBLIC -municode)

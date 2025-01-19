@@ -4,10 +4,10 @@
 
 #include <stdafx.h>
 
-static const double SPEED            = 0.003;
-static const double BOX_HEIGHT_RATIO = 0.45;
-static double boxWidth, boxHeight, offsetX, offsetY;
-static bool goingDown = true, goingRight = true;
+CHAOS_VAR const double SPEED            = 0.003;
+CHAOS_VAR const double BOX_HEIGHT_RATIO = 0.45;
+CHAOS_VAR double boxWidth, boxHeight, offsetX, offsetY;
+CHAOS_VAR bool goingDown = true, goingRight = true;
 
 static void OnStart()
 {

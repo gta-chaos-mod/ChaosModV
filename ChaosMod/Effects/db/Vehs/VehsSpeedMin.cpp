@@ -10,12 +10,12 @@
 #define WAIT_TIME 10000      // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
 
-static int ms_Overlay = 0;
-static Vehicle ms_LastVeh;
+CHAOS_VAR int ms_Overlay = 0;
+CHAOS_VAR Vehicle ms_LastVeh;
 
-static DWORD64 ms_TimeReserve;
-static DWORD64 ms_LastTick    = 0;
-static bool ms_EnteredVehicle = false;
+CHAOS_VAR DWORD64 ms_TimeReserve;
+CHAOS_VAR DWORD64 ms_LastTick    = 0;
+CHAOS_VAR bool ms_EnteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {

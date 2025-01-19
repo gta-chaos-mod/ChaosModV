@@ -6,8 +6,8 @@
 
 #include "Util/Player.h"
 
-static int lastTpTime;
-static int currentTpWaitTime;
+CHAOS_VAR int lastTpTime;
+CHAOS_VAR int currentTpWaitTime;
 
 static void OnStart()
 {

@@ -5,12 +5,12 @@
 
 #include "Util/Player.h"
 
-static Ped clone;
-static Vector3 coords;
-static float heading;
-static Vector3 rot;
-static Vehicle cloneVeh;
-static int camModes[3] = { 0, 0, 0 };
+CHAOS_VAR Ped clone;
+CHAOS_VAR Vector3 coords;
+CHAOS_VAR float heading;
+CHAOS_VAR Vector3 rot;
+CHAOS_VAR Vehicle cloneVeh;
+CHAOS_VAR int camModes[3] = { 0, 0, 0 };
 
 static void OnStart()
 {

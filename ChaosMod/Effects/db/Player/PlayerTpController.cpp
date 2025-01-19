@@ -280,7 +280,7 @@ struct FakeTeleportInfo
 	Vector3 vehiclePos;
 };
 
-static const std::vector<FakeTeleportInfo> tpLocations = {
+CHAOS_VAR const std::vector<FakeTeleportInfo> tpLocations = {
 	{ "tp_lsairport", { -1388.6f, -3111.61f, 13.94f } },                                    // LSIA
 	{ "tp_mazebanktower", { -75.7f, -818.62f, 326.16f } },                                  // Maze Tower
 	{ "tp_fortzancudo", { -2360.3f, 3244.83f, 92.9f }, { -2267.89f, 3121.04f, 32.5f } },    // Fort Zancudo

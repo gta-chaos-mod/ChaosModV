@@ -4,7 +4,7 @@
     Effect by Juhana
 */
 
-static Ped lamarPed;
+CHAOS_VAR Ped lamarPed;
 
 static void OnStart()
 {

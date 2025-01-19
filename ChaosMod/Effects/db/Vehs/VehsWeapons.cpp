@@ -6,7 +6,7 @@
 
 #include "Util/HelpText.h"
 
-static int last_shot = 0;
+CHAOS_VAR int last_shot = 0;
 
 static void OnStop()
 {

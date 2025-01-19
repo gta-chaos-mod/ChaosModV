@@ -19,8 +19,8 @@ struct CWaterQuad
 };
 static_assert(sizeof(CWaterQuad) == 0x1C);
 
-static CWaterQuad *WaterQuads;
-static std::vector<float> WaterHeights;
+CHAOS_VAR CWaterQuad *WaterQuads;
+CHAOS_VAR std::vector<float> WaterHeights;
 
 static CWaterQuad *GetWaterQuads()
 {

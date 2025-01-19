@@ -16,9 +16,9 @@ struct TemporarilyInvincibleEntity
 	}
 };
 
-static std::vector<TemporarilyInvincibleEntity> temporarilyInvincibleEntities;
+CHAOS_VAR std::vector<TemporarilyInvincibleEntity> temporarilyInvincibleEntities;
 
-static std::vector<Entity> excludeEntities;
+CHAOS_VAR std::vector<Entity> excludeEntities;
 
 static void OnStart()
 {

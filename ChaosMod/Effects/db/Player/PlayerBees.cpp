@@ -4,7 +4,7 @@
 
 #define CHANCE 100 // Higher is less chance
 
-static int ms_ParticleId;
+CHAOS_VAR int ms_ParticleId;
 
 static void OnStart()
 {

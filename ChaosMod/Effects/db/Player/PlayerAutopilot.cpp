@@ -8,9 +8,9 @@ static enum
 	STATE_ROAMING
 } ms_State;
 
-static Vector3 ms_WaypointCoords;
-static bool ms_FoundWaypoint;
-static bool ms_CustomWaypoint;
+CHAOS_VAR Vector3 ms_WaypointCoords;
+CHAOS_VAR bool ms_FoundWaypoint;
+CHAOS_VAR bool ms_CustomWaypoint;
 
 static bool VectorEqualRoughZ(Vector3 vec1, Vector3 vec2)
 {

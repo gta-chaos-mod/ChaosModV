@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static int last_firework = 0;
+CHAOS_VAR int last_firework = 0;
 
 static void OnStart()
 {

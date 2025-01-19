@@ -4,13 +4,11 @@
 
 #include <stdafx.h>
 
-#include "Memory/Gravity.h"
-
 #define PI 3.14159265
 
-static float x, y;
+CHAOS_VAR float x, y;
 
-static DWORD lastTick = 0;
+CHAOS_VAR DWORD lastTick = 0;
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();

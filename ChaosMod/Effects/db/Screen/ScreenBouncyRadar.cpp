@@ -4,7 +4,7 @@
 
 #define BOUNCE_SPEED_MULT 100.f
 
-static float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
+CHAOS_VAR float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
 
 static void OnStart()
 {

@@ -5,9 +5,9 @@
 #include <stdafx.h>
 
 // Degrees per millisecond, current value means 1.3 full rotations per second
-static constexpr float ROTATION_SPEED = (1.3f * 360.f) / 1000.f;
+CHAOS_VAR constexpr float ROTATION_SPEED = (1.3f * 360.f) / 1000.f;
 
-static int lastTick                   = 0;
+CHAOS_VAR int lastTick                   = 0;
 
 static void OnStart()
 {

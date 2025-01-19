@@ -3,7 +3,7 @@
 */
 #include <stdafx.h>
 
-static std::vector<Hash> models;
+CHAOS_VAR std::vector<Hash> models;
 
 static void OnStart()
 {

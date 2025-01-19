@@ -8,11 +8,11 @@
 
 #define WAIT_TIME 5000 // ms. before police are angry at your innocence
 
-static DWORD64 ms_TimeReserve;
-static DWORD64 ms_LastTick = 0;
+CHAOS_VAR DWORD64 ms_TimeReserve;
+CHAOS_VAR DWORD64 ms_LastTick = 0;
 
-static int ms_LastPlayerKills;
-static int ms_LastWantedLevel = 0;
+CHAOS_VAR int ms_LastPlayerKills;
+CHAOS_VAR int ms_LastWantedLevel = 0;
 
 static void OnStart()
 {

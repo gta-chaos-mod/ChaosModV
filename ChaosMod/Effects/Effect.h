@@ -3,13 +3,14 @@
 #include "Components/LuaScripts.h"
 
 #include "Effects/EffectIdentifier.h"
-#include "Effects/EffectTimedType.h"
 #include "Effects/EffectsInfo.h"
 
 #include "Util/File.h"
 
 #include <algorithm>
 #include <string>
+
+#define CHAOS_VAR static thread_local
 
 #define _EFFECT_CONCAT(a, b) a##b
 #define EFFECT_CONCAT(a, b) _EFFECT_CONCAT(a, b)

@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static std::map<Ped, Object> pedPropsMap;
-static std::vector<Hash> availablePropModels;
+CHAOS_VAR std::map<Ped, Object> pedPropsMap;
+CHAOS_VAR std::vector<Hash> availablePropModels;
 
 static Vector3 GetPropOffset(Hash propModel)
 {

@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static Object waterObj  = 0;
-static Hash displayHash = 0;
+CHAOS_VAR Object waterObj  = 0;
+CHAOS_VAR Hash displayHash = 0;
 
 static void OnStart()
 {

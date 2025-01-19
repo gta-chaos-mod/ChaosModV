@@ -10,11 +10,11 @@ enum TiredMode
 	openingEyes,
 	waiting,
 };
-static TiredMode currentMode = TiredMode::closingEyes;
-static int alpha;
-static int closingIterator;
-static int nextTimestamp;
-static float steeringDirection;
+CHAOS_VAR TiredMode currentMode = TiredMode::closingEyes;
+CHAOS_VAR int alpha;
+CHAOS_VAR int closingIterator;
+CHAOS_VAR int nextTimestamp;
+CHAOS_VAR float steeringDirection;
 
 static void BlackOut(int alpha)
 {

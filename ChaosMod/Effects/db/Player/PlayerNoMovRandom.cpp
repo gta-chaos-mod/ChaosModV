@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static int rand_key;
+CHAOS_VAR int rand_key;
 
 static void OnStart()
 {

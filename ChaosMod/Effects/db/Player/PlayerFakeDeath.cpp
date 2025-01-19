@@ -6,13 +6,13 @@
 
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
-static const char *ms_TextPairs[] = { "Just kidding, keep playing",
-	                                  "lol u suck",
-	                                  "Did you really fall for that?",
-	                                  "~g~(No you're fine)",
-	                                  "Did this scare you?",
-	                                  "~r~FISSION MAILED",
-	                                  "ded" };
+CHAOS_VAR const char *ms_TextPairs[] = { "Just kidding, keep playing",
+	                                     "lol u suck",
+	                                     "Did you really fall for that?",
+	                                     "~g~(No you're fine)",
+	                                     "Did this scare you?",
+	                                     "~r~FISSION MAILED",
+	                                     "ded" };
 
 enum FakeDeathState
 {
@@ -23,14 +23,14 @@ enum FakeDeathState
 	cleanup
 };
 
-static int scaleForm                  = 0;
-static int currentMode                = FakeDeathState::start;
-static int lastModeTime               = 0;
-static int nextModeTime               = 0;
-static int soundId                    = 0;
-static bool isOnMission               = false;
-static const char *deathAnimationName = "";
-static const char *playerDeathName    = "";
+CHAOS_VAR int scaleForm                  = 0;
+CHAOS_VAR int currentMode                = FakeDeathState::start;
+CHAOS_VAR int lastModeTime               = 0;
+CHAOS_VAR int nextModeTime               = 0;
+CHAOS_VAR int soundId                    = 0;
+CHAOS_VAR bool isOnMission               = false;
+CHAOS_VAR const char *deathAnimationName = "";
+CHAOS_VAR const char *playerDeathName    = "";
 
 static void OnStart()
 {

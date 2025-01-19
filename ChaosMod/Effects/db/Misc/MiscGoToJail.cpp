@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
+CHAOS_VAR const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
 
 static void OnStart()
 {

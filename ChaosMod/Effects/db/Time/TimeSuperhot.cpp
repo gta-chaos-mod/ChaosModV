@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static int lastCheck = 0;
+CHAOS_VAR int lastCheck = 0;
 
 static void OnStop()
 {

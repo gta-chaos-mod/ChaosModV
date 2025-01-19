@@ -4,7 +4,7 @@
 
 // Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
-static int ms_TargetPitch;
+CHAOS_VAR int ms_TargetPitch;
 
 static void OnStart()
 {

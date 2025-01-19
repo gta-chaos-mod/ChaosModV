@@ -11,10 +11,10 @@ struct ShooterInfo
 	int FxHandle                = 0;
 };
 
-static int MAX_DURATION_BETWEEN_SHOTS = 10;
-static int MAX_DURATION_ANIMATION     = 150;
+CHAOS_VAR int MAX_DURATION_BETWEEN_SHOTS = 10;
+CHAOS_VAR int MAX_DURATION_ANIMATION     = 150;
 
-static std::map<Ped, ShooterInfo> animationHandleByPed;
+CHAOS_VAR std::map<Ped, ShooterInfo> animationHandleByPed;
 
 static void OnStop()
 {

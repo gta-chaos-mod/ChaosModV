@@ -10,11 +10,11 @@ struct EnemyGroup
 	std::vector<Ped> peds;
 };
 
-static Hash model;
-static Hash microSmgHash;
-static Hash relationshipGroup;
-static EnemyGroup helicopterGroup;
-static EnemyGroup mesaGroup;
+CHAOS_VAR Hash model;
+CHAOS_VAR Hash microSmgHash;
+CHAOS_VAR Hash relationshipGroup;
+CHAOS_VAR EnemyGroup helicopterGroup;
+CHAOS_VAR EnemyGroup mesaGroup;
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float maxOffset)
 {

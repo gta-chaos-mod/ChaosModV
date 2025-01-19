@@ -4,8 +4,8 @@
 
 #include <stdafx.h>
 
-static int lastAirStrike = 0;
-static Hash airstrikeHash;
+CHAOS_VAR int lastAirStrike = 0;
+CHAOS_VAR Hash airstrikeHash;
 
 static void OnStart()
 {

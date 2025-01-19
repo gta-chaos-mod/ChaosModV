@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_szShaderSrcPrefix = R"SRC(
+CHAOS_VAR const char *ms_szShaderSrcPrefix = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -15,7 +15,7 @@ float4 main(float4 position	: SV_POSITION, float3 texcoord : TEXCOORD0, float4 c
     float4 col = HDRSampler.Sample(g_samLinear, texcoord);
     float rotation = )SRC";
 
-static const char *ms_szShaderSrcSuffix = R"SRC(;
+CHAOS_VAR const char *ms_szShaderSrcSuffix = R"SRC(;
     float sinA = sin(radians(rotation));
     float cosA = cos(radians(rotation));
     

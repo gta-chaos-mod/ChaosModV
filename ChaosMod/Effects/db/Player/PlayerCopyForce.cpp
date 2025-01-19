@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static Vector3 playerVelocity;
+CHAOS_VAR Vector3 playerVelocity;
 
 static void OnStart()
 {

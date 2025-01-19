@@ -14,8 +14,7 @@ struct Location
 	float speed;
 };
 
-static std::vector<Location> allPossibleJumps = {
-
+CHAOS_VAR std::vector<Location> allPossibleJumps = {
 	{ { 46.101, 6530.031, 30.713 }, 137.332, 40.f },    // 1
 	{ { -186.248, 6554.466, 10.446 }, 314.389, 30.f },  // 2
 	{ { 490.106, 4309.650, 54.884 }, 54.039, 45.f },    // 3
@@ -46,7 +45,6 @@ static std::vector<Location> allPossibleJumps = {
 	{ { -980.685, -2491.565, 13.898 }, 151.314, 60.f }, // 28
 	{ { -860.708, -2566.927, 13.785 }, 331.449, 60.f }, // 29
 	{ { -958.207, -2766.583, 13.693 }, 151.829, 45.f }  // 30
-
 };
 
 static void OnStart()

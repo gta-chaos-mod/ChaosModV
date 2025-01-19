@@ -3,13 +3,13 @@
 */
 
 #include <stdafx.h>
-static Camera sickCamera = 0;
-static float camZoom     = 80.f;
-static float camZoomRate = 0.4f;
-static float camRotX     = 0.f;
-static float camRotXRate = 0.4f;
-static float camRotY     = 0.f;
-static float camRotYRate = 0.6f;
+CHAOS_VAR Camera sickCamera = 0;
+CHAOS_VAR float camZoom     = 80.f;
+CHAOS_VAR float camZoomRate = 0.4f;
+CHAOS_VAR float camRotX     = 0.f;
+CHAOS_VAR float camRotXRate = 0.4f;
+CHAOS_VAR float camRotY     = 0.f;
+CHAOS_VAR float camRotYRate = 0.6f;
 
 static void UpdateCamera()
 {

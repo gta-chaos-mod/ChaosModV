@@ -3,7 +3,7 @@
 #include "Memory/Physics.h"
 #include "Util/XInput.h"
 
-static DWORD64 ms_AnchorTick;
+CHAOS_VAR DWORD64 ms_AnchorTick;
 
 static void OnStart()
 {

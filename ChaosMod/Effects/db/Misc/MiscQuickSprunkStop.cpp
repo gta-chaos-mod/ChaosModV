@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static const char *scriptName = "ob_vend1";
+CHAOS_VAR const char *scriptName = "ob_vend1";
 
 static void OnStart()
 {

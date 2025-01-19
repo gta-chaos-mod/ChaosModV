@@ -1,8 +1,8 @@
 #include <stdafx.h>
 
-static int ms_State;
-static std::map<Ped, Vector3> ms_ToTpPeds;
-static std::map<Vehicle, Vector3> ms_ToTpVehs;
+CHAOS_VAR int ms_State;
+CHAOS_VAR std::map<Ped, Vector3> ms_ToTpPeds;
+CHAOS_VAR std::map<Vehicle, Vector3> ms_ToTpVehs;
 
 static void OnStart()
 {

@@ -6,7 +6,7 @@
 
 #include "Memory/Vehicle.h"
 
-static std::map<Vehicle, Vector3> vehicleDefaultSizes;
+CHAOS_VAR std::map<Vehicle, Vector3> vehicleDefaultSizes;
 
 static bool VectorEquals(Vector3 vec1, Vector3 vec2)
 {

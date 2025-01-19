@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-static std::list<Ped> ms_Zombies;
+CHAOS_VAR std::list<Ped> ms_Zombies;
 
 static void OnStart()
 {

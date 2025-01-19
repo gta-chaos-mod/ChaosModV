@@ -2,7 +2,7 @@
 
 #include "Memory/Hooks/AudioPitchHook.h"
 
-static int ms_TargetPitch;
+CHAOS_VAR int ms_TargetPitch;
 
 static void OnStart()
 {

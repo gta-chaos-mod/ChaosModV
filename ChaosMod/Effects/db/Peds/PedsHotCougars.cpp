@@ -7,10 +7,10 @@
 #include <Util/Peds.h>
 #include <Util/Types.h>
 
-static std::list<Ped> cougarEnemies;
-static int spawnTimer = -1;
-static Hash relationshipGroup;
-static int maxCougarsToSpawn = 5;
+CHAOS_VAR std::list<Ped> cougarEnemies;
+CHAOS_VAR int spawnTimer = -1;
+CHAOS_VAR Hash relationshipGroup;
+CHAOS_VAR int maxCougarsToSpawn = 5;
 
 static void OnStop()
 {

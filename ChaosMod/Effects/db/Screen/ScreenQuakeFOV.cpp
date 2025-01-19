@@ -4,7 +4,7 @@
 
 #include <stdafx.h>
 
-static Camera fovCamera = 0;
+CHAOS_VAR Camera fovCamera = 0;
 
 static void UpdateCamera()
 {

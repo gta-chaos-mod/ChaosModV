@@ -3,7 +3,7 @@
 #include "Memory/Hooks/ShaderHook.h"
 #include "Memory/Snow.h"
 
-static const char *ms_ShaderSrc = R"SRC(
+CHAOS_VAR const char *ms_ShaderSrc = R"SRC(
 float4 main(float4 v0 : SV_Position0, float4 v1 : TEXCOORD0, float4 v2 : TEXCOORD1) : SV_Target0
 {
     discard;

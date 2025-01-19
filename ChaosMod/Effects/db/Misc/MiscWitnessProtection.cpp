@@ -11,8 +11,8 @@ struct OrbitPed
 	Ped ped;
 	float angle;
 };
-static std::vector<OrbitPed> orbitingPeds;
-static int pedCount = 20;
+CHAOS_VAR std::vector<OrbitPed> orbitingPeds;
+CHAOS_VAR int pedCount = 20;
 
 static void OnStart()
 {
