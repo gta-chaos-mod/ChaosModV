@@ -9,12 +9,14 @@
 // This file is manually formatted.
 // clang-format off
 
+#define BONE_COUNT 19
+
 CHAOS_VAR const float maxDistance = 75.0f;
 CHAOS_VAR const float thickness   = 0.001f;
 
 CHAOS_VAR Color lineColor;
 
-CHAOS_VAR const std::array<int, 19> BONE_IDS = {
+CHAOS_VAR const std::array<int, BONE_COUNT> BONE_IDS = {
 	0x796e, 0x9995, 0xfcd9, 0x58b7,
 	0xb1c5, 0xeeeb, 0x49d9, 0x29d2,
 	0x0bb0, 0x9d4d, 0x6e5c, 0xdead,
@@ -80,8 +82,8 @@ static void OnTick()
 		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) &&
 			!IS_PED_A_PLAYER(ped) && WithinDistance(playerPed, ped))
 		{
-			std::array<ChaosVector2, BONE_IDS.size()> points {};
-			for (size_t i = 0; i < BONE_IDS.size(); i++)
+			std::array<ChaosVector2, BONE_COUNT> points {};
+			for (size_t i = 0; i < points.size(); i++)
 			{
 				points[i] = GetBoneScreenCoords(ped, BONE_IDS[i]);
 			}
