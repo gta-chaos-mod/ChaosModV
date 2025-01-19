@@ -173,8 +173,8 @@ namespace Memory
 		          << (scanRange.StartAddr == 0 && scanRange.EndAddr == 0
 		                  ? "\""
 		                  : (std::stringstream()
-		                     << "\" within address range 0x" << std::uppercase << std::hex << std::setfill(' ')
-		                     << scanRange.StartAddr << " to 0x" << std::uppercase << std::hex << scanRange.EndAddr)
+		                     << "\" within address range 0x" << std::uppercase << std::hex << scanRange.StartAddr
+		                     << std::setfill(' ') << " to 0x" << std::uppercase << std::hex << scanRange.EndAddr)
 		                        .str()));
 
 		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)

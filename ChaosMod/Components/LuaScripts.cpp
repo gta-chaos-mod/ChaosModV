@@ -193,8 +193,8 @@ enum class LuaNativeReturnType
 	Vector3
 };
 
-_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, DWORD64 nativeHash, LuaNativeReturnType returnType,
-                                      const sol::variadic_args &args)
+_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, std::uint64_t nativeHash,
+                                      LuaNativeReturnType returnType, const sol::variadic_args &args)
 {
 	if (nativeHash == 0x213AEB2B90CBA7AC || nativeHash == 0x5A5F40FE637EB584 || nativeHash == 0x933D6A9EEC1BACD0
 	    || nativeHash == 0xE80492A9AC099A93 || nativeHash == 0x8EF07E15701D61ED)
@@ -298,8 +298,6 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	E("GET_HASH_KEY", GET_HASH_KEY),
 	E("print", [](const sol::this_environment &curEnv, const std::string &text)
 	  { LuaPrint(curEnv.env->get<sol::table>("EnvInfo")["ScriptName"], text); }),
-	E("_invoke", [](const sol::this_environment &curEnv, DWORD64 hash, LuaNativeReturnType returnType,
-	                const sol::variadic_args &args) { return LuaInvoke(curEnv, hash, returnType, args); }),
 	E("WAIT", WAIT),
 	E("IsKeyPressed",
 	  [](unsigned char key)
@@ -461,6 +459,26 @@ LuaScripts::LuaScripts()
 		ParseScript(fileName, path.string(), ParseScriptFlag_ScriptIsFilePath, userEffectSettings);
 	};
 
+	bool allowEvalNativeInvocations = DoesFeatureFlagExist("allowscriptevalnativeinvocations");
+
+	if (allowEvalNativeInvocations)
+	{
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
+		{
+			return LuaInvoke(curEnv, hash, returnType, args);
+		};
+	}
+	else
+	{
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
+		{
+			LOG("WARNING: Blocked invocation of native 0x" << std::uppercase << std::hex << hash << std::setfill(' ')
+			                                               << " during script evaluation!");
+		};
+	}
+
 	for (auto dir : ms_ScriptDirs)
 	{
 		if (!DoesFileExist(dir))
@@ -481,6 +499,15 @@ LuaScripts::LuaScripts()
 			for (const auto &entry : GetFiles(dir, ".lua", true))
 				parseScript(entry);
 		}
+	}
+
+	if (!allowEvalNativeInvocations)
+	{
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
+		{
+			return LuaInvoke(curEnv, hash, returnType, args);
+		};
 	}
 }
 
