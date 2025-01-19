@@ -64,15 +64,11 @@ struct RegisteredEffect
 			if (m_EffectIdentifier.IsScript())
 			{
 				if (ComponentExists<LuaScripts>())
-				{
 					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
 					                                    LuaScripts::ExecuteFuncType::Start);
-				}
 			}
 			else if (m_OnStart)
-			{
 				m_OnStart();
-			}
 		}
 	}
 
@@ -85,15 +81,11 @@ struct RegisteredEffect
 			if (m_EffectIdentifier.IsScript())
 			{
 				if (ComponentExists<LuaScripts>())
-				{
 					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
 					                                    LuaScripts::ExecuteFuncType::Stop);
-				}
 			}
 			else if (m_OnStop)
-			{
 				m_OnStop();
-			}
 		}
 	}
 
@@ -104,15 +96,11 @@ struct RegisteredEffect
 			if (m_EffectIdentifier.IsScript())
 			{
 				if (ComponentExists<LuaScripts>())
-				{
 					GetComponent<LuaScripts>()->Execute(m_EffectIdentifier.GetEffectId(),
 					                                    LuaScripts::ExecuteFuncType::Tick);
-				}
 			}
 			else if (m_OnTick)
-			{
 				m_OnTick();
-			}
 		}
 	}
 
