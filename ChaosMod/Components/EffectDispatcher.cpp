@@ -192,13 +192,21 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 static void _OnRunEffects(LPVOID data)
 {
 	auto effectDispatcher = reinterpret_cast<EffectDispatcher *>(data);
+	auto lastTime         = GetTickCount64();
 	while (true)
 	{
-		int deltaTime = GetTickCount64()
-		              - (!ComponentExists<EffectDispatchTimer>() ? 0 : GetComponent<EffectDispatchTimer>()->GetTimer());
+		auto curTime = GetTickCount64();
+		int deltaTime =
+		    !ComponentExists<EffectDispatchTimer>()
+		        ? 0
+		        : (curTime - lastTime)
+		              * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier
+		                                                  : 1.f);
 		// The game was paused
 		if (deltaTime > 1000)
 			deltaTime = 0;
+
+		lastTime = curTime;
 
 		while (!effectDispatcher->EffectDispatchQueue.empty())
 		{

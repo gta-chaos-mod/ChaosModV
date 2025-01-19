@@ -27,8 +27,8 @@ void EffectDispatchTimer::UpdateTimer(int deltaTime)
 		return;
 
 	m_TimerPercentage += deltaTime
-	                   * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-	                   / m_EffectSpawnTime / 1000;
+	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
+	                   / m_EffectSpawnTime / 1000.f;
 
 	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 	{
@@ -135,8 +135,8 @@ void EffectDispatchTimer::ResetTimer()
 int EffectDispatchTimer::GetRemainingTimerTime() const
 {
 	return std::ceil(m_EffectSpawnTime
-	                 / (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-	                 * (1 - m_TimerPercentage));
+	                 / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
+	                 * (1.f - m_TimerPercentage));
 }
 
 bool EffectDispatchTimer::ShouldDispatchEffectNow() const
@@ -161,7 +161,7 @@ void EffectDispatchTimer::ResetFakeTimerPercentage()
 
 void EffectDispatchTimer::OnRun()
 {
-	auto currentUpdateTime = GetTickCount64();
+	auto curTime = GetTickCount64();
 
 	if (m_EnableTimer && m_DrawTimerBar
 	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
@@ -180,7 +180,7 @@ void EffectDispatchTimer::OnRun()
 			          false);
 	}
 
-	int deltaTime = currentUpdateTime - m_Timer;
+	int deltaTime = curTime - m_Timer;
 
 	// The game was paused
 	if (deltaTime > 1000)
@@ -194,5 +194,5 @@ void EffectDispatchTimer::OnRun()
 			UpdateTimer(deltaTime);
 	}
 
-	m_Timer = currentUpdateTime;
+	m_Timer = curTime;
 }
