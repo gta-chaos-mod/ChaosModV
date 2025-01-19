@@ -666,7 +666,7 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 		}
 	}
 
-	const auto &result =
+	auto result =
 	    flags & ParseScriptFlag_ScriptIsFilePath ? lua.safe_script_file(std::string(script)) : lua.safe_script(script);
 	if (!result.valid())
 	{
