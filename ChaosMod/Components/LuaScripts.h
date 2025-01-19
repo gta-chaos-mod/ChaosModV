@@ -8,7 +8,6 @@
 
 #include <json.hpp>
 
-#include <mutex>
 #include <string>
 
 class LuaScripts : public Component
@@ -69,7 +68,6 @@ class LuaScripts : public Component
 		}
 	};
 	std::unordered_map<std::string, LuaScript> m_RegisteredEffects;
-	std::mutex m_RegisteredEffectsMutex;
 
   public:
 	LuaScripts();
@@ -91,13 +89,11 @@ class LuaScripts : public Component
 	enum class ParseScriptReturnReason
 	{
 		Success,
-		Error,
-		Error_ThreadUnsafe
+		Error
 	};
-	ParseScriptReturnReason ParseScriptRaw(std::string scriptName, const std::string &script,
-	                                       ParseScriptFlags flags = ParseScriptFlag_None,
-	                                       bool *isThreadUnsafe   = nullptr,
-	                                       std::unordered_map<std::string, nlohmann::json> settingOverrides = {});
+	ParseScriptReturnReason ParseScript(std::string scriptName, const std::string &script,
+	                                    ParseScriptFlags flags = ParseScriptFlag_None,
+	                                    std::unordered_map<std::string, nlohmann::json> settingOverrides = {});
 	void RemoveScriptEntry(const std::string &effectId);
 
   public:

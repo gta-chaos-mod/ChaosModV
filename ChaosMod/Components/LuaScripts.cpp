@@ -294,8 +294,13 @@ struct ExposableFunc
 	}
 };
 static const std::vector<ExposableFunc> ms_Exposables {
-	E("WAIT", scriptWait),
-
+	E("GetTickCount", GetTickCount64),
+	E("GET_HASH_KEY", GET_HASH_KEY),
+	E("print", [](const sol::this_environment &curEnv, const std::string &text)
+	  { LuaPrint(curEnv.env->get<sol::table>("EnvInfo")["ScriptName"], text); }),
+	E("_invoke", [](const sol::this_environment &curEnv, DWORD64 hash, LuaNativeReturnType returnType,
+	                const sol::variadic_args &args) { return LuaInvoke(curEnv, hash, returnType, args); }),
+	E("WAIT", WAIT),
 	E("IsKeyPressed",
 	  [](unsigned char key)
 	  {
@@ -312,46 +317,33 @@ static const std::vector<ExposableFunc> ms_Exposables {
 
 	      return false;
 	  }),
-
 	E("APPLY_FORCE_TO_ENTITY", APPLY_FORCE_TO_ENTITY),
 	E("APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS", APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS),
-
 	E("LoadModel", LoadModel),
-
 	E("GetAllPeds", GetAllPedsArray),
 	E("CreatePoolPed", CreatePoolPed),
-
 	E("TeleportPlayer", [](float x, float y, float z, bool noOffset) { TeleportPlayer(x, y, z, noOffset); }),
-
 	E("GetAllVehicles", GetAllVehsArray),
 	E("CreatePoolVehicle", CreatePoolVehicle),
 	E("CreateTempVehicle", CreateTempVehicle),
 	E("CreateTempVehicleOnPlayerPos", CreateTempVehicleOnPlayerPos),
 	E("SetSurroundingPedsInVehicles", SetSurroundingPedsInVehicles),
 	E("ReplaceVehicle", ReplaceVehicle),
-
 	E("GetAllProps", GetAllProps),
 	E("CreatePoolProp", CreatePoolProp),
-
 	E("GetAllWeapons", Memory::GetAllWeapons),
 	E("GetAllPedModels", Memory::GetAllPedModels),
 	E("GetAllVehicleModels", Memory::GetAllVehModels),
-
 	E("OverrideShader", Hooks::OverrideShader),
 	E("ResetShader", Hooks::ResetShader),
-
 	E("SetSnowState", Memory::SetSnow),
-
 	E("IsVehicleBraking", Memory::IsVehicleBraking),
-
 	E("EnableScriptThreadBlock", Hooks::EnableScriptThreadBlock),
 	E("DisableScriptThreadBlock", Hooks::DisableScriptThreadBlock),
-
 	E("SetAudioPitch", Hooks::SetAudioPitch),
 	E("ResetAudioPitch", Hooks::ResetAudioPitch),
 	E("SetAudioClearness", Hooks::SetAudioClearness),
 	E("ResetAudioClearness", Hooks::ResetAudioClearness),
-
 	E("GetGameplayCamOffsetInWorldCoords",
 	  [](LuaVector3 offset)
 	  {
@@ -364,22 +356,17 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	      const auto &result = Util::GetCoordsFromGameplayCam(distance);
 	      return LuaVector3(result.x, result.y, result.z);
 	  }),
-
 	E("GetCoordAround",
 	  [](Entity entity, float angle, float radius, float zOffset, bool relative)
 	  {
 	      const auto &result = GetCoordAround(entity, angle, radius, zOffset, relative);
 	      return LuaVector3(result.x, result.y, result.z);
 	  }),
-
 	E("IsWeaponShotgun", Util::IsWeaponShotgun),
-
 	E("GetChaosModVersion", []() { return MOD_VERSION; }),
 	E("GetGameBuild", Memory::GetGameBuild),
-
 	E("AddCustomLabel", Hooks::AddCustomLabel),
 	E("DisplayHelpText", DisplayHelpText),
-
 	E("GetRandomInt",
 	  [](int lower, int upper) -> int
 	  {
@@ -389,7 +376,6 @@ static const std::vector<ExposableFunc> ms_Exposables {
 		      return lower;
 	      return g_Random.GetRandomInt(lower, upper);
 	  }),
-
 	E("GetRandomFloat",
 	  [](float lower, float upper) -> float
 	  {
@@ -399,6 +385,53 @@ static const std::vector<ExposableFunc> ms_Exposables {
 		      return lower;
 	      return g_Random.GetRandomFloat(lower, upper);
 	  }),
+	E("GetEffectCompletionPercentage", CurrentEffect::GetEffectCompletionPercentage),
+	E("OverrideEffectName", [](const std::string &name) { CurrentEffect::OverrideEffectName(name); }),
+	E("OverrideEffectNameById",
+	  [](const std::string &overrideId) { CurrentEffect::OverrideEffectNameFromId(overrideId); }),
+	E("SetEffectSoundFollowPlayer",
+	  []()
+	  {
+	      auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
+	      if (sharedData)
+		      sharedData->EffectSoundPlayOptions.PlayType = EffectSoundPlayType::FollowPlayer;
+	  }),
+	E("SetEffectSoundFollowEntity",
+	  [](Entity entity)
+	  {
+	      auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
+	      if (!sharedData)
+		      return;
+	      sharedData->EffectSoundPlayOptions.PlayType = EffectSoundPlayType::FollowEntity;
+	      sharedData->EffectSoundPlayOptions.Entity   = entity;
+      }),
+	E("SetEffectSoundAtCoords",
+	  [](const LuaVector3 &coords)
+	  {
+	      auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
+	      if (!sharedData)
+		      return;
+	      sharedData->EffectSoundPlayOptions.PlayType = EffectSoundPlayType::AtCoords;
+	      sharedData->EffectSoundPlayOptions.Coords   = Vector3(coords.X, coords.Y, coords.Z);
+      }),
+	E("SetEffectSoundLooping",
+	  [](bool state)
+	  {
+	      auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
+	      if (sharedData)
+		      sharedData->EffectSoundPlayOptions.PlayFlags =
+		          state ? sharedData->EffectSoundPlayOptions.PlayFlags | EffectSoundPlayFlags_Looping
+		                : sharedData->EffectSoundPlayOptions.PlayFlags & ~EffectSoundPlayFlags_Looping;
+	  }),
+	E("SetEffectSoundStopOnEntityDeath",
+	  [](bool state)
+	  {
+	      auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
+	      if (sharedData)
+		      sharedData->EffectSoundPlayOptions.PlayFlags =
+		          state ? sharedData->EffectSoundPlayOptions.PlayFlags & ~EffectSoundPlayFlags_DontStopOnEntityDeath
+		                : sharedData->EffectSoundPlayOptions.PlayFlags | EffectSoundPlayFlags_DontStopOnEntityDeath;
+	  })
 };
 #undef E
 
@@ -406,52 +439,14 @@ LuaScripts::LuaScripts()
 {
 	SetupGlobalState();
 
-	SYSTEM_INFO systemInfo {};
-	GetSystemInfo(&systemInfo);
-
-	struct WorkerThread
-	{
-		std::thread Thread;
-	};
-	std::vector<std::unique_ptr<WorkerThread>> workerThreadPool;
-	// workerThreadPool.resize(systemInfo.dwNumberOfProcessors - 1);
-	workerThreadPool.resize(0);
-
-	std::queue<std::filesystem::directory_entry> entryQueue;
-	std::mutex entryQueueMutex;
-
-	std::queue<std::filesystem::directory_entry> threadUnsafeEntryQueue;
-	std::mutex threadUnsafeEntryQueueMutex;
-
-	auto mainThread             = std::this_thread::get_id();
-
-	bool isDone                 = false;
-
-	bool threadUnsafeFuncCalled = false;
-	m_GlobalState["_invoke"]    = [&](const sol::variadic_args &args)
-	{
-		threadUnsafeFuncCalled = true;
-	};
-	for (const auto &exposable : ms_Exposables)
-	{
-		m_GlobalState[exposable.Name] = [&](const sol::variadic_args &args)
-		{
-			threadUnsafeFuncCalled = true;
-		};
-	}
-
-	auto parseScript = [&](const std::filesystem::directory_entry &entry, bool printRunningLog = true)
+	auto parseScript = [&](const std::filesystem::directory_entry &entry)
 	{
 		const auto &path     = entry.path();
 		const auto &fileName = path.filename().string();
 		const auto &pathStr  = path.string();
 		auto scriptName      = pathStr.substr(pathStr.find("\\") + 1);
 
-		if (printRunningLog)
-			LUA_LOG("Running script " << scriptName);
-
-		auto currentThread   = std::this_thread::get_id();
-		int parseScriptFlags = ParseScriptFlag_ScriptIsFilePath;
+		LUA_LOG("Running script " << scriptName);
 
 		std::unordered_map<std::string, nlohmann::json> userEffectSettings;
 		if (pathStr.starts_with("chaosmod\\workshop") && ComponentExists<Workshop>())
@@ -463,59 +458,7 @@ LuaScripts::LuaScripts()
 			    tmp.substr(tmp.find("\\") + 1));
 		}
 
-		if (ParseScriptRaw(fileName, path.string(), static_cast<LuaScripts::ParseScriptFlags>(parseScriptFlags),
-		                   &threadUnsafeFuncCalled, userEffectSettings)
-		    == ParseScriptReturnReason::Error_ThreadUnsafe)
-		{
-			std::lock_guard lock(threadUnsafeEntryQueueMutex);
-			threadUnsafeEntryQueue.push(entry);
-		}
-	};
-
-	auto parseScriptThreaded = [&](const std::filesystem::directory_entry &entry)
-	{
-		// For our 1c/1t users out here we'll do evaluation immediately in the main thread
-		if (workerThreadPool.empty())
-		{
-			parseScript(entry);
-			return;
-		}
-
-		bool foundNewThread = false;
-		for (auto &workerThread : workerThreadPool)
-		{
-			if (workerThread)
-				continue;
-
-			workerThread         = std::make_unique<WorkerThread>();
-			workerThread->Thread = std::thread(
-			    [entry, parseScript, &entryQueue, &entryQueueMutex, &isDone]()
-			    {
-				    parseScript(entry);
-
-				    while (!isDone || !entryQueue.empty())
-				    {
-					    if (entryQueue.empty())
-						    continue;
-					    std::unique_lock lock(entryQueueMutex);
-					    if (entryQueue.empty())
-						    continue;
-
-					    auto entry = entryQueue.front();
-					    entryQueue.pop();
-
-					    lock.unlock();
-
-					    parseScript(entry);
-				    }
-			    });
-
-			foundNewThread = true;
-			break;
-		}
-
-		if (!foundNewThread)
-			entryQueue.push(entry);
+		ParseScript(fileName, path.string(), ParseScriptFlag_ScriptIsFilePath, userEffectSettings);
 	};
 
 	for (auto dir : ms_ScriptDirs)
@@ -528,41 +471,16 @@ LuaScripts::LuaScripts()
 			for (const auto &entry : std::filesystem::directory_iterator(dir))
 			{
 				if (entry.is_directory() && ComponentExists<Workshop>())
-				{
 					for (const auto &entry : GetComponent<Workshop>()->GetSubmissionFiles(entry.path().string(),
 					                                                                      Workshop::FileType::Script))
-					{
-						parseScriptThreaded(entry);
-					}
-				}
+						parseScript(entry);
 			}
 		}
 		else
 		{
 			for (const auto &entry : GetFiles(dir, ".lua", true))
-				parseScriptThreaded(entry);
+				parseScript(entry);
 		}
-	}
-
-	isDone = true;
-
-	for (auto &workerThread : workerThreadPool)
-		if (workerThread && workerThread->Thread.joinable())
-			workerThread->Thread.join();
-
-	m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, DWORD64 hash, LuaNativeReturnType returnType,
-	                              const sol::variadic_args &args)
-	{
-		return LuaInvoke(curEnv, hash, returnType, args);
-	};
-	for (const auto &exposable : ms_Exposables)
-		exposable(m_GlobalState);
-
-	while (!threadUnsafeEntryQueue.empty())
-	{
-		auto &entry = threadUnsafeEntryQueue.front();
-		parseScript(entry, false);
-		threadUnsafeEntryQueue.pop();
 	}
 }
 
@@ -653,17 +571,13 @@ void LuaScripts::SetupGlobalState()
 	m_GlobalState.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
 	                       OverrideShaderType::Snow);
 
-	m_GlobalState["GetTickCount"] = GetTickCount64;
-	m_GlobalState["GET_HASH_KEY"] = GET_HASH_KEY;
-	m_GlobalState["print"]        = [](const sol::this_environment &curEnv, const std::string &text)
-	{
-		LuaPrint(curEnv.env->get<sol::table>("EnvInfo")["ScriptName"], text);
-	};
+	for (const auto &exposable : ms_Exposables)
+		exposable(m_GlobalState);
 }
 
 LuaScripts::ParseScriptReturnReason
-LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, ParseScriptFlags flags,
-                           bool *isThreadUnsafe, std::unordered_map<std::string, nlohmann::json> settingOverrides)
+LuaScripts::ParseScript(std::string scriptName, const std::string &script, ParseScriptFlags flags,
+                        std::unordered_map<std::string, nlohmann::json> settingOverrides)
 {
 	sol::environment env(m_GlobalState, sol::create, m_GlobalState.globals());
 
@@ -673,20 +587,17 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 	envInfoMetaTable[sol::meta_function::index] = envInfoMetaTable;
 	envInfoTable[sol::metatable_key]            = envInfoMetaTable;
 
-	auto result = flags & ParseScriptFlag_ScriptIsFilePath ? m_GlobalState.safe_script_file(std::string(script), env)
-	                                                       : m_GlobalState.safe_script(script, env);
-	if (!result.valid())
+	auto scriptResult                           = flags & ParseScriptFlag_ScriptIsFilePath
+	                                                ? m_GlobalState.safe_script_file(std::string(script), env)
+	                                                : m_GlobalState.safe_script(script, env);
+	if (!scriptResult.valid())
 	{
-		const sol::error &error = result;
+		const sol::error &error = scriptResult;
 		LUA_SCRIPT_LOG(scriptName, error.what());
 
 		return ParseScriptReturnReason::Error;
 	}
 
-	if (isThreadUnsafe && *isThreadUnsafe)
-		return ParseScriptReturnReason::Error_ThreadUnsafe;
-
-	static std::mutex effectGroupMutex;
 	const sol::optional<sol::table> &effectGroupInfoOpt = env["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
@@ -703,8 +614,6 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 
 			if (!(flags & ParseScriptFlag_IsTemporary))
 			{
-				std::lock_guard lock(effectGroupMutex);
-
 				const auto &result = g_EffectGroups.find(groupName);
 				if (result != g_EffectGroups.end() && !result->second.IsPlaceholder)
 				{
@@ -772,99 +681,41 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 		return ParseScriptReturnReason::Error;
 	}
 
+	auto effectResult       = m_RegisteredEffects.find(effectId);
+	bool doesIdAlreadyExist = effectResult != m_RegisteredEffects.end();
+
+	if (doesIdAlreadyExist)
 	{
-		std::unique_lock lock(m_RegisteredEffectsMutex);
-		auto result             = m_RegisteredEffects.find(effectId);
-		bool doesIdAlreadyExist = result != m_RegisteredEffects.end();
-
-		if (doesIdAlreadyExist)
+		if (effectResult->second.IsTemporary())
 		{
-			if (result->second.IsTemporary())
-			{
-				/* Replace existing temporary effect with this one */
+			/* Replace existing temporary effect with this one */
 
-				if (ComponentExists<EffectDispatcher>())
-					GetComponent<EffectDispatcher>()->ClearEffect(effectId);
+			if (ComponentExists<EffectDispatcher>())
+				GetComponent<EffectDispatcher>()->ClearEffect(effectId);
 
-				RemoveScriptEntry(effectId);
+			RemoveScriptEntry(effectId);
 
-				doesIdAlreadyExist = false;
-			}
+			doesIdAlreadyExist = false;
 		}
-		else
+	}
+	else
+	{
+		for (const auto &effect : g_EffectsMap)
 		{
-			for (const auto &effect : g_EffectsMap)
+			if (effect.second.Id == effectId)
 			{
-				if (effect.second.Id == effectId)
-				{
-					doesIdAlreadyExist = true;
-					break;
-				}
+				doesIdAlreadyExist = true;
+				break;
 			}
-		}
-		lock.unlock();
-
-		if (doesIdAlreadyExist)
-		{
-			LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": EffectId \""
-			                                                                 << effectId << "\" already exists!");
-			return ParseScriptReturnReason::Error;
 		}
 	}
 
-	env["WAIT"]                          = WAIT;
-
-	env["GetEffectCompletionPercentage"] = [effectId](const sol::this_state &lua)
+	if (doesIdAlreadyExist)
 	{
-		CurrentEffect::GetEffectCompletionPercentage();
-	};
-	env["OverrideEffectName"] = [effectId](const sol::this_state &lua, const std::string &name)
-	{
-		CurrentEffect::OverrideEffectName(name);
-	};
-	env["OverrideEffectNameById"] = [effectId](const sol::this_state &lua, const std::string &overrideId)
-	{
-		CurrentEffect::OverrideEffectNameFromId(overrideId);
-	};
-
-	auto getEffectSoundPlayOptions = []() -> EffectSoundPlayOptions *
-	{
-		auto sharedData = EffectThreads::GetThreadSharedData(GetCurrentFiber());
-		if (!sharedData)
-			return nullptr;
-		return &sharedData->EffectSoundPlayOptions;
-	};
-	env["SetEffectSoundFollowPlayer"] = [effectId, getEffectSoundPlayOptions](const sol::this_state &lua)
-	{
-		auto soundPlayOptions      = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayType = EffectSoundPlayType::FollowPlayer;
-	};
-	env["SetEffectSoundFollowEntity"] = [effectId, getEffectSoundPlayOptions](const sol::this_state &lua, Entity entity)
-	{
-		auto soundPlayOptions      = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayType = EffectSoundPlayType::FollowEntity;
-		soundPlayOptions->Entity   = entity;
-	};
-	env["SetEffectSoundAtCoords"] =
-	    [effectId, getEffectSoundPlayOptions](const sol::this_state &lua, const LuaVector3 &coords)
-	{
-		auto soundPlayOptions      = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayType = EffectSoundPlayType::AtCoords;
-		soundPlayOptions->Coords   = { coords.X, coords.Y, coords.Z };
-	};
-	env["SetEffectSoundLooping"] = [effectId, getEffectSoundPlayOptions](const sol::this_state &lua, bool state)
-	{
-		auto soundPlayOptions       = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayFlags = state ? soundPlayOptions->PlayFlags | EffectSoundPlayFlags_Looping
-		                                    : soundPlayOptions->PlayFlags & ~EffectSoundPlayFlags_Looping;
-	};
-	env["SetEffectSoundStopOnEntityDeath"] =
-	    [effectId, getEffectSoundPlayOptions](const sol::this_state &lua, bool state)
-	{
-		auto soundPlayOptions       = getEffectSoundPlayOptions();
-		soundPlayOptions->PlayFlags = state ? soundPlayOptions->PlayFlags & ~EffectSoundPlayFlags_DontStopOnEntityDeath
-		                                    : soundPlayOptions->PlayFlags | EffectSoundPlayFlags_DontStopOnEntityDeath;
-	};
+		LUA_SCRIPT_LOG(scriptName, "ERROR: Could not register effect \"" << effectName << "\": EffectId \"" << effectId
+		                                                                 << "\" already exists!");
+		return ParseScriptReturnReason::Error;
+	}
 
 	EffectData effectData;
 	effectData.Name                                    = effectName;
@@ -999,8 +850,6 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 		const auto &effectGroup = *effectGroupOpt;
 		effectData.GroupType    = effectGroup;
 
-		std::lock_guard lock(effectGroupMutex);
-
 		if (!g_EffectGroups.contains(effectGroup))
 			g_EffectGroups[effectGroup] = { .IsPlaceholder = true, .WasRegisteredByScript = true };
 
@@ -1041,12 +890,9 @@ LuaScripts::ParseScriptRaw(std::string scriptName, const std::string &script, Pa
 	// Exclude temporary effects from choices pool
 	effectData.SetAttribute(EffectAttributes::IsTemporary, flags & ParseScriptFlag_IsTemporary);
 
-	{
-		std::lock_guard lock(m_RegisteredEffectsMutex);
-		m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, env, flags & ParseScriptFlag_IsTemporary));
-		g_EnabledEffects.emplace(effectId, effectData);
-		g_RegisteredEffects.emplace_back(effectId);
-	}
+	m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, env, flags & ParseScriptFlag_IsTemporary));
+	g_EnabledEffects.emplace(effectId, effectData);
+	g_RegisteredEffects.emplace_back(effectId);
 
 	if (flags & ParseScriptFlag_IsTemporary)
 	{
@@ -1097,5 +943,5 @@ void LuaScripts::Execute(const std::string &effectId, ExecuteFuncType funcType)
 
 void LuaScripts::RegisterScriptRawTemporary(std::string scriptName, std::string script)
 {
-	ParseScriptRaw(scriptName, script, ParseScriptFlag_IsTemporary);
+	ParseScript(scriptName, script, ParseScriptFlag_IsTemporary);
 }
