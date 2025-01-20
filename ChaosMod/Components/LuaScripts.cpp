@@ -57,17 +57,14 @@
 #define MAGIC_CATCH_END(x) }
 #endif
 
-static std::mutex ms_PrintMutex;
 #define LUA_LOG(text)                                   \
 	do                                                  \
 	{                                                   \
-		std::lock_guard lock(ms_PrintMutex);            \
 		LuaPrint((std::ostringstream() << text).str()); \
 	} while (0)
 #define LUA_SCRIPT_LOG(scriptName, text)                            \
 	do                                                              \
 	{                                                               \
-		std::lock_guard lock(ms_PrintMutex);                        \
 		LuaPrint(scriptName, (std::ostringstream() << text).str()); \
 	} while (0)
 
