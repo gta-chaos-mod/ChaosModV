@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+static int MAX_CATS_COUNT = 20;
+static std::vector<Ped> currentCats;
 #include "Memory/Physics.h"
 
 #include "Util/Camera.h"
@@ -51,8 +53,18 @@ static void OnTick()
 				SET_PED_TO_RAGDOLL(cat, 3000, 3000, 0, true, true, false);
 
 				Memory::ApplyForceToEntityCenterOfMass(cat, 1, .0f, 300.f, 0.f, false, true, true, false);
+				currentCats.insert(currentCats.begin(), cat);
 
 				SET_PED_AS_NO_LONGER_NEEDED(&cat);
+
+				// Remove older cats if over the max amount
+				if (currentCats.size() > MAX_CATS_COUNT)
+				{
+					Ped lastCat = currentCats.back();
+					SET_ENTITY_AS_MISSION_ENTITY(lastCat, true, true);
+					DELETE_PED(&lastCat);
+					currentCats.pop_back();
+				}
 			}
 		}
 	}
@@ -60,6 +72,16 @@ static void OnTick()
 	SET_MODEL_AS_NO_LONGER_NEEDED(catHash);
 }
 
+static void OnStop() 
+{
+	while (currentCats.size() > 0)
+	{
+		Ped lastCat = currentCats.back();
+		SET_ENTITY_AS_MISSION_ENTITY(lastCat, true, true);
+		DELETE_PED(&lastCat);
+		currentCats.pop_back();
+	}
+}
 // clang-format off
 REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
 	{
