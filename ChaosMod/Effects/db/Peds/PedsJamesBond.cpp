@@ -33,6 +33,7 @@ static void OnStart()
 	SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 
 	Ped bond = CreatePoolPedInsideVehicle(veh, 4, model, -1);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = bond });
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(bond, relationshipGroup);
 

@@ -31,6 +31,7 @@ static void OnStart()
 	SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 
 	Ped ped = CreateHostilePed(bikerHash, weaponHash);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 
 	SET_PED_INTO_VEHICLE(ped, veh, -1);
 }

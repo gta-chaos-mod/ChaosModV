@@ -23,6 +23,7 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
 	Ped ped = CreatePoolPed(4, alienHash, playerPos.x, playerPos.y, playerPos.z, 0.f);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 	SET_PED_CONFIG_FLAG(ped, 281, true);

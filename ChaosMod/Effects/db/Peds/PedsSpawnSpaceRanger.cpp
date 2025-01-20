@@ -9,6 +9,7 @@ Effect by Last0xygen
 static void OnStart()
 {
 	Ped ped = CreateHostilePed("u_m_y_rsranger_01"_hash, "weapon_raycarbine"_hash);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 }
 
 // clang-format off

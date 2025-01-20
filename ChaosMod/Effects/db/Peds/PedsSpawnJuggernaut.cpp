@@ -9,6 +9,7 @@ Effect by Last0xygen
 static void OnStart()
 {
 	Ped ped = CreateHostilePed("u_m_y_juggernaut_01"_hash, "weapon_minigun"_hash);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 	SET_PED_ARMOUR(ped, 250);
 	SET_PED_ACCURACY(ped, 3);
 }
