@@ -32,7 +32,9 @@ namespace Memory
 			}
 
 			AllocateDrawRect     = handle.At(0x56).Into().Get<char *(void *)>();
-			SetDrawRectCoords    = handle.At(0x92).Into().Get<void(void *, float, float, float, float)>();
+
+			auto offsetSDC = getGameVersion() < eGameVersion::VER_1_0_3407_0 ? 0x92 : 0x97;
+			SetDrawRectCoords    = handle.At(offsetSDC).Into().Get<void(void *, float, float, float, float)>();
 
 			drawRects            = handle.At(0x32).Into().Get<char>();
 			drawRectsSize        = handle.At(0x2C).Value<int>();
