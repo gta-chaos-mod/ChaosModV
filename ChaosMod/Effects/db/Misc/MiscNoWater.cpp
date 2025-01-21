@@ -5,6 +5,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 struct CWaterQuad
 {
 	short MinX;   // 0x0
@@ -54,7 +56,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, 
 	{
 		.Name = "Drought",
 		.Id = "misc_remove_water",

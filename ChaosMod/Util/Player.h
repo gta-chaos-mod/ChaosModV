@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Natives.h"
 #include "Components/EffectDispatchTimer.h"
+#include "Natives.h"
 
 inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 {

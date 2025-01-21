@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void StartTransitionTimecycle(std::string modifier, float strength = 1.f)
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
@@ -20,7 +22,7 @@ static void OnTickMexico()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, 
 	{
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
@@ -57,7 +59,7 @@ static void OnTickBright()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, 
 	{
 		.Name = "Deep Fried",
 		.Id = "screen_bright",
@@ -74,7 +76,7 @@ static void OnTickFog()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickFog, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickFog, 
 	{
 		.Name = "Extreme Fog",
 		.Id = "screen_fog",
@@ -91,7 +93,7 @@ static void OnTickRenderdist()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, 
 	{
 		.Name = "Where Did Everything Go?",
 		.Id = "screen_lowrenderdist",
@@ -174,7 +176,7 @@ static void OnTickLSD()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, 
 	{
 		.Name = "LSD",
 		.Id = "screen_lsd",
@@ -195,7 +197,7 @@ static void OnTickFullbright()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, 
 	{
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
@@ -213,7 +215,7 @@ static void OnTickBubbleVision()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, 
 	{
 		.Name = "Bubble Vision",
 		.Id = "screen_bubblevision",
@@ -282,7 +284,7 @@ static void OnTickLSNoire()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, 
 	{
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
@@ -298,7 +300,7 @@ static void OnTickNeedGlasses()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, 
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",
@@ -315,7 +317,7 @@ static void OnTickFuzzy()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, 
 	{
 		.Name = "Static",
 		.Id = "timecycle_fuzzy",
@@ -339,7 +341,7 @@ static void OnStopDarkWorld()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, 
 	{
 		.Name = "A Dark World",
 		.Id = "timecycle_darkworld",

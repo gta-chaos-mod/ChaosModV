@@ -7,9 +7,10 @@
 #include "Components/KeyStates.h"
 #include "Components/MetaModifiers.h"
 #include "Components/Workshop.h"
-#include "Effects/Effect.h"
 #include "Effects/EffectData.h"
-#include "Effects/EnabledEffectsMap.h"
+#include "Effects/EnabledEffects.h"
+#include "Effects/Register/RegisteredEffects.h"
+#include "Effects/Register/RegisteredEffectsMetadata.h"
 #include "Info.h"
 #include "Memory/Hooks/AudioClearnessHook.h"
 #include "Memory/Hooks/AudioPitchHook.h"
@@ -724,7 +725,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	}
 	else
 	{
-		for (const auto &effect : g_EffectsMap)
+		for (const auto &effect : g_RegisteredEffectsMetadata)
 		{
 			if (effect.second.Id == effectId)
 			{
@@ -865,7 +866,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		const auto &effectCategoryStr = *effectCategoryOpt;
 		auto effectCategoryIt         = g_NameToEffectCategory.find(effectCategoryStr);
 		if (effectCategoryIt != g_NameToEffectCategory.end())
-			effectData.EffectCategory = effectCategoryIt->second;
+			effectData.Category = effectCategoryIt->second;
 	}
 
 	const sol::optional<std::string> &effectGroupOpt = effectInfo["EffectGroup"];

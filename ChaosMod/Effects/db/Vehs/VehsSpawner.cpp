@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static Vector3 GetPlayerPos()
@@ -17,7 +18,7 @@ static void OnStartRhino()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRhino, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRhino, nullptr, nullptr, 
 	{
 		.Name = "Spawn Rhino",
 		.Id = "spawn_rhino",
@@ -34,7 +35,7 @@ static void OnStartAdder()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartAdder, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartAdder, nullptr, nullptr, 
 	{
 		.Name = "Spawn Adder",
 		.Id = "spawn_adder",
@@ -51,7 +52,7 @@ static void OnStartDump()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartDump, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartDump, nullptr, nullptr, 
 	{
 		.Name = "Spawn Dump",
 		.Id = "spawn_dump",
@@ -68,7 +69,7 @@ static void OnStartMonster()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMonster, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMonster, nullptr, nullptr, 
 	{
 		.Name = "Spawn Monster",
 		.Id = "spawn_monster",
@@ -85,7 +86,7 @@ static void OnStartBMX()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBMX, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBMX, nullptr, nullptr, 
 	{
 		.Name = "Spawn BMX",
 		.Id = "spawn_bmx",
@@ -102,7 +103,7 @@ static void OnStartTug()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartTug, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTug, nullptr, nullptr, 
 	{
 		.Name = "Spawn Tug",
 		.Id = "spawn_tug",
@@ -119,7 +120,7 @@ static void OnStartCargoplane()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartCargoplane, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartCargoplane, nullptr, nullptr, 
 	{
 		.Name = "Spawn Cargo Plane",
 		.Id = "spawn_cargo",
@@ -136,7 +137,7 @@ static void OnStartBus()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBus, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBus, nullptr, nullptr, 
 	{
 		.Name = "Spawn Bus",
 		.Id = "spawn_bus",
@@ -153,7 +154,7 @@ static void OnStartBlimp()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBlimp, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBlimp, nullptr, nullptr, 
 	{
 		.Name = "Spawn Blimp",
 		.Id = "spawn_blimp",
@@ -170,7 +171,7 @@ static void OnStartBuzzard()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBuzzard, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBuzzard, nullptr, nullptr, 
 	{
 		.Name = "Spawn Buzzard",
 		.Id = "spawn_buzzard",
@@ -187,7 +188,7 @@ static void OnStartFaggio()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFaggio, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFaggio, nullptr, nullptr, 
 	{
 		.Name = "Spawn Faggio",
 		.Id = "spawn_faggio",
@@ -204,7 +205,7 @@ static void OnStartRuiner3()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, 
 	{
 		.Name = "Spawn Ruined Ruiner",
 		.Id = "spawn_ruiner3",
@@ -256,7 +257,7 @@ static void OnStartRandom()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, 
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
@@ -273,7 +274,7 @@ static void OnStartBaletrailer()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBaletrailer, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBaletrailer, nullptr, nullptr, 
 	{
 		.Name = "Spawn Bale Trailer",
 		.Id = "spawn_baletrailer",
@@ -290,7 +291,7 @@ static void OnStartRomero()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, 
 	{
 		.Name = "Where's The Funeral?",
 		.Id = "spawn_romero",
@@ -325,7 +326,7 @@ static void OnStartWizardBroom()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, 
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",

@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR int lastAirStrike = 0;
 CHAOS_VAR Hash airstrikeHash;
 
@@ -48,7 +50,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Airstrike Inbound",
 		.Id = "misc_airstrike",

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR int ms_State;
 CHAOS_VAR std::map<Ped, Vector3> ms_ToTpPeds;
 CHAOS_VAR std::map<Vehicle, Vector3> ms_ToTpVehs;
@@ -77,7 +79,7 @@ static void OnTickLag()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTickLag, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTickLag, 
 	{
 		.Name = "Lag",
 		.Id = "time_lag",

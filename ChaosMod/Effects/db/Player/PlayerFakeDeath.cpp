@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
 CHAOS_VAR const char *ms_TextPairs[] = { "Just kidding, keep playing",
@@ -246,7 +247,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Fake Death",
 		.Id = "player_fakedeath",

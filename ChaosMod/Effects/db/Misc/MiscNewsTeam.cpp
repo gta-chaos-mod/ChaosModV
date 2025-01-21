@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
 	int randOffset = g_Random.GetRandomInt(0, 360);
@@ -160,7 +162,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
 		.Name = "News Team",
 		.Id = "misc_news_team",

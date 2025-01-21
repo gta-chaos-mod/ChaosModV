@@ -6,6 +6,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 #define WAIT_TIME 5000 // ms. before police are angry at your innocence
 
 CHAOS_VAR DWORD64 ms_TimeReserve;
@@ -96,7 +98,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Innocence Is Illegal",
 		.Id = "player_illegalinnocence",

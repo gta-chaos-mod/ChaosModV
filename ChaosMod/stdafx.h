@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Effects/Effect.h"
-
 #include "Util/EntityIterator.h"
 #include "Util/Hash.h"
 #include "Util/Logging.h"

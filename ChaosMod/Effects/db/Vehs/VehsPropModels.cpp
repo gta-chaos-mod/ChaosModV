@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::map<Vehicle, Object> vehPropsMap;
 CHAOS_VAR std::vector<Hash> availablePropModels;
 
@@ -134,7 +136,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Prop Cars",
 		.Id = "vehs_prop_models",

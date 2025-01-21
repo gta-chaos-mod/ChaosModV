@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR const double SPEED            = 0.003;
 CHAOS_VAR const double BOX_HEIGHT_RATIO = 0.45;
 CHAOS_VAR double boxWidth, boxHeight, offsetX, offsetY;
@@ -57,7 +59,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "DVD Screensaver",
 		.Id = "misc_dvdscreensaver",

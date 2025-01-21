@@ -1,29 +1,33 @@
 #pragma once
 
-#include "EffectAttributes.h"
-#include "EffectCategory.h"
-#include "EffectGroups.h"
-#include "EffectTimedType.h"
+#include "Effects/Condition/EffectCondition.h"
+#include "Effects/EffectAttributes.h"
+#include "Effects/EffectCategory.h"
+#include "Effects/EffectGroups.h"
+#include "Effects/EffectIdentifier.h"
+#include "Effects/EffectTimedType.h"
 
 #include <set>
 #include <string>
 
 inline bool g_EnableGroupWeighting = true;
 
-struct EffectData
+class EffectData
 {
+  public:
 	std::string Name;
 	std::string FakeName;
 	std::string CustomName;
-	std::string Id;
+	EffectIdentifier Id;
 	std::string GroupType;
 	std::set<std::string> IncompatibleIds;
-	float Weight                  = 5.f;
-	int CustomTime                = -1;
-	int WeightMult                = 5;
-	int ShortcutKeycode           = 0;
-	EffectTimedType TimedType     = EffectTimedType::NotTimed;
-	EffectCategory EffectCategory = EffectCategory::None;
+	float Weight                      = 5.f;
+	int CustomTime                    = -1;
+	int WeightMult                    = 5;
+	int ShortcutKeycode               = 0;
+	EffectTimedType TimedType         = EffectTimedType::NotTimed;
+	EffectCategory Category           = EffectCategory::None;
+	EffectConditionType ConditionType = EffectConditionType::None;
 
   private:
 	EffectAttributes Attributes {};

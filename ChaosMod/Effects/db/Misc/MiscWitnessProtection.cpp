@@ -4,6 +4,7 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Types.h"
 
 struct OrbitPed
@@ -105,7 +106,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "Witness Protection",
         .Id = "misc_witness_protection",

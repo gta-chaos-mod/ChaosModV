@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::vector<Ped> frozenPeds;
 CHAOS_VAR std::map<Ped, Entity> pedGuns;
 CHAOS_VAR std::map<Ped, Entity> heldWeapons;
@@ -94,7 +96,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Nailguns",
 		.Id = "peds_nailguns",

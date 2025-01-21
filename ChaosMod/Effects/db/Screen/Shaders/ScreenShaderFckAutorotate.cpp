@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ShaderHook.h"
 
 CHAOS_VAR const char *ms_ShaderSrc = R"SRC(
@@ -32,7 +33,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, 
 	{
 		.Name = "Goddamn Auto-Rotate",
 		.Id = "screen_fckautorotate",

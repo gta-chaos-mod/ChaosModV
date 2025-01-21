@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Color.h"
 #include "Util/Types.h"
 
@@ -93,7 +94,7 @@ static void OnTick()
 	}
 }
 
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "ESP",
 		.Id = "misc_esp",

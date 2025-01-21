@@ -3,6 +3,8 @@
 */
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::vector<Hash> models;
 
 static void OnStart()
@@ -34,7 +36,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo 
+REGISTER_EFFECT(OnStart, nullptr, nullptr,  
 	{ 
 		.Name = "Give Everyone A Random Prop",
 		.Id = "peds_give_props" 

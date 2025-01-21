@@ -12,15 +12,15 @@ class Voting : public Component
 
 	struct ChoosableEffect
 	{
-		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &name, const std::string &match)
-		    : m_EffectIdentifier(effectIdentifier), m_EffectName(name), m_Match(match)
+		EffectIdentifier Id;
+		std::string Name;
+		std::string Match;
+		int ChanceVotes = 0;
+
+		ChoosableEffect(const EffectIdentifier &effectId, const std::string &name, const std::string &match)
+		    : Id(effectId), Name(name), Match(match)
 		{
 		}
-
-		EffectIdentifier m_EffectIdentifier;
-		std::string m_EffectName;
-		std::string m_Match;
-		int m_ChanceVotes = 0;
 	};
 	std::vector<std::unique_ptr<ChoosableEffect>> m_EffectChoices;
 
@@ -29,7 +29,7 @@ class Voting : public Component
 
 	void *m_PipeHandle                 = INVALID_HANDLE_VALUE;
 
-	std::unique_ptr<EffectIdentifier> m_ChosenEffectIdentifier;
+	std::unique_ptr<EffectIdentifier> m_ChosenEffectId;
 
 	int m_SecsBeforeVoting = 0;
 

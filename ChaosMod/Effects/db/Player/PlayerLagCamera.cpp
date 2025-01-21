@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR int constexpr CAM_DELAY_NORMAL  = 250;
 CHAOS_VAR int constexpr CAM_DELAY_VEHICLE = 1000;
 
@@ -95,7 +97,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Delayed Camera",
 		.Id = "player_laggy_camera",

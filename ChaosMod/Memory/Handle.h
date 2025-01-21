@@ -1,12 +1,11 @@
 #pragma once
 
-using DWORD64 = unsigned long long;
-using DWORD   = unsigned long;
+#include <cstdint>
 
 class Handle
 {
   private:
-	uintptr_t m_Addr = 0;
+	std::uintptr_t m_Addr = 0;
 
   public:
 	Handle() = default;
@@ -34,7 +33,7 @@ class Handle
 		return IsValid() ? *Get<T>() : 0;
 	}
 
-	inline DWORD64 Addr() const
+	inline uintptr_t Addr() const
 	{
 		return m_Addr;
 	}
@@ -44,7 +43,7 @@ class Handle
 		if (IsValid())
 		{
 			auto handle = At(1);
-			return handle.At(handle.Value<DWORD>()).At(4);
+			return handle.At(handle.Value<std::uint32_t>()).At(4);
 		}
 
 		return 0;

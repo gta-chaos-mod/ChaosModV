@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR const char *TV_PLAYLISTS[] = {
 	"PL_WEB_KFLF",    // Kung Fu Rainbow Lazerforce
 	"PL_WEB_RANGERS", // Republican Space Rangers
@@ -69,7 +71,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "On-Demand TV",
 		.Id = "player_on_demand_cartoon",

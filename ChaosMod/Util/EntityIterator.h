@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Natives.h"
-
 #include "Memory/Memory.h"
+
+#include <scripthookv/inc/types.h>
 
 #include <vector>
 
@@ -13,8 +13,8 @@
 template <typename T> class PoolIterator
 {
   public:
-	T *Pool       = nullptr;
-	int32_t Index = 0;
+	T *Pool            = nullptr;
+	std::int32_t Index = 0;
 
 	explicit PoolIterator(T *pool, int32_t index = 0)
 	{

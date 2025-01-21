@@ -1,12 +1,14 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStartExtraSunny()
 {
 	SET_WEATHER_TYPE_NOW("EXTRASUNNY");
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartExtraSunny, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartExtraSunny, nullptr, nullptr, 
 	{
 		.Name = "Extra Sunny Weather",
 		.Id = "weather_extrasunny",
@@ -21,7 +23,7 @@ static void OnStartThunder()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartThunder, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartThunder, nullptr, nullptr, 
 	{
 		.Name = "Stormy Weather",
 		.Id = "weather_stormy",
@@ -36,7 +38,7 @@ static void OnStartFoggy()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFoggy, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFoggy, nullptr, nullptr, 
 	{
 		.Name = "Foggy Weather",
 		.Id = "weather_foggy",
@@ -51,7 +53,7 @@ static void OnStartNeutral()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartNeutral, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartNeutral, nullptr, nullptr, 
 	{
 		.Name = "Neutral Weather",
 		.Id = "weather_neutral",
@@ -66,7 +68,7 @@ static void OnStartXmas()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartXmas, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartXmas, nullptr, nullptr, 
 	{
 		.Name = "Snowy Weather",
 		.Id = "weather_snowy",
@@ -98,7 +100,7 @@ static void OnTickRandom()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickRandom, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickRandom, 
 	{
 		.Name = "Disco Weather",
 		.Id = "weather_randomizer",

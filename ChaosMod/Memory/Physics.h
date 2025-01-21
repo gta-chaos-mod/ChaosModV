@@ -56,8 +56,7 @@ namespace Memory
 		if (!phSimulator_sm_Instance)
 			return 100;
 
-		Handle handle(phSimulator_sm_Instance);
-		handle = handle.Value<DWORD64>();
+		Handle handle = Handle(phSimulator_sm_Instance).Value<std::uintptr_t>();
 
 		if (handle.Addr() == 0)
 			return 0;

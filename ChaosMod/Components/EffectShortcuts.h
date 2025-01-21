@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Components/Component.h"
-
 #include "Effects/EffectIdentifier.h"
 
 #include <mutex>

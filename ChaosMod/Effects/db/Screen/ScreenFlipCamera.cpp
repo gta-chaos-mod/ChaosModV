@@ -3,6 +3,8 @@
 */
 
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 // TODO: SHVDN has a memory pattern for the gameplay camera, so it might be wise at some point
 // to use it to directly modify the rotation of the camera, but that's for a later date :^)
 
@@ -37,7 +39,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Turn Turtle",
 		.Id = "player_flip_camera",

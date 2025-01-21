@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR const char *ptfxDict  = "scr_ar_planes";
 CHAOS_VAR const char *ptfxName  = "scr_ar_trail_smoke";
 
@@ -45,7 +47,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Smoke Trails",
 		.Id = "peds_smoketrails",

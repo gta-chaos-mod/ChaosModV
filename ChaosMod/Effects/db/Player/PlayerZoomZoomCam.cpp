@@ -3,6 +3,8 @@
 */
 
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 CHAOS_VAR Camera zoomCamera          = 0;
 CHAOS_VAR float camZoom              = 80.f;
 CHAOS_VAR const float camZoomRate    = 0.15f;
@@ -43,7 +45,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "Zoom Zoom Cam",
         .Id = "player_zoomzoom_cam",

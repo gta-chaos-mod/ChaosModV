@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void Override(float value)
 {
 	SET_PED_MOVE_RATE_OVERRIDE(PLAYER_PED_ID(), value);
@@ -11,7 +13,7 @@ static void OnTickx5()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickx5, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickx5, 
 	{
 		.Name = "5x Movement Speed",
 		.Id = "player_movementx5",
@@ -27,7 +29,7 @@ static void OnTickx10()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickx10, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickx10, 
 	{
 		.Name = "10x Movement Speed",
 		.Id = "player_movementx10",
@@ -43,7 +45,7 @@ static void OnTickx05()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickx05, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickx05, 
 	{
 		.Name = "0.5x Movement Speed",
 		.Id = "player_movementx05",

@@ -5,6 +5,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::map<Ped, Object> pedPropsMap;
 CHAOS_VAR const int TOAST_MODEL_COUNT = 6;
 CHAOS_VAR Hash availablePropModels[TOAST_MODEL_COUNT];
@@ -120,7 +122,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "You're Toast",
 		.Id = "peds_toast",

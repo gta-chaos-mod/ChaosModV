@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Player.h"
 #include "Util/Vehicle.h"
 
@@ -78,7 +79,7 @@ void OnStartMakeRandomStuntJump()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMakeRandomStuntJump, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMakeRandomStuntJump, nullptr, nullptr, 
     {
         .Name = "Make Random Stunt Jump",
         .Id = "player_tp_stunt",

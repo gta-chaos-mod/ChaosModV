@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static void OnTickRed()
@@ -17,7 +18,7 @@ static void OnTickRed()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickRed, 
 	{
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
@@ -43,7 +44,7 @@ static void OnTickBlue()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, 
 	{
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
@@ -69,7 +70,7 @@ static void OnTickGreen()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, 
 	{
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
@@ -98,7 +99,7 @@ static void OnTickChrome()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, 
 	{
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
@@ -164,7 +165,7 @@ static void OnTickPink()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, 
 	{
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
@@ -229,7 +230,7 @@ static void OnTickRainbow()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, 
 	{
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",

@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::map<Ped, Object> pedPropsMap;
 CHAOS_VAR std::vector<Hash> availablePropModels;
 
@@ -151,7 +153,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Prop Hunt",
 		.Id = "peds_prop_hunt",

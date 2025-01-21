@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Effects/Effect.h"
 #include "Effects/EffectSoundPlayOptions.h"
+#include "Effects/Register/RegisteredEffects.h"
 #include "Util/CrashHandler.h"
 
 #include <scripthookv/inc/types.h>

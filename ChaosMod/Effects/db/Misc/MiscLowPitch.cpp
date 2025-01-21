@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 
 // Effect by ProfessorBiddle, but the code is pretty much copied and pasted
@@ -22,7 +23,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",

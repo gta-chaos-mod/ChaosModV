@@ -5,6 +5,7 @@
 #include <stdafx.h>
 
 #include "Components/MetaModifiers.h"
+#include "Effects/Register/RegisterEffect.h"
 
 #include "Memory/UI.h"
 
@@ -81,7 +82,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",

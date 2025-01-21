@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 // clang-format off
 CHAOS_VAR std::vector<std::string> actions = {
 	"hold forwards",
@@ -131,7 +132,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Simeon Says",
 		.Id = "player_simeonsays",

@@ -2,6 +2,7 @@
 
 #include "Components/EffectDispatcher.h"
 #include "Components/MetaModifiers.h"
+#include "Effects/Register/RegisterEffect.h"
 
 static void OnStart()
 {
@@ -24,7 +25,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick,
 	{
 		.Name = "No Chaos",
 		.Id = "meta_nochaos",

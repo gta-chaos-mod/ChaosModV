@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
@@ -19,7 +21,7 @@ static void OnTickX2()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickX2, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX2, 
 	{
 		.Name = "2x Vehicle Engine Speed",
 		.Id = "vehs_x2engine",
@@ -39,7 +41,7 @@ static void OnTickX10()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickX10, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX10, 
 	{
 		.Name = "10x Vehicle Engine Speed",
 		.Id = "vehs_x10engine",
@@ -59,7 +61,7 @@ static void OnTickX05()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickX05, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX05, 
 	{
 		.Name = "0.5x Vehicle Engine Speed",
 		.Id = "vehs_x05engine",

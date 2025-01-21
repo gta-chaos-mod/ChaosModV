@@ -5,8 +5,7 @@
 #include "DebugSocket.h"
 
 #include "Components/EffectDispatcher.h"
-#include "Effects/EnabledEffectsMap.h"
-#include "Util/OptionsFile.h"
+#include "Effects/EnabledEffects.h"
 
 #include <json.hpp>
 
@@ -35,7 +34,7 @@ static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::Connect
 			continue;
 
 		json effectInfoJson;
-		effectInfoJson["id"]   = effectId.GetEffectId();
+		effectInfoJson["id"]   = effectId;
 		effectInfoJson["name"] = effectData.Name;
 
 		effectsJson["effects"].push_back(effectInfoJson);
@@ -192,29 +191,29 @@ static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionSt
 #undef HANDLER
 }
 
-static bool EventOnPreDispatchEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static bool EventOnPreDispatchEffect(DebugSocket *debugSocket, const EffectIdentifier &ide)
 {
-	debugSocket->m_EffectTraceStats.erase(identifier.GetEffectId());
+	debugSocket->m_EffectTraceStats.erase(ide);
 	return true;
 }
 
-static void EventOnPreRunEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static void EventOnPreRunEffect(DebugSocket *debugSocket, const EffectIdentifier &id)
 {
 	if (debugSocket->m_IsProfiling)
 	{
 		LARGE_INTEGER ticks;
 		QueryPerformanceCounter(&ticks);
 
-		debugSocket->m_EffectTraceStats[identifier.GetEffectId()].EntryTimestamp = ticks.QuadPart;
+		debugSocket->m_EffectTraceStats[id].EntryTimestamp = ticks.QuadPart;
 	}
 }
 
-static void EventOnPostRunEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static void EventOnPostRunEffect(DebugSocket *debugSocket, const EffectIdentifier &id)
 {
 	if (!debugSocket->m_IsProfiling)
 		return;
 
-	const auto &effectId = identifier.GetEffectId();
+	const auto &effectId = id;
 	if (!debugSocket->m_EffectTraceStats.contains(effectId))
 		return;
 
@@ -259,16 +258,14 @@ DebugSocket::DebugSocket()
 	if (ComponentExists<EffectDispatcher>())
 	{
 		m_OnPreDispatchEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreDispatchEffect,
-		                                       [&](const EffectIdentifier &identifier)
-		                                       { return EventOnPreDispatchEffect(this, identifier); });
+		                                       [&](const EffectIdentifier &id)
+		                                       { return EventOnPreDispatchEffect(this, id); });
 
 		m_OnPreRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreRunEffect,
-		                                  [&](const EffectIdentifier &identifier)
-		                                  { EventOnPreRunEffect(this, identifier); });
+		                                  [&](const EffectIdentifier &id) { EventOnPreRunEffect(this, id); });
 
 		m_OnPostRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPostRunEffect,
-		                                   [&](const EffectIdentifier &identifier)
-		                                   { EventOnPostRunEffect(this, identifier); });
+		                                   [&](const EffectIdentifier &id) { EventOnPostRunEffect(this, id); });
 	}
 }
 

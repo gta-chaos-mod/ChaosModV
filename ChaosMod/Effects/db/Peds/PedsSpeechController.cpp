@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTickFriendly()
 {
 	static DWORD64 lastTick = 0;
@@ -23,7 +25,7 @@ static void OnTickFriendly()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickFriendly, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickFriendly, 
 	{
 		.Name = "Friendly Neighborhood",
 		.Id = "peds_sayhi",
@@ -56,7 +58,7 @@ static void OnTickUnfriendly()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickUnfriendly, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickUnfriendly, 
 	{
 		.Name = "Unfriendly Neighborhood",
 		.Id = "peds_insult",
@@ -81,7 +83,7 @@ static void OnTickKifflom()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickKifflom, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickKifflom, 
 	{
 		.Name = "Kifflom!",
 		.Id = "peds_kifflom",

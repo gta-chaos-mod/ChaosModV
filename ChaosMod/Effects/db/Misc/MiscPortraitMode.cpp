@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR const double maxBoxWidth = 0.35;
 CHAOS_VAR double currentBoxWidth   = 0;
 
@@ -21,7 +23,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Portrait Mode",
 		.Id = "misc_portrait",

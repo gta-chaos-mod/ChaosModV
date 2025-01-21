@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Effects/EffectCategory.h"
 #include "Effects/EffectData.h"
 #include "Effects/EffectGroups.h"
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectTimedType.h"
-#include "Effects/EffectsInfo.h"
-
+#include "Effects/Register/RegisteredEffectsMetadata.h"
 #include "Util/OptionsFile.h"
 
 #include <string>
@@ -35,7 +33,7 @@ namespace EffectConfig
 	{
 		OptionsFile effectsFile(configPath, compatConfigPaths);
 
-		for (auto &[effectId, effectInfo] : g_EffectsMap)
+		for (auto &[effectId, effectMetadata] : g_RegisteredEffectsMetadata)
 		{
 			struct ConfigValues
 			{
@@ -97,7 +95,7 @@ namespace EffectConfig
 				continue;
 
 			EffectData effectData;
-			if (!effectInfo.IsTimed)
+			if (!effectMetadata.IsTimed)
 			{
 				effectData.TimedType = EffectTimedType::NotTimed;
 			}
@@ -114,7 +112,7 @@ namespace EffectConfig
 			{
 				effectData.TimedType =
 				    configValues.Values.TimedType == EffectTimedType::NotTimed
-				        ? (effectInfo.IsShortDuration ? EffectTimedType::Short : EffectTimedType::Normal)
+				        ? (effectMetadata.IsShortDuration ? EffectTimedType::Short : EffectTimedType::Normal)
 				        : configValues.Values.TimedType;
 			}
 
@@ -122,26 +120,29 @@ namespace EffectConfig
 				effectData.WeightMult = configValues.Values.WeightMult;
 			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
 			effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, configValues.Values.ExcludedFromVoting);
-			effectData.SetAttribute(EffectAttributes::IsMeta, effectInfo.ExecutionType == EffectExecutionType::Meta);
-			effectData.Name = effectInfo.Name;
-			effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, effectInfo.HideRealNameOnStart);
+			effectData.SetAttribute(EffectAttributes::IsMeta,
+			                        effectMetadata.ExecutionType == EffectExecutionType::Meta);
+			effectData.Name = effectMetadata.Name;
+			effectData.SetAttribute(EffectAttributes::HideRealNameOnStart, effectMetadata.HideRealNameOnStart);
 #ifdef CHAOSDEBUG
-			effectData.ShortcutKeycode =
-			    effectInfo.DebugShortcutKeycode ? effectInfo.DebugShortcutKeycode : configValues.Values.ShortcutKeycode;
+			effectData.ShortcutKeycode = effectMetadata.DebugShortcutKeycode ? effectMetadata.DebugShortcutKeycode
+			                                                                 : configValues.Values.ShortcutKeycode;
 #else
 			effectData.ShortcutKeycode = configValues.Values.ShortcutKeycode;
 #endif
 			if (!valueEffectName.empty())
 				effectData.CustomName = valueEffectName;
-			effectData.Id             = effectInfo.Id;
-			effectData.EffectCategory = effectInfo.EffectCategory;
+			effectData.Id            = { std::string(effectMetadata.Id) };
+			effectData.Category      = effectMetadata.EffectCategory;
+			effectData.ConditionType = effectMetadata.ConditionType;
 
-			for (auto effectType : effectInfo.IncompatibleWith)
-				effectData.IncompatibleIds.insert(g_EffectsMap.at(effectType).Id);
+			for (auto effectType : effectMetadata.IncompatibleWith)
+				effectData.IncompatibleIds.insert(std::string(g_RegisteredEffectsMetadata.at(effectType).Id));
 
-			if (effectInfo.EffectGroupType != EffectGroupType::None)
+			if (effectMetadata.EffectGroupType != EffectGroupType::None)
 			{
-				effectData.GroupType = g_EffectGroups.find(g_EffectTypeToGroup.at(effectInfo.EffectGroupType))->first;
+				effectData.GroupType =
+				    g_EffectGroups.find(g_EffectTypeToGroup.at(effectMetadata.EffectGroupType))->first;
 				g_EffectGroups[effectData.GroupType].MemberCount++;
 			}
 

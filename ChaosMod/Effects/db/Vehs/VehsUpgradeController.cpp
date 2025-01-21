@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStartMaxUpgrades()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -34,7 +36,7 @@ static void OnStartMaxUpgrades()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMaxUpgrades, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMaxUpgrades, nullptr, nullptr, 
 	{
 		.Name = "Add Max Upgrades To Every Vehicle",
 		.Id = "playerveh_maxupgrades"
@@ -79,7 +81,7 @@ static void OnStartRandomUpgrades()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandomUpgrades, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandomUpgrades, nullptr, nullptr, 
 	{
 		.Name = "Add Random Upgrades To Every Vehicle",
 		.Id = "playerveh_randupgrades"

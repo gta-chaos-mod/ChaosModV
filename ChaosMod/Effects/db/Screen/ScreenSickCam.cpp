@@ -3,6 +3,8 @@
 */
 
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 CHAOS_VAR Camera sickCamera = 0;
 CHAOS_VAR float camZoom     = 80.f;
 CHAOS_VAR float camZoomRate = 0.4f;
@@ -67,7 +69,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "I Feel Sick",
         .Id = "player_sick_cam",

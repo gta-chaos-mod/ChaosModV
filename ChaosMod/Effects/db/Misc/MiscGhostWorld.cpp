@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static int GetAlphaForEntity(Entity entity)
 {
 	return ((sin((entity * 20) + (GET_GAME_TIMER() / 125)) + 1) / 2) * 255;
@@ -34,7 +36,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Ghost Town",
 		.Id = "misc_ghost_world",

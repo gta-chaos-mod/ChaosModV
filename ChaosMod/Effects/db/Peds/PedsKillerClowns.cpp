@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::list<Ped> clownEnemies;
 CHAOS_VAR int spawnTimer = -1;
 CHAOS_VAR Hash relationshipGroup;
@@ -112,7 +114,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Killer Clowns",
 		.Id = "peds_killerclowns",

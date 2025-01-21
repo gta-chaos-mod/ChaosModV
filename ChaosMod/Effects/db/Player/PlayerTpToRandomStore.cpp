@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Player.h"
 
 #include "PlayerTpToRandomStore.h"
@@ -66,7 +67,7 @@ void OnStartTpRandomStore()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartTpRandomStore, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTpRandomStore, nullptr, nullptr, 
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",

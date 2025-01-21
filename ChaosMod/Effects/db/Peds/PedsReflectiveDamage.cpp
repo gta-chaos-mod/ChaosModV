@@ -3,6 +3,8 @@
 */
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR std::unordered_map<Ped, int> mappedPeds;
 
 static void OnStop()
@@ -91,7 +93,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Friendly Fire",
 		.Id = "peds_reflectivedamage",

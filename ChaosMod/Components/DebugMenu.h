@@ -12,11 +12,11 @@ class DebugMenu : public Component
 {
 	struct DebugEffect
 	{
-		EffectIdentifier Identifier;
+		EffectIdentifier Id;
 		std::string EffectName;
 
-		DebugEffect(const EffectIdentifier &effectIdentifier, const std::string &effectName)
-		    : Identifier(effectIdentifier), EffectName(effectName)
+		DebugEffect(const EffectIdentifier &effectId, const std::string &effectName)
+		    : Id(effectId), EffectName(effectName)
 		{
 		}
 	};

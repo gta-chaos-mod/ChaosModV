@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Gravity.h"
 #include "Memory/Physics.h"
 
@@ -20,7 +21,7 @@ static void OnTickLow()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickLow, 
 	{
 		.Name = "Low Gravity",
 		.Id = "lowgravity",
@@ -37,7 +38,7 @@ static void OnTickVeryLow()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, 
 	{
 		.Name = "Very Low Gravity",
 		.Id = "verylowgravity",
@@ -67,7 +68,7 @@ static void OnTickInsane()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, 
 	{
 		.Name = "Insane Gravity",
 		.Id = "insanegravity",
@@ -102,7 +103,7 @@ static void OnTickInvert()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, EffectInfo
+REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, 
 	{
 		.Name = "Invert Gravity",
 		.Id = "invertgravity",
@@ -155,7 +156,7 @@ static void OnTickSideways()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
+REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, 
 	{
 		.Name = "Sideways Gravity",
 		.Id = "misc_sideways_gravity",
@@ -213,7 +214,7 @@ static void OnTickRandom()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, 
 	{
 		.Name = "Random Gravity",
 		.Id = "misc_randomgravity",

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	static unsigned int constexpr DRIVING_STYLE = 1024; // "Drive in reverse gear" bit
@@ -14,7 +16,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Peds Drive Backwards",
 		.Id = "peds_drive_backwards",

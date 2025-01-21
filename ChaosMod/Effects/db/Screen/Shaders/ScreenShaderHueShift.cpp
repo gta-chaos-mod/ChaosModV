@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ShaderHook.h"
 
 CHAOS_VAR const char *ms_szShaderSrcPrefix = R"SRC(
@@ -46,7 +47,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo 
+REGISTER_EFFECT(OnStart, OnStop, nullptr,  
     { 
         .Name            = "Hue Shift",
         .Id              = "screen_hueshift",

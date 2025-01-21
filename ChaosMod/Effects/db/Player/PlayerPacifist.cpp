@@ -1,4 +1,6 @@
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 // Effect by ProfessorBiddle, requested thousands of times on discord
 
 CHAOS_VAR int lastPlayerKills;
@@ -32,7 +34,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Pacifist",
 		.Id = "player_pacifist",

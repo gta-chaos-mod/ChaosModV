@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 CHAOS_VAR const std::array options = { "Nothing",
 	                                   "All Peds Are Peds",
 	                                   "Teleport To Current Location",
@@ -32,7 +34,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Nothing",
 		.Id = "nothing",

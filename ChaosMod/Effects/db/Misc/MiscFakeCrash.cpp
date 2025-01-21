@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
 #include "Components/EffectDispatchTimer.h"
+#include "Effects/Register/RegisterEffect.h"
 
 static void SleepAllThreads(DWORD ms)
 {
@@ -75,7 +76,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Fake Crash",
 		.Id = "misc_fakecrash",

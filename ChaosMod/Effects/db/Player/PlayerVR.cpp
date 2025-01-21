@@ -3,6 +3,7 @@
  */
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Player.h"
 
 CHAOS_VAR Ped clone;
@@ -120,7 +121,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Virtual Reality",
 		.Id = "player_vr",

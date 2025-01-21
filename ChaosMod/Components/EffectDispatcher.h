@@ -2,11 +2,9 @@
 
 #include "Components/Component.h"
 
-#include "Effects/Effect.h"
-#include "Effects/EffectData.h"
 #include "Effects/EffectIdentifier.h"
 #include "Effects/EffectThreads.h"
-#include "Effects/EnabledEffectsMap.h"
+#include "Effects/Register/RegisteredEffects.h"
 
 #include "Util/Events.h"
 
@@ -29,7 +27,7 @@ class EffectDispatcher : public Component
 	};
 	struct EffectDispatchEntry
 	{
-		EffectIdentifier Identifier;
+		EffectIdentifier Id;
 		std::string Suffix;
 		DispatchEffectFlags Flags;
 	};
@@ -37,7 +35,7 @@ class EffectDispatcher : public Component
 
 	struct ActiveEffect
 	{
-		EffectIdentifier Identifier;
+		EffectIdentifier Id;
 
 		std::string Name;
 		std::string FakeName;
@@ -112,7 +110,7 @@ class EffectDispatcher : public Component
 
 	void DrawEffectTexts();
 
-	void DispatchEffect(const EffectIdentifier &effectIdentifier,
+	void DispatchEffect(const EffectIdentifier &effectId,
 	                    DispatchEffectFlags dispatchEffectFlags = DispatchEffectFlag_None,
 	                    const std::string &suffix               = {});
 	void DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags = DispatchEffectFlag_None,
@@ -132,7 +130,7 @@ class EffectDispatcher : public Component
 	void ClearActiveEffects();
 	void ClearMostRecentEffect();
 
-	std::vector<RegisteredEffect *> GetRecentEffects(int distance, std::string_view ignoreEffect = {}) const;
+	std::vector<RegisteredEffect *> GetRecentEffects(int distance, const std::string &ignoreEffect = {}) const;
 
 	void Reset(ClearEffectsFlags clearEffectFlags = ClearEffectsFlag_None);
 

@@ -6,7 +6,8 @@
 #include "Components/EffectDispatcher.h"
 #include "Components/MetaModifiers.h"
 #include "Components/SplashTexts.h"
-
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffects.h"
 #include "Util/OptionsManager.h"
 #include "Util/ScriptText.h"
 
@@ -63,7 +64,7 @@ bool Voting::Init()
 
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
 #ifdef CHAOSDEBUG
-	DWORD attributes = NULL;
+	DWORD attributes = 0;
 	if (DoesFeatureFlagExist("forcenovotingconsole"))
 		attributes = CREATE_NO_WINDOW;
 
@@ -121,13 +122,13 @@ void Voting::HandleMsg(std::string_view message)
 			std::string identifier = receivedJSON["Identifier"];
 			if (identifier == "voteresult")
 			{
-				int result               = receivedJSON["SelectedOption"];
+				int result          = receivedJSON["SelectedOption"];
 
-				m_HasReceivedResult      = true;
+				m_HasReceivedResult = true;
 
 				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_ChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-				    result == 3 ? EffectIdentifier() : m_EffectChoices[result]->m_EffectIdentifier);
+				m_ChosenEffectId =
+				    std::make_unique<EffectIdentifier>(result == 3 ? EffectIdentifier() : m_EffectChoices[result]->Id);
 			}
 			else if (identifier == "currentvotes")
 			{
@@ -136,8 +137,8 @@ void Voting::HandleMsg(std::string_view message)
 				{
 					for (int idx = 0; idx < options.size(); idx++)
 					{
-						int votes                           = options[idx];
-						m_EffectChoices[idx]->m_ChanceVotes = votes;
+						int votes                         = options[idx];
+						m_EffectChoices[idx]->ChanceVotes = votes;
 					}
 				}
 			}
@@ -290,13 +291,13 @@ void Voting::OnRun()
 	}
 	else if (GetComponent<EffectDispatchTimer>()->ShouldDispatchEffectNow())
 	{
-		// End of voting round; dispatch resulted effect
+		// End of voting round; dispatch resulting effect
 
 		// Should be random effect voteable, so just dispatch random effect
-		if (m_ChosenEffectIdentifier->GetEffectId().empty())
+		if (m_ChosenEffectId->Id().empty())
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
 		else
-			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectIdentifier);
+			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectId);
 		GetComponent<EffectDispatchTimer>()->ResetTimer();
 
 		if (ComponentExists<MetaModifiers>())
@@ -312,22 +313,23 @@ void Voting::OnRun()
 	{
 		// New voting round
 
-		m_IsVotingRunning        = true;
-		m_HasReceivedResult      = false;
-		m_IsVotingRoundDone      = false;
+		m_IsVotingRunning   = true;
+		m_HasReceivedResult = false;
+		m_IsVotingRoundDone = false;
 
-		m_ChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
+		m_ChosenEffectId    = std::make_unique<EffectIdentifier>();
 
 		m_EffectChoices.clear();
-		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-		for (auto &pair : g_EnabledEffects)
-		{
-			auto &[effectIdentifier, effectData] = pair;
 
-			if (!effectData.IsMeta() && !effectData.IsExcludedFromVoting() && !effectData.IsUtility()
-			    && !effectData.IsHidden())
+		const auto &filteredEffects = GetFilteredEnabledEffects();
+		std::vector<EffectData *> choosableEffects;
+		choosableEffects.reserve(filteredEffects.size());
+		for (auto &effectData : filteredEffects)
+		{
+			if (!effectData->IsMeta() && !effectData->IsExcludedFromVoting() && !effectData->IsUtility()
+			    && !effectData->IsHidden())
 			{
-				choosableEffects.emplace(effectIdentifier, effectData);
+				choosableEffects.push_back(effectData);
 			}
 		}
 
@@ -347,51 +349,43 @@ void Voting::OnRun()
 			}
 
 			float totalWeight = 0.f;
-			for (const auto &pair : choosableEffects)
-			{
-				const EffectData &effectData = pair.second;
-
-				totalWeight += effectData.GetEffectWeight();
-			}
+			for (const auto &effectData : choosableEffects)
+				totalWeight += effectData->GetEffectWeight();
 
 			float chosen = g_RandomNoDeterm.GetRandomFloat(0.f, totalWeight);
 
 			totalWeight  = 0.f;
-
-			std::unique_ptr<ChoosableEffect> pTargetChoice;
-
-			for (auto &pair : choosableEffects)
+			for (auto it = choosableEffects.begin(); it != choosableEffects.end();)
 			{
-				auto &[effectIdentifier, effectData] = pair;
+				const auto &effectData = *it;
 
-				totalWeight += effectData.GetEffectWeight();
-
+				totalWeight += effectData->GetEffectWeight();
 				if (chosen <= totalWeight)
 				{
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by
 					// EffectWeightMult
-					effectData.Weight = 0;
+					effectData->Weight = 0;
 
-					auto match        = (std::ostringstream() << m_VoteablePrefix
+					auto match         = (std::ostringstream() << m_VoteablePrefix
                                                        << (!m_AlternatedVotingRound       ? idx + 1
-					                                              : m_EnableRandomEffectVoteable ? idx + 5
-					                                                                             : idx + 4))
+					                                               : m_EnableRandomEffectVoteable ? idx + 5
+					                                                                              : idx + 4))
 					                 .str();
-					pTargetChoice = std::make_unique<ChoosableEffect>(
-					    effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name, match);
+
+					m_EffectChoices.push_back(std::make_unique<ChoosableEffect>(
+					    effectData->Id, effectData->HasCustomName() ? effectData->CustomName : effectData->Name,
+					    match));
+					it = choosableEffects.erase(it);
 					break;
 				}
+
+				it++;
 			}
-
-			EffectIdentifier effectIdentifier = pTargetChoice->m_EffectIdentifier;
-
-			m_EffectChoices.push_back(std::move(pTargetChoice));
-			choosableEffects.erase(effectIdentifier);
 		}
 
 		std::vector<std::string> effectNames;
 		for (const auto &pChoosableEffect : m_EffectChoices)
-			effectNames.push_back(pChoosableEffect->m_EffectName);
+			effectNames.push_back(pChoosableEffect->Name);
 
 		SendToPipe("vote", effectNames);
 
@@ -406,10 +400,10 @@ void Voting::OnRun()
 		int totalVotes = 0;
 		if (m_EnableChanceSystem)
 		{
-			for (const auto &pChoosableEffect : m_EffectChoices)
+			for (const auto &choosableEffect : m_EffectChoices)
 			{
 				int chanceVotes =
-				    pChoosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
+				    choosableEffect->ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 				totalVotes += chanceVotes;
 			}
@@ -419,7 +413,7 @@ void Voting::OnRun()
 		for (const auto &choosableEffect : m_EffectChoices)
 		{
 			std::ostringstream oss;
-			oss << choosableEffect->m_Match << ": " << choosableEffect->m_EffectName;
+			oss << choosableEffect->Match << ": " << choosableEffect->Name;
 
 			// Also show chance percentages if chance system is enabled
 			if (m_EnableChanceSystem)
@@ -432,7 +426,7 @@ void Voting::OnRun()
 				else
 				{
 					int chanceVotes =
-					    choosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
+					    choosableEffect->ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 					percentage =
 					    !chanceVotes

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/WeaponPool.h"
 
 static void OnStartAll()
@@ -11,7 +12,7 @@ static void OnStartAll()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartAll, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartAll, nullptr, nullptr, 
 	{
 		.Name = "Give All Weapons",
 		.Id = "player_allweps",

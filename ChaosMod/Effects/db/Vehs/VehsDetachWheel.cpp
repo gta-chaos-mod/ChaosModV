@@ -4,6 +4,7 @@ Effect by Reguas
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/EntityFragments.h"
 
 CHAOS_VAR const char *wheels[12] { "wheel_lf",  "wheel_rf",  "wheel_lm1", "wheel_rm1", "wheel_lm2", "wheel_rm2",
@@ -30,7 +31,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Detach Random Wheel",
 		.Id = "vehs_detach_wheel"

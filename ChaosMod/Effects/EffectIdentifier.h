@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EffectsInfo.h"
-
 #include <string>
 
 class EffectIdentifier
@@ -19,7 +17,12 @@ class EffectIdentifier
 
 	inline bool operator==(const EffectIdentifier &other) const
 	{
-		return m_EffectId == other.GetEffectId();
+		return m_EffectId == other;
+	}
+
+	inline bool operator==(const std::string &other) const
+	{
+		return m_EffectId == other;
 	}
 
 	inline bool IsScript() const
@@ -27,7 +30,12 @@ class EffectIdentifier
 		return m_IsScript;
 	}
 
-	inline const std::string &GetEffectId() const
+	inline const std::string &Id() const
+	{
+		return m_EffectId;
+	}
+
+	inline operator const std::string &() const
 	{
 		return m_EffectId;
 	}

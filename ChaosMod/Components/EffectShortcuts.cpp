@@ -3,6 +3,7 @@
 #include "EffectShortcuts.h"
 
 #include "Components/EffectDispatcher.h"
+#include "Effects/EnabledEffects.h"
 
 EffectShortcuts::EffectShortcuts() : Component()
 {
@@ -18,10 +19,10 @@ void EffectShortcuts::OnRun()
 		std::lock_guard lock(m_EffectQueueMtx);
 		while (!m_EffectQueue.empty())
 		{
-			auto &identifier = m_EffectQueue.front();
+			auto &id = m_EffectQueue.front();
 
 			if (ComponentExists<EffectDispatcher>())
-				GetComponent<EffectDispatcher>()->DispatchEffect(identifier);
+				GetComponent<EffectDispatcher>()->DispatchEffect(id);
 
 			m_EffectQueue.pop();
 		}

@@ -2,10 +2,9 @@
        Effect by Lucas7yoshi, modified
 */
 
-#include "scripthookv/inc/natives.h"
-#include <cmath>
 #include <stdafx.h>
-#include <string>
+
+#include "Effects/Register/RegisterEffect.h"
 
 #define WAIT_TIME 10000      // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
@@ -140,7 +139,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Need For Speed",
 		.Id = "veh_speed_goal",

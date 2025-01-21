@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 #include "Memory/Vehicle.h"
 
@@ -21,7 +22,7 @@ static void BoostOnTick()
 	}
 }
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, BoostOnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, BoostOnTick, 
 	{
 		.Name = "Boost Braking",
 		.Id = "veh_boostbrake",

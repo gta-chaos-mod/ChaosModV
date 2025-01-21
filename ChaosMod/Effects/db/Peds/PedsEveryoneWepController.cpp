@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/WeaponPool.h"
 
 static void OnStartRPG()
@@ -12,7 +13,7 @@ static void OnStartRPG()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRPG, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRPG, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone An RPG",
 		.Id = "peds_giverpg",
@@ -31,7 +32,7 @@ static void OnStartTazer()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartTazer, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTazer, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone A Stun Gun",
 		.Id = "peds_stungun",
@@ -50,7 +51,7 @@ static void OnStartMinigun()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMinigun, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMinigun, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone A Minigun",
 		.Id = "peds_minigun",
@@ -69,7 +70,7 @@ static void OnStartUpNAtomizer()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartUpNAtomizer, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartUpNAtomizer, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone An Up-N-Atomizer",
 		.Id = "peds_upnatomizer",
@@ -91,7 +92,7 @@ static void OnStartRandom()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone A Random Weapon",
 		.Id = "peds_randomwep",
@@ -112,7 +113,7 @@ static void OnStartRailgun()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRailgun, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRailgun, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone A Railgun",
 		.Id = "peds_railgun",
@@ -133,7 +134,7 @@ static void OnStartBattleAxe()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBattleAxe, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBattleAxe, nullptr, nullptr, 
 	{
 		.Name = "Give Everyone A Battle Axe",
 		.Id = "peds_battleaxe",

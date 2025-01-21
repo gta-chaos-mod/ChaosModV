@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 /*
  * Effect by juhana
  */
@@ -44,7 +46,7 @@ static void OnStartFake()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "U-Turn",
 		.Id = "misc_uturn"
@@ -53,7 +55,7 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 // clang-format on
 
 // clang-format off
-REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFake, nullptr, nullptr, 
 	{
 		.Name = "Fake U-Turn",
 		.Id = "misc_fakeuturn",

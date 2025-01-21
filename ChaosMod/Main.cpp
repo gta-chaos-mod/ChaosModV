@@ -2,11 +2,6 @@
 
 #include "Main.h"
 
-#include "Effects/EffectConfig.h"
-
-#include "Memory/Hooks/ScriptThreadRunHook.h"
-#include "Memory/Misc.h"
-
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatchTimer.h"
@@ -21,7 +16,10 @@
 #include "Components/SplashTexts.h"
 #include "Components/Voting.h"
 #include "Components/Workshop.h"
-
+#include "Effects/EffectConfig.h"
+#include "Effects/EnabledEffects.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Misc.h"
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"

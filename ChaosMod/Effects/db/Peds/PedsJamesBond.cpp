@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #define PI 3.14159265
 
 static void OnStart()
@@ -55,7 +56,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Spawn Deadly Agent",
 		.Id = "peds_jamesbond",

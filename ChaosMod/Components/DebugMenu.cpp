@@ -3,7 +3,7 @@
 #include "DebugMenu.h"
 
 #include "Components/EffectDispatcher.h"
-
+#include "Effects/EnabledEffects.h"
 #include "Util/OptionsManager.h"
 
 #define MAX_VIS_ITEMS 15
@@ -16,13 +16,10 @@ DebugMenu::DebugMenu() : Component()
 
 	for (const auto &pair : g_EnabledEffects)
 	{
-		const auto &[effectIdentifier, effectData] = pair;
+		const auto &[effectId, effectData] = pair;
 
 		if (!effectData.IsHidden())
-		{
-			m_Effects.emplace_back(effectIdentifier,
-			                       effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
-		}
+			m_Effects.emplace_back(effectId, effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
 	}
 
 	if (m_Effects.empty())
@@ -41,8 +38,8 @@ DebugMenu::DebugMenu() : Component()
 				          return false;
 			          else if (idx >= b.EffectName.size())
 				          return true;
-			          
-					  auto ai = std::toupper(a.EffectName[idx]);
+
+			          auto ai = std::toupper(a.EffectName[idx]);
 			          auto bi = std::toupper(b.EffectName[idx]);
 			          if (ai != bi)
 				          return ai < bi;
@@ -83,7 +80,7 @@ void DebugMenu::OnRun()
 		m_DispatchEffect = false;
 
 		if (ComponentExists<EffectDispatcher>())
-			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
+			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Id);
 	}
 
 	float y                 = .1f;
@@ -211,7 +208,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		break;
 	}
 	case VK_RETURN:
-		if (!m_Effects[m_SelectedIdx].Identifier.GetEffectId().empty())
+		if (!m_Effects[m_SelectedIdx].Id.Id().empty())
 			m_DispatchEffect = true;
 
 		break;

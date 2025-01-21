@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Effects/Condition/EffectCondition.h"
 #include "Effects/EffectCategory.h"
 #include "Effects/EffectExecutionType.h"
 #include "Effects/EffectGroups.h"
@@ -8,10 +9,10 @@
 #include <unordered_map>
 #include <vector>
 
-struct EffectInfo
+struct RegisteredEffectMetadata
 {
-	const char *Name;
-	const char *Id;
+	std::string_view Name;
+	std::string_view Id;
 	bool IsTimed             = false;
 	bool IsShortDuration     = false;
 	bool HideRealNameOnStart = false;
@@ -22,6 +23,7 @@ struct EffectInfo
 	EffectCategory EffectCategory     = EffectCategory::None;
 	EffectGroupType EffectGroupType   = EffectGroupType::None;
 	EffectExecutionType ExecutionType = EffectExecutionType::Default;
+	EffectConditionType ConditionType = EffectConditionType::None;
 };
 
-inline std::unordered_map<std::string_view, EffectInfo> g_EffectsMap;
+inline std::unordered_map<std::string_view, RegisteredEffectMetadata> g_RegisteredEffectsMetadata;
