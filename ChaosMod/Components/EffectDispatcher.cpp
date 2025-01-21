@@ -345,7 +345,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			if (!effectSharedData->OverrideEffectName.empty())
 			{
 				activeEffect.FakeName = effectSharedData->OverrideEffectName;
-				effectSharedData->OverrideEffectId.clear();
+				effectSharedData->OverrideEffectName.clear();
 			}
 
 			if (!effectSharedData->OverrideEffectId.empty())
@@ -353,7 +353,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 				if (g_EnabledEffects.contains(effectSharedData->OverrideEffectId))
 				{
 					auto &fakeEffect      = g_EnabledEffects.at(effectSharedData->OverrideEffectId);
-					activeEffect.FakeName = !fakeEffect.HasCustomName() ? "" : fakeEffect.CustomName;
+					activeEffect.FakeName = !fakeEffect.HasCustomName() ? fakeEffect.Name : fakeEffect.CustomName;
 				}
 				else
 				{
