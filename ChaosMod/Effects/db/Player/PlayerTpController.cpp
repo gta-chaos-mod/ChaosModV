@@ -398,7 +398,7 @@ static Vector3 PerformFakeTeleport(std::string effectId)
 			WAIT(0);
 
 		break;
-	case 11: // player_tptowaypointopposite
+	case "player_tptowaypointopposite"_hash:
 		OnStartWaypointOpposite();
 		break;
 	}
