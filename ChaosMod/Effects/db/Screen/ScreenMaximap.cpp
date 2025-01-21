@@ -22,6 +22,6 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
 		.Name = "Maximap",
 		.Id = "screen_maximap",
 		.IsTimed = true,
-		.IncompatibleWith = { "no_hud", "misc_flip_ui", "no_radar" }
+		.IncompatibleWith = { "no_hud", "screen_flip_ui", "no_radar" }
 	}
 );

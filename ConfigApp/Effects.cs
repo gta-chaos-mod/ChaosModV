@@ -302,7 +302,7 @@
             { "meta_effect_duration_0_5x", new EffectInfo("0.5x Effect Duration", EffectCategory.Meta, true) },
             { "meta_hide_chaos_ui", new EffectInfo("What's Happening??", EffectCategory.Meta, true) },
             { "meta_spawn_multiple_effects", new EffectInfo("Combo Time", EffectCategory.Meta, true) },
-            { "misc_flip_ui", new EffectInfo("Flipped HUD", EffectCategory.Screen, true) },
+            { "screen_flip_ui", new EffectInfo("Flipped HUD", EffectCategory.Screen, true) },
             { "vehs_crumble", new EffectInfo("Crumbling Vehicles", EffectCategory.Vehicle, true, true) },
             { "misc_fps_limit", new EffectInfo("Console Experience", EffectCategory.Misc, true, true) },
             { "meta_nochaos", new EffectInfo("No Chaos", EffectCategory.Meta, true) },
