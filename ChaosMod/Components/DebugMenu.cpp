@@ -36,12 +36,17 @@ DebugMenu::DebugMenu() : Component()
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
 		          for (int idx = 0;; idx++)
-			          if (idx >= a.EffectName.size()
-			              || std::toupper(a.EffectName[idx]) < std::toupper(b.EffectName[idx]))
-				          return true;
-			          else if (idx >= b.EffectName.size()
-			                   || std::toupper(b.EffectName[idx]) < std::toupper(a.EffectName[idx]))
+		          {
+			          if (idx >= a.EffectName.size())
 				          return false;
+			          else if (idx >= b.EffectName.size())
+				          return true;
+			          
+					  auto ai = std::toupper(a.EffectName[idx]);
+			          auto bi = std::toupper(b.EffectName[idx]);
+			          if (ai != bi)
+				          return ai < bi;
+		          }
 	          });
 }
 
