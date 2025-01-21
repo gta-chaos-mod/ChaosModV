@@ -159,6 +159,21 @@ void EffectDispatchTimer::ResetFakeTimerPercentage()
 	m_FakeTimerPercentage = 0.f;
 }
 
+bool EffectDispatchTimer::IsTimerPaused() const
+{
+	return m_PauseTimer;
+}
+
+void EffectDispatchTimer::SetTimerPaused(bool pause)
+{
+	m_PauseTimer = pause;
+}
+
+bool EffectDispatchTimer::IsUsingDistanceBasedDispatch() const
+{
+	return m_DistanceChaosState.EnableDistanceBasedEffectDispatch;
+}
+
 void EffectDispatchTimer::OnRun()
 {
 	auto curTime = GetTickCount64();

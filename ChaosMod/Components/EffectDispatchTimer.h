@@ -49,5 +49,10 @@ class EffectDispatchTimer : public Component
 	void SetFakeTimerPercentage(float percentage);
 	void ResetFakeTimerPercentage();
 
+	bool IsTimerPaused() const;
+	void SetTimerPaused(bool pause);
+
+	bool IsUsingDistanceBasedDispatch() const;
+
 	virtual void OnRun() override;
 };

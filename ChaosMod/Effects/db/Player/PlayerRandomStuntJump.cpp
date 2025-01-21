@@ -7,6 +7,8 @@
 #include "Util/Player.h"
 #include "Util/Vehicle.h"
 
+#include "PlayerRandomStuntJump.h"
+
 struct Location
 {
 	Vector3 coordinates;
@@ -47,7 +49,7 @@ CHAOS_VAR std::vector<Location> allPossibleJumps = {
 	{ { -958.207, -2766.583, 13.693 }, 151.829, 45.f }  // 30
 };
 
-static void OnStart()
+void OnStartMakeRandomStuntJump()
 {
 	Ped playerPed = PLAYER_PED_ID();
 	Vehicle veh;
@@ -76,7 +78,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMakeRandomStuntJump, nullptr, nullptr, EffectInfo
     {
         .Name = "Make Random Stunt Jump",
         .Id = "player_tp_stunt",
