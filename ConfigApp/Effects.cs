@@ -413,6 +413,7 @@
             { "screen_realfp", new EffectInfo("Real First Person", EffectCategory.Screen, true) },
             { "screen_hueshift", new EffectInfo("Hue Shift", EffectCategory.Screen, true) },
             { "player_copyforce", new EffectInfo("Use The Force", EffectCategory.Player, true, true) },
+            { "player_tptowaypointopposite", new EffectInfo("Teleport To The Opposite Side Of Waypoint", EffectCategory.Player) },
         };
     }
 }
