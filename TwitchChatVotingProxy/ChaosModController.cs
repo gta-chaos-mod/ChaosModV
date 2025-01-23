@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System;
+using System.Timers;
 using Serilog;
 using TwitchChatVotingProxy.ChaosPipe;
 using TwitchChatVotingProxy.OverlayServer;
@@ -36,6 +37,7 @@ namespace TwitchChatVotingProxy
             m_ChaosPipe.OnGetVoteResult += OnGetVoteResult;
             m_ChaosPipe.OnNewVote += OnNewVote;
             m_ChaosPipe.OnNoVotingRound += OnNoVotingRound;
+            m_ChaosPipe.OnSetVotingMode += OnSetVotingMode;
 
             // Setup receiver listeners
             foreach (var votingReceiver in m_VotingReceivers)
@@ -75,6 +77,7 @@ namespace TwitchChatVotingProxy
         /// <summary>
         /// Calculate the voting result by assigning them a percentage based on votes,
         /// and choosing a random option based on that percentage.
+        /// </summary>
         private int GetVoteResultByPercentage()
         {
             // Get total votes
@@ -101,6 +104,28 @@ namespace TwitchChatVotingProxy
 
             // Return the selected vote range/option
             return selectedOption;
+        }
+        /// <summary>
+        /// Calculate the voting result by the option with the lowest votes
+        /// </summary>
+        private int GetVoteResultByAntiMajority()
+        {
+            var lowestVoteCount = m_ActiveVoteOptions.Min(_ => _.Votes);
+            var chosenOptions = m_ActiveVoteOptions.FindAll(_ => _.Votes == lowestVoteCount);
+            IVoteOption chosenOption;
+            if (chosenOptions.Count == 1)
+            {
+                chosenOption = chosenOptions[0];
+            }
+            else
+            {
+                chosenOption = chosenOptions[m_Random.Next(0, chosenOptions.Count)];
+            }
+            return m_ActiveVoteOptions.IndexOf(chosenOption);
+        }
+        public void OnSetVotingMode(object? sender, OnSetVotingModeArgs onSetVotingModeArgs)
+        {
+            m_Config.VotingMode = onSetVotingModeArgs.VotingMode;
         }
         /// <summary>
         /// Is called when the chaos mod pipe requests the current votes (callback)
@@ -132,6 +157,9 @@ namespace TwitchChatVotingProxy
                 break;
             case EVotingMode.PERCENTAGE:
                 e.ChosenOption = GetVoteResultByPercentage();
+                break;
+            case EVotingMode.ANTIMAJORITY:
+                e.ChosenOption = GetVoteResultByAntiMajority();
                 break;
             }
 

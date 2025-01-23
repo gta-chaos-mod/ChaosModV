@@ -50,8 +50,8 @@ bool Voting::Init()
 	m_OverlayMode        = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
 	                                                       static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_EnableChanceSystem = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
-	                                                       OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_VotingMode = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
+	                                                       OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING) ? VotingMode::Percentage : VotingMode::Majority;
 	m_EnableVotingChanceSystemRetainInitialChance =
 	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
 	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
@@ -90,6 +90,11 @@ bool Voting::Init()
 bool Voting::IsEnabled() const
 {
 	return m_EnableVoting;
+}
+
+VotingMode Voting::GetVotingMode() const
+{
+	return m_VotingMode;
 }
 
 void Voting::HandleMsg(std::string_view message)
@@ -259,7 +264,7 @@ void Voting::OnRun()
 	{
 		m_LastVotesFetchTime = curTick;
 
-		if (m_IsVotingRunning && m_EnableChanceSystem && m_OverlayMode == OverlayMode::OverlayIngame)
+		if (m_IsVotingRunning && m_VotingMode == VotingMode::Percentage && m_OverlayMode == OverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
 			SendToPipe("getcurrentvotes");
@@ -277,6 +282,22 @@ void Voting::OnRun()
 
 	if (!m_ReceivedHello)
 		return;
+
+	if (ComponentExists<MetaModifiers>())
+	{
+		auto newMode = GetComponent<MetaModifiers>()->VotingModeOverride;
+		if (m_VotingModeOverride != newMode)
+		{
+			m_VotingModeOverride = newMode;
+
+			if (newMode == VotingMode::None)
+			{
+				newMode = m_VotingMode;
+			}
+
+			SendToPipe(std::string("votingmode"), { newMode.ToString() });
+		}
+	}
 
 	if (GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
 	{
@@ -398,7 +419,7 @@ void Voting::OnRun()
 
 		// Count total votes if chance system is enabled
 		int totalVotes = 0;
-		if (m_EnableChanceSystem)
+		if (m_VotingMode == VotingMode::Percentage)
 		{
 			for (const auto &choosableEffect : m_EffectChoices)
 			{
@@ -416,7 +437,7 @@ void Voting::OnRun()
 			oss << choosableEffect->Match << ": " << choosableEffect->Name;
 
 			// Also show chance percentages if chance system is enabled
-			if (m_EnableChanceSystem)
+			if (m_VotingMode == VotingMode::Percentage)
 			{
 				float percentage;
 				if (totalVotes == 0)

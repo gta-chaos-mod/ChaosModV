@@ -18,6 +18,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
         public event EventHandler<OnGetCurrentVotesArgs>? OnGetCurrentVotes = null;
         public event EventHandler<OnGetVoteResultArgs>? OnGetVoteResult = null;
         public event EventHandler<OnNewVoteArgs>? OnNewVote = null;
+        public event EventHandler<OnSetVotingModeArgs>? OnSetVotingMode = null;
         public event EventHandler? OnNoVotingRound = null;
 
         private readonly ILogger m_Logger = Log.Logger.ForContext<ChaosPipeClient>();
@@ -202,6 +203,9 @@ namespace TwitchChatVotingProxy.ChaosPipe
                     case "vote":
                         StartNewVote(pipe.Options);
                         break;
+                    case "votingmode":
+                        ChangeVotingMode(pipe.Options);
+                        break;
                     case "getvoteresult":
                         GetVoteResult();
                         break;
@@ -238,6 +242,23 @@ namespace TwitchChatVotingProxy.ChaosPipe
 
             // Dispatch information to listeners
             OnNewVote?.Invoke(this, new OnNewVoteArgs(options.ToArray()));
+        }
+        private void ChangeVotingMode(List<string>? options)
+        {
+            if (options == null || options.Count == 0)
+                return;
+
+            string modeName = options[0];
+
+            EVotingMode? mode = VotingMode.ReverseLookup(modeName);
+            if (mode == null)
+            {
+                m_Logger.Error("Unknown voting mode: " + modeName);
+                return;
+            }
+        
+            m_Logger.Information("Setting voting mode to " + modeName);
+            OnSetVotingMode?.Invoke(this, new((EVotingMode)mode));
         }
         /// <summary>
         /// Start a no-voting round. The chaos mod will decide over the options

@@ -414,6 +414,8 @@
             { "screen_hueshift", new EffectInfo("Hue Shift", EffectCategory.Screen, true) },
             { "player_copyforce", new EffectInfo("Use The Force", EffectCategory.Player, true, true) },
             { "player_tptowaypointopposite", new EffectInfo("Teleport To The Opposite Side Of Waypoint", EffectCategory.Player) },
+            { "meta_votingmode_majority", new EffectInfo("Majority Voting", EffectCategory.Meta, true) },
+            { "meta_votingmode_antimajority", new EffectInfo("Minority Voting", EffectCategory.Meta, true) },
         };
     }
 }
