@@ -13,12 +13,13 @@ class OptionsFile
 {
   private:
 	const char *m_FileName;
+	const char *m_FoundFileName;
 	std::vector<const char *> m_CompatFileNames;
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
 	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
-	    : m_FileName(fileName), m_CompatFileNames(compatFileNames)
+	    : m_FileName(fileName), m_CompatFileNames(compatFileNames), m_FoundFileName("")
 	{
 		Reset();
 	}
@@ -57,11 +58,31 @@ class OptionsFile
 			bool dataRead = false;
 			for (auto compatFileName : m_CompatFileNames)
 				if ((dataRead = readData(compatFileName)))
+				{
+					m_FoundFileName = compatFileName;
 					break;
+				}
 
 			if (!dataRead)
 				LOG("Config file " << m_FileName << " not found!");
 		}
+	}
+
+	inline void WriteFile()
+	{
+		std::ofstream file(m_FoundFileName, std::ofstream::out | std::ofstream::trunc);
+		if (!file)
+		{
+			LOG("Couldn't write config file " << m_FileName);
+			return;
+		}
+		for (auto &[key, value] : m_Options)
+			file << key << "=" << value << std::endl;
+	}
+
+	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
+	{
+		return ReadValue(std::vector<std::string> { key }, defaultValue);
 	}
 
 	template <typename T> inline T ReadValue(const std::vector<std::string> &keys, T defaultValue) const
@@ -92,5 +113,21 @@ class OptionsFile
 		}
 
 		return defaultValue;
+	}
+
+	inline void SetValueString(const std::string& szKey, const std::string& value)
+	{
+		if (m_Options.contains(szKey))
+		{
+			m_Options[szKey] = value;
+		}
+		else
+		{
+			m_Options.emplace(szKey, value);
+		}
+	}
+	template <typename T> inline void SetValue(const std::string& szKey, T value)
+	{
+		SetValueString(szKey, std::to_string(value));
 	}
 };

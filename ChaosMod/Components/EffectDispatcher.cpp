@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Components/CrossingChallenge.h"
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectSound/EffectSoundManager.h"
@@ -525,6 +526,8 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectId, Dispatch
                                       const std::string &suffix)
 {
 	EffectDispatchQueue.push({ .Id = effectId, .Suffix = suffix, .Flags = dispatchEffectFlags });
+	if (ComponentExists<CrossingChallenge>())
+		GetComponent<CrossingChallenge>()->IncrementEffects();
 }
 
 void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags, const std::string &suffix)

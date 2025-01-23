@@ -130,6 +130,7 @@ void EffectDispatchTimer::ResetTimer()
 {
 	m_TimerPercentage = 0.f;
 	m_Timer           = GetTickCount64();
+	m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 }
 
 int EffectDispatchTimer::GetRemainingTimerTime() const
