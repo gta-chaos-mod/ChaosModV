@@ -296,7 +296,6 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	E("GET_HASH_KEY", GET_HASH_KEY),
 	E("print", [](const sol::this_environment &curEnv, const std::string &text)
 	  { LuaPrint(curEnv.env->get<sol::table>("EnvInfo")["ScriptName"], text); }),
-	E("WAIT", WAIT),
 	E("IsKeyPressed",
 	  [](unsigned char key)
 	  {
@@ -466,6 +465,7 @@ LuaScripts::LuaScripts()
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
 		};
+		m_GlobalState["WAIT"] = WAIT;
 	}
 	else
 	{
@@ -474,6 +474,10 @@ LuaScripts::LuaScripts()
 		{
 			LOG("WARNING: Blocked invocation of native 0x" << std::uppercase << std::hex << hash << std::setfill(' ')
 			                                               << " during script evaluation!");
+		};
+		m_GlobalState["WAIT"] = []()
+		{
+			LOG("WARNING: Blocked invocation of WAIT during script evaluation!");
 		};
 	}
 
@@ -506,6 +510,7 @@ LuaScripts::LuaScripts()
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
 		};
+		m_GlobalState["WAIT"] = WAIT;
 	}
 }
 
