@@ -2,6 +2,7 @@
 
 #include "Main.h"
 
+#include "Components/CrossingChallenge.h"
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
 #include "Components/EffectDispatchTimer.h"
@@ -31,6 +32,7 @@ static struct
 	bool ClearEffectsShortcutEnabled = false;
 	bool ToggleModShortcutEnabled    = false;
 	bool ToggleModState              = false;
+	bool DisableMod                  = false;
 	bool PauseTimerShortcutEnabled   = false;
 	bool HaveLateHooksRan            = false;
 	bool AntiSoftlockShortcutEnabled = false;
@@ -204,6 +206,8 @@ static void Init()
 
 	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 
+	INIT_COMPONENT("CrossingChallenge", "Crossing Challenge", CrossingChallenge);
+
 #ifdef WITH_DEBUG_PANEL_SUPPORT
 	if (DoesFeatureFlagExist("enabledebugsocket"))
 		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
@@ -227,6 +231,15 @@ static void MainRun()
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
+	if (!g_Components.empty())
+	{
+		for (auto component : g_Components)
+			component->OnModPauseCleanup();
+
+		g_Components.clear();
+	}
+	ClearEntityPool();
+
 	Init();
 
 	bool isDisabled = false;
@@ -246,10 +259,8 @@ static void MainRun()
 			}
 		}
 
-		if (ms_Flags.ToggleModState)
+		if (ms_Flags.ToggleModState || ms_Flags.DisableMod)
 		{
-			ms_Flags.ToggleModState = false;
-
 			if (!isDisabled)
 			{
 				isDisabled = true;
@@ -273,7 +284,7 @@ static void MainRun()
 				for (auto component : g_Components)
 					component->OnModPauseCleanup();
 			}
-			else
+			else if (ms_Flags.ToggleModState)
 			{
 				isDisabled = false;
 
@@ -288,6 +299,9 @@ static void MainRun()
 				// Restart the main part of the mod completely
 				Init();
 			}
+
+			ms_Flags.ToggleModState = false;
+			ms_Flags.DisableMod     = false;
 		}
 
 		if (isDisabled)
@@ -323,8 +337,8 @@ static void MainRun()
 
 		for (auto component : g_Components)
 			component->OnRun();
+		}
 	}
-}
 
 namespace Main
 {
@@ -337,6 +351,8 @@ namespace Main
 
 	void OnCleanup()
 	{
+		for (auto component : g_Components)
+			component->OnModPauseCleanup();
 	}
 
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,
@@ -390,5 +406,10 @@ namespace Main
 
 		for (auto component : g_Components)
 			component->OnKeyInput(key, wasDownBefore, isUpNow, isCtrlPressed, isShiftPressed, isWithAlt);
+	}
+
+	void Stop()
+	{
+		ms_Flags.DisableMod = true;
 	}
 }

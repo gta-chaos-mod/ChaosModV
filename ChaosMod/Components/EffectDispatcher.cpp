@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Components/CrossingChallenge.h"
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectSound/EffectSoundManager.h"
