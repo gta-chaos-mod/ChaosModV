@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/Component.h"
+#include "Util/TimerMode.h"
 
 #include <cstdint>
 
@@ -13,4 +14,7 @@ class MetaModifiers : public Component
 	bool HideChaosUI                         = false;
 	bool DisableChaos                        = false;
 	bool FlipChaosUI                         = false;
+	TimerMode OverrideTimerMode              = TimerMode::None;
+	int TimeToDispatchEffect                 = 0;
+	int DistanceToDispatchEffect             = 0;
 };

@@ -7,6 +7,8 @@ enum class EffectConditionType
 {
 	None,
 	VotingEnabled, // Voting is enabled
+	UsingDistanceTimer,
+	UsingTimeTimer,
 };
 
 #define REGISTER_EFFECT_CONDITION(conditionType, condition)                           \

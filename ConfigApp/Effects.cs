@@ -414,6 +414,8 @@
             { "screen_hueshift", new EffectInfo("Hue Shift", EffectCategory.Screen, true) },
             { "player_copyforce", new EffectInfo("Use The Force", EffectCategory.Player, true, true) },
             { "player_tptowaypointopposite", new EffectInfo("Teleport To The Opposite Side Of Waypoint", EffectCategory.Player) },
+            { "meta_timer_distancebased", new EffectInfo("Distance Based Timer", EffectCategory.Meta, true) },
+            { "meta_timer_timebased", new EffectInfo("Time Based Timer", EffectCategory.Meta, true) },
         };
     }
 }
