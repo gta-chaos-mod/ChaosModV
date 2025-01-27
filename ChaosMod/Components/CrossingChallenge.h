@@ -3,8 +3,10 @@
 #include <list>
 
 #include "Component.h"
+#include "Components/EffectDispatcher.h"
 #include "Util/OptionsFile.h"
 #include "Util/Text.h"
+#include "Util/Events.h"
 
 #define SPLASH_TEXT_DUR_SECS 10
 
@@ -62,6 +64,8 @@ class CrossingChallenge : public Component
 	DWORD m_LastTick               = 0;
 	int m_EffectsCount             = 0;
 	bool m_TimerStarted            = 0;
+
+	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreDispatchEffect) m_OnPreDispatchEffectListener;
 
 	void ShowHint(const std::string &text);
 

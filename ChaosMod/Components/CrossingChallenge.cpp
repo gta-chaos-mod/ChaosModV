@@ -1,7 +1,6 @@
 #include <stdafx.h>
 
 #include "Components/CrossingChallenge.h"
-#include "Components/EffectDispatcher.h"
 #include "Components/EffectDispatchTimer.h"
 #include "Main.h"
 #include "Memory/WeaponPool.h"
@@ -263,16 +262,14 @@ CrossingChallenge::CrossingChallenge()
 	m_Enabled = g_OptionsManager.GetConfigValue<bool>({ "EnableCrossingChallenge" }, false);
 
 	if (!m_Enabled)
-	{
 		return;
-	}
 
 	m_StartEnabled = m_ConfigFile.ReadValue<bool>("StartEnabled", false);
 	if (m_StartEnabled)
 	{
 		m_StartLocation       = Vector3(m_ConfigFile.ReadValue<float>("StartLocationX", 0.f),
-		                                 m_ConfigFile.ReadValue<float>("StartLocationY", 0.f),
-		                                 m_ConfigFile.ReadValue<float>("StartLocationZ", 0.f));
+		                                m_ConfigFile.ReadValue<float>("StartLocationY", 0.f),
+		                                m_ConfigFile.ReadValue<float>("StartLocationZ", 0.f));
 		m_StartVehicleHash    = m_ConfigFile.ReadValue<Hash>("StartVehicle", 0);
 		m_StartHeading        = m_ConfigFile.ReadValue<float>("StartHeading", 0.f);
 		m_StartCameraHeading  = m_ConfigFile.ReadValue<float>("StartCameraHeading", 0.f);
@@ -295,10 +292,18 @@ CrossingChallenge::CrossingChallenge()
 	if (m_EndEnabled)
 	{
 		m_EndLocation = Vector3(m_ConfigFile.ReadValue<float>("EndLocationX", 0.f),
-		                         m_ConfigFile.ReadValue<float>("EndLocationY", 0.f),
-		                         m_ConfigFile.ReadValue<float>("EndLocationZ", 0.f));
+		                        m_ConfigFile.ReadValue<float>("EndLocationY", 0.f),
+		                        m_ConfigFile.ReadValue<float>("EndLocationZ", 0.f));
 		m_EndRadius   = m_ConfigFile.ReadValue<float>("EndRadius", 0.f);
 	}
+
+	if (ComponentExists<EffectDispatcher>())
+		m_OnPreDispatchEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreDispatchEffect,
+		                                       [&](const EffectIdentifier &id)
+		                                       {
+			                                       IncrementEffects();
+			                                       return true;
+		                                       });
 }
 
 static void DrawTriangle(Vector3 A, Vector3 B, Vector3 C, int r, int g, int b, int a)

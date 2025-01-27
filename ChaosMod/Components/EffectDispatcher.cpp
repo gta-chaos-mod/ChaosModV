@@ -526,8 +526,6 @@ void EffectDispatcher::DispatchEffect(const EffectIdentifier &effectId, Dispatch
                                       const std::string &suffix)
 {
 	EffectDispatchQueue.push({ .Id = effectId, .Suffix = suffix, .Flags = dispatchEffectFlags });
-	if (ComponentExists<CrossingChallenge>())
-		GetComponent<CrossingChallenge>()->IncrementEffects();
 }
 
 void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags, const std::string &suffix)
