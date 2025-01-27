@@ -10,8 +10,10 @@
 
 static void OnStop()
 {
-	if (ComponentExists<MetaModifiers>())
-		GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::None;
+	if (!ComponentExists<MetaModifiers>())
+		return;
+
+	GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::None;
 	GetComponent<MetaModifiers>()->DistanceToDispatchEffect = 0;
 	GetComponent<MetaModifiers>()->TimeToDispatchEffect = 0;
 	if (ComponentExists<EffectDispatchTimer>())
@@ -20,8 +22,10 @@ static void OnStop()
 
 static void OnTick_Time()
 {
-	if (ComponentExists<MetaModifiers>())
-		GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::Time;
+	if (!ComponentExists<MetaModifiers>())
+		return;
+
+	GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::Time;
 
 	int defaultDistance = ComponentExists<EffectDispatchTimer>()
 	                    ? GetComponent<EffectDispatchTimer>()->GetDefaultEffectSpawnDistance()
@@ -44,8 +48,10 @@ REGISTER_EFFECT(nullptr, OnStop, OnTick_Time,
 
 static void OnTick_Distance()
 {
-	if (ComponentExists<MetaModifiers>())
-		GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::Distance;
+	if (!ComponentExists<MetaModifiers>())
+		return;
+
+	GetComponent<MetaModifiers>()->OverrideTimerMode = TimerMode::Distance;
 	int defaultTime =
 	    ComponentExists<EffectDispatchTimer>() ? GetComponent<EffectDispatchTimer>()->GetDefaultEffectSpawnTime() : 0;
 	GetComponent<MetaModifiers>()->DistanceToDispatchEffect = defaultTime ? defaultTime * 10 : 300;
