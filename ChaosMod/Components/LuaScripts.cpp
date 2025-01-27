@@ -24,6 +24,7 @@
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
 #include "Util/HelpText.h"
+#include "Util/Peds.h"
 #include "Util/Player.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
@@ -318,6 +319,7 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	E("LoadModel", LoadModel),
 	E("GetAllPeds", GetAllPedsArray),
 	E("CreatePoolPed", CreatePoolPed),
+	E("SetCompanionRelationship", SetCompanionRelationship),
 	E("TeleportPlayer", [](float x, float y, float z, bool noOffset) { TeleportPlayer(x, y, z, noOffset); }),
 	E("GetAllVehicles", GetAllVehsArray),
 	E("CreatePoolVehicle", CreatePoolVehicle),
