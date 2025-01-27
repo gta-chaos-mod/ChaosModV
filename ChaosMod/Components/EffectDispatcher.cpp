@@ -409,7 +409,7 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 		std::vector<std::tuple<EffectIdentifier, EffectData *>> availableMetaEffects;
 
 		float totalWeight = 0.f;
-		for (auto effectData : GetFilteredEnabledEffects())
+		for (const auto &effectData : GetFilteredEnabledEffects())
 		{
 			if (effectData->IsMeta() && !effectData->IsUtility() && !effectData->IsHidden())
 			{
