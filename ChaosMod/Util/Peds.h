@@ -56,11 +56,11 @@ inline Ped CreateHostilePed(Hash modelHash, Hash weaponHash, Vector3 *location =
 	return ped;
 }
 
-inline void SetCompanionRelationship(Ped ped, const char* name)
+inline void SetCompanionRelationship(Ped ped, const std::string &name)
 {
 	static const Hash playerGroup = "PLAYER"_hash;
 	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP(name, &relationshipGroup);
+	ADD_RELATIONSHIP_GROUP(name.c_str(), &relationshipGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, playerGroup);
 	SET_RELATIONSHIP_BETWEEN_GROUPS(0, playerGroup, relationshipGroup);
 	for (Ped ped : GetAllPeds())
