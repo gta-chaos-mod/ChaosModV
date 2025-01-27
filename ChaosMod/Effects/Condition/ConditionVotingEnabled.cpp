@@ -5,7 +5,7 @@
 
 static bool OnCondition()
 {
-	return !ComponentExists<Voting>() || GetComponent<Voting>()->IsEnabled();
+	return ComponentExists<Voting>() && GetComponent<Voting>()->IsEnabled();
 }
 
 REGISTER_EFFECT_CONDITION(EffectConditionType::VotingEnabled, OnCondition);

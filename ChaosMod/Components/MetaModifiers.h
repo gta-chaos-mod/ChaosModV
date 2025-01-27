@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/Component.h"
+#include "Util/VotingMode.h"
 
 #include <cstdint>
 
@@ -13,4 +14,5 @@ class MetaModifiers : public Component
 	bool HideChaosUI                         = false;
 	bool DisableChaos                        = false;
 	bool FlipChaosUI                         = false;
+	VotingMode VotingModeOverride            = VotingMode::None;
 };

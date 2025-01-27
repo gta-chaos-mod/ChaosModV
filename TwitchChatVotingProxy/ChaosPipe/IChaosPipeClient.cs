@@ -11,6 +11,7 @@
         /// Event that gets invoked when the chaos mod creates a new vote
         /// </summary>
         event EventHandler<OnNewVoteArgs> OnNewVote;
+        event EventHandler<OnSetVotingModeArgs> OnSetVotingMode;
         /// <summary>
         /// Event that gets invoked when the chaos mod starts a no voting round
         /// </summary>

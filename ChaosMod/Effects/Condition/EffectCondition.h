@@ -7,6 +7,7 @@ enum class EffectConditionType
 {
 	None,
 	VotingEnabled, // Voting is enabled
+	ProportionalVotingEnabled
 };
 
 #define REGISTER_EFFECT_CONDITION(conditionType, condition)                           \
