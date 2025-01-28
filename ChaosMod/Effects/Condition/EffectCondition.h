@@ -3,6 +3,9 @@
 #include "Util/Logging.h"
 #include "Util/MacroConcat.h"
 
+#include <unordered_map>
+#include <functional>
+
 enum class EffectConditionType
 {
 	None,
@@ -10,10 +13,10 @@ enum class EffectConditionType
 	ProportionalVotingEnabled
 };
 
-#define REGISTER_EFFECT_CONDITION(conditionType, condition)                           \
-	namespace                                                                         \
-	{                                                                                 \
-		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition); \
+#define REGISTER_EFFECT_CONDITION(conditionType, condition, description)                           \
+	namespace                                                                                      \
+	{                                                                                              \
+		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition, description); \
 	}
 
 class EffectCondition;
@@ -24,10 +27,11 @@ class EffectCondition
 {
 	const EffectConditionType ConditionType = EffectConditionType::None;
 	const std::function<bool()> Condition;
+	const std::string Description;
 
   public:
-	EffectCondition(EffectConditionType conditionType, std::function<bool()> condition)
-	    : ConditionType(conditionType), Condition(condition)
+	EffectCondition(EffectConditionType conditionType, std::function<bool()> condition, std::string description)
+	    : ConditionType(conditionType), Condition(condition), Description(description)
 	{
 		if (conditionType == EffectConditionType::None)
 		{
@@ -48,6 +52,11 @@ class EffectCondition
 		}
 
 		g_EffectConditions[ConditionType] = this;
+	}
+
+	inline std::string GetDescription()
+	{
+		return Description;
 	}
 
 	~EffectCondition()
