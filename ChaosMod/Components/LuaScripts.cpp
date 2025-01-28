@@ -326,7 +326,7 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	E("CreateTempVehicleOnPlayerPos", CreateTempVehicleOnPlayerPos),
 	E("SetSurroundingPedsInVehicles", SetSurroundingPedsInVehicles),
 	E("ReplaceVehicle", ReplaceVehicle),
-	E("GetAllProps", GetAllProps),
+	E("GetAllProps", GetAllPropsArray),
 	E("CreatePoolProp", CreatePoolProp),
 	E("GetAllWeapons", Memory::GetAllWeapons),
 	E("GetAllPedModels", Memory::GetAllPedModels),
