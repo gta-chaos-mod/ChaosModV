@@ -87,7 +87,7 @@ namespace ConfigApp
         {
             get => new TreeMenuItemAction(OnConfigureClick);
         }
-
+        
         public TreeMenuItem(string text, TreeMenuItem? parent = null)
         {
             Text = text;
