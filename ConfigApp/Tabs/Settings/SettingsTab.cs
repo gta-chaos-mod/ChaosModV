@@ -9,8 +9,7 @@ namespace ConfigApp.Tabs.Settings
         private readonly Dictionary<string, Tab> m_Tabs = new()
         {
             { "General", new GeneralTab() },
-            { "Timers", new TimersTab() },
-            { "Distance", new DistanceTab() },
+            { "Modes", new ModesTab() },
             { "Shortcuts", new ShortcutsTab() },
             { "Colors", new ColorsTab() }
         };
