@@ -144,6 +144,8 @@ namespace ConfigApp.Tabs
                     Sha256 = sha256,
                 };
 
+                submissionItem.UpdateSearchTerms();
+
                 // Remote submissions are fetched before local ones so this submission only exists locally
                 if (isLocal)
                 {

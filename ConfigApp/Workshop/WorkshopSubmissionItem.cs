@@ -189,8 +189,6 @@ namespace ConfigApp.Workshop
             Id = id;
 
             m_FileHandler = new(this);
-
-            UpdateSearchTerms();
         }
     }
 }
