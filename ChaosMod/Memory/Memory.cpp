@@ -297,11 +297,11 @@ namespace Memory
 	{
 		static auto gameBuild = []() -> std::string
 		{
-			auto handle = Memory::FindPattern("33 DB 38 1D ? ? ? ? 89 5C 24 38");
+			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48");
 			if (!handle.IsValid())
 				return {};
 
-			std::string buildStr = handle.At(3).Into().Get<char>();
+			std::string buildStr = handle.At(1).Into().At(1).Get<char>();
 			if (buildStr.empty())
 				return {};
 
