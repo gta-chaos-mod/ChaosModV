@@ -34,6 +34,7 @@ namespace ConfigApp.Tabs.Settings
             grid.PushRowSpacedPair("Enable effects menu (allows you to choose effects manually, CTRL + ,)", m_EnableEffectsMenu = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
+            grid.PushRowEmptyPair();
             grid.PushRowSpacedPair("Enable black screen softlock prevention shortcut (CTRL + SHIFT + K)", m_EnableAntiSoftlockShortcut = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
