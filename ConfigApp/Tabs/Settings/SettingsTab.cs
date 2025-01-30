@@ -11,7 +11,8 @@ namespace ConfigApp.Tabs.Settings
             { "General", new GeneralTab() },
             { "Modes", new ModesTab() },
             { "Shortcuts", new ShortcutsTab() },
-            { "Colors", new ColorsTab() }
+            { "Colors", new ColorsTab() },
+            { "Sounds", new SoundsTab() }
         };
 
         protected override void InitContent()

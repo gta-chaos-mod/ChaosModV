@@ -176,7 +176,7 @@ static void Init()
 
 	INIT_COMPONENT("Workshop", "workshop", Workshop);
 
-	if (DoesFeatureFlagExist("uselegacyeffectsoundmanager"))
+	if (g_OptionsManager.GetConfigValue({ "EffectSoundUseMCI" }, OPTION_DEFAULT_EFFECT_SOUND_USE_MCI))
 	{
 		INIT_COMPONENT_BASE("EffectSoundManager", "effect sound system (legacy MCI)", EffectSoundManager,
 		                    EffectSoundMCI);
@@ -337,8 +337,8 @@ static void MainRun()
 
 		for (auto component : g_Components)
 			component->OnRun();
-		}
 	}
+}
 
 namespace Main
 {
