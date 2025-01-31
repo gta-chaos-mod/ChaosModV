@@ -13,10 +13,10 @@ enum class EffectConditionType
 	ProportionalVotingEnabled
 };
 
-#define REGISTER_EFFECT_CONDITION(conditionType, condition, description)                           \
-	namespace                                                                                      \
-	{                                                                                              \
-		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition, description); \
+#define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                           \
+	namespace                                                                                     \
+	{                                                                                             \
+		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition, failReason); \
 	}
 
 class EffectCondition;
@@ -27,11 +27,11 @@ class EffectCondition
 {
 	const EffectConditionType ConditionType = EffectConditionType::None;
 	const std::function<bool()> Condition;
-	const std::string Description;
+	const std::string FailReason;
 
   public:
-	EffectCondition(EffectConditionType conditionType, std::function<bool()> condition, std::string description)
-	    : ConditionType(conditionType), Condition(condition), Description(description)
+	EffectCondition(EffectConditionType conditionType, std::function<bool()> condition, std::string failReason)
+	    : ConditionType(conditionType), Condition(condition), FailReason(failReason)
 	{
 		if (conditionType == EffectConditionType::None)
 		{
@@ -54,9 +54,9 @@ class EffectCondition
 		g_EffectConditions[ConditionType] = this;
 	}
 
-	inline std::string GetDescription()
+	inline std::string GetFailReason()
 	{
-		return Description;
+		return FailReason;
 	}
 
 	~EffectCondition()

@@ -66,5 +66,5 @@ inline std::string GetFilterReason(EffectIdentifier id)
 	if (effectData.ConditionType == EffectConditionType::None)
 		return "";
 
-	return g_EffectConditions.at(effectData.ConditionType)->GetDescription();
+	return g_EffectConditions.at(effectData.ConditionType)->GetFailReason();
 }
