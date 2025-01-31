@@ -16,7 +16,7 @@ class MetaModifiers : public Component
 	bool DisableChaos                        = false;
 	bool FlipChaosUI                         = false;
 	VotingMode VotingModeOverride            = VotingMode::None;
-	TimerMode OverrideTimerMode              = TimerMode::None;
+	TimerMode TimerModeOverride              = TimerMode::None;
 	int TimeToDispatchEffect                 = 0;
 	int DistanceToDispatchEffect             = 0;
 };

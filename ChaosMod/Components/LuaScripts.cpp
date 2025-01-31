@@ -580,7 +580,8 @@ void LuaScripts::SetupGlobalState()
 		auto metaModifiersMetaTable = m_GlobalState.create_table_with(
 		    "EffectDurationModifier", P(EffectDurationModifier), "TimerSpeedModifier", P(TimerSpeedModifier),
 		    "AdditionalEffectsToDispatch", P(AdditionalEffectsToDispatch), "HideChaosUI", P(HideChaosUI),
-		    "DisableChaos", P(DisableChaos), "FlipChaosUI", P(FlipChaosUI));
+		    "DisableChaos", P(DisableChaos), "FlipChaosUI", P(FlipChaosUI), "TimeToDispatchEffect",
+		    P(TimeToDispatchEffect), "DistanceToDispatchEffect", P(DistanceToDispatchEffect));
 #undef P
 		metaModifiersMetaTable[sol::meta_function::new_index] = [] {};
 		metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;

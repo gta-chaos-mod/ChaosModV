@@ -228,7 +228,7 @@ void EffectDispatchTimer::OnRun()
 	if (!m_PauseTimer)
 	{
 		const TimerMode modeOverride =
-		    ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->OverrideTimerMode : TimerMode::None;
+		    ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerModeOverride : TimerMode::None;
 		
 		switch (modeOverride)
 		{
