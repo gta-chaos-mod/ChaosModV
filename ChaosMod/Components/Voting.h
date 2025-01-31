@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/Component.h"
+#include "Util/VotingMode.h"
 
 #include <cstdint>
 #include <memory>
@@ -53,17 +54,20 @@ class Voting : public Component
 	bool m_IsVotingRoundDone                           = true;
 	bool m_AlternatedVotingRound                       = false;
 
-	bool m_EnableChanceSystem                          = false;
+	VotingMode m_VotingMode                            = VotingMode::Majority;
 	bool m_EnableVotingChanceSystemRetainInitialChance = true;
 	bool m_EnableRandomEffectVoteable                  = true;
 
 	bool m_IsVotingRunning                             = false;
+
+	VotingMode m_VotingModeOverride                    = VotingMode::None;
 
   public:
 	Voting(const std::array<std::uint8_t, 3> &TextColor);
 
 	bool Init();
 	bool IsEnabled() const;
+	VotingMode GetVotingMode() const;
 	void HandleMsg(std::string_view message);
 
   private:

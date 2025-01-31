@@ -101,9 +101,16 @@ namespace ConfigApp
                 var fileName = Process.GetCurrentProcess().MainModule?.FileName;
                 if (fileName is not null)
                 {
-                    using var ico = Icon.ExtractAssociatedIcon(fileName);
-                    if (ico is not null)
-                        ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    try
+                    {
+                        using var ico = Icon.ExtractAssociatedIcon(fileName);
+                        if (ico is not null)
+                            ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    }
+                    catch (System.PlatformNotSupportedException)
+                    {
+
+                    }
                 }
             }
 

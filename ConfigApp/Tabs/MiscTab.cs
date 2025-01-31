@@ -125,6 +125,7 @@ namespace ConfigApp.Tabs
                     "Displacement"
                 }
             });
+            grid.PopRow();
 
             scrollViewer.Content = grid.Grid;
 

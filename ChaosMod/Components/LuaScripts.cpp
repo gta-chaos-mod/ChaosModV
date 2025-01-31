@@ -24,6 +24,7 @@
 #include "Util/EntityIterator.h"
 #include "Util/File.h"
 #include "Util/HelpText.h"
+#include "Util/Peds.h"
 #include "Util/Player.h"
 #include "Util/PoolSpawner.h"
 #include "Util/Script.h"
@@ -291,12 +292,11 @@ struct ExposableFunc
 		ExposeFunc(state);
 	}
 };
-static const std::vector<ExposableFunc> ms_Exposables {
+static const std::vector<ExposableFunc> ms_SafeExposables {
 	E("GetTickCount", GetTickCount64),
 	E("GET_HASH_KEY", GET_HASH_KEY),
 	E("print", [](const sol::this_environment &curEnv, const std::string &text)
 	  { LuaPrint(curEnv.env->get<sol::table>("EnvInfo")["ScriptName"], text); }),
-	E("WAIT", WAIT),
 	E("IsKeyPressed",
 	  [](unsigned char key)
 	  {
@@ -313,11 +313,17 @@ static const std::vector<ExposableFunc> ms_Exposables {
 
 	      return false;
 	  }),
+	E("GetChaosModVersion", []() { return MOD_VERSION; }),
+	E("GetGameBuild", Memory::GetGameBuild),
+};
+static const std::vector<ExposableFunc> ms_UnsafeExposables {
+	E("WAIT", WAIT),
 	E("APPLY_FORCE_TO_ENTITY", APPLY_FORCE_TO_ENTITY),
 	E("APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS", APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS),
 	E("LoadModel", LoadModel),
 	E("GetAllPeds", GetAllPedsArray),
 	E("CreatePoolPed", CreatePoolPed),
+	E("SetCompanionRelationship", SetCompanionRelationship),
 	E("TeleportPlayer", [](float x, float y, float z, bool noOffset) { TeleportPlayer(x, y, z, noOffset); }),
 	E("GetAllVehicles", GetAllVehsArray),
 	E("CreatePoolVehicle", CreatePoolVehicle),
@@ -325,7 +331,7 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	E("CreateTempVehicleOnPlayerPos", CreateTempVehicleOnPlayerPos),
 	E("SetSurroundingPedsInVehicles", SetSurroundingPedsInVehicles),
 	E("ReplaceVehicle", ReplaceVehicle),
-	E("GetAllProps", GetAllProps),
+	E("GetAllProps", GetAllPropsArray),
 	E("CreatePoolProp", CreatePoolProp),
 	E("GetAllWeapons", Memory::GetAllWeapons),
 	E("GetAllPedModels", Memory::GetAllPedModels),
@@ -359,8 +365,6 @@ static const std::vector<ExposableFunc> ms_Exposables {
 	      return LuaVector3(result.x, result.y, result.z);
 	  }),
 	E("IsWeaponShotgun", Util::IsWeaponShotgun),
-	E("GetChaosModVersion", []() { return MOD_VERSION; }),
-	E("GetGameBuild", Memory::GetGameBuild),
 	E("AddCustomLabel", Hooks::AddCustomLabel),
 	E("DisplayHelpText", DisplayHelpText),
 	E("GetRandomInt",
@@ -466,6 +470,9 @@ LuaScripts::LuaScripts()
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
 		};
+
+		for (const auto &exposable : ms_UnsafeExposables)
+			exposable(m_GlobalState);
 	}
 	else
 	{
@@ -475,6 +482,12 @@ LuaScripts::LuaScripts()
 			LOG("WARNING: Blocked invocation of native 0x" << std::uppercase << std::hex << hash << std::setfill(' ')
 			                                               << " during script evaluation!");
 		};
+
+		for (const auto &exposable : ms_UnsafeExposables)
+			m_GlobalState[exposable.Name] = [&]()
+			{
+				LOG("WARNING: Blocked invocation of mod function " << exposable.Name << " during script evaluation!");
+			};
 	}
 
 	for (auto dir : ms_ScriptDirs)
@@ -506,6 +519,9 @@ LuaScripts::LuaScripts()
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
 		};
+
+		for (const auto &exposable : ms_UnsafeExposables)
+			exposable(m_GlobalState);
 	}
 }
 
@@ -596,7 +612,7 @@ void LuaScripts::SetupGlobalState()
 	m_GlobalState.new_enum("EOverrideShaderType", "LensDistortion", OverrideShaderType::LensDistortion, "Snow",
 	                       OverrideShaderType::Snow);
 
-	for (const auto &exposable : ms_Exposables)
+	for (const auto &exposable : ms_SafeExposables)
 		exposable(m_GlobalState);
 }
 

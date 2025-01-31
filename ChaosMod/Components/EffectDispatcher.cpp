@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Components/CrossingChallenge.h"
 #include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectSound/EffectSoundManager.h"
@@ -409,13 +410,13 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 		std::vector<std::tuple<EffectIdentifier, EffectData *>> availableMetaEffects;
 
 		float totalWeight = 0.f;
-		for (auto &[effectId, effectData] : g_EnabledEffects)
+		for (const auto &effectData : GetFilteredEnabledEffects())
 		{
-			if (effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
+			if (effectData->IsMeta() && !effectData->IsUtility() && !effectData->IsHidden())
 			{
-				totalWeight += effectData.GetEffectWeight();
+				totalWeight += effectData->GetEffectWeight();
 
-				availableMetaEffects.push_back(std::make_tuple(effectId, &effectData));
+				availableMetaEffects.push_back(std::make_tuple(effectData->Id, effectData));
 			}
 		}
 
