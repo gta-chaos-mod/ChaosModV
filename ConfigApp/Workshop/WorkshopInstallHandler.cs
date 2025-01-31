@@ -9,7 +9,7 @@ using System.Windows.Input;
 using Newtonsoft.Json.Linq;
 using ZstdSharp;
 
-namespace ConfigApp
+namespace ConfigApp.Workshop
 {
     public class WorkshopInstallHandler : ICommand
     {
@@ -173,7 +173,6 @@ namespace ConfigApp
 
                 var fileStream = new MemoryStream(fileContent);
                 if (isFileCompressed)
-                {
                     try
                     {
                         var decompressor = new Decompressor();
@@ -185,7 +184,6 @@ namespace ConfigApp
                         // File content is not (zstd) compressed even though compressed = yes?
                         // Skip decompression
                     }
-                }
 
                 try
                 {

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace ConfigApp
 {
@@ -8,15 +10,39 @@ namespace ConfigApp
         Install
     }
 
+    public enum WorkshopSubmissionFileType
+    {
+        Script,
+        Sound,
+        Text,
+        Undefined
+    }
+
     public class WorkshopSubmissionFile : IComparable<WorkshopSubmissionFile>
     {
         public string Name { get; private set; }
         public bool IsEnabled { get; private set; }
+        public WorkshopSubmissionFileType Type { get; private set; }
         public EffectData? EffectData { get; private set; }
 
         public WorkshopSubmissionFile(string name, bool enabled, EffectData? effectData = null)
         {
             Name = name;
+            switch (name[^4..])
+            {
+            case ".lua":
+                Type = WorkshopSubmissionFileType.Script;
+                break;
+            case ".mp3":
+                Type = WorkshopSubmissionFileType.Sound;
+                break;
+            case ".txt":
+                Type = WorkshopSubmissionFileType.Text;
+                break;
+            default:
+                Type = WorkshopSubmissionFileType.Undefined;
+                break;
+            }
             IsEnabled = enabled;
             EffectData = effectData;
         }
@@ -50,7 +76,7 @@ namespace ConfigApp
 
         private readonly WorkshopEditDialogMode m_DialogMode;
 
-        public WorkshopEditDialog(List<WorkshopSubmissionFile> files, WorkshopEditDialogMode dialogMode)
+        public WorkshopEditDialog(List<WorkshopSubmissionFile> files, WorkshopEditDialogMode dialogMode, string? path = null, List<string>? highlightedFiles = null)
         {
             InitializeComponent();
 
@@ -66,17 +92,17 @@ namespace ConfigApp
                 button_save_or_no.Content = "No";
             }
 
-            TreeMenuItem generateItem(string text, TreeMenuItem? parent = null)
+            TreeMenuItem generateItem(string text, TreeMenuItem? parent = null, bool showCheckbox = true)
             {
                 var item = new TreeMenuItem(text, parent);
-                if (m_DialogMode == WorkshopEditDialogMode.Install)
+                if (m_DialogMode == WorkshopEditDialogMode.Install || !showCheckbox)
                     item.CheckBoxVisiblity = Visibility.Collapsed;
                 return item;
             }
 
             var luaParentItem = generateItem("Scripts");
             var mp3ParentItem = generateItem("Sounds");
-            var txtParentItem = generateItem("Text Files");
+            var txtParentItem = generateItem("Text Files", showCheckbox: false);
 
             var parentFolderItems = new Dictionary<string, TreeMenuItem>();
 
@@ -91,19 +117,15 @@ namespace ConfigApp
                 var pathFragments = (pathName.StartsWith("sounds\\") ? pathName[7..] : pathName).Split('\\');
 
                 TreeMenuItem targetItem;
-                bool isConfigurable = false;
-                switch (pathName[^4..])
+                switch (file.Type)
                 {
-                case ".lua":
+                case WorkshopSubmissionFileType.Script:
                     targetItem = luaParentItem;
-                    isConfigurable = true;
                     break;
-                case ".mp3":
+                case WorkshopSubmissionFileType.Sound:
                     targetItem = mp3ParentItem;
                     break;
-                case ".txt":
-                    if (m_DialogMode != WorkshopEditDialogMode.Install)
-                        continue;
+                case WorkshopSubmissionFileType.Text:
                     targetItem = txtParentItem;
                     break;
                 default:
@@ -137,23 +159,43 @@ namespace ConfigApp
                     }
                 }
 
-                var menuItem = generateItem(pathFragments.Last(), targetItem);
+                var menuItem = generateItem(pathFragments.Last(), targetItem, file.Type != WorkshopSubmissionFileType.Text);
                 var fileState = new WorkshopSubmissionFileState(menuItem, pathName, file.EffectData);
-                menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit || !isConfigurable;
+                menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit;
                 menuItem.OnConfigureClick = () =>
                 {
-                    var effectConfig = new EffectConfig(null, fileState.EffectData, new Effects.EffectInfo()
+                    if (file.Type == WorkshopSubmissionFileType.Script)
                     {
-                        Name = pathName,
-                        IsTimed = true
-                    });
-                    effectConfig.ShowDialog();
+                        var effectConfig = new EffectConfig(null, fileState.EffectData, new Effects.EffectInfo()
+                        {
+                            Name = pathName,
+                            IsTimed = true
+                        });
+                        effectConfig.ShowDialog();
 
-                    if (!effectConfig.IsSaved)
-                        return;
+                        if (!effectConfig.IsSaved)
+                            return;
 
-                    fileState.EffectData = effectConfig.GetNewData();
+                        fileState.EffectData = effectConfig.GetNewData();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            System.Diagnostics.Process.Start(new ProcessStartInfo(path is not null ? path.Replace('/', '\\') + pathName : pathName) { UseShellExecute = true });
+                        }
+                        catch (Win32Exception)
+                        {
+                            MessageBox.Show("Error: File not found", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
                 };
+
+                if (highlightedFiles?.Contains(pathName) ?? false)
+                {
+                    menuItem.IsColored = true;
+                }
+
                 targetItem.AddChild(menuItem);
                 FileStates.Add(fileState);
 
