@@ -30,7 +30,7 @@ class VotingMode
 		return value != a.value;
 	}
 
-	std::string ToString()
+	std::string_view ToString() const
 	{
 		switch (value)
 		{
@@ -43,6 +43,8 @@ class VotingMode
 		case VotingMode::Antimajority:
 			return "ANTIMAJORITY";
 		}
+
+		return "UNKNOWN";
 	}
 
   private:

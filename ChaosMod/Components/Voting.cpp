@@ -44,14 +44,16 @@ bool Voting::Init()
 		CloseHandle(mutex);
 	}
 
-	m_SecsBeforeVoting   = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
-	                                                       OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	m_SecsBeforeVoting = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
+	                                                     OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_OverlayMode        = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
-	                                                       static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_OverlayMode      = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
+	                                                     static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_VotingMode = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
-	                                                       OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING) ? VotingMode::Percentage : VotingMode::Majority;
+	m_VotingMode       = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
+	                                                     OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING)
+	                       ? VotingMode::Percentage
+	                       : VotingMode::Majority;
 	m_EnableVotingChanceSystemRetainInitialChance =
 	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
 	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
@@ -291,11 +293,9 @@ void Voting::OnRun()
 			m_VotingModeOverride = newMode;
 
 			if (newMode == VotingMode::None)
-			{
 				newMode = m_VotingMode;
-			}
 
-			SendToPipe(std::string("votingmode"), { newMode.ToString() });
+			SendToPipe("votingmode", { std::string(newMode.ToString()) });
 		}
 	}
 
