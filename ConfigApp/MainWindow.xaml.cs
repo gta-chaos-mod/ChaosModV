@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ConfigApp.Tabs;
+using ConfigApp.Tabs.Settings;
 using ConfigApp.Tabs.Voting;
 using static ConfigApp.Effects;
 
@@ -15,7 +16,7 @@ namespace ConfigApp
         private readonly Dictionary<string, Tab> m_Tabs = new()
         {
             //{ "Meta", new MetaTab() },
-            { "Misc", new MiscTab() },
+            { "Settings", new SettingsTab() },
             { "Voting", new VotingTab() },
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }

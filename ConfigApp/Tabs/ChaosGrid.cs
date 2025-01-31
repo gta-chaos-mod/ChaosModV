@@ -115,6 +115,13 @@ namespace ConfigApp.Tabs
             m_CurrentColumn++;
         }
 
+        public void PushRowEmptyPair()
+        {
+            CheckColumnValidity();
+
+            m_CurrentColumn += 3;
+        }
+
         public void PushRowElement(UIElement element)
         {
             PushRow(null, element);
