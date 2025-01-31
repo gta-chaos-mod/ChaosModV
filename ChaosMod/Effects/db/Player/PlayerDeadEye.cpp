@@ -127,7 +127,7 @@ static void OnTick()
 			if (DOES_ENTITY_EXIST(info.pedHandle))
 			{
 				Vector3 destOffset = GET_PED_BONE_COORDS(info.pedHandle, info.boneIdx, 0, 0, 0);
-				float boxSize      = 0.1;
+				float boxSize      = 0.1f;
 				DRAW_BOX(destOffset.x - boxSize, destOffset.y - boxSize, destOffset.z - boxSize, destOffset.x + boxSize,
 				         destOffset.y + boxSize, destOffset.z + boxSize, 255, 0, 0, 100);
 			}

@@ -28,7 +28,7 @@ static void OnTick()
 		if (!IS_ENTITY_PLAYING_ANIM(ped, "missfbi3_sniping", "dance_m_default", 3) && !IS_PED_A_PLAYER(ped)
 		    && (!IS_ENTITY_A_MISSION_ENTITY(ped) || rel == 4 || rel == 5))
 		{
-			TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
+			TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1, 1, 0.f, false, false, false);
 			SET_PED_KEEP_TASK(ped, true);
 			SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 		}

@@ -11,7 +11,7 @@
 CHAOS_VAR std::list<Ped> cougarEnemies;
 CHAOS_VAR int spawnTimer = -1;
 CHAOS_VAR Hash relationshipGroup;
-CHAOS_VAR int maxCougarsToSpawn = 5;
+CHAOS_VAR size_t maxCougarsToSpawn = 5;
 
 static void OnStop()
 {
@@ -29,11 +29,11 @@ static void OnTick()
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
 		WAIT(0);
 
-	Ped playerPed           = PLAYER_PED_ID();
-	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
-	int current_time        = GET_GAME_TIMER();
+	Ped playerPed       = PLAYER_PED_ID();
+	Vector3 playerPos   = GET_ENTITY_COORDS(playerPed, false);
+	int current_time    = GET_GAME_TIMER();
 
-	static DWORD64 lastTick = GET_GAME_TIMER();
+	static int lastTick = GET_GAME_TIMER();
 
 	if (lastTick < current_time - 100)
 	{
@@ -72,7 +72,7 @@ static void OnTick()
 	if (cougarEnemies.size() < maxCougarsToSpawn && current_time > spawnTimer + 2000)
 	{
 		spawnTimer       = current_time;
-		Vector3 spawnPos = GetCoordAround(playerPed, g_Random.GetRandomInt(0, 360), 10, 0, true);
+		Vector3 spawnPos = GetCoordAround(playerPed, g_Random.GetRandomFloat(0.f, 360.f), 10.f, 0.f, true);
 		USE_PARTICLE_FX_ASSET("core");
 		START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", spawnPos.x, spawnPos.y, spawnPos.z, 0, 0, 0, 2, true,
 		                                      true, true);

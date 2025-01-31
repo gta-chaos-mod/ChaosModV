@@ -37,7 +37,7 @@ static void OnTick()
 			SET_PED_CAN_RAGDOLL(ped, false);
 			SET_ENTITY_COLLISION(ped, false, true);
 			SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
-			float offset    = (360 / pedCount) * i;
+			float offset    = (360.f / pedCount) * i;
 			OrbitPed orbPed = { ped, offset };
 			orbitingPeds.push_back(orbPed);
 			if (--count == 0)

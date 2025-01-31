@@ -4,8 +4,8 @@
 #include "Components/EffectDispatchTimer.h"
 #include "Main.h"
 #include "Memory/WeaponPool.h"
-#include "Util/ScriptText.h"
 #include "Util/OptionsManager.h"
+#include "Util/ScriptText.h"
 
 void CrossingChallenge::SetStartParams()
 {
@@ -14,8 +14,8 @@ void CrossingChallenge::SetStartParams()
 	if (m_StartVehicleHash)
 	{
 		LoadModel(m_StartVehicleHash);
-		Vehicle vehicle = CREATE_VEHICLE(m_StartVehicleHash, m_StartLocation.x, m_StartLocation.y,
-		                                 m_StartLocation.z, m_StartHeading, true, false, false);
+		Vehicle vehicle = CREATE_VEHICLE(m_StartVehicleHash, m_StartLocation.x, m_StartLocation.y, m_StartLocation.z,
+		                                 m_StartHeading, true, false, false);
 		SET_PED_INTO_VEHICLE(player, vehicle, -1);
 	}
 
@@ -59,8 +59,8 @@ void CrossingChallenge::ControlRespawn()
 		SET_TIME_SCALE(1.f);
 		ANIMPOSTFX_STOP_ALL();
 		NETWORK_REQUEST_CONTROL_OF_ENTITY(player);
-		NETWORK_RESURRECT_LOCAL_PLAYER(m_StartLocation.x, m_StartLocation.y, m_StartLocation.z, m_StartHeading,
-		                               false, false, false);
+		NETWORK_RESURRECT_LOCAL_PLAYER(m_StartLocation.x, m_StartLocation.y, m_StartLocation.z, m_StartHeading, false,
+		                               false, false);
 		WAIT(2000);
 		if (vehicle)
 		{
@@ -86,7 +86,7 @@ void CrossingChallenge::ControlRespawn()
 		DISPLAY_HUD(true);
 		FREEZE_ENTITY_POSITION(player, false);
 
-		m_TickCount   = 0;
+		m_TickCount    = 0;
 		m_EffectsCount = 0;
 		m_TimerStarted = false;
 	}
@@ -94,7 +94,7 @@ void CrossingChallenge::ControlRespawn()
 
 static bool LoadScaleform(int &handle, bool &loading, const std::string &name)
 {
-	if (!handle || !loading && !HAS_SCALEFORM_MOVIE_LOADED(handle))
+	if (!handle || (!loading && !HAS_SCALEFORM_MOVIE_LOADED(handle)))
 	{
 		handle  = REQUEST_SCALEFORM_MOVIE(name.c_str());
 		loading = true;
@@ -200,12 +200,12 @@ void CrossingChallenge::SaveConfig()
 	m_ConfigFile.SetValue<float>("StartLocationX", m_StartLocation.x);
 	m_ConfigFile.SetValue<float>("StartLocationY", m_StartLocation.y);
 	m_ConfigFile.SetValue<float>("StartLocationZ", m_StartLocation.z);
-	m_ConfigFile.SetValue<float>("StartVehicle", m_StartVehicleHash);
-	m_ConfigFile.SetValue<Hash>("StartHeading", m_StartHeading);
+	m_ConfigFile.SetValue<Hash>("StartVehicle", m_StartVehicleHash);
+	m_ConfigFile.SetValue<float>("StartHeading", m_StartHeading);
 	m_ConfigFile.SetValue<float>("StartCameraHeading", m_StartCameraHeading);
-	m_ConfigFile.SetValue<float>("StartWeather1", m_StartWeatherType1);
+	m_ConfigFile.SetValue<Hash>("StartWeather1", m_StartWeatherType1);
 	m_ConfigFile.SetValue<Hash>("StartWeather2", m_StartWeatherType2);
-	m_ConfigFile.SetValue<Hash>("StartWeatherPercent", m_StartWeatherPercent);
+	m_ConfigFile.SetValue<float>("StartWeatherPercent", m_StartWeatherPercent);
 	m_ConfigFile.SetValue<int>("StartHours", m_ClockHours);
 	m_ConfigFile.SetValue<int>("StartMinutes", m_ClockMinutes);
 	m_ConfigFile.SetValue<int>("StartSeconds", m_ClockSeconds);
@@ -224,7 +224,7 @@ void CrossingChallenge::SaveConfig()
 
 void CrossingChallenge::CaptureStart()
 {
-	Ped player       = PLAYER_PED_ID();
+	Ped player      = PLAYER_PED_ID();
 
 	m_StartEnabled  = true;
 	m_StartLocation = GET_ENTITY_COORDS(player, false);
@@ -413,7 +413,7 @@ void CrossingChallenge::ShowHelpButtons()
 	DRAW_SCALEFORM_MOVIE_FULLSCREEN(m_ButtonsScaleformHandle, 255, 255, 255, 255, 0);
 }
 
-static void HandleBlip(Blip& blip, Vector3 coords, int color, const std::string &name)
+static void HandleBlip(Blip &blip, Vector3 coords, int color, const std::string &name)
 {
 	if (!blip || !DOES_BLIP_EXIST(blip))
 	{
@@ -524,7 +524,7 @@ void CrossingChallenge::OnRun()
 			GetComponent<EffectDispatchTimer>()->SetTimerEnabled(true);
 		}
 
-		m_TickCount   = 0;
+		m_TickCount    = 0;
 		m_EffectsCount = 0;
 		m_TimerStarted = false;
 
@@ -553,7 +553,7 @@ void CrossingChallenge::OnRun()
 			ControlPassed();
 
 		int deltaTicks = GetTickCount64() - m_LastTick;
-		m_LastTick   = GetTickCount64();
+		m_LastTick     = GetTickCount64();
 		if (m_TimerStarted && deltaTicks < 1000)
 			m_TickCount += deltaTicks;
 

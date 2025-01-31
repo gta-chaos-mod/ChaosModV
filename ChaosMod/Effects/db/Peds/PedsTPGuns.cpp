@@ -79,7 +79,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, 
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Portal Guns",
 		.Id = "peds_portal_gun",

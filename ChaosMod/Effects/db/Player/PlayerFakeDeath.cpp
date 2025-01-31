@@ -93,7 +93,7 @@ static void OnStart()
 							WAIT(0);
 						Hash pistolHash = "WEAPON_PISTOL"_hash;
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
-						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150.f, 1, 0.f, false, false,
+						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150, 1, 0.f, false, false,
 						               false);
 						nextModeTime = 750;
 						break;
@@ -104,14 +104,14 @@ static void OnStart()
 					// Set the fake name accordingly
 					CurrentEffect::OverrideEffectNameFromId("playerveh_explode");
 
-					Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
+					Vehicle veh         = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-					int lastTimestamp = GET_GAME_TIMER();
+					int lastTimestamp   = GET_GAME_TIMER();
 
-					int seats         = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+					int seats           = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
-					int detonateTimer = 5000;
-					int beepTimer     = 5000;
+					float detonateTimer = 5000.f;
+					float beepTimer     = 5000.f;
 					while (DOES_ENTITY_EXIST(veh))
 					{
 						WAIT(0);
@@ -138,7 +138,7 @@ static void OnStart()
 							}
 						}
 
-						if (detonateTimer <= 0)
+						if (detonateTimer <= 0.f)
 						{
 							for (int i = 0; i < 6; i++)
 								SET_VEHICLE_DOOR_BROKEN(veh, i, false);

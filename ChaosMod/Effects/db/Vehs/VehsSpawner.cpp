@@ -322,7 +322,7 @@ static void OnStartWizardBroom()
 	SET_ENTITY_VISIBLE(veh, false, false);
 
 	Object broom = CREATE_OBJECT(broomHash, playerPos.x, playerPos.y + 2, playerPos.z, true, false, false);
-	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, 0.3, -80.0, 0, 0, true, false, false, false, 0, true);
+	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, .3f, -80.f, 0, 0, true, false, false, false, 0, true);
 }
 
 // clang-format off

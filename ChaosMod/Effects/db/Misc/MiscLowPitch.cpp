@@ -5,11 +5,11 @@
 
 // Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
-CHAOS_VAR int ms_TargetPitch;
+CHAOS_VAR float ms_TargetPitch;
 
 static void OnStart()
 {
-	ms_TargetPitch = g_Random.GetRandomInt(-900, -300);
+	ms_TargetPitch = g_Random.GetRandomFloat(-900.f, -300.f);
 }
 
 static void OnStop()

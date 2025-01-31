@@ -53,8 +53,8 @@ static void OnStop()
 			TASK_LOOK_AT_ENTITY(lamarPed, playerPed, 1000, 2048, 3);
 			WAIT(1000);
 
-			TASK_PLAY_ANIM(lamarPed, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000.f, 1,
-			               0.f, false, false, false);
+			TASK_PLAY_ANIM(lamarPed, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000, 1, 0.f,
+			               false, false, false);
 			WAIT(2000);
 			PLAY_PED_AMBIENT_SPEECH_NATIVE(playerPed, "GENERIC_SHOCKED_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 

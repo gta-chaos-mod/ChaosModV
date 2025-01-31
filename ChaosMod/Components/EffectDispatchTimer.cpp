@@ -16,7 +16,7 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue(
 	    { "EnableDistanceBasedEffectDispatch" }, OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
 	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	    g_OptionsManager.GetConfigValue<float>({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
 	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 }
@@ -128,16 +128,17 @@ std::uint64_t EffectDispatchTimer::GetTimer() const
 
 void EffectDispatchTimer::ResetTimer()
 {
-	m_TimerPercentage = 0.f;
-	m_Timer           = GetTickCount64();
+	m_TimerPercentage                  = 0.f;
+	m_Timer                            = GetTickCount64();
 	m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 }
 
 int EffectDispatchTimer::GetRemainingTimerTime() const
 {
-	return std::ceil(m_EffectSpawnTime
-	                 / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
-	                 * (1.f - m_TimerPercentage));
+	return static_cast<int>(
+	    std::ceil(m_EffectSpawnTime
+	              / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
+	              * (1.f - m_TimerPercentage)));
 }
 
 bool EffectDispatchTimer::ShouldDispatchEffectNow() const

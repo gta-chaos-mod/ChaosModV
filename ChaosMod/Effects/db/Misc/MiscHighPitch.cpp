@@ -3,11 +3,11 @@
 #include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 
-CHAOS_VAR int ms_TargetPitch;
+CHAOS_VAR float ms_TargetPitch;
 
 static void OnStart()
 {
-	ms_TargetPitch = g_Random.GetRandomInt(750, 2000);
+	ms_TargetPitch = g_Random.GetRandomFloat(750.f, 2000.f);
 }
 
 static void OnStop()

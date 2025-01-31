@@ -45,12 +45,12 @@ static void OnStart()
 			}
 		}
 
-		Vehicle targetVeh     = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
+		Vehicle targetVeh        = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 
-		Hash targetVehModel   = GET_ENTITY_MODEL(targetVeh);
-		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
+		Hash targetVehModel      = GET_ENTITY_MODEL(targetVeh);
+		size_t targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
-		for (int i = 0; i < teleportPeds.size(); i++)
+		for (size_t i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= targetVehMaxSeats)
 				break;

@@ -39,7 +39,7 @@ inline Vehicle CreateTempVehicleOnPlayerPos(Hash model, float heading)
 	return veh;
 }
 
-inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
+inline void SetSurroundingPedsInVehicles(Hash vehicleHash, float maxDistance)
 {
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
@@ -97,8 +97,8 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	do
 	{
 		newVehModel = vehicleModels[g_RandomNoDeterm.GetRandomInt(0, vehicleModels.size() - 1)];
-	} while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel) < seatPeds.size() || IS_THIS_MODEL_A_TRAIN(newVehModel)
-	         || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
+	} while (static_cast<size_t>(GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel)) < seatPeds.size()
+	         || IS_THIS_MODEL_A_TRAIN(newVehModel) || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
 
 	if (!newVehModel)
 		return oldHandle;
@@ -108,7 +108,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	Vehicle newVehicle;
 	if (addToPool)
 	{
-		for (int i = 0; i < seatPeds.size(); i++)
+		for (size_t i = 0; i < seatPeds.size(); i++)
 		{
 			Ped seatPed = seatPeds[i].Ped;
 			SET_ENTITY_COORDS(seatPed, coords.x, coords.y, coords.z + 5.f, 0, 0, 0, 0);
@@ -127,7 +127,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
 	}
 
-	for (int i = 0; i < seatPeds.size(); i++)
+	for (size_t i = 0; i < seatPeds.size(); i++)
 	{
 		SeatPed seatPed = seatPeds.at(i);
 		int seatIndex   = seatPed.SeatIndex;

@@ -44,8 +44,10 @@ static void OnTick()
 
 	SET_USER_RADIO_CONTROL_ENABLED(false);
 
-	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0,
-	          std::lerp(0, 255, std::min(CurrentEffect::GetEffectCompletionPercentage(), 1.f)), false);
+	DRAW_RECT(
+	    .5f, .5f, 1.f, 1.f, 0, 0, 0,
+	    static_cast<int>(std::floor(std::lerp(0, 255, std::min(CurrentEffect::GetEffectCompletionPercentage(), 1.f)))),
+	    false);
 }
 
 // clang-format off

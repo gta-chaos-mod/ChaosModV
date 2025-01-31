@@ -10,10 +10,10 @@ enum class EffectConditionType
 	ProportionalVotingEnabled
 };
 
-#define REGISTER_EFFECT_CONDITION(conditionType, condition)                           \
-	namespace                                                                         \
-	{                                                                                 \
-		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition); \
+#define REGISTER_EFFECT_CONDITION(conditionType, condition)                                \
+	namespace                                                                              \
+	{                                                                                      \
+		EffectCondition CHAOSCONCAT(_effectCondition, __LINE__)(conditionType, condition); \
 	}
 
 class EffectCondition;

@@ -2,7 +2,7 @@
 
 namespace Hooks
 {
-	void SetAudioPitch(int pitch);
-	int GetTargetAudioPitch();
+	void SetAudioPitch(float pitch);
+	float GetTargetAudioPitch();
 	void ResetAudioPitch();
 }

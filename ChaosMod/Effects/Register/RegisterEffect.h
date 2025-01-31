@@ -9,10 +9,10 @@
 
 #define CHAOS_VAR static thread_local
 
-#define REGISTER_EFFECT(start, stop, tick, ...)                                   \
-	namespace                                                                     \
-	{                                                                             \
-		RegisterEffect CONCAT(_effect, __LINE__)(start, stop, tick, __VA_ARGS__); \
+#define REGISTER_EFFECT(start, stop, tick, ...)                                        \
+	namespace                                                                          \
+	{                                                                                  \
+		RegisterEffect CHAOSCONCAT(_effect, __LINE__)(start, stop, tick, __VA_ARGS__); \
 	}
 
 class RegisterEffect

@@ -45,9 +45,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
 	// times in a row
 	if (effectData.GroupType.empty())
-	{
 		effectData.Weight = effectData.WeightMult;
-	}
 	else
 	{
 		for (auto &effectData : filteredEffects)
@@ -132,7 +130,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			if (!entry.Suffix.empty())
 				effectName << " " << entry.Suffix;
 
-			int effectDuration = 0;
+			float effectDuration = 0;
 			switch (effectData.TimedType)
 			{
 			case EffectTimedType::NotTimed:
@@ -199,15 +197,15 @@ static void _OnRunEffects(LPVOID data)
 	while (true)
 	{
 		auto curTime = GetTickCount64();
-		int deltaTime =
+		float deltaTime =
 		    !ComponentExists<EffectDispatchTimer>()
 		        ? 0
 		        : (curTime - lastTime)
 		              * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier
 		                                                  : 1.f);
 		// The game was paused
-		if (deltaTime > 1000)
-			deltaTime = 0;
+		if (deltaTime > 1000.f)
+			deltaTime = 0.f;
 
 		lastTime = curTime;
 
@@ -279,7 +277,7 @@ void EffectDispatcher::OnRun()
 	DrawEffectTexts();
 }
 
-void EffectDispatcher::UpdateEffects(int deltaTime)
+void EffectDispatcher::UpdateEffects(float deltaTime)
 {
 	if (m_ClearEffectsState != ClearEffectsState::None)
 	{
@@ -396,7 +394,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 	}
 }
 
-void EffectDispatcher::UpdateMetaEffects(int deltaTime)
+void EffectDispatcher::UpdateMetaEffects(float deltaTime)
 {
 	if (!SharedState.MetaEffectsEnabled)
 		return;
