@@ -46,6 +46,7 @@ namespace ConfigApp.Workshop
             try
             {
                 m_FileHandler.SetSettings(editWindow.FileStates);
+                m_SubmissionItem.UpdateSearchTerms();
             }
             catch (Exception)
             {
