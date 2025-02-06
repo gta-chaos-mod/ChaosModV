@@ -9,6 +9,7 @@ class IDXGISwapChain;
 
 namespace Main
 {
+	void OnInit();
 	void OnRun();
 	void OnCleanup();
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,

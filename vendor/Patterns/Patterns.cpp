@@ -7,9 +7,9 @@
 
 #include "Patterns.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <algorithm>
 #include <windows.h>
+
+#include <algorithm>
 
 #ifdef PATTERNS_USE_HINTS
 #include <map>

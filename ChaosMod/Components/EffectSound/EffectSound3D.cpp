@@ -43,7 +43,7 @@ void EffectSound3D::FreeSounds()
 void EffectSound3D::OnModPauseCleanup()
 {
 	m_IsStopping = true;
-	m_PauseSoundsThread.detach();
+	m_PauseSoundsThread.join();
 
 	FreeSounds();
 

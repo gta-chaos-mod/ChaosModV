@@ -38,6 +38,7 @@ static struct
 	bool AntiSoftlockShortcutEnabled = false;
 	bool RunAntiSoftlock             = false;
 } ms_Flags;
+static bool ms_ModDisabled = false;
 
 static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
 {
@@ -215,7 +216,7 @@ static void Init()
 
 #undef INIT_COMPONENT
 
-	LOG("Completed init");
+	LOG("Completed init!");
 }
 
 static void MainRun()
@@ -231,18 +232,14 @@ static void MainRun()
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
-	if (!g_Components.empty())
-	{
-		for (auto component : g_Components)
-			component->OnModPauseCleanup();
+	for (auto &component : g_Components)
+		component->OnModPauseCleanup();
 
-		g_Components.clear();
-	}
 	ClearEntityPool();
 
 	Init();
 
-	bool isDisabled = false;
+	ms_ModDisabled = false;
 
 	while (true)
 	{
@@ -261,9 +258,9 @@ static void MainRun()
 
 		if (ms_Flags.ToggleModState || ms_Flags.DisableMod)
 		{
-			if (!isDisabled)
+			if (!ms_ModDisabled)
 			{
-				isDisabled = true;
+				ms_ModDisabled = true;
 
 				LOG("Mod has been disabled");
 
@@ -286,7 +283,7 @@ static void MainRun()
 			}
 			else if (ms_Flags.ToggleModState)
 			{
-				isDisabled = false;
+				ms_ModDisabled = false;
 
 				if (DoesFeatureFlagExist("clearlogfileonreset"))
 				{
@@ -304,7 +301,7 @@ static void MainRun()
 			ms_Flags.DisableMod     = false;
 		}
 
-		if (isDisabled)
+		if (ms_ModDisabled)
 			continue;
 
 		if (ms_Flags.ClearAllEffects)
@@ -335,13 +332,26 @@ static void MainRun()
 			continue;
 		}
 
-		for (auto component : g_Components)
+		for (auto &component : g_Components)
 			component->OnRun();
 	}
 }
 
 namespace Main
 {
+	static HMODULE ms_ModuleHandle = NULL;
+	EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+
+	void OnInit()
+	{
+		LOG("Running mod init");
+
+		WCHAR fileName[MAX_PATH] = {};
+		GetModuleFileName(reinterpret_cast<HINSTANCE>(&__ImageBase), fileName, MAX_PATH);
+
+		ms_ModuleHandle = LoadLibrary(fileName);
+	}
+
 	void OnRun()
 	{
 		SetUnhandledExceptionFilter(CrashHandler);
@@ -351,8 +361,13 @@ namespace Main
 
 	void OnCleanup()
 	{
-		for (auto component : g_Components)
-			component->OnModPauseCleanup();
+		LOG("Unloading mod");
+
+		if (!ms_ModDisabled)
+			for (auto component : g_Components)
+				component->OnModPauseCleanup();
+
+		LOG("Mod unload complete!");
 	}
 
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,
@@ -401,6 +416,11 @@ namespace Main
 			{
 				if (ms_Flags.ToggleModShortcutEnabled)
 					ms_Flags.ToggleModState = true;
+			}
+			else if (key == 0x52 && DoesFileExist("ScriptHookV.dev")) // R
+			{
+				OnCleanup();
+				FreeModule(ms_ModuleHandle);
 			}
 		}
 
