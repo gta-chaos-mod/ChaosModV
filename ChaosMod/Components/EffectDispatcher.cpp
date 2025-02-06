@@ -86,6 +86,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			{
 				// Replace previous instance of non-timed effect with this new one
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
+				activeEffect.IsZombie = true;
 			}
 
 			break;
@@ -309,8 +310,16 @@ void EffectDispatcher::UpdateEffects(float deltaTime)
 		auto &activeEffect  = *it;
 		bool isEffectPaused = EffectThreads::IsThreadPaused(activeEffect.ThreadId);
 
-		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId))
+		activeEffect.Timer -=
+		    (adjustedDeltaTime
+		     / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->EffectDurationModifier))
+		    * (activeEffect.IsTimed
+		           ? 1.f
+		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
+
+		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId) || activeEffect.IsZombie)
 		{
+			activeEffect.IsZombie = true;
 			if (activeEffect.IsTimed || activeEffect.Timer <= 0.f)
 			{
 				DEBUG_LOG("Discarding ActiveEffect " << activeEffect.Id.Id());
@@ -365,26 +374,21 @@ void EffectDispatcher::UpdateEffects(float deltaTime)
 			}
 		}
 
-		activeEffect.Timer -=
-		    (adjustedDeltaTime
-		     / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->EffectDurationModifier))
-		    * (activeEffect.IsTimed
-		           ? 1.f
-		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
-
-		if (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > m_MaxRunningEffects))
+		if (!activeEffect.IsZombie // Shouldn't ever occur since the ActiveEffect is removed if timer <= 0 above, but
+		                           // just in case this check is moved in the future
+		    && (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > m_MaxRunningEffects)))
 		{
-			if (activeEffect.Timer < -60.f)
-			{
-				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
-				DEBUG_LOG("Tiemout reached, forcefully stopping effect " << activeEffect.Id.Id());
-				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
-			}
-			else if (!activeEffect.IsStopping)
+			if (!activeEffect.IsStopping)
 			{
 				DEBUG_LOG("Stopping effect " << activeEffect.Id.Id());
 				EffectThreads::StopThread(activeEffect.ThreadId);
 				activeEffect.IsStopping = true;
+			}
+			else if (activeEffect.Timer < -60.f)
+			{
+				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
+				LOG("Timeout reached, forcefully stopping effect " << activeEffect.Id.Id());
+				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
 			}
 		}
 

@@ -50,6 +50,7 @@ class EffectDispatcher : public Component
 
 		bool HideEffectName = false;
 		bool IsStopping     = false;
+		bool IsZombie       = false;
 
 		DWORD64 SoundId     = 0;
 	};
