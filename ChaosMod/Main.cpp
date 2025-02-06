@@ -346,10 +346,12 @@ namespace Main
 	{
 		LOG("Running mod init");
 
-		WCHAR fileName[MAX_PATH] = {};
-		GetModuleFileName(reinterpret_cast<HINSTANCE>(&__ImageBase), fileName, MAX_PATH);
-
-		ms_ModuleHandle = LoadLibrary(fileName);
+		if (DoesFileExist("ScriptHookV.dev"))
+		{
+			WCHAR fileName[MAX_PATH] = {};
+			GetModuleFileName(reinterpret_cast<HINSTANCE>(&__ImageBase), fileName, MAX_PATH);
+			ms_ModuleHandle = LoadLibrary(fileName);
+		}
 	}
 
 	void OnRun()
@@ -417,7 +419,7 @@ namespace Main
 				if (ms_Flags.ToggleModShortcutEnabled)
 					ms_Flags.ToggleModState = true;
 			}
-			else if (key == 0x52 && DoesFileExist("ScriptHookV.dev")) // R
+			else if (key == 0x52 && ms_ModuleHandle) // R
 			{
 				OnCleanup();
 				FreeModule(ms_ModuleHandle);
