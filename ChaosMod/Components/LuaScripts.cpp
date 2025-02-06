@@ -173,7 +173,9 @@ class LuaHolder
 			return _TryParseVector3(&m_Data, x, y, z) ? LuaVector3(x, y, z) : LuaVector3();
 		}
 
+#if defined(__clang__) || defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
 		return *reinterpret_cast<T *>(&m_Data);
 	}
 
