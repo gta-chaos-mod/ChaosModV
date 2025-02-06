@@ -13,7 +13,7 @@ namespace Util
 		long lParseResult;
 
 		if constexpr (std::is_same<T, float>())
-			lParseResult = std::strtof(text.data(), &cEnd);
+			lParseResult = std::lround(std::strtof(text.data(), &cEnd));
 		else
 			lParseResult = std::strtol(text.data(), &cEnd, radix);
 

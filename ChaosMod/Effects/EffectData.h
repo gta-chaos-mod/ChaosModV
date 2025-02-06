@@ -22,8 +22,8 @@ class EffectData
 	std::string GroupType;
 	std::set<std::string> IncompatibleIds;
 	float Weight                      = 5.f;
-	int CustomTime                    = -1;
-	int WeightMult                    = 5;
+	float WeightMult                  = 5.f;
+	float CustomTime                  = -1.f;
 	int ShortcutKeycode               = 0;
 	EffectTimedType TimedType         = EffectTimedType::NotTimed;
 	EffectCategory Category           = EffectCategory::None;

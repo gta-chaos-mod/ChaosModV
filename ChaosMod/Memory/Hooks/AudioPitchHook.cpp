@@ -7,8 +7,8 @@
 static bool ms_EnabledHook  = false;
 static float ms_TargetPitch = 0;
 
-__int64 (*_OG_rage__audRequestedSettings__SetPitch)(__int64, int);
-__int64 _HK_rage__audRequestedSettings__SetPitch(__int64 _this, int pitch)
+void *(*_OG_rage__audRequestedSettings__SetPitch)(void *, float);
+void *_HK_rage__audRequestedSettings__SetPitch(void *_this, float pitch)
 {
 	return _OG_rage__audRequestedSettings__SetPitch(_this, ms_EnabledHook ? ms_TargetPitch : pitch);
 }
@@ -30,13 +30,13 @@ static RegisterHook registerHook(OnHook, nullptr, "rage::audRequestedSettings::S
 
 namespace Hooks
 {
-	void SetAudioPitch(int pitch)
+	void SetAudioPitch(float pitch)
 	{
 		ms_EnabledHook = true;
 		ms_TargetPitch = pitch;
 	}
 
-	int GetTargetAudioPitch()
+	float GetTargetAudioPitch()
 	{
 		return !ms_EnabledHook ? 0.f : ms_TargetPitch;
 	}

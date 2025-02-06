@@ -15,8 +15,8 @@ static void OnStart()
 
 static void OnTickLag()
 {
-	static DWORD64 lastTick = 0;
-	auto curTick            = GET_GAME_TIMER();
+	static int lastTick = 0;
+	auto curTick        = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{

@@ -19,7 +19,7 @@ nlohmann::json Workshop::GetSubmissionSettingJson(const std::string &submissionP
 	{
 		m_CachedSubmissionSettings[submissionPath] = nlohmann::json::parse(buffer.str());
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 		m_CachedSubmissionSettings[submissionPath] = {};
 	}
@@ -34,10 +34,10 @@ std::vector<std::string> Workshop::GetSubmissionBlacklistedFiles(const std::stri
 	auto json = GetSubmissionSettingJson(submissionPath);
 	try
 	{
-		for (const std::string &file : json["disabled_files"])
+		for (std::string file : json["disabled_files"])
 			blacklistedFiles.push_back(file);
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 
@@ -79,7 +79,7 @@ std::unordered_map<std::string, nlohmann::json> Workshop::GetSubmissionScriptSet
 			scriptSettings[key] = value;
 		}
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 

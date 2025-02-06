@@ -59,7 +59,7 @@ namespace Memory
 					DWORD64 v5 = *reinterpret_cast<WORD *>(model + 4);
 					LONG v6;
 					// IDA copy paste ftw
-					if (static_cast<int>(v5) < dword_7FF69DB37ED8
+					if (static_cast<DWORD>(v5) < dword_7FF69DB37ED8
 					    && (v6 = *reinterpret_cast<DWORD *>(qword_7FF69DB37F00 + 4 * (v5 >> 5)),
 					        _bittest(&v6, v5 & 0x1F)))
 					{

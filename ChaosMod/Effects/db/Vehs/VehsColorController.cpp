@@ -194,9 +194,9 @@ static void OnTickRainbow()
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		int r = std::sin(veh + freq * cnt) * 127 + 128;
-		int g = std::sin(veh + freq * cnt + 2) * 127 + 128;
-		int b = std::sin(veh + freq * cnt + 4) * 127 + 128;
+		int r = std::lround(std::sin(veh + freq * cnt) * 127 + 128);
+		int g = std::lround(std::sin(veh + freq * cnt + 2) * 127 + 128);
+		int b = std::lround(std::sin(veh + freq * cnt + 4) * 127 + 128);
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g, b, r);
@@ -221,9 +221,9 @@ static void OnTickRainbow()
 
 	// Headlight color switcher
 
-	int r = std::sin(freq * cnt) * 127 + 128;
-	int g = std::sin(freq * cnt + 2) * 127 + 128;
-	int b = std::sin(freq * cnt + 4) * 127 + 128;
+	int r = std::lround(std::sin(freq * cnt) * 127 + 128);
+	int g = std::lround(std::sin(freq * cnt + 2) * 127 + 128);
+	int b = std::lround(std::sin(freq * cnt + 4) * 127 + 128);
 
 	for (int i = 0; i < 13; i++)
 		Memory::OverrideVehicleHeadlightColor(i, true, r, g, b);

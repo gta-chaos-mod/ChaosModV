@@ -45,7 +45,7 @@ static void SetupCamera()
 	                                 false, 2);
 	ATTACH_CAM_TO_PED_BONE(eCamera, playerPed, 31086, 0, 0, 0, 0);
 
-	SET_CAM_NEAR_CLIP(eCamera, 0.2);
+	SET_CAM_NEAR_CLIP(eCamera, .2f);
 	SET_CAM_AFFECTS_AIMING(eCamera, false);
 }
 

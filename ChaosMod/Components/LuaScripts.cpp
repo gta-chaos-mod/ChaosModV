@@ -173,6 +173,9 @@ class LuaHolder
 			return _TryParseVector3(&m_Data, x, y, z) ? LuaVector3(x, y, z) : LuaVector3();
 		}
 
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
 		return *reinterpret_cast<T *>(&m_Data);
 	}
 
@@ -804,7 +807,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 			else
 			{
 				effectData.TimedType  = EffectTimedType::Custom;
-				effectData.CustomTime = (std::max)(1, *durationOpt);
+				effectData.CustomTime = static_cast<float>(std::max(1, *durationOpt));
 			}
 		}
 		else
@@ -817,7 +820,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	{
 		effectData.TimedType = static_cast<EffectTimedType>(settingOverrides["TimedType"]);
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 	try
@@ -826,21 +829,21 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		if (effectData.CustomTime > 0)
 			effectData.TimedType = EffectTimedType::Custom;
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 
 	const sol::optional<int> &weightMultOpt = effectInfo["WeightMultiplier"];
 	if (weightMultOpt)
 	{
-		effectData.WeightMult = (std::max)(1, *weightMultOpt);
+		effectData.WeightMult = static_cast<float>(std::max(1, *weightMultOpt));
 		effectData.Weight     = effectData.WeightMult;
 	}
 	try
 	{
 		effectData.WeightMult = settingOverrides["WeightMult"];
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 
@@ -855,7 +858,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	{
 		effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, settingOverrides["ExcludedFromVoting"]);
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 
@@ -914,7 +917,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	{
 		effectData.ShortcutKeycode = settingOverrides["ShortcutKeycode"];
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 
@@ -924,7 +927,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		if (!name.empty())
 			effectData.CustomName = name;
 	}
-	catch (nlohmann::json::exception)
+	catch (nlohmann::json::exception &)
 	{
 	}
 

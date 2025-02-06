@@ -14,14 +14,15 @@ namespace Memory
 	{
 	  private:
 		std::string m_Name;
+		std::function<bool()> m_HookFunc;
+		std::function<void()> m_CleanupFunc;
 		RegisteredHook *m_Next = nullptr;
-		bool (*m_HookFunc)();
-		void (*m_CleanupFunc)();
-		bool m_IsLateHook = false;
+		bool m_IsLateHook      = false;
 
 	  public:
-		RegisteredHook(bool (*hookFunc)(), void (*cleanupFunc)(), const std::string &name, bool isLateHook)
-		    : m_HookFunc(hookFunc), m_CleanupFunc(cleanupFunc), m_Name(name), m_IsLateHook(isLateHook)
+		RegisteredHook(std::function<bool()> hookFunc, std::function<void()> cleanupFunc, const std::string &name,
+		               bool isLateHook)
+		    : m_Name(name), m_HookFunc(hookFunc), m_CleanupFunc(cleanupFunc), m_IsLateHook(isLateHook)
 		{
 			if (g_pRegisteredHooks)
 				m_Next = g_pRegisteredHooks;

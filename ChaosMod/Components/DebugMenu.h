@@ -4,9 +4,8 @@
 
 #include "Effects/EffectIdentifier.h"
 
+#include <cstdint>
 #include <vector>
-
-using DWORD = unsigned long;
 
 class DebugMenu : public Component
 {
@@ -25,11 +24,11 @@ class DebugMenu : public Component
 
 	bool m_IsEnabled;
 
-	int m_SelectedIdx     = 0;
-	bool m_Visible        = false;
+	int64_t m_SelectedIdx      = 0;
+	bool m_Visible             = false;
 
-	DWORD m_RepeatTime    = 0;
-	bool m_DispatchEffect = false;
+	std::uint32_t m_RepeatTime = 0;
+	bool m_DispatchEffect      = false;
 
   public:
 	DebugMenu();

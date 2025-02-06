@@ -53,8 +53,8 @@ namespace Memory
 
 	inline Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
 	{
-		DWORD codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
-		for (int i = 0; i < codeBlocksSize; i++)
+		std::uint32_t codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
+		for (std::uint32_t i = 0; i < codeBlocksSize; i++)
 		{
 			auto handle = Memory::FindPattern(
 			    pattern,

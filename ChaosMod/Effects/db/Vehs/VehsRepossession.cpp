@@ -28,7 +28,7 @@ static void OnStart()
 
 		Vector3 coords;
 		coords.x = -52;
-		coords.y = -1106.88;
+		coords.y = -1106.88f;
 		coords.z = 26;
 		// Probably a really bad way of doing this, but im lazy as fuck.
 		TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(FranklinDrive, veh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);
@@ -60,7 +60,7 @@ static void OnStart()
 
 		Vector3 coords;
 		coords.x = -52;
-		coords.y = -1106.88;
+		coords.y = -1106.88f;
 		coords.z = 26;
 		// Probably a really bad way of doing this, but im lazy as fuck.
 		TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(FranklinDrive, veh, coords.x, coords.y, coords.z, 9999.f, 262668, 0.f);

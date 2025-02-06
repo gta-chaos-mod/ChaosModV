@@ -21,9 +21,9 @@ static void OnStop()
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 {
-	return Vector3::Init(startCoord.x + g_Random.GetRandomInt(-maxOffset, maxOffset),
-	                     startCoord.y + g_Random.GetRandomInt(-maxOffset, maxOffset),
-	                     startCoord.z + g_Random.GetRandomInt(-maxOffset, maxOffset));
+	return Vector3::Init(startCoord.x + g_Random.GetRandomFloat(-maxOffset, maxOffset),
+	                     startCoord.y + g_Random.GetRandomFloat(-maxOffset, maxOffset),
+	                     startCoord.z + g_Random.GetRandomFloat(-maxOffset, maxOffset));
 }
 
 static void OnTick()

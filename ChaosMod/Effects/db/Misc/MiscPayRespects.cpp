@@ -6,7 +6,6 @@
 
 #include "Effects/Register/RegisterEffect.h"
 #include <cmath>
-#include <string>
 
 #define WAIT_TIME 10000 // ms
 
@@ -14,8 +13,8 @@ CHAOS_VAR int ms_Overlay                = 0;
 CHAOS_VAR const int ms_MaxPressInterval = 1000;
 CHAOS_VAR int ms_LastPressTick          = 0;
 
-CHAOS_VAR DWORD64 ms_TimeReserve;
-CHAOS_VAR DWORD64 ms_LastTick = 0;
+CHAOS_VAR int ms_TimeReserve;
+CHAOS_VAR int ms_LastTick = 0;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -25,13 +24,13 @@ static inline bool Beepable(DWORD64 reserveValue)
 static void OnTick()
 {
 	Ped playerPed = PLAYER_PED_ID();
-	Vector3 pos   = GET_ENTITY_COORDS(playerPed, true);
+	auto pos      = GET_ENTITY_COORDS(playerPed, true);
 
 	if (!IS_PED_DEAD_OR_DYING(playerPed, false))
 	{
-		DWORD64 currentTick = GET_GAME_TIMER();
-		DWORD64 tickDelta   = currentTick - ms_LastTick;
-		int overlaycolor    = 0;
+		int currentTick  = GET_GAME_TIMER();
+		int tickDelta    = currentTick - ms_LastTick;
+		int overlaycolor = 0;
 
 		if (IS_CONTROL_JUST_PRESSED(0, 23))
 			ms_LastPressTick = currentTick;

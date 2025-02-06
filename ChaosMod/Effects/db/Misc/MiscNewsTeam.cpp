@@ -10,8 +10,8 @@ static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
 	int randOffset = g_Random.GetRandomInt(0, 360);
 	Vector3 res;
-	res.x = pos.x + (COS(randOffset) * radius);
-	res.y = pos.y + (SIN(randOffset) * radius);
+	res.x = pos.x + (std::cos(randOffset) * radius);
+	res.y = pos.y + (std::sin(randOffset) * radius);
 	res.z = pos.z + 50;
 	return res;
 }
@@ -23,56 +23,36 @@ CHAOS_VAR int lastPositionGoal = 0;
 CHAOS_VAR int scaleForm        = 0;
 CHAOS_VAR Vector3 targetCoords;
 
-CHAOS_VAR const char *ms_TextPairs[] = { "Chaos Mod Player Trying To Survive",
-	                                     "\"He won't survive\", Mod Contributors Say",
+struct TextPair
+{
+	const std::string_view Title;
+	const std::string_view Subtitle;
 
-	                                     "Crazy Lunatic Going On A Rampage",
-	                                     "This Report Was Brought To You By eCola",
-
-	                                     "The Aftermath Of An Experiment Gone Wrong",
-	                                     "THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!",
-
-	                                     "Wow Look At This",
-	                                     "Crazy Ain't It?",
-
-	                                     "An Example Of Our Average Law-Abiding Citizen",
-	                                     "\"Video Games cause violence\" Officials Say",
-
-	                                     "Holy Shit Wow Omg",
-	                                     "LULW WTFFF xDDDDDDDD",
-
-	                                     "What Bad RNG Looks Like",
-	                                     "Researchers Estimate The Chances Being Close To Millions To One",
-
-	                                     "A Speedrunner In Action",
-	                                     "Criticizers Claim Mods Might Be At Play",
-
-	                                     "An Ongoing Riot All Over San Andreas",
-	                                     "A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"",
-
-	                                     "Hey You're On Camera",
-	                                     "Come On Do Something Cool!",
-
-	                                     "Look Up And Smile",
-	                                     "It's The LSPD",
-
-	                                     "This Is A Nice Scaleform",
-	                                     "Wow Is This Self-Aware?",
-
-	                                     "This Is Why We Can't Have Nice Things",
-	                                     "SMH",
-
-	                                     "IS THAT A SUPRA???",
-	                                     ":o",
-
-	                                     "Don't Mind Us",
-	                                     "Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2",
-
-	                                     "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-	                                     "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-
-	                                     "Just Imagine All The Stuff I Could Put In Here",
-	                                     "Oh Wait..." };
+	TextPair(std::string_view title, std::string_view subtitle) : Title(title), Subtitle(subtitle)
+	{
+	}
+};
+CHAOS_VAR const std::vector<TextPair> ms_TextPairs = {
+	{ "Chaos Mod Player Trying To Survive", "\"He won't survive\", Mod Contributors Say" },
+	{ "Crazy Lunatic Going On A Rampage", "This Report Was Brought To You By eCola" },
+	{ "The Aftermath Of An Experiment Gone Wrong", "THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!" },
+	{ "Wow Look At This", "Crazy Ain't It?" },
+	{ "An Example Of Our Average Law-Abiding Citizen", "\"Video Games cause violence\" Officials Say" },
+	{ "Holy Shit Wow Omg", "LULW WTFFF xDDDDDDDD" },
+	{ "What Bad RNG Looks Like", "Researchers Estimate The Chances Being Close To Millions To One" },
+	{ "A Speedrunner In Action", "Criticizers Claim Mods Might Be At Play" },
+	{ "An Ongoing Riot All Over San Andreas",
+	  "A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"" },
+	{ "Hey You're On Camera", "Come On Do Something Cool!" },
+	{ "Look Up And Smile", "It's The LSPD" },
+	{ "This Is A Nice Scaleform", "Wow Is This Self-Aware?" },
+	{ "This Is Why We Can't Have Nice Things", "SMH" },
+	{ "IS THAT A SUPRA???", ":o" },
+	{ "Don't Mind Us", "Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2" },
+	{ "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+	  "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" },
+	{ "Just Imagine All The Stuff I Could Put In Here", "Oh Wait..." },
+};
 
 static void OnStart()
 {
@@ -124,10 +104,10 @@ static void OnStart()
 	while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
 		WAIT(0);
 
-	int chosenIndex = g_Random.GetRandomInt(0, sizeof(ms_TextPairs) / sizeof(ms_TextPairs[0]) * .5f - 1) * 2;
+	const auto &chosenTextPair = ms_TextPairs[g_Random.GetRandomInt(0, ms_TextPairs.size() - 1)];
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_TextPairs[chosenIndex]);
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_TextPairs[chosenIndex + 1]);
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(chosenTextPair.Title.data());
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(chosenTextPair.Subtitle.data());
 
 	END_SCALEFORM_MOVIE_METHOD();
 }

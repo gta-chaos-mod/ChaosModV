@@ -29,7 +29,7 @@ static void OnStart()
 		SET_PED_CAN_RAGDOLL(ped, false);
 		SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-		TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1.f, 1, 0.f, false, false, false);
+		TASK_PLAY_ANIM(ped, "missfbi3_sniping", "dance_m_default", 4.0f, -4.0f, -1, 1, 0.f, false, false, false);
 		WAIT(0);
 
 		SET_PED_CONFIG_FLAG(ped, 292, true);
