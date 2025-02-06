@@ -57,32 +57,25 @@ static void OnTick()
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
 			return;
 
-		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
+		static float timeUntilSteer     = 0.f;
 		static bool enableDrunkSteering = false;
 		static float steering;
 
 		if (enableDrunkSteering)
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
 
-		DWORD64 curTick = GET_GAME_TIMER();
-
-		if (timeUntilSteer < curTick)
+		if ((timeUntilSteer -= GET_FRAME_TIME()) < 0.f)
 		{
-			timeUntilSteer = GET_GAME_TIMER();
-
 			if (enableDrunkSteering)
 			{
 				// Give player back control
-
-				timeUntilSteer += g_Random.GetRandomInt(50, 250);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, 1.f);
 			}
 			else
 			{
 				// Take control from player
-
-				steering = GET_RANDOM_FLOAT_IN_RANGE(-.7f, .7f);
-
-				timeUntilSteer += g_Random.GetRandomInt(50, 300);
+				steering       = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, .2f);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
