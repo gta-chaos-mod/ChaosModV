@@ -35,12 +35,10 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	LOG("Dispatching effect \"" << effectData.Name << "\"");
 #endif
 
-	const auto &filteredEffects = GetFilteredEnabledEffects();
-
 	// Increase weight for all effects first
-	for (auto &effectData : filteredEffects)
-		if (!effectData->IsMeta())
-			effectData->Weight += effectData->WeightMult;
+	for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
+		if (!enabledEffectData.IsMeta())
+			enabledEffectData.Weight += enabledEffectData.WeightMult;
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
 	// times in a row
@@ -48,9 +46,9 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 		effectData.Weight = effectData.WeightMult;
 	else
 	{
-		for (auto &effectData : filteredEffects)
-			if (effectData->GroupType == effectData->GroupType)
-				effectData->Weight = effectData->WeightMult;
+		for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
+			if (enabledEffectData.GroupType == effectData.GroupType)
+				effectData.Weight = effectData.WeightMult;
 	}
 
 	auto playEffectDispatchSound = [&](EffectDispatcher::ActiveEffect &activeEffect)
@@ -430,14 +428,17 @@ void EffectDispatcher::UpdateMetaEffects(float deltaTime)
 			{
 				totalWeight += effectData->GetEffectWeight();
 
-				effectData->Weight += effectData->WeightMult;
-
 				if (!targetEffectId && chosen <= totalWeight)
 					targetEffectId = &effectId;
 			}
 
 			if (targetEffectId)
 			{
+				// Increase weight of all meta effects (including ones with an unfulfilled condition)
+				for (auto &[effectId, effectData] : g_EnabledEffects)
+					if (effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
+						effectData.Weight += effectData.WeightMult;
+
 				_DispatchEffect(this,
 				                { .Id = *targetEffectId, .Suffix = "(Meta)", .Flags = DispatchEffectFlag_NoAddToLog });
 			}
