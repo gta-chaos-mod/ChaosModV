@@ -5,6 +5,7 @@
 #include "Components/EffectDispatcher.h"
 #include "Effects/EnabledEffects.h"
 #include "Util/OptionsManager.h"
+#include "Util/HelpText.h"
 
 #define MAX_VIS_ITEMS 15
 
@@ -104,13 +105,19 @@ void DebugMenu::OnRun()
 
 		if (i == m_SelectedIdx)
 		{
-			DRAW_RECT(.1f, y, .2f, .05f, 255, 255, 255, 200, true);
+			if (IsEffectFilteredOut(m_Effects[i].Id))
+				DRAW_RECT(.1f, y, .2f, .05f, 180, 180, 180, 200, true);
+			else
+				DRAW_RECT(.1f, y, .2f, .05f, 255, 255, 255, 200, true);
 
 			SET_TEXT_COLOUR(0, 0, 0, 255);
 		}
 		else
 		{
-			DRAW_RECT(.1f, y, .2f, .05f, 0, 0, 0, 200, true);
+			if (IsEffectFilteredOut(m_Effects[i].Id))
+				DRAW_RECT(.1f, y, .2f, .05f, 90, 90, 90, 200, true);
+			else
+				DRAW_RECT(.1f, y, .2f, .05f, 0, 0, 0, 200, true);
 
 			SET_TEXT_COLOUR(255, 255, 255, 255);
 		}
@@ -120,6 +127,9 @@ void DebugMenu::OnRun()
 		y += .05f;
 		remainingDrawItems--;
 	}
+
+	if (IsEffectFilteredOut(m_Effects[m_SelectedIdx].Id))
+		DisplayHelpText("Effect disabled: " + GetFilterReason(m_Effects[m_SelectedIdx].Id));
 }
 
 bool DebugMenu::IsEnabled() const
@@ -208,7 +218,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		break;
 	}
 	case VK_RETURN:
-		if (!m_Effects[m_SelectedIdx].Id.Id().empty())
+		if (!m_Effects[m_SelectedIdx].Id.Id().empty() && !IsEffectFilteredOut(m_Effects[m_SelectedIdx].Id))
 			m_DispatchEffect = true;
 
 		break;

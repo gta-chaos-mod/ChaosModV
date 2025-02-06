@@ -39,3 +39,32 @@ inline std::vector<EffectData *> GetFilteredEnabledEffects()
 
 	return filteredEffects;
 }
+
+inline bool IsEffectFilteredOut(EffectIdentifier id)
+{
+	std::set<EffectConditionType> ensuredConditions;
+	for (auto &[conditionType, condition] : g_EffectConditions)
+		if (condition->CheckCondition())
+			ensuredConditions.insert(conditionType);
+
+	if (!g_EnabledEffects.contains(id))
+		return false;
+
+	const auto &effectData = g_EnabledEffects.at(id);
+
+	return effectData.ConditionType != EffectConditionType::None
+	    && !ensuredConditions.contains(effectData.ConditionType);
+}
+
+inline std::string GetFilterReason(EffectIdentifier id)
+{
+	if (!g_EnabledEffects.contains(id))
+		return "";
+
+	const auto &effectData = g_EnabledEffects.at(id);
+
+	if (effectData.ConditionType == EffectConditionType::None)
+		return "";
+
+	return g_EffectConditions.at(effectData.ConditionType)->GetFailReason();
+}
