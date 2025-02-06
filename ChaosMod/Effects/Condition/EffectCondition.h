@@ -16,7 +16,7 @@ enum class EffectConditionType
 #define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                           \
 	namespace                                                                                     \
 	{                                                                                             \
-		EffectCondition CONCAT(_effectCondition, __LINE__)(conditionType, condition, failReason); \
+		EffectCondition CHAOSCONCAT(_effectCondition, __LINE__)(conditionType, condition, failReason); \
 	}
 
 class EffectCondition;

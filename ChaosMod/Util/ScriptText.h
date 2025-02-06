@@ -63,7 +63,7 @@ inline void DrawScreenText(const std::string &text, const ScreenTextVector &text
 	{
 		float width           = GetScreenTextWidth(text, scale);
 		float height          = scale / 10;
-		float additionalWidth = 0.02;
+		float additionalWidth = 0.02f;
 		DRAW_RECT(textPos.X - (width * 0.5f), textPos.Y + 0.015, width + additionalWidth, height, 0, 0, 0, 127, true);
 	}
 }

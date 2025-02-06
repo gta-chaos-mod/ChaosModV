@@ -9,7 +9,7 @@
 static void OnTick()
 {
 	for (Vehicle veh : GetAllVehs())
-		_SET_VEHICLE_MAX_SPEED(veh, 13.41); // 13.41 Meters Per Second = 30 MPH~
+		_SET_VEHICLE_MAX_SPEED(veh, 13.41f); // 13.41 Meters Per Second = 30 MPH~
 }
 
 static void OnStop()

@@ -27,7 +27,8 @@ static void OnTick()
 
 		LoadModel(WHALE_MODEL);
 
-		Ped whale = CreatePoolPed(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_Random.GetRandomInt(0, 359));
+		Ped whale =
+		    CreatePoolPed(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_Random.GetRandomFloat(0.f, 359.f));
 
 		whaleAmount++;
 		for (int i = 0; i < MAX_WHALES; i++)

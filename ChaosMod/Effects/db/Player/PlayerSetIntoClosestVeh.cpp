@@ -50,10 +50,10 @@ static void OnStart()
 			}
 		}
 
-		Hash closestVehModel   = GET_ENTITY_MODEL(closestVeh);
-		int closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
+		Hash closestVehModel      = GET_ENTITY_MODEL(closestVeh);
+		size_t closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
 
-		for (int i = 0; i < teleportPeds.size(); i++)
+		for (size_t i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= closestVehMaxSeats)
 				break;

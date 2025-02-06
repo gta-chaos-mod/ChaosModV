@@ -9,7 +9,7 @@
 static void OnTick()
 {
 	static const int lagTimeDelay = 1000 / 25;
-	int lastUpdateTick            = GetTickCount64();
+	auto lastUpdateTick           = GetTickCount64();
 	while (lastUpdateTick > GetTickCount64() - lagTimeDelay)
 	{
 		// Create Lag

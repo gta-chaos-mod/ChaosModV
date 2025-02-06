@@ -33,7 +33,7 @@ DebugMenu::DebugMenu() : Component()
 	std::sort(m_Effects.begin(), m_Effects.end(),
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
-		          for (int idx = 0;; idx++)
+		          for (size_t idx = 0;; idx++)
 		          {
 			          if (idx >= a.EffectName.size())
 				          return false;
@@ -84,16 +84,16 @@ void DebugMenu::OnRun()
 			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Id);
 	}
 
-	float y                 = .1f;
-	WORD remainingDrawItems = MAX_VIS_ITEMS;
+	float y                   = .1f;
+	size_t remainingDrawItems = MAX_VIS_ITEMS;
 
-	for (int i = 0; remainingDrawItems > 0; i++)
+	for (int64_t i = 0; remainingDrawItems > 0; i++)
 	{
-		short overflow = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
+		int64_t bias = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
 
-		if (i < 0 || i < m_SelectedIdx - remainingDrawItems / 2 - (overflow > 0 ? overflow : 0))
+		if (i < static_cast<int64_t>(m_SelectedIdx - remainingDrawItems / 2 - (bias > 0 ? bias : 0)))
 			continue;
-		else if (i >= m_Effects.size())
+		else if (i >= static_cast<int64_t>(m_Effects.size()))
 			break;
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -163,7 +163,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 
 		break;
 	case VK_DOWN:
-		if (++m_SelectedIdx >= m_Effects.size())
+		if (static_cast<size_t>(++m_SelectedIdx) >= m_Effects.size())
 			m_SelectedIdx = 0;
 
 		break;
@@ -177,7 +177,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 			if (searchChar++ == SCHAR_MAX)
 				searchChar = SCHAR_MIN;
 
-			for (int idx = 0; idx < m_Effects.size(); idx++)
+			for (size_t idx = 0; idx < m_Effects.size(); idx++)
 			{
 				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{
@@ -202,7 +202,7 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 			if (searchChar-- == SCHAR_MIN)
 				searchChar = SCHAR_MAX;
 
-			for (int idx = 0; idx < m_Effects.size(); idx++)
+			for (size_t idx = 0; idx < m_Effects.size(); idx++)
 			{
 				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{

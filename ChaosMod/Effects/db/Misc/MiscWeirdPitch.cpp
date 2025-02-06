@@ -10,7 +10,7 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(g_Random.GetRandomInt(-900, 2000));
+	Hooks::SetAudioPitch(g_Random.GetRandomFloat(-900.f, 2000.f));
 }
 
 // clang-format off

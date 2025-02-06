@@ -81,7 +81,7 @@ namespace Memory
 				return 0;
 			}
 
-			return handle.At(8).Value<WORD>();
+			return handle.At(8).Value<std::uint16_t>();
 		}();
 
 		if (!outOfControlStateOffset)
@@ -90,17 +90,17 @@ namespace Memory
 		auto result = GetScriptHandleBaseAddress(vehicle);
 		if (result)
 		{
-			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) &= 0xFEu;
-			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) |= state;
+			*reinterpret_cast<std::uint8_t *>(result + outOfControlStateOffset) &= 0xFEu;
+			*reinterpret_cast<bool *>(result + outOfControlStateOffset) |= state;
 		}
 	}
 
 	inline void OverrideVehicleHeadlightColor(int idx, bool overrideColor, int r, int g, int b)
 	{
-		static DWORD64 *qword_7FF69E1E8E88 = nullptr;
+		static std::uint64_t *qword_7FF69E1E8E88 = nullptr;
 
-		static const int maxColors         = 13;
-		static DWORD origColors[maxColors] = {};
+		static const int maxColors               = 13;
+		static DWORD origColors[maxColors]       = {};
 
 		if (idx >= maxColors)
 			return;
@@ -114,7 +114,7 @@ namespace Memory
 			if (!handle.IsValid())
 				return;
 
-			qword_7FF69E1E8E88 = handle.At(2).Into().Get<DWORD64>();
+			qword_7FF69E1E8E88 = handle.At(2).Into().Get<std::uint64_t>();
 		}
 
 		auto colors = *reinterpret_cast<DWORD **>(*qword_7FF69E1E8E88 + 328);
@@ -144,7 +144,7 @@ namespace Memory
 				return 0;
 			}
 
-			return handle.At(4).Value<WORD>();
+			return handle.At(4).Value<std::uint16_t>();
 		}();
 
 		auto result = GetScriptHandleBaseAddress(vehicle);

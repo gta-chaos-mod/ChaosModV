@@ -22,13 +22,13 @@ static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float m
 {
 	Vector3 randomCoord;
 	if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-		randomCoord.x = startCoord.x + g_Random.GetRandomInt(minOffset, maxOffset);
+		randomCoord.x = startCoord.x + g_Random.GetRandomFloat(minOffset, maxOffset);
 	else
-		randomCoord.x = startCoord.x - g_Random.GetRandomInt(minOffset, maxOffset);
+		randomCoord.x = startCoord.x - g_Random.GetRandomFloat(minOffset, maxOffset);
 	if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-		randomCoord.y = startCoord.y + g_Random.GetRandomInt(minOffset, maxOffset);
+		randomCoord.y = startCoord.y + g_Random.GetRandomFloat(minOffset, maxOffset);
 	else
-		randomCoord.y = startCoord.y - g_Random.GetRandomInt(minOffset, maxOffset);
+		randomCoord.y = startCoord.y - g_Random.GetRandomFloat(minOffset, maxOffset);
 	randomCoord.z = startCoord.z;
 	return randomCoord;
 }

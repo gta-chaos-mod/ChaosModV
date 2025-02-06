@@ -35,24 +35,20 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	LOG("Dispatching effect \"" << effectData.Name << "\"");
 #endif
 
-	const auto &filteredEffects = GetFilteredEnabledEffects();
-
 	// Increase weight for all effects first
-	for (auto &effectData : filteredEffects)
-		if (!effectData->IsMeta())
-			effectData->Weight += effectData->WeightMult;
+	for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
+		if (!enabledEffectData.IsMeta())
+			enabledEffectData.Weight += enabledEffectData.WeightMult;
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
 	// times in a row
 	if (effectData.GroupType.empty())
-	{
 		effectData.Weight = effectData.WeightMult;
-	}
 	else
 	{
-		for (auto &effectData : filteredEffects)
-			if (effectData->GroupType == effectData->GroupType)
-				effectData->Weight = effectData->WeightMult;
+		for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
+			if (enabledEffectData.GroupType == effectData.GroupType)
+				effectData.Weight = effectData.WeightMult;
 	}
 
 	auto playEffectDispatchSound = [&](EffectDispatcher::ActiveEffect &activeEffect)
@@ -90,6 +86,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			{
 				// Replace previous instance of non-timed effect with this new one
 				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
+				activeEffect.IsZombie = true;
 			}
 
 			break;
@@ -132,7 +129,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 			if (!entry.Suffix.empty())
 				effectName << " " << entry.Suffix;
 
-			int effectDuration = 0;
+			float effectDuration = 0;
 			switch (effectData.TimedType)
 			{
 			case EffectTimedType::NotTimed:
@@ -199,15 +196,15 @@ static void _OnRunEffects(LPVOID data)
 	while (true)
 	{
 		auto curTime = GetTickCount64();
-		int deltaTime =
+		float deltaTime =
 		    !ComponentExists<EffectDispatchTimer>()
 		        ? 0
 		        : (curTime - lastTime)
 		              * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->EffectDurationModifier
 		                                                  : 1.f);
 		// The game was paused
-		if (deltaTime > 1000)
-			deltaTime = 0;
+		if (deltaTime > 1000.f)
+			deltaTime = 0.f;
 
 		lastTime = curTime;
 
@@ -279,7 +276,7 @@ void EffectDispatcher::OnRun()
 	DrawEffectTexts();
 }
 
-void EffectDispatcher::UpdateEffects(int deltaTime)
+void EffectDispatcher::UpdateEffects(float deltaTime)
 {
 	if (m_ClearEffectsState != ClearEffectsState::None)
 	{
@@ -313,8 +310,16 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 		auto &activeEffect  = *it;
 		bool isEffectPaused = EffectThreads::IsThreadPaused(activeEffect.ThreadId);
 
-		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId))
+		activeEffect.Timer -=
+		    (adjustedDeltaTime
+		     / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->EffectDurationModifier))
+		    * (activeEffect.IsTimed
+		           ? 1.f
+		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
+
+		if (!EffectThreads::DoesThreadExist(activeEffect.ThreadId) || activeEffect.IsZombie)
 		{
+			activeEffect.IsZombie = true;
 			if (activeEffect.IsTimed || activeEffect.Timer <= 0.f)
 			{
 				DEBUG_LOG("Discarding ActiveEffect " << activeEffect.Id.Id());
@@ -369,26 +374,21 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 			}
 		}
 
-		activeEffect.Timer -=
-		    (adjustedDeltaTime
-		     / (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->EffectDurationModifier))
-		    * (activeEffect.IsTimed
-		           ? 1.f
-		           : std::max(1.f, .5f * (activeEffects - EFFECT_NONTIMED_TIMER_SPEEDUP_MIN_EFFECTS + 3)));
-
-		if (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > m_MaxRunningEffects))
+		if (!activeEffect.IsZombie // Shouldn't ever occur since the ActiveEffect is removed if timer <= 0 above, but
+		                           // just in case this check is moved in the future
+		    && (activeEffect.Timer <= 0.f || (!activeEffect.IsMeta && activeEffects > m_MaxRunningEffects)))
 		{
-			if (activeEffect.Timer < -60.f)
-			{
-				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
-				DEBUG_LOG("Tiemout reached, forcefully stopping effect " << activeEffect.Id.Id());
-				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
-			}
-			else if (!activeEffect.IsStopping)
+			if (!activeEffect.IsStopping)
 			{
 				DEBUG_LOG("Stopping effect " << activeEffect.Id.Id());
 				EffectThreads::StopThread(activeEffect.ThreadId);
 				activeEffect.IsStopping = true;
+			}
+			else if (activeEffect.Timer < -60.f)
+			{
+				// Effect took over 60 seconds to stop, forcibly stop it in a blocking manner
+				LOG("Timeout reached, forcefully stopping effect " << activeEffect.Id.Id());
+				EffectThreads::StopThreadImmediately(activeEffect.ThreadId);
 			}
 		}
 
@@ -396,7 +396,7 @@ void EffectDispatcher::UpdateEffects(int deltaTime)
 	}
 }
 
-void EffectDispatcher::UpdateMetaEffects(int deltaTime)
+void EffectDispatcher::UpdateMetaEffects(float deltaTime)
 {
 	if (!SharedState.MetaEffectsEnabled)
 		return;
@@ -432,14 +432,17 @@ void EffectDispatcher::UpdateMetaEffects(int deltaTime)
 			{
 				totalWeight += effectData->GetEffectWeight();
 
-				effectData->Weight += effectData->WeightMult;
-
 				if (!targetEffectId && chosen <= totalWeight)
 					targetEffectId = &effectId;
 			}
 
 			if (targetEffectId)
 			{
+				// Increase weight of all meta effects (including ones with an unfulfilled condition)
+				for (auto &[effectId, effectData] : g_EnabledEffects)
+					if (effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
+						effectData.Weight += effectData.WeightMult;
+
 				_DispatchEffect(this,
 				                { .Id = *targetEffectId, .Suffix = "(Meta)", .Flags = DispatchEffectFlag_NoAddToLog });
 			}

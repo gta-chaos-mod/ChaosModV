@@ -50,6 +50,7 @@ class EffectDispatcher : public Component
 
 		bool HideEffectName = false;
 		bool IsStopping     = false;
+		bool IsZombie       = false;
 
 		DWORD64 SoundId     = 0;
 	};
@@ -116,8 +117,8 @@ class EffectDispatcher : public Component
 	void DispatchRandomEffect(DispatchEffectFlags dispatchEffectFlags = DispatchEffectFlag_None,
 	                          const std::string &suffix               = {});
 
-	void UpdateEffects(int deltaTime);
-	void UpdateMetaEffects(int deltaTime);
+	void UpdateEffects(float deltaTime);
+	void UpdateMetaEffects(float deltaTime);
 
 	void ClearEffect(const EffectIdentifier &effectId);
 	enum ClearEffectsFlags

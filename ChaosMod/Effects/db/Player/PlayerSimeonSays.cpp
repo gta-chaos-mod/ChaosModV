@@ -31,10 +31,10 @@ CHAOS_VAR std::map<std::string, std::vector<int>> actionKeys = {
 };
 // clang-format on
 
-CHAOS_VAR int scaleForm = 0;
-CHAOS_VAR int lastTime  = 0;
-CHAOS_VAR int waitTime  = 2000;
-CHAOS_VAR bool dead     = false;
+CHAOS_VAR int scaleForm          = 0;
+CHAOS_VAR std::uint64_t lastTime = 0;
+CHAOS_VAR std::uint64_t waitTime = 2000;
+CHAOS_VAR bool dead              = false;
 
 CHAOS_VAR std::string action;
 

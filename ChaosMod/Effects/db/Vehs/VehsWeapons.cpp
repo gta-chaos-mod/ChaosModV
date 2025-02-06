@@ -37,7 +37,7 @@ static void OnTick()
 				}
 				Vehicle veh             = GET_VEHICLE_PED_IS_IN(player, false);
 				Vector3 vehPos          = GET_ENTITY_COORDS(veh, false);
-				float zOffset           = 0.35;
+				float zOffset           = 0.35f;
 				Vector3 leftWeaponStart = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 0.5, zOffset);
 				Vector3 leftWeaponEnd   = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 100, zOffset);
 				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(leftWeaponStart.x, leftWeaponStart.y, leftWeaponStart.z,

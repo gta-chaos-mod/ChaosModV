@@ -19,7 +19,7 @@ class OptionsFile
 
   public:
 	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
-	    : m_FileName(fileName), m_CompatFileNames(compatFileNames), m_FoundFileName("")
+	    : m_FileName(fileName), m_FoundFileName(""), m_CompatFileNames(compatFileNames)
 	{
 		Reset();
 	}
@@ -115,18 +115,14 @@ class OptionsFile
 		return defaultValue;
 	}
 
-	inline void SetValueString(const std::string& key, const std::string& value)
+	inline void SetValueString(const std::string &key, const std::string &value)
 	{
 		if (m_Options.contains(key))
-		{
 			m_Options[key] = value;
-		}
 		else
-		{
 			m_Options.emplace(key, value);
-		}
 	}
-	template <typename T> inline void SetValue(const std::string& key, T value)
+	template <typename T> inline void SetValue(const std::string &key, T value)
 	{
 		SetValueString(key, std::to_string(value));
 	}

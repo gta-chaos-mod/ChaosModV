@@ -5,7 +5,7 @@ using WORD  = unsigned short;
 using BYTE  = unsigned char;
 using BOOL  = int; // wtf?
 
-class IDXGISwapChain;
+struct IDXGISwapChain;
 
 namespace Main
 {

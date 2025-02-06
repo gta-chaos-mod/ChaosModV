@@ -16,6 +16,18 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="files_info_text" Text="Disable any files from loading by unchecking the corresponding checkbox" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Margin="6,0" />
         <TreeView x:Name="files_tree_view" Background="{x:Null}" BorderBrush="White" VerticalAlignment="Stretch" Grid.Row="1">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsColored}" Value="True">
+                            <Setter Property="Background" Value="#FFF6F653" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsColored}" Value="False">
+                            <Setter Property="Background" Value="Transparent" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal" Height="20">

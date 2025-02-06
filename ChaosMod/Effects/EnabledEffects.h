@@ -10,7 +10,7 @@
 
 using size_t = unsigned long long;
 
-struct EffectData;
+class EffectData;
 
 class EffectsIdentifierHasher
 {

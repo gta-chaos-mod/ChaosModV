@@ -13,7 +13,7 @@ static void OnStart()
 			WAIT(0);
 		Hash pistolHash = "WEAPON_PISTOL"_hash;
 		GIVE_WEAPON_TO_PED(playerPed, pistolHash, 9999, true, true);
-		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 800.f, 1, 0.f, false, false, false);
+		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 800, 1, 0.f, false, false, false);
 		WAIT(750);
 		SET_PED_SHOOTS_AT_COORD(playerPed, 0, 0, 0, true);
 		REMOVE_ANIM_DICT("mp_suicide");

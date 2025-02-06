@@ -142,7 +142,7 @@ void Voting::HandleMsg(std::string_view message)
 				std::vector<int> options = receivedJSON["Votes"];
 				if (options.size() == m_EffectChoices.size())
 				{
-					for (int idx = 0; idx < options.size(); idx++)
+					for (size_t idx = 0; idx < options.size(); idx++)
 					{
 						int votes                         = options[idx];
 						m_EffectChoices[idx]->ChanceVotes = votes;

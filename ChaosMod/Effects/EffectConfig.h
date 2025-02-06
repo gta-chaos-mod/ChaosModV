@@ -11,7 +11,7 @@
 #include <vector>
 
 enum EffectType : int;
-struct EffectData;
+class EffectData;
 
 namespace EffectConfig
 {
@@ -43,12 +43,12 @@ namespace EffectConfig
 				{
 					alignas(int) bool Enabled              = true;
 					alignas(int) EffectTimedType TimedType = EffectTimedType::NotTimed;
-					alignas(int) int CustomTime            = 0;
-					alignas(int) int WeightMult            = 0;
+					alignas(int) uint CustomTime           = 0;
+					alignas(int) uint WeightMult           = 0;
 					alignas(int) bool Permanent            = false;
 					alignas(int) bool ExcludedFromVoting   = false;
 					alignas(int) char Placeholder;
-					alignas(int) int ShortcutKeycode = 0;
+					alignas(int) uint ShortcutKeycode = 0;
 				};
 				union
 				{
@@ -106,7 +106,7 @@ namespace EffectConfig
 			else if (configValues.Values.CustomTime > 0)
 			{
 				effectData.TimedType  = EffectTimedType::Custom;
-				effectData.CustomTime = configValues.Values.CustomTime;
+				effectData.CustomTime = static_cast<float>(configValues.Values.CustomTime);
 			}
 			else
 			{
@@ -117,7 +117,7 @@ namespace EffectConfig
 			}
 
 			if (configValues.Values.WeightMult > 0)
-				effectData.WeightMult = configValues.Values.WeightMult;
+				effectData.WeightMult = static_cast<float>(configValues.Values.WeightMult);
 			effectData.Weight = effectData.WeightMult; // Set initial effect weight to WeightMult
 			effectData.SetAttribute(EffectAttributes::ExcludedFromVoting, configValues.Values.ExcludedFromVoting);
 			effectData.SetAttribute(EffectAttributes::IsMeta,

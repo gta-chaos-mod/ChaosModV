@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
+using ConfigApp.Workshop;
 using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -66,24 +67,33 @@ namespace ConfigApp.Tabs
             var view = CollectionViewSource.GetDefaultView(m_WorkshopSubmissionItems);
             view.Filter = (submissionItem) =>
             {
-                if (submissionItem is not WorkshopSubmissionItem item || transformedText is null)
+                if (submissionItem is not WorkshopSubmissionItem item || transformedText is null || transformedText == "")
                     return true;
 
-                var texts = new string?[]
+                foreach (var term in item.SearchTerms)
                 {
-                    item.Name,
-                    item.Author,
-                    item.Description
-                };
-
-                foreach (var text in texts)
-                {
-                    if (text is not null && text.ToLower().Contains(transformedText))
+                    if (term.Term.ToLower().Contains(transformedText))
                         return true;
-                };
+                }
 
                 return false;
             };
+
+            foreach (var item in m_WorkshopSubmissionItems)
+            {
+                item.HighlightedFiles.Clear();
+                if (transformedText is not null && transformedText != "")
+                {
+                    foreach (var term in item.SearchTerms)
+                    {
+                        if (term.Term.ToLower().Contains(transformedText))
+                        {
+                            if (term.IsInFile)
+                                item.HighlightedFiles.Add(term.FileName);
+                        }
+                    }
+                }
+            }
         }
 
         private void ParseWorkshopSubmissionsFile(byte[] compressedFileContent)
@@ -124,9 +134,8 @@ namespace ConfigApp.Tabs
                     return;
                 }
 
-                var submissionItem = new WorkshopSubmissionItem()
+                var submissionItem = new WorkshopSubmissionItem(id)
                 {
-                    Id = id,
                     Name = getDataItem<string>(submissionData.name, "No Name"),
                     Author = getDataItem<string>(submissionData.author, "No Author"),
                     Description = getDataItem<string>(submissionData.description, "No Description"),
@@ -134,6 +143,8 @@ namespace ConfigApp.Tabs
                     LastUpdated = lastUpdated,
                     Sha256 = sha256,
                 };
+
+                submissionItem.UpdateSearchTerms();
 
                 // Remote submissions are fetched before local ones so this submission only exists locally
                 if (isLocal)
@@ -268,6 +279,10 @@ namespace ConfigApp.Tabs
             var button = (Button)sender;
 
             button.IsEnabled = false;
+            foreach (var item in m_WorkshopSubmissionItems)
+            {
+                item.Refresh();
+            }
             await ForceRefreshWorkshopContentFromRemote();
             button.IsEnabled = true;
         }
