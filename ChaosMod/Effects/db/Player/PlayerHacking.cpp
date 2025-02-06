@@ -59,7 +59,9 @@ CHAOS_VAR const char *WIN_PHRASES[] = {
 	"Kernel bitrate overclocked!",
 	"[ Hacking skill raised by 1 ]",
 	"Ah ah ah, you didn't say the magic word!",
-	"I frequent r/ProgrammerHumor.",
+	"Nice",
+	"Sorry, were you busy doing something?",
+	"Now back to your favorite game",
 };
 
 enum class TimerAction

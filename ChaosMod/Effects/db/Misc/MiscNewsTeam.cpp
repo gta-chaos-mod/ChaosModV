@@ -23,35 +23,34 @@ CHAOS_VAR int lastPositionGoal = 0;
 CHAOS_VAR int scaleForm        = 0;
 CHAOS_VAR Vector3 targetCoords;
 
-struct TextPair
-{
-	const std::string_view Title;
-	const std::string_view Subtitle;
-
-	TextPair(std::string_view title, std::string_view subtitle) : Title(title), Subtitle(subtitle)
-	{
-	}
-};
-CHAOS_VAR const std::vector<TextPair> ms_TextPairs = {
-	{ "Chaos Mod Player Trying To Survive", "\"He won't survive\", Mod Contributors Say" },
-	{ "Crazy Lunatic Going On A Rampage", "This Report Was Brought To You By eCola" },
-	{ "The Aftermath Of An Experiment Gone Wrong", "THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!" },
-	{ "Wow Look At This", "Crazy Ain't It?" },
-	{ "An Example Of Our Average Law-Abiding Citizen", "\"Video Games cause violence\" Officials Say" },
-	{ "Holy Shit Wow Omg", "LULW WTFFF xDDDDDDDD" },
-	{ "What Bad RNG Looks Like", "Researchers Estimate The Chances Being Close To Millions To One" },
-	{ "A Speedrunner In Action", "Criticizers Claim Mods Might Be At Play" },
-	{ "An Ongoing Riot All Over San Andreas",
-	  "A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"" },
-	{ "Hey You're On Camera", "Come On Do Something Cool!" },
-	{ "Look Up And Smile", "It's The LSPD" },
-	{ "This Is A Nice Scaleform", "Wow Is This Self-Aware?" },
-	{ "This Is Why We Can't Have Nice Things", "SMH" },
-	{ "IS THAT A SUPRA???", ":o" },
-	{ "Don't Mind Us", "Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2" },
-	{ "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-	  "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" },
-	{ "Just Imagine All The Stuff I Could Put In Here", "Oh Wait..." },
+CHAOS_VAR const std::vector<std::string_view> ms_Titles = {
+	"",
+	"Chaos Mod player trying to survive",
+	"A speedrunner in action",
+	"Meow",
+	"This is you in 10 years",
+	"Very bleak yes",
+	"Just your average sunday in Ohio",
+	"Nothing ever happens",
+	"We got this before GTA 6",
+	"What do you even want me to say to this?",
+	"This is Neoliberalism",
+	"Topical reference",
+	"Something is happening",
+	"Look at this occurance",
+	"This is gaming",
+	"New news",
+	"eCola or Sprunk?",
+	"\"He won't survive\", Mod Contributors say",
+	"Criticizers claim mods might be at play",
+	"Very bleak yes",
+	"Nothing ever happens",
+	"Look at this occurance",
+	"eCola or Sprunk?",
+	"Unbelievable",
+	"Woof",
+	"I love cats",
+	"New research indicates deers are cows",
 };
 
 static void OnStart()
@@ -104,10 +103,11 @@ static void OnStart()
 	while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
 		WAIT(0);
 
-	const auto &chosenTextPair = ms_TextPairs[g_Random.GetRandomInt(0, ms_TextPairs.size() - 1)];
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(chosenTextPair.Title.data());
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(chosenTextPair.Subtitle.data());
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(
+	    ms_Titles[g_RandomNoDeterm.GetRandomInt(0, ms_Titles.size() - 1)].data());
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(
+	    ms_Titles[g_RandomNoDeterm.GetRandomInt(0, ms_Titles.size() - 1)].data());
 
 	END_SCALEFORM_MOVIE_METHOD();
 }
