@@ -342,21 +342,16 @@ namespace Main
 	static HMODULE ms_ModuleHandle = NULL;
 	EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 
-	void OnInit()
+	void OnRun()
 	{
-		LOG("Running mod init");
+		SetUnhandledExceptionFilter(CrashHandler);
 
-		if (DoesFileExist("ScriptHookV.dev"))
+		if (!ms_ModuleHandle && DoesFileExist("ScriptHookV.dev"))
 		{
 			WCHAR fileName[MAX_PATH] = {};
 			GetModuleFileName(reinterpret_cast<HINSTANCE>(&__ImageBase), fileName, MAX_PATH);
 			ms_ModuleHandle = LoadLibrary(fileName);
 		}
-	}
-
-	void OnRun()
-	{
-		SetUnhandledExceptionFilter(CrashHandler);
 
 		MainRun();
 	}
@@ -421,8 +416,11 @@ namespace Main
 			}
 			else if (key == 0x52 && ms_ModuleHandle) // R
 			{
+				// Prevention for (somehow) double unloading
+				auto handle     = ms_ModuleHandle;
+				ms_ModuleHandle = NULL;
 				OnCleanup();
-				FreeModule(ms_ModuleHandle);
+				FreeModule(handle);
 			}
 		}
 

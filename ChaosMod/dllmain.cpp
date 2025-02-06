@@ -17,7 +17,6 @@ BOOL APIENTRY DllMain(HMODULE instance, DWORD reason, LPVOID reserved)
 
 		RAW_LOG("Chaos Mod v" MOD_VERSION "\n\n");
 
-		Main::OnInit();
 		Memory::Init();
 
 		scriptRegister(instance, Main::OnRun);
