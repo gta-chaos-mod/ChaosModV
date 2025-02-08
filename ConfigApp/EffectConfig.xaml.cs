@@ -32,16 +32,23 @@ namespace ConfigApp
             m_EffectData = effectData;
             m_IsTimedEffect = effectInfo.IsTimed;
 
+            EffectTimedType defaultTimedType = EffectTimedType.NotTimed;
+
+            if (effectInfo.IsTimed)
+            {
+                defaultTimedType = effectInfo.IsShort ? EffectTimedType.Short : EffectTimedType.Normal;
+            }
+
             if (m_IsTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue;
+                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue && m_EffectData.TimedType != defaultTimedType;
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short",
                     "Permanent"
                 };
-                effectconf_timer_type.SelectedIndex = m_EffectData.TimedType.GetValueOrDefault(EffectTimedType.Normal) switch
+                effectconf_timer_type.SelectedIndex = m_EffectData.TimedType.GetValueOrDefault(defaultTimedType) switch
                 {
                     EffectTimedType.Normal => 0,
                     EffectTimedType.Short => 1,
