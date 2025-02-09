@@ -7,14 +7,14 @@
 #include "Effects/Register/RegisterEffect.h"
 
 CHAOS_VAR Cam camera;
-CHAOS_VAR int state = 0;
+CHAOS_VAR int state         = 0;
 CHAOS_VAR Ped lastPlayerPed = 0;
 
 static bool SafetyCheck()
 {
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
-	Vector3 cameraPos = DOES_CAM_EXIST(camera)  ? GET_CAM_COORD(camera) : Vector3();
+	Vector3 cameraPos = DOES_CAM_EXIST(camera) ? GET_CAM_COORD(camera) : Vector3();
 
 	bool result       = true;
 
@@ -22,8 +22,8 @@ static bool SafetyCheck()
 	// 02/19/2024 - Added distance check for resets not covered by existing checks
 	if (IS_PLAYER_SWITCH_IN_PROGRESS() || IS_PLAYER_DEAD(PLAYER_ID()) || !ENTITY::DOES_ENTITY_EXIST(playerPed)
 	    || !ENTITY::IS_ENTITY_VISIBLE(playerPed)
-	    || DOES_CAM_EXIST(camera)
-	           && VDIST2(playerPos.x, playerPos.y, playerPos.z, cameraPos.x, cameraPos.y, cameraPos.z) > 3.f
+	    || (DOES_CAM_EXIST(camera)
+	        && VDIST2(playerPos.x, playerPos.y, playerPos.z, cameraPos.x, cameraPos.y, cameraPos.z) > 3.f)
 	    || lastPlayerPed != playerPed)
 		result = false;
 
@@ -48,7 +48,7 @@ static void SetupCamera()
 	Ped playerPed      = PLAYER_PED_ID();
 	Vector3 boneCoords = GET_PED_BONE_COORDS(playerPed, 0x322c, 0, 0, 0);
 	camera = CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", boneCoords.x, boneCoords.y, boneCoords.z, 0, 0, 0, 60,
-	                                 false, 2);
+	                                false, 2);
 	ATTACH_CAM_TO_PED_BONE(camera, playerPed, 31086, 0, 0, 0, 0);
 
 	SET_CAM_NEAR_CLIP(camera, .2f);
