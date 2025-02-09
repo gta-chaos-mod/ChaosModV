@@ -526,37 +526,6 @@ LuaScripts::LuaScripts()
 		for (const auto &exposable : ms_UnsafeExposables)
 			exposable(m_GlobalState);
 	}
-}
-
-void LuaScripts::OnModPauseCleanup()
-{
-	// Clean up all registered script effects
-	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
-		if (it->IsScript())
-			it = g_RegisteredEffects.erase(it);
-		else
-			it++;
-
-	// Clean up all effect groups registered by scripts
-	for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
-	{
-		const auto &[groupName, groupData] = *it;
-		if (groupData.WasRegisteredByScript)
-			it = g_EffectGroups.erase(it);
-		else
-			it++;
-	}
-}
-
-void LuaScripts::SetupGlobalState()
-{
-	m_GlobalState = {};
-	m_GlobalState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::bit32);
-
-	m_GlobalState["ReturnType"] =
-	    m_GlobalState.create_table_with("None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool,
-	                                    "Integer", LuaNativeReturnType::Int, "String", LuaNativeReturnType::String,
-	                                    "Float", LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
 	if (ComponentExists<MetaModifiers>())
 	{
@@ -589,6 +558,37 @@ void LuaScripts::SetupGlobalState()
 		metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
 		metaModifiersTable[sol::metatable_key]            = metaModifiersMetaTable;
 	}
+}
+
+void LuaScripts::OnModPauseCleanup()
+{
+	// Clean up all registered script effects
+	for (auto it = g_RegisteredEffects.begin(); it != g_RegisteredEffects.end();)
+		if (it->IsScript())
+			it = g_RegisteredEffects.erase(it);
+		else
+			it++;
+
+	// Clean up all effect groups registered by scripts
+	for (auto it = g_EffectGroups.begin(); it != g_EffectGroups.end();)
+	{
+		const auto &[groupName, groupData] = *it;
+		if (groupData.WasRegisteredByScript)
+			it = g_EffectGroups.erase(it);
+		else
+			it++;
+	}
+}
+
+void LuaScripts::SetupGlobalState()
+{
+	m_GlobalState = {};
+	m_GlobalState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::bit32);
+
+	m_GlobalState["ReturnType"] =
+	    m_GlobalState.create_table_with("None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool,
+	                                    "Integer", LuaNativeReturnType::Int, "String", LuaNativeReturnType::String,
+	                                    "Float", LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
 	if (ms_NativesDefCache.empty() && DoesFileExist(LUA_NATIVESDEF))
 	{
