@@ -43,7 +43,7 @@ namespace EffectConfig
 				{
 					alignas(int) bool Enabled              = true;
 					alignas(int) EffectTimedType TimedType = EffectTimedType::NotTimed;
-					alignas(int) uint CustomTime           = 0;
+					alignas(int) int CustomTime            = 0; // Used to be set to -1 by default so no uint
 					alignas(int) uint WeightMult           = 0;
 					alignas(int) bool Permanent            = false;
 					alignas(int) bool ExcludedFromVoting   = false;
