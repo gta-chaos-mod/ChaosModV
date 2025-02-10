@@ -132,6 +132,20 @@ namespace ConfigApp
                     continue;
                 }
 
+                string handleEffectId(string itemName)
+                {
+                    if (file.Type == WorkshopSubmissionFileType.Sound)
+                    {
+                        var effectId = itemName;
+                        if (!Effects.EffectsMap.ContainsKey(effectId))
+                            effectId = itemName[..^4];
+                        if (Effects.EffectsMap.ContainsKey(effectId))
+                            itemName += $" ({Effects.EffectsMap[effectId].Name})";
+                    }
+
+                    return itemName;
+                }
+
                 if (pathFragments.Length > 1)
                 {
                     for (int i = 1; i < pathFragments.Length; i++)
@@ -141,7 +155,7 @@ namespace ConfigApp
 
                         if (!parentFolderItems.ContainsKey(prevFragment))
                         {
-                            parentFolderItems[prevFragment] = generateItem(prevFragment, targetItem);
+                            parentFolderItems[prevFragment] = generateItem(handleEffectId(prevFragment), targetItem);
                             targetItem.AddChild(parentFolderItems[prevFragment]);
                         }
 
@@ -151,7 +165,7 @@ namespace ConfigApp
                         {
                             if (!parentFolderItems.ContainsKey(curFragment))
                             {
-                                parentFolderItems[curFragment] = generateItem(curFragment, parentFolderItems[prevFragment]);
+                                parentFolderItems[curFragment] = generateItem(handleEffectId(curFragment), parentFolderItems[prevFragment]);
                                 parentFolderItems[prevFragment].AddChild(parentFolderItems[curFragment]);
                             }
                             targetItem = parentFolderItems[curFragment];
@@ -159,7 +173,7 @@ namespace ConfigApp
                     }
                 }
 
-                var menuItem = generateItem(pathFragments.Last(), targetItem, file.Type != WorkshopSubmissionFileType.Text);
+                var menuItem = generateItem(handleEffectId(pathFragments.Last()), targetItem, file.Type != WorkshopSubmissionFileType.Text);
                 var fileState = new WorkshopSubmissionFileState(menuItem, pathName, file.EffectData);
                 menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit;
                 menuItem.OnConfigureClick = () =>
