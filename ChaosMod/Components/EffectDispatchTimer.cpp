@@ -28,9 +28,14 @@ void EffectDispatchTimer::OnRun()
 {
 	auto curTime = GetTickCount64();
 
-	if (m_EnableTimer && m_DrawTimerBar
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->DisableChaos))
+	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
+	{
+		ResetSavedPosition();
+		m_Timer = curTime;
+		return;
+	}
+
+	if (m_DrawTimerBar && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI))
 	{
 		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
 
@@ -64,9 +69,6 @@ void EffectDispatchTimer::OnRun()
 
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-		return;
-
 	m_TimerPercentage += deltaTime
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
 	                   / m_EffectSpawnTime / 1000.f;
@@ -88,12 +90,6 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 	auto player   = PLAYER_PED_ID();
 	auto position = GET_ENTITY_COORDS(player, false);
 
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-	{
-		m_DistanceChaosState.SavedPosition = position;
-		return;
-	}
-
 	if (IS_ENTITY_DEAD(player, false))
 	{
 		m_DistanceChaosState.DeadFlag = true;
@@ -102,8 +98,8 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 
 	if (m_DistanceChaosState.DeadFlag)
 	{
-		m_DistanceChaosState.DeadFlag      = false;
-		m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(player, false);
+		m_DistanceChaosState.DeadFlag = false;
+		ResetSavedPosition();
 		return;
 	}
 
@@ -165,6 +161,11 @@ void EffectDispatchTimer::SetTimerEnabled(bool state)
 std::uint64_t EffectDispatchTimer::GetTimer() const
 {
 	return m_Timer;
+}
+
+void EffectDispatchTimer::ResetSavedPosition()
+{
+	m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 }
 
 void EffectDispatchTimer::ResetTimer()
