@@ -109,7 +109,7 @@ namespace ConfigApp.Tabs.Settings
             body.Children.Add(m_DistanceGrid.Grid);
 
             var footerGrid = createCommonGrid();
-            footerGrid.PushRowSpacedPair("Enable Crossing Challenge™", m_EnableCrossingChallenge = Utils.GenerateCommonCheckBox());
+            footerGrid.PushRowSpacedPair("Enable Crossing Challenge™", m_EnableCrossingChallenge = Utils.GenerateCommonCheckBox(), "Set respawn and finish points on the map. Reach the finish point without dying to win.");
             grid.PushRowElement(footerGrid.Grid);
 
             scrollViewer.Content = grid.Grid;
