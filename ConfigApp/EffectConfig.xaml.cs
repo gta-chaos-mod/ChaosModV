@@ -41,7 +41,9 @@ namespace ConfigApp
 
             if (m_IsTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue && m_EffectData.TimedType != defaultTimedType;
+                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue &&
+                                                         m_EffectData.TimedType != defaultTimedType && 
+                                                         m_EffectData.TimedType != EffectTimedType.Custom;
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
