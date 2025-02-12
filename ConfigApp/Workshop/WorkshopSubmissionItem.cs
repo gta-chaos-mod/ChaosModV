@@ -156,7 +156,7 @@ namespace ConfigApp.Workshop
                     {
                         foreach (var line in File.ReadAllLines(m_FileHandler.SubmissionDirectory + file.Name))
                         {
-                            var match = Regex.Match(line, @"(?:Name|ScriptId)\s*=\s*""((?:\\""|[^""])+)""");
+                            var match = Regex.Match(line, @"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])+)""");
                             if (match.Success)
                             {
                                 SearchTerms.Add(new(match.Groups[1].Value, file.Name));

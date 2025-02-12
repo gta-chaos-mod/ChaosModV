@@ -137,7 +137,7 @@ namespace ConfigApp
                     if (file.Type == WorkshopSubmissionFileType.Sound)
                     {
                         var effectId = itemName;
-                        if (!Effects.EffectsMap.ContainsKey(effectId))
+                        if (!Effects.EffectsMap.ContainsKey(effectId) && itemName.Length > 4)
                             effectId = itemName[..^4];
                         if (Effects.EffectsMap.ContainsKey(effectId))
                             itemName += $" ({Effects.EffectsMap[effectId].Name})";
