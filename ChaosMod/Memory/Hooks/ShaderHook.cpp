@@ -102,7 +102,7 @@ namespace Hooks
 				    }
 				    else
 				    {
-					    LOG("Error compiling shader: Error code 0x" << std::hex << std::uppercase << compileResult);
+					    LOG("Error compiling shader: Error code 0x" << std::hex << std::uppercase << compileResult  << std::dec);
 					    if (errorMessages)
 					    {
 						    auto ptr = reinterpret_cast<BYTE *>(errorMessages->GetBufferPointer());

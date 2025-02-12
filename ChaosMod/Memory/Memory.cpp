@@ -196,7 +196,7 @@ namespace Memory
 				return {};
 
 			auto resultAddr = reinterpret_cast<uintptr_t>(thePattern.get_first());
-			DEBUG_LOG("Found pattern \"" << pattern << "\" at address 0x" << std::uppercase << std::hex << resultAddr);
+			DEBUG_LOG("Found pattern \"" << pattern << "\" at address 0x" << std::uppercase << std::hex << resultAddr << std::dec);
 			return resultAddr;
 		};
 
