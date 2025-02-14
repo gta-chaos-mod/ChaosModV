@@ -3,8 +3,8 @@
 #include "Util/Logging.h"
 #include "Util/MacroConcat.h"
 
-#include <unordered_map>
 #include <functional>
+#include <unordered_map>
 
 enum class EffectConditionType
 {
@@ -13,9 +13,9 @@ enum class EffectConditionType
 	ProportionalVotingEnabled
 };
 
-#define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                           \
-	namespace                                                                                     \
-	{                                                                                             \
+#define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                                \
+	namespace                                                                                          \
+	{                                                                                                  \
 		EffectCondition CHAOSCONCAT(_effectCondition, __LINE__)(conditionType, condition, failReason); \
 	}
 

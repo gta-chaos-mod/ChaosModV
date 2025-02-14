@@ -24,6 +24,44 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 }
 
+void EffectDispatchTimer::OnRun()
+{
+	auto curTime = GetTickCount64();
+
+	if (m_EnableTimer && m_DrawTimerBar
+	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
+	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->DisableChaos))
+	{
+		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
+
+		// Timer bar at the top
+		DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
+
+		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
+			DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1],
+			          m_TimerColor[2], 255, false);
+		else
+			DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
+			          false);
+	}
+
+	int deltaTime = curTime - m_Timer;
+
+	// The game was paused
+	if (deltaTime > 1000)
+		deltaTime = 0;
+
+	if (!m_PauseTimer)
+	{
+		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
+			UpdateTravelledDistance();
+		else
+			UpdateTimer(deltaTime);
+	}
+
+	m_Timer = curTime;
+}
+
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
 	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
@@ -177,42 +215,4 @@ void EffectDispatchTimer::SetTimerPaused(bool pause)
 bool EffectDispatchTimer::IsUsingDistanceBasedDispatch() const
 {
 	return m_DistanceChaosState.EnableDistanceBasedEffectDispatch;
-}
-
-void EffectDispatchTimer::OnRun()
-{
-	auto curTime = GetTickCount64();
-
-	if (m_EnableTimer && m_DrawTimerBar
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->DisableChaos))
-	{
-		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
-
-		// Timer bar at the top
-		DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
-
-		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
-			DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1],
-			          m_TimerColor[2], 255, false);
-		else
-			DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
-			          false);
-	}
-
-	int deltaTime = curTime - m_Timer;
-
-	// The game was paused
-	if (deltaTime > 1000)
-		deltaTime = 0;
-
-	if (!m_PauseTimer)
-	{
-		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-			UpdateTravelledDistance();
-		else
-			UpdateTimer(deltaTime);
-	}
-
-	m_Timer = curTime;
 }

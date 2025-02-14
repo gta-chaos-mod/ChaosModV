@@ -25,7 +25,7 @@ SplashTexts::SplashTexts()
 	ms_InitalSplashShown = true;
 }
 
-void SplashTexts::OnModPauseCleanup()
+void SplashTexts::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	m_ActiveSplashes.clear();
 }

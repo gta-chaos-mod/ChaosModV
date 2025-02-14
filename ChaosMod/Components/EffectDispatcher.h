@@ -100,15 +100,15 @@ class EffectDispatcher : public Component
 
 	EffectDispatcher(const std::array<std::uint8_t, 3> &textColor, const std::array<std::uint8_t, 3> &effectTimerColor);
 
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
+	virtual void OnRun() override;
+
   private:
 	float GetEffectTopSpace();
 
 	void RegisterPermanentEffects();
 
   public:
-	virtual void OnModPauseCleanup() override;
-	virtual void OnRun() override;
-
 	void DrawEffectTexts();
 
 	void DispatchEffect(const EffectIdentifier &effectId,

@@ -269,6 +269,24 @@ DebugSocket::DebugSocket()
 	}
 }
 
+void DebugSocket::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
+{
+	Close();
+}
+
+void DebugSocket::OnRun()
+{
+	if (!m_DelegateQueue.empty())
+	{
+		std::lock_guard lock(m_DelegateQueueMutex);
+		while (!m_DelegateQueue.empty())
+		{
+			m_DelegateQueue.front()();
+			m_DelegateQueue.pop();
+		}
+	}
+}
+
 void DebugSocket::Close()
 {
 	m_Server->stop();
@@ -286,24 +304,6 @@ void DebugSocket::ScriptLog(std::string_view scriptName, std::string_view text)
 
 	for (auto client : m_Server->getClients())
 		client->send(json.dump());
-}
-
-void DebugSocket::OnModPauseCleanup()
-{
-	Close();
-}
-
-void DebugSocket::OnRun()
-{
-	if (!m_DelegateQueue.empty())
-	{
-		std::lock_guard lock(m_DelegateQueueMutex);
-		while (!m_DelegateQueue.empty())
-		{
-			m_DelegateQueue.front()();
-			m_DelegateQueue.pop();
-		}
-	}
 }
 
 #endif

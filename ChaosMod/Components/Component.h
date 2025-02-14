@@ -90,7 +90,12 @@ class Component
 
 	Component &operator=(const Component &) = delete;
 
-	virtual void OnModPauseCleanup()
+	enum PauseCleanupFlags
+	{
+		// Passed if called from another thread
+		PauseCleanupFlags_UnsafeCleanup = (1 << 0)
+	};
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {})
 	{
 	}
 

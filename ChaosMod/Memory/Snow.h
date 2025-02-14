@@ -13,11 +13,11 @@ namespace Memory
 	{
 		/* Thanks to menyoo! */
 
-		static bool init   = false;
+		static bool init      = false;
 
 		static bool isPre3095 = getGameVersion() < eGameVersion::VER_1_0_3095_0;
-		auto snowPattern1 = isPre3095 ? "80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00"
-		                              : "44 38 ?? ?? ?? ?? 01 74 12 B9 40 00 00 00";
+		auto snowPattern1 =
+		    isPre3095 ? "80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00" : "44 38 ?? ?? ?? ?? 01 74 12 B9 40 00 00 00";
 		static auto handle = FindPattern(snowPattern1);
 		if (!handle.IsValid())
 			return;

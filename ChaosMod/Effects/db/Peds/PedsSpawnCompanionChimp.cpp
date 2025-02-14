@@ -8,8 +8,8 @@ static void OnStart()
 {
 	static const Hash modelHash = "a_c_chimp"_hash;
 
-	Ped playerPed     = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed               = PLAYER_PED_ID();
+	Vector3 playerPos           = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped = CreatePoolPed(28, modelHash, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });

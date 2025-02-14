@@ -21,7 +21,7 @@ EffectSound3D::EffectSound3D()
 		    {
 			    Sleep(100);
 
-			    if (IS_PAUSE_MENU_ACTIVE())
+			    if (GetTickCount64() > m_ThreadPingTimestamp + 100)
 			    {
 				    std::lock_guard lock(m_SoundsMutex);
 				    for (auto &[soundId, sound] : m_Sounds)
@@ -40,7 +40,7 @@ void EffectSound3D::FreeSounds()
 	}
 }
 
-void EffectSound3D::OnModPauseCleanup()
+void EffectSound3D::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	m_IsStopping = true;
 	m_PauseSoundsThread.join();
@@ -55,9 +55,11 @@ void EffectSound3D::OnRun()
 	if (m_Sounds.empty())
 		return;
 
-	auto playerPed    = PLAYER_PED_ID();
+	m_ThreadPingTimestamp = GetTickCount64();
 
-	auto adjCamCoords = GET_GAMEPLAY_CAM_COORD();
+	auto playerPed        = PLAYER_PED_ID();
+
+	auto adjCamCoords     = GET_GAMEPLAY_CAM_COORD();
 	ma_engine_listener_set_position(&m_maEngine, 0, adjCamCoords.x, adjCamCoords.y, adjCamCoords.z);
 
 	float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();

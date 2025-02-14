@@ -34,7 +34,6 @@ class DebugMenu : public Component
 	DebugMenu();
 
 	virtual void OnRun() override;
-
 	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
 	                        bool isAltPressed) override;
 

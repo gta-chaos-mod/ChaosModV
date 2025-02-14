@@ -72,7 +72,7 @@ class LuaScripts : public Component
   public:
 	LuaScripts();
 
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 
   private:
 	void SetupGlobalState();

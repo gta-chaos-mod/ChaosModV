@@ -30,6 +30,8 @@ class EffectDispatchTimer : public Component
   public:
 	EffectDispatchTimer(const std::array<BYTE, 3> &timerColor);
 
+	virtual void OnRun() override;
+
   private:
 	void UpdateTimer(int deltaTime);
 	void UpdateTravelledDistance();
@@ -53,6 +55,4 @@ class EffectDispatchTimer : public Component
 	void SetTimerPaused(bool pause);
 
 	bool IsUsingDistanceBasedDispatch() const;
-
-	virtual void OnRun() override;
 };

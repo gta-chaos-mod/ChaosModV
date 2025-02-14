@@ -46,6 +46,9 @@ class DebugSocket : public Component
   public:
 	DebugSocket();
 
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
+	virtual void OnRun() override;
+
   private:
 	void Connect();
 
@@ -53,9 +56,6 @@ class DebugSocket : public Component
 	void Close();
 
 	void ScriptLog(std::string_view scriptName, std::string_view text);
-
-	virtual void OnModPauseCleanup() override;
-	virtual void OnRun() override;
 };
 
 #endif
