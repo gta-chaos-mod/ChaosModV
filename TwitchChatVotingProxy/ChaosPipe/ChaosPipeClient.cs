@@ -256,7 +256,7 @@ namespace TwitchChatVotingProxy.ChaosPipe
                 m_Logger.Error("Unknown voting mode: " + modeName);
                 return;
             }
-        
+
             m_Logger.Information("Setting voting mode to " + modeName);
             OnSetVotingMode?.Invoke(this, new((EVotingMode)mode));
         }

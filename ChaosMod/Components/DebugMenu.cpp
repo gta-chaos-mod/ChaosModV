@@ -4,8 +4,8 @@
 
 #include "Components/EffectDispatcher.h"
 #include "Effects/EnabledEffects.h"
-#include "Util/OptionsManager.h"
 #include "Util/HelpText.h"
+#include "Util/OptionsManager.h"
 
 #define MAX_VIS_ITEMS 15
 

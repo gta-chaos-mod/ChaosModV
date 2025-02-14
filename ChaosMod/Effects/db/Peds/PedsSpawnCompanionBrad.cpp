@@ -8,10 +8,10 @@ static void OnStart()
 {
 	static const Hash model = "ig_brad"_hash;
 
-	Ped playerPed     = PLAYER_PED_ID();
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+	Ped playerPed           = PLAYER_PED_ID();
+	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
 
-	Ped ped           = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	Ped ped = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
 	CurrentEffect::SetEffectSoundPlayOptions(
 	    { .PlayType = EffectSoundPlayType::FollowEntity, .PlayFlags = EffectSoundPlayFlags_Looping, .Entity = ped });
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
