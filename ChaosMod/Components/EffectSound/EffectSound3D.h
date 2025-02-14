@@ -5,6 +5,7 @@
 #include <miniaudio.h>
 #include <scripthookv/inc/types.h>
 
+#include <cstdint>
 #include <map>
 #include <mutex>
 #include <string>
@@ -23,6 +24,7 @@ class EffectSound3D : public EffectSoundManager
 	std::mutex m_SoundsMutex;
 	bool m_IsStopping = false;
 	std::thread m_PauseSoundsThread;
+	uint64_t m_ThreadPingTimestamp;
 
   public:
 	EffectSound3D();
