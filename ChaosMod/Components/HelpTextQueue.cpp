@@ -4,14 +4,6 @@
 
 #include "Memory/Hooks/GetLabelTextHook.h"
 
-void HelpTextQueue::DisplayLabel(std::string_view label, std::uint8_t durationSecs)
-{
-	if (durationSecs == 0)
-		return;
-
-	m_HelpTextQueue.emplace(label, durationSecs / 1000.f);
-}
-
 void HelpTextQueue::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	Hooks::ClearCustomLabels();
@@ -29,4 +21,12 @@ void HelpTextQueue::OnRun()
 
 	if ((helpText.TimerSecs -= GET_FRAME_TIME()) < 0.f)
 		m_HelpTextQueue.pop();
+}
+
+void HelpTextQueue::DisplayLabel(std::string_view label, std::uint8_t durationSecs)
+{
+	if (durationSecs == 0)
+		return;
+
+	m_HelpTextQueue.emplace(label, durationSecs / 1000.f);
 }

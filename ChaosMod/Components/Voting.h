@@ -65,6 +65,9 @@ class Voting : public Component
   public:
 	Voting(const std::array<std::uint8_t, 3> &TextColor);
 
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
+	virtual void OnRun() override;
+
 	bool Init();
 	bool IsEnabled() const;
 	VotingMode GetVotingMode() const;
@@ -76,7 +79,4 @@ class Voting : public Component
   public:
 	void SendToPipe(std::string_view identifier, std::vector<std::string> params = {});
 	void ErrorOutWithMsg(std::string_view message);
-
-	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
-	virtual void OnRun() override;
 };

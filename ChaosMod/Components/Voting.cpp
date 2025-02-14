@@ -23,171 +23,6 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
 }
 
-bool Voting::Init()
-{
-	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
-	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
-	    < 3)
-	{
-		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable voting."
-		                " Reverting to normal mode.");
-
-		return false;
-	}
-
-	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
-	auto mutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
-	if (mutex)
-	{
-		WaitForSingleObject(mutex, INFINITE);
-		ReleaseMutex(mutex);
-		CloseHandle(mutex);
-	}
-
-	m_SecsBeforeVoting = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
-	                                                     OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
-
-	m_OverlayMode      = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
-	                                                     static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
-
-	m_VotingMode       = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
-	                                                     OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING)
-	                       ? VotingMode::Percentage
-	                       : VotingMode::Majority;
-	m_EnableVotingChanceSystemRetainInitialChance =
-	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
-	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
-
-	m_EnableRandomEffectVoteable = g_OptionsManager.GetVotingValue(
-	    { "RandomEffectVoteableEnable", "TwitchRandomEffectVoteableEnable" }, OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
-
-	STARTUPINFO startupInfo      = {};
-	PROCESS_INFORMATION procInfo = {};
-
-	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
-#ifdef CHAOSDEBUG
-	DWORD attributes = 0;
-	if (DoesFeatureFlagExist("forcenovotingconsole"))
-		attributes = CREATE_NO_WINDOW;
-
-	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
-#else
-	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
-#endif
-	free(str);
-
-	if (!result)
-	{
-		ErrorOutWithMsg((std::ostringstream()
-		                 << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError()
-		                 << "). Please verify the file exists. Reverting to normal mode.")
-		                    .str());
-
-		return false;
-	}
-
-	return true;
-}
-
-bool Voting::IsEnabled() const
-{
-	return m_EnableVoting;
-}
-
-VotingMode Voting::GetVotingMode() const
-{
-	return m_VotingMode;
-}
-
-void Voting::HandleMsg(std::string_view message)
-{
-	if (message == "hello")
-	{
-		if (!m_ReceivedHello)
-		{
-			m_ReceivedHello = true;
-			m_NoPingRuns    = 0;
-
-			LOG("Received hello from voting pipe");
-
-			if (ComponentExists<EffectDispatchTimer>())
-				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
-
-			SendToPipe("hello_back");
-		}
-	}
-	else if (message == "ping")
-	{
-		m_LastPing   = GetTickCount64();
-		m_NoPingRuns = 0;
-	}
-	else
-	{
-		auto receivedJSON = nlohmann::json::parse(message);
-		if (!receivedJSON.empty())
-		{
-			std::string identifier = receivedJSON["Identifier"];
-			if (identifier == "voteresult")
-			{
-				int result          = receivedJSON["SelectedOption"];
-
-				m_HasReceivedResult = true;
-
-				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_ChosenEffectId =
-				    std::make_unique<EffectIdentifier>(result == 3 ? EffectIdentifier() : m_EffectChoices[result]->Id);
-			}
-			else if (identifier == "currentvotes")
-			{
-				std::vector<int> options = receivedJSON["Votes"];
-				if (options.size() == m_EffectChoices.size())
-				{
-					for (size_t idx = 0; idx < options.size(); idx++)
-					{
-						int votes                         = options[idx];
-						m_EffectChoices[idx]->ChanceVotes = votes;
-					}
-				}
-			}
-			else if (identifier == "error")
-			{
-				std::string message = receivedJSON["Message"];
-				ErrorOutWithMsg(message);
-			}
-		}
-	}
-}
-
-std::string Voting::GetPipeJson(std::string_view identifier, std::vector<std::string> params)
-{
-	nlohmann::json finalJSON;
-	finalJSON["Identifier"] = identifier;
-	finalJSON["Options"]    = params;
-	return finalJSON.dump();
-}
-
-void Voting::SendToPipe(std::string_view identifier, std::vector<std::string> params)
-{
-	auto msg = GetPipeJson(identifier, params);
-	msg += "\n";
-	WriteFile(m_PipeHandle, msg.c_str(), msg.length(), NULL, NULL);
-}
-
-void Voting::ErrorOutWithMsg(std::string_view message)
-{
-	std::wstring wStr = { message.begin(), message.end() };
-	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
-
-	DisconnectNamedPipe(m_PipeHandle);
-	CloseHandle(m_PipeHandle);
-	m_PipeHandle = INVALID_HANDLE_VALUE;
-
-	if (ComponentExists<EffectDispatchTimer>())
-		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
-
-	m_EnableVoting = false;
-}
-
 void Voting::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
@@ -465,4 +300,169 @@ void Voting::OnRun()
 			y += .05f;
 		}
 	}
+}
+
+bool Voting::Init()
+{
+	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
+	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
+	    < 3)
+	{
+		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable voting."
+		                " Reverting to normal mode.");
+
+		return false;
+	}
+
+	// A previous instance of the voting proxy could still be running, wait for it to release the mutex
+	auto mutex = OpenMutex(SYNCHRONIZE, FALSE, L"ChaosModVVotingMutex");
+	if (mutex)
+	{
+		WaitForSingleObject(mutex, INFINITE);
+		ReleaseMutex(mutex);
+		CloseHandle(mutex);
+	}
+
+	m_SecsBeforeVoting = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
+	                                                     OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+
+	m_OverlayMode      = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
+	                                                     static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+
+	m_VotingMode       = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
+	                                                     OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING)
+	                       ? VotingMode::Percentage
+	                       : VotingMode::Majority;
+	m_EnableVotingChanceSystemRetainInitialChance =
+	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
+	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
+
+	m_EnableRandomEffectVoteable = g_OptionsManager.GetVotingValue(
+	    { "RandomEffectVoteableEnable", "TwitchRandomEffectVoteableEnable" }, OPTION_DEFAULT_TWITCH_RANDOM_EFFECT);
+
+	STARTUPINFO startupInfo      = {};
+	PROCESS_INFORMATION procInfo = {};
+
+	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
+#ifdef CHAOSDEBUG
+	DWORD attributes = 0;
+	if (DoesFeatureFlagExist("forcenovotingconsole"))
+		attributes = CREATE_NO_WINDOW;
+
+	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
+#else
+	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &startupInfo, &procInfo);
+#endif
+	free(str);
+
+	if (!result)
+	{
+		ErrorOutWithMsg((std::ostringstream()
+		                 << "Error while starting chaosmod/TwitchChatVotingProxy.exe (Error Code: " << GetLastError()
+		                 << "). Please verify the file exists. Reverting to normal mode.")
+		                    .str());
+
+		return false;
+	}
+
+	return true;
+}
+
+bool Voting::IsEnabled() const
+{
+	return m_EnableVoting;
+}
+
+VotingMode Voting::GetVotingMode() const
+{
+	return m_VotingMode;
+}
+
+void Voting::HandleMsg(std::string_view message)
+{
+	if (message == "hello")
+	{
+		if (!m_ReceivedHello)
+		{
+			m_ReceivedHello = true;
+			m_NoPingRuns    = 0;
+
+			LOG("Received hello from voting pipe");
+
+			if (ComponentExists<EffectDispatchTimer>())
+				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
+
+			SendToPipe("hello_back");
+		}
+	}
+	else if (message == "ping")
+	{
+		m_LastPing   = GetTickCount64();
+		m_NoPingRuns = 0;
+	}
+	else
+	{
+		auto receivedJSON = nlohmann::json::parse(message);
+		if (!receivedJSON.empty())
+		{
+			std::string identifier = receivedJSON["Identifier"];
+			if (identifier == "voteresult")
+			{
+				int result          = receivedJSON["SelectedOption"];
+
+				m_HasReceivedResult = true;
+
+				// If random effect voteable (result == 3) won, dispatch random effect later
+				m_ChosenEffectId =
+				    std::make_unique<EffectIdentifier>(result == 3 ? EffectIdentifier() : m_EffectChoices[result]->Id);
+			}
+			else if (identifier == "currentvotes")
+			{
+				std::vector<int> options = receivedJSON["Votes"];
+				if (options.size() == m_EffectChoices.size())
+				{
+					for (size_t idx = 0; idx < options.size(); idx++)
+					{
+						int votes                         = options[idx];
+						m_EffectChoices[idx]->ChanceVotes = votes;
+					}
+				}
+			}
+			else if (identifier == "error")
+			{
+				std::string message = receivedJSON["Message"];
+				ErrorOutWithMsg(message);
+			}
+		}
+	}
+}
+
+std::string Voting::GetPipeJson(std::string_view identifier, std::vector<std::string> params)
+{
+	nlohmann::json finalJSON;
+	finalJSON["Identifier"] = identifier;
+	finalJSON["Options"]    = params;
+	return finalJSON.dump();
+}
+
+void Voting::SendToPipe(std::string_view identifier, std::vector<std::string> params)
+{
+	auto msg = GetPipeJson(identifier, params);
+	msg += "\n";
+	WriteFile(m_PipeHandle, msg.c_str(), msg.length(), NULL, NULL);
+}
+
+void Voting::ErrorOutWithMsg(std::string_view message)
+{
+	std::wstring wStr = { message.begin(), message.end() };
+	MessageBox(NULL, wStr.c_str(), L"ChaosModV Error", MB_OK | MB_ICONERROR);
+
+	DisconnectNamedPipe(m_PipeHandle);
+	CloseHandle(m_PipeHandle);
+	m_PipeHandle = INVALID_HANDLE_VALUE;
+
+	if (ComponentExists<EffectDispatchTimer>())
+		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
+
+	m_EnableVoting = false;
 }

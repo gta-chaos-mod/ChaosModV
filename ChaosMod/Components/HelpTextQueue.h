@@ -14,8 +14,8 @@ class HelpTextQueue : public Component
 	std::queue<HelpText> m_HelpTextQueue;
 
   public:
-	void DisplayLabel(std::string_view label, std::uint8_t durationSecs);
-
 	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;
+
+	void DisplayLabel(std::string_view label, std::uint8_t durationSecs);
 };
