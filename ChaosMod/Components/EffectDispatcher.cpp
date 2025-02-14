@@ -38,17 +38,17 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 	// Increase weight for all effects first
 	for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
 		if (!enabledEffectData.IsMeta())
-			enabledEffectData.Weight += enabledEffectData.WeightMult;
+			enabledEffectData.Weight += enabledEffectData.WeightMult * enabledEffectData.WeightMult;
 
 	// Reset weight of this effect (or every effect in group) to reduce chance of same effect (group) happening multiple
 	// times in a row
 	if (effectData.GroupType.empty())
-		effectData.Weight = effectData.WeightMult;
+		effectData.Weight = effectData.WeightMult * effectData.WeightMult;
 	else
 	{
 		for (auto &[effectId, enabledEffectData] : g_EnabledEffects)
 			if (enabledEffectData.GroupType == effectData.GroupType)
-				effectData.Weight = effectData.WeightMult;
+				enabledEffectData.Weight = enabledEffectData.WeightMult * enabledEffectData.WeightMult;
 	}
 
 	auto playEffectDispatchSound = [&](EffectDispatcher::ActiveEffect &activeEffect)
