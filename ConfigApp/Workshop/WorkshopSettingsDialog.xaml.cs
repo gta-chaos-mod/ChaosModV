@@ -15,7 +15,7 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            workshop_custom_url.Text = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl");
+            workshop_custom_url.Text = OptionsManager.WorkshopFile.ReadValue<string>("WorkshopCustomUrl");
             workshop_custom_url.Watermark = Info.WORKSHOP_DEFAULT_URL;
         }
 

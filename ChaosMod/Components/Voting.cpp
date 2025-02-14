@@ -20,7 +20,7 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 {
 	m_EnableVoting =
 	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
-	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
+	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" });
 }
 
 bool Voting::Init()

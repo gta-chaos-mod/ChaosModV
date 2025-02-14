@@ -53,11 +53,11 @@ namespace ConfigApp.Tabs.Settings
         public override void OnLoadValues()
         {
             if (OptionsManager.ConfigFile.HasKey("EffectTimerColor") && m_TimerBarColor is not null)
-                m_TimerBarColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue("EffectTimerColor"));
+                m_TimerBarColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue<string>("EffectTimerColor"));
             if (OptionsManager.ConfigFile.HasKey("EffectTextColor") && m_EffectTextColor is not null)
-                m_EffectTextColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue("EffectTextColor"));
+                m_EffectTextColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue<string>("EffectTextColor"));
             if (OptionsManager.ConfigFile.HasKey("EffectTimedTimerColor") && m_EffectTimerBarColor is not null)
-                m_EffectTimerBarColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue("EffectTimedTimerColor"));
+                m_EffectTimerBarColor.SelectedColor = (Color)ColorConverter.ConvertFromString(OptionsManager.ConfigFile.ReadValue<string>("EffectTimedTimerColor"));
         }
 
         public override void OnSaveValues()

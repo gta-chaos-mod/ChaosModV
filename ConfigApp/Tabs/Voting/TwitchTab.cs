@@ -70,23 +70,23 @@ namespace ConfigApp.Tabs.Voting
         {
             if (m_EnableTwitchVoting is not null)
             {
-                m_EnableTwitchVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableVotingTwitch", false);
+                m_EnableTwitchVoting.IsChecked = OptionsManager.VotingFile.ReadValue("EnableVotingTwitch", false);
                 SetElementsEnabled(m_EnableTwitchVoting.IsChecked.GetValueOrDefault());
             }
             if (m_ChannelName is not null)
-                m_ChannelName.Text = OptionsManager.TwitchFile.ReadValue("TwitchChannelName");
+                m_ChannelName.Text = OptionsManager.VotingFile.ReadValue<string>("TwitchChannelName");
             if (m_UserName is not null)
-                m_UserName.Text = OptionsManager.TwitchFile.ReadValue("TwitchUserName");
+                m_UserName.Text = OptionsManager.VotingFile.ReadValue<string>("TwitchUserName");
             if (m_Token is not null)
-                m_Token.Password = OptionsManager.TwitchFile.ReadValue("TwitchChannelOAuth");
+                m_Token.Password = OptionsManager.VotingFile.ReadValue<string>("TwitchChannelOAuth");
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.TwitchFile.WriteValue("EnableVotingTwitch", m_EnableTwitchVoting?.IsChecked);
-            OptionsManager.TwitchFile.WriteValue("TwitchChannelName", m_ChannelName?.Text);
-            OptionsManager.TwitchFile.WriteValue("TwitchUserName", m_UserName?.Text);
-            OptionsManager.TwitchFile.WriteValue("TwitchChannelOAuth", m_Token?.Password);
+            OptionsManager.VotingFile.WriteValue("EnableVotingTwitch", m_EnableTwitchVoting?.IsChecked);
+            OptionsManager.VotingFile.WriteValue("TwitchChannelName", m_ChannelName?.Text);
+            OptionsManager.VotingFile.WriteValue("TwitchUserName", m_UserName?.Text);
+            OptionsManager.VotingFile.WriteValue("TwitchChannelOAuth", m_Token?.Password);
         }
     }
 }

@@ -4,9 +4,9 @@
 
 #include "Component.h"
 #include "Components/EffectDispatcher.h"
+#include "Util/Events.h"
 #include "Util/OptionsFile.h"
 #include "Util/Text.h"
-#include "Util/Events.h"
 
 #define SPLASH_TEXT_DUR_SECS 10
 
@@ -19,7 +19,7 @@ class CrossingChallenge : public Component
 		int ammo;
 	};
 
-	OptionsFile m_ConfigFile { "chaosmod/configs/crossing.ini", { "chaosmod/crossing.ini" } };
+	OptionsFile m_ConfigFile { { "chaosmod/configs/cached/crossingchallenge.json", "chaosmod/crossing.ini" } };
 
 	bool m_Enabled              = false;
 

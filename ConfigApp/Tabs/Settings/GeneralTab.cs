@@ -37,7 +37,11 @@ namespace ConfigApp.Tabs.Settings
             grid.PushRowSpacedPair("Don't draw effect text", m_DisableDrawEffectText = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
-            grid.PushRowSpacedPair("Random Seed (Leave empty for random seed every time)", m_RandomSeed = Utils.GenerateCommonNumericOnlyTextBox());
+            grid.PushRowSpacedPair("Random Seed (Leave empty for random seed every time)", m_RandomSeed = new TextBox()
+            {
+                Width = 200f,
+                Height = 20f
+            });
             grid.PushRowSpacedPair("Enable effect group weighting", m_EnableEffectGroupWeighting = Utils.GenerateCommonCheckBox());
             grid.PopRow();
 
@@ -53,21 +57,21 @@ namespace ConfigApp.Tabs.Settings
         public override void OnLoadValues()
         {
             if (m_DisableDrawTimer is not null)
-                m_DisableDrawTimer.IsChecked = OptionsManager.ConfigFile.ReadValueBool("DisableTimerBarDraw", false);
+                m_DisableDrawTimer.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableTimerBarDraw", false);
             if (m_DisableDrawEffectText is not null)
-                m_DisableDrawEffectText.IsChecked = OptionsManager.ConfigFile.ReadValueBool("DisableEffectTextDraw", false);
+                m_DisableDrawEffectText.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableEffectTextDraw", false);
             if (m_RandomSeed is not null)
-                m_RandomSeed.Text = OptionsManager.ConfigFile.ReadValue("Seed");
+                m_RandomSeed.Text = OptionsManager.ConfigFile.ReadValue<string>("Seed");
             if (m_MaxRunningEffects is not null)
-                m_MaxRunningEffects.Text = OptionsManager.ConfigFile.ReadValue("MaxParallelRunningEffects", "99");
+                m_MaxRunningEffects.Text = $"{OptionsManager.ConfigFile.ReadValue("MaxParallelRunningEffects", 99)}";
             if (m_EnableEffectGroupWeighting is not null)
-                m_EnableEffectGroupWeighting.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableGroupWeightingAdjustments", true);
+                m_EnableEffectGroupWeighting.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableGroupWeightingAdjustments", true);
             if (m_DisableModOnStartup is not null)
-                m_DisableModOnStartup.IsChecked = OptionsManager.ConfigFile.ReadValueBool("DisableStartup", false);
+                m_DisableModOnStartup.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableStartup", false);
             if (m_EnableFailsafe is not null)
-                m_EnableFailsafe.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableFailsafe", true);
+                m_EnableFailsafe.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableFailsafe", true);
             if (m_EnableModSplashTexts is not null)
-                m_EnableModSplashTexts.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableModSplashTexts", true);
+                m_EnableModSplashTexts.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableModSplashTexts", true);
         }
 
         public override void OnSaveValues()
@@ -75,7 +79,7 @@ namespace ConfigApp.Tabs.Settings
             OptionsManager.ConfigFile.WriteValue("DisableTimerBarDraw", m_DisableDrawTimer?.IsChecked);
             OptionsManager.ConfigFile.WriteValue("DisableEffectTextDraw", m_DisableDrawEffectText?.IsChecked);
             OptionsManager.ConfigFile.WriteValue("Seed", m_RandomSeed?.Text);
-            OptionsManager.ConfigFile.WriteValue("MaxParallelRunningEffects", m_MaxRunningEffects?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("MaxParallelRunningEffects", m_MaxRunningEffects?.Text);
             OptionsManager.ConfigFile.WriteValue("EnableGroupWeightingAdjustments", m_EnableEffectGroupWeighting?.IsChecked);
             OptionsManager.ConfigFile.WriteValue("DisableStartup", m_DisableModOnStartup?.IsChecked);
             OptionsManager.ConfigFile.WriteValue("EnableFailsafe", m_EnableFailsafe?.IsChecked);

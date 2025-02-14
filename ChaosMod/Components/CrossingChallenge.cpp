@@ -24,7 +24,7 @@ void CrossingChallenge::SetStartParams()
 	_SET_WEATHER_TYPE_TRANSITION(m_StartWeatherType1, m_StartWeatherType2, m_StartWeatherPercent);
 	SET_CLOCK_TIME(m_ClockHours, m_ClockMinutes, m_ClockSeconds);
 	REMOVE_ALL_PED_WEAPONS(player, false);
-	for (WeaponInfo weapon : m_StartWeapons)
+	for (const auto &weapon : m_StartWeapons)
 		GIVE_WEAPON_TO_PED(player, weapon.hash, weapon.ammo, false, false);
 
 	CLEAR_PLAYER_WANTED_LEVEL(PLAYER_ID());
@@ -196,28 +196,28 @@ static std::string GetWeaponOptionName(Hash weapon)
 
 void CrossingChallenge::SaveConfig()
 {
-	m_ConfigFile.SetValue<bool>("StartEnabled", m_StartEnabled);
-	m_ConfigFile.SetValue<float>("StartLocationX", m_StartLocation.x);
-	m_ConfigFile.SetValue<float>("StartLocationY", m_StartLocation.y);
-	m_ConfigFile.SetValue<float>("StartLocationZ", m_StartLocation.z);
-	m_ConfigFile.SetValue<Hash>("StartVehicle", m_StartVehicleHash);
-	m_ConfigFile.SetValue<float>("StartHeading", m_StartHeading);
-	m_ConfigFile.SetValue<float>("StartCameraHeading", m_StartCameraHeading);
-	m_ConfigFile.SetValue<Hash>("StartWeather1", m_StartWeatherType1);
-	m_ConfigFile.SetValue<Hash>("StartWeather2", m_StartWeatherType2);
-	m_ConfigFile.SetValue<float>("StartWeatherPercent", m_StartWeatherPercent);
-	m_ConfigFile.SetValue<int>("StartHours", m_ClockHours);
-	m_ConfigFile.SetValue<int>("StartMinutes", m_ClockMinutes);
-	m_ConfigFile.SetValue<int>("StartSeconds", m_ClockSeconds);
+	m_ConfigFile.SetValue("StartEnabled", m_StartEnabled);
+	m_ConfigFile.SetValue("StartLocationX", m_StartLocation.x);
+	m_ConfigFile.SetValue("StartLocationY", m_StartLocation.y);
+	m_ConfigFile.SetValue("StartLocationZ", m_StartLocation.z);
+	m_ConfigFile.SetValue("StartVehicle", m_StartVehicleHash);
+	m_ConfigFile.SetValue("StartHeading", m_StartHeading);
+	m_ConfigFile.SetValue("StartCameraHeading", m_StartCameraHeading);
+	m_ConfigFile.SetValue("StartWeather1", m_StartWeatherType1);
+	m_ConfigFile.SetValue("StartWeather2", m_StartWeatherType2);
+	m_ConfigFile.SetValue("StartWeatherPercent", m_StartWeatherPercent);
+	m_ConfigFile.SetValue("StartHours", m_ClockHours);
+	m_ConfigFile.SetValue("StartMinutes", m_ClockMinutes);
+	m_ConfigFile.SetValue("StartSeconds", m_ClockSeconds);
 
-	for (WeaponInfo weapon : m_StartWeapons)
-		m_ConfigFile.SetValue<int>(GetWeaponOptionName(weapon.hash), weapon.ammo);
+	for (const auto &weapon : m_StartWeapons)
+		m_ConfigFile.SetValue(GetWeaponOptionName(weapon.hash), weapon.ammo);
 
-	m_ConfigFile.SetValue<bool>("EndEnabled", m_EndEnabled);
-	m_ConfigFile.SetValue<float>("EndLocationX", m_EndLocation.x);
-	m_ConfigFile.SetValue<float>("EndLocationY", m_EndLocation.y);
-	m_ConfigFile.SetValue<float>("EndLocationZ", m_EndLocation.z);
-	m_ConfigFile.SetValue<float>("EndRadius", m_EndRadius);
+	m_ConfigFile.SetValue("EndEnabled", m_EndEnabled);
+	m_ConfigFile.SetValue("EndLocationX", m_EndLocation.x);
+	m_ConfigFile.SetValue("EndLocationY", m_EndLocation.y);
+	m_ConfigFile.SetValue("EndLocationZ", m_EndLocation.z);
+	m_ConfigFile.SetValue("EndRadius", m_EndRadius);
 
 	m_ConfigFile.WriteFile();
 }
@@ -259,42 +259,42 @@ void CrossingChallenge::CaptureEnd()
 
 CrossingChallenge::CrossingChallenge()
 {
-	m_Enabled = g_OptionsManager.GetConfigValue<bool>({ "EnableCrossingChallenge" }, false);
+	m_Enabled = g_OptionsManager.GetConfigValue({ "EnableCrossingChallenge" }, false);
 
 	if (!m_Enabled)
 		return;
 
-	m_StartEnabled = m_ConfigFile.ReadValue<bool>("StartEnabled", false);
+	m_StartEnabled = m_ConfigFile.ReadValue({ "StartEnabled" }, false);
 	if (m_StartEnabled)
 	{
-		m_StartLocation       = Vector3(m_ConfigFile.ReadValue<float>("StartLocationX", 0.f),
-		                                m_ConfigFile.ReadValue<float>("StartLocationY", 0.f),
-		                                m_ConfigFile.ReadValue<float>("StartLocationZ", 0.f));
-		m_StartVehicleHash    = m_ConfigFile.ReadValue<Hash>("StartVehicle", 0);
-		m_StartHeading        = m_ConfigFile.ReadValue<float>("StartHeading", 0.f);
-		m_StartCameraHeading  = m_ConfigFile.ReadValue<float>("StartCameraHeading", 0.f);
-		m_StartWeatherType1   = m_ConfigFile.ReadValue<Hash>("StartWeather1", 0);
-		m_StartWeatherType2   = m_ConfigFile.ReadValue<Hash>("StartWeather2", 0);
-		m_StartWeatherPercent = m_ConfigFile.ReadValue<float>("StartWeatherPercent", 0.f);
-		m_ClockHours          = m_ConfigFile.ReadValue<int>("StartHours", 0);
-		m_ClockMinutes        = m_ConfigFile.ReadValue<int>("StartMinutes", 0);
-		m_ClockSeconds        = m_ConfigFile.ReadValue<int>("StartSeconds", 0);
+		m_StartLocation       = Vector3(m_ConfigFile.ReadValue({ "StartLocationX" }, 0.f),
+		                                m_ConfigFile.ReadValue({ "StartLocationY" }, 0.f),
+		                                m_ConfigFile.ReadValue({ "StartLocationZ" }, 0.f));
+		m_StartVehicleHash    = m_ConfigFile.ReadValue({ "StartVehicle" }, 0);
+		m_StartHeading        = m_ConfigFile.ReadValue({ "StartHeading" }, 0.f);
+		m_StartCameraHeading  = m_ConfigFile.ReadValue({ "StartCameraHeading" }, 0.f);
+		m_StartWeatherType1   = m_ConfigFile.ReadValue({ "StartWeather1" }, 0);
+		m_StartWeatherType2   = m_ConfigFile.ReadValue({ "StartWeather2" }, 0);
+		m_StartWeatherPercent = m_ConfigFile.ReadValue({ "StartWeatherPercent" }, 0.f);
+		m_ClockHours          = m_ConfigFile.ReadValue({ "StartHours" }, 0);
+		m_ClockMinutes        = m_ConfigFile.ReadValue({ "StartMinutes" }, 0);
+		m_ClockSeconds        = m_ConfigFile.ReadValue({ "StartSeconds" }, 0);
 
 		for (Hash hash : Memory::GetAllWeapons())
 		{
-			int ammo = m_ConfigFile.ReadValue<int>(GetWeaponOptionName(hash), -1);
+			int ammo = m_ConfigFile.ReadValue({ GetWeaponOptionName(hash) }, -1);
 			if (ammo >= 0)
 				m_StartWeapons.emplace_back(WeaponInfo { hash, ammo });
 		}
 	}
 
-	m_EndEnabled = m_ConfigFile.ReadValue<bool>("EndEnabled", false);
+	m_EndEnabled = m_ConfigFile.ReadValue({ "EndEnabled" }, false);
 	if (m_EndEnabled)
 	{
-		m_EndLocation = Vector3(m_ConfigFile.ReadValue<float>("EndLocationX", 0.f),
-		                        m_ConfigFile.ReadValue<float>("EndLocationY", 0.f),
-		                        m_ConfigFile.ReadValue<float>("EndLocationZ", 0.f));
-		m_EndRadius   = m_ConfigFile.ReadValue<float>("EndRadius", 0.f);
+		m_EndLocation =
+		    Vector3(m_ConfigFile.ReadValue({ "EndLocationX" }, 0.f), m_ConfigFile.ReadValue({ "EndLocationY" }, 0.f),
+		            m_ConfigFile.ReadValue({ "EndLocationZ" }, 0.f));
+		m_EndRadius = m_ConfigFile.ReadValue({ "EndRadius" }, 0.f);
 	}
 
 	if (ComponentExists<EffectDispatcher>())

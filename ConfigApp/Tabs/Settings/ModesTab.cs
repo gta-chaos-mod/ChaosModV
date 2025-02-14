@@ -121,30 +121,30 @@ namespace ConfigApp.Tabs.Settings
         {
             if (m_DispatchMode is not null)
             {
-                m_DispatchMode.SelectedIndex = !OptionsManager.ConfigFile.ReadValueBool("EnableDistanceBasedEffectDispatch", false) ? 0 : 1;
+                m_DispatchMode.SelectedIndex = !OptionsManager.ConfigFile.ReadValue("EffectDispatchMode", false, "EnableDistanceBasedEffectDispatch") ? 0 : 1;
                 UpdateDispatchModeGridVisibility();
             }
             if (m_EffectDispatchTimer is not null)
-                m_EffectDispatchTimer.Text = OptionsManager.ConfigFile.ReadValue("NewEffectSpawnTime", "30");
+                m_EffectDispatchTimer.Text = $"{OptionsManager.ConfigFile.ReadValue("NewEffectSpawnTime", 30)}";
             if (m_TimedEffectDuration is not null)
-                m_TimedEffectDuration.Text = OptionsManager.ConfigFile.ReadValue("EffectTimedDur", "90");
+                m_TimedEffectDuration.Text = $"{OptionsManager.ConfigFile.ReadValue("EffectTimedDur", 90)}";
             if (m_ShortTimedEffectDuration is not null)
-                m_ShortTimedEffectDuration.Text = OptionsManager.ConfigFile.ReadValue("EffectTimedShortDur", "30");
+                m_ShortTimedEffectDuration.Text = $"{OptionsManager.ConfigFile.ReadValue("EffectTimedShortDur", 30)}";
             if (m_DistanceBasedDispatchDistance is not null)
-                m_DistanceBasedDispatchDistance.Text = OptionsManager.ConfigFile.ReadValue("DistanceToActivateEffect", "250");
+                m_DistanceBasedDispatchDistance.Text = $"{OptionsManager.ConfigFile.ReadValue("DistanceToActivateEffect", 250)}";
             if (m_DistanceBasedDispatchType is not null)
-                m_DistanceBasedDispatchType.SelectedIndex = OptionsManager.ConfigFile.ReadValueInt("DistanceType", 0);
+                m_DistanceBasedDispatchType.SelectedIndex = OptionsManager.ConfigFile.ReadValue("DistanceType", 0);
             if (m_EnableCrossingChallenge is not null)
-                m_EnableCrossingChallenge.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableCrossingChallenge", false);
+                m_EnableCrossingChallenge.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableCrossingChallenge", false);
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.ConfigFile.WriteValue("NewEffectSpawnTime", m_EffectDispatchTimer?.Text);
-            OptionsManager.ConfigFile.WriteValue("EffectTimedDur", m_TimedEffectDuration?.Text);
-            OptionsManager.ConfigFile.WriteValue("EffectTimedShortDur", m_ShortTimedEffectDuration?.Text);
-            OptionsManager.ConfigFile.WriteValue("EnableDistanceBasedEffectDispatch", m_DispatchMode?.SelectedIndex);
-            OptionsManager.ConfigFile.WriteValue("DistanceToActivateEffect", m_DistanceBasedDispatchDistance?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("NewEffectSpawnTime", m_EffectDispatchTimer?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("EffectTimedDur", m_TimedEffectDuration?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("EffectTimedShortDur", m_ShortTimedEffectDuration?.Text);
+            OptionsManager.ConfigFile.WriteValue("EffectDispatchMode", m_DispatchMode?.SelectedIndex);
+            OptionsManager.ConfigFile.WriteValueAsInt("DistanceToActivateEffect", m_DistanceBasedDispatchDistance?.Text);
             OptionsManager.ConfigFile.WriteValue("DistanceType", m_DistanceBasedDispatchType?.SelectedIndex);
             OptionsManager.ConfigFile.WriteValue("EnableCrossingChallenge", m_EnableCrossingChallenge?.IsChecked);
         }

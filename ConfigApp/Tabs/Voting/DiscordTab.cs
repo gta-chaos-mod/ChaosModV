@@ -71,16 +71,8 @@ namespace ConfigApp.Tabs.Voting
             });
             PopRow();
 
-            PushRowSpacedPair("Server ID", m_GuildId = new TextBox()
-            {
-                Width = 125f,
-                Height = 20f
-            });
-            PushRowSpacedPair("Channel ID", m_ChannelId = new TextBox()
-            {
-                Width = 125f,
-                Height = 20f
-            });
+            PushRowSpacedPair("Server ID", m_GuildId = Utils.GenerateCommonNumericOnlyTextBox(default, 125f, 20f));
+            PushRowSpacedPair("Channel ID", m_ChannelId = Utils.GenerateCommonNumericOnlyTextBox(default, 125f, 20f));
 
             SetElementsEnabled(false);
         }
@@ -89,24 +81,24 @@ namespace ConfigApp.Tabs.Voting
         {
             if (m_EnableDiscordVoting is not null)
             {
-                m_EnableDiscordVoting.IsChecked = OptionsManager.TwitchFile.ReadValueBool("EnableVotingDiscord", false);
+                m_EnableDiscordVoting.IsChecked = OptionsManager.VotingFile.ReadValue("EnableVotingDiscord", false);
                 SetElementsEnabled(m_EnableDiscordVoting.IsChecked.GetValueOrDefault());
             }
 
             if (m_Token is not null)
-                m_Token.Password = OptionsManager.TwitchFile.ReadValue("DiscordBotToken");
+                m_Token.Password = OptionsManager.VotingFile.ReadValue<string>("DiscordBotToken");
             if (m_GuildId is not null)
-                m_GuildId.Text = OptionsManager.TwitchFile.ReadValue("DiscordGuildId");
+                m_GuildId.Text = OptionsManager.VotingFile.ReadValue<string>("DiscordGuildId");
             if (m_ChannelId is not null)
-                m_ChannelId.Text = OptionsManager.TwitchFile.ReadValue("DiscordChannelId");
+                m_ChannelId.Text = OptionsManager.VotingFile.ReadValue<string>("DiscordChannelId");
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.TwitchFile.WriteValue("EnableVotingDiscord", m_EnableDiscordVoting?.IsChecked);
-            OptionsManager.TwitchFile.WriteValue("DiscordBotToken", m_Token?.Password);
-            OptionsManager.TwitchFile.WriteValue("DiscordGuildId", m_GuildId?.Text);
-            OptionsManager.TwitchFile.WriteValue("DiscordChannelId", m_ChannelId?.Text);
+            OptionsManager.VotingFile.WriteValue("EnableVotingDiscord", m_EnableDiscordVoting?.IsChecked);
+            OptionsManager.VotingFile.WriteValue("DiscordBotToken", m_Token?.Password);
+            OptionsManager.VotingFile.WriteValue("DiscordGuildId", m_GuildId?.Text);
+            OptionsManager.VotingFile.WriteValue("DiscordChannelId", m_ChannelId?.Text);
         }
     }
 }
