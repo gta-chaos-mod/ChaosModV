@@ -106,7 +106,7 @@ class EffectDispatcher : public Component
 	void RegisterPermanentEffects();
 
   public:
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;
 
 	void DrawEffectTexts();

@@ -263,7 +263,7 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 	g_EffectDispatcherThread = CreateFiber(0, _OnRunEffects, this);
 }
 
-void EffectDispatcher::OnModPauseCleanup()
+void EffectDispatcher::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	ClearEffects();
 }

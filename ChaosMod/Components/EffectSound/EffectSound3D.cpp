@@ -40,7 +40,7 @@ void EffectSound3D::FreeSounds()
 	}
 }
 
-void EffectSound3D::OnModPauseCleanup()
+void EffectSound3D::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	m_IsStopping = true;
 	m_PauseSoundsThread.join();

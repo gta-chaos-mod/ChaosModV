@@ -561,7 +561,7 @@ void CrossingChallenge::OnRun()
 	}
 }
 
-void CrossingChallenge::OnModPauseCleanup()
+void CrossingChallenge::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_StartedState != 2)
 		SET_ENTITY_INVINCIBLE(PLAYER_PED_ID(), false);
@@ -569,10 +569,14 @@ void CrossingChallenge::OnModPauseCleanup()
 	m_StartedState            = 0;
 	m_ButtonsScaleformHandle  = 0;
 	m_ButtonsScaleformLoading = false;
-	if (DOES_BLIP_EXIST(m_StartBlip))
-		REMOVE_BLIP(&m_StartBlip);
-	if (DOES_BLIP_EXIST(m_EndBlip))
-		REMOVE_BLIP(&m_EndBlip);
+
+	if (!(cleanupFlags & PauseCleanupFlags_UnsafeCleanup))
+	{
+		if (DOES_BLIP_EXIST(m_StartBlip))
+			REMOVE_BLIP(&m_StartBlip);
+		if (DOES_BLIP_EXIST(m_EndBlip))
+			REMOVE_BLIP(&m_EndBlip);
+	}
 
 	if (m_HelpMessageTick != -1)
 	{

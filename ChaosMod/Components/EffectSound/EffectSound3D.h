@@ -33,7 +33,7 @@ class EffectSound3D : public EffectSoundManager
 	void FreeSounds();
 
   public:
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;
 	virtual DWORD64 HandleSound(const std::string &soundFile) override;
 	virtual void SetSoundOptions(DWORD64 soundId, const EffectSoundPlayOptions &soundPlayOptions) override;

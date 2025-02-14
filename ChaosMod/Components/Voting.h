@@ -77,6 +77,6 @@ class Voting : public Component
 	void SendToPipe(std::string_view identifier, std::vector<std::string> params = {});
 	void ErrorOutWithMsg(std::string_view message);
 
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;
 };

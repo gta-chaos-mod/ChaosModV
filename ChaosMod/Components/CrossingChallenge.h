@@ -4,9 +4,9 @@
 
 #include "Component.h"
 #include "Components/EffectDispatcher.h"
+#include "Util/Events.h"
 #include "Util/OptionsFile.h"
 #include "Util/Text.h"
-#include "Util/Events.h"
 
 #define SPLASH_TEXT_DUR_SECS 10
 
@@ -95,7 +95,7 @@ class CrossingChallenge : public Component
 	CrossingChallenge();
 
 	virtual void OnRun() override;
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
 	                        bool isAltPressed) override;
 	inline void IncrementEffects()

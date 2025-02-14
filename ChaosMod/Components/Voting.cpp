@@ -188,7 +188,7 @@ void Voting::ErrorOutWithMsg(std::string_view message)
 	m_EnableVoting = false;
 }
 
-void Voting::OnModPauseCleanup()
+void Voting::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
 	{

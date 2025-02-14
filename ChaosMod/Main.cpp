@@ -362,7 +362,7 @@ namespace Main
 
 		if (!ms_ModDisabled)
 			for (auto component : g_Components)
-				component->OnModPauseCleanup();
+				component->OnModPauseCleanup(Component::PauseCleanupFlags_UnsafeCleanup);
 
 		LOG("Mod unload complete!");
 	}

@@ -288,7 +288,7 @@ void DebugSocket::ScriptLog(std::string_view scriptName, std::string_view text)
 		client->send(json.dump());
 }
 
-void DebugSocket::OnModPauseCleanup()
+void DebugSocket::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	Close();
 }
