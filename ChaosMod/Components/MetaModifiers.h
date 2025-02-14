@@ -2,6 +2,7 @@
 
 #include "Components/Component.h"
 #include "Util/VotingMode.h"
+#include "Util/TimerMode.h"
 
 #include <cstdint>
 
@@ -15,4 +16,7 @@ class MetaModifiers : public Component
 	bool DisableChaos                        = false;
 	bool FlipChaosUI                         = false;
 	VotingMode VotingModeOverride            = VotingMode::None;
+	TimerMode TimerModeOverride              = TimerMode::None;
+	int TimeToDispatchEffect                 = 0;
+	int DistanceToDispatchEffect             = 0;
 };

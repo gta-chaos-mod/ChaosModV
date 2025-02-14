@@ -26,9 +26,13 @@ void EffectDispatchTimer::UpdateTimer(int deltaTime)
 	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
 		return;
 
+	int effectSpawnTime = ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->TimeToDispatchEffect > 0
+	                        ? GetComponent<MetaModifiers>()->TimeToDispatchEffect
+	                        : m_EffectSpawnTime;
+
 	m_TimerPercentage += deltaTime
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
-	                   / m_EffectSpawnTime / 1000.f;
+	                   / effectSpawnTime / 1000.f;
 
 	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 	{
@@ -66,14 +70,22 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 		return;
 	}
 
+	int effectSpawnDistance =
+	    ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DistanceToDispatchEffect > 0
+	        ? GetComponent<MetaModifiers>()->DistanceToDispatchEffect
+	        : m_DistanceChaosState.DistanceToActivateEffect;
+
 	auto distance =
 	    GET_DISTANCE_BETWEEN_COORDS(position.x, position.y, position.z, m_DistanceChaosState.SavedPosition.x,
 	                                m_DistanceChaosState.SavedPosition.y, m_DistanceChaosState.SavedPosition.z, true);
 
 	if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Displacement)
 	{
-		if (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f)
-		    >= m_DistanceChaosState.DistanceToActivateEffect)
+		m_TimerPercentage =
+		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
+		    / effectSpawnDistance;
+
+		if (m_TimerPercentage >= 1.f)
 		{
 			if (m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 			{
@@ -86,17 +98,13 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 
 			m_DistanceChaosState.SavedPosition = position;
 		}
-
-		m_TimerPercentage =
-		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
-		    / m_DistanceChaosState.DistanceToActivateEffect;
 	}
 	else if (m_DistanceChaosState.DistanceType == DistanceChaosState::TravelledDistanceType::Distance)
 	{
 		m_DistanceChaosState.SavedPosition = position;
 		m_TimerPercentage +=
 		    (distance * (ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerSpeedModifier : 1.f))
-		    / m_DistanceChaosState.DistanceToActivateEffect;
+		    / effectSpawnDistance;
 
 		if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 		{
@@ -119,6 +127,21 @@ bool EffectDispatchTimer::IsTimerEnabled() const
 void EffectDispatchTimer::SetTimerEnabled(bool state)
 {
 	m_EnableTimer = state;
+}
+
+int EffectDispatchTimer::GetDefaultEffectSpawnTime() const
+{
+	return m_EffectSpawnTime;
+}
+
+int EffectDispatchTimer::GetDefaultEffectSpawnDistance() const
+{
+	return m_DistanceChaosState.DistanceToActivateEffect;
+}
+
+void EffectDispatchTimer::ResetSavedPosition()
+{
+	m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 }
 
 std::uint64_t EffectDispatchTimer::GetTimer() const
@@ -205,10 +228,24 @@ void EffectDispatchTimer::OnRun()
 
 	if (!m_PauseTimer)
 	{
-		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
-			UpdateTravelledDistance();
-		else
+		const TimerMode modeOverride =
+		    ComponentExists<MetaModifiers>() ? GetComponent<MetaModifiers>()->TimerModeOverride : TimerMode::None;
+		
+		switch (modeOverride)
+		{
+		case TimerMode::Time:
 			UpdateTimer(deltaTime);
+			break;
+		case TimerMode::Distance:
+			UpdateTravelledDistance();
+			break;
+		default:
+			if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
+				UpdateTravelledDistance();
+			else
+				UpdateTimer(deltaTime);
+			break;
+		}
 	}
 
 	m_Timer = curTime;

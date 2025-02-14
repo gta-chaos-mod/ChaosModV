@@ -416,6 +416,8 @@
             { "player_tptowaypointopposite", new EffectInfo("Teleport To The Opposite Side Of Waypoint", EffectCategory.Player) },
             { "meta_votingmode_majority", new EffectInfo("Majority Voting", EffectCategory.Meta, true) },
             { "meta_votingmode_antimajority", new EffectInfo("Minority Voting", EffectCategory.Meta, true) },
+            { "meta_timer_distancebased", new EffectInfo("Distance Based Timer", EffectCategory.Meta, true) },
+            { "meta_timer_timebased", new EffectInfo("Time Based Timer", EffectCategory.Meta, true) },
         };
     }
 }

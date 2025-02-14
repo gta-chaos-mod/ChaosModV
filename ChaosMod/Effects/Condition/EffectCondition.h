@@ -10,7 +10,9 @@ enum class EffectConditionType
 {
 	None,
 	VotingEnabled, // Voting is enabled
-	ProportionalVotingEnabled
+	ProportionalVotingEnabled,
+	UsingDistanceTimer,
+	UsingTimeTimer,
 };
 
 #define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                           \

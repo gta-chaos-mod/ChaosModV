@@ -527,6 +527,11 @@ LuaScripts::LuaScripts()
 			exposable(m_GlobalState);
 	}
 
+	m_GlobalState.new_enum("TimerMode", "None", TimerMode::None, "Time", TimerMode::Time, "Distance", TimerMode::Distance);
+
+	m_GlobalState.new_enum("VotingMode", "None", VotingMode::None, "Majority", VotingMode::Majority, "Percentage",
+	                       VotingMode::Percentage, "Antimajority", VotingMode::Antimajority);
+
 	if (ComponentExists<MetaModifiers>())
 	{
 		auto getMetaModFactory = []<typename T>(T &modifier)
@@ -552,7 +557,9 @@ LuaScripts::LuaScripts()
 		auto metaModifiersMetaTable = m_GlobalState.create_table_with(
 		    "EffectDurationModifier", P(EffectDurationModifier), "TimerSpeedModifier", P(TimerSpeedModifier),
 		    "AdditionalEffectsToDispatch", P(AdditionalEffectsToDispatch), "HideChaosUI", P(HideChaosUI),
-		    "DisableChaos", P(DisableChaos), "FlipChaosUI", P(FlipChaosUI));
+		    "DisableChaos", P(DisableChaos), "FlipChaosUI", P(FlipChaosUI), "VotingModeOverride", P(VotingModeOverride),
+		    "TimerModeOverride", P(TimerModeOverride), "TimeToDispatchEffect", P(TimeToDispatchEffect),
+		    "DistanceToDispatchEffect", P(DistanceToDispatchEffect));
 #undef P
 		metaModifiersMetaTable[sol::meta_function::new_index] = [] {};
 		metaModifiersMetaTable[sol::meta_function::index] = metaModifiersMetaTable;
