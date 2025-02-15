@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Camera.h"
 
 static void OnTick()
@@ -11,14 +12,10 @@ static void OnTick()
 	Player playerPed = PLAYER_PED_ID();
 	Hash weaponHash;
 	if (!GET_CURRENT_PED_WEAPON(playerPed, &weaponHash, true) || GET_WEAPONTYPE_GROUP(weaponHash) == 0xD49321D4)
-	{
 		return;
-	}
 	// Exclude non working weapons (minigun, hellbringer)
 	if (weaponHash == 0x42BF8A85 || weaponHash == 0xB62D1F67)
-	{
 		return;
-	}
 	DISABLE_CONTROL_ACTION(0, 24, true);
 	DISABLE_CONTROL_ACTION(0, 68, true);
 	DISABLE_CONTROL_ACTION(0, 69, true);
@@ -40,7 +37,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Rapid Fire",
 		.Id = "player_rapid_fire",

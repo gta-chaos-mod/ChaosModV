@@ -4,11 +4,12 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include <scripthookv/inc/enums.h>
 
 // These should be 8 characters all uppercase.
 // But there isn't anything enforcing that :^)
-const char *ROULETTE_WORDS[] = {
+CHAOS_VAR const char *ROULETTE_WORDS[] = {
 	"ROCKSTAR", "PONGO123", "DRUNDER_", "LAST0XYG", "TAKE_TWO", "DAVEYYYY", "MWEATHER", "RED_DEAD", "CHAOSMOD",
 	"HACKING!", "ALXBLADE", "DVIPERAU", "HCKERMAN", "JIZZLEDS", "BURHAC!!", "SAURUS88", "TORIKSLV", "TOASTYYY",
 	"ELIAS_GR", "KOLYA_VE", "LU7YOSHI", "P.BIDDLE", "SLOTHBEE", "ELI_RICK", "JUHANA!!", "LOSCHIKA", "BYHEMECH",
@@ -17,7 +18,7 @@ const char *ROULETTE_WORDS[] = {
 	"/HACK_R*", "FRANKLIN", "MICHAEL_", "TREVOR__", "LESTER__", "SYNFETIC",
 };
 
-const char *WIN_PHRASES[] = {
+CHAOS_VAR const char *WIN_PHRASES[] = {
 	"Rockstar: Creating realistic hacking since 1998.",
 	"I swear that was made for a child, by a child.",
 	"I wonder what would happen if you failed...",
@@ -58,7 +59,9 @@ const char *WIN_PHRASES[] = {
 	"Kernel bitrate overclocked!",
 	"[ Hacking skill raised by 1 ]",
 	"Ah ah ah, you didn't say the magic word!",
-	"I frequent r/ProgrammerHumor.",
+	"Nice",
+	"Sorry, were you busy doing something?",
+	"Now back to your favorite game",
 };
 
 enum class TimerAction
@@ -69,12 +72,12 @@ enum class TimerAction
 	KILL
 };
 
-static int lives             = 0;
-static int scaleform         = 0;
-static int timer             = 0;
-static TimerAction act       = TimerAction::NONE;
-static int selectInputReturn = 0;
-static bool finished         = false;
+CHAOS_VAR int lives             = 0;
+CHAOS_VAR int scaleform         = 0;
+CHAOS_VAR int timer             = 0;
+CHAOS_VAR TimerAction act       = TimerAction::NONE;
+CHAOS_VAR int selectInputReturn = 0;
+CHAOS_VAR bool finished         = false;
 
 static void ScaleformPushString(const char *text)
 {
@@ -132,9 +135,7 @@ static void OnStart()
 
 	scaleform = GRAPHICS::_REQUEST_SCALEFORM_MOVIE_INTERACTIVE("Hacking_PC");
 	while (!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleform))
-	{
 		WAIT(0);
-	}
 
 	GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(scaleform, "SET_BACKGROUND");
 	GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
@@ -227,9 +228,7 @@ static void OnStart()
 		}
 
 		if (!IS_SCREEN_FADED_IN())
-		{
 			act = TimerAction::REMOVE;
-		}
 
 		if (act != TimerAction::NONE && MISC::GET_GAME_TIMER() >= timer)
 		{
@@ -274,7 +273,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Realistic Hacking",
 		.Id = "player_hacking"

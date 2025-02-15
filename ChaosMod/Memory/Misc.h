@@ -21,9 +21,7 @@ namespace Memory
 		{
 			Handle handle = FindPattern("E8 ? ? ? ? C6 05 ? ? ? ? ? 48 83 C4 58");
 			if (!handle.IsValid())
-			{
 				return;
-			}
 
 			patchByte = handle.Into().Get<BYTE>();
 		}

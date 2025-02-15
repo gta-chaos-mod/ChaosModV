@@ -4,22 +4,21 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include <Util/Peds.h>
 #include <Util/Types.h>
 
-static std::list<Ped> cougarEnemies;
-static int spawnTimer = -1;
-static Hash relationshipGroup;
-static int maxCougarsToSpawn = 5;
+CHAOS_VAR std::list<Ped> cougarEnemies;
+CHAOS_VAR int spawnTimer = -1;
+CHAOS_VAR Hash relationshipGroup;
+CHAOS_VAR size_t maxCougarsToSpawn = 5;
 
 static void OnStop()
 {
 	REMOVE_NAMED_PTFX_ASSET("des_trailerpark");
 
 	for (Ped ped : cougarEnemies)
-	{
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-	}
 
 	cougarEnemies.clear();
 }
@@ -28,15 +27,13 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
-	{
 		WAIT(0);
-	}
 
-	Ped playerPed           = PLAYER_PED_ID();
-	Vector3 playerPos       = GET_ENTITY_COORDS(playerPed, false);
-	int current_time        = GET_GAME_TIMER();
+	Ped playerPed       = PLAYER_PED_ID();
+	Vector3 playerPos   = GET_ENTITY_COORDS(playerPed, false);
+	int current_time    = GET_GAME_TIMER();
 
-	static DWORD64 lastTick = GET_GAME_TIMER();
+	static int lastTick = GET_GAME_TIMER();
 
 	if (lastTick < current_time - 100)
 	{
@@ -63,13 +60,9 @@ static void OnTick()
 				it++;
 
 				if (IS_PED_IN_ANY_VEHICLE(playerPed, true))
-				{
 					TASK_ENTER_VEHICLE(cougar, GET_VEHICLE_PED_IS_IN(playerPed, false), -1, -2, 2.f, 1, 0);
-				}
 				else
-				{
 					TASK_COMBAT_PED(cougar, playerPed, 0, 16);
-				}
 
 				SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(cougar, true);
 			}
@@ -79,7 +72,7 @@ static void OnTick()
 	if (cougarEnemies.size() < maxCougarsToSpawn && current_time > spawnTimer + 2000)
 	{
 		spawnTimer       = current_time;
-		Vector3 spawnPos = GetCoordAround(playerPed, g_Random.GetRandomInt(0, 360), 10, 0, true);
+		Vector3 spawnPos = GetCoordAround(playerPed, g_Random.GetRandomFloat(0.f, 360.f), 10.f, 0.f, true);
 		USE_PARTICLE_FX_ASSET("core");
 		START_PARTICLE_FX_NON_LOOPED_AT_COORD("exp_air_molotov", spawnPos.x, spawnPos.y, spawnPos.z, 0, 0, 0, 2, true,
 		                                      true, true);
@@ -98,7 +91,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Hot Cougars In Your Area",
 		.Id = "peds_hotcougars",

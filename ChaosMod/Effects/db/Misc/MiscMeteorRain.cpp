@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
 static void OnTick()
@@ -65,9 +66,7 @@ static void OnTick()
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(prop))
 					{
 						if (lastTick2 < curTick - 1000)
-						{
 							meteorDespawnTime[i]--;
-						}
 					}
 					continue;
 				}
@@ -82,13 +81,11 @@ static void OnTick()
 	}
 
 	if (lastTick2 < curTick - 1000)
-	{
 		lastTick2 = curTick;
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Meteor Shower",
 		.Id = "meteorrain",

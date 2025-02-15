@@ -3,14 +3,15 @@
  */
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Player.h"
 
-static Ped clone;
-static Vector3 coords;
-static float heading;
-static Vector3 rot;
-static Vehicle cloneVeh;
-static int camModes[3] = { 0, 0, 0 };
+CHAOS_VAR Ped clone;
+CHAOS_VAR Vector3 coords;
+CHAOS_VAR float heading;
+CHAOS_VAR Vector3 rot;
+CHAOS_VAR Vehicle cloneVeh;
+CHAOS_VAR int camModes[3] = { 0, 0, 0 };
 
 static void OnStart()
 {
@@ -75,9 +76,7 @@ static void OnTick()
 {
 	// (kolyaventuri): Apply camera effects
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
-	{
 		SET_TRANSITION_TIMECYCLE_MODIFIER("secret_camera", 1.5f);
-	}
 
 	Ped player = PLAYER_PED_ID();
 
@@ -122,7 +121,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Virtual Reality",
 		.Id = "player_vr",

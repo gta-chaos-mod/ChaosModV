@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
 static void OnTick()
@@ -26,7 +27,8 @@ static void OnTick()
 
 		LoadModel(WHALE_MODEL);
 
-		Ped whale = CreatePoolPed(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_Random.GetRandomInt(0, 359));
+		Ped whale =
+		    CreatePoolPed(28, WHALE_MODEL, spawnPos.x, spawnPos.y, spawnPos.z, g_Random.GetRandomFloat(0.f, 359.f));
 
 		whaleAmount++;
 		for (int i = 0; i < MAX_WHALES; i++)
@@ -64,9 +66,7 @@ static void OnTick()
 					if (HAS_ENTITY_COLLIDED_WITH_ANYTHING(whale))
 					{
 						if (lastTick2 < curTick - 1000)
-						{
 							whaleDespawnTime[i]--;
-						}
 					}
 					continue;
 				}
@@ -81,13 +81,11 @@ static void OnTick()
 	}
 
 	if (lastTick2 < curTick - 1000)
-	{
 		lastTick2 = curTick;
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Whale Rain",
 		.Id = "world_whalerain",

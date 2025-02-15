@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -13,7 +15,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Pop Tires Of Every Vehicle",
 		.Id = "playerveh_poptires"

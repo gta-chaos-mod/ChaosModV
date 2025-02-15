@@ -3,13 +3,15 @@
 */
 
 #include <stdafx.h>
-static Camera sickCamera = 0;
-static float camZoom     = 80.f;
-static float camZoomRate = 0.4f;
-static float camRotX     = 0.f;
-static float camRotXRate = 0.4f;
-static float camRotY     = 0.f;
-static float camRotYRate = 0.6f;
+
+#include "Effects/Register/RegisterEffect.h"
+CHAOS_VAR Camera sickCamera = 0;
+CHAOS_VAR float camZoom     = 80.f;
+CHAOS_VAR float camZoomRate = 0.4f;
+CHAOS_VAR float camRotX     = 0.f;
+CHAOS_VAR float camRotXRate = 0.4f;
+CHAOS_VAR float camRotY     = 0.f;
+CHAOS_VAR float camRotYRate = 0.6f;
 
 static void UpdateCamera()
 {
@@ -42,21 +44,15 @@ static void OnTick()
 		lastTick = curTick;
 
 		if (camZoom < 60 || camZoom > 100)
-		{
 			camZoomRate = camZoomRate * -1;
-		}
 		camZoom += camZoomRate;
 
 		if (camRotX < -25 || camRotX > 25)
-		{
 			camRotXRate = camRotXRate * -1;
-		}
 		camRotX += camRotXRate;
 
 		if (camRotY < -35 || camRotY > 35)
-		{
 			camRotYRate = camRotYRate * -1;
-		}
 		camRotY += camRotYRate;
 	}
 
@@ -73,7 +69,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "I Feel Sick",
         .Id = "player_sick_cam",

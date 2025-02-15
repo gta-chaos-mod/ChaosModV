@@ -4,9 +4,10 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/HelpText.h"
 
-static int last_shot = 0;
+CHAOS_VAR int last_shot = 0;
 
 static void OnStop()
 {
@@ -32,13 +33,11 @@ static void OnTick()
 				{
 					REQUEST_WEAPON_ASSET(weaponHash, 31, 0);
 					while (!HAS_WEAPON_ASSET_LOADED(weaponHash))
-					{
 						WAIT(0);
-					}
 				}
 				Vehicle veh             = GET_VEHICLE_PED_IS_IN(player, false);
 				Vector3 vehPos          = GET_ENTITY_COORDS(veh, false);
-				float zOffset           = 0.35;
+				float zOffset           = 0.35f;
 				Vector3 leftWeaponStart = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 0.5, zOffset);
 				Vector3 leftWeaponEnd   = GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(veh, -1.5, 100, zOffset);
 				SHOOT_SINGLE_BULLET_BETWEEN_COORDS(leftWeaponStart.x, leftWeaponStart.y, leftWeaponStart.z,
@@ -56,7 +55,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Vehicles Shoot Rockets",
 		.Id = "veh_weapons",

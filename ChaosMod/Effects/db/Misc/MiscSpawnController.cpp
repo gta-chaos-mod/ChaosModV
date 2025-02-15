@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void SpawnProp(Hash propHash)
 {
 	Vector3 playerPos = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
@@ -16,7 +18,7 @@ static void OnStartUFO()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartUFO, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartUFO, nullptr, nullptr, 
 	{
 		.Name = "Spawn UFO",
 		.Id = "misc_spawnufo",
@@ -31,7 +33,7 @@ static void OnStartFerrisWheel()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFerrisWheel, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFerrisWheel, nullptr, nullptr, 
 	{
 		.Name = "Spawn Ferris Wheel",
 		.Id = "misc_spawnferriswheel",

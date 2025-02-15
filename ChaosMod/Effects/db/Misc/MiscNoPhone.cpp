@@ -1,13 +1,13 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	REQUEST_SCRIPT("cellphone_controller");
 
 	while (!HAS_SCRIPT_LOADED("cellphone_controller"))
-	{
 		WAIT(0);
-	}
 
 	START_NEW_SCRIPT("cellphone_controller", 1424);
 
@@ -20,7 +20,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "No Phone",
 		.Id = "player_nophone",

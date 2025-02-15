@@ -2,18 +2,19 @@
 {
     /// <summary>
     /// Represents how the vote options are being sent to the client after
-    /// JSON serializing them.
+    /// JSON serializing them with properties converted to lower case after the fact.
     /// </summary>
     class OverlayVoteOption
     {
+        public string Label { get; set; }
+        public string[] Matches { get; set; }
+        public int Value { get; set; }
+
         public OverlayVoteOption(IVoteOption voteOption)
         {
-            label = voteOption.Label;
-            value = voteOption.Votes;
-            matches = voteOption.Matches.ToArray();
+            Label = voteOption.Label;
+            Value = voteOption.Votes;
+            Matches = voteOption.Matches.ToArray();
         }
-        public string label { get; set; }
-        public string[] matches { get; set; }
-        public int value { get; set; }
     }
 }

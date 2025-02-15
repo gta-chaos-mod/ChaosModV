@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 struct SpacePed
 {
 	SpacePed(Ped ped, Vector3 vel) : Ped(ped), Vel(vel)
@@ -42,7 +44,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Launch All Nearby Peds Up",
 		.Id = "peds_launchnearby"

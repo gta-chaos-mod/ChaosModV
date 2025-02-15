@@ -29,7 +29,16 @@ namespace Memory
 	};
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange = {});
-	MH_STATUS AddHook(void *target, void *detour, void *orig);
+
+	template <typename T> inline MH_STATUS AddHook(void *target, T detour, T *orig)
+	{
+		auto result = MH_CreateHook(target, reinterpret_cast<void *>(detour), reinterpret_cast<void **>(orig));
+
+		if (result == MH_OK)
+			MH_EnableHook(target);
+
+		return result;
+	}
 
 	template <typename T> inline void Write(T *addr, T value, int count = 1)
 	{
@@ -37,9 +46,7 @@ namespace Memory
 		VirtualProtect(addr, sizeof(T) * count, PAGE_EXECUTE_READWRITE, &oldProtect);
 
 		for (int i = 0; i < count; i++)
-		{
 			addr[i] = value;
-		}
 
 		VirtualProtect(addr, sizeof(T) * count, oldProtect, &oldProtect);
 	}

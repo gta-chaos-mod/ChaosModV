@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	Ped playerPed      = PLAYER_PED_ID();
@@ -12,9 +14,7 @@ static void OnStart()
 	for (Vehicle veh : GetAllVehs())
 	{
 		if (veh == playerVeh)
-		{
 			continue;
-		}
 
 		Vector3 coords = GET_ENTITY_COORDS(veh, false);
 		float dist =
@@ -45,22 +45,18 @@ static void OnStart()
 					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
 					if (seatPed != playerPed)
-					{
 						teleportPeds.push_back(seatPed);
-					}
 				}
 			}
 		}
 
-		Hash closestVehModel   = GET_ENTITY_MODEL(closestVeh);
-		int closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
+		Hash closestVehModel      = GET_ENTITY_MODEL(closestVeh);
+		size_t closestVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(closestVehModel);
 
-		for (int i = 0; i < teleportPeds.size(); i++)
+		for (size_t i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= closestVehMaxSeats)
-			{
 				break;
-			}
 
 			Ped ped = teleportPeds[i];
 
@@ -79,7 +75,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Set Player Into Closest Vehicle",
 		.Id = "player_tpclosestveh"

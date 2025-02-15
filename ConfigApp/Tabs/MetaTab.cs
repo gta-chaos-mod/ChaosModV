@@ -6,13 +6,12 @@ namespace ConfigApp.Tabs
 {
     public class MetaTab : Tab
     {
-        private TextBox m_MetaEffectDispatchTimer;
+        private TextBox? m_MetaEffectDispatchTimer = null;
+        private TextBox? m_MetaEffectDuration = null;
+        private TextBox? m_MetaEffectShortDuration = null;
 
-        private TextBox m_MetaEffectDuration;
-
-        private TextBox m_MetaEffectShortDuration;
-
-        private static DependencyProperty IsSelectableProperty = DependencyProperty.Register("IsSelectable", typeof(bool), typeof(TreeViewItem), new FrameworkPropertyMetadata(true, null) { BindsTwoWayByDefault = true });
+        private static readonly DependencyProperty IsSelectableProperty =
+            DependencyProperty.Register("IsSelectable", typeof(bool), typeof(TreeViewItem), new FrameworkPropertyMetadata(true, null) { BindsTwoWayByDefault = true });
 
         protected override void InitContent()
         {
@@ -72,20 +71,19 @@ namespace ConfigApp.Tabs
 
         public override void OnLoadValues()
         {
-            m_MetaEffectDispatchTimer.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", "600");
-
-            m_MetaEffectDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", "95");
-
-            m_MetaEffectShortDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", "65");
+            if (m_MetaEffectDispatchTimer is not null)
+                m_MetaEffectDispatchTimer.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", "600");
+            if (m_MetaEffectDuration is not null)
+                m_MetaEffectDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", "95");
+            if (m_MetaEffectShortDuration is not null)
+                m_MetaEffectShortDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", "65");
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.ConfigFile.WriteValue("NewMetaEffectSpawnTime", m_MetaEffectDispatchTimer.Text);
-
-            OptionsManager.ConfigFile.WriteValue("MetaEffectDur", m_MetaEffectDuration.Text);
-
-            OptionsManager.ConfigFile.WriteValue("MetaShortEffectDur", m_MetaEffectShortDuration.Text);
+            OptionsManager.ConfigFile.WriteValue("NewMetaEffectSpawnTime", m_MetaEffectDispatchTimer?.Text);
+            OptionsManager.ConfigFile.WriteValue("MetaEffectDur", m_MetaEffectDuration?.Text);
+            OptionsManager.ConfigFile.WriteValue("MetaShortEffectDur", m_MetaEffectShortDuration?.Text);
         }
     }
 }

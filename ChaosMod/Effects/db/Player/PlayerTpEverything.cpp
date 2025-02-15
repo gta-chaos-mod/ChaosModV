@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	std::vector<Entity> entities;
@@ -8,9 +10,7 @@ static void OnStart()
 	for (auto ped : GetAllPeds())
 	{
 		if (maxEntities == 10)
-		{
 			break;
-		}
 
 		maxEntities--;
 
@@ -26,9 +26,7 @@ static void OnStart()
 	for (auto veh : GetAllVehs())
 	{
 		if (maxEntities == 0)
-		{
 			break;
-		}
 
 		maxEntities--;
 
@@ -43,9 +41,7 @@ static void OnStart()
 	auto playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	for (auto entity : entities)
-	{
 		SET_ENTITY_COORDS(entity, playerPos.x, playerPos.y, playerPos.z, false, false, false, false);
-	}
 
 	WAIT(0);
 
@@ -57,7 +53,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Teleport Everything To Player",
 		.Id = "player_tpeverything"

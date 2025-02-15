@@ -4,37 +4,31 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 struct EnemyGroup
 {
 	Vehicle vehicle;
 	std::vector<Ped> peds;
 };
 
-static Hash model;
-static Hash microSmgHash;
-static Hash relationshipGroup;
-static EnemyGroup helicopterGroup;
-static EnemyGroup mesaGroup;
+CHAOS_VAR Hash model;
+CHAOS_VAR Hash microSmgHash;
+CHAOS_VAR Hash relationshipGroup;
+CHAOS_VAR EnemyGroup helicopterGroup;
+CHAOS_VAR EnemyGroup mesaGroup;
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float minOffset, float maxOffset)
 {
 	Vector3 randomCoord;
 	if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-	{
-		randomCoord.x = startCoord.x + g_Random.GetRandomInt(minOffset, maxOffset);
-	}
+		randomCoord.x = startCoord.x + g_Random.GetRandomFloat(minOffset, maxOffset);
 	else
-	{
-		randomCoord.x = startCoord.x - g_Random.GetRandomInt(minOffset, maxOffset);
-	}
+		randomCoord.x = startCoord.x - g_Random.GetRandomFloat(minOffset, maxOffset);
 	if (g_Random.GetRandomInt(0, 1) % 2 == 0)
-	{
-		randomCoord.y = startCoord.y + g_Random.GetRandomInt(minOffset, maxOffset);
-	}
+		randomCoord.y = startCoord.y + g_Random.GetRandomFloat(minOffset, maxOffset);
 	else
-	{
-		randomCoord.y = startCoord.y - g_Random.GetRandomInt(minOffset, maxOffset);
-	}
+		randomCoord.y = startCoord.y - g_Random.GetRandomFloat(minOffset, maxOffset);
 	randomCoord.z = startCoord.z;
 	return randomCoord;
 }
@@ -101,9 +95,7 @@ static void spawnMesa()
 		spawnPoint = getRandomOffsetCoord(playerPos, 50, 50);
 		float groundZ;
 		if (GET_GROUND_Z_FOR_3D_COORD(spawnPoint.x, spawnPoint.y, spawnPoint.z, &groundZ, false, false))
-		{
 			spawnPoint.z = groundZ;
-		}
 	}
 	float xDiff   = playerPos.x - spawnPoint.x;
 	float yDiff   = playerPos.y - spawnPoint.y;
@@ -142,14 +134,10 @@ static void OnStop()
 {
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&helicopterGroup.vehicle);
 	for (Ped ped : helicopterGroup.peds)
-	{
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-	}
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&mesaGroup.vehicle);
 	for (Ped ped : mesaGroup.peds)
-	{
 		SET_PED_AS_NO_LONGER_NEEDED(&ped);
-	}
 }
 
 static bool checkPedsAlive(std::vector<Ped> pedList)
@@ -204,7 +192,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Mercenaries",
 		.Id = "peds_mercenaries",

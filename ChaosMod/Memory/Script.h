@@ -15,9 +15,7 @@ namespace Memory
 	inline rage::scrProgram *ScriptThreadToProgram(rage::scrThread *thread)
 	{
 		if (!thread)
-		{
 			return nullptr;
-		}
 
 		static const Handle sharedHandle = []
 		{
@@ -34,9 +32,7 @@ namespace Memory
 		static auto scrProgramRegistry__FindProgramByHash = []() -> rage::scrProgram *(*)(DWORD64, Hash)
 		{
 			if (!sharedHandle.IsValid())
-			{
 				return nullptr;
-			}
 
 			return sharedHandle.At(14).Into().Get<rage::scrProgram *(DWORD64, Hash)>();
 		}();
@@ -44,34 +40,28 @@ namespace Memory
 		static auto scrProgramDirectory = []() -> DWORD64
 		{
 			if (!sharedHandle.IsValid())
-			{
 				return 0;
-			}
 
 			return sharedHandle.At(7).At(sharedHandle.At(3).Value<DWORD>()).Addr();
 		}();
 
 		if (!sharedHandle.IsValid())
-		{
 			return nullptr;
-		}
 
 		return scrProgramRegistry__FindProgramByHash(scrProgramDirectory, thread->GetHash());
 	}
 
 	inline Handle FindScriptPattern(const std::string &pattern, rage::scrProgram *program)
 	{
-		DWORD codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
-		for (int i = 0; i < codeBlocksSize; i++)
+		std::uint32_t codeBlocksSize = (program->m_CodeSize + 0x3FFF) >> 14;
+		for (std::uint32_t i = 0; i < codeBlocksSize; i++)
 		{
 			auto handle = Memory::FindPattern(
 			    pattern,
 			    { program->m_CodeBlocks[i],
 			      program->m_CodeBlocks[i] + (i == codeBlocksSize - 1 ? program->m_CodeSize : program->PAGE_SIZE) });
 			if (handle.IsValid())
-			{
 				return handle;
-			}
 		}
 
 		return Handle();

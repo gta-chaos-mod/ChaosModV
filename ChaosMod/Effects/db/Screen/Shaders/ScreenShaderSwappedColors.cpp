@@ -1,8 +1,9 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_ShaderSrcPrefix = R"SRC(
+CHAOS_VAR const char *ms_ShaderSrcPrefix = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -40,9 +41,7 @@ static void OnStart()
 	}
 
 	if (!shaderSrcSuffix.empty())
-	{
 		Hooks::OverrideShader(OverrideShaderType::LensDistortion, ms_ShaderSrcPrefix + shaderSrcSuffix);
-	}
 }
 
 static void OnStop()
@@ -51,7 +50,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, 
 	{
 		.Name = "Swapped Colors",
 		.Id = "screen_swappedcolors",

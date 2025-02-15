@@ -4,9 +4,10 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
-static float sphereRadius = 10.f;
+CHAOS_VAR float sphereRadius = 10.f;
 
 static void OnTick()
 {
@@ -14,25 +15,15 @@ static void OnTick()
 	std::vector<Entity> entities;
 
 	for (Ped ped : GetAllPeds())
-	{
 		if (ped != player)
-		{
 			entities.push_back(ped);
-		}
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (!IS_PED_IN_VEHICLE(player, veh, false))
-		{
 			entities.push_back(veh);
-		}
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	Vector3 playerCoord       = GET_ENTITY_COORDS(player, false);
 	Vector3 playerSpeed       = GET_ENTITY_VELOCITY(player);
@@ -58,9 +49,7 @@ static void OnTick()
 		if (distance < startDistance)
 		{
 			if (IS_ENTITY_A_PED(entity) && !IS_PED_RAGDOLL(entity))
-			{
 				SET_PED_TO_RAGDOLL(entity, 5000, 5000, 0, true, true, false);
-			}
 
 			if (distance < sphereRadius * .9) // entity is inside the sphere
 			{
@@ -87,7 +76,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Gravity Sphere",
 		.Id = "player_grav_sphere",

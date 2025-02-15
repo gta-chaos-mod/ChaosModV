@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static void OnTick()
@@ -17,7 +18,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Full Acceleration",
 		.Id = "traffic_fullaccel",

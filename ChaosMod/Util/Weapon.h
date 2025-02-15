@@ -1,25 +1,19 @@
 #pragma once
 
+#include <unordered_map>
+
 using Hash = unsigned long;
 
 namespace Util
 {
-	// TODO: Maybe CWeaponInfo has some field which can be checked (instead of hardcoding the weapon hashes)
 	inline bool IsWeaponShotgun(Hash weaponHash)
 	{
-		switch ((long)weaponHash)
-		{
-		case 487013001:
-		case 2017895192:
-		case -1654528753:
-		case -494615257:
-		case -1466123874:
-		case 984333226:
-		case -275439685:
-		case 317205821:
-			return true;
-		}
+		static std::unordered_map<Hash, bool> cachedResults;
+		static const Hash shotgunGroup = "GROUP_SHOTGUN"_hash;
 
-		return false;
+		if (const auto result = cachedResults.find(weaponHash); result != cachedResults.end())
+			return result->second;
+
+		return cachedResults.emplace(weaponHash, (GET_WEAPONTYPE_GROUP(weaponHash) == shotgunGroup)).first->second;
 	}
 }

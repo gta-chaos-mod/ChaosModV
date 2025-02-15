@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	SET_PED_INFINITE_AMMO_CLIP(PLAYER_PED_ID(), false);
@@ -33,9 +35,7 @@ static void OnTick()
 					SET_PED_SHOOTS_AT_COORD(playerPed, headVector.x, headVector.y, headVector.z, true);
 					// Only 5 shots per Tick
 					if (--count <= 0)
-					{
 						break;
-					}
 				}
 			}
 		}
@@ -43,7 +43,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Aimbot",
 		.Id = "player_aimbot",

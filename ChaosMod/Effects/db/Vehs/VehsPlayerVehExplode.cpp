@@ -1,24 +1,24 @@
 #include <stdafx.h>
 
-#define DETONATE_TIMER 5000
+#include "Effects/Register/RegisterEffect.h"
+
+#define DETONATE_TIMER 5000.f
 
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
 
 	if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		return;
-	}
 
-	Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
+	Vehicle veh         = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-	int lastTimestamp = GET_GAME_TIMER();
+	int lastTimestamp   = GET_GAME_TIMER();
 
-	int seats         = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+	int seats           = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
-	int detonateTimer = DETONATE_TIMER;
-	int beepTimer     = DETONATE_TIMER;
+	float detonateTimer = DETONATE_TIMER;
+	float beepTimer     = DETONATE_TIMER;
 	while (DOES_ENTITY_EXIST(veh))
 	{
 		WAIT(0);
@@ -39,15 +39,13 @@ static void OnStart()
 				Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
 
 				if (!ped)
-				{
 					continue;
-				}
 
 				TASK_LEAVE_VEHICLE(ped, veh, 4160);
 			}
 		}
 
-		if (detonateTimer <= 0)
+		if (detonateTimer <= 0.f)
 		{
 			EXPLODE_VEHICLE(veh, true, false);
 
@@ -59,7 +57,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Detonate Current Vehicle",
 		.Id = "playerveh_explode",

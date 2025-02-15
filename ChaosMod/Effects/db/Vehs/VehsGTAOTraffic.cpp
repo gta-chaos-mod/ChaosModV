@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	static std::vector<Ped> goneThrough;
@@ -25,20 +27,14 @@ static void OnTick()
 
 	std::vector<Ped>::iterator it;
 	for (it = goneThrough.begin(); it != goneThrough.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = goneThrough.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Traffic Magnet",
 		.Id = "traffic_gtao",

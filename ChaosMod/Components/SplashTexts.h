@@ -7,10 +7,8 @@
 #include <cstdint>
 #include <list>
 
-
 class SplashTexts : public Component
 {
-  private:
 	struct SplashText
 	{
 		const std::string Text;
@@ -30,19 +28,14 @@ class SplashTexts : public Component
 
 	bool m_EnableSplashTexts = true;
 
-  protected:
+  public:
 	SplashTexts();
 
-  public:
 	virtual void OnRun() override;
-	virtual void OnModPauseCleanup() override;
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 
 	void ShowSplash(const std::string &text, const ScreenTextVector &textPos, float scale, ScreenTextColor textColor,
 	                std::uint8_t timeSecs = 10);
 	void ShowVotingSplash();
 	void ShowClearEffectsSplash();
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

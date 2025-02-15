@@ -1,11 +1,11 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_VEHICLE_DOORS_LOCKED(veh, 1);
-	}
 }
 
 static void OnTick()
@@ -21,7 +21,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Lock Player Inside Vehicle",
 		.Id = "playerveh_lock",

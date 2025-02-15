@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -19,9 +21,7 @@ static void OnStop()
 static void OnTick()
 {
 	if (!IS_GAMEPLAY_CAM_SHAKING())
-	{
 		SHAKE_GAMEPLAY_CAM("DRUNK_SHAKE", 2.f);
-	}
 
 	Ped playerPed = PLAYER_PED_ID();
 
@@ -41,38 +41,27 @@ static void OnTick()
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
-		{
 			return;
-		}
 
-		static DWORD64 timeUntilSteer   = GET_GAME_TIMER();
+		static float timeUntilSteer     = 0.f;
 		static bool enableDrunkSteering = false;
 		static float steering;
 
 		if (enableDrunkSteering)
-		{
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
-		}
 
-		DWORD64 curTick = GET_GAME_TIMER();
-
-		if (timeUntilSteer < curTick)
+		if ((timeUntilSteer -= GET_FRAME_TIME()) < 0.f)
 		{
-			timeUntilSteer = GET_GAME_TIMER();
-
 			if (enableDrunkSteering)
 			{
 				// Give player back control
-
-				timeUntilSteer += g_Random.GetRandomInt(100, 500);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, 3.f);
 			}
 			else
 			{
 				// Take control from player
-
-				steering = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
-
-				timeUntilSteer += g_Random.GetRandomInt(50, 300);
+				steering       = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, .2f);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
@@ -81,7 +70,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Drunk",
 		.Id = "player_drunk",

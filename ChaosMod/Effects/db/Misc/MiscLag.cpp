@@ -1,8 +1,10 @@
 #include <stdafx.h>
 
-static int ms_State;
-static std::map<Ped, Vector3> ms_ToTpPeds;
-static std::map<Vehicle, Vector3> ms_ToTpVehs;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR int ms_State;
+CHAOS_VAR std::map<Ped, Vector3> ms_ToTpPeds;
+CHAOS_VAR std::map<Vehicle, Vector3> ms_ToTpVehs;
 
 static void OnStart()
 {
@@ -13,17 +15,15 @@ static void OnStart()
 
 static void OnTickLag()
 {
-	static DWORD64 lastTick = 0;
-	auto curTick            = GET_GAME_TIMER();
+	static int lastTick = 0;
+	auto curTick        = GET_GAME_TIMER();
 
 	if (curTick > lastTick + 500)
 	{
 		lastTick = curTick;
 
 		if (++ms_State == 4)
-		{
 			ms_State = 0;
-		}
 
 		if (ms_State == 2)
 		{
@@ -59,9 +59,7 @@ static void OnTickLag()
 
 				// if the vehicle is reversing use a negative forward speed
 				if (GET_ENTITY_SPEED_VECTOR(veh, true).y < 0)
-				{
 					forwardSpeed *= -1;
-				}
 
 				const Vector3 &tpPos = pair.second;
 
@@ -81,7 +79,7 @@ static void OnTickLag()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTickLag, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTickLag, 
 	{
 		.Name = "Lag",
 		.Id = "time_lag",

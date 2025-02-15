@@ -4,16 +4,16 @@
 
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
-static const char *ms_TextPairs[] = { "Just kidding, keep playing",
-	                                  "lol u suck",
-	                                  "Did you really fall for that?",
-	                                  "~g~(No you're fine)",
-	                                  "Did this scare you?",
-	                                  "~r~FISSION MAILED",
-	                                  "ded" };
+CHAOS_VAR const char *ms_TextPairs[] = { "Just kidding, keep playing",
+	                                     "lol u suck",
+	                                     "Did you really fall for that?",
+	                                     "~g~(No you're fine)",
+	                                     "Did this scare you?",
+	                                     "~r~FISSION MAILED",
+	                                     "ded" };
 
 enum FakeDeathState
 {
@@ -24,14 +24,14 @@ enum FakeDeathState
 	cleanup
 };
 
-static int scaleForm                  = 0;
-static int currentMode                = FakeDeathState::start;
-static int lastModeTime               = 0;
-static int nextModeTime               = 0;
-static int soundId                    = 0;
-static bool isOnMission               = false;
-static const char *deathAnimationName = "";
-static const char *playerDeathName    = "";
+CHAOS_VAR int scaleForm                  = 0;
+CHAOS_VAR int currentMode                = FakeDeathState::start;
+CHAOS_VAR int lastModeTime               = 0;
+CHAOS_VAR int nextModeTime               = 0;
+CHAOS_VAR int soundId                    = 0;
+CHAOS_VAR bool isOnMission               = false;
+CHAOS_VAR const char *deathAnimationName = "";
+CHAOS_VAR const char *playerDeathName    = "";
 
 static void OnStart()
 {
@@ -53,14 +53,10 @@ static void OnStart()
 		WAIT(0);
 
 		if (currentMode > FakeDeathState::animation)
-		{
 			HIDE_HUD_AND_RADAR_THIS_FRAME();
-		}
 
 		if (scaleForm > 0)
-		{
 			DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);
-		}
 
 		int current_time = GetTickCount64();
 		if (current_time - lastModeTime > nextModeTime)
@@ -77,9 +73,7 @@ static void OnStart()
 		Ped playerPed = PLAYER_PED_ID();
 
 		if (currentMode != FakeDeathState::cleanup)
-		{
 			SET_PLAYER_INVINCIBLE(playerPed, true);
-		}
 
 		switch (currentMode)
 		{
@@ -88,23 +82,18 @@ static void OnStart()
 			{
 				if (!IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					if (ComponentExists<EffectDispatcher>())
-					{
-						// Set the fake name accordingly
-						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "player_suicide");
-					}
+					// Set the fake name accordingly
+					CurrentEffect::OverrideEffectNameFromId("player_suicide");
 
 					if (IS_PED_ON_FOOT(playerPed) && GET_PED_PARACHUTE_STATE(playerPed) == -1)
 					{
 						// Fake suicide
 						REQUEST_ANIM_DICT("mp_suicide");
 						while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
-						{
 							WAIT(0);
-						}
 						Hash pistolHash = "WEAPON_PISTOL"_hash;
 						GIVE_WEAPON_TO_PED(playerPed, pistolHash, 1, true, true);
-						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150.f, 1, 0.f, false, false,
+						TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 1150, 1, 0.f, false, false,
 						               false);
 						nextModeTime = 750;
 						break;
@@ -112,20 +101,17 @@ static void OnStart()
 				}
 				else if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
 				{
-					if (ComponentExists<EffectDispatcher>())
-					{
-						// Set the fake name accordingly
-						GetComponent<EffectDispatcher>()->OverrideEffectNameId("player_fakedeath", "playerveh_explode");
-					}
+					// Set the fake name accordingly
+					CurrentEffect::OverrideEffectNameFromId("playerveh_explode");
 
-					Vehicle veh       = GET_VEHICLE_PED_IS_IN(playerPed, false);
+					Vehicle veh         = GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-					int lastTimestamp = GET_GAME_TIMER();
+					int lastTimestamp   = GET_GAME_TIMER();
 
-					int seats         = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
+					int seats           = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(GET_ENTITY_MODEL(veh));
 
-					int detonateTimer = 5000;
-					int beepTimer     = 5000;
+					float detonateTimer = 5000.f;
+					float beepTimer     = 5000.f;
 					while (DOES_ENTITY_EXIST(veh))
 					{
 						WAIT(0);
@@ -146,20 +132,16 @@ static void OnStart()
 								Ped ped = GET_PED_IN_VEHICLE_SEAT(veh, i, false);
 
 								if (!ped)
-								{
 									continue;
-								}
 
 								TASK_LEAVE_VEHICLE(ped, veh, 4160);
 							}
 						}
 
-						if (detonateTimer <= 0)
+						if (detonateTimer <= 0.f)
 						{
 							for (int i = 0; i < 6; i++)
-							{
 								SET_VEHICLE_DOOR_BROKEN(veh, i, false);
-							}
 							Vector3 vehCoords = GET_ENTITY_COORDS(veh, false);
 							Vector3 plrCoords = GET_ENTITY_COORDS(playerPed, false);
 							if (GET_DISTANCE_BETWEEN_COORDS(vehCoords.x, vehCoords.y, vehCoords.z, plrCoords.x,
@@ -265,7 +247,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Fake Death",
 		.Id = "player_fakedeath",

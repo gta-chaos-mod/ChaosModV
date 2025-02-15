@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/WeaponPool.h"
 
 static void OnTick()
@@ -14,9 +15,7 @@ static void OnTick()
 		if (timeSinceDmg && curTime - timeSinceDmg < 200)
 		{
 			if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-			{
 				CLEAR_PED_TASKS_IMMEDIATELY(playerPed);
-			}
 
 			SET_PED_TO_RAGDOLL(playerPed, 500, 1000, 0, true, true, false);
 
@@ -29,7 +28,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Player Ragdolls When Shot",
 		.Id = "player_ragdollondmg",

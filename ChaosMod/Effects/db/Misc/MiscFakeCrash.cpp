@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
+#include "Components/EffectDispatchTimer.h"
+#include "Effects/Register/RegisterEffect.h"
 
 static void SleepAllThreads(DWORD ms)
 {
@@ -30,9 +31,7 @@ static void SleepAllThreads(DWORD ms)
 	} while (Thread32Next(handle, &threadEntry));
 
 	for (HANDLE thread : threads)
-	{
 		SuspendThread(thread);
-	}
 
 	Sleep(ms);
 
@@ -52,10 +51,8 @@ static void OnStart()
 
 	if (fakeTimer)
 	{
-		if (ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = g_Random.GetRandomFloat(0.f, 1.f);
-		}
+		if (ComponentExists<EffectDispatchTimer>())
+			GetComponent<EffectDispatchTimer>()->SetFakeTimerPercentage(g_Random.GetRandomFloat(0.f, 1.f));
 
 		WAIT(0);
 	}
@@ -74,14 +71,12 @@ static void OnStart()
 
 	SleepAllThreads(g_Random.GetRandomInt(3000, 10000));
 
-	if (fakeTimer && ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->FakeTimerBarPercentage = 0.f;
-	}
+	if (fakeTimer && ComponentExists<EffectDispatchTimer>())
+		GetComponent<EffectDispatchTimer>()->ResetFakeTimerPercentage();
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Fake Crash",
 		.Id = "misc_fakecrash",

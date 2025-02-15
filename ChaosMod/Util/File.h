@@ -14,6 +14,11 @@ inline bool DoesFileExist(std::string_view fileName)
 	return stat(fileName.data(), &temp) == 0;
 }
 
+inline bool DoesFeatureFlagExist(const std::string &featureFlagName)
+{
+	return DoesFileExist("chaosmod\\." + featureFlagName);
+}
+
 inline std::vector<std::filesystem::directory_entry> GetFiles(std::string path, std::string extension, bool recursive,
                                                               std::vector<std::string> blacklistedFiles = {})
 {
@@ -34,26 +39,16 @@ inline std::vector<std::filesystem::directory_entry> GetFiles(std::string path, 
 			}
 
 			if (addFile)
-			{
 				entries.push_back(entry);
-			}
 		}
 	};
 
 	if (recursive)
-	{
 		for (const auto &entry : std::filesystem::recursive_directory_iterator(path))
-		{
 			handleEntry(entry);
-		}
-	}
 	else
-	{
 		for (const auto &entry : std::filesystem::directory_iterator(path))
-		{
 			handleEntry(entry);
-		}
-	}
 
 	return entries;
 }

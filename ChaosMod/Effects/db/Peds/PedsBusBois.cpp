@@ -2,6 +2,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Vehicle.h"
 
 static void OnStart()
@@ -14,7 +15,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Bus Bois",
 		.Id = "peds_busbois",

@@ -4,7 +4,9 @@
 
 #include <stdafx.h>
 
-static const char *TV_PLAYLISTS[] = {
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR const char *TV_PLAYLISTS[] = {
 	"PL_WEB_KFLF",    // Kung Fu Rainbow Lazerforce
 	"PL_WEB_RANGERS", // Republican Space Rangers
 	"PL_WEB_PRB2",    // Princess Robot Bubblegum
@@ -36,8 +38,8 @@ static const char *TV_PLAYLISTS[] = {
 	"PL_CINEMA_MULTIPLAYER_NO_MELTDOWN",
 };
 
-static float ms_PosX = 0.f;
-static float ms_PosY = 0.f;
+CHAOS_VAR float ms_PosX = 0.f;
+CHAOS_VAR float ms_PosY = 0.f;
 
 static void OnStart()
 {
@@ -69,7 +71,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "On-Demand TV",
 		.Id = "player_on_demand_cartoon",

@@ -1,14 +1,16 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 /*
  * Effect by kolyaventuri, modified
  */
 
 #define CAMERA_OFFSET_MAX 20.f
 
-static Cam camera;
-static Vector3 lastPos;
-static Vector3 cameraOffset;
+CHAOS_VAR Cam camera;
+CHAOS_VAR Vector3 lastPos;
+CHAOS_VAR Vector3 cameraOffset;
 
 static void OnStart()
 {
@@ -54,7 +56,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "GTA 2",
 		.Id = "player_gta_2",

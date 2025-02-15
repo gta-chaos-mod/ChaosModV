@@ -1,11 +1,11 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_VEHICLE_REDUCE_GRIP(veh, false);
-	}
 }
 
 static void OnTick()
@@ -21,7 +21,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Slippery Vehicles",
 		.Id = "vehs_slippery",

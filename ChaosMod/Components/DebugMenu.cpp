@@ -3,7 +3,8 @@
 #include "DebugMenu.h"
 
 #include "Components/EffectDispatcher.h"
-
+#include "Effects/EnabledEffects.h"
+#include "Util/HelpText.h"
 #include "Util/OptionsManager.h"
 
 #define MAX_VIS_ITEMS 15
@@ -12,19 +13,14 @@ DebugMenu::DebugMenu() : Component()
 {
 	m_IsEnabled = g_OptionsManager.GetConfigValue({ "EnableDebugMenu" }, OPTION_DEFAULT_DEBUG_MENU);
 	if (!m_IsEnabled)
-	{
 		return;
-	}
 
 	for (const auto &pair : g_EnabledEffects)
 	{
-		const auto &[effectIdentifier, effectData] = pair;
+		const auto &[effectId, effectData] = pair;
 
 		if (!effectData.IsHidden())
-		{
-			m_Effects.emplace_back(effectIdentifier,
-			                       effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
-		}
+			m_Effects.emplace_back(effectId, effectData.HasCustomName() ? effectData.CustomName : effectData.Name);
 	}
 
 	if (m_Effects.empty())
@@ -37,18 +33,17 @@ DebugMenu::DebugMenu() : Component()
 	std::sort(m_Effects.begin(), m_Effects.end(),
 	          [](const DebugEffect &a, const DebugEffect &b)
 	          {
-		          for (int idx = 0;; idx++)
+		          for (size_t idx = 0;; idx++)
 		          {
-			          if (idx >= a.EffectName.size()
-			              || std::toupper(a.EffectName[idx]) < std::toupper(b.EffectName[idx]))
-			          {
-				          return true;
-			          }
-			          else if (idx >= b.EffectName.size()
-			                   || std::toupper(b.EffectName[idx]) < std::toupper(a.EffectName[idx]))
-			          {
+			          if (idx >= a.EffectName.size())
 				          return false;
-			          }
+			          else if (idx >= b.EffectName.size())
+				          return true;
+
+			          auto ai = std::toupper(a.EffectName[idx]);
+			          auto bi = std::toupper(b.EffectName[idx]);
+			          if (ai != bi)
+				          return ai < bi;
 		          }
 	          });
 }
@@ -56,9 +51,7 @@ DebugMenu::DebugMenu() : Component()
 void DebugMenu::OnRun()
 {
 	if (!m_IsEnabled || !m_Visible)
-	{
 		return;
-	}
 
 	// Arrow Up
 	DISABLE_CONTROL_ACTION(1, 27, true);
@@ -88,26 +81,20 @@ void DebugMenu::OnRun()
 		m_DispatchEffect = false;
 
 		if (ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Identifier);
-		}
+			GetComponent<EffectDispatcher>()->DispatchEffect(m_Effects[m_SelectedIdx].Id);
 	}
 
-	float y                 = .1f;
-	WORD remainingDrawItems = MAX_VIS_ITEMS;
+	float y                   = .1f;
+	size_t remainingDrawItems = MAX_VIS_ITEMS;
 
-	for (int i = 0; remainingDrawItems > 0; i++)
+	for (int64_t i = 0; remainingDrawItems > 0; i++)
 	{
-		short overflow = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
+		int64_t bias = MAX_VIS_ITEMS / 2 - (m_Effects.size() - 1 - m_SelectedIdx);
 
-		if (i < 0 || i < m_SelectedIdx - remainingDrawItems / 2 - (overflow > 0 ? overflow : 0))
-		{
+		if (i < static_cast<int64_t>(m_SelectedIdx - remainingDrawItems / 2 - (bias > 0 ? bias : 0)))
 			continue;
-		}
-		else if (i >= m_Effects.size())
-		{
+		else if (i >= static_cast<int64_t>(m_Effects.size()))
 			break;
-		}
 
 		BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
 		ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(m_Effects[i].EffectName.c_str());
@@ -118,13 +105,19 @@ void DebugMenu::OnRun()
 
 		if (i == m_SelectedIdx)
 		{
-			DRAW_RECT(.1f, y, .2f, .05f, 255, 255, 255, 200, true);
+			if (IsEffectFilteredOut(m_Effects[i].Id))
+				DRAW_RECT(.1f, y, .2f, .05f, 180, 180, 180, 200, true);
+			else
+				DRAW_RECT(.1f, y, .2f, .05f, 255, 255, 255, 200, true);
 
 			SET_TEXT_COLOUR(0, 0, 0, 255);
 		}
 		else
 		{
-			DRAW_RECT(.1f, y, .2f, .05f, 0, 0, 0, 200, true);
+			if (IsEffectFilteredOut(m_Effects[i].Id))
+				DRAW_RECT(.1f, y, .2f, .05f, 90, 90, 90, 200, true);
+			else
+				DRAW_RECT(.1f, y, .2f, .05f, 0, 0, 0, 200, true);
 
 			SET_TEXT_COLOUR(255, 255, 255, 255);
 		}
@@ -134,6 +127,9 @@ void DebugMenu::OnRun()
 		y += .05f;
 		remainingDrawItems--;
 	}
+
+	if (IsEffectFilteredOut(m_Effects[m_SelectedIdx].Id))
+		DisplayHelpText("Effect disabled: " + GetFilterReason(m_Effects[m_SelectedIdx].Id));
 }
 
 bool DebugMenu::IsEnabled() const
@@ -145,18 +141,14 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
                            bool isAltPressed)
 {
 	if (!m_IsEnabled || !m_Visible)
-	{
 		return;
-	}
 
 	if (repeated)
 	{
 		auto curTime = GetTickCount64();
 
 		if (key == VK_RETURN || m_RepeatTime > curTime - 250)
-		{
 			return;
-		}
 	}
 	else
 	{
@@ -167,16 +159,12 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 	{
 	case VK_UP:
 		if (--m_SelectedIdx < 0)
-		{
 			m_SelectedIdx = m_Effects.size() - 1;
-		}
 
 		break;
 	case VK_DOWN:
-		if (++m_SelectedIdx >= m_Effects.size())
-		{
+		if (static_cast<size_t>(++m_SelectedIdx) >= m_Effects.size())
 			m_SelectedIdx = 0;
-		}
 
 		break;
 	case VK_RIGHT:
@@ -187,11 +175,9 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		while (!found)
 		{
 			if (searchChar++ == SCHAR_MAX)
-			{
 				searchChar = SCHAR_MIN;
-			}
 
-			for (int idx = 0; idx < m_Effects.size(); idx++)
+			for (size_t idx = 0; idx < m_Effects.size(); idx++)
 			{
 				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{
@@ -214,11 +200,9 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		while (!found)
 		{
 			if (searchChar-- == SCHAR_MIN)
-			{
 				searchChar = SCHAR_MAX;
-			}
 
-			for (int idx = 0; idx < m_Effects.size(); idx++)
+			for (size_t idx = 0; idx < m_Effects.size(); idx++)
 			{
 				if (std::tolower(m_Effects[idx].EffectName[0]) == searchChar)
 				{
@@ -234,10 +218,8 @@ void DebugMenu::OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPr
 		break;
 	}
 	case VK_RETURN:
-		if (!m_Effects[m_SelectedIdx].Identifier.GetEffectId().empty())
-		{
+		if (!m_Effects[m_SelectedIdx].Id.Id().empty() && !IsEffectFilteredOut(m_Effects[m_SelectedIdx].Id))
 			m_DispatchEffect = true;
-		}
 
 		break;
 	case VK_BACK:

@@ -4,8 +4,10 @@
 
 #include <stdafx.h>
 
-static int lastAirStrike = 0;
-static Hash airstrikeHash;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR int lastAirStrike = 0;
+CHAOS_VAR Hash airstrikeHash;
 
 static void OnStart()
 {
@@ -19,18 +21,16 @@ static void OnStop()
 
 static Vector3 getRandomOffsetCoord(Vector3 startCoord, float maxOffset)
 {
-	return Vector3::Init(startCoord.x + g_Random.GetRandomInt(-maxOffset, maxOffset),
-	                     startCoord.y + g_Random.GetRandomInt(-maxOffset, maxOffset),
-	                     startCoord.z + g_Random.GetRandomInt(-maxOffset, maxOffset));
+	return Vector3::Init(startCoord.x + g_Random.GetRandomFloat(-maxOffset, maxOffset),
+	                     startCoord.y + g_Random.GetRandomFloat(-maxOffset, maxOffset),
+	                     startCoord.z + g_Random.GetRandomFloat(-maxOffset, maxOffset));
 }
 
 static void OnTick()
 {
 	REQUEST_WEAPON_ASSET(airstrikeHash, 31, 0);
 	while (!HAS_WEAPON_ASSET_LOADED(airstrikeHash))
-	{
 		WAIT(0);
-	}
 	int current_time = GET_GAME_TIMER();
 	if (current_time - lastAirStrike > 1000)
 	{
@@ -50,7 +50,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Airstrike Inbound",
 		.Id = "misc_airstrike",

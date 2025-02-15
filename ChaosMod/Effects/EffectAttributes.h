@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utility>
-
 enum class EffectAttributes
 {
 	ExcludedFromVoting  = (1 << 0),

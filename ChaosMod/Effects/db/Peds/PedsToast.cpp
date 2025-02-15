@@ -5,20 +5,20 @@
 
 #include <stdafx.h>
 
-static std::map<Ped, Object> pedPropsMap;
-static const int TOAST_MODEL_COUNT = 6;
-static Hash availablePropModels[TOAST_MODEL_COUNT];
-static Hash toastModels[TOAST_MODEL_COUNT] = { "v_res_fa_bread01"_hash, "v_res_fa_bread02"_hash,
-	                                           "v_res_fa_bread03"_hash, "v_ret_247_bread1"_hash,
-	                                           "prop_toaster_01"_hash,  "prop_toaster_02"_hash };
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::map<Ped, Object> pedPropsMap;
+CHAOS_VAR const int TOAST_MODEL_COUNT = 6;
+CHAOS_VAR Hash availablePropModels[TOAST_MODEL_COUNT];
+CHAOS_VAR Hash toastModels[TOAST_MODEL_COUNT] = { "v_res_fa_bread01"_hash, "v_res_fa_bread02"_hash,
+	                                              "v_res_fa_bread03"_hash, "v_ret_247_bread1"_hash,
+	                                              "prop_toaster_01"_hash,  "prop_toaster_02"_hash };
 
 // removes peds' heads; from PedsHeadless.cpp
 static void RemoveHead()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_PED_RESET_FLAG(ped, 166, true);
-	}
 }
 
 static void OnStart()
@@ -76,9 +76,7 @@ static void OnTick()
 			if (!DOES_ENTITY_EXIST(ped))
 			{
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = pedPropsMap.erase(it);
 			}
@@ -114,21 +112,17 @@ static void OnStop()
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(prop))
-		{
 			DELETE_OBJECT(&prop);
-		}
 	}
 
 	pedPropsMap.clear();
 
 	for (int i = 0; i < TOAST_MODEL_COUNT; ++i)
-	{
 		availablePropModels[i] = 0;
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "You're Toast",
 		.Id = "peds_toast",

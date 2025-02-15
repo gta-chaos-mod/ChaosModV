@@ -2,6 +2,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Vehicle.h"
 
 static void OnTick()
@@ -20,9 +21,7 @@ static void OnTick()
 
 			Ped driver = GET_PED_IN_VEHICLE_SEAT(newVeh, -1, 0);
 			if (driver && DOES_ENTITY_EXIST(driver) && !IS_PED_A_PLAYER(driver))
-			{
 				TASK_VEHICLE_DRIVE_WANDER(driver, newVeh, 40, 786603);
-			}
 
 			WAIT(0);
 		}
@@ -30,7 +29,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Random Traffic",
 		.Id = "veh_randtraffic",

@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 #define LAUNCH_TIMER 5000
 
 static void OnStart()
@@ -18,8 +20,8 @@ static void OnStart()
 	// REQUEST_NAMED_PTFX_ASSET("core"); Doesn't seem to be necessary
 
 	int lastTimestamp = GET_GAME_TIMER();
-	int launchTimer   = LAUNCH_TIMER;
-	int beepTimer     = LAUNCH_TIMER;
+	float launchTimer = LAUNCH_TIMER;
+	float beepTimer   = LAUNCH_TIMER;
 	while (true)
 	{
 		SET_ENTITY_INVINCIBLE(playerPed, true);
@@ -37,7 +39,7 @@ static void OnStart()
 			SET_ENTITY_VELOCITY(playerPed, 0.f, 0.f, 5.f);
 		}
 
-		if (launchTimer <= 0)
+		if (launchTimer <= 0.f)
 		{
 			USE_PARTICLE_FX_ASSET("core");
 			START_PARTICLE_FX_LOOPED_ON_ENTITY("exp_air_rpg", playerPed, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 2.f, false,
@@ -60,7 +62,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Rocket Man",
 		.Id = "player_rocket"

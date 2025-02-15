@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	static auto lastTick = GET_GAME_TIMER();
@@ -20,13 +22,11 @@ static void OnTick()
 static void OnStop()
 {
 	for (auto veh : GetAllVehs())
-	{
 		SET_VEHICLE_ALARM(veh, false);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Alarmy Vehicles",
 		.Id = "vehs_alarmloop",

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static Vector3 GetPlayerPos()
@@ -17,7 +18,7 @@ static void OnStartRhino()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRhino, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRhino, nullptr, nullptr, 
 	{
 		.Name = "Spawn Rhino",
 		.Id = "spawn_rhino",
@@ -34,7 +35,7 @@ static void OnStartAdder()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartAdder, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartAdder, nullptr, nullptr, 
 	{
 		.Name = "Spawn Adder",
 		.Id = "spawn_adder",
@@ -51,7 +52,7 @@ static void OnStartDump()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartDump, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartDump, nullptr, nullptr, 
 	{
 		.Name = "Spawn Dump",
 		.Id = "spawn_dump",
@@ -68,7 +69,7 @@ static void OnStartMonster()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMonster, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMonster, nullptr, nullptr, 
 	{
 		.Name = "Spawn Monster",
 		.Id = "spawn_monster",
@@ -85,7 +86,7 @@ static void OnStartBMX()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBMX, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBMX, nullptr, nullptr, 
 	{
 		.Name = "Spawn BMX",
 		.Id = "spawn_bmx",
@@ -102,7 +103,7 @@ static void OnStartTug()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartTug, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTug, nullptr, nullptr, 
 	{
 		.Name = "Spawn Tug",
 		.Id = "spawn_tug",
@@ -119,7 +120,7 @@ static void OnStartCargoplane()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartCargoplane, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartCargoplane, nullptr, nullptr, 
 	{
 		.Name = "Spawn Cargo Plane",
 		.Id = "spawn_cargo",
@@ -136,7 +137,7 @@ static void OnStartBus()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBus, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBus, nullptr, nullptr, 
 	{
 		.Name = "Spawn Bus",
 		.Id = "spawn_bus",
@@ -153,7 +154,7 @@ static void OnStartBlimp()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBlimp, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBlimp, nullptr, nullptr, 
 	{
 		.Name = "Spawn Blimp",
 		.Id = "spawn_blimp",
@@ -170,7 +171,7 @@ static void OnStartBuzzard()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBuzzard, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBuzzard, nullptr, nullptr, 
 	{
 		.Name = "Spawn Buzzard",
 		.Id = "spawn_buzzard",
@@ -187,7 +188,7 @@ static void OnStartFaggio()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFaggio, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFaggio, nullptr, nullptr, 
 	{
 		.Name = "Spawn Faggio",
 		.Id = "spawn_faggio",
@@ -204,7 +205,7 @@ static void OnStartRuiner3()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRuiner3, nullptr, nullptr, 
 	{
 		.Name = "Spawn Ruined Ruiner",
 		.Id = "spawn_ruiner3",
@@ -227,15 +228,13 @@ static void OnStartRandom()
 		// Also apply random upgrades
 		SET_VEHICLE_MOD_KIT(veh, 0);
 
-		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 7));
+		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 12));
 
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			if (max > 0)
-			{
 				SET_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
-			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 		}
@@ -251,16 +250,14 @@ static void OnStartRandom()
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
 		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, 
 	{
 		.Name = "Spawn Random Vehicle",
 		.Id = "spawn_random",
@@ -277,7 +274,7 @@ static void OnStartBaletrailer()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartBaletrailer, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartBaletrailer, nullptr, nullptr, 
 	{
 		.Name = "Spawn Bale Trailer",
 		.Id = "spawn_baletrailer",
@@ -294,7 +291,7 @@ static void OnStartRomero()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRomero, nullptr, nullptr, 
 	{
 		.Name = "Where's The Funeral?",
 		.Id = "spawn_romero",
@@ -325,11 +322,11 @@ static void OnStartWizardBroom()
 	SET_ENTITY_VISIBLE(veh, false, false);
 
 	Object broom = CREATE_OBJECT(broomHash, playerPos.x, playerPos.y + 2, playerPos.z, true, false, false);
-	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, 0.3, -80.0, 0, 0, true, false, false, false, 0, true);
+	ATTACH_ENTITY_TO_ENTITY(broom, veh, 0, 0, 0, .3f, -80.f, 0, 0, true, false, false, false, 0, true);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartWizardBroom, nullptr, nullptr, 
 	{
 		.Name = "You're A Wizard, Franklin",
 		.Id = "vehs_spawn_wizard_broom",

@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/EntityFragments.h"
 
 static void OnStart()
@@ -29,7 +30,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Disassemble Current Vehicle",
 		.Id = "vehs_disassemble"

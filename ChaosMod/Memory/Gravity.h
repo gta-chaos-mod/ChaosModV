@@ -16,9 +16,7 @@ namespace Memory
 		{
 			auto handle = FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
 			if (!handle.IsValid())
-			{
 				return;
-			}
 
 			handle    = handle.Into().At(24);
 			gravAddr  = handle.At(3).Into().Get<float>();

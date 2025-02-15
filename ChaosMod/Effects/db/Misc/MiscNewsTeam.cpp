@@ -4,73 +4,54 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static Vector3 GetCoordsAround(Vector3 pos, float radius)
 {
 	int randOffset = g_Random.GetRandomInt(0, 360);
 	Vector3 res;
-	res.x = pos.x + (COS(randOffset) * radius);
-	res.y = pos.y + (SIN(randOffset) * radius);
+	res.x = pos.x + (std::cos(randOffset) * radius);
+	res.y = pos.y + (std::sin(randOffset) * radius);
 	res.z = pos.z + 50;
 	return res;
 }
 
-static Vehicle heli         = 0;
-static Ped pilot            = 0;
-static Camera heliCam       = 0;
-static int lastPositionGoal = 0;
-static int scaleForm        = 0;
-static Vector3 targetCoords;
+CHAOS_VAR Vehicle heli         = 0;
+CHAOS_VAR Ped pilot            = 0;
+CHAOS_VAR Camera heliCam       = 0;
+CHAOS_VAR int lastPositionGoal = 0;
+CHAOS_VAR int scaleForm        = 0;
+CHAOS_VAR Vector3 targetCoords;
 
-static const char *ms_TextPairs[] = { "Chaos Mod Player Trying To Survive",
-	                                  "\"He won't survive\", Mod Contributors Say",
-
-	                                  "Crazy Lunatic Going On A Rampage",
-	                                  "This Report Was Brought To You By eCola",
-
-	                                  "The Aftermath Of An Experiment Gone Wrong",
-	                                  "THE NEXT HEADLINE WILL TOTALLY SHOCK YOU!",
-
-	                                  "Wow Look At This",
-	                                  "Crazy Ain't It?",
-
-	                                  "An Example Of Our Average Law-Abiding Citizen",
-	                                  "\"Video Games cause violence\" Officials Say",
-
-	                                  "Holy Shit Wow Omg",
-	                                  "LULW WTFFF xDDDDDDDD",
-
-	                                  "What Bad RNG Looks Like",
-	                                  "Researchers Estimate The Chances Being Close To Millions To One",
-
-	                                  "A Speedrunner In Action",
-	                                  "Criticizers Claim Mods Might Be At Play",
-
-	                                  "An Ongoing Riot All Over San Andreas",
-	                                  "A War Ensued Between The So Claimed \"Bus Bois\" And \"Scooter Brothers\"",
-
-	                                  "Hey You're On Camera",
-	                                  "Come On Do Something Cool!",
-
-	                                  "Look Up And Smile",
-	                                  "It's The LSPD",
-
-	                                  "This Is A Nice Scaleform",
-	                                  "Wow Is This Self-Aware?",
-
-	                                  "This Is Why We Can't Have Nice Things",
-	                                  "SMH",
-
-	                                  "IS THAT A SUPRA???",
-	                                  ":o",
-
-	                                  "Don't Mind Us",
-	                                  "Just Getting Some Footage For The Trailer Of Expanded & Enhanced 2",
-
-	                                  "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-	                                  "HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-
-	                                  "Just Imagine All The Stuff I Could Put In Here",
-	                                  "Oh Wait..." };
+CHAOS_VAR const std::vector<std::string_view> ms_Titles = {
+	"",
+	"Chaos Mod player trying to survive",
+	"A speedrunner in action",
+	"Meow",
+	"This is you in 10 years",
+	"Very bleak yes",
+	"Just your average sunday in Ohio",
+	"Nothing ever happens",
+	"We got this before GTA 6",
+	"What do you even want me to say to this?",
+	"This is Neoliberalism",
+	"Topical reference",
+	"Something is happening",
+	"Look at this occurance",
+	"This is gaming",
+	"New news",
+	"eCola or Sprunk?",
+	"\"He won't survive\", Mod Contributors say",
+	"Criticizers claim mods might be at play",
+	"Very bleak yes",
+	"Nothing ever happens",
+	"Look at this occurance",
+	"eCola or Sprunk?",
+	"Unbelievable",
+	"Woof",
+	"I love cats",
+	"New research indicates deers are cows",
+};
 
 static void OnStart()
 {
@@ -120,14 +101,13 @@ static void OnStart()
 	RENDER_SCRIPT_CAMS(true, true, 1000, true, true, true);
 	scaleForm = REQUEST_SCALEFORM_MOVIE("breaking_news");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(scaleForm))
-	{
 		WAIT(0);
-	}
 
-	int chosenIndex = g_Random.GetRandomInt(0, sizeof(ms_TextPairs) / sizeof(ms_TextPairs[0]) * .5f - 1) * 2;
 	BEGIN_SCALEFORM_MOVIE_METHOD(scaleForm, "SET_TEXT");
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_TextPairs[chosenIndex]);
-	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(ms_TextPairs[chosenIndex + 1]);
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(
+	    ms_Titles[g_RandomNoDeterm.GetRandomInt(0, ms_Titles.size() - 1)].data());
+	SCALEFORM_MOVIE_METHOD_ADD_PARAM_PLAYER_NAME_STRING(
+	    ms_Titles[g_RandomNoDeterm.GetRandomInt(0, ms_Titles.size() - 1)].data());
 
 	END_SCALEFORM_MOVIE_METHOD();
 }
@@ -158,13 +138,11 @@ static void OnTick()
 		SET_PED_KEEP_TASK(pilot, true);
 	}
 	if (scaleForm > 0)
-	{
 		DRAW_SCALEFORM_MOVIE_FULLSCREEN(scaleForm, 255, 255, 255, 255, 0);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
 		.Name = "News Team",
 		.Id = "misc_news_team",

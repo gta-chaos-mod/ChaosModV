@@ -4,10 +4,12 @@
 
 #include <stdafx.h>
 
-static const double SPEED            = 0.003;
-static const double BOX_HEIGHT_RATIO = 0.45;
-static double boxWidth, boxHeight, offsetX, offsetY;
-static bool goingDown = true, goingRight = true;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR const double SPEED            = 0.003;
+CHAOS_VAR const double BOX_HEIGHT_RATIO = 0.45;
+CHAOS_VAR double boxWidth, boxHeight, offsetX, offsetY;
+CHAOS_VAR bool goingDown = true, goingRight = true;
 
 static void OnStart()
 {
@@ -28,33 +30,25 @@ static void OnTick()
 	{
 		offsetX += SPEED;
 		if (offsetX + boxWidth >= 1)
-		{
 			goingRight = false;
-		}
 	}
 	else
 	{
 		offsetX -= SPEED;
 		if (offsetX <= 0)
-		{
 			goingRight = true;
-		}
 	}
 	if (goingDown)
 	{
 		offsetY += SPEED;
 		if (offsetY + boxHeight >= 1)
-		{
 			goingDown = false;
-		}
 	}
 	else
 	{
 		offsetY -= SPEED;
 		if (offsetY <= 0)
-		{
 			goingDown = true;
-		}
 	}
 	DRAW_RECT(0.5, offsetY / 2, 1, offsetY, 0, 0, 0, 255, false); // Top bar
 	double lowerHeight = (1 - offsetY - boxHeight);
@@ -65,7 +59,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "DVD Screensaver",
 		.Id = "misc_dvdscreensaver",

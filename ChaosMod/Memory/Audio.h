@@ -25,15 +25,11 @@ namespace Memory
 			Handle initHandle = Memory::FindPattern("48 89 5C 24 08 57 48 83 EC 40 F3 41 0F 10 00");
 
 			if (!initHandle.IsValid())
-			{
 				return Handle();
-			}
 
 			Handle handle2 = initHandle.At(0x63).Into();
 			if (!handle2.IsValid())
-			{
 				return Handle();
-			}
 			getHashKeyFunc        = handle2.At(0x20).Into().Get<unsigned int __cdecl(const char *, unsigned int)>();
 			playAmbientSpeechFunc = handle2.At(0x6E).Into().Get<PlayAmbientSpeech>();
 
@@ -41,9 +37,7 @@ namespace Memory
 		}();
 
 		if (!handle.IsValid())
-		{
 			return;
-		}
 
 		uintptr_t globalPtr = handle.At(0x53).Into().Addr();
 

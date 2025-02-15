@@ -22,9 +22,7 @@ __int64 (*OG_rage__scrThread__Run)(rage::scrThread *);
 __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 {
 	if (!Hooks::OnScriptThreadRun.Fire(thread))
-	{
 		return 0;
-	}
 
 	if (!strcmp(thread->GetName(), "shop_controller"))
 	{
@@ -67,9 +65,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 		// Scripthook (most likely) relies on these to run our script thread
 		// We don't want to block ourselves of course :p
 		if (strcmp(scriptName, "main") && strcmp(scriptName, "main_persistent") && strcmp(scriptName, "control_thread"))
-		{
 			return 0;
-		}
 	}
 
 	return OG_rage__scrThread__Run(thread);
@@ -82,9 +78,7 @@ static bool OnHook()
 	handle = Memory::FindPattern(
 	    "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 ? 00 00 00");
 	if (!handle.IsValid())
-	{
 		return false;
-	}
 
 	Memory::AddHook(handle.Get<void>(), HK_rage__scrThread__Run, &OG_rage__scrThread__Run);
 

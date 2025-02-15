@@ -1,10 +1,12 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 /*
     Effect by Juhana
 */
 
-static Ped lamarPed;
+CHAOS_VAR Ped lamarPed;
 
 static void OnStart()
 {
@@ -21,12 +23,11 @@ static void OnStart()
 	LoadModel(lamarModel);
 	lamarPed =
 	    CREATE_PED(4, lamarModel, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed), true, false);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = lamarPed });
 	SET_MODEL_AS_NO_LONGER_NEEDED(lamarModel);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(lamarPed, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(lamarPed, relationshipGroup);
 	SET_PED_AS_GROUP_MEMBER(lamarPed, GET_PLAYER_GROUP(PLAYER_ID()));
@@ -52,8 +53,8 @@ static void OnStop()
 			TASK_LOOK_AT_ENTITY(lamarPed, playerPed, 1000, 2048, 3);
 			WAIT(1000);
 
-			TASK_PLAY_ANIM(lamarPed, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000.f, 1,
-			               0.f, false, false, false);
+			TASK_PLAY_ANIM(lamarPed, "mp_player_int_upperfinger", "mp_player_int_finger_02", 8.0f, -1.0f, 1000, 1, 0.f,
+			               false, false, false);
 			WAIT(2000);
 			PLAY_PED_AMBIENT_SPEECH_NATIVE(playerPed, "GENERIC_SHOCKED_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
 
@@ -80,14 +81,12 @@ static void OnTick()
 		lastTick = curTick;
 
 		if (DOES_ENTITY_EXIST(lamarPed))
-		{
 			PLAY_PED_AMBIENT_SPEECH_NATIVE(lamarPed, "GENERIC_INSULT_MED", "SPEECH_PARAMS_FORCE_SHOUTED", 1);
-		}
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Get Roasted",
 		.Id = "peds_roasting",

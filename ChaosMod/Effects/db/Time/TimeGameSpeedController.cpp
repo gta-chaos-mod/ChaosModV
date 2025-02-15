@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 
 static void OnStop()
@@ -23,7 +24,7 @@ static void OnTickX02()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickX02, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX02, 
 	{
 		.Name = "x0.2 Gamespeed",
 		.Id = "time_x02",
@@ -46,7 +47,7 @@ static void OnTickX05()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickX05, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickX05, 
 	{
 		.Name = "x0.5 Gamespeed",
 		.Id = "time_x05",

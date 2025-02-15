@@ -4,10 +4,12 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Player.h"
 
-static std::vector<Vector3> allPossibleStores = {
+#include "PlayerTpToRandomStore.h"
 
+CHAOS_VAR std::vector<Vector3> allPossibleStores = {
 	// Convenience Stores
 	{ 372.29217529297f, 326.39370727539f, 103.56636047363f },   // 247 Clinton
 	{ 24.215274810791f, -1347.2624511719f, 29.497016906738f },  // 247 Strawberry
@@ -59,13 +61,13 @@ static std::vector<Vector3> allPossibleStores = {
 
 };
 
-static void OnStart()
+void OnStartTpRandomStore()
 {
 	TeleportPlayer(allPossibleStores.at(g_Random.GetRandomInt(0, allPossibleStores.size() - 1)));
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartTpRandomStore, nullptr, nullptr, 
 	{
 		.Name = "Teleport to Random Store",
 		.Id = "player_tp_store",

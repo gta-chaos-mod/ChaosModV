@@ -4,11 +4,16 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
-static void OnStart()
+#include "PlayerBlimpStrats.h"
+
+void OnStartBlimpStrats(bool bHandleThreadBlock)
 {
-	Hooks::EnableScriptThreadBlock();
+	if (bHandleThreadBlock)
+		Hooks::EnableScriptThreadBlock();
+
 	bool cutscenePlaying = IS_CUTSCENE_PLAYING();
 
 	Hash blimpHash       = "blimp"_hash;
@@ -17,9 +22,7 @@ static void OnStart()
 	LoadModel(blimpHash);
 
 	if (!cutscenePlaying)
-	{
 		REQUEST_CUTSCENE("fbi_1_int", 8);
-	}
 
 	Vehicle veh = CREATE_VEHICLE(blimpHash, -370.490f, 1029.085f, 345.090f, 53.824f, true, false, false);
 	SET_VEHICLE_ENGINE_ON(veh, true, true, false);
@@ -44,9 +47,7 @@ static void OnStart()
 		REQUEST_MODEL(daveHash);
 
 		while (!HAS_CUTSCENE_LOADED()) // for proper cutscene play
-		{
 			WAIT(0);
-		}
 
 		REGISTER_ENTITY_FOR_CUTSCENE(player, "MICHAEL", 0, 0, 64);
 
@@ -65,12 +66,19 @@ static void OnStart()
 		SET_PED_AS_NO_LONGER_NEEDED(&pedDave);
 	}
 
-	Hooks::DisableScriptThreadBlock();
+	if (bHandleThreadBlock)
+		Hooks::DisableScriptThreadBlock();
+
 	SET_VEHICLE_AS_NO_LONGER_NEEDED(&veh);
 }
 
+static void OnStart()
+{
+	OnStartBlimpStrats(true);
+}
+
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
     {
         .Name = "Blimp Strats",
         .Id = "player_blimp_strats",

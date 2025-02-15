@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Components/Component.h"
-#include "Components/EffectDispatcher.h"
+#include "Util/VotingMode.h"
 
 #include <cstdint>
 #include <memory>
@@ -9,20 +9,19 @@
 
 class Voting : public Component
 {
-  private:
 	std::string m_VoteablePrefix;
 
 	struct ChoosableEffect
 	{
-		ChoosableEffect(const EffectIdentifier &effectIdentifier, const std::string &name, const std::string &match)
-		    : m_EffectIdentifier(effectIdentifier), m_EffectName(name), m_Match(match)
+		EffectIdentifier Id;
+		std::string Name;
+		std::string Match;
+		int ChanceVotes = 0;
+
+		ChoosableEffect(const EffectIdentifier &effectId, const std::string &name, const std::string &match)
+		    : Id(effectId), Name(name), Match(match)
 		{
 		}
-
-		EffectIdentifier m_EffectIdentifier;
-		std::string m_EffectName;
-		std::string m_Match;
-		int m_ChanceVotes = 0;
 	};
 	std::vector<std::unique_ptr<ChoosableEffect>> m_EffectChoices;
 
@@ -31,7 +30,7 @@ class Voting : public Component
 
 	void *m_PipeHandle                 = INVALID_HANDLE_VALUE;
 
-	std::unique_ptr<EffectIdentifier> m_ChosenEffectIdentifier;
+	std::unique_ptr<EffectIdentifier> m_ChosenEffectId;
 
 	int m_SecsBeforeVoting = 0;
 
@@ -46,7 +45,8 @@ class Voting : public Component
 
 	std::array<std::uint8_t, 3> m_TextColor;
 
-	bool m_EnableVoting;
+	bool m_EnableVoting                                = false;
+	bool m_HasInitializedVoting                        = false;
 
 	bool m_ReceivedHello                               = false;
 	bool m_HasReceivedResult                           = false;
@@ -54,24 +54,23 @@ class Voting : public Component
 	bool m_IsVotingRoundDone                           = true;
 	bool m_AlternatedVotingRound                       = false;
 
-	bool m_EnableChanceSystem                          = false;
+	VotingMode m_VotingMode                            = VotingMode::Majority;
 	bool m_EnableVotingChanceSystemRetainInitialChance = true;
 	bool m_EnableRandomEffectVoteable                  = true;
 
 	bool m_IsVotingRunning                             = false;
 
-  protected:
-	Voting(const std::array<std::uint8_t, 3> &TextColor);
-	virtual ~Voting() override;
+	VotingMode m_VotingModeOverride                    = VotingMode::None;
 
   public:
-	virtual void OnModPauseCleanup() override;
+	Voting(const std::array<std::uint8_t, 3> &TextColor);
+
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;
 
 	bool Init();
-
 	bool IsEnabled() const;
-
+	VotingMode GetVotingMode() const;
 	void HandleMsg(std::string_view message);
 
   private:
@@ -79,10 +78,5 @@ class Voting : public Component
 
   public:
 	void SendToPipe(std::string_view identifier, std::vector<std::string> params = {});
-
 	void ErrorOutWithMsg(std::string_view message);
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

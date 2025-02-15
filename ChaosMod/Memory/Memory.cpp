@@ -26,7 +26,7 @@ namespace Memory
 
 		MH_Initialize();
 
-		if (DoesFileExist("chaosmod\\.skipintro"))
+		if (DoesFeatureFlagExist("skipintro"))
 		{
 			// Splash screen
 			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
@@ -58,7 +58,7 @@ namespace Memory
 			}
 		}
 
-		if (DoesFileExist("chaosmod\\.skipdlcs"))
+		if (DoesFeatureFlagExist("skipdlcs"))
 		{
 			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01");
 			if (!handle.IsValid())
@@ -73,7 +73,7 @@ namespace Memory
 			}
 		}
 
-		if (DoesFileExist("chaosmod\\.blacklistedhooks"))
+		if (DoesFeatureFlagExist("blacklistedhooks"))
 		{
 			std::ifstream file("chaosmod\\.blacklistedhooks");
 			if (!file.fail())
@@ -81,9 +81,7 @@ namespace Memory
 				std::string line;
 				line.resize(64);
 				while (file.getline(line.data(), 64))
-				{
 					ms_BlacklistedHookNames.insert(StringTrim(line.substr(0, line.find("\n"))));
-				}
 			}
 		}
 
@@ -95,9 +93,7 @@ namespace Memory
 			         registeredHook      = registeredHook->GetNext())
 			    {
 				    if (registeredHook->IsLateHook())
-				    {
 					    continue;
-				    }
 
 				    const auto &hookName = registeredHook->GetName();
 
@@ -110,9 +106,7 @@ namespace Memory
 				    LOG("Running " << hookName << " hook");
 
 				    if (!registeredHook->RunHook())
-				    {
 					    LOG(hookName << " hook failed!");
-				    }
 			    }
 
 			    MH_EnableHook(MH_ALL_HOOKS);
@@ -128,9 +122,7 @@ namespace Memory
 			const auto &hookName = registeredHook->GetName();
 
 			if (ms_BlacklistedHookNames.contains(hookName))
-			{
 				continue;
-			}
 
 			LOG("Running " << hookName << " hook cleanup");
 
@@ -153,9 +145,7 @@ namespace Memory
 			         registeredHook      = registeredHook->GetNext())
 			    {
 				    if (!registeredHook->IsLateHook())
-				    {
 					    continue;
-				    }
 
 				    const auto &hookName = registeredHook->GetName();
 
@@ -168,9 +158,7 @@ namespace Memory
 				    LOG("Running " << hookName << " hook");
 
 				    if (!registeredHook->RunHook())
-				    {
 					    LOG(hookName << " hook failed!");
-				    }
 			    }
 
 			    MH_EnableHook(MH_ALL_HOOKS);
@@ -180,7 +168,14 @@ namespace Memory
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange)
 	{
-		DEBUG_LOG("Searching for pattern: " << pattern);
+		DEBUG_LOG("Searching for pattern \""
+		          << pattern
+		          << (scanRange.StartAddr == 0 && scanRange.EndAddr == 0
+		                  ? "\""
+		                  : (std::stringstream()
+		                     << "\" within address range 0x" << std::uppercase << std::hex << scanRange.StartAddr
+		                     << std::setfill(' ') << " to 0x" << std::uppercase << std::hex << scanRange.EndAddr)
+		                        .str()));
 
 		if ((scanRange.StartAddr != 0 || scanRange.EndAddr != 0) && scanRange.StartAddr >= scanRange.EndAddr)
 		{
@@ -188,23 +183,22 @@ namespace Memory
 			return Handle();
 		}
 
-		auto scanPattern = [&]()
+		auto scanPattern = [&]() -> Handle
 		{
 			auto copy = pattern;
 			for (size_t pos = copy.find("??"); pos != std::string::npos; pos = copy.find("??", pos + 1))
-			{
 				copy.replace(pos, 2, "?");
-			}
 
 			auto thePattern = scanRange.StartAddr == 0 && scanRange.EndAddr == 0
 			                    ? hook::pattern(copy)
 			                    : hook::pattern(scanRange.StartAddr, scanRange.EndAddr, copy);
 			if (!thePattern.size())
-			{
-				return Handle();
-			}
+				return {};
 
-			return Handle(uintptr_t(thePattern.get_first()));
+			auto resultAddr = reinterpret_cast<uintptr_t>(thePattern.get_first());
+			DEBUG_LOG("Found pattern \"" << pattern << "\" at address 0x" << std::uppercase << std::hex << resultAddr
+			                             << std::dec);
+			return resultAddr;
 		};
 
 		if (EffectThreads::IsThreadAnEffectThread())
@@ -215,26 +209,12 @@ namespace Memory
 
 			using namespace std::chrono_literals;
 			while (future.wait_for(0ms) != std::future_status::ready)
-			{
 				WAIT(0);
-			}
 
 			return handle;
 		}
 
 		return scanPattern();
-	}
-
-	MH_STATUS AddHook(void *target, void *detour, void *orig)
-	{
-		auto result = MH_CreateHook(target, detour, reinterpret_cast<void **>(orig));
-
-		if (result == MH_OK)
-		{
-			MH_EnableHook(target);
-		}
-
-		return result;
 	}
 
 	const char *GetTypeName(__int64 vftAddr)
@@ -252,9 +232,7 @@ namespace Memory
 					{
 						auto typeDesc = ms_BaseAddr + rva;
 						if (typeDesc)
-						{
 							return reinterpret_cast<const char *>(typeDesc + 16);
-						}
 					}
 				}
 			}
@@ -269,9 +247,7 @@ namespace Memory
 		{
 			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
 			if (!handle.IsValid())
-			{
 				return nullptr;
-			}
 
 			return handle.At(2).Into().Get<DWORD64 *>();
 		}();
@@ -310,9 +286,7 @@ namespace Memory
 			}
 
 			if (fallbackToSHV)
-			{
 				LOG("Warning: FiveM (non-sp) detected, features such as Failsafe will not work!");
-			}
 
 			return fallbackToSHV;
 		}();
@@ -324,23 +298,17 @@ namespace Memory
 	{
 		static auto gameBuild = []() -> std::string
 		{
-			auto handle = Memory::FindPattern("33 DB 38 1D ? ? ? ? 89 5C 24 38");
+			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48");
 			if (!handle.IsValid())
-			{
 				return {};
-			}
 
-			std::string buildStr = handle.At(3).Into().Get<char>();
+			std::string buildStr = handle.At(1).Into().At(1).Get<char>();
 			if (buildStr.empty())
-			{
 				return {};
-			}
 
 			auto splitIndex = buildStr.find("-dev");
 			if (splitIndex == buildStr.npos)
-			{
 				return {};
-			}
 
 			return buildStr.substr(0, splitIndex);
 		}();

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 #define FAN_CATS_AMOUNT 3
 
 static void OnStart()
@@ -23,7 +25,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Spawn Fan Cats",
 		.Id = "peds_spawnfancats",

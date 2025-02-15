@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static void OnTickRed()
@@ -17,7 +18,7 @@ static void OnTickRed()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickRed, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickRed, 
 	{
 		.Name = "Red Traffic",
 		.Id = "vehs_red",
@@ -43,7 +44,7 @@ static void OnTickBlue()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickBlue, 
 	{
 		.Name = "Blue Traffic",
 		.Id = "vehs_blue",
@@ -69,7 +70,7 @@ static void OnTickGreen()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickGreen, 
 	{
 		.Name = "Green Traffic",
 		.Id = "vehs_green",
@@ -98,7 +99,7 @@ static void OnTickChrome()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickChrome, 
 	{
 		.Name = "Chrome Traffic",
 		.Id = "vehs_chrome",
@@ -127,9 +128,7 @@ static void OnTickPink()
 {
 	REQUEST_NAMED_PTFX_ASSET("des_trailerpark");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("des_trailerpark"))
-	{
 		WAIT(0);
-	}
 	for (auto it = flameByCar.cbegin(); it != flameByCar.cend();)
 	{
 		Vehicle veh = it->first;
@@ -166,7 +165,7 @@ static void OnTickPink()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, 
 	{
 		.Name = "Hot Traffic",
 		.Id = "vehs_pink",
@@ -180,9 +179,7 @@ REGISTER_EFFECT(nullptr, OnStopPink, OnTickPink, EffectInfo
 static void OnStopRainbow()
 {
 	for (int i = 0; i < 13; i++)
-	{
 		Memory::OverrideVehicleHeadlightColor(i, false, 0, 0, 0);
-	}
 }
 
 static void OnTickRainbow()
@@ -193,15 +190,13 @@ static void OnTickRainbow()
 	static const float freq   = .1f;
 
 	if (++cnt >= (ULONG)-1)
-	{
 		cnt = 0;
-	}
 
 	for (Vehicle veh : GetAllVehs())
 	{
-		int r = std::sin(veh + freq * cnt) * 127 + 128;
-		int g = std::sin(veh + freq * cnt + 2) * 127 + 128;
-		int b = std::sin(veh + freq * cnt + 4) * 127 + 128;
+		int r = std::lround(std::sin(veh + freq * cnt) * 127 + 128);
+		int g = std::lround(std::sin(veh + freq * cnt + 2) * 127 + 128);
+		int b = std::lround(std::sin(veh + freq * cnt + 4) * 127 + 128);
 
 		SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
 		SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, g, b, r);
@@ -210,9 +205,7 @@ static void OnTickRainbow()
 
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, r, g, b);
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		// Headlights too
 
@@ -228,18 +221,16 @@ static void OnTickRainbow()
 
 	// Headlight color switcher
 
-	int r = std::sin(freq * cnt) * 127 + 128;
-	int g = std::sin(freq * cnt + 2) * 127 + 128;
-	int b = std::sin(freq * cnt + 4) * 127 + 128;
+	int r = std::lround(std::sin(freq * cnt) * 127 + 128);
+	int g = std::lround(std::sin(freq * cnt + 2) * 127 + 128);
+	int b = std::lround(std::sin(freq * cnt + 4) * 127 + 128);
 
 	for (int i = 0; i < 13; i++)
-	{
 		Memory::OverrideVehicleHeadlightColor(i, true, r, g, b);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopRainbow, OnTickRainbow, 
 	{
 		.Name = "Rainbow Traffic",
 		.Id = "vehs_rainbow",

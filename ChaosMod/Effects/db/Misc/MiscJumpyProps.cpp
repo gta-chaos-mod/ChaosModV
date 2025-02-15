@@ -4,13 +4,15 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 struct PropData
 {
 	float originalZ;
 	int startOffset;
 };
 
-static std::map<Object, PropData> propDataMap = {};
+CHAOS_VAR std::map<Object, PropData> propDataMap = {};
 
 static void OnTick()
 {
@@ -19,9 +21,7 @@ static void OnTick()
 		Vector3 coords = GET_ENTITY_COORDS(prop, 0);
 
 		if (!propDataMap.contains(prop))
-		{
 			propDataMap[prop] = PropData { coords.z, GET_GAME_TIMER() + prop };
-		}
 
 		PropData data = propDataMap[prop];
 
@@ -49,7 +49,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Jumpy Props",
 		.Id = "misc_jumpy_props",

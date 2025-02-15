@@ -1,8 +1,9 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ShaderHook.h"
 
-static const char *ms_ShaderSrc = R"SRC(
+CHAOS_VAR const char *ms_ShaderSrc = R"SRC(
 Texture2D HDRSampler : register(t5);
 SamplerState g_samLinear : register(s5)
 {
@@ -32,7 +33,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, nullptr, 
 	{
 		.Name = "Fourth Dimension",
 		.Id = "screen_fourthdimension",

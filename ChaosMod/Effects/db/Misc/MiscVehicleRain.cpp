@@ -2,6 +2,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 #include "Util/Vehicle.h"
@@ -31,6 +32,9 @@ static void OnTick()
 
 			// Also apply random upgrades
 			SET_VEHICLE_MOD_KIT(veh, 0);
+
+			SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 12));
+
 			for (int i = 0; i < 50; i++)
 			{
 				int max = GET_NUM_VEHICLE_MODS(veh, i);
@@ -46,7 +50,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Vehicle Rain",
 		.Id = "misc_vehicle_rain",

@@ -1,8 +1,10 @@
 /*
-    Effect By OnlyRealNubs
+    Effect By Rylxnd
 */
 
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 
 static void OnTick()
 {
@@ -15,7 +17,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "AFK",
 		.Id = "player_afk",

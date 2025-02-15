@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Components/Component.h"
+#include "Util/VotingMode.h"
 
 #include <cstdint>
 
@@ -13,8 +14,5 @@ class MetaModifiers : public Component
 	bool HideChaosUI                         = false;
 	bool DisableChaos                        = false;
 	bool FlipChaosUI                         = false;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
+	VotingMode VotingModeOverride            = VotingMode::None;
 };

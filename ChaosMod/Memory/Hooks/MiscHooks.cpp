@@ -4,18 +4,14 @@
 
 // Work around crash related to SET_PED_SHOOTS_AT_COORD
 // Thanks to Rainbomizer!
-void (*OG_crSkeleton_GetGlobalMtx)(__int64, unsigned int, void *);
-void HK_crSkeleton_GetGlobalMtx(__int64 skeleton, unsigned int id, void *matrix)
+void (*OG_crSkeleton_GetGlobalMtx)(__int64, int, void *);
+void HK_crSkeleton_GetGlobalMtx(__int64 skeleton, int id, void *matrix)
 {
 	if (!skeleton)
-	{
 		return;
-	}
 
 	if (id == -1)
-	{
 		id = 0;
-	}
 
 	OG_crSkeleton_GetGlobalMtx(skeleton, id, matrix);
 }
@@ -24,15 +20,11 @@ static bool OnHook()
 {
 	Handle handle;
 
-	handle = Memory::FindPattern("E8 ? ? ? ? 4D 03 F5");
+	handle = Memory::FindPattern("E8 ? ? ? ? 4D 03 F5 48");
 	if (!handle.IsValid())
-	{
 		LOG("crSkeleton::GetGlobalMtx not found!");
-	}
 	else
-	{
 		Memory::AddHook(handle.Into().Get<void>(), HK_crSkeleton_GetGlobalMtx, &OG_crSkeleton_GetGlobalMtx);
-	}
 
 	return true;
 }

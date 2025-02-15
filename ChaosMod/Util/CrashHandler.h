@@ -2,7 +2,6 @@
 
 #include "File.h"
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #include <dbghelp.h>
@@ -11,10 +10,8 @@
 
 inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 {
-	if (DoesFileExist("chaosmod\\.nodumps"))
-	{
+	if (DoesFeatureFlagExist("nodumps"))
 		return EXCEPTION_CONTINUE_SEARCH;
-	}
 
 	SYSTEMTIME systemTime;
 	GetSystemTime(&systemTime);
@@ -37,7 +34,7 @@ inline LONG WINAPI CrashHandler(_EXCEPTION_POINTERS *exceptionInfo)
 
 	DWORD flags              = MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory;
 
-	if (DoesFileExist("chaosmod\\.fulldumps"))
+	if (DoesFeatureFlagExist("fulldumps"))
 	{
 		flags = MiniDumpWithFullMemory | MiniDumpWithHandleData | MiniDumpWithUnloadedModules
 		      | MiniDumpWithProcessThreadData | MiniDumpWithFullMemoryInfo | MiniDumpWithThreadInfo;

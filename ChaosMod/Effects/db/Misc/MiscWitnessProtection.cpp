@@ -4,6 +4,7 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Types.h"
 
 struct OrbitPed
@@ -11,8 +12,8 @@ struct OrbitPed
 	Ped ped;
 	float angle;
 };
-static std::vector<OrbitPed> orbitingPeds;
-static int pedCount = 20;
+CHAOS_VAR std::vector<OrbitPed> orbitingPeds;
+CHAOS_VAR int pedCount = 20;
 
 static void OnStart()
 {
@@ -36,7 +37,7 @@ static void OnTick()
 			SET_PED_CAN_RAGDOLL(ped, false);
 			SET_ENTITY_COLLISION(ped, false, true);
 			SET_PED_CAN_BE_TARGETTED_BY_PLAYER(ped, player, false);
-			float offset    = (360 / pedCount) * i;
+			float offset    = (360.f / pedCount) * i;
 			OrbitPed orbPed = { ped, offset };
 			orbitingPeds.push_back(orbPed);
 			if (--count == 0)
@@ -48,9 +49,7 @@ static void OnTick()
 	}
 	Entity entityToCircle = player;
 	if (IS_PED_IN_ANY_VEHICLE(player, false))
-	{
 		entityToCircle = GET_VEHICLE_PED_IS_IN(player, false);
-	}
 	Vector3 pos = GET_ENTITY_COORDS(entityToCircle, false);
 	Vector3 min;
 	Vector3 max;
@@ -107,7 +106,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "Witness Protection",
         .Id = "misc_witness_protection",

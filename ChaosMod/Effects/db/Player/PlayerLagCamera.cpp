@@ -4,10 +4,12 @@
 
 #include <stdafx.h>
 
-static int constexpr CAM_DELAY_NORMAL  = 250;
-static int constexpr CAM_DELAY_VEHICLE = 1000;
+#include "Effects/Register/RegisterEffect.h"
 
-static int GetTargetCamDelay()
+#define CAM_DELAY_NORMAL 250.f
+#define CAM_DELAY_VEHICLE 1000.f
+
+static float GetTargetCamDelay()
 {
 	return IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), true) ? CAM_DELAY_VEHICLE : CAM_DELAY_NORMAL;
 }
@@ -29,11 +31,11 @@ struct CameraSnapshot
 	}
 };
 
-static std::vector<CameraSnapshot> cameraSnapshots;
+CHAOS_VAR std::vector<CameraSnapshot> cameraSnapshots;
 
-static int currentCamDelay;
-static int targetCamDelay;
-static Cam camera;
+CHAOS_VAR float currentCamDelay;
+CHAOS_VAR float targetCamDelay;
+CHAOS_VAR Cam camera;
 
 static void TakeCameraSnapshot()
 {
@@ -49,7 +51,7 @@ static void OnStart()
 	CAM::RENDER_SCRIPT_CAMS(true, true, 700, 1, 1, 1);
 
 	cameraSnapshots = {};
-	currentCamDelay = 0;
+	currentCamDelay = 0.f;
 }
 
 static void OnTick()
@@ -75,7 +77,7 @@ static void OnTick()
 	if (currentCamDelay != targetCamDelay)
 	{
 		int direction = currentCamDelay < targetCamDelay ? 1 : -1;
-		currentCamDelay += 300 * direction * GET_FRAME_TIME();
+		currentCamDelay += 300.f * direction * GET_FRAME_TIME();
 
 		// If the step this frame overshot the target, snap back to it
 		if ((direction == 1 && currentCamDelay > targetCamDelay)
@@ -95,7 +97,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Delayed Camera",
 		.Id = "player_laggy_camera",

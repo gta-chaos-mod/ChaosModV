@@ -2,9 +2,12 @@
 
 #include "Voting.h"
 
+#include "Components/EffectDispatchTimer.h"
+#include "Components/EffectDispatcher.h"
 #include "Components/MetaModifiers.h"
 #include "Components/SplashTexts.h"
-
+#include "Effects/EffectData.h"
+#include "Effects/EnabledEffects.h"
 #include "Util/OptionsManager.h"
 #include "Util/ScriptText.h"
 
@@ -18,47 +21,9 @@ Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(
 	m_EnableVoting =
 	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" }, "");
-
-	if (m_EnableVoting && !Init())
-	{
-		return;
-	}
-
-	m_PipeHandle =
-	    CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
-	                    PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE, BUFFER_SIZE, 0, NULL);
-
-	if (m_PipeHandle == INVALID_HANDLE_VALUE)
-	{
-		ErrorOutWithMsg("Error while creating a named pipe, previous instance of voting proxy might be running. Try "
-		                "reloading the mod. Reverting to normal mode.");
-
-		return;
-	}
-
-	ConnectNamedPipe(m_PipeHandle, NULL);
-
-	if (m_EnableVoting)
-	{
-		if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
-		    && ComponentExists<EffectDispatcher>())
-		{
-			GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
-		}
-
-		if (ComponentExists<SplashTexts>())
-		{
-			GetComponent<SplashTexts>()->ShowVotingSplash();
-		}
-	}
 }
 
-Voting::~Voting()
-{
-	OnModPauseCleanup();
-}
-
-void Voting::OnModPauseCleanup()
+void Voting::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
 	{
@@ -72,8 +37,46 @@ void Voting::OnModPauseCleanup()
 
 void Voting::OnRun()
 {
-	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>())
+	if (!m_EnableVoting || !ComponentExists<EffectDispatcher>() || !ComponentExists<EffectDispatchTimer>())
+		return;
+
+	if (!m_HasInitializedVoting)
 	{
+		// Only initialize voting proxy after we are fully loaded in, otherwise some weird behaviour can occur from the
+		// voting proxy, e.g. OnFailureToReceiveJoinConfirmation being raised for whatever reason
+		if (GET_IS_LOADING_SCREEN_ACTIVE())
+			return;
+
+		m_HasInitializedVoting = true;
+
+		if (!Init())
+			return;
+
+		m_PipeHandle = CreateNamedPipe(L"\\\\.\\pipe\\ChaosModVVotingPipe", PIPE_ACCESS_DUPLEX,
+		                               PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT, 1, BUFFER_SIZE,
+		                               BUFFER_SIZE, 0, NULL);
+
+		if (m_PipeHandle == INVALID_HANDLE_VALUE)
+		{
+			ErrorOutWithMsg(
+			    "Error while creating a named pipe, previous instance of voting proxy might be running. Try "
+			    "reloading the mod. Reverting to normal mode.");
+
+			return;
+		}
+
+		ConnectNamedPipe(m_PipeHandle, NULL);
+
+		if (m_EnableVoting)
+		{
+			if ((m_OverlayMode == OverlayMode::OverlayIngame || m_OverlayMode == OverlayMode::OverlayOBS)
+			    && ComponentExists<EffectDispatcher>())
+				GetComponent<EffectDispatcher>()->EnableEffectTextExtraTopSpace = true;
+
+			if (ComponentExists<SplashTexts>())
+				GetComponent<SplashTexts>()->ShowVotingSplash();
+		}
+
 		return;
 	}
 
@@ -98,7 +101,7 @@ void Voting::OnRun()
 	{
 		m_LastVotesFetchTime = curTick;
 
-		if (m_IsVotingRunning && m_EnableChanceSystem && m_OverlayMode == OverlayMode::OverlayIngame)
+		if (m_IsVotingRunning && m_VotingMode == VotingMode::Percentage && m_OverlayMode == OverlayMode::OverlayIngame)
 		{
 			// Get current vote status to display procentages on screen
 			SendToPipe("getcurrentvotes");
@@ -108,24 +111,30 @@ void Voting::OnRun()
 	char buffer[BUFFER_SIZE];
 	DWORD bytesRead;
 	if (!ReadFile(m_PipeHandle, buffer, BUFFER_SIZE, &bytesRead, NULL))
-	{
 		while (GetLastError() == ERROR_IO_PENDING)
-		{
 			WAIT(0);
+
+	if (bytesRead > 0)
+		HandleMsg(buffer);
+
+	if (!m_ReceivedHello)
+		return;
+
+	if (ComponentExists<MetaModifiers>())
+	{
+		auto newMode = GetComponent<MetaModifiers>()->VotingModeOverride;
+		if (m_VotingModeOverride != newMode)
+		{
+			m_VotingModeOverride = newMode;
+
+			if (newMode == VotingMode::None)
+				newMode = m_VotingMode;
+
+			SendToPipe("votingmode", { std::string(newMode.ToString()) });
 		}
 	}
 
-	if (bytesRead > 0)
-	{
-		HandleMsg(buffer);
-	}
-
-	if (!m_ReceivedHello)
-	{
-		return;
-	}
-
-	if (GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
+	if (GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= 1 && !m_HasReceivedResult)
 	{
 		// Get vote result 1 second before effect is supposed to dispatch
 
@@ -136,54 +145,47 @@ void Voting::OnRun()
 			SendToPipe("getvoteresult");
 		}
 	}
-	else if (GetComponent<EffectDispatcher>()->ShouldDispatchEffectNow())
+	else if (GetComponent<EffectDispatchTimer>()->ShouldDispatchEffectNow())
 	{
-		// End of voting round; dispatch resulted effect
+		// End of voting round; dispatch resulting effect
 
 		// Should be random effect voteable, so just dispatch random effect
-		if (m_ChosenEffectIdentifier->GetEffectId().empty())
-		{
+		if (m_ChosenEffectId->Id().empty())
 			GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-		}
 		else
-		{
-			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectIdentifier);
-		}
-		GetComponent<EffectDispatcher>()->ResetTimer();
+			GetComponent<EffectDispatcher>()->DispatchEffect(*m_ChosenEffectId);
+		GetComponent<EffectDispatchTimer>()->ResetTimer();
 
 		if (ComponentExists<MetaModifiers>())
-		{
 			for (int i = 0; i < GetComponent<MetaModifiers>()->AdditionalEffectsToDispatch; i++)
-			{
 				GetComponent<EffectDispatcher>()->DispatchRandomEffect();
-			}
-		}
 
 		m_IsVotingRoundDone = true;
 	}
 	else if (!m_IsVotingRunning && m_ReceivedHello
 	         && (m_SecsBeforeVoting == 0
-	             || GetComponent<EffectDispatcher>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
+	             || GetComponent<EffectDispatchTimer>()->GetRemainingTimerTime() <= m_SecsBeforeVoting)
 	         && m_IsVotingRoundDone)
 	{
 		// New voting round
 
-		m_IsVotingRunning        = true;
-		m_HasReceivedResult      = false;
-		m_IsVotingRoundDone      = false;
+		m_IsVotingRunning   = true;
+		m_HasReceivedResult = false;
+		m_IsVotingRoundDone = false;
 
-		m_ChosenEffectIdentifier = std::make_unique<EffectIdentifier>();
+		m_ChosenEffectId    = std::make_unique<EffectIdentifier>();
 
 		m_EffectChoices.clear();
-		std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-		for (auto &pair : g_EnabledEffects)
-		{
-			auto &[effectIdentifier, effectData] = pair;
 
-			if (!effectData.IsMeta() && !effectData.IsExcludedFromVoting() && !effectData.IsUtility()
-			    && !effectData.IsHidden())
+		const auto &filteredEffects = GetFilteredEnabledEffects();
+		std::vector<EffectData *> choosableEffects;
+		choosableEffects.reserve(filteredEffects.size());
+		for (auto &effectData : filteredEffects)
+		{
+			if (!effectData->IsMeta() && !effectData->IsExcludedFromVoting() && !effectData->IsUtility()
+			    && !effectData->IsHidden())
 			{
-				choosableEffects.emplace(effectIdentifier, effectData);
+				choosableEffects.push_back(effectData);
 			}
 		}
 
@@ -203,53 +205,43 @@ void Voting::OnRun()
 			}
 
 			float totalWeight = 0.f;
-			for (const auto &pair : choosableEffects)
-			{
-				const EffectData &effectData = pair.second;
+			for (const auto &effectData : choosableEffects)
+				totalWeight += effectData->GetEffectWeight();
 
-				totalWeight += effectData.GetEffectWeight();
-			}
-
-			float chosen = g_Random.GetRandomFloat(0.f, totalWeight);
+			float chosen = g_RandomNoDeterm.GetRandomFloat(0.f, totalWeight);
 
 			totalWeight  = 0.f;
-
-			std::unique_ptr<ChoosableEffect> pTargetChoice;
-
-			for (auto &pair : choosableEffects)
+			for (auto it = choosableEffects.begin(); it != choosableEffects.end();)
 			{
-				auto &[effectIdentifier, effectData] = pair;
+				const auto &effectData = *it;
 
-				totalWeight += effectData.GetEffectWeight();
-
+				totalWeight += effectData->GetEffectWeight();
 				if (chosen <= totalWeight)
 				{
 					// Set weight of this effect 0, EffectDispatcher::DispatchEffect will increment it immediately by
 					// EffectWeightMult
-					effectData.Weight = 0;
+					effectData->Weight = 0;
 
-					auto match        = (std::ostringstream() << m_VoteablePrefix
+					auto match         = (std::ostringstream() << m_VoteablePrefix
                                                        << (!m_AlternatedVotingRound       ? idx + 1
-					                                              : m_EnableRandomEffectVoteable ? idx + 5
-					                                                                             : idx + 4))
+					                                               : m_EnableRandomEffectVoteable ? idx + 5
+					                                                                              : idx + 4))
 					                 .str();
-					pTargetChoice = std::make_unique<ChoosableEffect>(
-					    effectIdentifier, effectData.HasCustomName() ? effectData.CustomName : effectData.Name, match);
+
+					m_EffectChoices.push_back(std::make_unique<ChoosableEffect>(
+					    effectData->Id, effectData->HasCustomName() ? effectData->CustomName : effectData->Name,
+					    match));
+					it = choosableEffects.erase(it);
 					break;
 				}
+
+				it++;
 			}
-
-			EffectIdentifier effectIdentifier = pTargetChoice->m_EffectIdentifier;
-
-			m_EffectChoices.push_back(std::move(pTargetChoice));
-			choosableEffects.erase(effectIdentifier);
 		}
 
 		std::vector<std::string> effectNames;
 		for (const auto &pChoosableEffect : m_EffectChoices)
-		{
-			effectNames.push_back(pChoosableEffect->m_EffectName);
-		}
+			effectNames.push_back(pChoosableEffect->Name);
 
 		SendToPipe("vote", effectNames);
 
@@ -262,12 +254,12 @@ void Voting::OnRun()
 
 		// Count total votes if chance system is enabled
 		int totalVotes = 0;
-		if (m_EnableChanceSystem)
+		if (m_VotingMode == VotingMode::Percentage)
 		{
-			for (const auto &pChoosableEffect : m_EffectChoices)
+			for (const auto &choosableEffect : m_EffectChoices)
 			{
 				int chanceVotes =
-				    pChoosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
+				    choosableEffect->ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 				totalVotes += chanceVotes;
 			}
@@ -277,10 +269,10 @@ void Voting::OnRun()
 		for (const auto &choosableEffect : m_EffectChoices)
 		{
 			std::ostringstream oss;
-			oss << choosableEffect->m_Match << ": " << choosableEffect->m_EffectName;
+			oss << choosableEffect->Match << ": " << choosableEffect->Name;
 
 			// Also show chance percentages if chance system is enabled
-			if (m_EnableChanceSystem)
+			if (m_VotingMode == VotingMode::Percentage)
 			{
 				float percentage;
 				if (totalVotes == 0)
@@ -290,7 +282,7 @@ void Voting::OnRun()
 				else
 				{
 					int chanceVotes =
-					    choosableEffect->m_ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
+					    choosableEffect->ChanceVotes + (m_EnableVotingChanceSystemRetainInitialChance ? 1 : 0);
 
 					percentage =
 					    !chanceVotes
@@ -331,14 +323,16 @@ bool Voting::Init()
 		CloseHandle(mutex);
 	}
 
-	m_SecsBeforeVoting   = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
-	                                                       OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
+	m_SecsBeforeVoting = g_OptionsManager.GetVotingValue({ "VotingSecsBeforeVoting", "TwitchVotingSecsBeforeVoting" },
+	                                                     OPTION_DEFAULT_TWITCH_SECS_BEFORE_VOTING);
 
-	m_OverlayMode        = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
-	                                                       static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
+	m_OverlayMode      = g_OptionsManager.GetVotingValue({ "VotingOverlayMode", "TwitchVotingOverlayMode" },
+	                                                     static_cast<OverlayMode>(OPTION_DEFAULT_TWITCH_OVERLAY_MODE));
 
-	m_EnableChanceSystem = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
-	                                                       OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING);
+	m_VotingMode       = g_OptionsManager.GetVotingValue({ "VotingChanceSystem", "TwitchVotingChanceSystem" },
+	                                                     OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING)
+	                       ? VotingMode::Percentage
+	                       : VotingMode::Majority;
 	m_EnableVotingChanceSystemRetainInitialChance =
 	    g_OptionsManager.GetVotingValue({ "VotingChanceSystemRetainChance", "TwitchVotingChanceSystemRetainChance" },
 	                                    OPTION_DEFAULT_TWITCH_PROPORTIONAL_VOTING_RETAIN_CHANCE);
@@ -350,12 +344,10 @@ bool Voting::Init()
 	PROCESS_INFORMATION procInfo = {};
 
 	auto str                     = _wcsdup(VOTING_PROXY_START_ARGS);
-#ifdef _DEBUG
-	DWORD attributes = NULL;
-	if (DoesFileExist("chaosmod\\.forcenovotingconsole"))
-	{
+#ifdef CHAOSDEBUG
+	DWORD attributes = 0;
+	if (DoesFeatureFlagExist("forcenovotingconsole"))
 		attributes = CREATE_NO_WINDOW;
-	}
 
 	bool result = CreateProcess(NULL, str, NULL, NULL, TRUE, attributes, NULL, NULL, &startupInfo, &procInfo);
 #else
@@ -381,6 +373,11 @@ bool Voting::IsEnabled() const
 	return m_EnableVoting;
 }
 
+VotingMode Voting::GetVotingMode() const
+{
+	return m_VotingMode;
+}
+
 void Voting::HandleMsg(std::string_view message)
 {
 	if (message == "hello")
@@ -392,10 +389,8 @@ void Voting::HandleMsg(std::string_view message)
 
 			LOG("Received hello from voting pipe");
 
-			if (ComponentExists<EffectDispatcher>())
-			{
-				GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = false;
-			}
+			if (ComponentExists<EffectDispatchTimer>())
+				GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(false);
 
 			SendToPipe("hello_back");
 		}
@@ -413,23 +408,23 @@ void Voting::HandleMsg(std::string_view message)
 			std::string identifier = receivedJSON["Identifier"];
 			if (identifier == "voteresult")
 			{
-				int result               = receivedJSON["SelectedOption"];
+				int result          = receivedJSON["SelectedOption"];
 
-				m_HasReceivedResult      = true;
+				m_HasReceivedResult = true;
 
 				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_ChosenEffectIdentifier = std::make_unique<EffectIdentifier>(
-				    result == 3 ? EffectIdentifier() : m_EffectChoices[result]->m_EffectIdentifier);
+				m_ChosenEffectId =
+				    std::make_unique<EffectIdentifier>(result == 3 ? EffectIdentifier() : m_EffectChoices[result]->Id);
 			}
 			else if (identifier == "currentvotes")
 			{
 				std::vector<int> options = receivedJSON["Votes"];
 				if (options.size() == m_EffectChoices.size())
 				{
-					for (int idx = 0; idx < options.size(); idx++)
+					for (size_t idx = 0; idx < options.size(); idx++)
 					{
-						int votes                           = options[idx];
-						m_EffectChoices[idx]->m_ChanceVotes = votes;
+						int votes                         = options[idx];
+						m_EffectChoices[idx]->ChanceVotes = votes;
 					}
 				}
 			}
@@ -466,9 +461,8 @@ void Voting::ErrorOutWithMsg(std::string_view message)
 	CloseHandle(m_PipeHandle);
 	m_PipeHandle = INVALID_HANDLE_VALUE;
 
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->DispatchEffectsOnTimer = true;
-	}
+	if (ComponentExists<EffectDispatchTimer>())
+		GetComponent<EffectDispatchTimer>()->SetShouldDispatchEffects(true);
+
 	m_EnableVoting = false;
 }

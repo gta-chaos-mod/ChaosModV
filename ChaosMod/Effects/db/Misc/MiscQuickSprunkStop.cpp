@@ -4,7 +4,9 @@
 
 #include <stdafx.h>
 
-static const char *scriptName = "ob_vend1";
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR const char *scriptName = "ob_vend1";
 
 static void OnStart()
 {
@@ -17,14 +19,12 @@ static void OnStart()
 
 	REQUEST_SCRIPT(scriptName);
 	while (!HAS_SCRIPT_LOADED(scriptName))
-	{
 		WAIT(0);
-	}
 	START_NEW_SCRIPT_WITH_ARGS(scriptName, (Any *)&obj, 1, 512);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
     {
         .Name = "Quick Sprunk Stop",
         .Id = "misc_quick_sprunk_stop",

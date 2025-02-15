@@ -2,27 +2,25 @@
 
 #include "Main.h"
 
-#include "Effects/EffectConfig.h"
-
-#include "Memory/Hooks/ScriptThreadRunHook.h"
-#include "Memory/Hooks/ShaderHook.h"
-#include "Memory/Misc.h"
-#include "Memory/Shader.h"
-
+#include "Components/CrossingChallenge.h"
 #include "Components/DebugMenu.h"
 #include "Components/DebugSocket.h"
+#include "Components/EffectDispatchTimer.h"
 #include "Components/EffectDispatcher.h"
 #include "Components/EffectShortcuts.h"
+#include "Components/EffectSound/EffectSoundManagers.h"
 #include "Components/Failsafe.h"
 #include "Components/HelpTextQueue.h"
 #include "Components/KeyStates.h"
 #include "Components/LuaScripts.h"
 #include "Components/MetaModifiers.h"
-#include "Components/Mp3Manager.h"
 #include "Components/SplashTexts.h"
 #include "Components/Voting.h"
 #include "Components/Workshop.h"
-
+#include "Effects/EffectConfig.h"
+#include "Effects/EnabledEffects.h"
+#include "Memory/Hooks/ScriptThreadRunHook.h"
+#include "Memory/Misc.h"
 #include "Util/File.h"
 #include "Util/OptionsManager.h"
 #include "Util/PoolSpawner.h"
@@ -34,11 +32,13 @@ static struct
 	bool ClearEffectsShortcutEnabled = false;
 	bool ToggleModShortcutEnabled    = false;
 	bool ToggleModState              = false;
+	bool DisableMod                  = false;
 	bool PauseTimerShortcutEnabled   = false;
 	bool HaveLateHooksRan            = false;
 	bool AntiSoftlockShortcutEnabled = false;
 	bool RunAntiSoftlock             = false;
 } ms_Flags;
+static bool ms_ModDisabled = false;
 
 static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
 {
@@ -47,9 +47,7 @@ static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
 
 	int j = 0;
 	for (int i = 3; i < 9; i += 2)
-	{
 		Util::TryParse<BYTE>(colorText.substr(i, 2), colors[j++], 16);
-	}
 
 	return colors;
 }
@@ -61,26 +59,6 @@ static void ParseEffectsFile()
 	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
 }
 
-static void Reset()
-{
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->Reset();
-		while (GetComponent<EffectDispatcher>()->IsClearingEffects())
-		{
-			GetComponent<EffectDispatcher>()->OnRun();
-			WAIT(0);
-		}
-	}
-
-	ClearEntityPool();
-
-	for (auto component : g_Components)
-	{
-		component->OnModPauseCleanup();
-	}
-}
-
 static void Init()
 {
 	// Attempt to print game build number
@@ -89,9 +67,7 @@ static void Init()
 	{
 		auto gameBuild = Memory::GetGameBuild();
 		if (gameBuild.empty())
-		{
 			gameBuild = "Unknown";
-		}
 
 		LOG("Game Build: " << gameBuild);
 
@@ -99,7 +75,7 @@ static void Init()
 	}();
 
 	static std::streambuf *oldStreamBuf;
-	if (DoesFileExist("chaosmod\\.enableconsole"))
+	if (DoesFeatureFlagExist("enableconsole"))
 	{
 		if (GetConsoleWindow())
 		{
@@ -164,9 +140,10 @@ static void Init()
 	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
 	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
+	g_RandomNoDeterm.SetSeed(GetTickCount64());
 
 	std::set<std::string> blacklistedComponentNames;
-	if (DoesFileExist("chaosmod\\.blacklistedcomponents"))
+	if (DoesFeatureFlagExist("blacklistedcomponents"))
 	{
 		std::ifstream file("chaosmod\\.blacklistedcomponents");
 		if (!file.fail())
@@ -174,35 +151,49 @@ static void Init()
 			std::string line;
 			line.resize(64);
 			while (file.getline(line.data(), 64))
-			{
 				blacklistedComponentNames.insert(StringTrim(line.substr(0, line.find("\n"))));
-			}
 		}
 	}
 
-#define INIT_COMPONENT(componentName, logName, componentType, ...)             \
-	if (blacklistedComponentNames.contains(componentName))                     \
-	{                                                                          \
-		LOG(componentName << " component has been blacklisted from running!"); \
-		UninitComponent<componentType>();                                      \
-	}                                                                          \
-	else                                                                       \
-	{                                                                          \
-		LOG("Initializing " << logName << " component");                       \
-		InitComponent<componentType>(__VA_ARGS__);                             \
-	}
+#define INIT_COMPONENT_BASE(componentName, logName, baseComponentType, componentType, ...) \
+	do                                                                                     \
+	{                                                                                      \
+		if (blacklistedComponentNames.contains(componentName))                             \
+		{                                                                                  \
+			LOG(componentName << " component has been blacklisted from running!");         \
+			UninitComponent<baseComponentType>();                                          \
+		}                                                                                  \
+		else                                                                               \
+		{                                                                                  \
+			LOG("Initializing " << logName << " component");                               \
+			InitComponent<baseComponentType, componentType>(__VA_ARGS__);                  \
+		}                                                                                  \
+	} while (0)
+
+#define INIT_COMPONENT(componentName, logName, componentType, ...) \
+	INIT_COMPONENT_BASE(componentName, logName, componentType, componentType, __VA_ARGS__)
 
 	INIT_COMPONENT("SplashTexts", "mod splash texts handler", SplashTexts);
 
 	INIT_COMPONENT("Workshop", "workshop", Workshop);
 
-	INIT_COMPONENT("Mp3Manager", "effect sound system", Mp3Manager);
+	if (g_OptionsManager.GetConfigValue({ "EffectSoundUseMCI" }, OPTION_DEFAULT_EFFECT_SOUND_USE_MCI))
+	{
+		INIT_COMPONENT_BASE("EffectSoundManager", "effect sound system (legacy MCI)", EffectSoundManager,
+		                    EffectSoundMCI);
+	}
+	else
+	{
+		INIT_COMPONENT_BASE("EffectSoundManager", "effect sound system", EffectSoundManager, EffectSound3D);
+	}
 
 	INIT_COMPONENT("MetaModifiers", "meta modifier states", MetaModifiers);
 
 	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, timerColor, textColor, effectTimerColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, textColor, effectTimerColor);
+
+	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer, timerColor);
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
@@ -216,16 +207,16 @@ static void Init()
 
 	INIT_COMPONENT("HelpTextQueue", "script help text queue", HelpTextQueue);
 
+	INIT_COMPONENT("CrossingChallenge", "Crossing Challenge", CrossingChallenge);
+
 #ifdef WITH_DEBUG_PANEL_SUPPORT
-	if (DoesFileExist("chaosmod\\.enabledebugsocket"))
-	{
+	if (DoesFeatureFlagExist("enabledebugsocket"))
 		INIT_COMPONENT("DebugSocket", "Debug Websocket", DebugSocket);
-	}
 #endif
 
 #undef INIT_COMPONENT
 
-	LOG("Completed init");
+	LOG("Completed init!");
 }
 
 static void MainRun()
@@ -237,15 +228,18 @@ static void MainRun()
 		Memory::RunLateHooks();
 	}
 
-	g_MainThread = GetCurrentFiber();
-
-	Reset();
+	g_MainThread            = GetCurrentFiber();
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
+	for (auto &component : g_Components)
+		component->OnModPauseCleanup();
+
+	ClearEntityPool();
+
 	Init();
 
-	bool isDisabled = false;
+	ms_ModDisabled = false;
 
 	while (true)
 	{
@@ -262,18 +256,17 @@ static void MainRun()
 			}
 		}
 
-		if (ms_Flags.ToggleModState)
+		if (ms_Flags.ToggleModState || ms_Flags.DisableMod)
 		{
-			ms_Flags.ToggleModState = false;
-
-			if (!isDisabled)
+			if (!ms_ModDisabled)
 			{
-				isDisabled = true;
+				ms_ModDisabled = true;
 
 				LOG("Mod has been disabled");
 
 				if (ComponentExists<EffectDispatcher>())
 				{
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
 					GetComponent<EffectDispatcher>()->Reset(
 					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
@@ -283,13 +276,16 @@ static void MainRun()
 					}
 				}
 
-				Reset();
-			}
-			else
-			{
-				isDisabled = false;
+				ClearEntityPool();
 
-				if (DoesFileExist("chaosmod\\.clearlogfileonreset"))
+				for (auto component : g_Components)
+					component->OnModPauseCleanup();
+			}
+			else if (ms_Flags.ToggleModState)
+			{
+				ms_ModDisabled = false;
+
+				if (DoesFeatureFlagExist("clearlogfileonreset"))
 				{
 					// Clear log
 					g_Log = std::ofstream(CHAOS_LOG_FILE);
@@ -300,12 +296,13 @@ static void MainRun()
 				// Restart the main part of the mod completely
 				Init();
 			}
+
+			ms_Flags.ToggleModState = false;
+			ms_Flags.DisableMod     = false;
 		}
 
-		if (isDisabled)
-		{
+		if (ms_ModDisabled)
 			continue;
-		}
 
 		if (ms_Flags.ClearAllEffects)
 		{
@@ -313,6 +310,7 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
+				GetComponent<EffectDispatchTimer>()->ResetTimer();
 				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{
@@ -334,24 +332,39 @@ static void MainRun()
 			continue;
 		}
 
-		for (auto component : g_Components)
-		{
+		for (auto &component : g_Components)
 			component->OnRun();
-		}
 	}
 }
 
 namespace Main
 {
+	static HMODULE ms_ModuleHandle = NULL;
+	EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+
 	void OnRun()
 	{
 		SetUnhandledExceptionFilter(CrashHandler);
+
+		if (!ms_ModuleHandle && DoesFileExist("ScriptHookV.dev"))
+		{
+			WCHAR fileName[MAX_PATH] = {};
+			GetModuleFileName(reinterpret_cast<HINSTANCE>(&__ImageBase), fileName, MAX_PATH);
+			ms_ModuleHandle = LoadLibrary(fileName);
+		}
 
 		MainRun();
 	}
 
 	void OnCleanup()
 	{
+		LOG("Unloading mod");
+
+		if (!ms_ModDisabled)
+			for (auto component : g_Components)
+				component->OnModPauseCleanup(Component::PauseCleanupFlags_UnsafeCleanup);
+
+		LOG("Mod unload complete!");
 	}
 
 	void OnKeyboardInput(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore,
@@ -377,44 +390,46 @@ namespace Main
 					ms_Flags.ClearAllEffects = true;
 
 					if (ComponentExists<SplashTexts>())
-					{
 						GetComponent<SplashTexts>()->ShowClearEffectsSplash();
-					}
 				}
 			}
 			else if (key == VK_OEM_PERIOD)
 			{
-				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatcher>())
-				{
-					GetComponent<EffectDispatcher>()->PauseTimer = !GetComponent<EffectDispatcher>()->PauseTimer;
-				}
+				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
+					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
+					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
 			}
 			else if (key == VK_OEM_COMMA)
 			{
 				if (ComponentExists<DebugMenu>() && GetComponent<DebugMenu>()->IsEnabled())
-				{
 					GetComponent<DebugMenu>()->SetVisible(!GetComponent<DebugMenu>()->IsVisible());
-				}
 			}
 			else if (key == 0x4B) // K
 			{
 				if (ms_Flags.AntiSoftlockShortcutEnabled && isShiftPressed)
-				{
 					ms_Flags.RunAntiSoftlock = true;
-				}
 			}
 			else if (key == 0x4C) // L
 			{
 				if (ms_Flags.ToggleModShortcutEnabled)
-				{
 					ms_Flags.ToggleModState = true;
-				}
+			}
+			else if (key == 0x52 && ms_ModuleHandle) // R
+			{
+				// Prevention for (somehow) double unloading
+				auto handle     = ms_ModuleHandle;
+				ms_ModuleHandle = NULL;
+				OnCleanup();
+				FreeModule(handle);
 			}
 		}
 
 		for (auto component : g_Components)
-		{
 			component->OnKeyInput(key, wasDownBefore, isUpNow, isCtrlPressed, isShiftPressed, isWithAlt);
-		}
+	}
+
+	void Stop()
+	{
+		ms_Flags.DisableMod = true;
 	}
 }

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStartMaxUpgrades()
 {
 	for (Vehicle veh : GetAllVehs())
@@ -9,9 +11,7 @@ static void OnStartMaxUpgrades()
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			if (max > 0)
-			{
 				SET_VEHICLE_MOD(veh, i, max - 1, true);
-			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, true);
 		}
@@ -27,9 +27,7 @@ static void OnStartMaxUpgrades()
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
 		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 
@@ -38,7 +36,7 @@ static void OnStartMaxUpgrades()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMaxUpgrades, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMaxUpgrades, nullptr, nullptr, 
 	{
 		.Name = "Add Max Upgrades To Every Vehicle",
 		.Id = "playerveh_maxupgrades"
@@ -52,15 +50,13 @@ static void OnStartRandomUpgrades()
 	{
 		SET_VEHICLE_MOD_KIT(veh, 0);
 
-		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 7));
+		SET_VEHICLE_WHEEL_TYPE(veh, g_Random.GetRandomInt(0, 12));
 
 		for (int i = 0; i < 50; i++)
 		{
 			int max = GET_NUM_VEHICLE_MODS(veh, i);
 			if (max > 0)
-			{
 				SET_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
-			}
 
 			TOGGLE_VEHICLE_MOD(veh, i, g_Random.GetRandomInt(0, 1));
 		}
@@ -76,9 +72,7 @@ static void OnStartRandomUpgrades()
 		_SET_VEHICLE_NEON_LIGHTS_COLOUR(veh, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
 		                                g_Random.GetRandomInt(0, 255));
 		for (int i = 0; i < 4; i++)
-		{
 			_SET_VEHICLE_NEON_LIGHT_ENABLED(veh, i, true);
-		}
 
 		_SET_VEHICLE_XENON_LIGHTS_COLOR(veh, g_Random.GetRandomInt(0, 12));
 
@@ -87,7 +81,7 @@ static void OnStartRandomUpgrades()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandomUpgrades, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandomUpgrades, nullptr, nullptr, 
 	{
 		.Name = "Add Random Upgrades To Every Vehicle",
 		.Id = "playerveh_randupgrades"

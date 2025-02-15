@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	std::vector<Vehicle> vehs = GetAllVehsArray();
@@ -20,7 +22,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Crumbling Vehicles",
 		.Id = "vehs_crumble",

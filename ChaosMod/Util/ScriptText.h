@@ -53,9 +53,7 @@ inline void DrawScreenText(const std::string &text, const ScreenTextVector &text
 	SET_TEXT_COLOUR(textColor.R, textColor.G, textColor.B, 255);
 
 	if (outline)
-	{
 		SET_TEXT_OUTLINE();
-	}
 
 	SET_TEXT_JUSTIFICATION(static_cast<int>(textAdjust));
 	SET_TEXT_WRAP(textWrap.X, textWrap.Y);
@@ -65,7 +63,7 @@ inline void DrawScreenText(const std::string &text, const ScreenTextVector &text
 	{
 		float width           = GetScreenTextWidth(text, scale);
 		float height          = scale / 10;
-		float additionalWidth = 0.02;
+		float additionalWidth = 0.02f;
 		DRAW_RECT(textPos.X - (width * 0.5f), textPos.Y + 0.015, width + additionalWidth, height, 0, 0, 0, 127, true);
 	}
 }

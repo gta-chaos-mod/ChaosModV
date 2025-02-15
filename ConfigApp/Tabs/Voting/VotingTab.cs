@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -7,7 +6,7 @@ namespace ConfigApp.Tabs.Voting
 {
     public class VotingTab : Tab
     {
-        private Dictionary<string, Tab> m_Tabs = new Dictionary<string, Tab>
+        private readonly Dictionary<string, Tab> m_Tabs = new()
         {
             { "General", new GeneralTab() },
             { "Twitch", new TwitchTab() },
@@ -51,17 +50,13 @@ namespace ConfigApp.Tabs.Voting
         public override void OnLoadValues()
         {
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnLoadValues();
-            }
         }
 
         public override void OnSaveValues()
         {
             foreach (var tab in m_Tabs)
-            {
                 tab.Value.OnSaveValues();
-            }
         }
     }
 }

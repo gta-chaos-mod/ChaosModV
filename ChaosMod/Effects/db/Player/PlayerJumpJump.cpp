@@ -4,9 +4,10 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
-static int lastCheck = 0;
+CHAOS_VAR int lastCheck = 0;
 
 static void OnTick()
 {
@@ -31,7 +32,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Jump! Jump!",
 		.Id = "player_jump_jump",

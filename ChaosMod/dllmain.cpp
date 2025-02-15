@@ -12,6 +12,7 @@ BOOL APIENTRY DllMain(HMODULE instance, DWORD reason, LPVOID reserved)
 	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
+	{
 		SetUnhandledExceptionFilter(CrashHandler);
 
 		RAW_LOG("Chaos Mod v" MOD_VERSION "\n\n");
@@ -23,8 +24,8 @@ BOOL APIENTRY DllMain(HMODULE instance, DWORD reason, LPVOID reserved)
 		keyboardHandlerRegister(Main::OnKeyboardInput);
 
 		break;
+	}
 	case DLL_PROCESS_DETACH:
-		Main::OnCleanup();
 		Memory::Uninit();
 
 		scriptUnregister(instance);

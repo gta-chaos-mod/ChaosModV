@@ -4,8 +4,10 @@
 
 #include <stdafx.h>
 
-static std::map<Vehicle, Object> vehPropsMap;
-static std::vector<Hash> availablePropModels;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::map<Vehicle, Object> vehPropsMap;
+CHAOS_VAR std::vector<Hash> availablePropModels;
 
 static Vector3 GetPropOffset(Hash propModel)
 {
@@ -47,9 +49,7 @@ static void OnTick()
 
 			// Don't include models that are either very small or very large
 			if (modelSize > 0.75f && modelSize < 6.f)
-			{
 				availablePropModels.push_back(model);
-			}
 		}
 	}
 
@@ -94,9 +94,7 @@ static void OnTick()
 			if (!DOES_ENTITY_EXIST(veh))
 			{
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = vehPropsMap.erase(it);
 			}
@@ -128,21 +126,17 @@ static void OnStop()
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(veh))
-		{
 			RESET_ENTITY_ALPHA(veh);
-		}
 
 		if (DOES_ENTITY_EXIST(prop))
-		{
 			DELETE_OBJECT(&prop);
-		}
 	}
 
 	vehPropsMap.clear();
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Prop Cars",
 		.Id = "vehs_prop_models",

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	static constexpr Hash modelHash = -835930287;
@@ -37,6 +39,8 @@ static void OnStart()
 	SET_RELATIONSHIP_BETWEEN_GROUPS(5, relationshipGroup, femCivGroup);
 
 	Ped ped = CreatePoolPedInsideVehicle(veh, 4, modelHash, -1);
+	CurrentEffect::SetEffectSoundPlayOptions(
+	    { .PlayType = EffectSoundPlayType::FollowEntity, .PlayFlags = EffectSoundPlayFlags_Looping, .Entity = ped });
 	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 	SET_PED_CONFIG_FLAG(ped, 281, true);
@@ -59,7 +63,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Spawn Extreme Griefer Jesus",
 		.Id = "spawn_grieferjesus2",

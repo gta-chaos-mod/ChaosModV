@@ -4,6 +4,8 @@ Effect by Last0xygen
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	static const Hash tonyaHash    = "ig_tonya"_hash;
@@ -53,7 +55,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
     {
         .Name = "Get Towed",
         .Id = "misc_get_towed",

@@ -4,20 +4,18 @@
 
 #include "Effects/EffectIdentifier.h"
 
+#include <cstdint>
 #include <vector>
-
-using DWORD = unsigned long;
 
 class DebugMenu : public Component
 {
-  private:
 	struct DebugEffect
 	{
-		EffectIdentifier Identifier;
+		EffectIdentifier Id;
 		std::string EffectName;
 
-		DebugEffect(const EffectIdentifier &effectIdentifier, const std::string &effectName)
-		    : Identifier(effectIdentifier), EffectName(effectName)
+		DebugEffect(const EffectIdentifier &effectId, const std::string &effectName)
+		    : Id(effectId), EffectName(effectName)
 		{
 		}
 	};
@@ -26,18 +24,16 @@ class DebugMenu : public Component
 
 	bool m_IsEnabled;
 
-	int m_SelectedIdx     = 0;
-	bool m_Visible        = false;
+	int64_t m_SelectedIdx      = 0;
+	bool m_Visible             = false;
 
-	DWORD m_RepeatTime    = 0;
-	bool m_DispatchEffect = false;
-
-  protected:
-	DebugMenu();
+	std::uint32_t m_RepeatTime = 0;
+	bool m_DispatchEffect      = false;
 
   public:
-	virtual void OnRun() override;
+	DebugMenu();
 
+	virtual void OnRun() override;
 	virtual void OnKeyInput(DWORD key, bool repeated, bool isUpNow, bool isCtrlPressed, bool isShiftPressed,
 	                        bool isAltPressed) override;
 
@@ -45,8 +41,4 @@ class DebugMenu : public Component
 
 	void SetVisible(bool state);
 	bool IsVisible() const;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };

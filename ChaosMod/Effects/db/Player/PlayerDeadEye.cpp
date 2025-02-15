@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Camera.h"
 
 struct PedHitInfo
@@ -12,9 +13,9 @@ struct PedHitInfo
 	int boneIdx;
 };
 
-static bool didSelect = false;
-static std::vector<PedHitInfo> selectedOffsets;
-static bool isBlocked = false;
+CHAOS_VAR bool didSelect = false;
+CHAOS_VAR std::vector<PedHitInfo> selectedOffsets;
+CHAOS_VAR bool isBlocked = false;
 
 static void OnStop()
 {
@@ -35,9 +36,7 @@ static void OnTick()
 	}
 	// Exclude non working weapons (minigun, hellbringer)
 	if (weaponHash == 0x42BF8A85 || weaponHash == 0xB62D1F67)
-	{
 		return;
-	}
 	// Check if player is aiming
 	if (IS_CONTROL_PRESSED(0, 25))
 	{
@@ -128,7 +127,7 @@ static void OnTick()
 			if (DOES_ENTITY_EXIST(info.pedHandle))
 			{
 				Vector3 destOffset = GET_PED_BONE_COORDS(info.pedHandle, info.boneIdx, 0, 0, 0);
-				float boxSize      = 0.1;
+				float boxSize      = 0.1f;
 				DRAW_BOX(destOffset.x - boxSize, destOffset.y - boxSize, destOffset.z - boxSize, destOffset.x + boxSize,
 				         destOffset.y + boxSize, destOffset.z + boxSize, 255, 0, 0, 100);
 			}
@@ -161,7 +160,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Dead Eye",
 		.Id = "player_dead_eye",

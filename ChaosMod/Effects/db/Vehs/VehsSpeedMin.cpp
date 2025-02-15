@@ -2,20 +2,19 @@
        Effect by Lucas7yoshi, modified
 */
 
-#include "scripthookv/inc/natives.h"
-#include <cmath>
 #include <stdafx.h>
-#include <string>
+
+#include "Effects/Register/RegisterEffect.h"
 
 #define WAIT_TIME 10000      // ms
 #define SPEED_THRESHOLD 0.5f // % of max speed must be reached
 
-static int ms_Overlay = 0;
-static Vehicle ms_LastVeh;
+CHAOS_VAR int ms_Overlay = 0;
+CHAOS_VAR Vehicle ms_LastVeh;
 
-static DWORD64 ms_TimeReserve;
-static DWORD64 ms_LastTick    = 0;
-static bool ms_EnteredVehicle = false;
+CHAOS_VAR DWORD64 ms_TimeReserve;
+CHAOS_VAR DWORD64 ms_LastTick    = 0;
+CHAOS_VAR bool ms_EnteredVehicle = false;
 
 static inline bool Beepable(DWORD64 reserveValue)
 {
@@ -81,9 +80,7 @@ static void OnTick()
 			}
 
 			if (Beepable(ms_TimeReserve - tickDelta) && !Beepable(ms_TimeReserve))
-			{
 				PLAY_SOUND_FRONTEND(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
-			}
 
 			ms_TimeReserve -= tickDelta;
 		}
@@ -92,9 +89,7 @@ static void OnTick()
 			overlaycolor = 25;
 			ms_TimeReserve += tickDelta / 2; // slows down regaining time
 			if (ms_TimeReserve > WAIT_TIME)
-			{
 				ms_TimeReserve = WAIT_TIME;
-			}
 		}
 
 		ms_LastTick = currentTick;
@@ -136,9 +131,7 @@ static void OnStart()
 {
 	ms_Overlay = REQUEST_SCALEFORM_MOVIE("MP_BIG_MESSAGE_FREEMODE");
 	while (!HAS_SCALEFORM_MOVIE_LOADED(ms_Overlay))
-	{
 		WAIT(0);
-	}
 	ms_EnteredVehicle = false;
 	ms_LastTick       = GET_GAME_TIMER();
 	ms_LastVeh        = 0;
@@ -146,7 +139,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Need For Speed",
 		.Id = "veh_speed_goal",

@@ -4,19 +4,13 @@
 
 #include <stdafx.h>
 
-static int s_alpha;
-static float s_alphaTimer;
+#include "Effects/Register/RegisterEffect.h"
 
 static void OnStart()
 {
-	s_alpha      = 0;
-	s_alphaTimer = 0.f;
-
 	REQUEST_ADDITIONAL_TEXT("CREDIT", 0);
 	while (!HAS_ADDITIONAL_TEXT_LOADED(0))
-	{
 		WAIT(0);
-	}
 
 	PLAY_END_CREDITS_MUSIC(true);
 	SET_CREDITS_ACTIVE(true);
@@ -24,17 +18,11 @@ static void OnStart()
 
 	int song = g_Random.GetRandomInt(0, 2);
 	if (song == 0)
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_SAVE_MICHAEL_TREVOR", 1);
-	}
 	else if (song == 1)
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_MICHAEL", 1);
-	}
 	else
-	{
 		SET_CUSTOM_RADIO_TRACK_LIST("RADIO_16_SILVERLAKE", "END_CREDITS_KILL_TREVOR", 1);
-	}
 }
 
 static void OnStop()
@@ -56,17 +44,14 @@ static void OnTick()
 
 	SET_USER_RADIO_CONTROL_ENABLED(false);
 
-	if (s_alpha < 255 && (s_alphaTimer += GET_FRAME_TIME()) > 0.1f)
-	{
-		s_alphaTimer = 0;
-		s_alpha++;
-	}
-
-	DRAW_RECT(.5f, .5f, 1.f, 1.f, 0, 0, 0, s_alpha, false);
+	DRAW_RECT(
+	    .5f, .5f, 1.f, 1.f, 0, 0, 0,
+	    static_cast<int>(std::floor(std::lerp(0, 255, std::min(CurrentEffect::GetEffectCompletionPercentage(), 1.f)))),
+	    false);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Roll Credits",
 		.Id = "misc_credits",

@@ -39,7 +39,7 @@ inline Vehicle CreateTempVehicleOnPlayerPos(Hash model, float heading)
 	return veh;
 }
 
-inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
+inline void SetSurroundingPedsInVehicles(Hash vehicleHash, float maxDistance)
 {
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, true);
@@ -57,9 +57,7 @@ inline void SetSurroundingPedsInVehicles(Hash vehicleHash, int maxDistance)
 					Vehicle veh = GET_VEHICLE_PED_IS_IN(ped, false);
 
 					if (GET_ENTITY_MODEL(veh) == vehicleHash)
-					{
 						continue;
-					}
 				}
 
 				float pedHeading = GET_ENTITY_HEADING(ped);
@@ -98,9 +96,9 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	Hash newVehModel = 0;
 	do
 	{
-		newVehModel = vehicleModels[g_Random.GetRandomInt(0, vehicleModels.size() - 1)];
-	} while (GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel) < seatPeds.size() || IS_THIS_MODEL_A_TRAIN(newVehModel)
-	         || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
+		newVehModel = vehicleModels[g_RandomNoDeterm.GetRandomInt(0, vehicleModels.size() - 1)];
+	} while (static_cast<size_t>(GET_VEHICLE_MODEL_NUMBER_OF_SEATS(newVehModel)) < seatPeds.size()
+	         || IS_THIS_MODEL_A_TRAIN(newVehModel) || GET_VEHICLE_MODEL_ACCELERATION(newVehModel) <= 0);
 
 	if (!newVehModel)
 		return oldHandle;
@@ -110,7 +108,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	Vehicle newVehicle;
 	if (addToPool)
 	{
-		for (int i = 0; i < seatPeds.size(); i++)
+		for (size_t i = 0; i < seatPeds.size(); i++)
 		{
 			Ped seatPed = seatPeds[i].Ped;
 			SET_ENTITY_COORDS(seatPed, coords.x, coords.y, coords.z + 5.f, 0, 0, 0, 0);
@@ -129,22 +127,18 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 		SET_ENTITY_AS_MISSION_ENTITY(newVehicle, false, true);
 	}
 
-	for (int i = 0; i < seatPeds.size(); i++)
+	for (size_t i = 0; i < seatPeds.size(); i++)
 	{
 		SeatPed seatPed = seatPeds.at(i);
 		int seatIndex   = seatPed.SeatIndex;
 		if (seatIndex >= numberOfSeats || !IS_VEHICLE_SEAT_FREE(newVehicle, seatIndex, 0))
-		{
 			seatIndex = -2;
-		}
 
 		SET_PED_INTO_VEHICLE(seatPed.Ped, newVehicle, seatIndex);
 	}
 
 	if (engineRunning)
-	{
 		SET_VEHICLE_ENGINE_ON(newVehicle, true, true, false);
-	}
 
 	SET_ENTITY_VELOCITY(newVehicle, velocity.x, velocity.y, velocity.z);
 	SET_VEHICLE_FORWARD_SPEED(newVehicle, forwardSpeed);
@@ -156,9 +150,7 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 		SET_ENTITY_AS_MISSION_ENTITY(copy, true, true);
 
 		if (shouldUseHook)
-		{
 			Hooks::EnableScriptThreadBlock();
-		}
 		DELETE_VEHICLE(&copy);
 		if (shouldUseHook)
 		{
@@ -170,35 +162,34 @@ inline Vehicle CreateRandomVehicleWithPeds(Vehicle oldHandle, const std::vector<
 	// Also apply random upgrades
 	SET_VEHICLE_MOD_KIT(newVehicle, 0);
 
-	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_Random.GetRandomInt(0, 7));
+	SET_VEHICLE_WHEEL_TYPE(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 12));
 
 	for (int i = 0; i < 50; i++)
 	{
 		int max = GET_NUM_VEHICLE_MODS(newVehicle, i);
 		if (max > 0)
 		{
-			SET_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, max - 1), g_Random.GetRandomInt(0, 1));
+			SET_VEHICLE_MOD(newVehicle, i, g_RandomNoDeterm.GetRandomInt(0, max - 1),
+			                g_RandomNoDeterm.GetRandomInt(0, 1));
 		}
 
-		TOGGLE_VEHICLE_MOD(newVehicle, i, g_Random.GetRandomInt(0, 1));
+		TOGGLE_VEHICLE_MOD(newVehicle, i, g_RandomNoDeterm.GetRandomInt(0, 1));
 	}
 
-	SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_Random.GetRandomInt(0, 1));
-	SET_VEHICLE_WINDOW_TINT(newVehicle, g_Random.GetRandomInt(0, 6));
+	SET_VEHICLE_TYRES_CAN_BURST(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 1));
+	SET_VEHICLE_WINDOW_TINT(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 6));
 
-	SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                  g_Random.GetRandomInt(0, 255));
-	SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                    g_Random.GetRandomInt(0, 255));
+	SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                  g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
+	SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                    g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
 
-	_SET_VEHICLE_NEON_LIGHTS_COLOUR(newVehicle, g_Random.GetRandomInt(0, 255), g_Random.GetRandomInt(0, 255),
-	                                g_Random.GetRandomInt(0, 255));
+	_SET_VEHICLE_NEON_LIGHTS_COLOUR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 255),
+	                                g_RandomNoDeterm.GetRandomInt(0, 255), g_RandomNoDeterm.GetRandomInt(0, 255));
 	for (int i = 0; i < 4; i++)
-	{
 		_SET_VEHICLE_NEON_LIGHT_ENABLED(newVehicle, i, true);
-	}
 
-	_SET_VEHICLE_XENON_LIGHTS_COLOR(newVehicle, g_Random.GetRandomInt(0, 12));
+	_SET_VEHICLE_XENON_LIGHTS_COLOR(newVehicle, g_RandomNoDeterm.GetRandomInt(0, 12));
 
 	return newVehicle;
 }

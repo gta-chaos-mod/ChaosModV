@@ -1,12 +1,14 @@
 /*
-    Effect by DrUnderscore (James), modified by Last0xygen, fixed by OnlyRealNubs
+    Effect by DrUnderscore (James), modified by Last0xygen, fixed by Rylxnd
 */
 
 #include <stdafx.h>
+
+#include "Effects/Register/RegisterEffect.h"
 // TODO: SHVDN has a memory pattern for the gameplay camera, so it might be wise at some point
 // to use it to directly modify the rotation of the camera, but that's for a later date :^)
 
-static Camera flippedCamera = 0;
+CHAOS_VAR Camera flippedCamera = 0;
 
 static void UpdateCamera()
 {
@@ -37,7 +39,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Turn Turtle",
 		.Id = "player_flip_camera",

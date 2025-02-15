@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	Hash groupHash;
@@ -23,9 +25,7 @@ static void OnTick()
 		if (!IS_PED_A_PLAYER(ped))
 		{
 			if (IS_PED_IN_GROUP(ped) && GET_PED_GROUP_INDEX(ped) == playerGroup)
-			{
 				REMOVE_PED_FROM_GROUP(ped);
-			}
 
 			SET_PED_RELATIONSHIP_GROUP_HASH(ped, enemyGroupHash);
 
@@ -40,7 +40,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "All Peds Attack Player",
 		.Id = "peds_attackplayer",

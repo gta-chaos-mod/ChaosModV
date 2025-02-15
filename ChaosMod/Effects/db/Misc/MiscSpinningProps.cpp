@@ -4,10 +4,12 @@
 
 #include <stdafx.h>
 
-// Degrees per millisecond, current value means 1.3 full rotations per second
-static constexpr float ROTATION_SPEED = (1.3f * 360.f) / 1000.f;
+#include "Effects/Register/RegisterEffect.h"
 
-static int lastTick                   = 0;
+// Degrees per millisecond, current value means 1.3 full rotations per second
+CHAOS_VAR constexpr float ROTATION_SPEED = (1.3f * 360.f) / 1000.f;
+
+CHAOS_VAR int lastTick                   = 0;
 
 static void OnStart()
 {
@@ -28,7 +30,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Spinning Props",
 		.Id = "misc_spinning_props",

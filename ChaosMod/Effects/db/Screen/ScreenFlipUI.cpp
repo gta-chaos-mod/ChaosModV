@@ -5,16 +5,17 @@
 #include <stdafx.h>
 
 #include "Components/MetaModifiers.h"
+#include "Effects/Register/RegisterEffect.h"
 
 #include "Memory/UI.h"
 
-static constexpr int NUM_HUD_COMPONENTS = 21;
+CHAOS_VAR constexpr int NUM_HUD_COMPONENTS = 21;
 
-static float originalMobilePhoneX;
+CHAOS_VAR float originalMobilePhoneX;
 
-static std::map<int, float> originalHudComponentX;
+CHAOS_VAR std::map<int, float> originalHudComponentX;
 
-static std::map<int, float> hudComponentXValues = {
+CHAOS_VAR std::map<int, float> hudComponentXValues = {
 	{ 1, -0.9f },  // HUD_WANTED_STARS
 	{ 2, -0.9f },  // HUD_WEAPON_ICON
 	{ 3, -0.9f },  // HUD_CASH
@@ -33,12 +34,8 @@ static std::map<int, float> hudComponentXValues = {
 static void OnStart()
 {
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
-	{
 		if (hudComponentXValues.contains(i))
-		{
 			originalHudComponentX[i] = GET_HUD_COMPONENT_POSITION(i).x;
-		}
-	}
 
 	Vector3 originalMobilePhonePos;
 	GET_MOBILE_PHONE_POSITION(&originalMobilePhonePos);
@@ -48,9 +45,7 @@ static void OnStart()
 static void OnTick()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->FlipChaosUI = true;
-	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
 	{
@@ -73,17 +68,11 @@ static void OnTick()
 static void OnStop()
 {
 	if (ComponentExists<MetaModifiers>())
-	{
 		GetComponent<MetaModifiers>()->FlipChaosUI = false;
-	}
 
 	for (int i = 0; i < NUM_HUD_COMPONENTS; i++)
-	{
 		if (hudComponentXValues.contains(i))
-		{
 			SET_HUD_COMPONENT_POSITION(i, originalHudComponentX[i], GET_HUD_COMPONENT_POSITION(i).y);
-		}
-	}
 
 	Vector3 mobilePos;
 	GET_MOBILE_PHONE_POSITION(&mobilePos);
@@ -93,7 +82,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Flipped HUD",
 		.Id = "misc_flip_ui",

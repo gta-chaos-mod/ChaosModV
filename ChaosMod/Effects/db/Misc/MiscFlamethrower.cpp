@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 struct ShooterInfo
 {
 	float FullDuration          = 0;
@@ -11,10 +13,10 @@ struct ShooterInfo
 	int FxHandle                = 0;
 };
 
-static int MAX_DURATION_BETWEEN_SHOTS = 10;
-static int MAX_DURATION_ANIMATION     = 150;
+CHAOS_VAR int MAX_DURATION_BETWEEN_SHOTS = 10;
+CHAOS_VAR int MAX_DURATION_ANIMATION     = 150;
 
-static std::map<Ped, ShooterInfo> animationHandleByPed;
+CHAOS_VAR std::map<Ped, ShooterInfo> animationHandleByPed;
 
 static void OnStop()
 {
@@ -25,9 +27,7 @@ static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("core");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("core"))
-	{
 		WAIT(0);
-	}
 	std::vector<Ped> firingPeds;
 
 	for (Ped ped : GetAllPeds())
@@ -36,9 +36,7 @@ static void OnTick()
 		{
 			Entity weapon = GET_SELECTED_PED_WEAPON(ped);
 			if (GET_WEAPON_DAMAGE_TYPE(weapon) == 3)
-			{
 				firingPeds.push_back(ped);
-			}
 		}
 	}
 
@@ -95,7 +93,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Flamethrowers",
 		.Id = "misc_flamethrower",

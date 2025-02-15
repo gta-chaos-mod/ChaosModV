@@ -4,13 +4,13 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	REQUEST_NAMED_PTFX_ASSET("scr_sr_tr");
 	while (!HAS_NAMED_PTFX_ASSET_LOADED("scr_sr_tr"))
-	{
 		WAIT(0);
-	}
 	for (Ped ped : GetAllPeds())
 	{
 		if (IS_PED_SHOOTING(ped))
@@ -25,7 +25,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Gunsmoke",
 		.Id = "peds_gunsmoke",

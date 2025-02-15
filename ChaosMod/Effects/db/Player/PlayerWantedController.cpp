@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
 
 static void OnStartFive()
@@ -12,7 +12,7 @@ static void OnStartFive()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFive, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFive, nullptr, nullptr, 
 	{
 		.Name = "5 Wanted Stars",
 		.Id = "player_5stars",
@@ -31,7 +31,7 @@ static void OnStartPlusTwo()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartPlusTwo, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartPlusTwo, nullptr, nullptr, 
 	{
 		.Name = "+2 Wanted Stars",
 		.Id = "player_plus2stars",
@@ -48,7 +48,7 @@ static void OnTickNeverWanted()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickNeverWanted, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickNeverWanted, 
 	{
 		.Name = "Never Wanted",
 		.Id = "player_neverwanted",
@@ -67,7 +67,7 @@ static void OnStartThree()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartThree, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartThree, nullptr, nullptr, 
 	{
 		.Name = "3 Wanted Stars",
 		.Id = "player_3stars",
@@ -86,7 +86,7 @@ static void OnStartOne()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartOne, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartOne, nullptr, nullptr, 
 	{
 		.Name = "1 Wanted Star",
 		.Id = "player_1star",
@@ -123,10 +123,7 @@ static void OnStartFake()
 
 	Hooks::EnableScriptThreadBlock();
 
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->OverrideEffectName("player_fakestars", selectedInfo.Name);
-	}
+	CurrentEffect::OverrideEffectName(selectedInfo.Name);
 
 	Player player  = PLAYER_ID();
 	int lastLevel  = GET_PLAYER_WANTED_LEVEL(player);
@@ -160,7 +157,7 @@ static void OnStartFake()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFake, nullptr, nullptr, 
 	{
 		.Name = "Fake Wanted Level",
 		.Id = "player_fakestars",

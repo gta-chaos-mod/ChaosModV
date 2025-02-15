@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/WeaponPool.h"
 
 static void OnStart()
@@ -49,20 +50,14 @@ static void OnTick()
 	}
 
 	for (std::list<Ped>::iterator it = goneThroughPeds.begin(); it != goneThroughPeds.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = goneThroughPeds.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Peds Riot",
 		.Id = "peds_riot",

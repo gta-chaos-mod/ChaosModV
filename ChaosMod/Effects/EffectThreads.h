@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Effects/Effect.h"
-
+#include "Effects/EffectSoundPlayOptions.h"
+#include "Effects/Register/RegisteredEffects.h"
 #include "Util/CrashHandler.h"
+
+#include <scripthookv/inc/types.h>
 
 #include <memory>
 
@@ -11,9 +13,33 @@ using DWORD64 = unsigned long long;
 
 using LPVOID  = void *;
 
+struct EffectThreadSharedData
+{
+	float EffectCompletionPercentage = 0.f;
+	EffectSoundPlayOptions EffectSoundPlayOptions;
+	std::string OverrideEffectName;
+	std::string OverrideEffectId;
+};
+
+struct EffectThreadData
+{
+	RegisteredEffect *Effect = nullptr;
+	bool HasOnStartExecuted  = false;
+	bool IsRunning           = true;
+	bool HasStopped          = false;
+
+	void *CallerFiber        = nullptr;
+
+	EffectThreadSharedData SharedData;
+
+	EffectThreadData(RegisteredEffect *effect) : Effect(effect)
+	{
+	}
+};
+
 namespace EffectThreads
 {
-	LPVOID CreateThread(RegisteredEffect *effect, bool isTimed);
+	LPVOID CreateThread(RegisteredEffect *effect);
 
 	void StopThread(LPVOID threadId);
 	void StopThreadImmediately(LPVOID threadId);
@@ -30,20 +56,8 @@ namespace EffectThreads
 	bool HasThreadOnStartExecuted(LPVOID threadId);
 
 	bool IsThreadAnEffectThread();
-};
 
-struct EffectThreadData
-{
-	RegisteredEffect *Effect = nullptr;
-	bool HasOnStartExecuted  = false;
-	bool IsRunning           = false;
-	bool HasStopped          = false;
-
-	void *CallerFiber        = nullptr;
-
-	EffectThreadData(RegisteredEffect *effect, bool isRunning) : Effect(effect), IsRunning(isRunning)
-	{
-	}
+	EffectThreadSharedData *GetThreadSharedData(LPVOID threadId);
 };
 
 inline void EffectThreadFunc(LPVOID data)
@@ -61,7 +75,6 @@ inline void EffectThreadFunc(LPVOID data)
 		threadData.Effect->Tick();
 	}
 
-	SwitchToFiber(threadData.CallerFiber);
 	threadData.Effect->Stop();
 
 	threadData.HasStopped = true;
@@ -70,15 +83,14 @@ inline void EffectThreadFunc(LPVOID data)
 
 class EffectThread
 {
-  private:
-	EffectThreadData m_ThreadData;
-
   public:
 	DWORD64 PauseTimestamp = 0;
+	// NOTE: A previous fiber handle can be reused for a new one
+	// Do not assume they are uniquely identifiable for anything other than currently running fibers!
 	LPVOID Thread          = nullptr;
+	EffectThreadData ThreadData;
 
-	EffectThread(RegisteredEffect *effect, bool isTimed)
-	    : m_ThreadData(effect, isTimed), Thread(CreateFiber(0, EffectThreadFunc, &m_ThreadData))
+	EffectThread(RegisteredEffect *effect) : ThreadData(effect), Thread(CreateFiber(0, EffectThreadFunc, &ThreadData))
 	{
 	}
 
@@ -98,15 +110,15 @@ class EffectThread
 
 	inline void OnRun()
 	{
-		m_ThreadData.CallerFiber = GetCurrentFiber();
+		ThreadData.CallerFiber = GetCurrentFiber();
 		SwitchToFiber(Thread);
 	}
 
 	inline void Stop()
 	{
-		if (!m_ThreadData.HasStopped)
+		if (!ThreadData.HasStopped)
 		{
-			m_ThreadData.IsRunning = false;
+			ThreadData.IsRunning = false;
 
 			OnRun();
 		}
@@ -114,16 +126,24 @@ class EffectThread
 
 	inline bool HasStopped() const
 	{
-		return m_ThreadData.HasStopped;
+		return ThreadData.HasStopped;
 	}
 
 	inline bool HasOnStartExecuted() const
 	{
-		return m_ThreadData.HasOnStartExecuted;
+		return ThreadData.HasOnStartExecuted;
 	}
 
 	inline bool IsStopping() const
 	{
-		return !m_ThreadData.IsRunning;
+		return !ThreadData.IsRunning;
 	}
 };
+
+namespace CurrentEffect
+{
+	float GetEffectCompletionPercentage();
+	void SetEffectSoundPlayOptions(const EffectSoundPlayOptions &soundPlayOptions);
+	void OverrideEffectName(const std::string &effectName);
+	void OverrideEffectNameFromId(const std::string &effectId);
+}

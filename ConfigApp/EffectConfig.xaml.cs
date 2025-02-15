@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,8 +8,8 @@ namespace ConfigApp
 {
     public partial class EffectConfig : Window
     {
-        private EffectData m_EffectData;
-        private bool m_IsTimedEffect = false;
+        private readonly EffectData m_EffectData;
+        private readonly bool m_IsTimedEffect = false;
         private bool m_IsSaved = false;
         private int m_EffectShortcut = 0; // Win32Key + 2^10 (if CTRL) + 2^9 (if Shift) + 2^8 (if Alt)
 
@@ -27,42 +25,39 @@ namespace ConfigApp
         {
             InitializeComponent();
 
-            if (effectData == null)
-            {
-                effectData = new EffectData();
-            }
+            effectData ??= new EffectData();
 
             Title = effectInfo.Name;
 
             m_EffectData = effectData;
             m_IsTimedEffect = effectInfo.IsTimed;
 
+            EffectTimedType defaultTimedType = EffectTimedType.NotTimed;
+
+            if (effectInfo.IsTimed)
+            {
+                defaultTimedType = effectInfo.IsShort ? EffectTimedType.Short : EffectTimedType.Normal;
+            }
+
             if (m_IsTimedEffect)
             {
-                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType != null;
+                effectconf_timer_type_enable.IsChecked = m_EffectData.TimedType.HasValue &&
+                                                         m_EffectData.TimedType != defaultTimedType &&
+                                                         m_EffectData.TimedType != EffectTimedType.Custom;
                 effectconf_timer_type.ItemsSource = new string[]
                 {
                     "Normal",
                     "Short",
                     "Permanent"
                 };
-                switch (m_EffectData.TimedType.GetValueOrDefault(EffectTimedType.Normal))
+                effectconf_timer_type.SelectedIndex = m_EffectData.TimedType.GetValueOrDefault(defaultTimedType) switch
                 {
-                    case EffectTimedType.Normal:
-                        effectconf_timer_type.SelectedIndex = 0;
-                        break;
-                    case EffectTimedType.Short:
-                        effectconf_timer_type.SelectedIndex = 1;
-                        break;
-                    case EffectTimedType.Permanent:
-                        effectconf_timer_type.SelectedIndex = 2;
-                        break;
-                    default:
-                        effectconf_timer_type.SelectedIndex = 0;
-                        break;
-                }
-
-                if (m_EffectData.CustomTime >= 0)
+                    EffectTimedType.Normal => 0,
+                    EffectTimedType.Short => 1,
+                    EffectTimedType.Permanent => 2,
+                    _ => 0,
+                };
+                if (m_EffectData.CustomTime > 0)
                 {
                     effectconf_timer_time_enable.IsChecked = true;
                     effectconf_timer_time.Text = $"{m_EffectData.CustomTime}";
@@ -83,15 +78,13 @@ namespace ConfigApp
                 ? (m_EffectData.ExcludedFromVoting.Value ? 2 : 1) : 0;
 
             effectconf_effect_custom_name.Text = m_EffectData.CustomName;
-            effectconf_effect_custom_name.TextChanged += CustomEffectNameTextFieldTextChanged;
+            effectconf_effect_custom_name.TextChanged += OnCustomEffectNameTextFieldTextChanged;
 
             if (!string.IsNullOrWhiteSpace(effectId))
-            {
                 effectconf_mp3_label.Text = $@"
                     Sound to play when this effect gets activated: chaosmod/sounds/{effectId}.mp3
                     Or create the following folder and drop mp3 files in there to play a random one: chaosmod/sounds/{effectId}
                 ";
-            }
 
             // Meta Effect Handling
 
@@ -126,9 +119,7 @@ namespace ConfigApp
                 effectconf_effect_shortcut_input.IsEnabled = true;
 
                 if (savedWin32Key <= 0)
-                {
                     effectconf_effect_shortcut_input.Text = "None";
-                }
                 else
                 {
                     Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
@@ -153,7 +144,7 @@ namespace ConfigApp
             CheckEnableConfigurables();
         }
 
-        private void CustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
+        private void OnCustomEffectNameTextFieldTextChanged(object sender, TextChangedEventArgs e)
         {
             effectconf_effect_custom_name.Text = effectconf_effect_custom_name.Text.Replace("\"", "");
         }
@@ -174,17 +165,13 @@ namespace ConfigApp
             }
 
             if (key == Key.System)
-            {
                 key = e.SystemKey;
-            }
 
             // Don't want a shortcut with any of these as the main key
             if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift
                 || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt
                 || key == Key.LWin || key == Key.RWin || key == Key.Apps)
-            {
                 return;
-            }
 
             SetEffectShortcut(key, modifiers);
         }
@@ -225,8 +212,8 @@ namespace ConfigApp
                 effectconf_timer_time_enable.IsEnabled = false;
             }
 
-            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false);
-            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsChecked.GetValueOrDefault(false);
+            effectconf_timer_type.IsEnabled = effectconf_timer_type_enable.IsEnabled && effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false);
+            effectconf_timer_time.IsEnabled = effectconf_timer_time_enable.IsEnabled && effectconf_timer_time_enable.IsChecked.GetValueOrDefault(false);
         }
 
         private void OnClicked(object sender, RoutedEventArgs e)
@@ -243,13 +230,9 @@ namespace ConfigApp
             if (checkBox.IsChecked.GetValueOrDefault(false))
             {
                 if (sender == effectconf_timer_type_enable)
-                {
                     effectconf_timer_time_enable.IsChecked = false;
-                }
                 else if (sender == effectconf_timer_time_enable)
-                {
                     effectconf_timer_type_enable.IsChecked = false;
-                }
             }
 
             CheckEnableConfigurables();
@@ -272,46 +255,27 @@ namespace ConfigApp
 
         public EffectData GetNewData()
         {
-            if (effectconf_timer_type_enable.IsChecked.HasValue && effectconf_timer_type_enable.IsChecked.Value)
-            {
-                switch (effectconf_timer_type.SelectedIndex)
+            if (effectconf_timer_type_enable.IsChecked.GetValueOrDefault(false))
+                m_EffectData.TimedType = (object)effectconf_timer_type.SelectedIndex switch
                 {
-                    case 0:
-                        m_EffectData.TimedType = EffectTimedType.Normal;
-                        break;
-                    case 1:
-                        m_EffectData.TimedType = EffectTimedType.Short;
-                        break;
-                    case 2:
-                        m_EffectData.TimedType = EffectTimedType.Permanent;
-                        break;
-                    default:
-                        m_EffectData.TimedType = null;
-                        break;
-                }
-            }
+                    0 => (EffectTimedType?)EffectTimedType.Normal,
+                    1 => (EffectTimedType?)EffectTimedType.Short,
+                    2 => (EffectTimedType?)EffectTimedType.Permanent,
+                    _ => null,
+                };
             else
-            {
                 m_EffectData.TimedType = null;
-            }
 
             m_EffectData.CustomTime = effectconf_timer_time_enable.IsChecked.HasValue && effectconf_timer_time_enable.IsChecked.Value
                 ? effectconf_timer_time.Text.Length > 0 ? int.Parse(effectconf_timer_time.Text) : null : null;
             m_EffectData.WeightMult = effectconf_effect_weight_mult.SelectedIndex > 0 ? effectconf_effect_weight_mult.SelectedIndex : null;
 
-            switch (effectconf_exclude_voting_state.SelectedIndex)
+            m_EffectData.ExcludedFromVoting = (object)effectconf_exclude_voting_state.SelectedIndex switch
             {
-                case 1:
-                    m_EffectData.ExcludedFromVoting = false;
-                    break;
-                case 2:
-                    m_EffectData.ExcludedFromVoting = true;
-                    break;
-                default:
-                    m_EffectData.ExcludedFromVoting = null;
-                    break;
-            }
-
+                1 => false,
+                2 => (bool?)true,
+                _ => null,
+            };
             m_EffectData.CustomName = effectconf_effect_custom_name.Text.Trim().Length > 0 ? effectconf_effect_custom_name.Text.Trim() : null;
             m_EffectData.ShortcutKeycode = effectconf_effect_shortcut_enable.IsChecked.GetValueOrDefault(false) ? m_EffectShortcut : null;
 

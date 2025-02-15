@@ -4,17 +4,19 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 enum TiredMode
 {
 	closingEyes,
 	openingEyes,
 	waiting,
 };
-static TiredMode currentMode = TiredMode::closingEyes;
-static int alpha;
-static int closingIterator;
-static int nextTimestamp;
-static float steeringDirection;
+CHAOS_VAR TiredMode currentMode = TiredMode::closingEyes;
+CHAOS_VAR int alpha;
+CHAOS_VAR int closingIterator;
+CHAOS_VAR int nextTimestamp;
+CHAOS_VAR float steeringDirection;
 
 static void BlackOut(int alpha)
 {
@@ -71,22 +73,16 @@ static void OnTick()
 		alpha += closingIterator;
 		// Chance for player who's on foot to ragdoll halfway through blinking
 		if (alpha >= 127 && alpha - closingIterator < 127 && g_Random.GetRandomFloat(0.f, 1.f) < .25f)
-		{
 			RagdollOnFoot();
-		}
 		// Fall asleep at the wheel near the end of blinking
 		if (alpha > 200)
-		{
 			SteerVehicle();
-		}
 		if (alpha >= 255)
 		{
 			currentMode   = TiredMode::openingEyes;
 			nextTimestamp = GET_GAME_TIMER() + ((20 - closingIterator) * 20);
 			if (closingIterator > 1)
-			{
 				closingIterator = std::max(1, closingIterator - 2);
-			}
 		}
 		break;
 	case TiredMode::openingEyes:
@@ -113,7 +109,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "I'm So Tired",
 		.Id = "player_tired",

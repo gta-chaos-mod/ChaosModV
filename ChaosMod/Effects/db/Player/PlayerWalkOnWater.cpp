@@ -4,8 +4,10 @@
 
 #include <stdafx.h>
 
-static Object waterObj  = 0;
-static Hash displayHash = 0;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR Object waterObj  = 0;
+CHAOS_VAR Hash displayHash = 0;
 
 static void OnStart()
 {
@@ -50,13 +52,11 @@ static void OnTick()
 static void OnStop()
 {
 	if (DOES_ENTITY_EXIST(waterObj))
-	{
 		DELETE_OBJECT(&waterObj);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Walk On Water",
 		.Id = "player_walkonwater",

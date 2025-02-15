@@ -1,14 +1,15 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 
 // Effect by ProfessorBiddle, but the code is pretty much copied and pasted
 
-static int ms_TargetPitch;
+CHAOS_VAR float ms_TargetPitch;
 
 static void OnStart()
 {
-	ms_TargetPitch = g_Random.GetRandomInt(-900, -300);
+	ms_TargetPitch = g_Random.GetRandomFloat(-900.f, -300.f);
 }
 
 static void OnStop()
@@ -22,7 +23,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Low Pitch",
 		.Id = "misc_lowpitch",

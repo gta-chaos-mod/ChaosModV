@@ -1,6 +1,11 @@
+/*
+    Effect By Rylxnd
+*/
 #include <stdafx.h>
 
-static std::vector<Hash> models;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::vector<Hash> models;
 
 static void OnStart()
 {
@@ -15,17 +20,13 @@ static void OnStart()
 		GET_MODEL_DIMENSIONS(model, &min, &max);
 		float modelSize = (max - min).Length();
 		if (modelSize > 0.3f && modelSize <= 6.f)
-		{
 			models.push_back(model);
-		}
 	}
 
 	for (Ped ped : GetAllPeds())
 	{
 		if (count >= maxCount)
-		{
 			break;
-		}
 		Hash selectedModel = models.at(g_Random.GetRandomInt(0, models.size() - 1));
 		Object obj = CreatePoolPropAttachedToPed(selectedModel, ped, GET_PED_BONE_INDEX(ped, 0xDEAD), 0, 0, 0, 0, 0, 0,
 		                                         false, false, true);
@@ -35,7 +36,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo 
+REGISTER_EFFECT(OnStart, nullptr, nullptr,  
 	{ 
 		.Name = "Give Everyone A Random Prop",
 		.Id = "peds_give_props" 

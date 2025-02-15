@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Natives.h"
-
 namespace Util
 {
 	inline Vector3 GetGameplayCamOffsetInWorldCoords(const Vector3 &offset)
@@ -24,8 +22,13 @@ namespace Util
 
 	inline Vector3 DegToRadian(const Vector3 &angles)
 	{
-		return Vector3::Init(angles.x * .0174532925199433F, angles.y * .0174532925199433F,
-		                     angles.z * .0174532925199433F);
+		return Vector3::Init(angles.x * .0174532925199433f, angles.y * .0174532925199433f,
+		                     angles.z * .0174532925199433f);
+	}
+
+	inline float DegToRadian(float deg)
+	{
+		return deg * .0174532925199433f;
 	}
 
 	inline Vector3 GetCoordsFromGameplayCam(float distance)

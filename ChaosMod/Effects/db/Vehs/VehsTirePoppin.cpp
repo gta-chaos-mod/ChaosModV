@@ -1,14 +1,12 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		for (int i = 0; i < 47; i++)
-		{
 			SET_VEHICLE_TYRE_FIXED(veh, i);
-		}
-	}
 }
 
 static void OnTick()
@@ -26,7 +24,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Now This Is Some Tire Poppin'",
 		.Id = "vehs_poptiresconstant",

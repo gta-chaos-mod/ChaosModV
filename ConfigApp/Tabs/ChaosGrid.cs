@@ -1,36 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace ConfigApp.Tabs
 {
     public class ChaosGrid
     {
-        public Grid Grid { get; private set; }
+        public Grid Grid { get; private set; } = new Grid();
 
         private int m_CurrentRow = -1;
         private int m_CurrentColumn = 0;
+        private readonly List<RowDefinition> m_RowDefinitions = new();
+        private readonly List<ColumnDefinition> m_ColumnDefinitions = new();
 
-        private List<RowDefinition> m_RowDefinitions = new List<RowDefinition>();
-        private List<ColumnDefinition> m_ColumnDefinitions = new List<ColumnDefinition>();
-
-        public ChaosGrid(Grid grid = null)
+        public ChaosGrid(Grid? grid = null)
         {
-            Init(grid != null ? grid : new Grid());
+            Init(grid);
         }
 
-        public virtual void Init(Grid grid)
+        public virtual void Init(Grid? grid = null)
         {
-            if (grid == null)
-            {
-                throw new System.NullReferenceException("grid can't be null!");
-            }
-            if (grid == Grid)
-            {
+            if (grid is not null && grid == Grid)
                 return;
-            }
 
-            Grid = grid;
+            Grid = grid ?? new Grid();
 
             m_CurrentRow = -1;
             m_CurrentColumn = 0;
@@ -54,9 +46,7 @@ namespace ConfigApp.Tabs
         private void CheckColumnValidity()
         {
             if (m_ColumnDefinitions.Count <= m_CurrentColumn)
-            {
                 throw new System.IndexOutOfRangeException("m_CurrentColumn > max columns!");
-            }
         }
 
         public void SetRowHeight(GridLength gridLength)
@@ -64,23 +54,26 @@ namespace ConfigApp.Tabs
             m_RowDefinitions[m_CurrentRow].Height = gridLength;
         }
 
-        private void PushRow(string text, UIElement control)
+        private void PushRow(string? text, FrameworkElement? control, string? tooltip = null)
         {
             if (text != null)
             {
                 CheckColumnValidity();
 
-                var textBlock = new TextBlock()
+                var textBlock = new TextBlock
                 {
                     Text = text,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = control != null && control.GetValue(FrameworkElement.VerticalAlignmentProperty) != null
+                        ? (VerticalAlignment)control.GetValue(FrameworkElement.VerticalAlignmentProperty) : VerticalAlignment.Center
                 };
-
-                textBlock.HorizontalAlignment = HorizontalAlignment.Right;
-                textBlock.VerticalAlignment = control != null && control.GetValue(FrameworkElement.VerticalAlignmentProperty) != null
-                    ? (VerticalAlignment)control.GetValue(FrameworkElement.VerticalAlignmentProperty) : VerticalAlignment.Center;
 
                 textBlock.SetValue(Grid.ColumnProperty, m_CurrentColumn);
                 textBlock.SetValue(Grid.RowProperty, m_CurrentRow);
+                if (tooltip != null)
+                {
+                    textBlock.ToolTip = new ToolTip { Content = tooltip };
+                }
                 Grid.Children.Add(textBlock);
 
                 m_CurrentColumn++;
@@ -93,17 +86,17 @@ namespace ConfigApp.Tabs
                 if (text != null)
                 {
                     if (control.GetValue(FrameworkElement.HorizontalAlignmentProperty) == null)
-                    {
                         control.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-                    }
                     if (control.GetValue(FrameworkElement.VerticalAlignmentProperty) == null)
-                    {
                         control.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
-                    }
                 }
 
                 control.SetValue(Grid.ColumnProperty, m_CurrentColumn);
                 control.SetValue(Grid.RowProperty, m_CurrentRow);
+                if (tooltip != null)
+                {
+                    control.ToolTip = new ToolTip { Content = tooltip };
+                }
                 Grid.Children.Add(control);
 
                 m_CurrentColumn++;
@@ -130,12 +123,19 @@ namespace ConfigApp.Tabs
             m_CurrentColumn++;
         }
 
-        public void PushRowElement(UIElement element)
+        public void PushRowEmptyPair()
+        {
+            CheckColumnValidity();
+
+            m_CurrentColumn += 3;
+        }
+
+        public void PushRowElement(FrameworkElement element)
         {
             PushRow(null, element);
         }
 
-        public void PushRowExpandElement(UIElement element)
+        public void PushRowExpandElement(FrameworkElement element)
         {
             element.ClipToBounds = false;
 
@@ -144,20 +144,20 @@ namespace ConfigApp.Tabs
             PushRow(null, canvas);
         }
 
-        public void PushRowPair(string text, UIElement element)
+        public void PushRowPair(string text, FrameworkElement element)
         {
             PushRow(text, element);
         }
 
-        public void PushRowSpacedPair(string text, UIElement element)
+        public void PushRowSpacedPair(string text, FrameworkElement element, string? tooltip = null)
         {
-            PushRow(text, null);
+            PushRow(text, null, tooltip);
             PushRowEmpty();
 
             element.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Left);
             element.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
 
-            PushRow(null, element);
+            PushRow(null, element, tooltip);
         }
 
         public void PushRowTextBlock(string text)

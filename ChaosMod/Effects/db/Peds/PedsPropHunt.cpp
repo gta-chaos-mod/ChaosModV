@@ -4,8 +4,10 @@
 
 #include <stdafx.h>
 
-static std::map<Ped, Object> pedPropsMap;
-static std::vector<Hash> availablePropModels;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::map<Ped, Object> pedPropsMap;
+CHAOS_VAR std::vector<Hash> availablePropModels;
 
 static Vector3 GetPropOffset(Hash propModel)
 {
@@ -35,9 +37,7 @@ static void OnTick()
 
 			// Don't include models that are either very small or very large
 			if (modelSize > 0.3f && modelSize <= 6.f)
-			{
 				availablePropModels.push_back(model);
-			}
 		}
 	}
 
@@ -90,9 +90,7 @@ static void OnTick()
 			if (!DOES_ENTITY_EXIST(ped))
 			{
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = pedPropsMap.erase(it);
 			}
@@ -102,9 +100,7 @@ static void OnTick()
 				SET_ENTITY_VISIBLE(ped, true, 0);
 
 				if (DOES_ENTITY_EXIST(prop))
-				{
 					DELETE_OBJECT(&prop);
-				}
 
 				it = pedPropsMap.erase(it);
 			}
@@ -147,21 +143,17 @@ static void OnStop()
 		Object prop = it.second;
 
 		if (DOES_ENTITY_EXIST(ped))
-		{
 			SET_ENTITY_VISIBLE(ped, true, 0);
-		}
 
 		if (DOES_ENTITY_EXIST(prop))
-		{
 			DELETE_OBJECT(&prop);
-		}
 	}
 
 	pedPropsMap.clear();
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Prop Hunt",
 		.Id = "peds_prop_hunt",

@@ -22,9 +22,7 @@ namespace Memory
 
 			handle = Memory::FindPattern("74 42 0F B7 15 ? ? ? 01");
 			if (!handle.IsValid())
-			{
 				return weapons;
-			}
 
 			WORD *dword_7FF6D9EF9748    = handle.At(4).Into().Get<WORD>();
 			DWORD64 *qword_7FF6D9EF9740 = handle.At(18).Into().Get<DWORD64>();
@@ -32,9 +30,7 @@ namespace Memory
 			// Get address of CWeaponInfo's vftable and store it
 			handle                      = Memory::FindPattern("48 8D 05 ? ? ? ? 4C 89 71 08 4C 89 71 10");
 			if (!handle.IsValid())
-			{
 				return weapons;
-			}
 
 			auto CWeaponInfo_vftable = handle.At(2).Into().Addr();
 
@@ -50,9 +46,7 @@ namespace Memory
 
 				// Only include actual ped weapons by checking if vftable pointed to is CWeaponInfo's
 				if (*reinterpret_cast<DWORD64 *>(vftableAddrPtr) != CWeaponInfo_vftable)
-				{
 					continue;
-				}
 
 				// Check if weapon has valid model & slot
 				if (*reinterpret_cast<DWORD *>(vftableAddrPtr + 20) && *reinterpret_cast<DWORD *>(vftableAddrPtr + 28))

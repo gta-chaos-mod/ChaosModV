@@ -3,9 +3,11 @@
 */
 
 #include <stdafx.h>
-static Camera spinningCamera = 0;
-float camRot                 = 0.f;
-const float camRotRate       = 1.2f;
+
+#include "Effects/Register/RegisterEffect.h"
+CHAOS_VAR Camera spinningCamera = 0;
+CHAOS_VAR float camRot          = 0.f;
+CHAOS_VAR float camRotRate      = 1.2f;
 
 static void UpdateCamera()
 {
@@ -37,7 +39,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
     {
         .Name = "Spinning Camera",
         .Id = "player_spin_camera",

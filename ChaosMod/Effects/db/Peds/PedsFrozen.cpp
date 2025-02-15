@@ -1,11 +1,11 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStop()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		SET_PED_CONFIG_FLAG(ped, 292, false);
-	}
 }
 
 static void OnTick()
@@ -54,9 +54,7 @@ static void OnTick()
 			           > 50.f)
 			{
 				if (pedExists)
-				{
 					SET_PED_CONFIG_FLAG(ped, 292, false);
-				}
 
 				it = wentThroughPeds.erase(it);
 			}
@@ -71,7 +69,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Peds Are Brainless",
 		.Id = "peds_frozen",

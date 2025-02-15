@@ -14,16 +14,10 @@ static void HandleEntity(Entity entity)
 
 	// Clean up entities which don't exist anymore first
 	for (auto it = m_Entities.begin(); it != m_Entities.end();)
-	{
 		if (!DOES_ENTITY_EXIST(*it))
-		{
 			it = m_Entities.erase(it);
-		}
 		else
-		{
 			it++;
-		}
-	}
 
 	// Delete front entity if size above limit
 	if (m_Entities.size() > ENTITY_POOL_MAX)
@@ -31,9 +25,7 @@ static void HandleEntity(Entity entity)
 		auto frontEntity = m_Entities.front();
 
 		if (DOES_ENTITY_EXIST(frontEntity))
-		{
 			SET_ENTITY_AS_NO_LONGER_NEEDED(&frontEntity);
-		}
 
 		m_Entities.pop_front();
 	}
@@ -87,32 +79,22 @@ Ped CreatePoolClonePed(Ped pedToClone)
 	CLONE_PED_TO_TARGET(pedToClone, clone);
 
 	for (int i = 0; i < 411; i++)
-	{
 		SET_PED_CONFIG_FLAG(clone, i, GET_PED_CONFIG_FLAG(pedToClone, i, 1));
-	}
 
 	for (int i = 0; i < 300; i++)
-	{
 		SET_PED_RESET_FLAG(clone, i, GET_PED_RESET_FLAG(pedToClone, i));
-	}
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(clone, GET_PED_RELATIONSHIP_GROUP_HASH(pedToClone));
 
 	int groupIndex = GET_PED_GROUP_INDEX(pedToClone);
 	if (GET_PED_AS_GROUP_LEADER(groupIndex) == pedToClone)
-	{
 		SET_PED_AS_GROUP_LEADER(clone, groupIndex);
-	}
 	else
-	{
 		SET_PED_AS_GROUP_MEMBER(clone, groupIndex);
-	}
 
 	Hash weaponHash;
 	if (GET_CURRENT_PED_WEAPON(pedToClone, &weaponHash, 0))
-	{
 		GIVE_WEAPON_TO_PED(clone, weaponHash, 9999, false, true);
-	}
 
 	SET_PED_ACCURACY(clone, GET_PED_ACCURACY(pedToClone));
 	SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
@@ -140,7 +122,7 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 	Ped ped;
 	if (!pedModels.empty())
 	{
-		Hash model = pedModels[g_Random.GetRandomInt(0, pedModels.size() - 1)];
+		Hash model = pedModels[g_RandomNoDeterm.GetRandomInt(0, pedModels.size() - 1)];
 
 		ped        = CreatePoolPed(4, model, x, y, z, heading);
 	}
@@ -154,20 +136,20 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 	for (int i = 0; i < 12; i++)
 	{
 		int drawableAmount = GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(ped, i);
-		int drawable       = drawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, drawableAmount - 1);
+		int drawable       = drawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, drawableAmount - 1);
 
 		int textureAmount  = GET_NUMBER_OF_PED_TEXTURE_VARIATIONS(ped, i, drawable);
-		int texture        = textureAmount == 0 ? 0 : g_Random.GetRandomInt(0, textureAmount - 1);
+		int texture        = textureAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, textureAmount - 1);
 
-		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_Random.GetRandomInt(0, 3));
+		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_RandomNoDeterm.GetRandomInt(0, 3));
 
 		if (i < 4)
 		{
 			int propDrawableAmount = GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(ped, i);
-			int propDrawable       = propDrawableAmount == 0 ? 0 : g_Random.GetRandomInt(0, propDrawableAmount - 1);
+			int propDrawable = propDrawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, propDrawableAmount - 1);
 
-			int propTextureAmount  = GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(ped, i, drawable);
-			int propTexture        = propTextureAmount == 0 ? 0 : g_Random.GetRandomInt(0, propTextureAmount - 1);
+			int propTextureAmount = GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS(ped, i, drawable);
+			int propTexture = propTextureAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, propTextureAmount - 1);
 
 			SET_PED_PROP_INDEX(ped, i, propDrawable, propTexture, true);
 		}

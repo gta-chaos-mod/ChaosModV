@@ -4,14 +4,13 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
 static void OnStop()
 {
 	for (Vehicle veh : GetAllVehs())
-	{
 		Memory::SetVehicleOutOfControl(veh, false);
-	}
 }
 
 static void OnTick()
@@ -24,14 +23,12 @@ static void OnTick()
 		lastTick = curTick;
 
 		for (Vehicle veh : GetAllVehs())
-		{
 			Memory::SetVehicleOutOfControl(veh, true);
-		}
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Vehicles Explode On Impact",
 		.Id = "vehs_ohko",

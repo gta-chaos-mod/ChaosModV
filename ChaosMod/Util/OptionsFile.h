@@ -13,12 +13,13 @@ class OptionsFile
 {
   private:
 	const char *m_FileName;
+	const char *m_FoundFileName;
 	std::vector<const char *> m_CompatFileNames;
 	std::unordered_map<std::string, std::string> m_Options;
 
   public:
 	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
-	    : m_FileName(fileName), m_CompatFileNames(compatFileNames)
+	    : m_FileName(fileName), m_FoundFileName(fileName), m_CompatFileNames(compatFileNames)
 	{
 		Reset();
 	}
@@ -31,9 +32,7 @@ class OptionsFile
 		{
 			std::ifstream file(fileName);
 			if (file.fail())
-			{
 				return false;
-			}
 
 			std::string line;
 			line.resize(128);
@@ -43,9 +42,7 @@ class OptionsFile
 
 				// Ignore line if there's no "="
 				if (line == key)
-				{
 					continue;
-				}
 
 				const auto &value = StringTrim(
 				    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
@@ -60,18 +57,32 @@ class OptionsFile
 		{
 			bool dataRead = false;
 			for (auto compatFileName : m_CompatFileNames)
-			{
 				if ((dataRead = readData(compatFileName)))
 				{
+					m_FoundFileName = compatFileName;
 					break;
 				}
-			}
 
 			if (!dataRead)
-			{
 				LOG("Config file " << m_FileName << " not found!");
-			}
 		}
+	}
+
+	inline void WriteFile()
+	{
+		std::ofstream file(m_FoundFileName, std::ofstream::out | std::ofstream::trunc);
+		if (!file)
+		{
+			LOG("Couldn't write config file " << m_FoundFileName);
+			return;
+		}
+		for (auto &[key, value] : m_Options)
+			file << key << "=" << value << std::endl;
+	}
+
+	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
+	{
+		return ReadValue(std::vector<std::string> { key }, defaultValue);
 	}
 
 	template <typename T> inline T ReadValue(const std::vector<std::string> &keys, T defaultValue) const
@@ -84,9 +95,7 @@ class OptionsFile
 			{
 				T parsedResult;
 				if (Util::TryParse<T>(result->second, parsedResult))
-				{
 					return parsedResult;
-				}
 			}
 		}
 
@@ -100,11 +109,21 @@ class OptionsFile
 			const auto &result = m_Options.find(key);
 
 			if (result != m_Options.end())
-			{
 				return result->second;
-			}
 		}
 
 		return defaultValue;
+	}
+
+	inline void SetValueString(const std::string &key, const std::string &value)
+	{
+		if (m_Options.contains(key))
+			m_Options[key] = value;
+		else
+			m_Options.emplace(key, value);
+	}
+	template <typename T> inline void SetValue(const std::string &key, T value)
+	{
+		SetValueString(key, std::to_string(value));
 	}
 };

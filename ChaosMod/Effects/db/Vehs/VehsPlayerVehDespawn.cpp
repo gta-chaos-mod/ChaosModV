@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -15,9 +17,7 @@ static void OnStart()
 		for (int i = -1; i < maxSeats - 1; i++)
 		{
 			if (IS_VEHICLE_SEAT_FREE(playerVeh, i, false))
-			{
 				continue;
-			}
 
 			Ped ped = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
@@ -36,14 +36,12 @@ static void OnStart()
 		WAIT(0);
 
 		for (Ped ped : vehPeds)
-		{
 			SET_ENTITY_VELOCITY(ped, vehVel.x, vehVel.y, vehVel.z);
-		}
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Remove Current Vehicle",
 		.Id = "playerveh_despawn"

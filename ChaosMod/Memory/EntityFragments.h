@@ -111,13 +111,9 @@ namespace Memory
 			auto unkType                             = fragInst->unkType;
 
 			if (unkType < 2)
-			{
 				return fragPhysicsLODAddresses[unkType];
-			}
 			else
-			{
 				return fragPhysicsLODAddresses[0];
-			}
 		}
 
 		inline int GetFragmentGroupCount(FragInst *fragInst)
@@ -138,9 +134,7 @@ namespace Memory
 				unsigned short id = fragTypeChildArr[i]->boneId;
 
 				if (boneIndex == GetBoneIndexByBoneId(crSkeletonData, id))
-				{
 					return i;
-				}
 			}
 
 			return -1;
@@ -152,9 +146,7 @@ namespace Memory
 			    Memory::FindPattern("0F BE 5E 06 48 8B CF FF 50 ?? 8B D3 48 8B C8 E8 ?? ?? ?? ?? 8B 4E ??");
 
 			if (!handle.IsValid())
-			{
 				return false;
-			}
 
 			getFragInstVFuncOffset        = handle.At(9).Value<BYTE>();
 			detachFragmentPartByIndexFunc = handle.At(15).Into().Get<bool(FragInst *, int)>();
@@ -165,9 +157,7 @@ namespace Memory
 		inline FragInst *GetFragInst(Entity entity)
 		{
 			if (!InitBones())
-			{
 				return nullptr;
-			}
 
 			DWORD64 address = GetScriptHandleBaseAddress(entity);
 			return (*(FragInst * (__fastcall **)(DWORD64))(*reinterpret_cast<DWORD64 *>(address)
@@ -180,9 +170,7 @@ namespace Memory
 	{
 		EntityFragment::FragInst *fragInst = EntityFragment::GetFragInst(entity);
 		if (!fragInst || index < 0 || index >= GetFragmentGroupCount(fragInst))
-		{
 			return -1;
-		}
 
 		auto fragPhysicsLOD                              = GetFragPhysicsLOD(fragInst);
 		auto crSkeletonData                              = GetSkeletonData(fragInst);
@@ -196,9 +184,7 @@ namespace Memory
 	{
 		EntityFragment::FragInst *fragInst = EntityFragment::GetFragInst(entity);
 		if (!fragInst)
-		{
 			return 0;
-		}
 
 		return GetFragmentGroupCount(fragInst);
 	}
@@ -207,25 +193,17 @@ namespace Memory
 	{
 		EntityFragment::FragInst *fragInst = EntityFragment::GetFragInst(entity);
 		if (!fragInst)
-		{
 			return;
-		}
 
 		if (!IsFreeToActivatePhysics())
-		{
 			return;
-		}
 
 		int fragIndex = GetFragIndexByBoneIndex(fragInst, boneIndex);
 
 		if (fragIndex == -1)
-		{
 			return;
-		}
 
 		if (fragIndex < GetFragmentGroupCount(fragInst))
-		{
 			EntityFragment::detachFragmentPartByIndexFunc(fragInst, fragIndex);
-		}
 	}
 }

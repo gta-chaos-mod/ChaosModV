@@ -4,22 +4,18 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	for (Ped ped : GetAllPeds())
-	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(ped);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(veh);
-	}
 
 	for (Entity prop : GetAllProps())
-	{
 		CLEAR_ENTITY_LAST_WEAPON_DAMAGE(prop);
-	}
 }
 
 static Entity GetLastEntityShotBy(Ped attacker)
@@ -82,9 +78,7 @@ static void OnTick()
 			if (entity && DOES_ENTITY_EXIST(entity))
 			{
 				if (IS_ENTITY_A_PED(entity) && !IS_PED_A_PLAYER(entity) && !IS_PED_IN_ANY_VEHICLE(entity, false))
-				{
 					SET_PED_TO_RAGDOLL(entity, 500, 500, 0, false, false, false);
-				}
 
 				Vector3 entityVelocity = GET_ENTITY_VELOCITY(entity);
 
@@ -103,7 +97,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Gravity Guns",
 		.Id = "peds_grapple_guns",

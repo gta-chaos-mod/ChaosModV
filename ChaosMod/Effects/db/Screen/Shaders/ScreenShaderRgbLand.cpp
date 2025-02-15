@@ -1,9 +1,10 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/ShaderHook.h"
 #include "Memory/Snow.h"
 
-static const char *ms_ShaderSrc = R"SRC(
+CHAOS_VAR const char *ms_ShaderSrc = R"SRC(
 cbuffer misc_globals : register(b2)
 {
     float4 globalFade;                 // Offset:    0 Size:    16 [unused]
@@ -59,7 +60,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "RGB Land",
 		.Id = "screen_rgbland",

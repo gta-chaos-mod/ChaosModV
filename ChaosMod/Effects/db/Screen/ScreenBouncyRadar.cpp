@@ -1,10 +1,11 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/UI.h"
 
 #define BOUNCE_SPEED_MULT 100.f
 
-static float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
+CHAOS_VAR float xOffset, yOffset, xVelocity, yVelocity, xMin, xMax, yMin, yMax;
 
 static void OnStart()
 {
@@ -15,13 +16,9 @@ static void OnStart()
 	float multiplier = ((float)screenWidth / (float)screenHeight) * (9.f / 16);
 
 	if (multiplier > 1)
-	{
 		xMin = -0.005f * safezoneSize * multiplier - (multiplier - 1) / 2;
-	}
 	else
-	{
 		xMin = -0.005f * safezoneSize * multiplier;
-	}
 	xMax      = multiplier - 0.14f + xMin;
 	yMax      = 0.005f * safezoneSize;
 	yMin      = yMax - 0.825f;
@@ -36,14 +33,10 @@ static void OnStart()
 static void OnTick()
 {
 	if (xOffset < xMin || xOffset > xMax)
-	{
 		xVelocity *= -1;
-	}
 
 	if (yOffset < yMin || yOffset > yMax)
-	{
 		yVelocity *= -1;
-	}
 
 	auto mult = GET_FRAME_TIME() * BOUNCE_SPEED_MULT;
 
@@ -59,7 +52,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Bouncy Radar",
 		.Id = "screen_bouncyradar",

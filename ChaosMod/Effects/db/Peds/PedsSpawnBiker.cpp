@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Util/Peds.h"
 
 static void OnStart()
@@ -29,12 +30,13 @@ static void OnStart()
 	SET_ENTITY_VELOCITY(veh, vel.x, vel.y, vel.z);
 
 	Ped ped = CreateHostilePed(bikerHash, weaponHash);
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 
 	SET_PED_INTO_VEHICLE(ped, veh, -1);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
     {
         .Name = "Spawn Biker",
         .Id = "peds_spawn_biker",

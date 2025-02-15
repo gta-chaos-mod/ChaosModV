@@ -1,24 +1,22 @@
 #include <stdafx.h>
 
+#include "Util/Peds.h"
+
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
-	Hash relationshipGroup;
-	ADD_RELATIONSHIP_GROUP("_COMPANION_RANDOM", &relationshipGroup);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, relationshipGroup, "PLAYER"_hash);
-	SET_RELATIONSHIP_BETWEEN_GROUPS(0, "PLAYER"_hash, relationshipGroup);
-
 	Ped playerPed     = PLAYER_PED_ID();
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped           = CreateRandomPoolPed(playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	SET_PED_SUFFERS_CRITICAL_HITS(ped, false);
 
-	SET_PED_RELATIONSHIP_GROUP_HASH(ped, relationshipGroup);
+	SetCompanionRelationship(ped, "_COMPANION_RANDOM");
 	SET_PED_HEARING_RANGE(ped, 9999.f);
 
 	SET_PED_AS_GROUP_MEMBER(ped, GET_PLAYER_GROUP(PLAYER_ID()));
@@ -30,7 +28,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Spawn Random Companion",
 		.Id = "spawn_comprnd",

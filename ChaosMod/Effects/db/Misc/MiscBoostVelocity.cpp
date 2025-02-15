@@ -4,24 +4,20 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	std::vector<Entity> entities;
 
 	for (Ped ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (Object prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (Entity ent : entities)
 	{
@@ -33,7 +29,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Speed Boost",
 		.Id = "misc_boost_velocity"

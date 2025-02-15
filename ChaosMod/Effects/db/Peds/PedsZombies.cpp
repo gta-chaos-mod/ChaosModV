@@ -1,6 +1,8 @@
 #include <stdafx.h>
 
-static std::list<Ped> ms_Zombies;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::list<Ped> ms_Zombies;
 
 static void OnStart()
 {
@@ -20,12 +22,8 @@ static void OnStart()
 static void OnStop()
 {
 	for (Ped ped : ms_Zombies)
-	{
 		if (DOES_ENTITY_EXIST(ped))
-		{
 			SET_PED_AS_NO_LONGER_NEEDED(&ped);
-		}
-	}
 }
 
 static void OnTick()
@@ -105,7 +103,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, OnStop, OnTick, 
 	{
 		.Name = "Explosive Zombies",
 		.Id = "zombies",

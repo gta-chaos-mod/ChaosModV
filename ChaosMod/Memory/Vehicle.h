@@ -28,18 +28,14 @@ namespace Memory
 
 			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
 			if (!handle.IsValid())
-			{
 				return vehModels;
-			}
 
 			handle         = handle.At(2).Into();
 			auto modelList = handle.Value<DWORD64>();
 
 			handle         = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
 			if (!handle.IsValid())
-			{
 				return vehModels;
-			}
 
 			handle         = handle.At(2).Into();
 			auto maxModels = handle.Value<WORD>();
@@ -53,16 +49,12 @@ namespace Memory
 			{
 				auto entry = *reinterpret_cast<DWORD64 *>(modelList + 8 * i);
 				if (!entry)
-				{
 					continue;
-				}
 
 				auto model = *reinterpret_cast<Hash *>(entry);
 
 				if (IS_MODEL_VALID(model) && IS_MODEL_A_VEHICLE(model) && !blacklistedModels.contains(model))
-				{
 					vehModels.push_back(model);
-				}
 			}
 		}
 
@@ -89,33 +81,29 @@ namespace Memory
 				return 0;
 			}
 
-			return handle.At(8).Value<WORD>();
+			return handle.At(8).Value<std::uint16_t>();
 		}();
 
 		if (!outOfControlStateOffset)
-		{
 			return;
-		}
 
 		auto result = GetScriptHandleBaseAddress(vehicle);
 		if (result)
 		{
-			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) &= 0xFEu;
-			*reinterpret_cast<BYTE *>(result + outOfControlStateOffset) |= state;
+			*reinterpret_cast<std::uint8_t *>(result + outOfControlStateOffset) &= 0xFEu;
+			*reinterpret_cast<bool *>(result + outOfControlStateOffset) |= state;
 		}
 	}
 
 	inline void OverrideVehicleHeadlightColor(int idx, bool overrideColor, int r, int g, int b)
 	{
-		static DWORD64 *qword_7FF69E1E8E88 = nullptr;
+		static std::uint64_t *qword_7FF69E1E8E88 = nullptr;
 
-		static const int maxColors         = 13;
-		static DWORD origColors[maxColors] = {};
+		static const int maxColors               = 13;
+		static DWORD origColors[maxColors]       = {};
 
 		if (idx >= maxColors)
-		{
 			return;
-		}
 
 		if (!qword_7FF69E1E8E88)
 		{
@@ -124,11 +112,9 @@ namespace Memory
 			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 "
 			                     "33 C0 E8 ? ? ? ? 4C 8D 0D");
 			if (!handle.IsValid())
-			{
 				return;
-			}
 
-			qword_7FF69E1E8E88 = handle.At(2).Into().Get<DWORD64>();
+			qword_7FF69E1E8E88 = handle.At(2).Into().Get<std::uint64_t>();
 		}
 
 		auto colors = *reinterpret_cast<DWORD **>(*qword_7FF69E1E8E88 + 328);
@@ -138,9 +124,7 @@ namespace Memory
 			// Orig colors not backed up yet, do it now
 
 			for (int i = 0; i < maxColors; i++)
-			{
 				origColors[i] = colors[i * 4];
-			}
 		}
 
 		DWORD newColor      = ((((r << 24) | (g << 16)) | b << 8) | 0xFF);
@@ -160,7 +144,7 @@ namespace Memory
 				return 0;
 			}
 
-			return handle.At(4).Value<WORD>();
+			return handle.At(4).Value<std::uint16_t>();
 		}();
 
 		auto result = GetScriptHandleBaseAddress(vehicle);
@@ -185,9 +169,7 @@ namespace Memory
 	{
 		auto baseAddr = GetScriptHandleBaseAddress(veh);
 		if (!baseAddr)
-		{
 			return;
-		}
 
 		auto passengerMatrixAddress = baseAddr + 0x60;
 		Vector3 passengerForwardVec = Memory::GetVector3(passengerMatrixAddress + 0x00);

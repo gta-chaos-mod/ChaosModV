@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void StartTransitionTimecycle(std::string modifier, float strength = 1.f)
 {
 	if (GET_TIMECYCLE_TRANSITION_MODIFIER_INDEX() == -1 && GET_TIMECYCLE_MODIFIER_INDEX() == -1)
@@ -20,7 +22,7 @@ static void OnTickMexico()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickMexico, 
 	{
 		.Name = "Is This What Mexico Looks Like?",
 		.Id = "screen_mexico",
@@ -57,7 +59,7 @@ static void OnTickBright()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopBright, OnTickBright, 
 	{
 		.Name = "Deep Fried",
 		.Id = "screen_bright",
@@ -74,7 +76,7 @@ static void OnTickFog()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickFog, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickFog, 
 	{
 		.Name = "Extreme Fog",
 		.Id = "screen_fog",
@@ -91,7 +93,7 @@ static void OnTickRenderdist()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickRenderdist, 
 	{
 		.Name = "Where Did Everything Go?",
 		.Id = "screen_lowrenderdist",
@@ -119,9 +121,7 @@ static void OnStopLSD()
 static void OnTickLSD()
 {
 	if (!ANIMPOSTFX_IS_RUNNING("DrugsDrivingIn"))
-	{
 		ANIMPOSTFX_PLAY("DrugsDrivingIn", -1, true);
-	}
 
 	StartTransitionTimecycle("ArenaEMP");
 
@@ -139,39 +139,27 @@ static void OnTickLSD()
 	{
 		Vehicle playerVeh = GET_VEHICLE_PED_IS_IN(playerPed, false);
 		if (GET_PED_IN_VEHICLE_SEAT(playerVeh, -1, 0) != playerPed)
-		{
 			return;
-		}
 
-		static DWORD64 timeUntilSteer = GET_GAME_TIMER();
-		;
+		static float timeUntilSteer     = 0.f;
 		static bool enableDrunkSteering = false;
 		static float steering;
 
 		if (enableDrunkSteering)
-		{
 			SET_VEHICLE_STEER_BIAS(playerVeh, steering);
-		}
 
-		DWORD64 curTick = GET_GAME_TIMER();
-
-		if (timeUntilSteer < curTick)
+		if ((timeUntilSteer -= GET_FRAME_TIME()) < 0.f)
 		{
-			timeUntilSteer = GET_GAME_TIMER();
-
 			if (enableDrunkSteering)
 			{
 				// Give player back control
-
-				timeUntilSteer += g_Random.GetRandomInt(500, 2000);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, 5.f);
 			}
 			else
 			{
 				// Take control from player
-
-				steering = GET_RANDOM_FLOAT_IN_RANGE(-1.f, 1.f);
-
-				timeUntilSteer += g_Random.GetRandomInt(50, 300);
+				steering       = GET_RANDOM_FLOAT_IN_RANGE(-.5f, .5f);
+				timeUntilSteer = g_RandomNoDeterm.GetRandomFloat(0.f, .1f);
 			}
 
 			enableDrunkSteering = !enableDrunkSteering;
@@ -180,7 +168,7 @@ static void OnTickLSD()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopLSD, OnTickLSD, 
 	{
 		.Name = "LSD",
 		.Id = "screen_lsd",
@@ -201,7 +189,7 @@ static void OnTickFullbright()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, EffectInfo
+REGISTER_EFFECT(OnStartFullbright, OnStop, OnTickFullbright, 
 	{
 		.Name = "Fullbright",
 		.Id = "screen_fullbright",
@@ -219,7 +207,7 @@ static void OnTickBubbleVision()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickBubbleVision, 
 	{
 		.Name = "Bubble Vision",
 		.Id = "screen_bubblevision",
@@ -288,7 +276,7 @@ static void OnTickLSNoire()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, EffectInfo
+REGISTER_EFFECT(OnStartLSNoire, OnStop, OnTickLSNoire, 
 	{
 		.Name = "LS Noire",
 		.Id = "screen_lsnoire",
@@ -304,7 +292,7 @@ static void OnTickNeedGlasses()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickNeedGlasses, 
 	{
 		.Name = "I Need Glasses",
 		.Id = "screen_needglasses",
@@ -321,7 +309,7 @@ static void OnTickFuzzy()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickFuzzy, 
 	{
 		.Name = "Static",
 		.Id = "timecycle_fuzzy",
@@ -345,7 +333,7 @@ static void OnStopDarkWorld()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, EffectInfo
+REGISTER_EFFECT(nullptr, OnStopDarkWorld, OnTickDarkWorld, 
 	{
 		.Name = "A Dark World",
 		.Id = "timecycle_darkworld",

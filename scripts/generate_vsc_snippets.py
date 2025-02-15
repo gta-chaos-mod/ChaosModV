@@ -6,6 +6,11 @@
 import json
 import urllib.request
 
+NATIVE_URLS = {
+    "https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json", # Thanks to alloc8or for the natives.json
+    "https://gopong.dev/chaos/natives.json"
+}
+
 out_data = {}
 
 def parse_native(native_hash, native_data):
@@ -35,18 +40,22 @@ def parse_native(native_hash, native_data):
         "description": "Returns: " + native_data["return_type"] + native_comment
     }
 
-# Thanks to alloc8or for the natives.json
-try:
-    result = urllib.request.urlopen("https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json").read()
-except urllib.error.URLError:
-    print("Error while fetching natives.json, aborting!")
-    exit()
 
-json_in = json.loads(result)
+def parse_natives(url):
+    try:
+        result = urllib.request.urlopen(url).read()
+    except urllib.error.URLError:
+        print(f"Error while fetching {url}, aborting!")
+        exit()
 
-for _, native_namespace in json_in.items():
-    for native_hash, native_data in native_namespace.items():
-        parse_native(native_hash, native_data)
-    
+    json_in = json.loads(result)
+
+    for _, native_namespace in json_in.items():
+        for native_hash, native_data in native_namespace.items():
+            parse_native(native_hash, native_data)
+
+for url in NATIVE_URLS:
+    parse_natives(url)
+
 with open("lua.json", "w") as _out:
     json.dump(out_data, _out)

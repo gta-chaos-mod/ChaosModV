@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Natives.h"
-
 #include "Memory/Memory.h"
+
+#include <scripthookv/inc/types.h>
 
 #include <vector>
 
@@ -13,8 +13,8 @@
 template <typename T> class PoolIterator
 {
   public:
-	T *Pool       = nullptr;
-	int32_t Index = 0;
+	T *Pool            = nullptr;
+	std::int32_t Index = 0;
 
 	explicit PoolIterator(T *pool, int32_t index = 0)
 	{
@@ -25,12 +25,8 @@ template <typename T> class PoolIterator
 	PoolIterator &operator++()
 	{
 		for (Index++; Index < Pool->m_Size; Index++)
-		{
 			if (Pool->IsValid(Index))
-			{
 				return *this;
-			}
-		}
 
 		Index = Pool->m_Size;
 		return *this;
@@ -63,9 +59,7 @@ template <typename T> class PoolUtils
 	{
 		std::vector<Entity> arr;
 		for (auto entity : *static_cast<T *>(this))
-		{
 			arr.push_back(entity);
-		}
 
 		return arr;
 	}

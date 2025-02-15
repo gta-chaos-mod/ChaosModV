@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	std::vector<Entity> entities;
@@ -31,15 +33,11 @@ static void OnTick()
 	for (Entity entity : entities)
 	{
 		if (!DOES_ENTITY_EXIST(entity))
-		{
 			continue;
-		}
 		Vector3 entityPos = GET_ENTITY_COORDS(entity, false);
 		float groundZ     = 0;
 		if (GET_GROUND_Z_FOR_3D_COORD(entityPos.x, entityPos.y, entityPos.z, &groundZ, false, false))
-		{
 			ADD_PETROL_DECAL(entityPos.x, entityPos.y, groundZ, 2, 2, 1);
-		}
 
 		if (--count == 0)
 		{
@@ -51,7 +49,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Oil Trails",
 		.Id = "misc_oilleaks",

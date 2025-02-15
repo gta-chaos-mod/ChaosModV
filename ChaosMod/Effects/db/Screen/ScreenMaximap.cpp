@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/UI.h"
 
 static void OnTick()
@@ -17,7 +18,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Maximap",
 		.Id = "screen_maximap",

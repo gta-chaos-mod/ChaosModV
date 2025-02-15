@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	Ped playerPed              = PLAYER_PED_ID();
@@ -38,24 +40,20 @@ static void OnStart()
 					Ped seatPed = GET_PED_IN_VEHICLE_SEAT(playerVeh, i, false);
 
 					if (seatPed != playerPed)
-					{
 						teleportPeds.push_back(seatPed);
-					}
 				}
 			}
 		}
 
-		Vehicle targetVeh     = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
+		Vehicle targetVeh        = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
 
-		Hash targetVehModel   = GET_ENTITY_MODEL(targetVeh);
-		int targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
+		Hash targetVehModel      = GET_ENTITY_MODEL(targetVeh);
+		size_t targetVehMaxSeats = GET_VEHICLE_MODEL_NUMBER_OF_SEATS(targetVehModel);
 
-		for (int i = 0; i < teleportPeds.size(); i++)
+		for (size_t i = 0; i < teleportPeds.size(); i++)
 		{
 			if (i >= targetVehMaxSeats)
-			{
 				break;
-			}
 
 			Ped ped = teleportPeds[i];
 
@@ -74,7 +72,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Set Player Into Random Vehicle",
 		.Id = "player_setintorandveh"

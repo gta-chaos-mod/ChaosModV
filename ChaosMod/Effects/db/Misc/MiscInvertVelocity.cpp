@@ -1,23 +1,19 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	std::vector<Entity> entities;
 
 	for (auto ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (auto prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (auto entity : entities)
 	{
@@ -28,7 +24,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Invert Current Velocity",
 		.Id = "invertvelocity"

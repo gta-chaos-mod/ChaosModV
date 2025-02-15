@@ -1,12 +1,14 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStartMorning()
 {
 	SET_CLOCK_TIME(8, 0, 0);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMorning, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMorning, nullptr, nullptr, 
 	{
 		.Name = "Set Time To Morning",
 		.Id = "time_morning",
@@ -21,7 +23,7 @@ static void OnStartDay()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartDay, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartDay, nullptr, nullptr, 
 	{
 		.Name = "Set Time To Daytime",
 		.Id = "time_day",
@@ -36,7 +38,7 @@ static void OnStartEvening()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartEvening, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartEvening, nullptr, nullptr, 
 	{
 		.Name = "Set Time To Evening",
 		.Id = "time_evening",
@@ -51,7 +53,7 @@ static void OnStartNight()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartNight, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartNight, nullptr, nullptr, 
 	{
 		.Name = "Set Time To Night",
 		.Id = "time_night",
@@ -66,7 +68,7 @@ static void OnTickTimelapse()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTickTimelapse, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTickTimelapse, 
 	{
 		.Name = "Timelapse",
 		.Id = "time_quickday",
@@ -86,7 +88,7 @@ static void OnStartSystem()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartSystem, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartSystem, nullptr, nullptr, 
 	{
 		.Name = "Set Time To System Time",
 		.Id = "time_local_time",

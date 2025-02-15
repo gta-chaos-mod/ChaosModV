@@ -4,6 +4,7 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
 static void OnTick()
@@ -17,23 +18,13 @@ static void OnTick()
 
 	// get all moveable entities
 	for (Ped ped : GetAllPeds())
-	{
 		if (ped != playerPed)
-		{
 			entities.push_back(ped);
-		}
-	}
 	for (Vehicle veh : GetAllVehs())
-	{
 		if (!IS_PED_IN_VEHICLE(playerPed, veh, false))
-		{
 			entities.push_back(veh);
-		}
-	}
 	for (Entity prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	Vector3 playerCoord = GET_ENTITY_COORDS(playerPed, false);
 	int count           = 10;
@@ -51,9 +42,7 @@ static void OnTick()
 		if (distance < startDistance)
 		{
 			if (IS_ENTITY_A_PED(entity) && !IS_PED_RAGDOLL(entity))
-			{
 				SET_PED_TO_RAGDOLL(entity, 5000, 5000, 0, true, true, false);
-			}
 			float forceDistance = std::min(std::max(0.f, (startDistance - distance)), maxForceDistance);
 			float force         = (forceDistance / maxForceDistance) * maxForce;
 			Memory::ApplyForceToEntity(entity, 3, (entityCoord.x - playerCoord.x) * -1.f,
@@ -61,9 +50,7 @@ static void OnTick()
 			                           0, 0, 0, false, false, true, true, false, true);
 
 			if (IS_ENTITY_A_MISSION_ENTITY(entity))
-			{
 				SET_ENTITY_INVINCIBLE(entity, true);
-			}
 
 			if (--count <= 0)
 			{
@@ -81,18 +68,14 @@ static void OnStop()
 	SET_PLAYER_INVINCIBLE(player, false);
 
 	for (Ped ped : GetAllPeds())
-	{
 		SET_ENTITY_INVINCIBLE(ped, false);
-	}
 
 	for (Vehicle veh : GetAllVehs())
-	{
 		SET_ENTITY_INVINCIBLE(veh, false);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Gravity Field",
 		.Id = "player_gravity",

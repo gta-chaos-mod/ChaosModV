@@ -1,9 +1,11 @@
 #include <stdafx.h>
 
-#include "Components/EffectDispatcher.h"
-
+#include "Effects/EnabledEffects.h"
+#include "Effects/Register/RegisterEffect.h"
+#include "Effects/db/Player/PlayerBlimpStrats.h"
+#include "Effects/db/Player/PlayerRandomStuntJump.h"
+#include "Effects/db/Player/PlayerTpToRandomStore.h"
 #include "Memory/Hooks/ScriptThreadRunHook.h"
-
 #include "Util/Player.h"
 
 static void OnStartLSIA()
@@ -12,7 +14,7 @@ static void OnStartLSIA()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartLSIA, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartLSIA, nullptr, nullptr, 
 	{
 		.Name = "Teleport To LS Airport",
 		.Id = "tp_lsairport",
@@ -27,7 +29,7 @@ static void OnStartMazeTower()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Top Of Maze Bank Tower",
 		.Id = "tp_mazebanktower",
@@ -39,17 +41,13 @@ REGISTER_EFFECT(OnStartMazeTower, nullptr, nullptr, EffectInfo
 static void OnStartFortZancudo()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
-	{
 		TeleportPlayer(-2360.3f, 3244.83f, 92.9f);
-	}
 	else
-	{
 		TeleportPlayer(-2267.89f, 3121.04f, 32.5f);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Fort Zancudo",
 		.Id = "tp_fortzancudo",
@@ -61,17 +59,13 @@ REGISTER_EFFECT(OnStartFortZancudo, nullptr, nullptr, EffectInfo
 static void OnStartMountChilliad()
 {
 	if (!IS_PED_IN_ANY_VEHICLE(PLAYER_PED_ID(), false))
-	{
 		TeleportPlayer(501.77f, 5604.85f, 797.91f);
-	}
 	else
-	{
 		TeleportPlayer(503.33f, 5531.91f, 777.45f);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMountChilliad, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMountChilliad, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Mount Chiliad",
 		.Id = "tp_mountchilliad",
@@ -86,7 +80,7 @@ static void OnStartSkyFall()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartSkyFall, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartSkyFall, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Heaven",
 		.Id = "tp_skyfall",
@@ -94,6 +88,21 @@ REGISTER_EFFECT(OnStartSkyFall, nullptr, nullptr, EffectInfo
 	}
 );
 // clang-format on
+
+static bool HasValidWaypointForTp()
+{
+	if (IS_WAYPOINT_ACTIVE())
+		return true;
+
+	for (int i = 0; i < 3; i++)
+	{
+		Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+		if (DOES_BLIP_EXIST(blip))
+			return true;
+	}
+
+	return false;
+}
 
 static void OnStartWaypoint()
 {
@@ -126,51 +135,63 @@ static void OnStartWaypoint()
 	{
 		float z;
 		if (!playerBlip)
-		{
-			z = coords.z;
-		}
+			TeleportPlayer(coords.x, coords.y, coords.z);
 		else
-		{
-			float groundZ;
-			bool useGroundZ;
-			for (int i = 0; i < 100; i++)
-			{
-				float testZ = (i * 10.f) - 100.f;
-
-				TeleportPlayer(coords.x, coords.y, testZ);
-				if (i % 5 == 0)
-				{
-					WAIT(0);
-				}
-
-				useGroundZ = GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, testZ, &groundZ, false, false);
-				if (useGroundZ)
-				{
-					break;
-				}
-			}
-
-			if (useGroundZ)
-			{
-				z = groundZ;
-			}
-			else
-			{
-				Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-
-				z                 = playerPos.z;
-			}
-		}
-
-		TeleportPlayer(coords.x, coords.y, z);
+			TeleportPlayerFindZ(coords.x, coords.y);
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartWaypoint, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartWaypoint, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Waypoint",
 		.Id = "player_tptowaypoint"
+	}
+);
+// clang-format on
+
+static void OnStartWaypointOpposite()
+{
+	Vector3 coords;
+	bool found = false, playerBlip = false;
+	if (IS_WAYPOINT_ACTIVE())
+	{
+		coords     = GET_BLIP_COORDS(GET_FIRST_BLIP_INFO_ID(8));
+		found      = true;
+		playerBlip = true;
+	}
+	else
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			Blip blip = GET_FIRST_BLIP_INFO_ID(i);
+			if (DOES_BLIP_EXIST(blip))
+			{
+				coords = GET_BLIP_COORDS(blip);
+				found  = true;
+
+				break;
+			}
+		}
+	}
+
+	Ped playerPed = PLAYER_PED_ID();
+
+	if (found)
+	{
+		Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
+
+		coords            = coords + coords - playerPos;
+
+		TeleportPlayerFindZ(coords.x, coords.y);
+	}
+}
+
+// clang-format off
+REGISTER_EFFECT(OnStartWaypointOpposite, nullptr, nullptr, 
+	{
+		.Name = "Teleport To The Opposite Side Of Waypoint",
+		.Id = "player_tptowaypointopposite"
 	}
 );
 // clang-format on
@@ -186,7 +207,7 @@ static void OnStartFront()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFront, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFront, nullptr, nullptr, 
 	{
 		.Name = "Teleport Player A Few Meters",
 		.Id = "player_tpfront"
@@ -202,35 +223,16 @@ static void OnStartRandom()
 	float x, y, z = playerPos.z, _;
 	do
 	{
-		x = g_Random.GetRandomInt(-3747.f, 4500.f);
-		y = g_Random.GetRandomInt(-4400.f, 8022.f);
+		x = g_Random.GetRandomFloat(-3747.f, 4500.f);
+		y = g_Random.GetRandomFloat(-4400.f, 8022.f);
 
 	} while (TEST_VERTICAL_PROBE_AGAINST_ALL_WATER(x, y, z, 0, &_));
 
-	float groundZ;
-	bool useGroundZ;
-	for (int i = 0; i < 100; i++)
-	{
-		float testZ = (i * 10.f) - 100.f;
-
-		TeleportPlayer(x, y, testZ);
-		if (i % 5 == 0)
-		{
-			WAIT(0);
-		}
-
-		useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
-		if (useGroundZ)
-		{
-			break;
-		}
-	}
-
-	TeleportPlayer(x, y, useGroundZ ? groundZ : z);
+	TeleportPlayerFindZ(x, y);
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Random Location",
 		.Id = "tp_random",
@@ -239,7 +241,7 @@ REGISTER_EFFECT(OnStartRandom, nullptr, nullptr, EffectInfo
 );
 // clang-format on
 
-static void OnStartMission()
+static std::vector<Blip> GetAllMissionBlips()
 {
 	std::vector<Hash> excludedColors;
 	switch (GET_ENTITY_MODEL(PLAYER_PED_ID()))
@@ -270,12 +272,16 @@ static void OnStartMission()
 			int color = GET_BLIP_COLOUR(nextBlip);
 			// Filter out missions for other players (ignore Trevor- and Franklin-Blips for Michael)
 			if (std::find(excludedColors.begin(), excludedColors.end(), color) == excludedColors.end())
-			{
 				validBlips.push_back(nextBlip);
-			}
 			nextBlip = GET_NEXT_BLIP_INFO_ID(i);
 		}
 	}
+
+	return validBlips;
+}
+static void OnStartMission()
+{
+	std::vector<Blip> validBlips = GetAllMissionBlips();
 	if (validBlips.size() >= 1)
 	{
 		Blip randomBlip   = validBlips[g_Random.GetRandomInt(0, validBlips.size() - 1)];
@@ -285,7 +291,7 @@ static void OnStartMission()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartMission, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartMission, nullptr, nullptr, 
 	{
 		.Name = "Teleport To Random Mission",
 		.Id = "tp_mission"
@@ -293,44 +299,42 @@ REGISTER_EFFECT(OnStartMission, nullptr, nullptr, EffectInfo
 );
 // clang-format on
 
-struct FakeTeleportInfo
-{
-	std::string_view type;
-	Vector3 playerPos;
-	Vector3 vehiclePos;
+static const std::vector<std::string_view> fakeTpTypes = {
+	"tp_lsairport",        "tp_mazebanktower",    "tp_fortzancudo",  "tp_mountchilliad",
+	"tp_skyfall",          "tp_mission",          "tp_random",       "player_tp_store",
+	"player_tptowaypoint", "player_blimp_strats", "player_tp_stunt", "player_tptowaypointopposite"
 };
 
-static const std::vector<FakeTeleportInfo> tpLocations = {
-	{ "tp_lsairport", { -1388.6f, -3111.61f, 13.94f } },                                    // LSIA
-	{ "tp_mazebanktower", { -75.7f, -818.62f, 326.16f } },                                  // Maze Tower
-	{ "tp_fortzancudo", { -2360.3f, 3244.83f, 92.9f }, { -2267.89f, 3121.04f, 32.5f } },    // Fort Zancudo
-	{ "tp_mountchilliad", { 501.77f, 5604.85f, 797.91f }, { 503.33f, 5531.91f, 777.45f } }, // Mount Chilliad
-	{ "tp_skyfall", { 935.f, 3800.f, 2300.f } }                                             // Heaven
-};
-
-static int GetFakeWantedLevel(std::string_view effect)
+static bool IsValidFakeTpType(std::string_view type)
 {
-	if (effect == "tp_lsairport")
-	{
-		return 3;
-	}
-	else if (effect == "tp_fortzancudo")
-	{
-		return 4;
-	}
+	auto effectIdentifier = EffectIdentifier(std::string(type));
+	if (!g_EnabledEffects.contains(effectIdentifier))
+		return false;
 
-	return 0;
+	if (type == "tp_mission")
+		return GetAllMissionBlips().size() > 0;
+	else if (type == "player_tptowaypoint")
+		return HasValidWaypointForTp();
+
+	return true;
 }
 
-static void OnStartFakeTp()
+static Vector3 PerformFakeTeleport(std::string effectId)
 {
-	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId                       = selectedLocationInfo.type;
+	std::string fakeTpType;
 
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fake", overrideId);
-	}
+	std::vector<std::string> validTpTypes;
+
+	for (auto &type : fakeTpTypes)
+		if (IsValidFakeTpType(type))
+			validTpTypes.emplace_back(type);
+
+	if (validTpTypes.empty())
+		return GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
+
+	fakeTpType = validTpTypes.at(g_Random.GetRandomInt(0, validTpTypes.size() - 1));
+
+	CurrentEffect::OverrideEffectNameFromId(fakeTpType);
 
 	Player player     = PLAYER_ID();
 	Ped playerPed     = PLAYER_PED_ID();
@@ -341,30 +345,65 @@ static void OnStartFakeTp()
 	Hooks::EnableScriptThreadBlock();
 
 	SET_ENTITY_INVINCIBLE(playerPed, true);
-	Vector3 destinationPos = selectedLocationInfo.playerPos;
 	if (playerVeh)
-	{
-		if (!selectedLocationInfo.vehiclePos.IsDefault())
-		{
-			destinationPos = selectedLocationInfo.vehiclePos;
-		}
 		SET_ENTITY_INVINCIBLE(playerVeh, true);
-	}
 
-	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
-	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
-	if (wanted == 0 || wanted < currentWanted)
+	int oldWantedLevel = GET_PLAYER_WANTED_LEVEL(player);
+
+	switch (GET_HASH_KEY(fakeTpType.data()))
 	{
-		wanted = currentWanted;
-	}
+	case "tp_lsairport"_hash:
+		SET_PLAYER_WANTED_LEVEL(player, 3, false);
+		SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+		OnStartLSIA();
+		break;
+	case "tp_mazebanktower"_hash:
+		OnStartMazeTower();
+		break;
+	case "tp_fortzancudo"_hash:
+		SET_PLAYER_WANTED_LEVEL(player, 4, false);
+		SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+		OnStartFortZancudo();
+		break;
+	case "tp_mountchilliad"_hash:
+		OnStartMountChilliad();
+		break;
+	case "tp_skyfall"_hash:
+		OnStartSkyFall();
+		break;
+	case "tp_mission"_hash:
+		OnStartMission();
+		break;
+	case "tp_random"_hash:
+		OnStartRandom();
+		break;
+	case "player_tp_store"_hash:
+		OnStartTpRandomStore();
+		break;
+	case "player_tptowaypoint"_hash:
+		OnStartWaypoint();
+		break;
+	case "player_blimp_strats"_hash:
+		OnStartBlimpStrats(false);
+		break;
+	case "player_tp_stunt"_hash:
+		OnStartMakeRandomStuntJump();
 
-	SET_PLAYER_WANTED_LEVEL(player, 0, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
-	SET_MAX_WANTED_LEVEL(0);
-	SET_FAKE_WANTED_LEVEL(wanted);
-	TeleportPlayer(destinationPos);
+		// Wait for stunt jump to start
+		WAIT(1000);
+
+		while (IS_STUNT_JUMP_IN_PROGRESS())
+			WAIT(0);
+
+		break;
+	case "player_tptowaypointopposite"_hash:
+		OnStartWaypointOpposite();
+		break;
+	}
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
+
+	Vector3 destinationCoords = GET_ENTITY_COORDS(playerPed, false);
 
 	TeleportPlayer(playerPos);
 
@@ -372,20 +411,25 @@ static void OnStartFakeTp()
 
 	SET_ENTITY_INVINCIBLE(playerPed, false);
 	if (playerVeh)
-	{
 		SET_ENTITY_INVINCIBLE(playerVeh, false);
-	}
 
-	SET_FAKE_WANTED_LEVEL(0);
-	SET_MAX_WANTED_LEVEL(5);
-	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
+	SET_PLAYER_WANTED_LEVEL(player, oldWantedLevel, false);
+	SET_PLAYER_WANTED_LEVEL_NOW(player, 0);
+
+	return destinationCoords;
+}
+
+static void OnStartFakeTp()
+{
+	Hooks::EnableScriptThreadBlock();
+
+	PerformFakeTeleport("tp_fake");
 
 	Hooks::DisableScriptThreadBlock();
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, 
 	{
 		.Name = "Fake Teleport",
 		.Id = "tp_fake",
@@ -396,67 +440,11 @@ REGISTER_EFFECT(OnStartFakeTp, nullptr, nullptr, EffectInfo
 
 static void OnStartFakeFakeTp()
 {
-	FakeTeleportInfo selectedLocationInfo = tpLocations.at(g_Random.GetRandomInt(0, tpLocations.size() - 1));
-	auto overrideId                       = selectedLocationInfo.type;
-
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", overrideId);
-	}
-
-	Player player     = PLAYER_ID();
-	Ped playerPed     = PLAYER_PED_ID();
-	Vehicle playerVeh = IS_PED_IN_ANY_VEHICLE(playerPed, false) ? GET_VEHICLE_PED_IS_IN(playerPed, false) : 0;
-
-	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
-
 	Hooks::EnableScriptThreadBlock();
 
-	SET_ENTITY_INVINCIBLE(playerPed, true);
-	Vector3 destinationPos = selectedLocationInfo.playerPos;
-	if (playerVeh)
-	{
-		if (!selectedLocationInfo.vehiclePos.IsDefault())
-		{
-			destinationPos = selectedLocationInfo.vehiclePos;
-		}
-		SET_ENTITY_INVINCIBLE(playerVeh, true);
-	}
+	Vector3 destinationPos = PerformFakeTeleport("tp_fakex2");
 
-	int currentWanted = GET_PLAYER_WANTED_LEVEL(player);
-	int wanted        = GetFakeWantedLevel(selectedLocationInfo.type);
-	if (wanted == 0 || wanted < currentWanted)
-	{
-		wanted = currentWanted;
-	}
-
-	SET_PLAYER_WANTED_LEVEL(player, 0, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
-	SET_MAX_WANTED_LEVEL(0);
-	SET_FAKE_WANTED_LEVEL(wanted);
-	TeleportPlayer(destinationPos);
-
-	WAIT(g_Random.GetRandomInt(3500, 6000));
-
-	TeleportPlayer(playerPos);
-
-	WAIT(0);
-
-	SET_ENTITY_INVINCIBLE(playerPed, false);
-	if (playerVeh)
-	{
-		SET_ENTITY_INVINCIBLE(playerVeh, false);
-	}
-
-	SET_FAKE_WANTED_LEVEL(0);
-	SET_MAX_WANTED_LEVEL(5);
-	SET_PLAYER_WANTED_LEVEL(player, currentWanted, false);
-	SET_PLAYER_WANTED_LEVEL_NOW(player, false);
-
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("tp_fakex2", "tp_fake");
-	}
+	CurrentEffect::OverrideEffectNameFromId("tp_fake");
 
 	WAIT(g_Random.GetRandomInt(3500, 6000));
 
@@ -466,7 +454,7 @@ static void OnStartFakeFakeTp()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartFakeFakeTp, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFakeFakeTp, nullptr, nullptr, 
 	{
 		.Name = "Fake Fake Teleport",
 		.Id = "tp_fakex2",

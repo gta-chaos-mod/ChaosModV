@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Gravity.h"
 #include "Memory/Physics.h"
 
@@ -8,14 +9,10 @@ static void OnStop()
 	SET_GRAVITY_LEVEL(0);
 
 	for (auto ped : GetAllPeds())
-	{
 		SET_ENTITY_INVINCIBLE(ped, false);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		SET_ENTITY_INVINCIBLE(veh, false);
-	}
 }
 
 static void OnTickLow()
@@ -24,7 +21,7 @@ static void OnTickLow()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickLow, 
 	{
 		.Name = "Low Gravity",
 		.Id = "lowgravity",
@@ -41,7 +38,7 @@ static void OnTickVeryLow()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickVeryLow, 
 	{
 		.Name = "Very Low Gravity",
 		.Id = "verylowgravity",
@@ -67,13 +64,11 @@ static void OnTickInsane()
 	}
 
 	for (auto object : GetAllProps())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, -200.f, false, false, true, false);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickInsane, 
 	{
 		.Name = "Insane Gravity",
 		.Id = "insanegravity",
@@ -104,13 +99,11 @@ static void OnTickInvert()
 	}
 
 	for (auto object : GetAllProps())
-	{
 		Memory::ApplyForceToEntityCenterOfMass(object, 0, 0, 0, 100.f, false, false, true, false);
-	}
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, EffectInfo
+REGISTER_EFFECT(OnStartInvert, OnStop, OnTickInvert, 
 	{
 		.Name = "Invert Gravity",
 		.Id = "invertgravity",
@@ -163,7 +156,7 @@ static void OnTickSideways()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, EffectInfo
+REGISTER_EFFECT(OnStartSideways, OnStop, OnTickSideways, 
 	{
 		.Name = "Sideways Gravity",
 		.Id = "misc_sideways_gravity",
@@ -221,7 +214,7 @@ static void OnTickRandom()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTickRandom, 
 	{
 		.Name = "Random Gravity",
 		.Id = "misc_randomgravity",

@@ -1,8 +1,10 @@
 #include <stdafx.h>
 
-static std::vector<Ped> frozenPeds;
-static std::map<Ped, Entity> pedGuns;
-static std::map<Ped, Entity> heldWeapons;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::vector<Ped> frozenPeds;
+CHAOS_VAR std::map<Ped, Entity> pedGuns;
+CHAOS_VAR std::map<Ped, Entity> heldWeapons;
 
 static bool isFrozen(const Ped ped)
 {
@@ -61,29 +63,21 @@ static void OnTick()
 		}
 
 		if (HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED(ped) && !isFrozen(ped))
-		{
 			frozenPeds.push_back(ped);
-		}
 
 		if (isFrozen(ped))
-		{
 			FREEZE_ENTITY_POSITION(ped, true);
-		}
 	}
 }
 
 static void OnStop()
 {
 	for (const Ped ped : frozenPeds)
-	{
 		FREEZE_ENTITY_POSITION(ped, false);
-	}
 
 	// (kolyaventuri): Reshow weapons
 	for (std::map<Ped, Entity>::iterator it = heldWeapons.begin(); it != heldWeapons.end(); ++it)
-	{
 		SET_ENTITY_VISIBLE(it->second, true, 0);
-	}
 
 	// (kolyaventuri): Remove weapons
 	for (std::map<Ped, Entity>::iterator it = pedGuns.begin(); it != pedGuns.end(); ++it)
@@ -102,7 +96,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Nailguns",
 		.Id = "peds_nailguns",

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Physics.h"
 
 #include "Util/Camera.h"
@@ -36,15 +37,11 @@ static void OnTick()
 			for (int i = 0; i < thingCount; i++)
 			{
 				if (i > 0)
-				{
 					WAIT(0);
-				}
 
 				Vector3 spawnPos = spawnBasePos;
 				if (isShotgun)
-				{
 					spawnPos.z = spawnBasePos.z - .25f + i * .25f;
-				}
 
 				int objType = GET_RANDOM_INT_IN_RANGE(0, 3);
 
@@ -58,9 +55,7 @@ static void OnTick()
 				{
 				case 0:
 					for (Entity prop : GetAllProps())
-					{
 						props.push_back(prop);
-					}
 					if (!props.empty())
 					{
 						Entity thingProp = props[g_Random.GetRandomInt(0, props.size() - 1)];
@@ -69,9 +64,7 @@ static void OnTick()
 					break;
 				case 1:
 					for (Ped ped : GetAllPeds())
-					{
 						peds.push_back(ped);
-					}
 					if (!peds.empty())
 					{
 						Ped thingPed = peds[g_Random.GetRandomInt(0, peds.size() - 1)];
@@ -81,9 +74,7 @@ static void OnTick()
 				case 2:
 					std::vector<Vehicle> vehs;
 					for (Vehicle veh : GetAllVehs())
-					{
 						vehs.push_back(veh);
-					}
 					if (!vehs.empty())
 					{
 						Vehicle thingVeh = vehs[g_Random.GetRandomInt(0, vehs.size() - 1)];
@@ -115,7 +106,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Improvised Weaponry",
 		.Id = "misc_stuffguns",

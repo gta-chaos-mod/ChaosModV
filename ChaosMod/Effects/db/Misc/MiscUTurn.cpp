@@ -1,6 +1,6 @@
 #include <stdafx.h>
 
-#include <Components/EffectDispatcher.h>
+#include "Effects/Register/RegisterEffect.h"
 
 /*
  * Effect by juhana
@@ -12,19 +12,13 @@ static void OnStart()
 	float camHeading = GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 
 	for (auto ped : GetAllPeds())
-	{
 		entities.push_back(ped);
-	}
 
 	for (auto veh : GetAllVehs())
-	{
 		entities.push_back(veh);
-	}
 
 	for (auto prop : GetAllProps())
-	{
 		entities.push_back(prop);
-	}
 
 	for (auto veh : entities)
 	{
@@ -44,10 +38,7 @@ static void OnStartFake()
 {
 	OnStart();
 
-	if (ComponentExists<EffectDispatcher>())
-	{
-		GetComponent<EffectDispatcher>()->OverrideEffectNameId("misc_fakeuturn", "misc_uturn");
-	}
+	CurrentEffect::OverrideEffectNameFromId("misc_uturn");
 
 	WAIT(g_Random.GetRandomInt(6000, 9000));
 
@@ -55,7 +46,7 @@ static void OnStartFake()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "U-Turn",
 		.Id = "misc_uturn"
@@ -64,7 +55,7 @@ REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
 // clang-format on
 
 // clang-format off
-REGISTER_EFFECT(OnStartFake, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStartFake, nullptr, nullptr, 
 	{
 		.Name = "Fake U-Turn",
 		.Id = "misc_fakeuturn",

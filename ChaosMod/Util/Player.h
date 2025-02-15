@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Components/EffectDispatchTimer.h"
 #include "Natives.h"
 
 inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
@@ -13,9 +14,7 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 	float groundHeight = GET_ENTITY_HEIGHT_ABOVE_GROUND(playerVeh);
 	float forwardSpeed;
 	if (isInVeh)
-	{
 		forwardSpeed = GET_ENTITY_SPEED(playerVeh);
-	}
 
 	if (noOffset)
 	{
@@ -32,12 +31,41 @@ inline void TeleportPlayer(float x, float y, float z, bool noOffset = false)
 	SET_ENTITY_VELOCITY(isInVeh ? playerVeh : playerPed, vel.x, vel.y, vel.z);
 
 	if (isInVeh)
-	{
 		SET_VEHICLE_FORWARD_SPEED(playerVeh, forwardSpeed);
-	}
 }
 
 inline void TeleportPlayer(const Vector3 &coords, bool noOffset = false)
 {
 	TeleportPlayer(coords.x, coords.y, coords.z, noOffset);
+}
+
+inline void TeleportPlayerFindZ(float x, float y)
+{
+	bool shouldPause = ComponentExists<EffectDispatchTimer>()
+	                && GetComponent<EffectDispatchTimer>()->IsUsingDistanceBasedDispatch()
+	                && !GetComponent<EffectDispatchTimer>()->IsTimerPaused();
+
+	if (shouldPause)
+		GetComponent<EffectDispatchTimer>()->SetTimerPaused(true);
+
+	float groundZ;
+	bool useGroundZ;
+	for (int i = 0; i < 100; i++)
+	{
+		float testZ = (i * 10.f) - 100.f;
+
+		TeleportPlayer(x, y, testZ);
+		if (i % 5 == 0)
+			WAIT(0);
+
+		useGroundZ = GET_GROUND_Z_FOR_3D_COORD(x, y, testZ, &groundZ, false, false);
+		if (useGroundZ)
+			break;
+	}
+
+	if (shouldPause)
+		GetComponent<EffectDispatchTimer>()->SetTimerPaused(false);
+
+	if (useGroundZ)
+		TeleportPlayer(x, y, groundZ);
 }

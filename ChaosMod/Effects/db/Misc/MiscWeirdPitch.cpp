@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Hooks/AudioPitchHook.h"
 
 static void OnStop()
@@ -9,11 +10,11 @@ static void OnStop()
 
 static void OnTick()
 {
-	Hooks::SetAudioPitch(g_Random.GetRandomInt(-900, 2000));
+	Hooks::SetAudioPitch(g_Random.GetRandomFloat(-900.f, 2000.f));
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Weird Pitch",
 		.Id = "misc_weirdpitch",

@@ -1,10 +1,11 @@
 /*
-    Effect by OnlyRealNubs
+    Effect by Rylxnd
 */
 
 #include <stdafx.h>
 
-static const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
+#include "Effects/Register/RegisterEffect.h"
+CHAOS_VAR const Vector3 destination = Vector3::Init(473.1f, -1023.5f, 28.1f);
 
 static void OnStart()
 {
@@ -25,7 +26,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Bad Boys",
 		.Id = "misc_go_to_jail",

@@ -43,9 +43,11 @@ class DebugSocket : public Component
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreRunEffect) m_OnPreRunEffectListener;
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPostRunEffect) m_OnPostRunEffectListener;
 
-  protected:
+  public:
 	DebugSocket();
-	virtual ~DebugSocket() override;
+
+	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
+	virtual void OnRun() override;
 
   private:
 	void Connect();
@@ -54,13 +56,6 @@ class DebugSocket : public Component
 	void Close();
 
 	void ScriptLog(std::string_view scriptName, std::string_view text);
-
-	virtual void OnModPauseCleanup() override;
-	virtual void OnRun() override;
-
-	template <class T>
-	requires std::is_base_of_v<Component, T>
-	friend struct ComponentHolder;
 };
 
 #endif

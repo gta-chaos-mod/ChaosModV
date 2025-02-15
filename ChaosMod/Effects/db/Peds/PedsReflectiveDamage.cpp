@@ -1,6 +1,11 @@
+/*
+    Effect By Rylxnd
+*/
 #include <stdafx.h>
 
-static std::unordered_map<Ped, int> mappedPeds;
+#include "Effects/Register/RegisterEffect.h"
+
+CHAOS_VAR std::unordered_map<Ped, int> mappedPeds;
 
 static void OnStop()
 {
@@ -81,16 +86,14 @@ static void OnTick()
 		}
 
 		if (IS_ENTITY_DEAD(ped, false))
-		{
 			it = mappedPeds.erase(it);
-		}
 
 		it++;
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Friendly Fire",
 		.Id = "peds_reflectivedamage",

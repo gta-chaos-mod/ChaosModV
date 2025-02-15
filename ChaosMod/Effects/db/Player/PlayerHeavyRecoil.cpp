@@ -4,6 +4,8 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	static float verticalRecoil = 1;
@@ -13,7 +15,7 @@ static void OnTick()
 		Hash weaponHash;
 		if (GET_CURRENT_PED_WEAPON(player, &weaponHash, 1) && GET_WEAPON_DAMAGE_TYPE(weaponHash) == 3)
 		{
-			float horizontalRecoil = g_Random.GetRandomInt(-100, 100);
+			float horizontalRecoil = g_Random.GetRandomFloat(-100.f, 100.f);
 			horizontalRecoil       = horizontalRecoil / 10;
 			for (int i = 0; i < 10; i++)
 			{
@@ -26,7 +28,7 @@ static void OnTick()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Heavy Recoil",
 		.Id = "player_heavyrecoil",

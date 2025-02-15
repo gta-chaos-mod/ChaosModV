@@ -1,11 +1,11 @@
 #include <stdafx.h>
 
 #ifdef WITH_DEBUG_PANEL_SUPPORT
+
 #include "DebugSocket.h"
 
 #include "Components/EffectDispatcher.h"
-#include "Effects/EnabledEffectsMap.h"
-#include "Util/OptionsFile.h"
+#include "Effects/EnabledEffects.h"
 
 #include <json.hpp>
 
@@ -31,12 +31,10 @@ static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::Connect
 	for (const auto &[effectId, effectData] : g_EnabledEffects)
 	{
 		if (effectData.TimedType == EffectTimedType::Permanent || effectData.IsHidden())
-		{
 			continue;
-		}
 
 		json effectInfoJson;
-		effectInfoJson["id"]   = effectId.GetEffectId();
+		effectInfoJson["id"]   = effectId;
 		effectInfoJson["name"] = effectData.Name;
 
 		effectsJson["effects"].push_back(effectInfoJson);
@@ -49,29 +47,21 @@ static void OnTriggerEffect(DebugSocket *debugSocket, std::shared_ptr<ix::Connec
                             ix::WebSocket &webSocket, const json &payloadJson)
 {
 	if (!ComponentExists<EffectDispatcher>())
-	{
 		return;
-	}
 
 	if (!payloadJson.contains("effect_id") || !payloadJson["effect_id"].is_string())
-	{
 		return;
-	}
 
 	auto targetEffectId = payloadJson["effect_id"].get<std::string>();
 	if (targetEffectId.empty())
-	{
 		return;
-	}
 
 	QueueDelegate(debugSocket,
 	              [targetEffectId]()
 	              {
 		              auto result = g_EnabledEffects.find(targetEffectId);
 		              if (result != g_EnabledEffects.end())
-		              {
 			              GetComponent<EffectDispatcher>()->DispatchEffect(result->first);
-		              }
 	              });
 }
 
@@ -79,28 +69,20 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
                          ix::WebSocket &webSocket, const json &payloadJson)
 {
 	if (!ComponentExists<EffectDispatcher>())
-	{
 		return;
-	}
 
 	if (!payloadJson.contains("script_raw") || !payloadJson["script_raw"].is_string())
-	{
 		return;
-	}
 
 	auto script = payloadJson["script_raw"].get<std::string>();
 	if (script.empty())
-	{
 		return;
-	}
 
 	// Generate random hex value for script name
 	std::string scriptName;
 	scriptName.resize(8);
 	for (int i = 0; i < 8; i++)
-	{
-		sprintf(scriptName.data() + i, "%x", g_Random.GetRandomInt(0, 16));
-	}
+		sprintf(scriptName.data() + i, "%x", g_RandomNoDeterm.GetRandomInt(0, 16));
 
 	json json;
 	json["command"]     = "result_exec_script";
@@ -111,9 +93,7 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
 	              [payloadJson, scriptName]()
 	              {
 		              if (ComponentExists<LuaScripts>())
-		              {
 			              GetComponent<LuaScripts>()->RegisterScriptRawTemporary(scriptName, payloadJson["script_raw"]);
-		              }
 	              });
 }
 
@@ -121,9 +101,7 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
                               ix::WebSocket &webSocket, const json &payloadJson)
 {
 	if (!payloadJson.contains("state") || !payloadJson["state"].is_string())
-	{
 		return;
-	}
 
 	const auto &state = payloadJson["state"];
 	if (state == "start")
@@ -160,18 +138,14 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
 				              for (const auto &[effectId, traceStats] : debugSocket->m_EffectTraceStats)
 				              {
 					              if (traceStats.TotalExecTime == 0)
-					              {
 						              continue;
-					              }
 
 					              json profileJson;
 					              profileJson["total_exec_time"] = traceStats.TotalExecTime;
 					              profileJson["max_exec_time"]   = traceStats.MaxExecTime;
 
 					              for (const auto &execTrace : traceStats.ExecTraces)
-					              {
 						              profileJson["exec_times"].push_back(execTrace.ExecTime);
-					              }
 
 					              resultJson["profiles"][effectId] = profileJson;
 				              }
@@ -186,9 +160,7 @@ static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionSt
                       ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg)
 {
 	if (msg->type != ix::WebSocketMessageType::Message)
-	{
 		return;
-	}
 
 	auto payload = msg->str;
 
@@ -204,9 +176,7 @@ static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionSt
 	}
 
 	if (!payloadJson.contains("command"))
-	{
 		return;
-	}
 
 	auto command = payloadJson["command"].get<std::string>();
 #define SET_HANDLER(cmd, handler) \
@@ -221,35 +191,31 @@ static void OnMessage(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionSt
 #undef HANDLER
 }
 
-static bool EventOnPreDispatchEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static bool EventOnPreDispatchEffect(DebugSocket *debugSocket, const EffectIdentifier &ide)
 {
-	debugSocket->m_EffectTraceStats.erase(identifier.GetEffectId());
+	debugSocket->m_EffectTraceStats.erase(ide);
 	return true;
 }
 
-static void EventOnPreRunEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static void EventOnPreRunEffect(DebugSocket *debugSocket, const EffectIdentifier &id)
 {
 	if (debugSocket->m_IsProfiling)
 	{
 		LARGE_INTEGER ticks;
 		QueryPerformanceCounter(&ticks);
 
-		debugSocket->m_EffectTraceStats[identifier.GetEffectId()].EntryTimestamp = ticks.QuadPart;
+		debugSocket->m_EffectTraceStats[id].EntryTimestamp = ticks.QuadPart;
 	}
 }
 
-static void EventOnPostRunEffect(DebugSocket *debugSocket, const EffectIdentifier &identifier)
+static void EventOnPostRunEffect(DebugSocket *debugSocket, const EffectIdentifier &id)
 {
 	if (!debugSocket->m_IsProfiling)
-	{
 		return;
-	}
 
-	const auto &effectId = identifier.GetEffectId();
+	const auto &effectId = id;
 	if (!debugSocket->m_EffectTraceStats.contains(effectId))
-	{
 		return;
-	}
 
 	auto &traceStats = debugSocket->m_EffectTraceStats.at(effectId);
 
@@ -271,9 +237,7 @@ static void EventOnPostRunEffect(DebugSocket *debugSocket, const EffectIdentifie
 	}
 
 	if (execTime > traceStats.MaxExecTime)
-	{
 		traceStats.MaxExecTime = execTime;
-	}
 }
 
 DebugSocket::DebugSocket()
@@ -294,48 +258,18 @@ DebugSocket::DebugSocket()
 	if (ComponentExists<EffectDispatcher>())
 	{
 		m_OnPreDispatchEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreDispatchEffect,
-		                                       [&](const EffectIdentifier &identifier)
-		                                       { return EventOnPreDispatchEffect(this, identifier); });
+		                                       [&](const EffectIdentifier &id)
+		                                       { return EventOnPreDispatchEffect(this, id); });
 
 		m_OnPreRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPreRunEffect,
-		                                  [&](const EffectIdentifier &identifier)
-		                                  { EventOnPreRunEffect(this, identifier); });
+		                                  [&](const EffectIdentifier &id) { EventOnPreRunEffect(this, id); });
 
 		m_OnPostRunEffectListener.Register(GetComponent<EffectDispatcher>()->OnPostRunEffect,
-		                                   [&](const EffectIdentifier &identifier)
-		                                   { EventOnPostRunEffect(this, identifier); });
+		                                   [&](const EffectIdentifier &id) { EventOnPostRunEffect(this, id); });
 	}
 }
 
-DebugSocket::~DebugSocket()
-{
-	Close();
-}
-
-void DebugSocket::Close()
-{
-	m_Server->stop();
-}
-
-void DebugSocket::ScriptLog(std::string_view scriptName, std::string_view text)
-{
-	if (!m_Server)
-	{
-		return;
-	}
-
-	json json;
-	json["command"]     = "script_log";
-	json["script_name"] = scriptName;
-	json["text"]        = text;
-
-	for (auto client : m_Server->getClients())
-	{
-		client->send(json.dump());
-	}
-}
-
-void DebugSocket::OnModPauseCleanup()
+void DebugSocket::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	Close();
 }
@@ -351,6 +285,25 @@ void DebugSocket::OnRun()
 			m_DelegateQueue.pop();
 		}
 	}
+}
+
+void DebugSocket::Close()
+{
+	m_Server->stop();
+}
+
+void DebugSocket::ScriptLog(std::string_view scriptName, std::string_view text)
+{
+	if (!m_Server)
+		return;
+
+	json json;
+	json["command"]     = "script_log";
+	json["script_name"] = scriptName;
+	json["text"]        = text;
+
+	for (auto client : m_Server->getClients())
+		client->send(json.dump());
 }
 
 #endif

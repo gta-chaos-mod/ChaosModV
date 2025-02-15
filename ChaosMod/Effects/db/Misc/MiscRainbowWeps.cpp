@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnTick()
 {
 	static auto lastTick = GET_GAME_TIMER();
@@ -17,17 +19,13 @@ static void OnTick()
 		}
 
 		for (auto prop : GetAllProps())
-		{
 			if (IS_PICKUP_WEAPON_OBJECT_VALID(prop))
-			{
 				SET_WEAPON_OBJECT_TINT_INDEX(prop, g_Random.GetRandomInt(1, 7));
-			}
-		}
 	}
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, nullptr, OnTick, 
 	{
 		.Name = "Rainbow Weapons",
 		.Id = "peds_rainbowweps",

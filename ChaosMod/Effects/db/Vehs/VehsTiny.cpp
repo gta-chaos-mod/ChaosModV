@@ -4,9 +4,10 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Vehicle.h"
 
-static std::map<Vehicle, Vector3> vehicleDefaultSizes;
+CHAOS_VAR std::map<Vehicle, Vector3> vehicleDefaultSizes;
 
 static bool VectorEquals(Vector3 vec1, Vector3 vec2)
 {
@@ -28,14 +29,10 @@ static void OnTick()
 			Vector3 vehicleSize = Vector3(rightVector.Length(), forwardVector.Length(), upVector.Length());
 
 			if (!vehicleDefaultSizes.contains(veh))
-			{
 				vehicleDefaultSizes[veh] = vehicleSize;
-			}
 
 			if (VectorEquals(vehicleDefaultSizes[veh], vehicleSize))
-			{
 				Memory::SetVehicleScale(veh, 0.5f);
-			}
 		}
 	}
 }
@@ -46,7 +43,7 @@ static void OnStop()
 }
 
 // clang-format off
-REGISTER_EFFECT(nullptr, OnStop, OnTick, EffectInfo
+REGISTER_EFFECT(nullptr, OnStop, OnTick, 
 	{
 		.Name = "Tiny Vehicles",
 		.Id = "vehs_tiny",

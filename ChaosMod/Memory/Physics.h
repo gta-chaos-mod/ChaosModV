@@ -21,9 +21,7 @@ namespace Memory
 		{
 			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D");
 			if (handle.IsValid())
-			{
 				return handle.At(17).Into().Get<void *(DWORD64)>();
-			}
 
 			LOG("CEntity::GetColliderNonConst not found");
 			return nullptr;
@@ -39,9 +37,7 @@ namespace Memory
 		{
 			Handle handle = FindPattern("? 8B 0D ? ? ? ? ? 83 64 ? ? 00 ? 0F B7 D1 ? 33 C9 E8");
 			if (handle.IsValid())
-			{
 				return handle.At(2).Into().Addr();
-			}
 
 			LOG("phSimulator::sm_Instance not found");
 			return 0ull;
@@ -60,8 +56,7 @@ namespace Memory
 		if (!phSimulator_sm_Instance)
 			return 100;
 
-		Handle handle(phSimulator_sm_Instance);
-		handle = handle.Value<DWORD64>();
+		Handle handle = Handle(phSimulator_sm_Instance).Value<std::uintptr_t>();
 
 		if (handle.Addr() == 0)
 			return 0;
@@ -95,8 +90,6 @@ namespace Memory
 	                                           BOOL isDirectionRel, BOOL isForceRel, BOOL p8)
 	{
 		if (IsFreeToActivatePhysics() || DoesEntityHaveCollider(entity))
-		{
 			invoke<Void>(0x18FF00FC7EFF559E, entity, forceType, x, y, z, p5, isDirectionRel, isForceRel, p8);
-		}
 	}
 }

@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	Ped playerPed = PLAYER_PED_ID();
@@ -8,12 +10,10 @@ static void OnStart()
 	{
 		REQUEST_ANIM_DICT("mp_suicide");
 		while (!HAS_ANIM_DICT_LOADED("mp_suicide"))
-		{
 			WAIT(0);
-		}
 		Hash pistolHash = "WEAPON_PISTOL"_hash;
 		GIVE_WEAPON_TO_PED(playerPed, pistolHash, 9999, true, true);
-		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 800.f, 1, 0.f, false, false, false);
+		TASK_PLAY_ANIM(playerPed, "mp_suicide", "pistol", 8.0f, -1.0f, 800, 1, 0.f, false, false, false);
 		WAIT(750);
 		SET_PED_SHOOTS_AT_COORD(playerPed, 0, 0, 0, true);
 		REMOVE_ANIM_DICT("mp_suicide");
@@ -22,7 +22,7 @@ static void OnStart()
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Suicide",
 		.Id = "player_suicide",

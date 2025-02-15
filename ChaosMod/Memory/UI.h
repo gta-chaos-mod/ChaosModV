@@ -20,9 +20,7 @@ namespace Memory
 	{
 		Handle handle = Memory::FindPattern("?? 89 5C ?? ?? 57 ?? 83 EC ?? ?? 8D 3D ?? ?? ?? ?? ?? 8D ?? ?? ?? E8");
 		if (!handle.IsValid())
-		{
 			return nullptr;
-		}
 
 		return handle.Get<void()>();
 	}
@@ -37,15 +35,11 @@ namespace Memory
 			    "?? 8D 15 ?? ?? ?? ?? ?? 6B C9 78 8B 44 ?? ?? 89 03 8B 44 ?? ?? 89 43 04 8A 4C ?? ??");
 			handle = handle.At(2).Into();
 			if (!handle.IsValid())
-			{
 				return nullptr;
-			}
 
 			auto minimapData = handle.Get<MinimapData>();
 			for (size_t i = 0; i < 3; i++)
-			{
 				defaultMinimap[i] = minimapData[i];
-			}
 
 			refreshMinimapFunc = GetRefreshMinimapFunc();
 
@@ -53,14 +47,10 @@ namespace Memory
 		}();
 
 		if (!minimapData || !refreshMinimapFunc)
-		{
 			return;
-		}
 
 		for (size_t i = 0; i < 3; i++)
-		{
 			proceed(minimapData[i], defaultMinimap[i]);
-		}
 
 		refreshMinimapFunc();
 	}

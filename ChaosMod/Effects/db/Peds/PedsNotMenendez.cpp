@@ -4,10 +4,16 @@
 
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
 #include "Memory/Audio.h"
 #include <set>
 
-static std::set<Ped> deadPeds;
+CHAOS_VAR std::set<Ped> deadPeds;
+
+static void OnStart()
+{
+	deadPeds = {};
+}
 
 static void OnTick()
 {
@@ -34,21 +40,8 @@ static void OnTick()
 	}
 }
 
-static void OnStart()
-{
-	deadPeds = {};
-
-	for (Ped ped : GetAllPeds())
-	{
-		if (IS_ENTITY_DEAD(ped, false))
-		{
-			deadPeds.insert(ped);
-		}
-	}
-}
-
 // clang-format off
-REGISTER_EFFECT(nullptr, nullptr, OnTick, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, OnTick, 
 	{
 		.Name = "Not Menendez!",
 		.Id = "peds_not_menendez",

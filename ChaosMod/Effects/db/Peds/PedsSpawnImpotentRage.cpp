@@ -1,5 +1,7 @@
 #include <stdafx.h>
 
+#include "Effects/Register/RegisterEffect.h"
+
 static void OnStart()
 {
 	static const Hash playerGroup = "PLAYER"_hash;
@@ -18,6 +20,7 @@ static void OnStart()
 	Vector3 playerPos = GET_ENTITY_COORDS(playerPed, false);
 
 	Ped ped           = CreatePoolPed(4, model, playerPos.x, playerPos.y, playerPos.z, GET_ENTITY_HEADING(playerPed));
+	CurrentEffect::SetEffectSoundPlayOptions({ .PlayType = EffectSoundPlayType::FollowEntity, .Entity = ped });
 	SET_ENTITY_HEALTH(ped, 1000, 0);
 	SET_PED_ARMOUR(ped, 1000);
 
@@ -35,9 +38,7 @@ static void OnStart()
 	SET_PED_FIRING_PATTERN(ped, 0xC6EE6B4C);
 
 	if (IS_PED_IN_ANY_VEHICLE(playerPed, false))
-	{
 		SET_PED_INTO_VEHICLE(ped, GET_VEHICLE_PED_IS_IN(playerPed, false), -2);
-	}
 
 	DWORD64 lastTick = GET_GAME_TIMER();
 
@@ -46,23 +47,19 @@ static void OnStart()
 		DWORD64 curTick = GET_GAME_TIMER();
 
 		if (lastTick < curTick - 500)
-		{
 			break;
-		}
 
 		WAIT(0);
 	}
 
 	for (int i = 0; i < 3; i++)
-	{
 		PLAY_SOUND_FRONTEND(-1, "impotent_rage", "dlc_vw_hidden_collectible_sounds", false);
-	}
 
 	RELEASE_NAMED_SCRIPT_AUDIO_BANK("DLC_VINEWOOD/DLC_VW_HIDDEN_COLLECTIBLES");
 }
 
 // clang-format off
-REGISTER_EFFECT(OnStart, nullptr, nullptr, EffectInfo
+REGISTER_EFFECT(OnStart, nullptr, nullptr, 
 	{
 		.Name = "Spawn Impotent Rage",
 		.Id = "peds_spawnimrage",
