@@ -373,7 +373,7 @@ namespace ConfigApp
                 || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini")
             {
                 oldIniFilesExist = true;
-                if (MessageBox.Show("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate to your config files. " +
+                if (MessageBox.Show("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. " +
                     "This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
                  != MessageBoxResult.OK)
                     return;
