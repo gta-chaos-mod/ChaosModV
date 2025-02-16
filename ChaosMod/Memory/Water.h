@@ -56,20 +56,28 @@ namespace Memory
 {
 	inline static CWaterQuad *GetAllWaterQuads()
 	{
-		static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
+		static Handle handle = Memory::FindPattern("4C 8B 05 ? ? ? ? 42 8B 04 03");
 		if (!handle.IsValid())
 			return nullptr;
 
-		return *handle.At(6).Into().Get<CWaterQuad *>();
+		return *handle.At(2).Into().Get<CWaterQuad *>();
 	}
 
 	inline static CCalmingQuad *GetAllCalmingQuads()
 	{
-		return nullptr;
+		static Handle handle = Memory::FindPattern("4C 8B 05 ? ? ? ? 49 83 C1 0C");
+		if (!handle.IsValid())
+			return nullptr;
+
+		return *handle.At(2).Into().Get<CCalmingQuad *>();
 	}
 
 	inline static CWaveQuad *GetAllWaveQuads()
 	{
-		return nullptr;
+		static Handle handle = Memory::FindPattern("4C 8B 05 ? ? ? ? 49 83 C1 18");
+		if (!handle.IsValid())
+			return nullptr;
+
+		return *handle.At(2).Into().Get<CWaveQuad *>();
 	}
 }
