@@ -13,8 +13,11 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 	m_DrawTimerBar    = !g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 
-	m_DistanceChaosState.EnableDistanceBasedEffectDispatch = g_OptionsManager.GetConfigValue(
-	    { "EnableDistanceBasedEffectDispatch" }, OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED);
+	m_DistanceChaosState.EnableDistanceBasedEffectDispatch =
+	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", " EnableDistanceBasedEffectDispatch " },
+	                                    OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED)
+	        ? true
+	        : false;
 	m_DistanceChaosState.DistanceToActivateEffect =
 	    g_OptionsManager.GetConfigValue<float>({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(

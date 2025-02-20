@@ -2,47 +2,76 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Newtonsoft.Json.Linq;
 
 namespace ConfigApp
 {
     public static class Utils
     {
-        public static EffectData ValueStringToEffectData(string? value)
+        public static EffectData ValuesArrayToEffectData<T>(T? value)
         {
             var effectData = new EffectData();
 
             if (value is null)
                 return effectData;
 
-            // Split by comma, ignoring commas in between quotation marks
-            var values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+            dynamic[] values;
+            bool isNewConfig = true;
+            switch (value)
+            {
+            case JArray arrayValue:
+                values = arrayValue.Children().ToArray();
+                break;
+            case string strValue:
+                // Split by comma, ignoring commas in between quotation marks
+                values = Regex.Split(strValue, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+                isNewConfig = false;
+                break;
+            default:
+                throw new NotImplementedException("Invalid Value Type");
+            }
 
-            /* Has compatibility checks as previous mod versions had less options */
+            // .ini configs stored everything (except CustomName) as an int
+            // Also has compatibility checks as very ancient mod versions had less options
 
             if (values.Length >= 4)
             {
-                if (int.TryParse(values[0], out int enabled))
-                    effectData.Enabled = enabled != 0;
+                int enabled = isNewConfig ? (bool)values[0] ? 1 : 0 : int.Parse(values[0]);
+                effectData.Enabled = enabled != 0;
 
-                if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
-                    effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
-                if (int.TryParse(values[2], out int customTime))
-                    effectData.CustomTime = customTime;
-                if (int.TryParse(values[3], out int weightMult))
-                    effectData.WeightMult = weightMult;
+                Effects.EffectTimedType timedType = (Effects.EffectTimedType)(isNewConfig ? values[1] : Enum.Parse(typeof(Effects.EffectTimedType), values[1]));
+                effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
+
+                int customTime = isNewConfig ? values[2] : int.Parse(values[2]);
+                effectData.CustomTime = customTime;
+
+                int weightMult = isNewConfig ? values[3] : int.Parse(values[3]);
+                effectData.WeightMult = weightMult;
             }
 
-            if (values.Length >= 5 && int.TryParse(values[4], out int tmp) && tmp != 0)
-                effectData.TimedType = Effects.EffectTimedType.Permanent;
+            if (values.Length >= 5)
+            {
+                int isPermanent = isNewConfig ? (bool)values[4] ? 1 : 0 : int.Parse(values[4]);
+                if (isPermanent != 0)
+                    effectData.TimedType = Effects.EffectTimedType.Permanent;
+            }
 
-            if (values.Length >= 6 && int.TryParse(values[5], out tmp))
-                effectData.ExcludedFromVoting = tmp != 0;
+            if (values.Length >= 6)
+            {
+                int excludedFromVoting = isNewConfig ? (bool)values[5] ? 1 : 0 : int.Parse(values[5]);
+                effectData.ExcludedFromVoting = excludedFromVoting != 0;
+            }
 
             if (values.Length >= 7)
-                effectData.CustomName = values[6] == "0" ? null : values[6].Trim('\"');
+                effectData.CustomName = values[6] == "0" ? null : ((string)values[6]).Trim('\"');
 
-            if (values.Length >= 8 && int.TryParse(values[7], out int shortcut))
+            if (values.Length >= 8)
+            {
+                int shortcut = isNewConfig ? values[7] : int.Parse(values[7]);
                 effectData.ShortcutKeycode = shortcut;
+            }
+
+            // New JSON-exclusive stored values below here, meaning we can properly use the stored type
 
             return effectData;
         }
@@ -90,6 +119,15 @@ namespace ConfigApp
             textBox.AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(HandleNoSpacePreviewKeyDown));
 
             return textBox;
+        }
+
+        public static bool IsNumeric<T>(this T value)
+        {
+            if (value is null)
+                return false;
+
+            var t = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
+            return t.IsPrimitive || t == typeof(decimal);
         }
     }
 }

@@ -29,10 +29,13 @@ namespace EffectConfig
 		return -1;
 	}
 
-	inline void ReadConfig(const char *configPath, auto &out, std::vector<const char *> compatConfigPaths = {})
+	inline void ReadConfig(std::vector<std::string_view> lookupPaths, auto &out)
 	{
-		OptionsFile effectsFile(configPath, compatConfigPaths);
+		DEBUG_LOG("Parsing effect config");
 
+		OptionsFile effectsFile(lookupPaths);
+
+		bool isJson = effectsFile.GetFoundFileName().ends_with(".json");
 		for (auto &[effectId, effectMetadata] : g_RegisteredEffectsMetadata)
 		{
 			struct ConfigValues
@@ -59,35 +62,47 @@ namespace EffectConfig
 			// HACK: Store EffectCustomName seperately
 			std::string valueEffectName;
 
-			auto value = effectsFile.ReadValueString({ std::string(effectId) });
-			if (!value.empty())
+			if (isJson)
 			{
-				size_t splitIndex = GetNextDelimiterOffset(value);
-				for (int j = 0;; j++)
-				{
-					// Effect-Name override
-					if (j == 6)
-					{
-						auto split = value.substr(0, splitIndex);
-						// Trim surrounding quotations
-						if (split.length() >= 2 && split[0] == '\"' && split[split.length() - 1] == '\"')
-							split = split.substr(1, split.size() - 2);
-						// Names can't be "0" to support older configs
-						if (!split.empty() && split != "0")
-							valueEffectName = split;
-					}
+				auto jsonArray = effectsFile.ReadValue<nlohmann::json::array_t>({ std::string(effectId) });
+				for (size_t i = 0; i < jsonArray.size(); i++)
+					if (i == 6)
+						valueEffectName = jsonArray[i];
 					else
+						configValues.ValuesRaw[i] = jsonArray[i];
+			}
+			else
+			{
+				auto value = effectsFile.ReadValue<std::string>({ std::string(effectId) });
+				if (!value.empty())
+				{
+					size_t splitIndex = GetNextDelimiterOffset(value);
+					for (int i = 0;; i++)
 					{
-						const auto &split = value.substr(0, splitIndex);
+						// Effect-Name override
+						if (i == 6)
+						{
+							auto split = value.substr(0, splitIndex);
+							// Trim surrounding quotations
+							if (split.length() >= 2 && split[0] == '\"' && split[split.length() - 1] == '\"')
+								split = split.substr(1, split.size() - 2);
+							// Names can't be "0" to support older configs
+							if (!split.empty() && split != "0")
+								valueEffectName = split;
+						}
+						else
+						{
+							const auto &split = value.substr(0, splitIndex);
 
-						Util::TryParse<int>(split, configValues.ValuesRaw[j]);
+							Util::TryParse<int>(split, configValues.ValuesRaw[i]);
+						}
+
+						if (splitIndex == value.npos)
+							break;
+
+						value      = value.substr(splitIndex + 1);
+						splitIndex = GetNextDelimiterOffset(value);
 					}
-
-					if (splitIndex == value.npos)
-						break;
-
-					value      = value.substr(splitIndex + 1);
-					splitIndex = GetNextDelimiterOffset(value);
 				}
 			}
 
@@ -148,5 +163,7 @@ namespace EffectConfig
 
 			out.emplace(EffectIdentifier(std::string(effectId)), effectData);
 		}
+
+		DEBUG_LOG("Parsed effect config");
 	}
 }

@@ -56,7 +56,8 @@ static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
 
-	EffectConfig::ReadConfig("chaosmod/configs/effects.ini", g_EnabledEffects, { "chaosmod/effects.ini" });
+	EffectConfig::ReadConfig(
+	    { "chaosmod/configs/effects.json", "chaosmod/configs/effects.ini", "chaosmod/effects.ini" }, g_EnabledEffects);
 }
 
 static void Init()
@@ -139,7 +140,9 @@ static void Init()
 	const auto &effectTimerColor = ParseConfigColorString(
 	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
 
-	g_Random.SetSeed(g_OptionsManager.GetConfigValue({ "Seed" }, 0));
+	auto seed = g_OptionsManager.GetConfigValue<std::string>({ "Seed" });
+	if (!seed.empty())
+		g_Random.SetSeed(std::hash<std::string> {}(seed));
 	g_RandomNoDeterm.SetSeed(GetTickCount64());
 
 	std::set<std::string> blacklistedComponentNames;

@@ -72,18 +72,18 @@ namespace ConfigApp.Tabs
         public override void OnLoadValues()
         {
             if (m_MetaEffectDispatchTimer is not null)
-                m_MetaEffectDispatchTimer.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", "600");
+                m_MetaEffectDispatchTimer.Text = $"{OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600)}";
             if (m_MetaEffectDuration is not null)
-                m_MetaEffectDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", "95");
+                m_MetaEffectDuration.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95)}";
             if (m_MetaEffectShortDuration is not null)
-                m_MetaEffectShortDuration.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", "65");
+                m_MetaEffectShortDuration.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65)}";
         }
 
         public override void OnSaveValues()
         {
-            OptionsManager.ConfigFile.WriteValue("NewMetaEffectSpawnTime", m_MetaEffectDispatchTimer?.Text);
-            OptionsManager.ConfigFile.WriteValue("MetaEffectDur", m_MetaEffectDuration?.Text);
-            OptionsManager.ConfigFile.WriteValue("MetaShortEffectDur", m_MetaEffectShortDuration?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("NewMetaEffectSpawnTime", m_MetaEffectDispatchTimer?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("MetaEffectDur", m_MetaEffectDuration?.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("MetaShortEffectDur", m_MetaEffectShortDuration?.Text);
         }
     }
 }
