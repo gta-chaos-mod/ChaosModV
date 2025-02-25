@@ -602,8 +602,9 @@ void LuaScripts::SetupGlobalState()
 		m_GlobalState.unsafe_script(ms_NativesDefCache);
 
 	m_GlobalState.new_usertype<LuaHolder>("_Holder", "IsValid", &LuaHolder::IsValid, "AsBoolean", &LuaHolder::As<bool>,
-	                                      "AsInteger", &LuaHolder::As<int>, "AsFloat", &LuaHolder::As<float>,
-	                                      "AsString", &LuaHolder::As<char *>, "AsVector3", &LuaHolder::As<LuaVector3>);
+	                                      "AsInteger", &LuaHolder::As<int>, "AsUnsignedInteger", &LuaHolder::As<uint>,
+	                                      "AsFloat", &LuaHolder::As<float>, "AsString", &LuaHolder::As<char *>,
+	                                      "AsVector3", &LuaHolder::As<LuaVector3>);
 	m_GlobalState["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object &>);
 
 	m_GlobalState.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::X, "y", &LuaVector3::Y, "z", &LuaVector3::Z);
