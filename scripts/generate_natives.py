@@ -31,9 +31,10 @@ def parse_native(native_hash, native_data, _out):
     if return_type == "BOOL":
         target_type = "_b"
     elif (return_type == "int" or return_type == "Entity" or return_type == "Ped" or return_type == "Vehicle" or return_type == "Object"
-        or return_type == "Hash" or return_type == "Pickup" or return_type == "Blip" or return_type == "Interior" or return_type == "Cam"
-        or return_type == "Player"):
+        or return_type == "Pickup" or return_type == "Blip" or return_type == "Interior" or return_type == "Cam" or return_type == "Player"):
         target_type = "_i"
+    elif return_type == "Hash":
+        target_type = "_u"
     elif return_type == "float":
         target_type = "_f"
     elif return_type == "const char*" or return_type == "char*":
@@ -64,7 +65,7 @@ except urllib.error.URLError:
 json_in = json.loads(result)
 
 with open("natives_def.lua", "w") as _out:
-    _out.write("local _,_b,_i,_f,_s,_v=ReturnType.None,ReturnType.Boolean,ReturnType.Integer,ReturnType.Float,ReturnType.String,ReturnType.Vector3\n\n")
+    _out.write("local _,_b,_i,_u,_f,_s,_v=ReturnType.None,ReturnType.Boolean,ReturnType.Integer,ReturnType.UnsignedInteger,ReturnType.Float,ReturnType.String,ReturnType.Vector3\n\n")
 
     for _, native_namespace in json_in.items():
         for native_hash, native_data in native_namespace.items():

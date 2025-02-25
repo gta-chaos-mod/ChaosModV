@@ -190,13 +190,14 @@ enum class LuaNativeReturnType
 	None,
 	Bool,
 	Int,
+	UInt,
 	Float,
 	String,
 	Vector3
 };
 
-_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, std::uint64_t nativeHash,
-                                      LuaNativeReturnType returnType, const sol::variadic_args &args)
+_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, uint64_t nativeHash, LuaNativeReturnType returnType,
+                                      const sol::variadic_args &args)
 {
 	if (nativeHash == 0x213AEB2B90CBA7AC || nativeHash == 0x5A5F40FE637EB584 || nativeHash == 0x933D6A9EEC1BACD0
 	    || nativeHash == 0xE80492A9AC099A93 || nativeHash == 0x8EF07E15701D61ED)
@@ -255,6 +256,8 @@ _LUAFUNC static sol::object LuaInvoke(const sol::environment &env, std::uint64_t
 		case LuaNativeReturnType::Bool:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<bool *>(returned));
 		case LuaNativeReturnType::Int:
+			return sol::make_object(env.lua_state(), *reinterpret_cast<int *>(returned));
+		case LuaNativeReturnType::UInt:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<int *>(returned));
 		case LuaNativeReturnType::Float:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<float *>(returned));
@@ -468,7 +471,7 @@ LuaScripts::LuaScripts()
 
 	if (allowEvalNativeInvocations)
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
@@ -479,7 +482,7 @@ LuaScripts::LuaScripts()
 	}
 	else
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			LOG("WARNING: Blocked invocation of native 0x" << std::uppercase << std::hex << hash << std::setfill(' ')
@@ -517,7 +520,7 @@ LuaScripts::LuaScripts()
 
 	if (!allowEvalNativeInvocations)
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
@@ -585,10 +588,10 @@ void LuaScripts::SetupGlobalState()
 	m_GlobalState = {};
 	m_GlobalState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::bit32);
 
-	m_GlobalState["ReturnType"] =
-	    m_GlobalState.create_table_with("None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool,
-	                                    "Integer", LuaNativeReturnType::Int, "String", LuaNativeReturnType::String,
-	                                    "Float", LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
+	m_GlobalState["ReturnType"] = m_GlobalState.create_table_with(
+	    "None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool, "Integer", LuaNativeReturnType::Int,
+	    "UnsignedInteger", LuaNativeReturnType::UInt, "String", LuaNativeReturnType::String, "Float",
+	    LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
 	if (ms_NativesDefCache.empty() && DoesFileExist(LUA_NATIVESDEF))
 	{
