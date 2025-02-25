@@ -785,14 +785,13 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		}
 		else if (timedTypeText == "Permanent")
 		{
-			effectData.TimedType = EffectTimedType::Permanent;
-
 			if (flags & ParseScriptFlag_IsTemporary)
 			{
-				LUA_SCRIPT_LOG(scriptName, "ERROR: TimedType \"Permanent\" for effect \""
-				                               << effectName
-				                               << "\" is invalid for temporary effects, please use another TimedType!");
+				effectData.TimedType  = EffectTimedType::Custom;
+				effectData.CustomTime = std::numeric_limits<decltype(effectData.CustomTime)>::max();
 			}
+			else
+				effectData.TimedType = EffectTimedType::Permanent;
 		}
 		else if (timedTypeText == "Custom")
 		{
