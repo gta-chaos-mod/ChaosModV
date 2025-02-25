@@ -31,7 +31,8 @@ def parse_native(native_hash, native_data, _out):
     if return_type == "BOOL":
         target_type = "_b"
     elif (return_type == "int" or return_type == "Entity" or return_type == "Ped" or return_type == "Vehicle" or return_type == "Object"
-        or return_type == "Hash" or return_type == "Pickup" or return_type == "Blip" or return_type == "Interior" or return_type == "Cam"):
+        or return_type == "Hash" or return_type == "Pickup" or return_type == "Blip" or return_type == "Interior" or return_type == "Cam"
+        or return_type == "Player"):
         target_type = "_i"
     elif return_type == "float":
         target_type = "_f"
