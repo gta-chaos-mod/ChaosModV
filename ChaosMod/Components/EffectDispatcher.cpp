@@ -72,7 +72,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	for (auto &activeEffect : effectDispatcher->SharedState.ActiveEffects)
 	{
-		if (activeEffect.Id == entry.Id)
+		if (activeEffect.Id == entry.Id && !activeEffect.IsZombie)
 		{
 			if (effectData.TimedType != EffectTimedType::NotTimed)
 			{
