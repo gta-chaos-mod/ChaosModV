@@ -26,16 +26,14 @@ class LuaScripts : public Component
 		}
 
 		LuaScript(LuaScript &&script) noexcept
-		    : m_ScriptName(std::move(script.m_ScriptName)),
-		      m_Env(std::move(script.m_Env)),
-		      m_IsTemporary(script.m_IsTemporary)
+		    : m_ScriptName(std::move(script.m_ScriptName)), m_Env(script.m_Env), m_IsTemporary(script.m_IsTemporary)
 		{
 		}
 
 		LuaScript &operator=(LuaScript &&script) noexcept
 		{
 			m_ScriptName  = std::move(script.m_ScriptName);
-			m_Env         = std::move(script.m_Env);
+			m_Env         = script.m_Env;
 			m_IsTemporary = script.m_IsTemporary;
 
 			return *this;
@@ -53,11 +51,11 @@ class LuaScripts : public Component
 
 		void Execute(const char *funcName) const
 		{
-			const sol::protected_function &func = m_Env[funcName];
+			auto func = m_Env[funcName];
 			if (!func.valid())
 				return;
 
-			const sol::protected_function_result &result = func();
+			auto result = func();
 			if (!result.valid())
 			{
 				const sol::error &error = result;

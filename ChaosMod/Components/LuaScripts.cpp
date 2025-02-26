@@ -627,17 +627,19 @@ LuaScripts::ParseScriptReturnReason
 LuaScripts::ParseScript(std::string scriptName, const std::string &script, ParseScriptFlags flags,
                         std::unordered_map<std::string, nlohmann::json> settingOverrides)
 {
-	sol::environment env(m_GlobalState, sol::create, m_GlobalState.globals());
+	auto thread      = sol::thread::create(m_GlobalState);
+	auto threadState = thread.state();
+	sol::environment threadEnv(threadState, sol::create, threadState.globals());
 
-	auto envInfoTable     = env.create_named("EnvInfo");
-	auto envInfoMetaTable = env.create_with("ScriptName", scriptName);
+	auto envInfoTable     = threadEnv.create_named("EnvInfo");
+	auto envInfoMetaTable = threadEnv.create_with("ScriptName", scriptName);
 	envInfoMetaTable[sol::meta_function::new_index] = [] {};
 	envInfoMetaTable[sol::meta_function::index] = envInfoMetaTable;
 	envInfoTable[sol::metatable_key]            = envInfoMetaTable;
 
 	auto scriptResult                           = flags & ParseScriptFlag_ScriptIsFilePath
-	                                                ? m_GlobalState.safe_script_file(std::string(script), env)
-	                                                : m_GlobalState.safe_script(script, env);
+	                                                ? threadState.safe_script_file(std::string(script), threadEnv)
+	                                                : threadState.safe_script(script, threadEnv);
 	if (!scriptResult.valid())
 	{
 		const sol::error &error = scriptResult;
@@ -646,7 +648,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		return ParseScriptReturnReason::Error;
 	}
 
-	const sol::optional<sol::table> &effectGroupInfoOpt = env["EffectGroupInfo"];
+	const sol::optional<sol::table> &effectGroupInfoOpt = threadEnv["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
 		const auto &effectGroupInfo                    = *effectGroupInfoOpt;
@@ -687,11 +689,11 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 			}
 		}
 	}
-	sol::optional<sol::table> effectInfoOpt = env["EffectInfo"];
+	sol::optional<sol::table> effectInfoOpt = threadEnv["EffectInfo"];
 	if (!effectInfoOpt)
 	{
 		// Backwards compatibility
-		effectInfoOpt = env["ScriptInfo"].get<sol::optional<sol::table>>();
+		effectInfoOpt = threadEnv["ScriptInfo"].get<sol::optional<sol::table>>();
 		if (!effectInfoOpt)
 			return ParseScriptReturnReason::Error;
 	}
@@ -937,7 +939,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	// Exclude temporary effects from choices pool
 	effectData.SetAttribute(EffectAttributes::IsTemporary, flags & ParseScriptFlag_IsTemporary);
 
-	m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, env, flags & ParseScriptFlag_IsTemporary));
+	m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, threadEnv, flags & ParseScriptFlag_IsTemporary));
 	g_EnabledEffects.emplace(effectId, effectData);
 	g_RegisteredEffects.emplace_back(effectId);
 
