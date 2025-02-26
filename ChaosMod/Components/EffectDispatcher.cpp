@@ -265,7 +265,8 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 
 void EffectDispatcher::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
-	ClearEffects();
+	if (!(cleanupFlags & PauseCleanupFlags_UnsafeCleanup))
+		ClearEffects();
 }
 
 void EffectDispatcher::OnRun()
