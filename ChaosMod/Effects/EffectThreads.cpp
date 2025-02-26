@@ -14,10 +14,26 @@ static auto _StopThreadImmediately(auto it)
 	// OK so maybe not really immediately but it's still blocking
 	thread->Stop();
 	int count = 0;
-	while (!thread->HasStopped() && count++ < 20)
+	while (!thread->HasStopped() && count++ < 10)
 	{
 		SwitchToFiber(g_MainThread);
 		thread->Run();
+	}
+
+	DeleteFiber(threadId);
+
+	if (!thread->HasStopped())
+	{
+		thread->ThreadData.HasStarted = true;
+		thread->ThreadData.ShouldStop = true;
+		auto cleanupThread            = CreateFiber(0, EffectThreadFunc, &thread->ThreadData);
+		while (!thread->HasStopped() && count++ < 20)
+		{
+			SwitchToFiber(g_MainThread);
+			SwitchToFiber(cleanupThread);
+		}
+
+		DeleteFiber(cleanupThread);
 	}
 
 	return m_Threads.erase(it);
@@ -38,13 +54,19 @@ namespace EffectThreads
 	void StopThread(LPVOID threadId)
 	{
 		if (m_Threads.contains(threadId))
+		{
+			DEBUG_LOG("Stopping thread id " << threadId);
 			m_Threads.at(threadId)->Stop();
+		}
 	}
 
 	void StopThreadImmediately(LPVOID threadId)
 	{
 		if (m_Threads.contains(threadId))
+		{
+			DEBUG_LOG("Stopping thread id " << threadId << " immediately");
 			_StopThreadImmediately(m_Threads.find(threadId));
+		}
 	}
 
 	void StopThreads()
@@ -113,7 +135,7 @@ namespace EffectThreads
 		if (!m_Threads.contains(threadId))
 			return true;
 
-		return m_Threads.at(threadId)->HasOnStartExecuted();
+		return m_Threads.at(threadId)->HasStarted();
 	}
 
 	bool IsThreadAnEffectThread()

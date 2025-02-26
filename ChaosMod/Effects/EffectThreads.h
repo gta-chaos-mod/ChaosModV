@@ -24,11 +24,11 @@ struct EffectThreadSharedData
 struct EffectThreadData
 {
 	RegisteredEffect *Effect = nullptr;
-	bool HasOnStartExecuted  = false;
-	bool IsRunning           = true;
+	bool HasStarted          = false;
+	bool ShouldStop          = false;
 	bool HasStopped          = false;
 
-	void *CallerFiber        = nullptr;
+	void *CallerThread       = nullptr;
 
 	EffectThreadSharedData SharedData;
 
@@ -64,21 +64,23 @@ inline void EffectThreadFunc(LPVOID data)
 {
 	SetUnhandledExceptionFilter(CrashHandler);
 
-	auto &threadData = *reinterpret_cast<EffectThreadData *>(data);
+	auto threadData = reinterpret_cast<EffectThreadData *>(data);
 
-	threadData.Effect->Start();
-	threadData.HasOnStartExecuted = true;
+	if (!threadData->HasStarted)
+		threadData->Effect->Start();
+	threadData->HasStarted = true;
 
-	while (threadData.IsRunning)
+	while (!threadData->ShouldStop)
 	{
-		SwitchToFiber(threadData.CallerFiber);
-		threadData.Effect->Tick();
+		SwitchToFiber(threadData->CallerThread);
+		threadData->Effect->Tick();
 	}
 
-	threadData.Effect->Stop();
+	if (!threadData->HasStopped)
+		threadData->Effect->Stop();
 
-	threadData.HasStopped = true;
-	SwitchToFiber(threadData.CallerFiber);
+	threadData->HasStopped = true;
+	SwitchToFiber(threadData->CallerThread);
 }
 
 class EffectThread
@@ -110,7 +112,7 @@ class EffectThread
 
 	inline void Run()
 	{
-		ThreadData.CallerFiber = GetCurrentFiber();
+		ThreadData.CallerThread = GetCurrentFiber();
 		SwitchToFiber(Thread);
 	}
 
@@ -118,24 +120,24 @@ class EffectThread
 	{
 		if (!ThreadData.HasStopped)
 		{
-			ThreadData.IsRunning = false;
+			ThreadData.ShouldStop = false;
 			Run();
 		}
+	}
+
+	inline bool HasStarted() const
+	{
+		return ThreadData.HasStarted;
+	}
+
+	inline bool IsStopping() const
+	{
+		return ThreadData.ShouldStop;
 	}
 
 	inline bool HasStopped() const
 	{
 		return ThreadData.HasStopped;
-	}
-
-	inline bool HasOnStartExecuted() const
-	{
-		return ThreadData.HasOnStartExecuted;
-	}
-
-	inline bool IsStopping() const
-	{
-		return !ThreadData.IsRunning;
 	}
 };
 
