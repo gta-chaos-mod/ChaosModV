@@ -85,10 +85,10 @@ class EffectThread
 {
   public:
 	DWORD64 PauseTimestamp = 0;
+	EffectThreadData ThreadData;
 	// NOTE: A previous fiber handle can be reused for a new one
 	// Do not assume they are uniquely identifiable for anything other than currently running fibers!
-	LPVOID Thread          = nullptr;
-	EffectThreadData ThreadData;
+	LPVOID Thread = nullptr;
 
 	EffectThread(RegisteredEffect *effect) : ThreadData(effect), Thread(CreateFiber(0, EffectThreadFunc, &ThreadData))
 	{
