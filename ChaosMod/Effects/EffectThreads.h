@@ -108,7 +108,7 @@ class EffectThread
 		return thisThread->Thread == thread;
 	}
 
-	inline void OnRun()
+	inline void Run()
 	{
 		ThreadData.CallerFiber = GetCurrentFiber();
 		SwitchToFiber(Thread);
@@ -119,8 +119,7 @@ class EffectThread
 		if (!ThreadData.HasStopped)
 		{
 			ThreadData.IsRunning = false;
-
-			OnRun();
+			Run();
 		}
 	}
 

@@ -17,7 +17,7 @@ static auto _StopThreadImmediately(auto it)
 	while (!thread->HasStopped() && count++ < 20)
 	{
 		SwitchToFiber(g_MainThread);
-		thread->OnRun();
+		thread->Run();
 	}
 
 	return m_Threads.erase(it);
@@ -85,7 +85,7 @@ namespace EffectThreads
 		}
 
 		if (GetTickCount64() >= thread->PauseTimestamp)
-			thread->OnRun();
+			thread->Run();
 
 		it++;
 	}
