@@ -13,9 +13,7 @@ set_target_properties(ChaosMod PROPERTIES SUFFIX ".asi")
 set_target_properties(ChaosMod PROPERTIES CXX_STANDARD 20)
 set_target_properties(ChaosMod PROPERTIES CXX_SCAN_FOR_MODULES OFF)
 
-target_compile_definitions(ChaosMod PUBLIC $<$<CONFIG:Debug>:CHAOSDEBUG>)
-target_compile_definitions(ChaosMod PUBLIC NDEBUG)
-target_compile_definitions(ChaosMod PUBLIC WIN32_LEAN_AND_MEAN)
+target_compile_definitions(ChaosMod PUBLIC $<$<CONFIG:Debug>:CHAOSDEBUG> NDEBUG WIN32_LEAN_AND_MEAN)
 
 set(include_dirs ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/../vendor ${PROJECT_SOURCE_DIR}/../vendor/lua/include)
 set(link_libs shv minhook lua54 winmm d3dcompiler xinput)
