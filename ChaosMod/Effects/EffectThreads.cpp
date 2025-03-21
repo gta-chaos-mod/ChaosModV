@@ -20,8 +20,6 @@ static auto _StopThreadImmediately(auto it)
 		thread->Run();
 	}
 
-	DeleteFiber(threadId);
-
 	if (!thread->HasStopped())
 	{
 		thread->ThreadData.HasStarted = true;
