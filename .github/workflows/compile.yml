@@ -53,16 +53,16 @@ jobs:
         7z.exe x data.zip
         rm data.zip
         cp ../ChaosMod/build/ChaosMod.asi
-        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish/ChaosModVConfig.exe chaosmod/
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net6.0-windows/win-x64/publish/TwitchChatVotingProxy.exe chaosmod/
+        cp ../ConfigApp/bin/x64/Release/net9.0-windows/win-x64/publish/ChaosModVConfig.exe chaosmod/
+        cp ../TwitchChatVotingProxy/bin/x64/Release/net9.0-windows/win-x64/publish/TwitchChatVotingProxy.exe chaosmod/
         cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
         cp ../scripts/natives_def.lua chaosmod/
         cd ..
         mkdir symbols
         cd symbols
         cp ../ChaosMod/build/ChaosMod.pdb
-        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish/ChaosModVConfig.pdb
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net6.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
+        cp ../ConfigApp/bin/x64/Release/net9.0-windows/win-x64/publish/ChaosModVConfig.pdb
+        cp ../TwitchChatVotingProxy/bin/x64/Release/net9.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
 
     - name: Upload :)
       uses: actions/upload-artifact@v4
