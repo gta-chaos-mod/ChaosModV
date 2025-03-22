@@ -2,8 +2,8 @@
 
 #include "Components/Component.h"
 
-#include <sol/sol.hpp>
 #include <json.hpp>
+#include <sol/sol.hpp>
 
 #include <string>
 
