@@ -1,7 +1,5 @@
 #pragma once
 
-#include <scripthookv/inc/main.h>
-
 #include "game.h"
 
 using DWORD   = unsigned long;

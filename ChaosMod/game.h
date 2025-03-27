@@ -8,18 +8,18 @@ enum class GameVersion
     GTA5_ENHANCED
 };
 
-GameVersion GetGame()
+inline GameVersion GetGame()
 {
     static GameVersion result = getGameVersion() > 1000 ? GameVersion::GTA5_ENHANCED : GameVersion::GTA5_LEGACY;
     return result;
 }
 
-bool IsEnhanced()
+inline bool IsEnhanced()
 {
     return GetGame() == GameVersion::GTA5_ENHANCED;
 }
 
-bool IsLegacy()
+inline bool IsLegacy()
 {
     return GetGame() == GameVersion::GTA5_LEGACY;
 }
