@@ -2,9 +2,12 @@
 
 #include "Memory/Memory.h"
 
+#include <scripthookv/inc/natives.h>
 #include <scripthookv/inc/types.h>
 
 #include <vector>
+
+#include "Util/Logging.h"
 
 // Thanks to menyoo for most of these!!
 
@@ -24,11 +27,11 @@ template <typename T> class PoolIterator
 
 	PoolIterator &operator++()
 	{
-		for (Index++; Index < Pool->m_Size; Index++)
+		for (Index++; Index < Pool->GetSize(); Index++)
 			if (Pool->IsValid(Index))
 				return *this;
 
-		Index = Pool->m_Size;
+		Index = Pool->GetSize();
 		return *this;
 	}
 
@@ -36,8 +39,9 @@ template <typename T> class PoolIterator
 	{
 		static int (*_addEntityToPoolFunc)(__int64) = []
 		{
-			Handle handle = Memory::FindPattern("48 F7 F9 49 8B 48 08 48 63 D0 C1 E0 08 0F B6 1C 11 03 D8").Addr();
-			return handle.At(-0x68).Get<int(__int64)>();
+			Handle handle =
+			    Memory::FindPattern("48 F7 F9 49 8B 48 08 48 63 D0 C1 E0 08 0F B6 1C 11 03 D8", "48 8D 71 10 8B 15");
+			return handle.At(IsLegacy() ? -0x68 : -0x9).Get<int(__int64)>();
 		}();
 
 		auto addr  = Pool->GetAddress(Index);
@@ -71,88 +75,281 @@ template <typename T> class PoolUtils
 
 	auto end()
 	{
-		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->m_Size);
+		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->GetSize());
 	}
+
+	virtual bool IsValid(UINT32 i) = 0;
+	virtual UINT64 GetAddress(UINT32 i) = 0;
+	virtual UINT32 GetSize() = 0;
 };
 
 class VehiclePool : public PoolUtils<VehiclePool>
 {
-  public:
-	UINT64 *m_PoolAddress;
-	UINT32 m_Size;
-	char _Padding2[36];
-	UINT32 *m_BitArray;
-	char _Padding3[40];
-	UINT32 m_ItemCount;
-
-	inline bool IsValid(UINT32 i)
+  private:
+	struct LegacyPool
 	{
-		return (m_BitArray[i >> 5] >> (i & 0x1F)) & 1;
+		UINT64 *m_PoolAddress;
+		UINT32 m_Size;
+		char _Padding2[36];
+		UINT32 *m_BitArray;
+		char _Padding3[40];
+		UINT32 m_ItemCount;
+	};
+
+	struct EnhancedPool
+	{
+		void *vft;
+		UINT64 *m_PoolAddress;
+		UINT32 m_Size;
+		char _Padding2[36];
+		UINT32 *m_BitArray;
+		char _Padding3[40];
+		UINT32 m_ItemCount;
+	};
+
+	union Pool
+	{
+		LegacyPool lp;
+		EnhancedPool ep;
+	};
+
+	Pool *pool;
+
+  public:
+	VehiclePool(DWORD64 address)
+	{
+		pool = *reinterpret_cast<Pool **>(address);
 	}
 
-	inline UINT64 GetAddress(UINT32 i)
+	VehiclePool() : VehiclePool(0)
 	{
-		return m_PoolAddress[i];
+	}
+
+	inline bool IsValid(UINT32 i) override
+	{
+		if (IsEnhanced())
+			return (pool->ep.m_BitArray[i >> 5] >> (i & 0x1F)) & 1;
+		else
+			return (pool->lp.m_BitArray[i >> 5] >> (i & 0x1F)) & 1;
+	}
+
+	inline UINT64 GetAddress(UINT32 i) override
+	{
+		if (IsEnhanced())
+			return pool->ep.m_PoolAddress[i];
+		else
+			return pool->lp.m_PoolAddress[i];
+	}
+
+	inline UINT32 GetSize() override
+	{
+		if (IsEnhanced())
+			return pool->ep.m_Size;
+		else
+			return pool->lp.m_Size;
 	}
 };
 
 class GenericPool : public PoolUtils<GenericPool>
 {
-  public:
-	UINT64 m_PoolStartAddress;
-	BYTE *m_ByteArray;
-	UINT32 m_Size;
-	UINT32 m_ItemSize;
+  private:
+	struct LegacyPool
+	{
+		UINT64 m_PoolStartAddress;
+		BYTE *m_ByteArray;
+		UINT32 m_Size;
+		UINT32 m_ItemSize;
+	};
 
-	inline bool IsValid(UINT32 i)
+	struct EnhancedPool
+	{
+		void *vft;
+		UINT64 m_PoolStartAddress;
+		BYTE *m_ByteArray;
+		UINT32 m_Size;
+		UINT32 m_ItemSize;
+	};
+
+	union Pool
+	{
+		LegacyPool lp;
+		EnhancedPool ep;
+	};
+
+	Pool *pool;
+
+  public:
+	GenericPool(DWORD64 address)
+	{
+		pool = reinterpret_cast<Pool *>(address);
+	}
+
+	GenericPool() : GenericPool(0)
+	{
+	}
+
+	inline bool IsValid(UINT32 i) override
 	{
 		return Mask(i) != 0;
 	}
 
-	inline UINT64 GetAddress(UINT32 i)
+	inline UINT64 GetAddress(UINT32 i) override
 	{
-		return Mask(i) & (m_PoolStartAddress + i * m_ItemSize);
+		if (IsEnhanced())
+			return Mask(i) & (pool->ep.m_PoolStartAddress + i * pool->ep.m_ItemSize);
+		else
+			return Mask(i) & (pool->lp.m_PoolStartAddress + i * pool->lp.m_ItemSize);
+	}
+
+	inline UINT32 GetSize() override
+	{
+		if (IsEnhanced())
+			return pool->ep.m_Size;
+		else
+			return pool->lp.m_Size;
 	}
 
   private:
 	inline long long Mask(UINT32 i)
 	{
-		long long num1 = m_ByteArray[i] & 0x80;
+		long long num1;
+		if (IsEnhanced())
+			num1 = pool->ep.m_ByteArray[i] & 0x80;
+		else
+			num1 = pool->lp.m_ByteArray[i] & 0x80;
+
 		return ~((num1 | -num1) >> 63);
+	}
+};
+
+template <typename T> class EncryptedPointer
+{
+  public: // protected
+	struct Encrypted
+	{
+		bool m_IsSet;
+		DWORD64 m_First;
+		DWORD64 m_Second;
+	};
+
+	Encrypted *val;
+
+  public:
+	virtual T GetPool() = 0;
+
+	EncryptedPointer(DWORD64 address)
+	{
+		val = reinterpret_cast<Encrypted *>(address);
+	}
+
+	EncryptedPointer() : EncryptedPointer(0)
+	{
+	}
+};
+
+class PedPoolEncryptedPointer : public EncryptedPointer<GenericPool>
+{
+  public:
+	GenericPool GetPool() override
+	{
+		if (val->m_IsSet)
+		{
+			DWORD64 temp = _rotl64(val->m_Second, 30);
+			return GenericPool(~_rotl64(_rotl64(temp ^ val->m_First, 32), (temp & 0x1F) + 2));
+		}
+
+		return GenericPool();
+	}
+
+	PedPoolEncryptedPointer(DWORD64 address) : EncryptedPointer(address)
+	{
+	}
+
+	PedPoolEncryptedPointer() : EncryptedPointer()
+	{
+	}
+};
+
+class ObjectPoolEncryptedPointer : public EncryptedPointer<GenericPool>
+{
+  public:
+	GenericPool GetPool() override
+	{
+		if (val->m_IsSet)
+		{
+			DWORD64 temp = _rotl64(val->m_Second, 30);
+			return GenericPool(~_rotl64(_rotl64(temp ^ val->m_First, (temp & 0x1F) + 3), 32));
+		}
+
+		return GenericPool();
+	}
+
+	ObjectPoolEncryptedPointer(DWORD64 address) : EncryptedPointer(address)
+	{
+	}
+
+	ObjectPoolEncryptedPointer() : EncryptedPointer()
+	{
 	}
 };
 
 inline auto &GetAllPeds()
 {
-	static GenericPool *pedPool = []
+	static GenericPool pedPool = []
 	{
-		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
-		return handle.At(2).Into().Value<GenericPool *>();
+		if (IsLegacy())
+		{
+			auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 41 0F BF C8 0F BF 40 10");
+			return GenericPool(handle.At(2).Into().Value<UINT64>());
+		}
+		else
+		{
+			auto handle       = Memory::FindPattern("0F B6 05 ?? ?? ?? ?? A8 01 75 0F 45 31 F6");
+			auto encryptedPtr = PedPoolEncryptedPointer(handle.At(2).Into().Addr());
+			return encryptedPtr.GetPool();
+		}
 	}();
 
-	return *pedPool;
+	return pedPool;
 }
 
 inline auto &GetAllVehs()
 {
-	static VehiclePool *vehPool = []
+	static VehiclePool vehPool = []
 	{
-		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
-		return *handle.At(2).Into().Value<VehiclePool **>();
+		if (IsLegacy())
+		{
+			auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? F3 0F 59 F6 48 8B 08");
+			return VehiclePool(handle.At(2).Into().Value<UINT64>());
+		}
+		else
+		{
+			auto handle = Memory::FindPattern("4C 8B 35 ?? ?? ?? ?? 4D 85 F6 0F 84 67 02 00 00");
+			return VehiclePool(handle.At(2).Into().Value<UINT64>());
+		}
 	}();
 
-	return *vehPool;
+	return vehPool;
 }
 
 inline auto &GetAllProps()
 {
-	static GenericPool *propPool = []
+	static GenericPool propPool = []
 	{
-		auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
-		return handle.At(2).Into().Value<GenericPool *>();
+		if (IsLegacy())
+		{
+			auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 8B 78 10 85 FF");
+			return GenericPool(handle.At(2).Into().Value<UINT64>());
+		}
+		else
+		{
+			auto handle       = Memory::FindPattern("0F B6 05 ?? ?? ?? ?? A8 01 0F 84 94 02 00 00");
+			auto encryptedPtr = ObjectPoolEncryptedPointer(handle.At(2).Into().Addr());
+			return encryptedPtr.GetPool();
+		}
 	}();
 
-	return *propPool;
+	return propPool;
 }
 
 inline auto GetAllPedsArray()

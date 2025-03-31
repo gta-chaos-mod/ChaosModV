@@ -54,8 +54,6 @@ namespace Memory
 
 	inline rage::scrProgram *ScriptThreadToProgramEnhanced(rage::scrThread *thread)
 	{
-		DEBUG_LOG("ScriptThreadToProgramEnhanced");
-
 		static const Handle handle = FindPattern("84 C9 74 1B 66 90");
 		if (!handle.IsValid())
 			return nullptr;
