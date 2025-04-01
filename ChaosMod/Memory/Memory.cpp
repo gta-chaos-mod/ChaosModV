@@ -217,7 +217,7 @@ namespace Memory
 		return scanPattern();
 	}
 
-	Handle FindPattern(const std::string &legacyPattern, const std::string& enhancedPattern)
+	Handle FindPattern(const std::string &legacyPattern, const std::string &enhancedPattern)
 	{
 		return IsEnhanced() ? FindPattern(enhancedPattern) : FindPattern(legacyPattern);
 	}
@@ -250,7 +250,8 @@ namespace Memory
 	{
 		static auto globalPtr = []() -> DWORD64 **
 		{
-			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11", "48 8D 3D ?? ?? ?? ?? 31 ED 4C 8D 25");
+			auto handle =
+			    FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11", "48 8D 3D ?? ?? ?? ?? 31 ED 4C 8D 25");
 			if (!handle.IsValid())
 				return nullptr;
 

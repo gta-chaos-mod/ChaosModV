@@ -71,7 +71,9 @@ namespace Memory
 				archetypePool_PoolPtr           = handle.At(27).Into().Value<DWORD64>();
 				archetypePool_ElemSize          = handle.At(43).Into().Value<DWORD64>();
 
-				DEBUG_LOG(archetypeMap_Map << " " << archetypeMap_Slots << " " << archetypePool_Size << " " << archetypePool_AllocatedMap_Bits << " " << archetypePool_PoolPtr << " " << archetypePool_ElemSize);
+				DEBUG_LOG(archetypeMap_Map << " " << archetypeMap_Slots << " " << archetypePool_Size << " "
+				                           << archetypePool_AllocatedMap_Bits << " " << archetypePool_PoolPtr << " "
+				                           << archetypePool_ElemSize);
 			}
 
 			for (WORD i = 0; i < archetypeMap_Slots; i++)

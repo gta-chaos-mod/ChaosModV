@@ -34,19 +34,19 @@ void _HK_rage__audSound__CombineBuffers(void *_this, __int64 combineBuffer)
 	if (ms_OverrideLPFCutoff.doOverride)
 	{
 		__int16 *value = Handle(combineBuffer).At(IsEnhanced() ? 0x14 : 0x8).Get<__int16>();
-		*value = std::min(*value, (short)ms_OverrideLPFCutoff.targetValue);
+		*value         = std::min(*value, static_cast<short>(ms_OverrideLPFCutoff.targetValue));
 	}
 
 	if (ms_OverrideHPFCutoff.doOverride)
 	{
 		__int16 *value = Handle(combineBuffer).At(IsEnhanced() ? 0x16 : 0xA).Get<__int16>();
-		*value = std::max(*value, (short)ms_OverrideHPFCutoff.targetValue);
+		*value         = std::max(*value, static_cast<short>(ms_OverrideHPFCutoff.targetValue));
 	}
 
 	if (ms_OverrideVolume.doOverride)
 	{
 		int *value = Handle(combineBuffer).At(0).Get<int>();
-		*value = ms_OverrideVolume.targetValue;
+		*value     = ms_OverrideVolume.targetValue;
 	}
 }
 
@@ -73,7 +73,7 @@ namespace Hooks
 	void SetAudioPitch(float pitch)
 	{
 		ms_OverridePitch.doOverride  = true;
-		ms_OverridePitch.targetValue = (short)pitch;
+		ms_OverridePitch.targetValue = static_cast<short>(pitch);
 	}
 
 	float GetTargetAudioPitch()

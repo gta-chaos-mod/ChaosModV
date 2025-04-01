@@ -37,7 +37,7 @@ static void OnCleanup()
 	if (ms_ModelSpawnPatchAddr)
 	{
 		memcpy_s(reinterpret_cast<void *>(ms_ModelSpawnPatchAddr), ms_ByteCount, ms_ModelSpawnPatchOrigBytes.data(),
-		        ms_ByteCount);
+		         ms_ByteCount);
 	}
 }
 

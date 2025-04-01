@@ -78,9 +78,9 @@ template <typename T> class PoolUtils
 		return ++PoolIterator<T>(static_cast<T *>(this), static_cast<T *>(this)->GetSize());
 	}
 
-	virtual bool IsValid(UINT32 i) = 0;
+	virtual bool IsValid(UINT32 i)      = 0;
 	virtual UINT64 GetAddress(UINT32 i) = 0;
-	virtual UINT32 GetSize() = 0;
+	virtual UINT32 GetSize()            = 0;
 };
 
 class VehiclePool : public PoolUtils<VehiclePool>
