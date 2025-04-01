@@ -7,28 +7,16 @@ namespace Memory
 {
 	inline void SetGravityLevel(float gravity)
 	{
-		static float *gravAddr = nullptr;
-		static void(__cdecl * someFunc1)(float grav);
-		static void(__cdecl * someFunc2)();
-		static void(__cdecl * someFunc3)();
+		static auto handle =
+		    FindPattern("48 83 EC 28 83 F9 03 77", "48 83 EC 58 0F 29 7C 24 40 0F 29 74 24 30 83 F9 03");
+		if (!handle.IsValid())
+			return;
+		static auto CPhysics__SetGravityLevel = handle.Get<void(unsigned int)>();
+		static auto afGravityLevels           = handle.At(IsLegacy() ? 14 : 27).Into().Get<float>();
 
-		if (!gravAddr)
-		{
-			auto handle = FindPattern("E8 ? ? ? ? 48 8D 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 89 05 ? ? ? ? 48 83 C4 28 C3");
-			if (!handle.IsValid())
-				return;
-
-			handle    = handle.Into().At(24);
-			gravAddr  = handle.At(3).Into().Get<float>();
-			someFunc1 = handle.At(8).Into().Get<void(float)>();
-			someFunc2 = handle.At(13).Into().Get<void()>();
-			someFunc3 = handle.At(18).Into().Get<void()>();
-		}
-
-		*gravAddr = gravity;
-
-		someFunc1(*gravAddr);
-		someFunc2();
-		someFunc3();
+		auto ogLevel                          = afGravityLevels[0];
+		afGravityLevels[0]                    = gravity;
+		CPhysics__SetGravityLevel(0);
+		afGravityLevels[0] = ogLevel;
 	}
 }
