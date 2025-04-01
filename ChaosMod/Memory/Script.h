@@ -101,8 +101,9 @@ namespace Memory
 		{
 			auto handle = Memory::FindPattern(
 			    pattern,
-			    { program->m_CodeBlocks[i],
-			      program->m_CodeBlocks[i] + (i == codeBlocksSize - 1 ? program->m_CodeSize : program->PAGE_SIZE) });
+			    PatternScanRange { program->m_CodeBlocks[i],
+			                       program->m_CodeBlocks[i]
+			                           + (i == codeBlocksSize - 1 ? program->m_CodeSize : program->PAGE_SIZE) });
 			if (handle.IsValid())
 				return handle;
 		}

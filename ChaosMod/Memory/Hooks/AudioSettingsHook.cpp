@@ -109,7 +109,7 @@ namespace Hooks
 	void SetAudioVolume(float value)
 	{
 		ms_OverrideVolume.doOverride  = true;
-		ms_OverrideVolume.targetValue = *reinterpret_cast<int*>(&value);
+		ms_OverrideVolume.targetValue = static_cast<int>(value);
 	}
 	void ResetAudioVolume()
 	{
