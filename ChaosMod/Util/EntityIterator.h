@@ -324,7 +324,7 @@ inline auto &GetAllVehs()
 		}
 		else
 		{
-			auto handle = Memory::FindPattern("4C 8B 35 ?? ?? ?? ?? 4D 85 F6 0F 84 67 02 00 00");
+			auto handle = Memory::FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 00 48 83 78 18 05");
 			return VehiclePool(handle.At(2).Into().Value<UINT64>());
 		}
 	}();
