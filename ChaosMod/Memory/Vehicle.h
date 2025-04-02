@@ -26,19 +26,14 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
+			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12", "48 89 05 ?? ?? ?? ?? 66 85 F6 74 2A");
 			if (!handle.IsValid())
 				return vehModels;
 
-			handle         = handle.At(2).Into();
+			handle = handle.At(2).Into();
+
 			auto modelList = handle.Value<DWORD64>();
-
-			handle         = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
-			if (!handle.IsValid())
-				return vehModels;
-
-			handle         = handle.At(2).Into();
-			auto maxModels = handle.Value<WORD>();
+			auto maxModels = handle.At(8).Value<WORD>();
 
 			//  Stub vehicles, thanks R* lol
 			static const std::unordered_set<Hash> blacklistedModels {
