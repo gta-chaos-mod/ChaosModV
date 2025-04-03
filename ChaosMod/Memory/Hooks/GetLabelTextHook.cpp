@@ -21,11 +21,12 @@ const char *HK_GetLabelText(void *text, Hash hash)
 
 static bool OnHook()
 {
-	auto handle = Memory::FindPattern("48 8B CB 8B D0 E8 ? ? ? ? 48 85 C0 0F 95 C0");
+	auto handle =
+	    Memory::FindPattern("48 8B CB 8B D0 E8 ? ? ? ? 48 85 C0 0F 95 C0", "48 83 EC 28 E8 ?? ?? ?? ?? 48 85 C0 75");
 	if (!handle.IsValid())
 		return false;
 
-	Memory::AddHook(handle.At(5).Into().Get<void>(), HK_GetLabelText, &OG_GetLabelText);
+	Memory::AddHook(handle.At(IsLegacy() ? 5 : 4).Into().Get<void>(), HK_GetLabelText, &OG_GetLabelText);
 
 	return true;
 }
