@@ -26,11 +26,12 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12", "48 89 05 ?? ?? ?? ?? 66 85 F6 74 2A");
+			handle =
+			    FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12", "48 89 05 ?? ?? ?? ?? 66 85 F6 74 2A");
 			if (!handle.IsValid())
 				return vehModels;
 
-			handle = handle.At(2).Into();
+			handle         = handle.At(2).Into();
 
 			auto modelList = handle.Value<DWORD64>();
 			auto maxModels = handle.At(8).Value<WORD>();
@@ -69,7 +70,8 @@ namespace Memory
 
 		static auto outOfControlStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 FE 40 80 E7 01", "0F B6 86 ?? ?? 00 00 24 FE 08 D8 88 86 ?? ?? 00 00 E9 ?? ?? ?? ?? F3");
+			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 FE 40 80 E7 01",
+			                          "0F B6 86 ?? ?? 00 00 24 FE 08 D8 88 86 ?? ?? 00 00 E9 ?? ?? ?? ?? F3");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle out of control state offset not found!");
@@ -104,7 +106,8 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 4D C8", "48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D ?? ?? ?? 00 00 00 48 89");
+			handle = FindPattern("48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 4D C8",
+			                     "48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D ?? ?? ?? 00 00 00 48 89");
 			if (!handle.IsValid())
 				return;
 
@@ -131,7 +134,8 @@ namespace Memory
 	{
 		static auto brakeStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53");
+			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53",
+			                          "f3 0f 11 86 ? ? ? ? e9 ? ? ? ? 90 e4");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle brake state offset not found!");
