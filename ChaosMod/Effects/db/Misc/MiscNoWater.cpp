@@ -26,9 +26,9 @@ CHAOS_VAR std::vector<float> WaterHeights;
 
 static CWaterQuad *GetWaterQuads()
 {
-	static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
+	static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?", "48 8B 15 ?? ?? ?? ?? 0F 57 C0 F3 44 0F 10 05");
 	if (handle.IsValid())
-		return *handle.At(6).Into().Get<CWaterQuad *>();
+		return *handle.At(IsLegacy() ? 6 : 2).Into().Get<CWaterQuad *>();
 	return nullptr;
 }
 

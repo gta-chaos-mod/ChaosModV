@@ -30,7 +30,7 @@ class Handle
 
 	template <typename T> inline T Value() const
 	{
-		return IsValid() ? *Get<T>() : 0;
+		return IsValid() ? *Get<T>() : T();
 	}
 
 	inline uintptr_t Addr() const

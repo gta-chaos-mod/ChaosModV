@@ -16,7 +16,8 @@ namespace Memory
 	{
 		static auto _getScriptHandleBaseAddress = []() -> DWORD64 (*)(Entity)
 		{
-			auto handle = FindPattern("E8 ? ? ? ? 48 8B D8 48 85 C0 74 3D E8");
+			auto handle =
+			    FindPattern("E8 ? ? ? ? 48 8B D8 48 85 C0 74 3D E8", "E8 ?? ?? ?? ?? 48 85 C0 74 74 48 8B 38");
 			if (!handle.IsValid())
 			{
 				LOG("Couldn't find _getScriptHandleBaseAddress, falling back to shv");

@@ -26,19 +26,15 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
+			handle =
+			    FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12", "48 89 05 ?? ?? ?? ?? 66 85 F6 74 2A");
 			if (!handle.IsValid())
 				return vehModels;
 
 			handle         = handle.At(2).Into();
+
 			auto modelList = handle.Value<DWORD64>();
-
-			handle         = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
-			if (!handle.IsValid())
-				return vehModels;
-
-			handle         = handle.At(2).Into();
-			auto maxModels = handle.Value<WORD>();
+			auto maxModels = handle.At(8).Value<WORD>();
 
 			//  Stub vehicles, thanks R* lol
 			static const std::unordered_set<Hash> blacklistedModels {
@@ -74,14 +70,15 @@ namespace Memory
 
 		static auto outOfControlStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 fE 40 80 E7 01");
+			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 FE 40 80 E7 01",
+			                          "0F B6 86 ?? ?? 00 00 24 FE 08 D8 88 86 ?? ?? 00 00 E9 ?? ?? ?? ?? F3");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle out of control state offset not found!");
 				return 0;
 			}
 
-			return handle.At(8).Value<std::uint16_t>();
+			return handle.At(IsLegacy() ? 8 : 3).Value<std::uint16_t>();
 		}();
 
 		if (!outOfControlStateOffset)
@@ -109,8 +106,8 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 "
-			                     "33 C0 E8 ? ? ? ? 4C 8D 0D");
+			handle = FindPattern("48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 4D C8",
+			                     "48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D ?? ?? ?? 00 00 00 48 89");
 			if (!handle.IsValid())
 				return;
 
@@ -137,7 +134,8 @@ namespace Memory
 	{
 		static auto brakeStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53");
+			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53",
+			                          "f3 0f 11 86 ? ? ? ? e9 ? ? ? ? 90 e4");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle brake state offset not found!");
