@@ -20,7 +20,7 @@ namespace Memory
 		static auto CEntity_GetColliderNonConst = []() -> void *(*)(DWORD64)
 		{
 			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D",
-			                            "E8 ?? ?? ?? ?? 48 85 C0 74 23 48 8B CB");
+			                            "E8 ?? ?? ?? ?? 44 8B 8C 24 78 02 00 00 48 85 C0");
 			if (handle.IsValid())
 				return handle.At(IsLegacy() ? 17 : 0).Into().Get<void *(DWORD64)>();
 
