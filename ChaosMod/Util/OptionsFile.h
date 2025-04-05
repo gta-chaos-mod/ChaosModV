@@ -4,6 +4,8 @@
 #include "Util/Text.h"
 #include "Util/TryParse.h"
 
+#include <json.hpp>
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -12,14 +14,12 @@
 class OptionsFile
 {
   private:
-	const char *m_FileName;
-	const char *m_FoundFileName;
-	std::vector<const char *> m_CompatFileNames;
-	std::unordered_map<std::string, std::string> m_Options;
+	std::vector<std::string_view> m_LookupFilePaths;
+	std::string_view m_FoundFilePath;
+	std::unordered_map<std::string, nlohmann::json::value_type> m_Options;
 
   public:
-	OptionsFile(const char *fileName, std::vector<const char *> compatFileNames = {})
-	    : m_FileName(fileName), m_FoundFileName(fileName), m_CompatFileNames(compatFileNames)
+	OptionsFile(std::vector<std::string_view> lookupFilePaths) : m_LookupFilePaths(lookupFilePaths)
 	{
 		Reset();
 	}
@@ -28,102 +28,146 @@ class OptionsFile
 	{
 		m_Options.clear();
 
-		auto readData = [&](const char *fileName)
+		bool dataRead = false;
+		for (auto filePath : m_LookupFilePaths)
 		{
-			std::ifstream file(fileName);
+			std::ifstream file(filePath.data());
 			if (file.fail())
-				return false;
+				continue;
 
-			std::string line;
-			line.resize(128);
-			while (file.getline(line.data(), 128))
+			DEBUG_LOG("Parsing config file \"" << filePath << "\"");
+
+			if (filePath.ends_with(".json"))
 			{
-				const auto &key = StringTrim(line.substr(0, line.find("=")));
-
-				// Ignore line if there's no "="
-				if (line == key)
-					continue;
-
-				const auto &value = StringTrim(
-				    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
-
-				m_Options.emplace(key, value);
-			}
-
-			return true;
-		};
-
-		if (!readData(m_FileName))
-		{
-			bool dataRead = false;
-			for (auto compatFileName : m_CompatFileNames)
-				if ((dataRead = readData(compatFileName)))
+				std::string fileContent;
+				file >> fileContent;
+				try
 				{
-					m_FoundFileName = compatFileName;
+					auto json = nlohmann::json::parse(fileContent);
+					for (const auto &[key, value] : json.items())
+						m_Options.emplace(key, value);
+				}
+				catch (nlohmann::json::exception &)
+				{
 					break;
 				}
+			}
+			else if (filePath.ends_with(".ini"))
+			{
+				std::string line;
+				line.resize(128);
+				while (file.getline(line.data(), 128))
+				{
+					const auto &key = StringTrim(line.substr(0, line.find("=")));
 
-			if (!dataRead)
-				LOG("Config file " << m_FileName << " not found!");
+					// Ignore line if there's no "="
+					if (line == key)
+						continue;
+
+					const auto &value = StringTrim(
+					    line.substr(line.find("=") + 1).substr(0, line.find('\n'))); // Also do trimming of newline
+
+					m_Options.emplace(key, value);
+				}
+			}
+			else
+			{
+				DEBUG_LOG("Config file \"" << filePath << "\" has invalid file extension, continuing search");
+				continue;
+			}
+
+			DEBUG_LOG("Parsed config file \"" << filePath << "\"");
+			m_FoundFilePath = filePath;
+			dataRead        = true;
+			break;
 		}
+
+		if (!dataRead)
+			LOG("Could not load config file " << m_LookupFilePaths[0] << "!");
 	}
 
 	inline void WriteFile()
 	{
-		std::ofstream file(m_FoundFileName, std::ofstream::out | std::ofstream::trunc);
+		const auto &filePath = m_LookupFilePaths[0];
+
+		auto dir             = filePath.substr(0, filePath.find_last_of('/'));
+		if (dir != filePath)
+			std::filesystem::create_directory(dir);
+		std::ofstream file(filePath.data(), std::ofstream::out | std::ofstream::trunc);
 		if (!file)
 		{
-			LOG("Couldn't write config file " << m_FoundFileName);
+			LOG("Couldn't write config file " << filePath << "!");
 			return;
 		}
-		for (auto &[key, value] : m_Options)
-			file << key << "=" << value << std::endl;
+
+		nlohmann::json json;
+		for (const auto &[key, value] : m_Options)
+			json[key] = value;
+		file << json.dump(4);
+
+		LOG("Wrote config file " << filePath);
+
+		for (const auto &filePath : m_LookupFilePaths)
+			if (filePath != m_FoundFilePath)
+			{
+				std::error_code error;
+				std::filesystem::remove(filePath, error);
+			}
 	}
 
-	template <typename T> inline T ReadValue(const std::string &key, T defaultValue) const
+	template <typename T> inline T ReadValue(const std::vector<std::string> &lookupKeys, T defaultValue = {}) const
 	{
-		return ReadValue(std::vector<std::string> { key }, defaultValue);
-	}
-
-	template <typename T> inline T ReadValue(const std::vector<std::string> &keys, T defaultValue) const
-	{
-		for (const auto &key : keys)
+		for (const auto &key : lookupKeys)
 		{
 			const auto &result = m_Options.find(key);
-
-			if (result != m_Options.end() && !result->second.empty())
+			if (result != m_Options.end())
 			{
-				T parsedResult;
-				if (Util::TryParse<T>(result->second, parsedResult))
-					return parsedResult;
+				DEBUG_LOG("Reading value of key \"" << key << "\" from config file \"" << m_FoundFilePath << "\"");
+
+				try
+				{
+					const auto &value = result->second;
+					if constexpr (std::is_base_of<char *, T>() || std::is_base_of<std::string, T>())
+					{
+						if (!value.is_string())
+							return defaultValue;
+
+						return value;
+					}
+					else if (value.is_string())
+					{
+						T parsedResult;
+						std::string strValue = value;
+						if (!Util::TryParse<T>(strValue.c_str(), parsedResult))
+							return defaultValue;
+
+						return parsedResult;
+					}
+
+					return value;
+				}
+				catch (nlohmann::json::exception &)
+				{
+					// We aren't interested in potential other matches
+					LOG("WARNING: Config file \"" << m_FoundFilePath << "\" has invalid value for key \"" << key
+					                              << "\", reverting to default value!");
+					break;
+				}
 			}
 		}
 
 		return defaultValue;
 	}
 
-	inline std::string ReadValueString(const std::vector<std::string> &keys, const std::string &defaultValue = {}) const
-	{
-		for (const auto &key : keys)
-		{
-			const auto &result = m_Options.find(key);
-
-			if (result != m_Options.end())
-				return result->second;
-		}
-
-		return defaultValue;
-	}
-
-	inline void SetValueString(const std::string &key, const std::string &value)
-	{
-		if (m_Options.contains(key))
-			m_Options[key] = value;
-		else
-			m_Options.emplace(key, value);
-	}
 	template <typename T> inline void SetValue(const std::string &key, T value)
 	{
-		SetValueString(key, std::to_string(value));
+		DEBUG_LOG("Writing value \"" << value << "\" for key \"" << key << "\" to config file \""
+		                             << m_LookupFilePaths[0] << "\"");
+		m_Options[key] = value;
+	}
+
+	inline std::string_view GetFoundFileName() const
+	{
+		return m_FoundFilePath;
 	}
 };

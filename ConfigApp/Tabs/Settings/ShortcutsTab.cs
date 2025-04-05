@@ -46,15 +46,15 @@ namespace ConfigApp.Tabs.Settings
         public override void OnLoadValues()
         {
             if (m_EnableToggleModShortcut is not null)
-                m_EnableToggleModShortcut.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableToggleModShortcut", true);
+                m_EnableToggleModShortcut.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableToggleModShortcut", true);
             if (m_EnableClearActiveEffectsShortcut is not null)
-                m_EnableClearActiveEffectsShortcut.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableClearEffectsShortcut", true);
+                m_EnableClearActiveEffectsShortcut.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableClearEffectsShortcut", true);
             if (m_EnablePauseTimerShortcut is not null)
-                m_EnablePauseTimerShortcut.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnablePauseTimerShortcut", false);
+                m_EnablePauseTimerShortcut.IsChecked = OptionsManager.ConfigFile.ReadValue("EnablePauseTimerShortcut", false);
             if (m_EnableEffectsMenu is not null)
-                m_EnableEffectsMenu.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableDebugMenu", false);
+                m_EnableEffectsMenu.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableDebugMenu", false);
             if (m_EnableAntiSoftlockShortcut is not null)
-                m_EnableAntiSoftlockShortcut.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EnableAntiSoftlockShortcut", true);
+                m_EnableAntiSoftlockShortcut.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableAntiSoftlockShortcut", true);
         }
 
         public override void OnSaveValues()

@@ -26,9 +26,9 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         public DiscordVotingReceiver(OptionsFile config, ChaosPipeClient chaosPipe)
         {
-            m_BotToken = config.ReadValue("DiscordBotToken");
-            m_GuildId = (ulong)config.ReadValueLong("DiscordGuildId", 0);
-            m_ChannelId = (ulong)config.ReadValueLong("DiscordChannelId", 0);
+            m_BotToken = config.ReadValue<string>("DiscordBotToken");
+            m_GuildId = config.ReadValue<ulong>("DiscordGuildId", 0);
+            m_ChannelId = config.ReadValue<ulong>("DiscordChannelId", 0);
 
             m_ChaosPipe = chaosPipe;
         }

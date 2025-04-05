@@ -11,8 +11,7 @@ class Random
   public:
 	inline void SetSeed(int seed)
 	{
-		if (seed > 0)
-			m_Random.seed(seed);
+		m_Random.seed(seed);
 	}
 
 	inline int GetRandomInt(int lower, int upper)

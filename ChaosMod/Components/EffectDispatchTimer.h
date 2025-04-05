@@ -40,6 +40,8 @@ class EffectDispatchTimer : public Component
 	bool IsTimerEnabled() const;
 	void SetTimerEnabled(bool state);
 
+	void ResetSavedPosition();
+
 	std::uint64_t GetTimer() const;
 	void ResetTimer();
 

@@ -72,7 +72,7 @@ static void _DispatchEffect(EffectDispatcher *effectDispatcher, const EffectDisp
 
 	for (auto &activeEffect : effectDispatcher->SharedState.ActiveEffects)
 	{
-		if (activeEffect.Id == entry.Id)
+		if (activeEffect.Id == entry.Id && !activeEffect.IsZombie)
 		{
 			if (effectData.TimedType != EffectTimedType::NotTimed)
 			{
@@ -250,7 +250,7 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 
 	for (const auto &[effectId, effectData] : g_EnabledEffects)
 	{
-		if (!effectData.IsMeta() && !effectData.IsUtility())
+		if (!effectData.IsMeta() && !effectData.IsUtility() && effectData.TimedType != EffectTimedType::Permanent)
 		{
 			// There's at least 1 enabled non-permanent effect, enable timer
 			m_EnableNormalEffectDispatch = true;
@@ -265,7 +265,8 @@ EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const s
 
 void EffectDispatcher::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
-	ClearEffects();
+	if (!(cleanupFlags & PauseCleanupFlags_UnsafeCleanup))
+		ClearEffects();
 }
 
 void EffectDispatcher::OnRun()
@@ -663,13 +664,8 @@ void EffectDispatcher::RegisterPermanentEffects()
 		registerEffect({ "player_flip_camera" });
 
 	for (const auto &[effectId, effectData] : g_EnabledEffects)
-	{
 		if (effectData.TimedType == EffectTimedType::Permanent)
-		{
-			// Always run permanent timed effects in background
 			registerEffect(effectId);
-		}
-	}
 }
 
 bool EffectDispatcher::IsClearingEffects() const

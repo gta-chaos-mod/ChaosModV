@@ -32,22 +32,22 @@ namespace TwitchChatVotingProxy
             m_Logger.Information("Starting chaos mod twitch proxy");
             m_Logger.Information("===============================");
 
-            var config = new OptionsFile("chaosmod/configs/voting.ini", "chaosmod/configs/twitch.ini", "chaosmod/twitch.ini");
+            var config = new OptionsFile("chaosmod/configs/voting.json", "chaosmod/configs/voting.ini", "chaosmod/configs/twitch.ini", "chaosmod/twitch.ini");
             config.ReadFile();
 
             var mutex = new Mutex(false, "ChaosModVVotingMutex");
             mutex.WaitOne();
 
-            var votingMode = (EVotingMode)config.ReadValueInt("VotingChanceSystem", 0, "TwitchVotingChanceSystem");
-            var overlayMode = (EOverlayMode)config.ReadValueInt("VotingOverlayMode", 0, "TwitchVotingOverlayMode");
-            var retainInitialVotes = config.ReadValueBool("VotingChanceSystemRetainChance", false, "TwitchVotingChanceSystemRetainChance");
+            var votingMode = (EVotingMode)config.ReadValue("VotingChanceSystem", 0, "TwitchVotingChanceSystem");
+            var overlayMode = (EOverlayMode)config.ReadValue("VotingOverlayMode", 0, "TwitchVotingOverlayMode");
+            var retainInitialVotes = config.ReadValue("VotingChanceSystemRetainChance", false, "TwitchVotingChanceSystemRetainChance");
 
             // Check if OBS overlay should be shown
             OverlayServer.OverlayServer? overlayServer = null;
             if (overlayMode == EOverlayMode.OVERLAY_OBS)
             {
                 // Create component
-                var overlayServerPort = config.ReadValueInt("OverlayServerPort", 9091);
+                var overlayServerPort = config.ReadValue("OverlayServerPort", 9091);
                 var overlayServerConfig = new OverlayServerConfig(votingMode, retainInitialVotes, overlayServerPort);
                 overlayServer = new OverlayServer.OverlayServer(overlayServerConfig);
             }
@@ -56,9 +56,9 @@ namespace TwitchChatVotingProxy
             var chaosPipe = new ChaosPipeClient();
 
             var votingReceivers = new List<(string Name, IVotingReceiver VotingReceiver)>();
-            if (config.ReadValueBool("EnableVotingTwitch", false))
+            if (config.ReadValue("EnableVotingTwitch", false))
                 votingReceivers.Add(("Twitch", new TwitchVotingReceiver(config, chaosPipe)));
-            if (config.ReadValueBool("EnableVotingDiscord", false))
+            if (config.ReadValue("EnableVotingDiscord", false))
                 votingReceivers.Add(("Discord", new DiscordVotingReceiver(config, chaosPipe)));
 
             foreach (var votingReceiver in votingReceivers)

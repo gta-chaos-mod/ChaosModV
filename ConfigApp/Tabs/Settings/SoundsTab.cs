@@ -32,7 +32,7 @@ namespace ConfigApp.Tabs.Settings
         public override void OnLoadValues()
         {
             if (m_UseMCI is not null)
-                m_UseMCI.IsChecked = OptionsManager.ConfigFile.ReadValueBool("EffectSoundUseMCI", false);
+                m_UseMCI.IsChecked = OptionsManager.ConfigFile.ReadValue("EffectSoundUseMCI", false);
         }
 
         public override void OnSaveValues()

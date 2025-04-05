@@ -19,7 +19,7 @@ class CrossingChallenge : public Component
 		int ammo;
 	};
 
-	OptionsFile m_ConfigFile { "chaosmod/configs/crossing.ini", { "chaosmod/crossing.ini" } };
+	OptionsFile m_ConfigFile { { "chaosmod/configs/cached/crossingchallenge.json", "chaosmod/crossing.ini" } };
 
 	bool m_Enabled              = false;
 

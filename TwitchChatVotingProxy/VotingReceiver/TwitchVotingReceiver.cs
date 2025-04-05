@@ -30,9 +30,9 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         public TwitchVotingReceiver(OptionsFile config, ChaosPipeClient chaosPipe)
         {
-            m_ChannelName = config.ReadValue("TwitchChannelName");
-            m_OAuth = config.ReadValue("TwitchChannelOAuth");
-            m_UserName = config.ReadValue("TwitchUserName");
+            m_ChannelName = config.ReadValue<string>("TwitchChannelName");
+            m_OAuth = config.ReadValue<string>("TwitchChannelOAuth");
+            m_UserName = config.ReadValue<string>("TwitchUserName");
 
             m_ChaosPipe = chaosPipe;
         }

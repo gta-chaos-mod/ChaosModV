@@ -7,6 +7,7 @@ using System.Windows.Media;
 using ConfigApp.Tabs;
 using ConfigApp.Tabs.Settings;
 using ConfigApp.Tabs.Voting;
+using Newtonsoft.Json.Linq;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -160,25 +161,29 @@ namespace ConfigApp
         private void ParseConfigFile()
         {
             // Meta Effects
-            meta_effects_spawn_dur.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", "600");
-            meta_effects_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", "95");
-            meta_effects_short_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", "65");
+            meta_effects_spawn_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600)}";
+            meta_effects_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95)}";
+            meta_effects_short_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65)}";
         }
 
         private void WriteConfigFile()
         {
             // Meta Effects
-            OptionsManager.ConfigFile.WriteValue("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
-            OptionsManager.ConfigFile.WriteValue("MetaEffectDur", meta_effects_timed_dur.Text);
-            OptionsManager.ConfigFile.WriteValue("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("MetaEffectDur", meta_effects_timed_dur.Text);
+            OptionsManager.ConfigFile.WriteValueAsInt("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
         }
 
         private void ParseEffectsFile()
         {
+            bool isJson = OptionsManager.EffectsFile.FoundFilePath.EndsWith(".json");
             foreach (string key in OptionsManager.EffectsFile.GetKeys())
             {
-                var value = OptionsManager.EffectsFile.ReadValue(key);
-                var effectData = Utils.ValueStringToEffectData(value);
+                EffectData effectData;
+                if (isJson)
+                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<JArray>(key));
+                else
+                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
 
                 m_EffectDataMap?.Add(key, effectData);
             }
@@ -186,18 +191,23 @@ namespace ConfigApp
 
         private void WriteEffectsFile()
         {
-            foreach (var pair in EffectsMap)
+            foreach (var (effectId, _) in EffectsMap)
             {
-                var effectData = GetEffectData(pair.Key);
+                var effectData = GetEffectData(effectId);
 
-                OptionsManager.EffectsFile.WriteValue(pair.Key, $"{(m_TreeMenuItemsMap?[pair.Key].IsChecked is true ? 1 : 0)}"
-                    + $",{(int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed)}"
-                    + $",{effectData.CustomTime.GetValueOrDefault(0)}"
-                    + $",{effectData.WeightMult.GetValueOrDefault(0)}"
-                    + $",{(effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent ? 1 : 0)}"
-                    + $",{(effectData.ExcludedFromVoting.GetValueOrDefault(false) ? 1 : 0)}"
-                    + $",\"{(string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName)}\""
-                    + $",{effectData.ShortcutKeycode.GetValueOrDefault(0)}");
+                var jsonArray = new JArray
+                {
+                    m_TreeMenuItemsMap?[effectId].IsChecked,
+                    (int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed),
+                    effectData.CustomTime.GetValueOrDefault(0),
+                    effectData.WeightMult.GetValueOrDefault(0),
+                    effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent,
+                    effectData.ExcludedFromVoting.GetValueOrDefault(false),
+                    string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName,
+                    effectData.ShortcutKeycode.GetValueOrDefault(0)
+                };
+
+                OptionsManager.EffectsFile.WriteValue(effectId, jsonArray);
             }
 
             OptionsManager.EffectsFile.WriteFile();
@@ -347,12 +357,35 @@ namespace ConfigApp
 
         private void OnUserSaveClick(object sender, RoutedEventArgs e)
         {
-            if (OptionsManager.ConfigFile.HasCompatFile("config.ini") || OptionsManager.TwitchFile.HasCompatFile("twitch.ini")
-                || OptionsManager.EffectsFile.HasCompatFile("effects.ini"))
-                if (MessageBox.Show("Note: Config files reside inside the configs/ subdirectory now. Clicking OK will move the files there. " +
+            // Config migration stuff
+            bool oldIniFilesExist = false;
+            if (OptionsManager.ConfigFile.FoundFilePath == "config.ini" || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "effects.ini")
+            {
+                oldIniFilesExist = true;
+                if (MessageBox.Show("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. " +
                     "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
                     != MessageBoxResult.OK)
                     return;
+            }
+
+            if (oldIniFilesExist || OptionsManager.ConfigFile.FoundFilePath == "configs/config.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/twitch.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/voting.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini")
+            {
+                oldIniFilesExist = true;
+                if (MessageBox.Show("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. " +
+                    "This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
+                 != MessageBoxResult.OK)
+                    return;
+            }
+
+            if (oldIniFilesExist)
+            {
+                Directory.CreateDirectory("configs/old");
+                File.Move(OptionsManager.ConfigFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.ConfigFile.FoundFilePath)}", true);
+                File.Move(OptionsManager.VotingFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.VotingFile.FoundFilePath)}", true);
+                File.Move(OptionsManager.EffectsFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.EffectsFile.FoundFilePath)}", true);
+            }
 
             WriteConfigFile();
             WriteEffectsFile();
@@ -384,7 +417,7 @@ namespace ConfigApp
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
-                    OptionsManager.TwitchFile.ResetFile();
+                    OptionsManager.VotingFile.ResetFile();
 
                 Init();
 

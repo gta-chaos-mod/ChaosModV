@@ -190,13 +190,14 @@ enum class LuaNativeReturnType
 	None,
 	Bool,
 	Int,
+	UInt,
 	Float,
 	String,
 	Vector3
 };
 
-_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, std::uint64_t nativeHash,
-                                      LuaNativeReturnType returnType, const sol::variadic_args &args)
+_LUAFUNC static sol::object LuaInvoke(const sol::environment &env, uint64_t nativeHash, LuaNativeReturnType returnType,
+                                      const sol::variadic_args &args)
 {
 	if (nativeHash == 0x213AEB2B90CBA7AC || nativeHash == 0x5A5F40FE637EB584 || nativeHash == 0x933D6A9EEC1BACD0
 	    || nativeHash == 0xE80492A9AC099A93 || nativeHash == 0x8EF07E15701D61ED)
@@ -255,6 +256,8 @@ _LUAFUNC static sol::object LuaInvoke(const sol::environment &env, std::uint64_t
 		case LuaNativeReturnType::Bool:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<bool *>(returned));
 		case LuaNativeReturnType::Int:
+			return sol::make_object(env.lua_state(), *reinterpret_cast<int *>(returned));
+		case LuaNativeReturnType::UInt:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<int *>(returned));
 		case LuaNativeReturnType::Float:
 			return sol::make_object(env.lua_state(), *reinterpret_cast<float *>(returned));
@@ -468,7 +471,7 @@ LuaScripts::LuaScripts()
 
 	if (allowEvalNativeInvocations)
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
@@ -479,7 +482,7 @@ LuaScripts::LuaScripts()
 	}
 	else
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			LOG("WARNING: Blocked invocation of native 0x" << std::uppercase << std::hex << hash << std::setfill(' ')
@@ -517,7 +520,7 @@ LuaScripts::LuaScripts()
 
 	if (!allowEvalNativeInvocations)
 	{
-		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, std::uint64_t hash,
+		m_GlobalState["_invoke"] = [](const sol::this_environment &curEnv, uint64_t hash,
 		                              LuaNativeReturnType returnType, const sol::variadic_args &args)
 		{
 			return LuaInvoke(curEnv, hash, returnType, args);
@@ -585,10 +588,10 @@ void LuaScripts::SetupGlobalState()
 	m_GlobalState = {};
 	m_GlobalState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::bit32);
 
-	m_GlobalState["ReturnType"] =
-	    m_GlobalState.create_table_with("None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool,
-	                                    "Integer", LuaNativeReturnType::Int, "String", LuaNativeReturnType::String,
-	                                    "Float", LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
+	m_GlobalState["ReturnType"] = m_GlobalState.create_table_with(
+	    "None", LuaNativeReturnType::None, "Boolean", LuaNativeReturnType::Bool, "Integer", LuaNativeReturnType::Int,
+	    "UnsignedInteger", LuaNativeReturnType::UInt, "String", LuaNativeReturnType::String, "Float",
+	    LuaNativeReturnType::Float, "Vector3", LuaNativeReturnType::Vector3);
 
 	if (ms_NativesDefCache.empty() && DoesFileExist(LUA_NATIVESDEF))
 	{
@@ -602,8 +605,9 @@ void LuaScripts::SetupGlobalState()
 		m_GlobalState.unsafe_script(ms_NativesDefCache);
 
 	m_GlobalState.new_usertype<LuaHolder>("_Holder", "IsValid", &LuaHolder::IsValid, "AsBoolean", &LuaHolder::As<bool>,
-	                                      "AsInteger", &LuaHolder::As<int>, "AsFloat", &LuaHolder::As<float>,
-	                                      "AsString", &LuaHolder::As<char *>, "AsVector3", &LuaHolder::As<LuaVector3>);
+	                                      "AsInteger", &LuaHolder::As<int>, "AsUnsignedInteger", &LuaHolder::As<uint>,
+	                                      "AsFloat", &LuaHolder::As<float>, "AsString", &LuaHolder::As<char *>,
+	                                      "AsVector3", &LuaHolder::As<LuaVector3>);
 	m_GlobalState["Holder"] = sol::overload(Generate<LuaHolder>, Generate<LuaHolder, const sol::object &>);
 
 	m_GlobalState.new_usertype<LuaVector3>("_Vector3", "x", &LuaVector3::X, "y", &LuaVector3::Y, "z", &LuaVector3::Z);
@@ -623,17 +627,19 @@ LuaScripts::ParseScriptReturnReason
 LuaScripts::ParseScript(std::string scriptName, const std::string &script, ParseScriptFlags flags,
                         std::unordered_map<std::string, nlohmann::json> settingOverrides)
 {
-	sol::environment env(m_GlobalState, sol::create, m_GlobalState.globals());
+	auto thread      = sol::thread::create(m_GlobalState);
+	auto threadState = thread.state();
+	sol::environment threadEnv(threadState, sol::create, threadState.globals());
 
-	auto envInfoTable     = env.create_named("EnvInfo");
-	auto envInfoMetaTable = env.create_with("ScriptName", scriptName);
+	auto envInfoTable     = threadEnv.create_named("EnvInfo");
+	auto envInfoMetaTable = threadEnv.create_with("ScriptName", scriptName);
 	envInfoMetaTable[sol::meta_function::new_index] = [] {};
 	envInfoMetaTable[sol::meta_function::index] = envInfoMetaTable;
 	envInfoTable[sol::metatable_key]            = envInfoMetaTable;
 
 	auto scriptResult                           = flags & ParseScriptFlag_ScriptIsFilePath
-	                                                ? m_GlobalState.safe_script_file(std::string(script), env)
-	                                                : m_GlobalState.safe_script(script, env);
+	                                                ? threadState.safe_script_file(std::string(script), threadEnv)
+	                                                : threadState.safe_script(script, threadEnv);
 	if (!scriptResult.valid())
 	{
 		const sol::error &error = scriptResult;
@@ -642,7 +648,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		return ParseScriptReturnReason::Error;
 	}
 
-	const sol::optional<sol::table> &effectGroupInfoOpt = env["EffectGroupInfo"];
+	const sol::optional<sol::table> &effectGroupInfoOpt = threadEnv["EffectGroupInfo"];
 	if (effectGroupInfoOpt)
 	{
 		const auto &effectGroupInfo                    = *effectGroupInfoOpt;
@@ -683,11 +689,11 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 			}
 		}
 	}
-	sol::optional<sol::table> effectInfoOpt = env["EffectInfo"];
+	sol::optional<sol::table> effectInfoOpt = threadEnv["EffectInfo"];
 	if (!effectInfoOpt)
 	{
 		// Backwards compatibility
-		effectInfoOpt = env["ScriptInfo"].get<sol::optional<sol::table>>();
+		effectInfoOpt = threadEnv["ScriptInfo"].get<sol::optional<sol::table>>();
 		if (!effectInfoOpt)
 			return ParseScriptReturnReason::Error;
 	}
@@ -784,14 +790,13 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		}
 		else if (timedTypeText == "Permanent")
 		{
-			effectData.TimedType = EffectTimedType::Permanent;
-
 			if (flags & ParseScriptFlag_IsTemporary)
 			{
-				LUA_SCRIPT_LOG(scriptName, "ERROR: TimedType \"Permanent\" for effect \""
-				                               << effectName
-				                               << "\" is invalid for temporary effects, please use another TimedType!");
+				effectData.TimedType  = EffectTimedType::Custom;
+				effectData.CustomTime = std::numeric_limits<decltype(effectData.CustomTime)>::max();
 			}
+			else
+				effectData.TimedType = EffectTimedType::Permanent;
 		}
 		else if (timedTypeText == "Custom")
 		{
@@ -934,7 +939,7 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 	// Exclude temporary effects from choices pool
 	effectData.SetAttribute(EffectAttributes::IsTemporary, flags & ParseScriptFlag_IsTemporary);
 
-	m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, env, flags & ParseScriptFlag_IsTemporary));
+	m_RegisteredEffects.emplace(effectId, LuaScript(scriptName, threadEnv, flags & ParseScriptFlag_IsTemporary));
 	g_EnabledEffects.emplace(effectId, effectData);
 	g_RegisteredEffects.emplace_back(effectId);
 
