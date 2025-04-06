@@ -19,7 +19,7 @@ static void OnStart()
 	{
 		for (int i = 0; i < 821; i++) // 821 = Max Water Items
 		{
-			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
+			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Height
 			WaterQuads[i].Z = -1000.0f;              // Remove Water
 		}
 	}
@@ -29,9 +29,11 @@ static void OnStop()
 {
 	if (WaterQuads)
 	{
-		for (int i = 0; i < 821; i++)             // 821 = Max Water Items
-			WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
-		WaterHeights.clear();                     // Clear Storage Vector
+		for (int i = 0; i < 821; i++) // 821 = Max Water Items
+		{
+			WaterQuads[i].Z    = WaterHeights.at(i); // Restore Water
+			WaterHeights.at(i) = 0.0f;               // Clear Saved Height
+		}
 	}
 }
 
