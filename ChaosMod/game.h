@@ -75,7 +75,7 @@ inline bool DetectByFilename()
 	GetModuleFileName(nullptr, moduleName, MAX_PATH);
 	std::wstring ws(moduleName);
 
-	if (ws.find(L"_Enhanced.exe") != std::wstring::npos)
+	if (ws.ends_with(L"_Enhanced.exe"))
 	{
 		LOG("Enhanced Version Detected With Filename Check");
 		return true;
