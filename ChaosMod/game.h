@@ -17,7 +17,7 @@ struct RSDSHeader
 	DWORD Signature;
 	GUID Guid;
 	DWORD Age;
-	char PdbFileName[1]; // Variable-length array
+	char PdbFileName[1];
 };
 #pragma pack(pop)
 
