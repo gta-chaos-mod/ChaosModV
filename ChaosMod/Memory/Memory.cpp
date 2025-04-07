@@ -250,8 +250,7 @@ namespace Memory
 	{
 		static auto globalPtr = []() -> DWORD64 **
 		{
-			auto handle =
-			    FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11", "48 8D 3D ?? ?? ?? ?? 31 ED 4C 8D 25");
+			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11", "48 8D 3D ? ? ? ? 31 ED 4C 8D 25");
 			if (!handle.IsValid())
 				return nullptr;
 
@@ -304,7 +303,8 @@ namespace Memory
 	{
 		static auto gameBuild = []() -> std::string
 		{
-			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48", "48 8D 0D ?? ?? ?? ?? 48 8D 15 ?? ?? ?? ?? 4C 8D 44 24 2C E8");
+			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48",
+			                                  "48 8D 0D ? ? ? ? 48 8D 15 ? ? ? ? 4C 8D 44 24 2C E8");
 			if (!handle.IsValid())
 				return {};
 

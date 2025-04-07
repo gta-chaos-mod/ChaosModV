@@ -52,7 +52,7 @@ void _HK_rage__audSound__CombineBuffers(void *_this, __int64 combineBuffer)
 
 static bool OnHook()
 {
-	auto handle = Memory::FindPattern("E8 ?? ?? ?? ?? 48 8B CE 44 89 7E 54", "E8 ?? ?? ?? ?? 44 89 77 54");
+	auto handle = Memory::FindPattern("E8 ? ? ? ? 48 8B CE 44 89 7E 54", "E8 ? ? ? ? 44 89 77 54");
 	if (!handle.IsValid())
 		return false;
 
@@ -91,6 +91,7 @@ namespace Hooks
 		ms_OverrideLPFCutoff.doOverride  = true;
 		ms_OverrideLPFCutoff.targetValue = value;
 	}
+
 	void ResetAudioLPFCutoff()
 	{
 		ms_OverrideLPFCutoff.doOverride = false;
@@ -101,6 +102,7 @@ namespace Hooks
 		ms_OverrideHPFCutoff.doOverride  = true;
 		ms_OverrideHPFCutoff.targetValue = value;
 	}
+
 	void ResetAudioHPFCutoff()
 	{
 		ms_OverrideHPFCutoff.doOverride = false;
@@ -111,6 +113,7 @@ namespace Hooks
 		ms_OverrideVolume.doOverride  = true;
 		ms_OverrideVolume.targetValue = static_cast<int>(value);
 	}
+
 	void ResetAudioVolume()
 	{
 		ms_OverrideVolume.doOverride = false;

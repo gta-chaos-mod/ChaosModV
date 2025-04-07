@@ -13,6 +13,7 @@ struct ChangeSetEntry
 	int type;
 	// ...
 };
+
 void (*OG_ApplyChangeSetEntryStub)(ChangeSetEntry *entry);
 void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 {
