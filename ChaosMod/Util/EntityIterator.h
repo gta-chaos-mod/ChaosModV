@@ -304,7 +304,7 @@ inline auto &GetAllPeds()
 		}
 		else
 		{
-			auto handle       = Memory::FindPattern("0F B6 05 ?? ?? ?? ?? A8 01 75 0F 45 31 F6");
+			auto handle       = Memory::FindPattern("0F B6 05 ?? ?? ?? ?? A8 01 75 1E");
 			auto encryptedPtr = PedPoolEncryptedPointer(handle.At(2).Into().Addr());
 			return encryptedPtr.GetPool();
 		}
