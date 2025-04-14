@@ -29,30 +29,44 @@ namespace Memory
 		if (DoesFeatureFlagExist("skipintro"))
 		{
 			// Splash screen
-			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
+			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D", "0F 85 A9 00 00 00 48 8D 54");
 			if (!handle.IsValid())
 			{
 				LOG("SkipIntro: Failed to patch splash screen!");
 			}
 			else
 			{
-				Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
-
+				if (IsLegacy())
+					Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+				else
+				{
+					// jz -> jmp
+					Write<BYTE>(handle.At(-0xD).Get<BYTE>(), 0xE9);
+					Write<BYTE>(handle.At(-0xC).Get<BYTE>(), 0x86);
+					Write<BYTE>(handle.At(-0xB).Get<BYTE>(), 0x01);
+					Write<BYTE>(handle.At(-0xA).Get<BYTE>(), 0x00);
+					// extra nop just in case
+					Write<BYTE>(handle.At(-0x8).Get<BYTE>(), 0x90);
+				}
 				LOG("SkipIntro: Patched splash screen");
 			}
 
 			// Legal screen
-			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01");
+			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01", "E9 6B 05 00 00 E8");
 			if (!handle.IsValid())
 			{
 				LOG("SkipIntro: Failed to patch legal screen!");
 			}
 			else
 			{
-				handle = handle.Into();
-
-				Write<BYTE>(handle.Get<BYTE>(), 0xC3);
-				Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+				if (IsLegacy())
+				{
+					handle = handle.Into();
+					Write<BYTE>(handle.Get<BYTE>(), 0xC3);
+					Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+				}
+				else
+					Write<BYTE>(handle.At(-0x10).Get<BYTE>(), 0x90, 6);
 
 				LOG("SkipIntro: Patched legal screen");
 			}
