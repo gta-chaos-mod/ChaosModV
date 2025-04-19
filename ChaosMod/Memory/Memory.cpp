@@ -60,14 +60,18 @@ namespace Memory
 
 		if (DoesFeatureFlagExist("skipdlcs"))
 		{
-			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01");
+			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01",
+			                            "E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 89 D9 E8 ? ? ? ? EB 03");
 			if (!handle.IsValid())
 			{
 				LOG("SkipDLCs: Failed to patch DLC loading!");
 			}
 			else
 			{
-				Write<BYTE>(handle.At(24).Get<BYTE>(), 0x90, 24);
+				if (IsEnhanced())
+					Write<BYTE>(handle.Get<BYTE>(), 0x90, 5);
+				else
+					Write<BYTE>(handle.At(24).Get<BYTE>(), 0x90, 24);
 
 				LOG("SkipDLCs: Patched DLC loading");
 			}
