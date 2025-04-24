@@ -135,14 +135,14 @@ namespace Memory
 		static auto brakeStateOffset = []() -> WORD
 		{
 			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53",
-			                          "f3 0f 11 86 ? ? ? ? e9 ? ? ? ? 90 e4");
+			                          "f3 41 0f 10 80 ? ? ? ? 0f 57 c9 0f 2e c1 75 ? 7a ? 41 80 b8");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle brake state offset not found!");
 				return 0;
 			}
 
-			return handle.At(4).Value<std::uint16_t>();
+			return handle.At(IsLegacy() ? 4 : 5).Value<std::uint16_t>();
 		}();
 
 		auto result = GetScriptHandleBaseAddress(vehicle);
