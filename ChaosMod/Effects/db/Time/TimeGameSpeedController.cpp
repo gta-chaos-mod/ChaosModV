@@ -1,7 +1,7 @@
 #include <stdafx.h>
 
 #include "Effects/Register/RegisterEffect.h"
-#include "Memory/Hooks/AudioPitchHook.h"
+#include "Memory/Hooks/AudioSettingsHook.h"
 
 static void OnStop()
 {
@@ -18,7 +18,7 @@ static void OnTickX02()
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", true);
 
-	Hooks::SetAudioPitch(-900);
+	Hooks::SetAudioPitchFromSpeedMult(.2f);
 
 	SET_TIME_SCALE(.2f);
 }
@@ -41,7 +41,7 @@ static void OnTickX05()
 	SET_AUDIO_FLAG("AllowScriptedSpeechInSlowMo", true);
 	SET_AUDIO_FLAG("AllowAmbientSpeechInSlowMo", true);
 
-	Hooks::SetAudioPitch(-500);
+	Hooks::SetAudioPitchFromSpeedMult(.5f);
 
 	SET_TIME_SCALE(.5f);
 }

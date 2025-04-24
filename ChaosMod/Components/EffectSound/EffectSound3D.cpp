@@ -2,7 +2,7 @@
 
 #include "EffectSound3D.h"
 
-#include "Memory/Hooks/AudioPitchHook.h"
+#include "Memory/Hooks/AudioSettingsHook.h"
 #include "Util/Camera.h"
 
 #define MINIAUDIO_IMPLEMENTATION

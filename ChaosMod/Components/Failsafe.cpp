@@ -30,7 +30,7 @@ Failsafe::Failsafe() : Component()
 		    if (!ms_SearchedForMissionStateGlobal && !ms_StateGlobalIdx && !strcmp(thread->GetName(), "main"))
 		    {
 			    auto program = Memory::ScriptThreadToProgram(thread);
-			    if (program->m_CodeBlocks)
+			    if (program && program->m_CodeBlocks)
 			    {
 				    ms_SearchedForMissionStateGlobal = true;
 

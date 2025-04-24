@@ -143,13 +143,13 @@ namespace Memory
 		inline bool InitBones()
 		{
 			static const Handle handle =
-			    Memory::FindPattern("0F BE 5E 06 48 8B CF FF 50 ?? 8B D3 48 8B C8 E8 ?? ?? ?? ?? 8B 4E ??");
+			    Memory::FindPattern("0F BE 5E 06 48 8B CF FF 50 ?? 8B D3 48 8B C8 E8 ?? ?? ?? ?? 8B 4E ??", "0F BE 56 06 48 89 C1 E8 ?? ?? ?? ?? 48 89 C3");
 
 			if (!handle.IsValid())
 				return false;
 
-			getFragInstVFuncOffset        = handle.At(9).Value<BYTE>();
-			detachFragmentPartByIndexFunc = handle.At(15).Into().Get<bool(FragInst *, int)>();
+			getFragInstVFuncOffset        = handle.At(IsLegacy() ? 9 : -1).Value<BYTE>();
+			detachFragmentPartByIndexFunc = handle.At(IsLegacy() ? 15 : 7).Into().Get<bool(FragInst *, int)>();
 
 			return true;
 		}

@@ -53,11 +53,7 @@ static bool OnHook()
 		                           }
 	                           });
 
-	Handle handle;
-
-	//
-
-	handle = Memory::FindPattern("E8 ? ? ? ? 48 89 83 28 02 00 00 8B 44 24 30 89 83 30 02 00 00 EB 0F");
+	Handle handle = Memory::FindPattern("E8 ? ? ? ? 48 89 83 28 02 00 00 8B 44 24 30 89 83 30 02 00 00 EB 0F");
 	if (!handle.IsValid())
 		return false;
 

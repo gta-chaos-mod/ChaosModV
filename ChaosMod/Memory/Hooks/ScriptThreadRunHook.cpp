@@ -35,7 +35,7 @@ __int64 HK_rage__scrThread__Run(rage::scrThread *thread)
 			ms_OnlineVehicleDespawnPatchAddr      = 0;
 
 			auto program                          = Memory::ScriptThreadToProgram(thread);
-			if (program->m_CodeBlocks)
+			if (program && program->m_CodeBlocks)
 			{
 				// Thanks to rainbomizer
 				auto handle = Memory::FindScriptPattern("2D ? ? 00 ? 38 00 5D ? ? ? 06 56 ? ? 2E 01 00", program);
@@ -76,7 +76,8 @@ static bool OnHook()
 	Handle handle;
 
 	handle = Memory::FindPattern(
-	    "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 ? 00 00 00");
+	    "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 20 48 8D 81 ? 00 00 00",
+	    "41 57 41 56 41 54 56 57 53 48 83 EC 28 48 89 CE 48 8D 81");
 	if (!handle.IsValid())
 		return false;
 

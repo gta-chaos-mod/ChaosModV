@@ -5,7 +5,7 @@
 #include <stdafx.h>
 
 #include "Effects/Register/RegisterEffect.h"
-#include "Memory/Hooks/AudioPitchHook.h"
+#include "Memory/Hooks/AudioSettingsHook.h"
 
 static void OnStop()
 {

@@ -13,62 +13,41 @@ namespace Memory
 	{
 		/* Thanks to menyoo! */
 
-		static bool init      = false;
-
 		static bool isPre3095 = getGameVersion() < eGameVersion::VER_1_0_3095_0;
-		auto snowPattern1 =
-		    isPre3095 ? "80 3D ?? ?? ?? ?? 00 74 25 B9 40 00 00 00" : "44 38 ?? ?? ?? ?? 01 74 12 B9 40 00 00 00";
-		static auto handle = FindPattern(snowPattern1);
-		if (!handle.IsValid())
+		auto snowPattern1     = isPre3095 ? "75 17 80 3D ?? ?? ?? ?? ?? 74 25"
+		                                  : "75 ? 44 38 3d ? ? ? ? 74 ? b9 ? ? ? ? e8 ? ? ? ? 84 c0 74 ? 84 db";
+		static auto handle1   = FindPattern(snowPattern1, "75 0D 80 3D ?? ?? ?? ?? ?? 75 35");
+		if (!handle1.IsValid())
 			return;
 
-		static auto addr1 = handle.Addr();
-		static BYTE orig1[13];
-
-		if (!init && addr1)
-			memcpy(orig1, reinterpret_cast<void *>(addr1), 13);
-
-		static auto handle2 = FindPattern("44 38 3D ?? ?? ?? ?? 74 1D B9 40 00 00 00");
+		static auto handle2 = FindPattern("75 17 44 38 3D ?? ?? ?? ?? 74 1D", "74 1A 40 84 ED 0F 94 C0");
 		if (!handle2.IsValid())
 			return;
 
-		static auto addr2 = handle2.Addr();
-		static BYTE orig2[14];
-
-		if (!init && addr2)
-			memcpy(orig2, reinterpret_cast<void *>(addr2), 14);
-
-		init = true;
-
 		if (state)
 		{
-			if (addr1)
-			{
-				BYTE *from                           = reinterpret_cast<BYTE *>(addr1);
-				from[0]                              = 0x48; // mov rax, func
-				from[1]                              = 0xB8;
-				*reinterpret_cast<BYTE **>(&from[2]) = reinterpret_cast<BYTE *>(addr1 + (isPre3095 ? 0x1B : 0x20));
-				from[10]                             = 0x50; // push rax
-				from[11]                             = 0xC3; // ret
-			}
+			Memory::Write(handle1.At(0).Get<byte>(), byte { 0xEB }); // 0xEB = jmp
+			Memory::Write(handle1.At(1).Get<byte>(),
+			              isPre3095 ? byte { 0x20 } : byte { 0x25 }); // 0x25 for enhanced too
 
-			if (addr2)
-			{
-				BYTE *from                           = reinterpret_cast<BYTE *>(addr2);
-				from[0]                              = 0x48; // mov rax, func
-				from[1]                              = 0xB8;
-				*reinterpret_cast<BYTE **>(&from[2]) = reinterpret_cast<BYTE *>(addr2 + 0x1C);
-				from[10]                             = 0x50; // push rax
-				from[11]                             = 0xC3; // ret
-			}
+			Memory::Write(handle2.At(0).Get<byte>(), byte { 0xEB }); // 0xEB = jmp
+			Memory::Write(handle2.At(1).Get<byte>(), IsLegacy() ? byte { 0x1C } : byte { 0x4C });
 		}
 		else
 		{
-			if (addr1)
-				memcpy(reinterpret_cast<void *>(addr1), orig1, 13);
+			Memory::Write(handle1.At(0).Get<byte>(), byte { 0x75 });
+			Memory::Write(handle1.At(1).Get<byte>(), IsLegacy() ? byte { 0x17 } : byte { 0x0D });
 
-			if (addr2)
-				memcpy(reinterpret_cast<void *>(addr2), orig2, 14);
+			if (IsLegacy())
+			{
+				Memory::Write(handle2.At(0).Get<byte>(), byte { 0x75 });
+				Memory::Write(handle2.At(1).Get<byte>(), byte { 0x17 });
+			}
+			else
+			{
+				Memory::Write(handle2.At(0).Get<byte>(), byte { 0x74 });
+				Memory::Write(handle2.At(1).Get<byte>(), byte { 0x1A });
+			}
 		}
 	}
 }
