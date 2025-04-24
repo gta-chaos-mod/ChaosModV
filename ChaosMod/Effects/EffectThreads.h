@@ -120,7 +120,7 @@ class EffectThread
 	{
 		if (!ThreadData.HasStopped)
 		{
-			ThreadData.ShouldStop = false;
+			ThreadData.ShouldStop = true;
 			Run();
 		}
 	}
