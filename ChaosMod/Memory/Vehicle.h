@@ -71,14 +71,14 @@ namespace Memory
 		static auto outOfControlStateOffset = []() -> WORD
 		{
 			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 FE 40 80 E7 01",
-			                          "0F B6 86 ?? ?? 00 00 24 FE 08 D8 88 86 ?? ?? 00 00 E9 ?? ?? ?? ?? F3");
+			                          "f6 87 ? ? ? ? ? 75 ? 48 8b 07 48 89 f9 ff 90 ? ? ? ? f3 0f 10 40");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle out of control state offset not found!");
 				return 0;
 			}
 
-			return handle.At(IsLegacy() ? 8 : 3).Value<std::uint16_t>();
+			return handle.At(IsLegacy() ? 8 : 2).Value<std::uint16_t>();
 		}();
 
 		if (!outOfControlStateOffset)
