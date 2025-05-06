@@ -63,6 +63,33 @@ void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 		"dlc_mp2023_01_G9EC:/x64/levels/mp2023_01_G9EC/vehiclemods/coureurhsw_mods.rpf",
 		"dlc_mp2023_01_G9EC:/x64/levels/mp2023_01_G9EC/vehiclemods/monstrocitihsw_mods.rpf",
 		"dlc_mp2023_01_G9EC:/x64/levels/mp2023_01_G9EC/vehiclemods/stingertthsw_mods.rpf",
+
+		"dlc_mp2023_02_G9EC:/common/data/overlayinfo.xml",
+		"dlc_mp2023_02_G9EC:/common/data/interiorProxies.meta",
+		"dlc_mp2023_02_G9EC:/x64/levels/gta5/mp2023_02_g9ec_additions/mp2023_02_g9ec_additions.rpf",
+		"dlc_mp2023_02_G9EC:/x64/levels/gta5/mp2023_02_g9ec_additions/mp2023_02_g9ec_additions_metadata.rpf",
+		"dlc_mp2023_02_G9EC:/x64/levels/gta5/interiors/int_placement_m23_2_g9ec.rpf",
+		"dlc_mp2023_02_G9EC:/x64/levels/gta5/interiors/mp2023_02_dlc_int_3.rpf",
+		"dlc_mp2023_02_G9EC:/x64/levels/mp2023_02_G9EC/vehiclemods/vivanitehsw_mods.rpf",
+
+		"dlc_mp2024_01_G9EC:/common/data/overlayinfo.xml",
+		"dlc_mp2024_01_G9EC:/common/data/interiorProxies.xml",
+		"dlc_mp2024_01_G9EC:/x64/levels/gta5/interiors/int_placement_m24_1_g9ec.rpf",
+		"dlc_mp2024_01_G9EC:/x64/levels/gta5/interiors/m24_1_dlc_int_02.rpf",
+		"dlc_mp2024_01_G9EC:/x64/levels/mp2024_01_g9ec/vehiclemods/eurosx32hsw_mods.rpf",
+		"dlc_mp2024_01_G9EC:/x64/levels/mp2024_01_g9ec/vehiclemods/niobehsw_mods.rpf",
+
+		"dlc_mp2024_02_G9EC:/x64/levels/mp2024_02_G9EC/vehiclemods/banshee3hsw_mods.rpf",
+		"dlc_mp2024_02_G9EC:/x64/levels/mp2024_02_G9EC/vehiclemods/firebolthsw_mods.rpf",
+		"dlc_mp2024_02_G9EC:/common/data/weaponArchetypes.meta",
+		"dlc_mp2024_02_G9EC:/x64/models/cdimages/weapons.rpf",
+		"dlc_mp2024_02_G9EC:/common/data/shop_weapon.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/ai/loadouts.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/pedpersonality.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/pickups.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weapon_strickler.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weaponanimations.meta",
+		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weaponcomponents.meta"
 	};
 
 	if (entry->type == 6 || entry->type == 7 || !entry->dataFile || !badFiles.contains(entry->dataFile->name))
