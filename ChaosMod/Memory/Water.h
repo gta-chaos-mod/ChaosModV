@@ -1,5 +1,10 @@
 #pragma once
 
+#include "Util/Types.h"
+
+#define MAXWATERQUADS 821
+#define MAXRIVERQUADS 64
+
 struct CWaterQuad
 {
 	short MinX;     // 0x00
@@ -16,7 +21,7 @@ struct CWaterQuad
 		struct
 		{
 			uint8_t UnkFlag0 : 1;  // Bit 0
-			uint8_t UnkFlag1 : 1;  // Bit 1
+			uint8_t IsDeep : 1;    // Bit 1
 			uint8_t IsAudible : 1; // Bit 2
 			uint8_t IsVisible : 1; // Bit 3
 			uint8_t UnkFlag4 : 1;  // Bit 4
@@ -53,6 +58,13 @@ struct CWaveQuad
 };
 static_assert(sizeof(CWaveQuad) == 0xC);
 
+struct CRiverQuad
+{
+	void *Entity;      // 0x00
+	char Pad_08[0x30]; // 0x08
+};
+static_assert(sizeof(CRiverQuad) == 0x38);
+
 namespace Memory
 {
 	inline static CWaterQuad *GetAllWaterQuads()
@@ -83,5 +95,18 @@ namespace Memory
 			return nullptr;
 
 		return *handle.At(2).Into().Get<CWaveQuad *>();
+	}
+
+	inline static CRiverQuad *GetAllRiverQuads()
+	{
+		static Handle handle =
+		    Memory::FindPattern("48 8D 0D ? ? ? ? 48 C1 E0 06 48 8B 04 08", "89 C8 48 C1 E0 06 48 8D 0D ? ? ? ? 48");
+		if (!handle.IsValid())
+			return nullptr;
+
+		if (IsLegacy())
+			return *handle.At(2).Into().Get<CRiverQuad *>();
+
+		return *handle.At(8).Into().Get<CRiverQuad *>();
 	}
 }
