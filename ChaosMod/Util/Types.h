@@ -2,18 +2,46 @@
 
 #include "Natives.h"
 
-struct ChaosVector3
+template <typename T> union ChaosVector2
 {
-	float x, y, z;
-	explicit ChaosVector3(const Vector3 &vec) : x(vec.x), y(vec.y), z(vec.z)
+	T Data[2];
+	struct
+	{
+		T X, Y;
+	};
+
+	constexpr ChaosVector2(T x, T y) : X(x), Y(y)
+	{
+	}
+
+	constexpr ChaosVector2() : X(), Y()
 	{
 	}
 };
 
-struct ChaosVector2
+template <typename T> union ChaosVector3
 {
-	float x, y;
+	T Data[3];
+	struct
+	{
+		T X, Y, Z;
+	};
+
+	constexpr ChaosVector3(T x, T y, T z) noexcept : X(x), Y(y), Z(z)
+	{
+	}
+
+	constexpr ChaosVector3() noexcept : X(), Y(), Z()
+	{
+	}
+
+	explicit ChaosVector3(const Vector3 &vec) : X(vec.x), Y(vec.y), Z(vec.z)
+	{
+	}
 };
+
+typedef ChaosVector2<float> fChaosVector2;
+typedef ChaosVector3<float> fChaosVector3;
 
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {
