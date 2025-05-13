@@ -7,51 +7,52 @@
 
 #include "Effects/Register/RegisterEffect.h"
 
-struct CWaterQuad
-{
-	short MinX;   // 0x0
-	short MinY;   // 0x2
-	short MaxX;   // 0x4
-	short MaxY;   // 0x6
-	uint Color;   // 0x8
-	char unk1[4]; // 0xC
-	char unk2[4]; // 0x10
-	float Z;      // 0x14
-	uint Flags;   // 0x18
-};
-static_assert(sizeof(CWaterQuad) == 0x1C);
+#include "Memory/Water.h"
 
 CHAOS_VAR CWaterQuad *WaterQuads;
 CHAOS_VAR std::vector<float> WaterHeights;
 
-static CWaterQuad *GetWaterQuads()
-{
-	static Handle handle = Memory::FindPattern("? 6B C9 1C ? 03 0D ? ? ? ? 66 ? 03 C5 66 89 05 ? ? ? ?");
-	if (handle.IsValid())
-		return *handle.At(6).Into().Get<CWaterQuad *>();
-	return nullptr;
-}
+CHAOS_VAR CRiverQuad *RiverQuads;
+CHAOS_VAR std::vector<float> RiverHeights;
 
 static void OnStart()
 {
-	WaterQuads = GetWaterQuads();
+	WaterHeights.reserve(MAXWATERQUADS);
+
+	WaterQuads = Memory::GetAllWaterQuads();
 	if (WaterQuads)
 	{
-		for (int i = 0; i < 821; i++) // 821 = Max Water Items
+		for (int i = 0; i < MAXWATERQUADS; i++)
 		{
-			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Heights
+			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Height
 			WaterQuads[i].Z = -1000.0f;              // Remove Water
+		}
+	}
+
+	RiverQuads = Memory::GetAllRiverQuads();
+	if (RiverQuads)
+	{
+		char buffer[256];
+		for (int i = 0; i < MAXRIVERQUADS; i++)
+		{
+			sprintf_s(buffer, "RiverQuads[%d].Entity: 0x%p", i, &RiverQuads[i].Entity);
+			LOG(buffer);
 		}
 	}
 }
 
 static void OnStop()
 {
-	if (WaterQuads)
+	if (WaterQuads && !WaterHeights.empty())
 	{
-		for (int i = 0; i < 821; i++)             // 821 = Max Water Items
-			WaterQuads[i].Z = WaterHeights.at(i); // Restore Water
-		WaterHeights.clear();                     // Clear Storage Vector
+		for (int i = 0; i < MAXWATERQUADS; i++)
+		{
+			WaterQuads[i].Z = WaterHeights[i]; // Restore Water
+			WaterHeights[i] = 0.0f;            // Clear Saved Height
+		}
+
+		WaterHeights.clear();
+		WaterHeights.shrink_to_fit();
 	}
 }
 

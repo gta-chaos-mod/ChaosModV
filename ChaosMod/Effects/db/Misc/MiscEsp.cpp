@@ -32,26 +32,26 @@ CHAOS_VAR std::array<std::array<int, 2>, 14> connections = {{
 	{ 14, 17 }, { 16, 18 },
 }};
 
-static ChaosVector2 GetBoneScreenCoords(Ped ped, int boneID)
+static fChaosVector2 GetBoneScreenCoords(Ped ped, int boneID)
 {
 	Vector3 boneCoords = GET_PED_BONE_COORDS(ped, boneID, 0, 0, 0);
-	ChaosVector2 screenCoords;
-	Memory::WorldToScreen((ChaosVector3)boneCoords, &screenCoords);
+	fChaosVector2 screenCoords;
+	Memory::WorldToScreen((fChaosVector3)boneCoords, &screenCoords);
 	return screenCoords;
 }
 
 static void DrawSkeleton(
-	const std::array<ChaosVector2, 19> &points,
+	const std::array<fChaosVector2, 19> &points,
 	const std::array<std::array<int, 2>, 14> &connections,
 	Color lineColor, float thickness)
 {
 	for (const auto &connection : connections)
 	{
-		ChaosVector2 pointA = points[connection[0]];
-		ChaosVector2 pointB = points[connection[1]];
+		fChaosVector2 pointA = points[connection[0]];
+		fChaosVector2 pointB = points[connection[1]];
 
-		bool validPointA = pointA.x > 0 && pointA.x < 1 && pointA.y > 0 && pointA.y < 1;
-		bool validPointB = pointB.x > 0 && pointB.x < 1 && pointB.y > 0 && pointB.y < 1;
+		bool validPointA = pointA.X > 0 && pointA.X < 1 && pointA.Y > 0 && pointA.Y < 1;
+		bool validPointB = pointB.Y > 0 && pointB.Y < 1 && pointB.Y > 0 && pointB.Y < 1;
 
 		if (validPointA && validPointB)
 		{
@@ -83,7 +83,7 @@ static void OnTick()
 		if (IS_ENTITY_ON_SCREEN(ped) && !IS_ENTITY_DEAD(ped, false) &&
 			!IS_PED_A_PLAYER(ped) && WithinDistance(playerPed, ped))
 		{
-			std::array<ChaosVector2, BONE_COUNT> points {};
+			std::array<fChaosVector2, BONE_COUNT> points {};
 			for (size_t i = 0; i < points.size(); i++)
 			{
 				points[i] = GetBoneScreenCoords(ped, BONE_IDS[i]);
