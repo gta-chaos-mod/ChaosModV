@@ -895,7 +895,11 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		const auto &effectCategoryStr = *effectCategoryOpt;
 		auto effectCategoryIt         = g_NameToEffectCategory.find(effectCategoryStr);
 		if (effectCategoryIt != g_NameToEffectCategory.end())
+		{
 			effectData.Category = effectCategoryIt->second;
+			if (effectData.Category == EffectCategory::Shader)
+				effectData.ConditionType = EffectConditionType::EnhancedShader;
+		}
 	}
 
 	const sol::optional<std::string> &effectGroupOpt = effectInfo["EffectGroup"];
