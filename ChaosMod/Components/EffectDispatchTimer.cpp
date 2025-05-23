@@ -14,7 +14,7 @@ EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) 
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch =
-	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", " EnableDistanceBasedEffectDispatch " },
+	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", "EnableDistanceBasedEffectDispatch" },
 	                                    OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED)
 	        ? true
 	        : false;

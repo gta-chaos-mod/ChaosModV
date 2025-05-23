@@ -7,9 +7,9 @@
 
 EffectShortcuts::EffectShortcuts() : Component()
 {
-	for (const auto &[effectId, effectData] : g_EnabledEffects)
-		if (effectData.ShortcutKeycode > 0 && !effectData.IsHidden())
-			m_AvailableShortcuts[effectData.ShortcutKeycode].push_back(effectId);
+	for (const auto &effectData : GetFilteredEnabledEffects())
+		if (effectData->ShortcutKeycode > 0 && !effectData->IsHidden())
+			m_AvailableShortcuts[effectData->ShortcutKeycode].push_back(effectData->Id);
 }
 
 void EffectShortcuts::OnRun()

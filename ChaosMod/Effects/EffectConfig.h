@@ -150,6 +150,8 @@ namespace EffectConfig
 			effectData.Id            = { std::string(effectMetadata.Id) };
 			effectData.Category      = effectMetadata.EffectCategory;
 			effectData.ConditionType = effectMetadata.ConditionType;
+			if (effectData.Category == EffectCategory::Shader)
+				effectData.ConditionType = EffectConditionType::EnhancedShader;
 
 			for (auto effectType : effectMetadata.IncompatibleWith)
 				effectData.IncompatibleIds.insert(std::string(g_RegisteredEffectsMetadata.at(effectType).Id));
