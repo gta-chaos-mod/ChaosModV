@@ -23,7 +23,7 @@ __int64 _HK_HandleToEntityStruct(Entity entity)
 
 static bool OnHook()
 {
-	Handle handle = Memory::FindPattern("83 F9 FF 74 31 4C 8B 0D");
+	Handle handle = Memory::FindPattern("83 F9 FF 74 31 4C 8B 0D", "83 F9 FF 74 64 41");
 	if (!handle.IsValid())
 		return false;
 
