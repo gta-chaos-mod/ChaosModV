@@ -304,8 +304,10 @@ void Voting::OnRun()
 
 bool Voting::Init()
 {
-	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
-	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
+	const auto enabledEffects = GetFilteredEnabledEffects();
+
+	if (std::count_if(enabledEffects.begin(), enabledEffects.end(),
+	                  [](const auto &effectData) { return !effectData->IsExcludedFromVoting(); })
 	    < 3)
 	{
 		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable voting."
