@@ -24,7 +24,7 @@ class OptionsFile
 		Reset();
 	}
 
-	void Reset()
+	inline void Reset()
 	{
 		m_Options.clear();
 
@@ -134,7 +134,7 @@ class OptionsFile
 
 						return value;
 					}
-					else if (value.is_string())
+					else if constexpr (std::is_same<T, Color>())
 					{
 						T parsedResult;
 						std::string strValue = value;
@@ -143,8 +143,10 @@ class OptionsFile
 
 						return parsedResult;
 					}
-
-					return value;
+					else
+					{
+						return value;
+					}
 				}
 				catch (nlohmann::json::exception &)
 				{

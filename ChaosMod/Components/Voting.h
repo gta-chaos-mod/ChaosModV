@@ -43,7 +43,7 @@ class Voting : public Component
 		OverlayOBS
 	} m_OverlayMode = OverlayMode::ChatMessages;
 
-	std::array<std::uint8_t, 3> m_TextColor;
+	Color m_TextColor;
 
 	bool m_EnableVoting                                = false;
 	bool m_HasInitializedVoting                        = false;
@@ -63,7 +63,7 @@ class Voting : public Component
 	VotingMode m_VotingModeOverride                    = VotingMode::None;
 
   public:
-	Voting(const std::array<std::uint8_t, 3> &TextColor);
+	Voting();
 
 	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 	virtual void OnRun() override;

@@ -1,14 +1,40 @@
 #pragma once
 
+#include "TryParse.h"
+
 #include <cstdint>
+
+struct Color;
+namespace Util
+{
+	Color ParseConfigColorString(const std::string &colorText, bool &success);
+}
 
 struct Color
 {
 	std::uint8_t R, G, B, A;
 
-	std::uint32_t Get() const
+	inline std::uint32_t Get() const
 	{
 		return A << 24 | R << 16 | G << 8 | B;
+	}
+
+	Color(std::string colorString)
+	{
+		bool _;
+		*this = Util::ParseConfigColorString(colorString, _);
+	}
+
+	Color() : R(0), G(0), B(0), A(0)
+	{
+	}
+
+	Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) : R(r), G(g), B(b), A(a)
+	{
+	}
+
+	Color(std::uint8_t r, std::uint8_t g, std::uint8_t b) : Color(r, g, b, 255)
+	{
 	}
 };
 

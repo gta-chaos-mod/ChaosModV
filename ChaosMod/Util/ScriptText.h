@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util/Natives.h"
+#include "Color.h"
 
 #include <cstdint>
 
@@ -10,17 +11,6 @@ struct ScreenTextVector
 	const float Y;
 
 	ScreenTextVector(float x, float y) : X(x), Y(y)
-	{
-	}
-};
-
-struct ScreenTextColor
-{
-	const std::uint8_t R;
-	const std::uint8_t G;
-	const std::uint8_t B;
-
-	ScreenTextColor(std::uint8_t r, std::uint8_t g, std::uint8_t b) : R(r), G(g), B(b)
 	{
 	}
 };
@@ -42,7 +32,7 @@ inline float GetScreenTextWidth(const std::string &text, float scale)
 }
 
 inline void DrawScreenText(const std::string &text, const ScreenTextVector &textPos, float scale,
-                           ScreenTextColor textColor, bool outline = false,
+                           Color textColor, bool outline = false,
                            ScreenTextAdjust textAdjust      = ScreenTextAdjust::Center,
                            const ScreenTextVector &textWrap = { 0.f, 1.f }, bool addBackground = false)
 {
@@ -50,7 +40,7 @@ inline void DrawScreenText(const std::string &text, const ScreenTextVector &text
 	ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text.c_str());
 
 	SET_TEXT_SCALE(scale, scale);
-	SET_TEXT_COLOUR(textColor.R, textColor.G, textColor.B, 255);
+	SET_TEXT_COLOUR(textColor.R, textColor.G, textColor.B, textColor.A);
 
 	if (outline)
 		SET_TEXT_OUTLINE();
