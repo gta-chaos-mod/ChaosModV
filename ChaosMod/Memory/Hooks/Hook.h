@@ -6,60 +6,48 @@
 
 namespace Memory
 {
-	class RegisteredHook;
-
-	inline RegisteredHook *g_pRegisteredHooks = nullptr;
-
 	class RegisteredHook
 	{
 	  private:
+		inline static std::list<RegisteredHook*> ms_RegisteredHooks = {};
+
 		std::string m_Name;
 		std::function<bool()> m_HookFunc;
 		std::function<void()> m_CleanupFunc;
-		RegisteredHook *m_Next = nullptr;
-		bool m_IsLateHook      = false;
+		bool m_IsLateHook;
 
 	  public:
-		RegisteredHook(std::function<bool()> hookFunc, std::function<void()> cleanupFunc, const std::string &name,
-		               bool isLateHook)
-		    : m_Name(name), m_HookFunc(hookFunc), m_CleanupFunc(cleanupFunc), m_IsLateHook(isLateHook)
-		{
-			if (g_pRegisteredHooks)
-				m_Next = g_pRegisteredHooks;
+		RegisteredHook(const std::function<bool()> &hookFunc, const std::function<void()> &cleanupFunc,
+		               const std::string &name, bool isLateHook);
 
-			g_pRegisteredHooks = this;
-		}
-
-		RegisteredHook(const RegisteredHook &)            = delete;
-
-		RegisteredHook &operator=(const RegisteredHook &) = delete;
-
-		inline bool RunHook()
+		inline bool RunHook() const
 		{
 			return m_HookFunc ? m_HookFunc() : true;
 		}
 
-		inline void RunCleanup()
+		inline void RunCleanup() const
 		{
 			if (m_CleanupFunc)
 				m_CleanupFunc();
 		}
 
-		inline const std::string &GetName() const
+		inline const std::string GetName() const
 		{
 			return m_Name;
-		}
-
-		inline RegisteredHook *GetNext() const
-		{
-			return m_Next;
 		}
 
 		inline bool IsLateHook() const
 		{
 			return m_IsLateHook;
 		}
+
+		static inline std::list<RegisteredHook*> GetRegisteredHooks()
+		{
+			return ms_RegisteredHooks;
+		}
 	};
+
+	std::list<RegisteredHook*> GetRegisteredHooks();
 }
 
 class RegisterHook
@@ -68,10 +56,8 @@ class RegisterHook
 	const Memory::RegisteredHook m_RegisteredHook;
 
   public:
-	RegisterHook(bool (*hookFunc)(), void (*cleanupFunc)(), const std::string &&name, bool isLateHook = false)
-	    : m_RegisteredHook(hookFunc, cleanupFunc, name, isLateHook)
-	{
-	}
+	RegisterHook(std::function<bool()> hookFunc, std::function<void()> cleanupFunc, std::string name,
+	             bool isLateHook = false);
 
 	RegisterHook(const RegisterHook &)                = delete;
 
