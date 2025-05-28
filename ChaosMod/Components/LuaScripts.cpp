@@ -12,8 +12,7 @@
 #include "Effects/Register/RegisteredEffects.h"
 #include "Effects/Register/RegisteredEffectsMetadata.h"
 #include "Info.h"
-#include "Memory/Hooks/AudioClearnessHook.h"
-#include "Memory/Hooks/AudioPitchHook.h"
+#include "Memory/Hooks/AudioSettingsHook.h"
 #include "Memory/Hooks/GetLabelTextHook.h"
 #include "Memory/Hooks/ShaderHook.h"
 #include "Memory/PedModels.h"
@@ -481,8 +480,14 @@ static void SetupLateState(sol::state &lua, const std::string &scriptName)
 	E("DisableScriptThreadBlock", Hooks::DisableScriptThreadBlock);
 	E("SetAudioPitch", Hooks::SetAudioPitch);
 	E("ResetAudioPitch", Hooks::ResetAudioPitch);
-	E("SetAudioClearness", Hooks::SetAudioClearness);
-	E("ResetAudioClearness", Hooks::ResetAudioClearness);
+	E("SetAudioClearness", Hooks::SetAudioLPFCutoff);
+	E("ResetAudioClearness", Hooks::ResetAudioLPFCutoff);
+	E("SetAudioHPFCutoff", Hooks::SetAudioHPFCutoff);
+	E("ResetAudioHPFCutoff", Hooks::ResetAudioHPFCutoff);
+	E("SetAudioLPFCutoff", Hooks::SetAudioLPFCutoff);
+	E("ResetAudioLPFCutoff", Hooks::ResetAudioLPFCutoff);
+	E("SetAudioVolume", Hooks::SetAudioVolume);
+	E("ResetAudioVolume", Hooks::ResetAudioVolume);
 	E("GetGameplayCamOffsetInWorldCoords",
 	  [](LuaVector3 offset)
 	  {
@@ -832,7 +837,11 @@ LuaScripts::ParseScript(std::string scriptName, const std::string &script, Parse
 		const auto &effectCategoryStr = *effectCategoryOpt;
 		auto effectCategoryIt         = g_NameToEffectCategory.find(effectCategoryStr);
 		if (effectCategoryIt != g_NameToEffectCategory.end())
+		{
 			effectData.Category = effectCategoryIt->second;
+			if (effectData.Category == EffectCategory::Shader)
+				effectData.ConditionType = EffectConditionType::EnhancedShader;
+		}
 	}
 
 	const sol::optional<std::string> &effectGroupOpt = effectInfo["EffectGroup"];

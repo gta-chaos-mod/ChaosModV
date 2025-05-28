@@ -29,30 +29,44 @@ namespace Memory
 		if (DoesFeatureFlagExist("skipintro"))
 		{
 			// Splash screen
-			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D");
+			Handle handle = FindPattern("E8 ? ? ? ? 8B CF 40 88 2D", "0F 85 A9 00 00 00 48 8D 54");
 			if (!handle.IsValid())
 			{
 				LOG("SkipIntro: Failed to patch splash screen!");
 			}
 			else
 			{
-				Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
-
+				if (IsLegacy())
+					Write<BYTE>(handle.Into().At(0x21).Into().Get<BYTE>(), 0x0, 36);
+				else
+				{
+					// jz -> jmp
+					Write<BYTE>(handle.At(-0xD).Get<BYTE>(), 0xE9);
+					Write<BYTE>(handle.At(-0xC).Get<BYTE>(), 0x86);
+					Write<BYTE>(handle.At(-0xB).Get<BYTE>(), 0x01);
+					Write<BYTE>(handle.At(-0xA).Get<BYTE>(), 0x00);
+					// extra nop just in case
+					Write<BYTE>(handle.At(-0x8).Get<BYTE>(), 0x90);
+				}
 				LOG("SkipIntro: Patched splash screen");
 			}
 
 			// Legal screen
-			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01");
+			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01", "E9 6B 05 00 00 E8");
 			if (!handle.IsValid())
 			{
 				LOG("SkipIntro: Failed to patch legal screen!");
 			}
 			else
 			{
-				handle = handle.Into();
-
-				Write<BYTE>(handle.Get<BYTE>(), 0xC3);
-				Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+				if (IsLegacy())
+				{
+					handle = handle.Into();
+					Write<BYTE>(handle.Get<BYTE>(), 0xC3);
+					Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
+				}
+				else
+					Write<BYTE>(handle.At(-0x10).Get<BYTE>(), 0x90, 6);
 
 				LOG("SkipIntro: Patched legal screen");
 			}
@@ -60,14 +74,18 @@ namespace Memory
 
 		if (DoesFeatureFlagExist("skipdlcs"))
 		{
-			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01");
+			Handle handle = FindPattern("84 C0 74 2C 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? 45 33 C9 41 B0 01",
+			                            "E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 89 D9 E8 ? ? ? ? EB 03");
 			if (!handle.IsValid())
 			{
 				LOG("SkipDLCs: Failed to patch DLC loading!");
 			}
 			else
 			{
-				Write<BYTE>(handle.At(24).Get<BYTE>(), 0x90, 24);
+				if (IsEnhanced())
+					Write<BYTE>(handle.Get<BYTE>(), 0x90, 5);
+				else
+					Write<BYTE>(handle.At(24).Get<BYTE>(), 0x90, 24);
 
 				LOG("SkipDLCs: Patched DLC loading");
 			}
@@ -215,6 +233,11 @@ namespace Memory
 		return scanPattern();
 	}
 
+	Handle FindPattern(const std::string &legacyPattern, const std::string &enhancedPattern)
+	{
+		return IsEnhanced() ? FindPattern(enhancedPattern) : FindPattern(legacyPattern);
+	}
+
 	const char *GetTypeName(__int64 vftAddr)
 	{
 		if (vftAddr)
@@ -243,7 +266,7 @@ namespace Memory
 	{
 		static auto globalPtr = []() -> DWORD64 **
 		{
-			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11");
+			auto handle = FindPattern("4C 8D 05 ? ? ? ? 4D 8B 08 4D 85 C9 74 11", "48 8D 3D ? ? ? ? 31 ED 4C 8D 25");
 			if (!handle.IsValid())
 				return nullptr;
 
@@ -296,11 +319,12 @@ namespace Memory
 	{
 		static auto gameBuild = []() -> std::string
 		{
-			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48");
+			auto handle = Memory::FindPattern("80 3D ? ? ? ? 00 0F 57 C0 48",
+			                                  "48 8D 0D ? ? ? ? 48 8D 15 ? ? ? ? 4C 8D 44 24 2C E8");
 			if (!handle.IsValid())
 				return {};
 
-			std::string buildStr = handle.At(1).Into().At(1).Get<char>();
+			std::string buildStr = handle.At(IsLegacy() ? 1 : 2).Into().At(IsLegacy() ? 1 : 0).Get<char>();
 			if (buildStr.empty())
 				return {};
 
