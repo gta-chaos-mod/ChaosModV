@@ -19,10 +19,9 @@ namespace Memory
 	{
 		static auto CEntity_GetColliderNonConst = []() -> void *(*)(DWORD64)
 		{
-			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D",
-			                            "E8 ?? ?? ?? ?? 44 8B 8C 24 78 02 00 00 48 85 C0");
+			Handle handle = FindPattern("? 85 C0 74 ? ? 3B ? ? ? ? ? 75 ? ? 8B CF E8 ? ? ? ? ? 8D");
 			if (handle.IsValid())
-				return handle.At(IsLegacy() ? 17 : 0).Into().Get<void *(DWORD64)>();
+				return handle.At(17).Into().Get<void *(DWORD64)>();
 
 			LOG("CEntity::GetColliderNonConst not found");
 			return nullptr;
@@ -36,10 +35,9 @@ namespace Memory
 	{
 		static auto phSimulator_sm_Instance = []
 		{
-			Handle handle =
-			    FindPattern("? 8B 0D ? ? ? ? ? 83 64 ? ? 00 ? 0F B7 D1 ? 33 C9 E8", "48 3D FF FF 00 00 74 74 48 8B 15");
+			Handle handle = FindPattern("? 8B 0D ? ? ? ? ? 83 64 ? ? 00 ? 0F B7 D1 ? 33 C9 E8");
 			if (handle.IsValid())
-				return handle.At(IsLegacy() ? 2 : 10).Into().Addr();
+				return handle.At(2).Into().Addr();
 
 			LOG("phSimulator::sm_Instance not found");
 			return 0ull;
@@ -47,8 +45,7 @@ namespace Memory
 
 		static auto [usedCollidersOffset, maxCollidersOffset] = []
 		{
-			Handle handle = FindPattern("? 63 ? ? ? ? ? 3B ? ? ? ? ? 0F 8D ? ? ? ? ? 8B C8",
-			                            "48 63 87 ?? ?? 00 00 3B 87 ?? ?? 00 00");
+			Handle handle = FindPattern("? 63 ? ? ? ? ? 3B ? ? ? ? ? 0F 8D ? ? ? ? ? 8B C8");
 			if (handle.IsValid())
 				return std::make_tuple(handle.At(3).Value<int>(), handle.At(9).Value<int>());
 

@@ -20,25 +20,15 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = Memory::FindPattern("74 42 0F B7 15 ? ? ? 01", "48 89 35 ?? ?? ?? ?? 0F B7 2D ?? ?? ?? ?? E9 06 FE FF FF");
+			handle = Memory::FindPattern("74 42 0F B7 15 ? ? ? 01");
 			if (!handle.IsValid())
 				return weapons;
 
-			WORD *infoptrs__count;
-			DWORD64 *infoptrs__elements;
-			if (IsLegacy())
-			{
-				infoptrs__count    = handle.At(4).Into().Get<WORD>();
-				infoptrs__elements = handle.At(18).Into().Get<DWORD64>();
-			}
-			else
-			{
-				infoptrs__elements = handle.At(2).Into().Get<DWORD64>();
-				infoptrs__count    = handle.At(9).Into().Get<WORD>();
-			}
+			WORD *dword_7FF6D9EF9748    = handle.At(4).Into().Get<WORD>();
+			DWORD64 *qword_7FF6D9EF9740 = handle.At(18).Into().Get<DWORD64>();
 
 			// Get address of CWeaponInfo's vftable and store it
-			handle = Memory::FindPattern("48 8D 05 ? ? ? ? 4C 89 71 08 4C 89 71 10", "48 8D 05 ?? ?? ?? ?? 48 89 01 C7 41 5C 00 00 00 00");
+			handle                      = Memory::FindPattern("48 8D 05 ? ? ? ? 4C 89 71 08 4C 89 71 10");
 			if (!handle.IsValid())
 				return weapons;
 
@@ -48,11 +38,11 @@ namespace Memory
 			DWORD64 v4;
 			DWORD64 vftableAddrPtr;
 
-			for (v3 = *infoptrs__count - 1; v3 >= 0; v3 = v4 - 1)
+			for (v3 = *dword_7FF6D9EF9748 - 1; v3 >= 0; v3 = v4 - 1)
 			{
 				v4             = static_cast<DWORD>(v3);
 
-				vftableAddrPtr = *(reinterpret_cast<DWORD64 *>(*infoptrs__elements) + v4);
+				vftableAddrPtr = *(reinterpret_cast<DWORD64 *>(*qword_7FF6D9EF9740) + v4);
 
 				// Only include actual ped weapons by checking if vftable pointed to is CWeaponInfo's
 				if (*reinterpret_cast<DWORD64 *>(vftableAddrPtr) != CWeaponInfo_vftable)

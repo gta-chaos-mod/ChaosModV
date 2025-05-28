@@ -19,14 +19,13 @@ namespace Memory
 
 		if (!patchByte)
 		{
-			Handle handle = FindPattern("E8 ? ? ? ? C6 05 ? ? ? ? ? 48 83 C4 58",
-			                            "e8 ? ? ? ? c6 05 ? ? ? ? ? 48 83 c4 ? c3 90 e9 ? ? ? ? c6 05");
+			Handle handle = FindPattern("E8 ? ? ? ? C6 05 ? ? ? ? ? 48 83 C4 58");
 			if (!handle.IsValid())
 				return;
 
 			patchByte = handle.Into().Get<BYTE>();
 		}
 
-		Write<BYTE>(patchByte, state ? 0xC3 : (IsLegacy() ? 0x48 : 0x41));
+		Write<BYTE>(patchByte, state ? 0xC3 : 0x48);
 	}
 }

@@ -4,16 +4,16 @@
 #include <stdafx.h>
 
 #include "Effects/Register/RegisterEffect.h"
-#include "Memory/Hooks/AudioSettingsHook.h"
+#include "Memory/Hooks/AudioClearnessHook.h"
 
 static void OnStart()
 {
-	Hooks::SetAudioLPFCutoff(100);
+	Hooks::SetAudioClearness(0);
 }
 
 static void OnStop()
 {
-	Hooks::ResetAudioLPFCutoff();
+	Hooks::ResetAudioClearness();
 }
 
 // clang-format off

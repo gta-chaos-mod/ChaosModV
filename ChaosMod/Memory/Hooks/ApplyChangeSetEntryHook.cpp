@@ -13,7 +13,6 @@ struct ChangeSetEntry
 	int type;
 	// ...
 };
-
 void (*OG_ApplyChangeSetEntryStub)(ChangeSetEntry *entry);
 void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 {
@@ -99,16 +98,13 @@ void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 
 static bool OnHook()
 {
-	if (IsLegacy())
-	{
-		Handle handle;
+	Handle handle;
 
-		handle = Memory::FindPattern("48 8D 0C 40 48 8D 0C CE E8 ? ? ? ? FF C3");
-		if (!handle.IsValid())
-			return false;
+	handle = Memory::FindPattern("48 8D 0C 40 48 8D 0C CE E8 ? ? ? ? FF C3");
+	if (!handle.IsValid())
+		return false;
 
-		Memory::AddHook(handle.At(8).Into().Get<void>(), HK_ApplyChangeSetEntryStub, &OG_ApplyChangeSetEntryStub);
-	}
+	Memory::AddHook(handle.At(8).Into().Get<void>(), HK_ApplyChangeSetEntryStub, &OG_ApplyChangeSetEntryStub);
 
 	return true;
 }

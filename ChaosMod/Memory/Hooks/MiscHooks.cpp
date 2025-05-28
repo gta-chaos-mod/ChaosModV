@@ -20,7 +20,7 @@ static bool OnHook()
 {
 	Handle handle;
 
-	handle = Memory::FindPattern("E8 ? ? ? ? 4D 03 F5 48", "E8 ? ? ? ? 41 F6 47 54 08");
+	handle = Memory::FindPattern("E8 ? ? ? ? 4D 03 F5 48");
 	if (!handle.IsValid())
 		LOG("crSkeleton::GetGlobalMtx not found!");
 	else

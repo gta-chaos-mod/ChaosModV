@@ -30,8 +30,6 @@ namespace Memory
 
 	Handle FindPattern(const std::string &pattern, const PatternScanRange &&scanRange = {});
 
-	Handle FindPattern(const std::string &legacyPattern, const std::string &enhancedPattern);
-
 	template <typename T> inline MH_STATUS AddHook(void *target, T detour, T *orig)
 	{
 		auto result = MH_CreateHook(target, reinterpret_cast<void *>(detour), reinterpret_cast<void **>(orig));

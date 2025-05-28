@@ -26,15 +26,19 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle =
-			    FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12", "48 89 05 ?? ?? ?? ?? 66 85 F6 74 2A");
+			handle = FindPattern("48 8B 05 ?? ?? ?? ?? 48 8B 14 D0 EB 0D 44 3B 12");
 			if (!handle.IsValid())
 				return vehModels;
 
 			handle         = handle.At(2).Into();
-
 			auto modelList = handle.Value<DWORD64>();
-			auto maxModels = handle.At(8).Value<WORD>();
+
+			handle         = FindPattern("0F B7 05 ?? ?? ?? ?? 44 8B 49 18 45 33 D2 48 8B F1");
+			if (!handle.IsValid())
+				return vehModels;
+
+			handle         = handle.At(2).Into();
+			auto maxModels = handle.Value<WORD>();
 
 			//  Stub vehicles, thanks R* lol
 			static const std::unordered_set<Hash> blacklistedModels {
@@ -70,15 +74,14 @@ namespace Memory
 
 		static auto outOfControlStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 FE 40 80 E7 01",
-			                          "f6 87 ? ? ? ? ? 75 ? 48 8b 07 48 89 f9 ff 90 ? ? ? ? f3 0f 10 40");
+			auto handle = FindPattern("FF 90 ? ? 00 00 80 A3 ? ? 00 00 fE 40 80 E7 01");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle out of control state offset not found!");
 				return 0;
 			}
 
-			return handle.At(IsLegacy() ? 8 : 2).Value<std::uint16_t>();
+			return handle.At(8).Value<std::uint16_t>();
 		}();
 
 		if (!outOfControlStateOffset)
@@ -106,8 +109,8 @@ namespace Memory
 		{
 			Handle handle;
 
-			handle = FindPattern("48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 4D C8",
-			                     "48 89 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D ?? ?? ?? 00 00 00 48 89");
+			handle = FindPattern("48 89 0D ? ? ? ? E8 ? ? ? ? 48 8D 4D C8 E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 4D C8 45 "
+			                     "33 C0 E8 ? ? ? ? 4C 8D 0D");
 			if (!handle.IsValid())
 				return;
 
@@ -134,15 +137,14 @@ namespace Memory
 	{
 		static auto brakeStateOffset = []() -> WORD
 		{
-			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53",
-			                          "f3 41 0f 10 80 ? ? ? ? 0f 57 c9 0f 2e c1 75 ? 7a ? 41 80 b8");
+			auto handle = FindPattern("F3 0F 11 80 ? ? 00 00 48 83 C4 20 5B C3 ? ? 40 53");
 			if (!handle.IsValid())
 			{
 				LOG("Vehicle brake state offset not found!");
 				return 0;
 			}
 
-			return handle.At(IsLegacy() ? 4 : 5).Value<std::uint16_t>();
+			return handle.At(4).Value<std::uint16_t>();
 		}();
 
 		auto result = GetScriptHandleBaseAddress(vehicle);
