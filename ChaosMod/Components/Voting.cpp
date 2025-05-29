@@ -29,7 +29,6 @@ void Voting::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
 	{
-		FlushFileBuffers(m_PipeHandle);
 		DisconnectNamedPipe(m_PipeHandle);
 		CloseHandle(m_PipeHandle);
 
