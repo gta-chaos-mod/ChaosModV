@@ -58,12 +58,20 @@ struct CWaveQuad
 };
 static_assert(sizeof(CWaveQuad) == 0xC);
 
-struct CRiverQuad
+struct alignas(8) CRiverQuad
 {
-	void *Entity;      // 0x00
-	char Pad_08[0x30]; // 0x08
+	void *Entity;        // 0x0000
+	bool IsRiver;        // 0x0008
+	char pad_0009[7];    // 0x0009
+	fChaosVector3 Min;   // 0x0010
+	char pad_001C[4];    // 0x001C
+	fChaosVector3 Max;   // 0x0020
+	char pad_002C[4];    // 0x002C
+	void *TextureData;   // 0x0030
+	bool HasTextureData; // 0x0038
+	char pad_0039[7];    // 0x0039
 };
-static_assert(sizeof(CRiverQuad) == 0x38);
+static_assert(sizeof(CRiverQuad) == 0x40);
 
 namespace Memory
 {
@@ -104,9 +112,6 @@ namespace Memory
 		if (!handle.IsValid())
 			return nullptr;
 
-		if (IsLegacy())
-			return *handle.At(2).Into().Get<CRiverQuad *>();
-
-		return *handle.At(8).Into().Get<CRiverQuad *>();
+		return *handle.At(IsLegacy() ? 2 : 8).Into().Get<CRiverQuad *>();
 	}
 }

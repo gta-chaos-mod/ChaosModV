@@ -35,7 +35,7 @@ static void OnStart()
 		char buffer[256];
 		for (int i = 0; i < MAXRIVERQUADS; i++)
 		{
-			sprintf_s(buffer, "RiverQuads[%d].Entity: 0x%p", i, &RiverQuads[i].Entity);
+			sprintf_s(buffer, "RiverQuads[%d]: 0x%p", i, &RiverQuads[i]);
 			LOG(buffer);
 		}
 	}
