@@ -9,58 +9,67 @@
 
 #include "Memory/Water.h"
 
-CHAOS_VAR CWaterQuad *WaterQuads;
-CHAOS_VAR std::vector<float> WaterHeights;
+CHAOS_VAR CWaterQuad *WaterQuads = nullptr;
+CHAOS_VAR std::vector<float> WaterQuadHeights;
 
-CHAOS_VAR CRiverQuad *RiverQuads;
-CHAOS_VAR std::vector<float> RiverHeights;
+CHAOS_VAR CRiverEntity *RiverEntities = nullptr;
+CHAOS_VAR std::vector<float> RiverEntityHeights;
+
+constexpr float WATER_REMOVAL_DEPTH = -1000.0f;
 
 static void OnStart()
 {
-	WaterHeights.reserve(MAXWATERQUADS);
+	// Pre-allocate vectors to avoid reallocations
+	WaterQuadHeights.resize(MAXWATERQUADS);
+	RiverEntityHeights.resize(MAXRIVERENTITIES);
 
-	WaterQuads = Memory::GetAllWaterQuads();
-	if (WaterQuads)
+	// Process water quads
+	if (WaterQuads = Memory::GetAllWaterQuads())
 	{
 		for (int i = 0; i < MAXWATERQUADS; i++)
 		{
-			WaterHeights.push_back(WaterQuads[i].Z); // Save Water Height
-			WaterQuads[i].Z = -1000.0f;              // Remove Water
+			WaterQuadHeights[i] = WaterQuads[i].Z;
+			WaterQuads[i].Z     = WATER_REMOVAL_DEPTH;
 		}
 	}
 
-	RiverQuads = Memory::GetAllRiverQuads();
-	if (RiverQuads)
+	// Process river entities
+	if (RiverEntities = Memory::GetAllRiverEntities())
 	{
-		char buffer[256];
-		for (int i = 0; i < MAXRIVERQUADS; i++)
+		for (int i = 0; i < MAXRIVERENTITIES; i++)
 		{
-			sprintf_s(buffer, "RiverQuads[%d]: 0x%p", i, &RiverQuads[i]);
-			LOG(buffer);
+			if (RiverEntities[i].Entity)
+			{
+				RiverEntityHeights[i]               = RiverEntities[i].Entity->Position.Z;
+				RiverEntities[i].Entity->Position.Z = WATER_REMOVAL_DEPTH;
+			}
 		}
 	}
 }
 
 static void OnStop()
 {
-	if (WaterQuads && !WaterHeights.empty())
-	{
+	// Restore water quads
+	if (WaterQuads)
 		for (int i = 0; i < MAXWATERQUADS; i++)
-		{
-			WaterQuads[i].Z = WaterHeights[i]; // Restore Water
-			WaterHeights[i] = 0.0f;            // Clear Saved Height
-		}
+			WaterQuads[i].Z = WaterQuadHeights[i];
 
-		WaterHeights.clear();
-		WaterHeights.shrink_to_fit();
-	}
+	// Restore river entities
+	if (RiverEntities)
+		for (int i = 0; i < MAXRIVERENTITIES; i++)
+			if (RiverEntities[i].Entity)
+				RiverEntities[i].Entity->Position.Z = RiverEntityHeights[i];
+
+	// Clear vectors
+	WaterQuadHeights.clear();
+	RiverEntityHeights.clear();
 }
 
 // clang-format off
 REGISTER_EFFECT(OnStart, OnStop, nullptr, 
-	{
-		.Name = "Drought",
-		.Id = "misc_remove_water",
-		.IsTimed = true
-	}
+    {
+        .Name = "Drought",
+        .Id = "misc_remove_water",
+        .IsTimed = true
+    }
 );

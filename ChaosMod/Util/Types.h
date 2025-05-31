@@ -40,8 +40,34 @@ template <typename T> union ChaosVector3
 	}
 };
 
+template <typename T> union ChaosMatrix34
+{
+	T Data[3][4];
+	struct
+	{
+		struct
+		{
+			T X, Y, Z, W;
+		} Rows[3];
+	};
+};
+
+template <typename T> union ChaosMatrix44
+{
+	T Data[4][4];
+	struct
+	{
+		struct
+		{
+			T X, Y, Z, W;
+		} Rows[4];
+	};
+};
+
 typedef ChaosVector2<float> fChaosVector2;
 typedef ChaosVector3<float> fChaosVector3;
+typedef ChaosMatrix34<float> fChaosMatrix34;
+typedef ChaosMatrix44<float> fChaosMatrix44;
 
 inline Vector3 GetCoordAround(Entity entity, float angle, float radius, float zOffset, bool relative)
 {

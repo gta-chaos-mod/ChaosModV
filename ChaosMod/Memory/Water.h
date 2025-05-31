@@ -3,7 +3,7 @@
 #include "Util/Types.h"
 
 #define MAXWATERQUADS 821
-#define MAXRIVERQUADS 64
+#define MAXRIVERENTITIES 64
 
 struct CWaterQuad
 {
@@ -58,9 +58,20 @@ struct CWaveQuad
 };
 static_assert(sizeof(CWaveQuad) == 0xC);
 
-struct alignas(8) CRiverQuad
+#pragma pack(push, 1)
+struct CEntity
 {
-	void *Entity;        // 0x0000
+	char pad_0000[32];      // 0x0000
+	void *ModelInfo;        // 0x0020
+	char pad_0028[104];     // 0x0028
+	fChaosVector3 Position; // 0x0090
+};
+static_assert(offsetof(CEntity, Position) == 0x90);
+#pragma pack(pop)
+
+struct alignas(8) CRiverEntity
+{
+	CEntity *Entity;     // 0x0000
 	bool IsRiver;        // 0x0008
 	char pad_0009[7];    // 0x0009
 	fChaosVector3 Min;   // 0x0010
@@ -71,7 +82,7 @@ struct alignas(8) CRiverQuad
 	bool HasTextureData; // 0x0038
 	char pad_0039[7];    // 0x0039
 };
-static_assert(sizeof(CRiverQuad) == 0x40);
+static_assert(sizeof(CRiverEntity) == 0x40);
 
 namespace Memory
 {
@@ -105,13 +116,13 @@ namespace Memory
 		return *handle.At(2).Into().Get<CWaveQuad *>();
 	}
 
-	inline static CRiverQuad *GetAllRiverQuads()
+	inline static CRiverEntity *GetAllRiverEntities()
 	{
 		static Handle handle =
 		    Memory::FindPattern("48 8D 0D ? ? ? ? 48 C1 E0 06 48 8B 04 08", "89 C8 48 C1 E0 06 48 8D 0D ? ? ? ? 48");
 		if (!handle.IsValid())
 			return nullptr;
 
-		return *handle.At(IsLegacy() ? 2 : 8).Into().Get<CRiverQuad *>();
+		return handle.At(IsLegacy() ? 2 : 8).Into().Get<CRiverEntity>();
 	}
 }
