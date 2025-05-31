@@ -52,12 +52,18 @@ namespace Memory
 		if (!handle.IsValid())
 			return;
 
-		globalPtr    = handle.At(IsLegacy() ? 0x53 : 2).Into().Addr();
+		globalPtr = handle.At(IsLegacy() ? 0x53 : 2).Into().Addr();
 
 		__m128 pos;
+#ifdef _MSC_VER
 		pos.m128_f32[0] = coords.x;
 		pos.m128_f32[1] = coords.y;
 		pos.m128_f32[2] = coords.z;
+#else
+		pos[0] = coords.x;
+		pos[1] = coords.y;
+		pos[2] = coords.z;
+#endif
 
 		playSpeechFunc(globalPtr + 0x4410, GET_HASH_KEY(speechName.c_str()), speechParam.c_str(),
 		               GET_HASH_KEY(voiceName.c_str()), -1, 0, 0, -1, 1.0, 1, &speechIndex, &pos);
