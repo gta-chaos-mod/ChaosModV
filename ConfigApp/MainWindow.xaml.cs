@@ -181,9 +181,9 @@ namespace ConfigApp
             {
                 EffectData effectData;
                 if (isJson)
-                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<JArray>(key));
+                    effectData = Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key));
                 else
-                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
+                    effectData = Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
 
                 m_EffectDataMap?.Add(key, effectData);
             }
@@ -191,23 +191,31 @@ namespace ConfigApp
 
         private void WriteEffectsFile()
         {
+            OptionsManager.EffectsFile.ResetFile();
+
             foreach (var (effectId, _) in EffectsMap)
             {
                 var effectData = GetEffectData(effectId);
 
-                var jsonArray = new JArray
-                {
-                    m_TreeMenuItemsMap?[effectId].IsChecked,
-                    (int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed),
-                    effectData.CustomTime.GetValueOrDefault(0),
-                    effectData.WeightMult.GetValueOrDefault(0),
-                    effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent,
-                    effectData.ExcludedFromVoting.GetValueOrDefault(false),
-                    string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName,
-                    effectData.ShortcutKeycode.GetValueOrDefault(0)
-                };
+                var json = new JObject();
+                if (effectData.Enabled is not null)
+                    json["enabled"] = effectData.Enabled;
+                if (effectData.CustomTime is not null)
+                    json["customTime"] = effectData.CustomTime;
+                if (effectData.ExcludedFromVoting is not null)
+                    json["excludedFromVoting"] = effectData.ExcludedFromVoting;
+                if (effectData.TimedType is not null)
+                    json["permanent"] = effectData.TimedType == EffectTimedType.Permanent;
+                if (effectData.ShortcutKeycode is not null)
+                    json["shortcutKeycode"] = effectData.ShortcutKeycode;
+                if (effectData.TimedType is not null)
+                    json["timedType"] = (int)effectData.TimedType;
+                if (effectData.WeightMult is not null)
+                    json["weightMult"] = effectData.WeightMult;
+                if (effectData.CustomName is not null)
+                    json["customName"] = effectData.CustomName;
 
-                OptionsManager.EffectsFile.WriteValue(effectId, jsonArray);
+                OptionsManager.EffectsFile.WriteValue(effectId, json);
             }
 
             OptionsManager.EffectsFile.WriteFile();

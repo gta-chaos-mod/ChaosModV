@@ -12,16 +12,17 @@ nlohmann::json Workshop::GetSubmissionSettingJson(const std::string &submissionP
 		return {};
 
 	std::ifstream file(submissionSettingsFile);
-	std::stringstream buffer;
-	buffer << file.rdbuf();
 
-	try
+	if (!file.fail())
 	{
-		m_CachedSubmissionSettings[submissionPath] = nlohmann::json::parse(buffer.str());
-	}
-	catch (nlohmann::json::exception &)
-	{
-		m_CachedSubmissionSettings[submissionPath] = {};
+		try
+		{
+			m_CachedSubmissionSettings[submissionPath] = nlohmann::json::parse(file);
+		}
+		catch (nlohmann::json::exception &)
+		{
+			m_CachedSubmissionSettings[submissionPath] = {};
+		}
 	}
 
 	return m_CachedSubmissionSettings.at(submissionPath);

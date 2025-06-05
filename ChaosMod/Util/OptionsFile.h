@@ -17,6 +17,7 @@ class OptionsFile
 	std::vector<std::string_view> m_LookupFilePaths;
 	std::string_view m_FoundFilePath;
 	std::unordered_map<std::string, nlohmann::json::value_type> m_Options;
+	bool m_IsJson;
 
   public:
 	OptionsFile(std::vector<std::string_view> lookupFilePaths) : m_LookupFilePaths(lookupFilePaths)
@@ -39,21 +40,22 @@ class OptionsFile
 
 			if (filePath.ends_with(".json"))
 			{
-				std::string fileContent;
-				file >> fileContent;
+				m_IsJson = true;
 				try
 				{
-					auto json = nlohmann::json::parse(fileContent);
+					auto json = nlohmann::json::parse(file);
 					for (const auto &[key, value] : json.items())
 						m_Options.emplace(key, value);
 				}
-				catch (nlohmann::json::exception &)
+				catch (nlohmann::json::exception &e)
 				{
+					LOG("Error when parsing effects file: " << e.what());
 					break;
 				}
 			}
 			else if (filePath.ends_with(".ini"))
 			{
+				m_IsJson = false;
 				std::string line;
 				line.resize(128);
 				while (file.getline(line.data(), 128))
@@ -137,15 +139,26 @@ class OptionsFile
 					else if constexpr (std::is_same<T, Color>())
 					{
 						T parsedResult;
-						std::string strValue = value;
-						if (!Util::TryParse<T>(strValue.c_str(), parsedResult))
+						if (!Util::TryParse<T>(value.get<std::string>().c_str(), parsedResult))
+							return defaultValue;
+
+						return parsedResult;
+					}
+					else if constexpr (!std::is_base_of<nlohmann::json::object_t, T>())
+					{
+						if (m_IsJson)
+						{
+							return value.get<T>();
+						}
+						T parsedResult;
+						if (!Util::TryParse<T>(value.get<std::string>().c_str(), parsedResult))
 							return defaultValue;
 
 						return parsedResult;
 					}
 					else
 					{
-						return value;
+						return value.get<T>();
 					}
 				}
 				catch (nlohmann::json::exception &)
@@ -159,6 +172,11 @@ class OptionsFile
 		}
 
 		return defaultValue;
+	}
+
+	template <typename T> inline T ReadValue(const std::string &key, T defaultValue = {})
+	{
+		return ReadValue(std::vector<std::string> { key }, defaultValue);
 	}
 
 	template <typename T> inline void SetValue(const std::string &key, T value)
