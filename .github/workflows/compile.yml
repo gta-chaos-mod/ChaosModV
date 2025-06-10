@@ -63,12 +63,29 @@ jobs:
         cp ../ChaosMod/build/ChaosMod.pdb
         cp ../ConfigApp/bin/x64/Release/net9.0-windows/win-x64/publish/ChaosModVConfig.pdb
         cp ../TwitchChatVotingProxy/bin/x64/Release/net9.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
+        cd ..
+
+    - name: Copy files to Inno source folder
+      run: |
+        c:\windows\system32\xcopy.exe "dist\" "Installer\" /S /E /I /Y
+
+    - name: Compile .ISS to .EXE Installer
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      with:
+        path: Installer/install.iss
+        options: /O+
 
     - name: Upload :)
       uses: actions/upload-artifact@v4
       with:
         name: chaosmod
         path: dist
+    
+    - name: Upload installer :)
+      uses: actions/upload-artifact@v4
+      with:
+        name: installer
+        path: Installer/dst/ChaosModInstaller.exe
 
     - name: Upload symbols too
       uses: actions/upload-artifact@v4
