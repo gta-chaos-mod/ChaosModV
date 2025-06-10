@@ -117,7 +117,7 @@ jobs:
 
       - name: Copy files to Inno source folder
         run: |
-          c:\windows\system32\xcopy.exe "dst\dst\" "Installer\" /S /E /I /Y
+          cp -r dst\dst\ Installer\src\
 
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2

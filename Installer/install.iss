@@ -10,11 +10,13 @@ Uninstallable=no
 CreateUninstallRegKey=no
 OutputDir="dst"
 OutputBaseFilename="ChaosModInstaller"
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 
 [Files]
-Source: "ChaosMod.asi"; DestDir: "{app}"; Flags: ignoreversion
-Source: "chaosmod/*"; DestDir: "{app}/chaosmod"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "README.txt"; DestDir: "{app}/chaosmod"; Flags: ignoreversion isreadme
+Source: "src/ChaosMod.asi"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src/chaosmod/*"; DestDir: "{app}/chaosmod"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "src/README.txt"; DestDir: "{app}/chaosmod"; Flags: ignoreversion isreadme
 
 [Code]
 function HasGtaInFolder(Folder: String): Boolean;
@@ -198,7 +200,7 @@ end;
 
 function InitializeSetup: Boolean;
 begin
-  Dependency_AddDotNet90;
+  Dependency_AddDotNet90Desktop;
   Dependency_AddVC2015To2022;
 
   Result := True;
