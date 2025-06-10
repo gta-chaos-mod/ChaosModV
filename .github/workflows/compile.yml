@@ -3,92 +3,142 @@ name: Compile
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  build-asi:
     runs-on: windows-latest
-
     steps:
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v2
-    - name: Enable Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1.13.0
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup
-      run: git submodule update --init --recursive
+      - name: Get submodules
+        run: git submodule update --init --recursive
+      
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
-    - name: Get NuGet Packages
-      run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
+      - name: Compile ASI & Dependencies
+        run: |
+          cd ChaosMod
+          mkdir build
+          cd build
+          cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
+          ninja
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-asi
+          path: |
+            ChaosMod/build/ChaosMod.asi
+            ChaosMod/build/ChaosMod.pdb
 
-    - name: Compile Config App
-      run: dotnet publish ConfigApp -c Release
+  build-dotnet:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Compile Voting Proxy
-      run: dotnet publish TwitchChatVotingProxy -c Release
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Compile ASI & Dependencies
-      run: |
-        cd ChaosMod
-        mkdir build
-        cd build
-        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
-        ninja
+      - name: Get NuGet Packages
+        run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
 
-    - name: Compile Voting Overlay
-      run: |
-        cd twitchVotingOverlay
-        npm install
-        npm run compile:prod
+      - name: Compile Config App
+        run: dotnet publish ConfigApp -c Release -o dst
 
-    - name: Generate Native Definitions for Lua Runtime
-      run: |
-        cd scripts
-        python generate_natives.py
+      - name: Compile Voting Proxy
+        run: dotnet publish TwitchChatVotingProxy -c Release -o dst
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-dotnet
+          path: dst
 
-    - name: Ready up for distribution
-      run: |
-        mkdir dist
-        cd dist
-        C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
-        7z.exe x data.zip
-        rm data.zip
-        cp ../ChaosMod/build/ChaosMod.asi
-        cp ../ConfigApp/bin/x64/Release/net9.0-windows/win-x64/publish/ChaosModVConfig.exe chaosmod/
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net9.0-windows/win-x64/publish/TwitchChatVotingProxy.exe chaosmod/
-        cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
-        cp ../scripts/natives_def.lua chaosmod/
-        cd ..
-        mkdir symbols
-        cd symbols
-        cp ../ChaosMod/build/ChaosMod.pdb
-        cp ../ConfigApp/bin/x64/Release/net9.0-windows/win-x64/publish/ChaosModVConfig.pdb
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net9.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
-        cd ..
+  build-misc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Copy files to Inno source folder
-      run: |
-        c:\windows\system32\xcopy.exe "dist\" "Installer\" /S /E /I /Y
+      - name: Compile Voting Overlay
+        run: |
+          cd twitchVotingOverlay
+          npm install
+          npm run compile:prod
 
-    - name: Compile .ISS to .EXE Installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
-      with:
-        path: Installer/install.iss
-        options: /O+
+      - name: Generate Native Definitions for Lua Runtime
+        run: |
+          cd scripts
+          python generate_natives.py
 
-    - name: Upload :)
-      uses: actions/upload-artifact@v4
-      with:
-        name: chaosmod
-        path: dist
-    
-    - name: Upload installer :)
-      uses: actions/upload-artifact@v4
-      with:
-        name: installer
-        path: Installer/dst/ChaosModInstaller.exe
+      - name: Copy to folder
+        run: |
+          mkdir dst
+          cd dst
+          cp -r ../twitchVotingOverlay/dist twitchOverlay
+          cp ../scripts/natives_def.lua
 
-    - name: Upload symbols too
-      uses: actions/upload-artifact@v4
-      with:
-        name: symbols
-        path: symbols
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-misc
+          path:
+            dst
+  
+  package:
+    needs: [build-asi, build-dotnet, build-misc]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: dst-*
+          merge-multiple: true
+          path: dst
+
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: dst-*
+
+      - name: Ready up for distribution
+        run: |
+          cd dst
+          mkdir dst
+          C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
+          7z.exe x data.zip -o"dst\"
+          rm data.zip
+          cp ChaosMod.asi dst/
+          cp ChaosModVConfig.exe dst/chaosmod/
+          cp TwitchChatVotingProxy.exe dst/chaosmod/
+          cp -r twitchOverlay dst/chaosmod/twitchOverlay/
+          cp natives_def.lua dst/chaosmod/
+          mkdir symbols
+          cp ChaosMod.pdb symbols/
+          cp ChaosModVConfig.pdb symbols/
+          cp TwitchChatVotingProxy.pdb symbols/
+          cd ..
+
+      - name: Copy files to Inno source folder
+        run: |
+          c:\windows\system32\xcopy.exe "dst\dst\" "Installer\" /S /E /I /Y
+
+      - name: Compile .ISS to .EXE Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: Installer/install.iss
+          options: /O+
+
+      - name: Upload :)
+        uses: actions/upload-artifact@v4
+        with:
+          name: chaosmod
+          path: dst/dst
+      
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: Installer/dst/ChaosModInstaller.exe
+
+      - name: Upload symbols too
+        uses: actions/upload-artifact@v4
+        with:
+          name: symbols
+          path: dst/symbols
