@@ -130,15 +130,18 @@ jobs:
         with:
           name: chaosmod
           path: dst/dst
+          include-hidden-files: true
       
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: installer
           path: Installer/dst/ChaosModInstaller.exe
+          include-hidden-files: true
 
       - name: Upload symbols too
         uses: actions/upload-artifact@v4
         with:
           name: symbols
           path: dst/symbols
+          include-hidden-files: true
