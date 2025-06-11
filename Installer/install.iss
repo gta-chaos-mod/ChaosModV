@@ -7,6 +7,7 @@ DefaultDirName=""
 DisableDirPage=yes
 CreateAppDir=no
 Uninstallable=no
+DisableWelcomePage=no
 CreateUninstallRegKey=no
 OutputDir="dst"
 OutputBaseFilename="ChaosModInstaller"
@@ -121,12 +122,120 @@ begin
   end;
 end;
 
-var GDestDir: String;
+var
+  DownloadPage: TDownloadWizardPage;
+  GExtractionPage: TOutputProgressWizardPage;
+  GScriptHookPath: String;
 
-function GetDestDir(Param: String): String;
+function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
 begin
-  MsgBox('GetDestDir: ' + Param + ' ' + GDestDir, mbInformation, MB_OK);
-  Result := GDestDir;
+  if Progress = ProgressMax then
+    Log(Format('Successfully downloaded file to {tmp}: %s', [FileName]));
+  Result := True;
+end;
+
+function ShowDownloadPage: Boolean;
+var
+  StringArray: TArrayOfString;
+  i: Integer;
+  StartPos: Integer;
+  EndPos: Integer;
+  DownloadLink: String;
+begin
+  DownloadPage.Clear;
+  DownloadPage.Show;
+  try
+    try
+      DownloadTemporaryFile('http://www.dev-c.com/gtav/scripthookv/', 'page.html', '', @OnDownloadProgress);
+
+      LoadStringsFromFile(ExpandConstant('{tmp}\page.html'), StringArray);
+      for i := 0 to Length(StringArray) - 1 do
+        if Pos('Download</a>', StringArray[i]) <> 0 then
+        begin
+          StartPos := Pos('href="', StringArray[i]) + 6;
+          DownloadLink := Copy(StringArray[i], StartPos, Length(StringArray[i]));
+          EndPos := Pos('"', DownloadLink) - 1;
+          DownloadLink := Copy(DownloadLink, 1, EndPos);
+          DownloadPage.Add(DownloadLink, 'ScriptHookV.zip', '');
+          DownloadPage.Download;
+          GScriptHookPath := ExpandConstant('{tmp}\ScriptHookV.zip');
+          break;
+        end;
+      Result := True;
+    except
+      if DownloadPage.AbortedByUser then
+        Log('Aborted by user.')
+      else
+        SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
+      Result := False;
+    end;
+  finally
+    DownloadPage.Hide;
+  end;
+end;
+
+const
+  NO_PROGRESS_BOX = 4;
+  RESPOND_YES_TO_ALL = 16;
+
+procedure UnZip(ZipPath, FileName, TargetPath: string); 
+var
+  Shell: Variant;
+  ZipFile: Variant;
+  Item: Variant;
+  TargetFolder: Variant;
+begin
+  Shell := CreateOleObject('Shell.Application');
+
+  ZipFile := Shell.NameSpace(ZipPath);
+  if VarIsClear(ZipFile) then
+    RaiseException(Format('Cannot open ZIP file "%s" or does not exist', [ZipPath]));
+
+  Item := ZipFile.ParseName(FileName);
+  if VarIsClear(Item) then
+    RaiseException(Format('Cannot find "%s" in "%s" ZIP file', [FileName, ZipPath]));
+
+  TargetFolder := Shell.NameSpace(TargetPath);
+  if VarIsClear(TargetFolder) then
+    RaiseException(Format('Target path "%s" does not exist', [TargetPath]));
+
+  TargetFolder.CopyHere(Item, NO_PROGRESS_BOX or RESPOND_YES_TO_ALL);
+end;
+
+procedure UnZipAndShowProgress(ZipPath, FileName, TargetPath: string);
+begin
+  GExtractionPage.SetText('Extracting', FileName);
+  UnZip(ZipPath, FileName, TargetPath);
+end;
+
+procedure ShowExtractionPage(Folder: String);
+begin
+  GExtractionPage.Show;
+  try
+    try
+      UnZipAndShowProgress(GScriptHookPath, 'bin\ScriptHookV.dll', Folder);
+      if FileExists(Folder + '\GTA5.exe') then
+      begin
+        UnZipAndShowProgress(GScriptHookPath, 'bin\dinput8.dll', Folder);
+      end
+      else if FileExists(Folder + '\GTA5_Enhanced.exe') then
+      begin
+        UnZipAndShowProgress(GScriptHookPath, 'bin\xinput1_4.dll', Folder);
+      end
+      else
+      begin
+        UnZipAndShowProgress(GScriptHookPath, 'bin\dinput8.dll', Folder);
+        UnZipAndShowProgress(GScriptHookPath, 'bin\xinput1_4.dll', Folder);
+      end;
+
+      GExtractionPage.SetText('Extracted!', '');
+      SuppressibleMsgBox('ScriptHookV installed successfully', mbInformation, MB_OK, IDOK);
+    except
+      SuppressibleMsgBox('Couldn''t extract ScriptHookV: ' + AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
+    end;
+  finally
+    GExtractionPage.Hide;
+  end;
 end;
 
 function PathSelectorPageNextClick(Sender: TWizardPage): Boolean;
@@ -146,6 +255,16 @@ begin
   end;
 
   WizardForm.DirEdit.Text := Folder;
+
+  if not (FileExists(Folder + '\ScriptHookV.dll') and 
+          ((FileExists(Folder + '\dinput8.dll') and FileExists(Folder + '\GTA5.exe')) or
+          (FileExists(Folder + '\xinput1_4.dll') and FileExists(Folder + '\GTA5_Enhanced.exe')))) then
+    if MsgBox('Warning: ScriptHook does not seem to be installed! ScriptHook is required to run chaos mod. Do you want to install it automatically?', mbError, MB_YESNO) = IDYES then
+    begin
+      ShowDownloadPage;
+      if GScriptHookPath <> '' then
+        ShowExtractionPage(Folder);
+    end;
 
   Result := true;
 end;
@@ -196,6 +315,10 @@ begin
   PathSelectionPage.PromptLabels[0].FocusControl := PathsComboBox;
 
   PathSelectionPage.OnNextButtonClick := @PathSelectorPageNextClick;
+
+  DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+  DownloadPage.ShowBaseNameInsteadOfUrl := True;
+  GExtractionPage := CreateOutputProgressPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc));
 end;
 
 function InitializeSetup: Boolean;
