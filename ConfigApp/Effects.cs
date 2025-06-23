@@ -239,6 +239,7 @@
             { "peds_portal_gun", new EffectInfo("Portal Guns", EffectCategory.Peds, true) },
             { "misc_fireworks", new EffectInfo("Fireworks!", EffectCategory.Misc, true) },
             { "peds_spawnballasquad", new EffectInfo("Spawn Balla Squad", EffectCategory.Peds) },
+            { "peds_spawnarmysquad", new EffectInfo("Spawn Balla Squad", EffectCategory.Peds) },
             { "playerveh_despawn", new EffectInfo("Remove Current Vehicle", EffectCategory.Vehicle) },
             { "peds_scooterbrothers", new EffectInfo("Scooter Brothers", EffectCategory.Peds) },
             { "peds_intorandomvehs", new EffectInfo("Set Everyone Into Random Vehicles", EffectCategory.Peds) },
