@@ -73,6 +73,9 @@ namespace Memory
 					case 849905853:
 					case 375527679:
 					case 28811031:
+					case 3684886537:
+					case 485882440:
+					case 3094580364:
 						continue;
 					}
 

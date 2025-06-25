@@ -90,7 +90,10 @@ void HK_ApplyChangeSetEntryStub(ChangeSetEntry *entry)
 		"dlc_mp2024_02_G9ECCRC:/common/data/pickups.meta",
 		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weapon_strickler.meta",
 		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weaponanimations.meta",
-		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weaponcomponents.meta"
+		"dlc_mp2024_02_G9ECCRC:/common/data/ai/weaponcomponents.meta",
+
+		"dlc_mp2025_01_G9EC:/x64/levels/mp2025_01_G9EC/vehiclemods/tampa4hsw_mods.rpf",
+		"dlc_mp2025_01_G9EC:/x64/levels/mp2025_01_G9EC/vehiclemods/woodlanderhsw_mods.rpf"
 	};
 
 	if (entry->type == 6 || entry->type == 7 || !entry->dataFile || !badFiles.contains(entry->dataFile->name))

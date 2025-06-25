@@ -52,7 +52,7 @@ namespace Memory
 			}
 
 			// Legal screen
-			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01", "E9 6B 05 00 00 E8");
+			handle = FindPattern("E8 ? ? ? ? EB 0D B1 01", "00 E9 ? 05 00 00 E8 ? 07");
 			if (!handle.IsValid())
 			{
 				LOG("SkipIntro: Failed to patch legal screen!");
@@ -66,7 +66,7 @@ namespace Memory
 					Write<BYTE>(handle.At(0x9).Into().At(0x3).Get<BYTE>(), 0x2);
 				}
 				else
-					Write<BYTE>(handle.At(-0x10).Get<BYTE>(), 0x90, 6);
+					Write<BYTE>(handle.At(-0xF).Get<BYTE>(), 0x90, 6);
 
 				LOG("SkipIntro: Patched legal screen");
 			}
