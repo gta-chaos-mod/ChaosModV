@@ -60,7 +60,7 @@ def parse_native(native_hash, native_data, _out):
     if len(args) > 0:
         _out.write(",")
         for i in range(len(args)):
-            _out.write(args[i].name + ('+.0' if args[i].type == 'float' else ''))
+            _out.write(args[i].name + (' and ' + args[i].name + '+.0 or 0.0' if args[i].type == 'float' else ''))
             if i < len(args) - 1:
                 _out.write(",")
     _out.write(")\nend\n\n")
