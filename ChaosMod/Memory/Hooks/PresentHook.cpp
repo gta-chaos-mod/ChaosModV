@@ -20,12 +20,12 @@ static bool OnHook()
 {
 	Handle handle;
 
-	handle = Memory::FindPattern("80 7E 10 00 48 8B", "48 8B 18 48 8D 0D");
+	handle = Memory::FindPattern("00 80 7E 10 00 48 8B", "48 8B 18 48 8D 0D");
 	if (!handle.IsValid())
 		return false;
 
 	// IDXGISwapChain
-	handle                    = *handle.At(IsLegacy() ? 6 : 5).Into().Value<DWORD64 *>();
+	handle                    = *handle.At(IsLegacy() ? 7 : 5).Into().Value<DWORD64 *>();
 
 	ms_PresentAddr            = handle.At(64).Get<void *>();
 	OG_IDXGISwapChain_Present = *(HRESULT(**)(IDXGISwapChain *, UINT, UINT))ms_PresentAddr;
