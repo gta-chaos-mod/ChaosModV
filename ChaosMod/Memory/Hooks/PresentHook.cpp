@@ -20,7 +20,7 @@ static bool OnHook()
 {
 	Handle handle;
 
-	handle = Memory::FindPattern("80 7E 10 00 48 8B", "48 8B 18 48 8D 0D");
+	handle = Memory::FindPattern("80 7E ? ? 48 8B 0D ? ? ? ? 48 8d 94 24", "48 8B 18 48 8D 0D");
 	if (!handle.IsValid())
 		return false;
 
