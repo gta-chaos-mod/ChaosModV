@@ -269,6 +269,10 @@ namespace ConfigApp
                         m_EffectDataMap[effectMisc.EffectId] = effectData;
                     menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 };
+                menuItem.OnCheckedClick = () =>
+                {
+                    effectData.Enabled = menuItem.IsChecked;
+                };
                 menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 menuItem.IsChecked = effectData.Enabled ?? true;
                 m_TreeMenuItemsMap.Add(effectMisc.EffectId, menuItem);

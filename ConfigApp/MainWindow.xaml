@@ -37,7 +37,7 @@
                             <TreeView.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type local:TreeMenuItem}" ItemsSource="{Binding Children}">
                                     <StackPanel Orientation="Horizontal" Height="20">
-                                        <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                                        <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Command="{Binding OnCheckedCommand}" />
                                         <TextBlock Text="{Binding Text}" Margin="5,0" VerticalAlignment="Center" />
                                         <Button Content="..." Visibility="{Binding IsConfigVisible}" IsEnabled="{Binding IsConfigEnabled}" Width="18" Height="18" Margin="8,0"
                                                     VerticalAlignment="Center" Command="{Binding OnConfigureCommand}" />
