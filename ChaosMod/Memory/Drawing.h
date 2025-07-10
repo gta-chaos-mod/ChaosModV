@@ -45,7 +45,7 @@ namespace Memory
 
 				AllocateDrawRect     = handle.At(0x1C).Into().Get<char *(void *)>();
 				drawRects            = handle.At(0x14).Into().Get<char>();
-				drawRectsSize        = handle.At(0x0D).Value<int>();
+				drawRectsSize        = handle.At(0x0E).Value<int>();
 				mainThreadFrameIndex = handle.At(0x06).Into().Get<int>();
 
 				handle               = Memory::FindPattern("E8 ?? ?? ?? ?? B9 70 FF FF FF");
