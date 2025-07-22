@@ -23,7 +23,7 @@ inline std::mutex g_LogMutex;
 #define _LOG(_text, _stream)                                 \
 	do                                                       \
 	{                                                        \
-		const std::lock_guard<std::mutex> lock(g_LogMutex); \
+		const std::lock_guard<std::mutex> lock(g_LogMutex);  \
 		_stream << _text;                                    \
 	} while (0)
 
