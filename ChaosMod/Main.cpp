@@ -216,6 +216,17 @@ static void MainRun()
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
 
+	if (ComponentExists<EffectDispatcher>())
+	{
+		const auto dispatcher = GetComponent<EffectDispatcher>();
+		dispatcher->ClearEffects();
+		while (dispatcher->IsClearingEffects())
+		{
+			dispatcher->OnRun();
+			WAIT(0);
+		}
+	}
+
 	for (auto &component : g_Components)
 		component->OnModPauseCleanup();
 

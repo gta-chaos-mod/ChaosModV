@@ -55,6 +55,8 @@ namespace EffectThreads
 	bool DoesThreadExist(LPVOID threadId);
 	bool HasThreadOnStartExecuted(LPVOID threadId);
 
+	int GetThreadCount();
+
 	bool IsThreadAnEffectThread();
 
 	EffectThreadSharedData *GetThreadSharedData(LPVOID threadId);

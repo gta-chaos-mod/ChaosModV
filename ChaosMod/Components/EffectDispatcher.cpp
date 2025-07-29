@@ -6,6 +6,7 @@
 #include "Components/EffectSound/EffectSoundManager.h"
 #include "Components/MetaModifiers.h"
 #include "Effects/EffectCategory.h"
+#include "Effects/EffectThreads.h"
 #include "Effects/EffectTimedType.h"
 #include "Effects/EnabledEffects.h"
 #include "Effects/Register/RegisteredEffectsMetadata.h"
@@ -284,7 +285,18 @@ void EffectDispatcher::UpdateEffects(float deltaTime)
 		m_PermanentEffects.clear();
 		SharedState.DispatchedEffectsLog.clear();
 
-		EffectThreads::StopThreadsImmediately();
+		static bool startedStopping = false;
+		
+		if (!startedStopping)
+		{
+			EffectThreads::StopThreadsImmediately();
+			startedStopping = true;
+		}
+
+		if (EffectThreads::GetThreadCount() > 0)
+			return;
+
+		startedStopping = false;
 
 		// Ensure player control isn't stuck in disabled state
 		SET_PLAYER_CONTROL(PLAYER_ID(), true, 0);

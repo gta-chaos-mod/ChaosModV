@@ -79,6 +79,11 @@ namespace EffectThreads
 			it = _StopThreadImmediately(it);
 	}
 
+	int GetThreadCount()
+	{
+		return m_Threads.size();
+	}
+
 	void PauseThisThread(DWORD timeMs)
 	{
 		auto fiber = GetCurrentFiber();
