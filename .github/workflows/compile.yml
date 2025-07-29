@@ -7,20 +7,41 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get submodules
         run: git submodule update --init --recursive
+
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v1
       
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
+      - name: Cache build files
+        id: cache-build-restore
+        uses: actions/cache/restore@v4
+        env:
+          cache-name: cache-build-dir
+        with:
+          path: ChaosMod/build
+          key: build-${{ hashFiles('ChaosMod/**', 'CMakeLists.txt') }}
+          restore-keys: build-
+
       - name: Compile ASI & Dependencies
         run: |
           cd ChaosMod
-          mkdir build
+          New-Item -ItemType Directory -Force -Path build
           cd build
           cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
           ninja
+
+      - name: Save build cache
+        uses: actions/cache/save@v4
+        with:
+          path: ChaosMod/build
+          key: ${{ steps.cache-build-restore.outputs.cache-primary-key }}
       
       - uses: actions/upload-artifact@v4
         with:
