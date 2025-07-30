@@ -7,6 +7,9 @@ file(GLOB_RECURSE SRC ${PROJECT_SOURCE_DIR}/Components/*.cpp ${PROJECT_SOURCE_DI
 file(GLOB PATTERNS_SRC ${PROJECT_SOURCE_DIR}/../vendor/Patterns/Patterns.cpp)
 add_library(ChaosMod MODULE ${ROOT_SRC} ${SRC} ${PATTERNS_SRC} ChaosMod.rc)
 
+file (STRINGS ${PROJECT_SOURCE_DIR}/../version.txt MOD_VERSION)
+configure_file(${PROJECT_SOURCE_DIR}/InfoTEMPLATE.h.in ${PROJECT_SOURCE_DIR}/Info.h @ONLY)
+
 target_precompile_headers(ChaosMod PUBLIC stdafx.cpp)
 
 set_target_properties(ChaosMod PROPERTIES SUFFIX ".asi")
