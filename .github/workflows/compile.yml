@@ -95,6 +95,11 @@ jobs:
           cp -r ../twitchVotingOverlay/dist twitchOverlay
           cp ../scripts/natives_def.lua
 
+      - name: Copy version.txt
+        run: |
+          $version = Get-Content version.txt -Raw
+          "ChaosMod version $($version)`n`nBuilt on $([DateTime]::UtcNow.ToString('u').Replace('Z',' UTC'))" | Set-Content dst\version.txt
+
       - uses: actions/upload-artifact@v4
         with:
           name: dst-misc
@@ -130,6 +135,7 @@ jobs:
           cp TwitchChatVotingProxy.exe dst/chaosmod/
           cp -r twitchOverlay dst/chaosmod/twitchOverlay/
           cp natives_def.lua dst/chaosmod/
+          cp version.txt dst/chaosmod/
           mkdir symbols
           cp ChaosMod.pdb symbols/
           cp ChaosModVConfig.pdb symbols/
