@@ -1,3 +1,23 @@
+_v.2.2_ 
+* Added ChaosMod Installer
+* Added 2 effects
+* Multiple effect fixes and improvements
+* Fixes for recent Legacy builds
+* Added (almost) full support for Enhanced
+  * The only thing not yet ported is shader effects
+* (Beta) 3D Sound support, options for the sounds to follow spawned entities
+* Added Crossing Challenge component. It allows to set a starting and an ending point; then, once active, it respawns player at the start on death and shows a congratulatory message when reaching the end
+* ConfigApp:
+  * Split Misc tab into subtabs & rename to Settings
+  * Workshop: Made an option to open text and sound files for preview
+  * Workshop: Improved search
+  * Sound files now show effect names instead of IDs
+* Replaced .ini configs with .json configs
+* Changed effect weighting logic to be exponential
+* Lua Scripts: Multiple fixes
+* Major internal code cleanup
+
+
 _v.2.1.3_  
 *   Fixed permanent effects persisting through mod pausing
 *   Fixed "Override Timed Effect Type" and "Override Timed Effect Timer Length" options in config utility wrongfully showing up as checked
