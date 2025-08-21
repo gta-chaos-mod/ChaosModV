@@ -23,7 +23,6 @@ static void OnStop()
 	for (size_t i = 0; i < peds.size(); i++)
 	{
 		REMOVE_PARTICLE_FX_FROM_ENTITY(peds.at(i));
-		peds.erase(peds.begin() + i);
 	}
 	peds.clear();
 }
