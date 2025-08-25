@@ -55,6 +55,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             m_Client.Ready += OnReady;
             m_Client.Disconnected += OnDisconnected;
             m_Client.SlashCommandExecuted += OnSlashCommandExecuted;
+            m_Client.ButtonExecuted  += OnButtonExecuted;
 
             await m_Client.LoginAsync(TokenType.Bot, m_BotToken);
             await m_Client.StartAsync();
@@ -93,7 +94,16 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
             try
             {
-                await channel.SendMessageAsync(message);
+                var builder = new ComponentBuilder()
+                    .WithButton("1", "1", row: 0)
+                    .WithButton("2", "2", row: 0)
+                    .WithButton("3", "3", row: 0)
+                    .WithButton("4", "4", row: 0)
+                    .WithButton("5", "5", row: 1)
+                    .WithButton("6", "6", row: 1)
+                    .WithButton("7", "7", row: 1)
+                    .WithButton("8", "8", row: 1);
+                await channel.SendMessageAsync(message, components: builder.Build());
             }
             catch (HttpException)
             {
@@ -185,6 +195,29 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 Message = option,
                 ClientId = $"{command.User.Id}",
                 Username = command.User.GlobalName
+            });
+        }
+        /// <summary>
+        /// Called when the discord client receives a button press
+        /// </summary>
+        public async Task OnButtonExecuted(SocketMessageComponent component)
+        {
+            string option = component.Data.CustomId;
+            
+            // pretty sure this would be useless for buttons, I only followed the exact code to not make a mistake
+            if (string.IsNullOrEmpty(option))
+            {
+                await component.RespondAsync("Missing option", ephemeral: true);
+                return;
+            }
+
+            await component.RespondAsync($"Voted for {option}", ephemeral: true);
+
+            OnMessage?.Invoke(this, new OnMessageArgs()
+            {
+                Message = option,
+                ClientId = $"{component.User.Id}",
+                Username = component.User.GlobalName
             });
         }
     }
