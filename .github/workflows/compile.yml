@@ -4,6 +4,8 @@ on: [push, pull_request]
 
 jobs:
   build-asi:
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,8 +28,8 @@ jobs:
           cache-name: cache-build-dir
         with:
           path: ChaosMod/build
-          key: build-${{ hashFiles('ChaosMod/**', 'CMakeLists.txt') }}
-          restore-keys: build-
+          key: build-${{ env.BRANCH_NAME }}-${{ hashFiles('ChaosMod/**', 'CMakeLists.txt') }}
+          restore-keys: build-${{ env.BRANCH_NAME }}
 
       - name: Compile ASI & Dependencies
         run: |
