@@ -133,7 +133,7 @@ namespace ConfigApp
 
             try
             {
-                string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
+                string newVersion = await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt");
 
                 if (Info.VERSION != newVersion)
                     update_available_button.Visibility = Visibility.Visible;
