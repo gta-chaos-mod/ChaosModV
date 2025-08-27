@@ -7,7 +7,7 @@
 
 [Setup]
 AppName=Chaos Mod
-AppVersion=${AppVer}
+AppVersion={#AppVer}
 DefaultDirName=""
 DisableDirPage=yes
 CreateAppDir=no
