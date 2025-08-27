@@ -116,10 +116,6 @@ namespace EffectConfig
 			configValues.Values.WeightMult         = GetIfPresent(value, "weightMult", 0);
 			configValues.valueEffectName           = GetIfPresent(value, "customName", std::string());
 		}
-		else
-		{
-			LOG("WARNING: Config value for effect " << effectId << " not found!");
-		}
 
 		return configValues;
 	}
