@@ -1,8 +1,13 @@
 #include "../vendor/CodeDependencies.iss"
 
+#define VerFile FileOpen("..\version.txt")
+#define AppVer FileRead(VerFile)
+#expr FileClose(VerFile)
+#undef VerFile
+
 [Setup]
 AppName=Chaos Mod
-AppVersion=2.2-beta
+AppVersion=${AppVer}
 DefaultDirName=""
 DisableDirPage=yes
 CreateAppDir=no
