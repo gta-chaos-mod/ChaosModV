@@ -16,7 +16,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Restore Timestamps
-        uses: chetan/git-restore-mtime-action@v1
+        uses: chetan/git-restore-mtime-action@v2.1.1
       
       - name: Enable Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1.13.0
