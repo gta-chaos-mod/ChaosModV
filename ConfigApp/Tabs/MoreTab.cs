@@ -27,7 +27,7 @@ namespace ConfigApp.Tabs
 
             PushRowPair("Visit the mod page for more information", GenerateInfoButton("GTA5-Mods", (sender, eventArgs) =>
             {
-                Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+                Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v");
             }));
             PopRow();
 
