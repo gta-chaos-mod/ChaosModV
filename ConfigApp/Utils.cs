@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -119,6 +120,15 @@ namespace ConfigApp
 
             var t = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
             return t.IsPrimitive || t == typeof(decimal);
+        }
+
+        public static void OpenURL(string url)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 
 namespace ConfigApp
@@ -196,7 +195,7 @@ namespace ConfigApp
                     {
                         try
                         {
-                            System.Diagnostics.Process.Start(new ProcessStartInfo(path is not null ? path.Replace('/', '\\') + pathName : pathName) { UseShellExecute = true });
+                            Utils.OpenURL(path is not null ? path.Replace('/', '\\') + pathName : pathName);
                         }
                         catch (Win32Exception)
                         {
