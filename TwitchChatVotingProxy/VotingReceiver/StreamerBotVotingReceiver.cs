@@ -84,30 +84,50 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 else
                 {
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    m_Logger.Debug($"Received message from Streamer.bot: {message}");
+                    m_Logger.Debug($"Received raw message from Streamer.bot: {message}");
 
                     try
                     {
+                        m_Logger.Debug("Attempting to parse message as JObject.");
                         var json = JObject.Parse(message);
+                        m_Logger.Debug($"Successfully parsed message. JSON: {json.ToString(Newtonsoft.Json.Formatting.None)}");
+
                         if (json["event"]?["source"]?.ToString() == "YouTube" && json["event"]?["type"]?.ToString() == "Message")
                         {
+                            m_Logger.Debug("Message is a YouTube Message event.");
                             var username = json["data"]?["message"]?["displayName"]?.ToString();
                             var text = json["data"]?["message"]?["message"]?.ToString();
 
+                            m_Logger.Debug($"Extracted username: '{username}', text: '{text}'");
+
                             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(text))
                             {
+                                m_Logger.Information($"Valid YouTube message received. User: '{username}', Message: '{text}'. Invoking OnMessage event.");
                                 OnMessage?.Invoke(this, new OnMessageArgs
                                 {
                                     ClientId = username, // Using username as client id
                                     Username = username,
                                     Message = text
                                 });
+                                m_Logger.Information("OnMessage event invoked.");
+                            }
+                            else
+                            {
+                                m_Logger.Warning($"Extracted username or text was null or empty. Username: '{username}', Text: '{text}'");
                             }
                         }
+                        else
+                        {
+                            m_Logger.Debug($"Message is not a YouTube Message event. Event source: '{json["event"]?["source"]}', type: '{json["event"]?["type"]}'");
+                        }
+                    }
+                    catch (Newtonsoft.Json.JsonReaderException jex)
+                    {
+                        m_Logger.Error(jex, $"Failed to parse JSON message from Streamer.bot. Raw message: '{message}'");
                     }
                     catch (Exception ex)
                     {
-                        m_Logger.Error(ex, "Failed to parse message from Streamer.bot");
+                        m_Logger.Error(ex, "An unexpected error occurred while processing message from Streamer.bot.");
                     }
                 }
             }
