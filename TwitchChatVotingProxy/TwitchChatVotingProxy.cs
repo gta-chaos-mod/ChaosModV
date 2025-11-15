@@ -86,6 +86,11 @@ namespace TwitchChatVotingProxy
                 votingReceivers.Add(("Twitch", new TwitchVotingReceiver(config, chaosPipe)));
             if (config.ReadValue("EnableVotingDiscord", false))
                 votingReceivers.Add(("Discord", new DiscordVotingReceiver(config, chaosPipe)));
+            if (config.ReadValue("EnableVotingStreamerBot", false))
+            {
+                var streamerBotPort = config.ReadValue("StreamerBotPort", 8080);
+                votingReceivers.Add(("Streamer.bot", new StreamerBotVotingReceiver(streamerBotPort)));
+            }
 
             var tokenSource = new CancellationTokenSource();
 
