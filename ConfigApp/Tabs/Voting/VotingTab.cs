@@ -10,7 +10,8 @@ namespace ConfigApp.Tabs.Voting
         {
             { "General", new GeneralTab() },
             { "Twitch", new TwitchTab() },
-            { "Discord", new DiscordTab() }
+            { "Discord", new DiscordTab() },
+            { "Streamer.bot", new StreamerBotTab() }
         };
 
         protected override void InitContent()
