@@ -128,7 +128,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
-            logger.Information($"Broadcasting overlay request '{request}' with message: {jsonMessage}");
+            // logger.Information($"Broadcasting overlay request '{request}' with message: {jsonMessage}");
             Broadcast(jsonMessage);
         }
     }
