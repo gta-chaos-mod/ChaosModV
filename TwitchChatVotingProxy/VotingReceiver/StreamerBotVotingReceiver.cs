@@ -73,61 +73,70 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
         private async Task Listen()
         {
-            var buffer = new byte[1024 * 4];
+            var buffer = new ArraySegment<byte>(new byte[8192]); // Use a larger buffer
+            
             while (ws.State == WebSocketState.Open)
             {
-                var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Close)
+                using (var ms = new System.IO.MemoryStream())
                 {
-                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                }
-                else
-                {
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    m_Logger.Debug($"Received raw message from Streamer.bot: {message}");
-
-                    try
+                    WebSocketReceiveResult result;
+                    do
                     {
-                        m_Logger.Debug("Attempting to parse message as JObject.");
-                        var json = JObject.Parse(message);
-                        m_Logger.Debug($"Successfully parsed message. JSON: {json.ToString(Newtonsoft.Json.Formatting.None)}");
+                        result = await ws.ReceiveAsync(buffer, CancellationToken.None);
+                        ms.Write(buffer.Array, buffer.Offset, result.Count);
+                    }
+                    while (!result.EndOfMessage);
 
-                        if (json["event"]?["source"]?.ToString() == "Youtube" && json["event"]?["type"]?.ToString() == "Message")
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                        break; // Exit loop on close
+                    }
+
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    using (var reader = new System.IO.StreamReader(ms, Encoding.UTF8))
+                    {
+                        var message = await reader.ReadToEndAsync();
+                        m_Logger.Debug($"Received raw message from Streamer.bot: {message}");
+
+                        try
                         {
-                            m_Logger.Debug("Message is a YouTube Message event.");
-                            var username = json["data"]?["user"]?["name"]?.ToString();
-                            var text = json["data"]?["message"]?.ToString().Trim();
+                            m_Logger.Debug("Attempting to parse message as JObject.");
+                            var json = JObject.Parse(message);
+                            m_Logger.Debug($"Successfully parsed message. JSON: {json.ToString(Newtonsoft.Json.Formatting.None)}");
 
-                            m_Logger.Debug($"Extracted username: '{username}', text: '{text}'");
-
-                            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(text))
+                            if (json["event"]?["source"]?.ToString() == "YouTube" && json["event"]?["type"]?.ToString() == "Message")
                             {
-                                m_Logger.Information($"Valid YouTube message received. User: '{username}', Message: '{text}'. Invoking OnMessage event.");
-                                OnMessage?.Invoke(this, new OnMessageArgs
+                                m_Logger.Debug("Message is a YouTube Message event.");
+                                var username = json["data"]?["user"]?["name"]?.ToString();
+                                var text = json["data"]?["message"]?.ToString().Trim();
+
+                                m_Logger.Debug($"Extracted username: '{username}', text: '{text}'");
+
+                                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(text))
                                 {
-                                    ClientId = username, // Using username as client id
-                                    Username = username,
-                                    Message = text
-                                });
-                                m_Logger.Information("OnMessage event invoked.");
+                                    m_Logger.Information($"Valid YouTube message received. User: '{username}', Message: '{text}'. Invoking OnMessage event.");
+                                    OnMessage?.Invoke(this, new OnMessageArgs { ClientId = username, Username = username, Message = text });
+                                    m_Logger.Information("OnMessage event invoked.");
+                                }
+                                else
+                                {
+                                    m_Logger.Warning($"Extracted username or text was null or empty. Username: '{username}', Text: '{text}'");
+                                }
                             }
                             else
                             {
-                                m_Logger.Warning($"Extracted username or text was null or empty. Username: '{username}', Text: '{text}'");
+                                m_Logger.Debug($"Message is not a YouTube Message event. Event source: '{json["event"]?["source"]}', type: '{json["event"]?["type"]}'");
                             }
                         }
-                        else
+                        catch (Newtonsoft.Json.JsonReaderException jex)
                         {
-                            m_Logger.Debug($"Message is not a YouTube Message event. Event source: '{json["event"]?["source"]}', type: '{json["event"]?["type"]}'");
+                            m_Logger.Error(jex, $"Failed to parse JSON message from Streamer.bot. Raw message: '{message}'");
                         }
-                    }
-                    catch (Newtonsoft.Json.JsonReaderException jex)
-                    {
-                        m_Logger.Error(jex, $"Failed to parse JSON message from Streamer.bot. Raw message: '{message}'");
-                    }
-                    catch (Exception ex)
-                    {
-                        m_Logger.Error(ex, "An unexpected error occurred while processing message from Streamer.bot.");
+                        catch (Exception ex)
+                        {
+                            m_Logger.Error(ex, "An unexpected error occurred while processing message from Streamer.bot.");
+                        }
                     }
                 }
             }
