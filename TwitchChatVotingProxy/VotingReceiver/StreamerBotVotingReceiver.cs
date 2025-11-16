@@ -92,10 +92,10 @@ namespace TwitchChatVotingProxy.VotingReceiver
                         var json = JObject.Parse(message);
                         m_Logger.Debug($"Successfully parsed message. JSON: {json.ToString(Newtonsoft.Json.Formatting.None)}");
 
-                        if (json["event"]?["source"]?.ToString() == "YouTube" && json["event"]?["type"]?.ToString() == "Message")
+                        if (json["event"]?["source"]?.ToString() == "Youtube" && json["event"]?["type"]?.ToString() == "Message")
                         {
                             m_Logger.Debug("Message is a YouTube Message event.");
-                            var username = json["data"]?["user"]?["displayName"]?.ToString();
+                            var username = json["data"]?["user"]?["name"]?.ToString();
                             var text = json["data"]?["message"]?.ToString().Trim();
 
                             m_Logger.Debug($"Extracted username: '{username}', text: '{text}'");
