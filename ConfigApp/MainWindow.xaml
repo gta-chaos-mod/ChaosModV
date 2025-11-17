@@ -126,37 +126,6 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="integrations_tab" Header="Integrations" Background="#FFF0F0F0" BorderBrush="LightGray">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="80" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0">
-                            <TextBlock Text="Integrations allow external applications like Streamer.bot to interact with the mod."
-                                       Grid.Row="0"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Grid>
-
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="40" />
-                                <RowDefinition Height="40" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="250" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-
-                            <CheckBox x:Name="integrations_streamer_bot_enable" Content="Enable Streamer.bot Integration" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" />
-
-                            <TextBlock Text="WebSocket Port:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" />
-                            <TextBox x:Name="integrations_streamer_bot_port" Height="20" Width="60" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" MaxLength="5" PreviewTextInput="OnlyNumbersPreviewTextInput" CommandManager.PreviewExecuted="NoCopyPastePreviewExecuted" ContextMenu="{x:Null}" Keyboard.PreviewKeyDown="NoSpacePreviewKeyDown" />
-                        </Grid>
-                    </Grid>
-                </TabItem>
             </TabControl>
         </Grid>
 
