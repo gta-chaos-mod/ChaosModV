@@ -83,7 +83,10 @@ namespace TwitchChatVotingProxy.VotingReceiver
                     do
                     {
                         result = await ws.ReceiveAsync(buffer, CancellationToken.None);
-                        ms.Write(buffer.Array, buffer.Offset, result.Count);
+                        if (buffer.Array != null)
+                        {
+                            ms.Write(buffer.Array, buffer.Offset, result.Count);
+                        }
                     }
                     while (!result.EndOfMessage);
 
