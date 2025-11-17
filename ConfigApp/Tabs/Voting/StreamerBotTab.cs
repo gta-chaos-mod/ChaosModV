@@ -30,7 +30,7 @@ namespace ConfigApp.Tabs.Voting
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                Content = "Enable Streamer.bot Voting"
+                Content = "Enable Youtube Voting(via Streamer.bot)"
             };
             m_EnableStreamerBotVoting.Click += (sender, eventArgs) =>
             {
