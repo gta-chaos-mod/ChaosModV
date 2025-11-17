@@ -124,14 +124,11 @@ namespace TwitchChatVotingProxy.OverlayServer
             msg.TotalVotes = 0;
             voteOptions.ForEach(_ => msg.TotalVotes += _.Votes);
             // Send the message to all clients
-            var jsonMessage = JsonConvert.SerializeObject(msg, new JsonSerializerSettings
+            Broadcast(JsonConvert.SerializeObject(msg, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-            // logger.Information($"Broadcasting overlay request '{request}' with message: {jsonMessage}");
-            Broadcast(jsonMessage);
+            }));
         }
     }
 }
-
 
