@@ -19,7 +19,7 @@ EffectDispatchTimer::EffectDispatchTimer() : Component()
 	        ? true
 	        : false;
 	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue<float>({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	    g_OptionsManager.GetConfigValue({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
 	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 }
@@ -50,26 +50,29 @@ void EffectDispatchTimer::OnRun()
 			DRAW_RECT(percentage * .5f, .01f, percentage, .02f, color.R, color.G, color.B, color.A, false);
 	}
 
-	int deltaTime = curTime - m_Timer;
+	int deltaTimeTicks = curTime - m_Timer;
 
 	// The game was paused
-	if (deltaTime > 1000)
-		deltaTime = 0;
+	if (deltaTimeTicks > 1000)
+		deltaTimeTicks = 0;
+
+	if (deltaTimeTicks <= 0)
+		deltaTimeTicks = 0;
 
 	if (!m_PauseTimer)
 	{
 		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
 			UpdateTravelledDistance();
 		else
-			UpdateTimer(deltaTime);
+			UpdateTimer(deltaTimeTicks);
 	}
 
 	m_Timer = curTime;
 }
 
-void EffectDispatchTimer::UpdateTimer(int deltaTime)
+void EffectDispatchTimer::UpdateTimer(int deltaTimeTicks)
 {
-	m_TimerPercentage += deltaTime
+	m_TimerPercentage += (float)deltaTimeTicks
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
 	                   / m_EffectSpawnTime / 1000.f;
 
