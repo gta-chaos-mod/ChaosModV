@@ -58,13 +58,13 @@ class EffectDispatcher : public Component
 	{
 		std::vector<ActiveEffect> ActiveEffects;
 		std::list<RegisteredEffect *> DispatchedEffectsLog;
-		float MetaEffectTimerPercentage   = 0.f;
-		std::uint16_t MetaEffectSpawnTime = 0;
-		std::uint16_t MetaEffectTimedDur  = 0;
-		std::uint16_t MetaEffectShortDur  = 0;
-		std::uint16_t EffectTimedDur      = 0;
-		std::uint16_t EffectTimedShortDur = 0;
-		bool MetaEffectsEnabled           = true;
+		float MetaEffectTimerPercentage = 0.f;
+		float MetaEffectSpawnTime       = 0;
+		float MetaEffectTimedDur        = 0;
+		float MetaEffectShortDur        = 0;
+		float EffectTimedDur            = 0;
+		float EffectTimedShortDur       = 0;
+		bool MetaEffectsEnabled         = true;
 	} SharedState;
 
   public:

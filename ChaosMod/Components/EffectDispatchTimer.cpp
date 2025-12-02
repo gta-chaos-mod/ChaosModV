@@ -12,6 +12,7 @@ EffectDispatchTimer::EffectDispatchTimer() : Component()
 
 	m_DrawTimerBar    = !g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
+	LOG("Init effectSpawnTime=" << m_EffectSpawnTime);
 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch =
 	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", "EnableDistanceBasedEffectDispatch" },
@@ -19,7 +20,7 @@ EffectDispatchTimer::EffectDispatchTimer() : Component()
 	        ? true
 	        : false;
 	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue<float>({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	    g_OptionsManager.GetConfigValue({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
 	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 }
@@ -58,6 +59,7 @@ void EffectDispatchTimer::OnRun()
 
 	if (!m_PauseTimer)
 	{
+		LOG("OnRun: Updating timer");
 		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
 			UpdateTravelledDistance();
 		else
@@ -69,9 +71,14 @@ void EffectDispatchTimer::OnRun()
 
 void EffectDispatchTimer::UpdateTimer(int deltaTime)
 {
-	m_TimerPercentage += deltaTime
+	m_TimerPercentage += (float)deltaTime
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
 	                   / m_EffectSpawnTime / 1000.f;
+
+	LOG("Updating timer; m_EffectSpawnTime="
+	    << m_EffectSpawnTime << " TimerSpeedModifier="
+	    << (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
+	    << " deltaTime=" << deltaTime << " new value=" << m_TimerPercentage);
 
 	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 	{

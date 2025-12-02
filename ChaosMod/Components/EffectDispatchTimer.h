@@ -4,11 +4,11 @@
 
 class EffectDispatchTimer : public Component
 {
-	bool m_EnableTimer              = true;
-	bool m_PauseTimer               = false;
-	bool m_DispatchEffectsOnTimer   = true;
-	bool m_DrawTimerBar             = true;
-	std::uint16_t m_EffectSpawnTime = 0;
+	bool m_EnableTimer            = true;
+	bool m_PauseTimer             = false;
+	bool m_DispatchEffectsOnTimer = true;
+	bool m_DrawTimerBar           = true;
+	float m_EffectSpawnTime       = 0.f;
 	Color m_TimerColor;
 	float m_TimerPercentage     = 0.f;
 	float m_FakeTimerPercentage = 0.f;
