@@ -12,7 +12,6 @@ EffectDispatchTimer::EffectDispatchTimer() : Component()
 
 	m_DrawTimerBar    = !g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
-	LOG("Init effectSpawnTime=" << m_EffectSpawnTime);
 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch =
 	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", "EnableDistanceBasedEffectDispatch" },
@@ -51,34 +50,31 @@ void EffectDispatchTimer::OnRun()
 			DRAW_RECT(percentage * .5f, .01f, percentage, .02f, color.R, color.G, color.B, color.A, false);
 	}
 
-	int deltaTime = curTime - m_Timer;
+	int deltaTimeTicks = curTime - m_Timer;
 
 	// The game was paused
-	if (deltaTime > 1000)
-		deltaTime = 0;
+	if (deltaTimeTicks > 1000)
+		deltaTimeTicks = 0;
+
+	if (deltaTimeTicks <= 0)
+		deltaTimeTicks = 0;
 
 	if (!m_PauseTimer)
 	{
-		LOG("OnRun: Updating timer");
 		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
 			UpdateTravelledDistance();
 		else
-			UpdateTimer(deltaTime);
+			UpdateTimer(deltaTimeTicks);
 	}
 
 	m_Timer = curTime;
 }
 
-void EffectDispatchTimer::UpdateTimer(int deltaTime)
+void EffectDispatchTimer::UpdateTimer(int deltaTimeTicks)
 {
-	m_TimerPercentage += (float)deltaTime
+	m_TimerPercentage += (float)deltaTimeTicks
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
 	                   / m_EffectSpawnTime / 1000.f;
-
-	LOG("Updating timer; m_EffectSpawnTime="
-	    << m_EffectSpawnTime << " TimerSpeedModifier="
-	    << (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
-	    << " deltaTime=" << deltaTime << " new value=" << m_TimerPercentage);
 
 	if (m_TimerPercentage >= 1.f && m_DispatchEffectsOnTimer && ComponentExists<EffectDispatcher>())
 	{
