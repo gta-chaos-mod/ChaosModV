@@ -3,75 +3,187 @@ name: Compile
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  build-asi:
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
     runs-on: windows-latest
-
     steps:
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v2
-    - name: Enable Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1.13.0
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
 
-    - name: Setup
-      run: git submodule update --init --recursive
+      - name: Restore Timestamps
+        uses: chetan/git-restore-mtime-action@v2.1.1
+      
+      - name: Restore Timestamps Minhook
+        uses: chetan/git-restore-mtime-action@v2.1.1
+        with:
+          working-directory: 'vendor/minhook'
+      
+      - name: Restore Timestamps IXWebSocket
+        uses: chetan/git-restore-mtime-action@v2.1.1
+        with:
+          working-directory: 'vendor/IXWebSocket'
+      
+      - name: Restore Timestamps shv
+        uses: chetan/git-restore-mtime-action@v2.1.1
+        with:
+          working-directory: 'vendor/shv'
+      
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
-    - name: Get NuGet Packages
-      run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
+      - name: Cache build files
+        id: cache-build-restore
+        uses: actions/cache/restore@v4
+        env:
+          cache-name: cache-build-dir
+        with:
+          path: ChaosMod/build
+          key: build-${{ env.BRANCH_NAME }}-${{ hashFiles('ChaosMod/**', 'CMakeLists.txt') }}
+          restore-keys: build-${{ env.BRANCH_NAME }}
 
-    - name: Compile Config App
-      run: dotnet publish ConfigApp -c Release
+      - name: Compile ASI & Dependencies
+        run: |
+          cd ChaosMod
+          New-Item -ItemType Directory -Force -Path build
+          cd build
+          cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
+          ninja
 
-    - name: Compile Voting Proxy
-      run: dotnet publish TwitchChatVotingProxy -c Release
+      - name: Save build cache
+        uses: actions/cache/save@v4
+        with:
+          path: ChaosMod/build
+          key: ${{ steps.cache-build-restore.outputs.cache-primary-key }}
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-asi
+          path: |
+            ChaosMod/build/ChaosMod.asi
+            ChaosMod/build/ChaosMod.pdb
 
-    - name: Compile ASI & Dependencies
-      run: |
-        cd ChaosMod
-        mkdir build
-        cd build
-        cmake -GNinja -DCMAKE_BUILD_TYPE="Release" -DWITH_DEBUG_PANEL_SUPPORT=1 ../
-        ninja
+  build-dotnet:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Compile Voting Overlay
-      run: |
-        cd twitchVotingOverlay
-        npm install
-        npm run compile:prod
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Generate Native Definitions for Lua Runtime
-      run: |
-        cd scripts
-        python generate_natives.py
+      - name: Get NuGet Packages
+        run: msbuild ChaosMod.sln /t:restore /p:RestorePackagesConfig=true /p:Configuration=Release
 
-    - name: Ready up for distribution
-      run: |
-        mkdir dist
-        cd dist
-        C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
-        7z.exe x data.zip
-        rm data.zip
-        cp ../ChaosMod/build/ChaosMod.asi
-        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish/ChaosModVConfig.exe chaosmod/
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net6.0-windows/win-x64/publish/TwitchChatVotingProxy.exe chaosmod/
-        cp -r ../twitchVotingOverlay/dist chaosmod/twitchOverlay
-        cp ../scripts/natives_def.lua chaosmod/
-        cd ..
-        mkdir symbols
-        cd symbols
-        cp ../ChaosMod/build/ChaosMod.pdb
-        cp ../ConfigApp/bin/x64/Release/net6.0-windows/win-x64/publish/ChaosModVConfig.pdb
-        cp ../TwitchChatVotingProxy/bin/x64/Release/net6.0-windows/win-x64/publish/TwitchChatVotingProxy.pdb
+      - name: Compile Config App
+        run: dotnet publish ConfigApp -c Release -o dst
 
-    - name: Upload :)
-      uses: actions/upload-artifact@v4
-      with:
-        name: chaosmod
-        path: dist
+      - name: Compile Voting Proxy
+        run: dotnet publish TwitchChatVotingProxy -c Release -o dst
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-dotnet
+          path: dst
 
-    - name: Upload symbols too
-      uses: actions/upload-artifact@v4
-      with:
-        name: symbols
-        path: symbols
+  build-misc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile Voting Overlay
+        run: |
+          cd twitchVotingOverlay
+          npm install
+          npm run compile:prod
+
+      - name: Generate Native Definitions for Lua Runtime
+        run: |
+          cd scripts
+          python generate_natives.py
+
+      - name: Copy to folder
+        run: |
+          mkdir dst
+          cd dst
+          cp -r ../twitchVotingOverlay/dist twitchOverlay
+          cp ../scripts/natives_def.lua
+
+      - name: Copy version.txt
+        run: |
+          $version = Get-Content version.txt -Raw
+          "ChaosMod version $($version)`n`nBuilt on $([DateTime]::UtcNow.ToString('u').Replace('Z',' UTC'))" | Set-Content dst\version.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dst-misc
+          path:
+            dst
+  
+  package:
+    needs: [build-asi, build-dotnet, build-misc]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: dst-*
+          merge-multiple: true
+          path: dst
+
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: dst-*
+
+      - name: Ready up for distribution
+        run: |
+          cd dst
+          mkdir dst
+          C:\msys64\usr\bin\wget.exe http://gopong.dev/chaos/data.zip
+          7z.exe x data.zip -o"dst\"
+          rm data.zip
+          cp ChaosMod.asi dst/
+          cp ChaosModVConfig.exe dst/chaosmod/
+          cp TwitchChatVotingProxy.exe dst/chaosmod/
+          cp -r twitchOverlay dst/chaosmod/twitchOverlay/
+          cp natives_def.lua dst/chaosmod/
+          cp version.txt dst/chaosmod/
+          mkdir symbols
+          cp ChaosMod.pdb symbols/
+          cp ChaosModVConfig.pdb symbols/
+          cp TwitchChatVotingProxy.pdb symbols/
+          cd ..
+
+      - name: Copy files to Inno source folder
+        run: |
+          cp -r dst\dst\ Installer\src\
+
+      - name: Compile .ISS to .EXE Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: Installer/install.iss
+          options: /O+
+
+      - name: Upload :)
+        uses: actions/upload-artifact@v4
+        with:
+          name: chaosmod
+          path: dst/dst
+          include-hidden-files: true
+      
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: Installer/dst/ChaosModInstaller.exe
+          include-hidden-files: true
+
+      - name: Upload symbols too
+        uses: actions/upload-artifact@v4
+        with:
+          name: symbols
+          path: dst/symbols
+          include-hidden-files: true

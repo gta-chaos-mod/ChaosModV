@@ -50,7 +50,11 @@ namespace ConfigApp
                 NotifyFieldsUpdated();
 
                 foreach (TreeMenuItem menuItem in Children)
+                {
                     menuItem.IsChecked = value;
+                    if (menuItem.OnCheckedClick != null)
+                        menuItem.OnCheckedClick();
+                }
 
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
@@ -86,6 +90,12 @@ namespace ConfigApp
         public ICommand OnConfigureCommand
         {
             get => new TreeMenuItemAction(OnConfigureClick);
+        }
+
+        public Action? OnCheckedClick { get; set; }
+        public ICommand OnCheckedCommand
+        {
+            get => new TreeMenuItemAction(OnCheckedClick);
         }
 
         public TreeMenuItem(string text, TreeMenuItem? parent = null)

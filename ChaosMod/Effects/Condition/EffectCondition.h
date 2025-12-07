@@ -10,7 +10,8 @@ enum class EffectConditionType
 {
 	None,
 	VotingEnabled, // Voting is enabled
-	ProportionalVotingEnabled
+	ProportionalVotingEnabled,
+	EnhancedShader,
 };
 
 #define REGISTER_EFFECT_CONDITION(conditionType, condition, failReason)                                \

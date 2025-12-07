@@ -55,6 +55,8 @@ namespace EffectThreads
 	bool DoesThreadExist(LPVOID threadId);
 	bool HasThreadOnStartExecuted(LPVOID threadId);
 
+	int GetThreadCount();
+
 	bool IsThreadAnEffectThread();
 
 	EffectThreadSharedData *GetThreadSharedData(LPVOID threadId);
@@ -120,7 +122,7 @@ class EffectThread
 	{
 		if (!ThreadData.HasStopped)
 		{
-			ThreadData.ShouldStop = false;
+			ThreadData.ShouldStop = true;
 			Run();
 		}
 	}

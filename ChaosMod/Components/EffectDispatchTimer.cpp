@@ -6,20 +6,20 @@
 
 #include "Util/OptionsManager.h"
 
-EffectDispatchTimer::EffectDispatchTimer(const std::array<BYTE, 3> &timerColor) : Component()
+EffectDispatchTimer::EffectDispatchTimer() : Component()
 {
-	m_TimerColor      = timerColor;
+	m_TimerColor      = g_OptionsManager.GetConfigValue({ "EffectTimerColor" }, OPTION_DEFAULT_BAR_COLOR);
 
 	m_DrawTimerBar    = !g_OptionsManager.GetConfigValue({ "DisableTimerBarDraw" }, OPTION_DEFAULT_NO_EFFECT_BAR);
 	m_EffectSpawnTime = g_OptionsManager.GetConfigValue({ "NewEffectSpawnTime" }, OPTION_DEFAULT_EFFECT_SPAWN_TIME);
 
 	m_DistanceChaosState.EnableDistanceBasedEffectDispatch =
-	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", " EnableDistanceBasedEffectDispatch " },
+	    g_OptionsManager.GetConfigValue({ "EffectDispatchMode", "EnableDistanceBasedEffectDispatch" },
 	                                    OPTION_DEFAULT_DISTANCE_BASED_DISPATCH_ENABLED)
 	        ? true
 	        : false;
 	m_DistanceChaosState.DistanceToActivateEffect =
-	    g_OptionsManager.GetConfigValue<float>({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
+	    g_OptionsManager.GetConfigValue({ "DistanceToActivateEffect" }, OPTION_DEFAULT_EFFECT_SPAWN_DISTANCE);
 	m_DistanceChaosState.DistanceType = static_cast<DistanceChaosState::TravelledDistanceType>(
 	    g_OptionsManager.GetConfigValue({ "DistanceType" }, OPTION_DEFAULT_DISTANCE_TYPE));
 }
@@ -28,46 +28,51 @@ void EffectDispatchTimer::OnRun()
 {
 	auto curTime = GetTickCount64();
 
-	if (m_EnableTimer && m_DrawTimerBar
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI)
-	    && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->DisableChaos))
+	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
+	{
+		ResetSavedPosition();
+		m_Timer = curTime;
+		return;
+	}
+
+	if (m_DrawTimerBar && (!ComponentExists<MetaModifiers>() || !GetComponent<MetaModifiers>()->HideChaosUI))
 	{
 		float percentage = m_FakeTimerPercentage != 0.f ? m_FakeTimerPercentage : m_TimerPercentage;
 
 		// Timer bar at the top
 		DRAW_RECT(.5f, .01f, 1.f, .021f, 0, 0, 0, 127, false);
 
+		auto color = m_TimerColor;
+
 		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
-			DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1],
-			          m_TimerColor[2], 255, false);
+			DRAW_RECT(1.f - percentage * .5f, .01f, percentage, .02f, color.R, color.G, color.B, color.A, false);
 		else
-			DRAW_RECT(percentage * .5f, .01f, percentage, .018f, m_TimerColor[0], m_TimerColor[1], m_TimerColor[2], 255,
-			          false);
+			DRAW_RECT(percentage * .5f, .01f, percentage, .02f, color.R, color.G, color.B, color.A, false);
 	}
 
-	int deltaTime = curTime - m_Timer;
+	int deltaTimeTicks = curTime - m_Timer;
 
 	// The game was paused
-	if (deltaTime > 1000)
-		deltaTime = 0;
+	if (deltaTimeTicks > 1000)
+		deltaTimeTicks = 0;
+
+	if (deltaTimeTicks <= 0)
+		deltaTimeTicks = 0;
 
 	if (!m_PauseTimer)
 	{
 		if (m_DistanceChaosState.EnableDistanceBasedEffectDispatch)
 			UpdateTravelledDistance();
 		else
-			UpdateTimer(deltaTime);
+			UpdateTimer(deltaTimeTicks);
 	}
 
 	m_Timer = curTime;
 }
 
-void EffectDispatchTimer::UpdateTimer(int deltaTime)
+void EffectDispatchTimer::UpdateTimer(int deltaTimeTicks)
 {
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-		return;
-
-	m_TimerPercentage += deltaTime
+	m_TimerPercentage += (float)deltaTimeTicks
 	                   * (!ComponentExists<MetaModifiers>() ? 1.f : GetComponent<MetaModifiers>()->TimerSpeedModifier)
 	                   / m_EffectSpawnTime / 1000.f;
 
@@ -88,12 +93,6 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 	auto player   = PLAYER_PED_ID();
 	auto position = GET_ENTITY_COORDS(player, false);
 
-	if (!m_EnableTimer || (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->DisableChaos))
-	{
-		m_DistanceChaosState.SavedPosition = position;
-		return;
-	}
-
 	if (IS_ENTITY_DEAD(player, false))
 	{
 		m_DistanceChaosState.DeadFlag = true;
@@ -102,8 +101,8 @@ void EffectDispatchTimer::UpdateTravelledDistance()
 
 	if (m_DistanceChaosState.DeadFlag)
 	{
-		m_DistanceChaosState.DeadFlag      = false;
-		m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(player, false);
+		m_DistanceChaosState.DeadFlag = false;
+		ResetSavedPosition();
 		return;
 	}
 
@@ -165,6 +164,11 @@ void EffectDispatchTimer::SetTimerEnabled(bool state)
 std::uint64_t EffectDispatchTimer::GetTimer() const
 {
 	return m_Timer;
+}
+
+void EffectDispatchTimer::ResetSavedPosition()
+{
+	m_DistanceChaosState.SavedPosition = GET_ENTITY_COORDS(PLAYER_PED_ID(), false);
 }
 
 void EffectDispatchTimer::ResetTimer()

@@ -20,8 +20,6 @@ static auto _StopThreadImmediately(auto it)
 		thread->Run();
 	}
 
-	DeleteFiber(threadId);
-
 	if (!thread->HasStopped())
 	{
 		thread->ThreadData.HasStarted = true;
@@ -79,6 +77,11 @@ namespace EffectThreads
 	{
 		for (auto it = m_Threads.begin(); it != m_Threads.end();)
 			it = _StopThreadImmediately(it);
+	}
+
+	int GetThreadCount()
+	{
+		return m_Threads.size();
 	}
 
 	void PauseThisThread(DWORD timeMs)

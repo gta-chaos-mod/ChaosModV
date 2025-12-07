@@ -133,7 +133,7 @@ namespace ConfigApp
 
             try
             {
-                string newVersion = await httpClient.GetStringAsync("https://gopong.dev/chaos/version.txt");
+                string newVersion = await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt");
 
                 if (Info.VERSION != newVersion)
                     update_available_button.Visibility = Visibility.Visible;
@@ -181,9 +181,9 @@ namespace ConfigApp
             {
                 EffectData effectData;
                 if (isJson)
-                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<JArray>(key));
+                    effectData = Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key));
                 else
-                    effectData = Utils.ValuesArrayToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
+                    effectData = Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
 
                 m_EffectDataMap?.Add(key, effectData);
             }
@@ -191,23 +191,31 @@ namespace ConfigApp
 
         private void WriteEffectsFile()
         {
+            OptionsManager.EffectsFile.ResetFile();
+
             foreach (var (effectId, _) in EffectsMap)
             {
                 var effectData = GetEffectData(effectId);
 
-                var jsonArray = new JArray
-                {
-                    m_TreeMenuItemsMap?[effectId].IsChecked,
-                    (int)effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed),
-                    effectData.CustomTime.GetValueOrDefault(0),
-                    effectData.WeightMult.GetValueOrDefault(0),
-                    effectData.TimedType.GetValueOrDefault(EffectTimedType.NotTimed) == EffectTimedType.Permanent,
-                    effectData.ExcludedFromVoting.GetValueOrDefault(false),
-                    string.IsNullOrEmpty(effectData.CustomName) ? "" : effectData.CustomName,
-                    effectData.ShortcutKeycode.GetValueOrDefault(0)
-                };
+                var json = new JObject();
+                if (effectData.Enabled is not null)
+                    json["enabled"] = effectData.Enabled;
+                if (effectData.CustomTime is not null)
+                    json["customTime"] = effectData.CustomTime;
+                if (effectData.ExcludedFromVoting is not null)
+                    json["excludedFromVoting"] = effectData.ExcludedFromVoting;
+                if (effectData.TimedType is not null)
+                    json["permanent"] = effectData.TimedType == EffectTimedType.Permanent;
+                if (effectData.ShortcutKeycode is not null)
+                    json["shortcutKeycode"] = effectData.ShortcutKeycode;
+                if (effectData.TimedType is not null)
+                    json["timedType"] = (int)effectData.TimedType;
+                if (effectData.WeightMult is not null)
+                    json["weightMult"] = effectData.WeightMult;
+                if (effectData.CustomName is not null)
+                    json["customName"] = effectData.CustomName;
 
-                OptionsManager.EffectsFile.WriteValue(effectId, jsonArray);
+                OptionsManager.EffectsFile.WriteValue(effectId, json);
             }
 
             OptionsManager.EffectsFile.WriteFile();
@@ -260,6 +268,10 @@ namespace ConfigApp
                     if (m_EffectDataMap is not null)
                         m_EffectDataMap[effectMisc.EffectId] = effectData;
                     menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
+                };
+                menuItem.OnCheckedClick = () =>
+                {
+                    effectData.Enabled = menuItem.IsChecked;
                 };
                 menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
                 menuItem.IsChecked = effectData.Enabled ?? true;
@@ -427,7 +439,7 @@ namespace ConfigApp
 
         public void OpenModPageEvent(object sender, RoutedEventArgs eventArgs)
         {
-            System.Diagnostics.Process.Start("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+            Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
         }
     }
 }

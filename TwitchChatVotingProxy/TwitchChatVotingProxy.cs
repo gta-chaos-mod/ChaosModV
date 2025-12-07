@@ -10,6 +10,32 @@ namespace TwitchChatVotingProxy
     {
         private static readonly ILogger m_Logger = Log.Logger.ForContext<TwitchChatVotingProxy>();
 
+        private static async Task InitVotingReceivers(List<(string Name, IVotingReceiver VotingReceiver)> votingReceivers, ChaosPipeClient chaosPipe, CancellationTokenSource tokenSource)
+        {
+            foreach (var votingReceiver in votingReceivers)
+            {
+                m_Logger.Information($"Initializing {votingReceiver.Name} voting");
+
+                try
+                {
+                    if (!await votingReceiver.VotingReceiver.Init())
+                    {
+                        m_Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting");
+
+                        tokenSource.Cancel();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    m_Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting\nException occured: ${exception}");
+                    chaosPipe.SendErrorMessage($"Error occured while initializing {votingReceiver.Name} voting." +
+                        $" Check chaosproxy.log for details.");
+
+                    tokenSource.Cancel();
+                }
+            }
+        }
+
         private static async Task Main(string[] args)
         {
             if (args.Length < 1 || args[0] != "--startProxy")
@@ -61,28 +87,9 @@ namespace TwitchChatVotingProxy
             if (config.ReadValue("EnableVotingDiscord", false))
                 votingReceivers.Add(("Discord", new DiscordVotingReceiver(config, chaosPipe)));
 
-            foreach (var votingReceiver in votingReceivers)
-            {
-                m_Logger.Information($"Initializing {votingReceiver.Name} voting");
+            var tokenSource = new CancellationTokenSource();
 
-                try
-                {
-                    if (!await votingReceiver.VotingReceiver.Init())
-                    {
-                        m_Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting");
-
-                        return;
-                    }
-                }
-                catch (Exception exception)
-                {
-                    m_Logger.Fatal($"Failed to initialize {votingReceiver.Name} voting\nException occured: ${exception}");
-                    chaosPipe.SendErrorMessage($"Error occured while initializing {votingReceiver.Name} voting." +
-                        $" Check chaosproxy.log for details.");
-
-                    return;
-                }
-            }
+            var receiversTask = InitVotingReceivers(votingReceivers, chaosPipe, tokenSource);
 
             // Start the chaos mod controller
             m_Logger.Information("Initializing controller");
@@ -103,16 +110,18 @@ namespace TwitchChatVotingProxy
             m_Logger.Information("Sending hello to mod");
 
             chaosPipe.SendMessageToPipe("hello");
-            while (!chaosPipe.GotHelloBack && chaosPipe.IsConnected())
+            bool helloBackLogged = false;
+            while (chaosPipe.IsConnected() && !tokenSource.IsCancellationRequested)
+            {
+                if (chaosPipe.GotHelloBack && !helloBackLogged)
+                {
+                    m_Logger.Information("Received hello_back from mod!");
+                    helloBackLogged = true;
+                }
                 await Task.Delay(100);
+            }
 
-            if (chaosPipe.GotHelloBack)
-                m_Logger.Information("Received hello_back from mod!");
-
-            while (chaosPipe.IsConnected())
-                await Task.Delay(100);
-
-            m_Logger.Information("Pipe disconnected, ending program.");
+            m_Logger.Information("Shutting down");
         }
     }
 }

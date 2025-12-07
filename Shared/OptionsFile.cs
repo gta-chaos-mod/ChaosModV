@@ -4,20 +4,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Shared
 {
-    public class OptionsFile
+    public class OptionsFile(string filePath, params string[] compatFilePaths)
     {
         public string FoundFilePath { get; private set; } = string.Empty;
-        public string[] CompatFilePaths { get; private set; }
+        public string[] CompatFilePaths { get; private set; } = compatFilePaths;
 
-        private readonly string m_FilePath;
+        private readonly string m_FilePath = filePath;
         private bool m_IsJson = false;
         private Dictionary<string, JToken?> m_Options = new();
-
-        public OptionsFile(string filePath, params string[] compatFilePaths)
-        {
-            m_FilePath = filePath;
-            CompatFilePaths = compatFilePaths;
-        }
 
         public bool HasKey(params string[] keys)
         {
@@ -54,7 +48,14 @@ namespace Shared
                         return (T?)Convert.ChangeType(result != 0, typeof(T));
                 }
 
-                return m_Options[_key].ToObject<T>();
+                try
+                {
+                    return m_Options[_key]!.ToObject<T>();
+                }
+                catch
+                {
+                    return defaultValue;
+                }
             }
 
             return defaultValue;

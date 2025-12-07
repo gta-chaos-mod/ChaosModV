@@ -4,6 +4,13 @@
 import json
 import urllib.request
 
+from dataclasses import dataclass
+
+@dataclass
+class Arg:
+    name : str
+    type : str
+    
 def parse_native(native_hash, native_data, _out):
     return_type = native_data["return_type"]
 
@@ -11,18 +18,21 @@ def parse_native(native_hash, native_data, _out):
 
     print(native_name)
 
+    args : list[Arg]
     args = []
-    for arg in native_data["params"]:
-        argName = arg["name"]
+    for param in native_data["params"]:
+        argName = param["name"]
 
         if argName == "end" or argName == "repeat":
             argName = "_" + argName
         
-        args.append(argName)
+        arg = Arg(argName, param['type'])
+
+        args.append(arg)
 
     _out.write("function " + native_name + "(")
     for i in range(len(args)):
-        _out.write(args[i])
+        _out.write(args[i].name)
         if i < len(args) - 1:
             _out.write(",")
     _out.write(")\n")
@@ -50,7 +60,7 @@ def parse_native(native_hash, native_data, _out):
     if len(args) > 0:
         _out.write(",")
         for i in range(len(args)):
-            _out.write(args[i])
+            _out.write(args[i].name + (' and ' + args[i].name + '+.0 or 0.0' if args[i].type == 'float' else ''))
             if i < len(args) - 1:
                 _out.write(",")
     _out.write(")\nend\n\n")

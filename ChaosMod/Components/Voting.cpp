@@ -16,18 +16,19 @@
 #define BUFFER_SIZE 256
 #define VOTING_PROXY_START_ARGS L"chaosmod\\TwitchChatVotingProxy.exe --startProxy"
 
-Voting::Voting(const std::array<BYTE, 3> &textColor) : Component(), m_TextColor(textColor)
+Voting::Voting() : Component()
 {
 	m_EnableVoting =
 	    g_OptionsManager.GetVotingValue({ "EnableVoting", "EnableTwitchVoting" }, OPTION_DEFAULT_TWITCH_VOTING_ENABLED);
 	m_VoteablePrefix = g_OptionsManager.GetVotingValue<std::string>({ "VoteablePrefix" });
+
+	m_TextColor      = g_OptionsManager.GetConfigValue({ "EffectTextColor" }, OPTION_DEFAULT_BAR_COLOR);
 }
 
 void Voting::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 {
 	if (m_PipeHandle != INVALID_HANDLE_VALUE)
 	{
-		FlushFileBuffers(m_PipeHandle);
 		DisconnectNamedPipe(m_PipeHandle);
 		CloseHandle(m_PipeHandle);
 
@@ -294,7 +295,7 @@ void Voting::OnRun()
 				oss << " (" << percentage * 100.f << "%)";
 			}
 
-			DrawScreenText(oss.str(), { .95f, y }, .41f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
+			DrawScreenText(oss.str(), { .95f, y }, .41f, m_TextColor, true,
 			               ScreenTextAdjust::Right, { .0f, .95f }, true);
 
 			y += .05f;
@@ -304,8 +305,10 @@ void Voting::OnRun()
 
 bool Voting::Init()
 {
-	if (std::count_if(g_EnabledEffects.begin(), g_EnabledEffects.end(),
-	                  [](const auto &pair) { return !pair.second.IsExcludedFromVoting(); })
+	const auto enabledEffects = GetFilteredEnabledEffects();
+
+	if (std::count_if(enabledEffects.begin(), enabledEffects.end(),
+	                  [](const auto &effectData) { return !effectData->IsExcludedFromVoting(); })
 	    < 3)
 	{
 		ErrorOutWithMsg("You need at least 3 enabled effects (which are not excluded from voting) to enable voting."

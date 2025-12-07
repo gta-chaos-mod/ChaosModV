@@ -28,7 +28,7 @@ static void OnTick()
 			if (current_time - last_shot > 1000)
 			{
 				last_shot       = current_time;
-				Hash weaponHash = "VEHICLE_WEAPON_TANK"_hash;
+				Hash weaponHash = "WEAPON_AIRSTRIKE_ROCKET"_hash;
 				if (!HAS_WEAPON_ASSET_LOADED(weaponHash))
 				{
 					REQUEST_WEAPON_ASSET(weaponHash, 31, 0);

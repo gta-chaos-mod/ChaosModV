@@ -6,6 +6,7 @@
 #include "Components/EffectSound/EffectSoundManager.h"
 #include "Components/MetaModifiers.h"
 #include "Effects/EffectCategory.h"
+#include "Effects/EffectThreads.h"
 #include "Effects/EffectTimedType.h"
 #include "Effects/EnabledEffects.h"
 #include "Effects/Register/RegisteredEffectsMetadata.h"
@@ -223,11 +224,10 @@ static void _OnRunEffects(LPVOID data)
 	}
 }
 
-EffectDispatcher::EffectDispatcher(const std::array<BYTE, 3> &textColor, const std::array<BYTE, 3> &effectTimerColor)
-    : Component()
+EffectDispatcher::EffectDispatcher() : Component()
 {
-	m_TextColor        = textColor;
-	m_EffectTimerColor = effectTimerColor;
+	m_TextColor        = g_OptionsManager.GetConfigValue({ "EffectTextColor" }, OPTION_DEFAULT_TEXT_COLOR);
+	m_EffectTimerColor = g_OptionsManager.GetConfigValue({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR);
 
 	m_DisableDrawEffectTexts =
 	    g_OptionsManager.GetConfigValue({ "DisableEffectTextDraw" }, OPTION_DEFAULT_NO_TEXT_DRAW);
@@ -285,7 +285,18 @@ void EffectDispatcher::UpdateEffects(float deltaTime)
 		m_PermanentEffects.clear();
 		SharedState.DispatchedEffectsLog.clear();
 
-		EffectThreads::StopThreadsImmediately();
+		static bool startedStopping = false;
+		
+		if (!startedStopping)
+		{
+			EffectThreads::StopThreadsImmediately();
+			startedStopping = true;
+		}
+
+		if (EffectThreads::GetThreadCount() > 0)
+			return;
+
+		startedStopping = false;
 
 		// Ensure player control isn't stuck in disabled state
 		SET_PLAYER_CONTROL(PLAYER_ID(), true, 0);
@@ -495,30 +506,28 @@ void EffectDispatcher::DrawEffectTexts()
 		if (effect.HideEffectName && hasFake)
 			effectName = effect.FakeName;
 
+		auto color = m_TextColor;
+
 		if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
-		{
-			DrawScreenText(effectName, { .085f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
-			               ScreenTextAdjust::Left, { .0f, .915f });
-		}
+			DrawScreenText(effectName, { .085f, y }, .47f, color, true, ScreenTextAdjust::Left, { .0f, .915f });
 		else
-		{
-			DrawScreenText(effectName, { .915f, y }, .47f, { m_TextColor[0], m_TextColor[1], m_TextColor[2] }, true,
-			               ScreenTextAdjust::Right, { .0f, .915f });
-		}
+			DrawScreenText(effectName, { .915f, y }, .47f, color, true, ScreenTextAdjust::Right, { .0f, .915f });
 
 		if (effect.IsTimed)
 		{
+			color = m_EffectTimerColor;
+
 			if (ComponentExists<MetaModifiers>() && GetComponent<MetaModifiers>()->FlipChaosUI)
 			{
 				DRAW_RECT(.04f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-				DRAW_RECT(.04f, y + .0185f, .048f * (1.f - (effect.Timer / effect.MaxTime)), .017f,
-				          m_EffectTimerColor[0], m_EffectTimerColor[1], m_EffectTimerColor[2], 255, false);
+				DRAW_RECT(.04f, y + .0185f, .048f * (1.f - (effect.Timer / effect.MaxTime)), .017f, color.R, color.G, color.B,
+				          color.A, false);
 			}
 			else
 			{
 				DRAW_RECT(.96f, y + .0185f, .05f, .019f, 0, 0, 0, 127, false);
-				DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, m_EffectTimerColor[0],
-				          m_EffectTimerColor[1], m_EffectTimerColor[2], 255, false);
+				DRAW_RECT(.96f, y + .0185f, .048f * effect.Timer / effect.MaxTime, .017f, color.R, color.G, color.B, color.A,
+				          false);
 			}
 		}
 
@@ -538,9 +547,9 @@ void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFl
 		return;
 
 	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-	for (const auto &[effectId, effectData] : g_EnabledEffects)
-		if (!effectData.IsMeta() && !effectData.IsUtility() && !effectData.IsHidden())
-			choosableEffects.emplace(effectId, effectData);
+	for (const auto &effectData : GetFilteredEnabledEffects())
+		if (!effectData->IsMeta() && !effectData->IsUtility() && !effectData->IsHidden())
+			choosableEffects.emplace(effectData->Id, *effectData);
 
 	float totalWeight = 0.f;
 	for (const auto &[effectId, effectData] : choosableEffects)

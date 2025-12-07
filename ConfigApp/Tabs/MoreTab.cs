@@ -27,25 +27,25 @@ namespace ConfigApp.Tabs
 
             PushRowPair("Visit the mod page for more information", GenerateInfoButton("GTA5-Mods", (sender, eventArgs) =>
             {
-                System.Diagnostics.Process.Start("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+                Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v");
             }));
             PopRow();
 
             PushRowPair("Enjoying the mod? Buy me a coffee! :)", GenerateInfoButton("PayPal", (sender, eventArgs) =>
             {
-                System.Diagnostics.Process.Start("https://paypal.me/EmrCue");
+                Utils.OpenURL("https://paypal.me/EmrCue");
             }));
             PopRow();
 
             PushRowPair("Want to contribute to the mod? It's open source!", GenerateInfoButton("GitHub", (sender, eventArgs) =>
             {
-                System.Diagnostics.Process.Start("https://github.com/gta-chaos-mod/ChaosModV");
+                Utils.OpenURL("https://github.com/gta-chaos-mod/ChaosModV");
             }));
             PopRow();
 
             PushRowPair("Join our Discord for announcements, support and more!", GenerateInfoButton("Discord", (sender, eventArgs) =>
             {
-                System.Diagnostics.Process.Start("https://discord.gg/w2tDeKVaF9");
+                Utils.OpenURL("https://discord.gg/w2tDeKVaF9");
             }));
         }
     }

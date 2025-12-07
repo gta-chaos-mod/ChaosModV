@@ -2,68 +2,44 @@
 
 #include "Components/Component.h"
 
-#define SOL_ALL_SAFETIES_ON 1
-#define SOL_DEFAULT_PASS_ON_ERROR 1
-#include <sol/sol.hpp>
-
 #include <json.hpp>
+#include <sol/sol.hpp>
 
 #include <string>
 
 class LuaScripts : public Component
 {
-	sol::state m_GlobalState;
-	class LuaScript
+	struct LuaScript
 	{
-		std::string m_ScriptName;
-		sol::environment m_Env;
-		bool m_IsTemporary;
+		std::string ScriptName;
+		sol::state Lua;
+		bool IsTemporary;
+		bool LateStateSetup;
 
-	  public:
-		LuaScript(const std::string &scriptName, sol::environment &env, bool isTemporary)
-		    : m_ScriptName(scriptName), m_Env(env), m_IsTemporary(isTemporary)
+		LuaScript(const std::string &scriptName, sol::state &lua, bool isTemporary)
+		    : ScriptName(scriptName), Lua(std::move(lua)), IsTemporary(isTemporary), LateStateSetup(false)
 		{
 		}
 
 		LuaScript(LuaScript &&script) noexcept
-		    : m_ScriptName(std::move(script.m_ScriptName)), m_Env(script.m_Env), m_IsTemporary(script.m_IsTemporary)
+		    : ScriptName(std::move(script.ScriptName)),
+		      Lua(std::move(script.Lua)),
+		      IsTemporary(script.IsTemporary),
+		      LateStateSetup(script.LateStateSetup)
 		{
 		}
 
 		LuaScript &operator=(LuaScript &&script) noexcept
 		{
-			m_ScriptName  = std::move(script.m_ScriptName);
-			m_Env         = script.m_Env;
-			m_IsTemporary = script.m_IsTemporary;
+			ScriptName     = std::move(script.ScriptName);
+			Lua            = std::move(script.Lua);
+			IsTemporary    = script.IsTemporary;
+			LateStateSetup = script.LateStateSetup;
 
 			return *this;
 		}
 
-		const std::string &GetScriptName() const
-		{
-			return m_ScriptName;
-		}
-
-		bool IsTemporary() const
-		{
-			return m_IsTemporary;
-		}
-
-		void Execute(const char *funcName) const
-		{
-			auto func = m_Env[funcName];
-			if (!func.valid())
-				return;
-
-			auto result = func();
-			if (!result.valid())
-			{
-				const sol::error &error = result;
-
-				extern void LuaPrint(const std::string &name, const std::string &text);
-				LuaPrint(m_ScriptName, error.what());
-			}
-		}
+		void Execute(const char *funcName) const;
 	};
 	std::unordered_map<std::string, LuaScript> m_RegisteredEffects;
 
@@ -73,8 +49,6 @@ class LuaScripts : public Component
 	virtual void OnModPauseCleanup(PauseCleanupFlags cleanupFlags = {}) override;
 
   private:
-	void SetupGlobalState();
-
 	enum ParseScriptFlags
 	{
 		ParseScriptFlag_None,

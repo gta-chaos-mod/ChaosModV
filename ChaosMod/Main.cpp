@@ -40,18 +40,6 @@ static struct
 } ms_Flags;
 static bool ms_ModDisabled = false;
 
-static std::array<BYTE, 3> ParseConfigColorString(const std::string &colorText)
-{
-	// Format: #ARGB
-	std::array<BYTE, 3> colors;
-
-	int j = 0;
-	for (int i = 3; i < 9; i += 2)
-		Util::TryParse<BYTE>(colorText.substr(i, 2), colors[j++], 16);
-
-	return colors;
-}
-
 static void ParseEffectsFile()
 {
 	g_EnabledEffects.clear();
@@ -133,13 +121,6 @@ static void Init()
 	g_EnableGroupWeighting =
 	    g_OptionsManager.GetConfigValue({ "EnableGroupWeightingAdjustments" }, OPTION_DEFAULT_GROUP_WEIGHTING);
 
-	const auto &timerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimerColor" }, OPTION_DEFAULT_BAR_COLOR));
-	const auto &textColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTextColor" }, OPTION_DEFAULT_TEXT_COLOR));
-	const auto &effectTimerColor = ParseConfigColorString(
-	    g_OptionsManager.GetConfigValue<std::string>({ "EffectTimedTimerColor" }, OPTION_DEFAULT_TIMED_COLOR));
-
 	auto seed = g_OptionsManager.GetConfigValue<std::string>({ "Seed" });
 	if (!seed.empty())
 		g_Random.SetSeed(std::hash<std::string> {}(seed));
@@ -194,9 +175,9 @@ static void Init()
 
 	INIT_COMPONENT("LuaScripts", "Lua scripts", LuaScripts);
 
-	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher, textColor, effectTimerColor);
+	INIT_COMPONENT("EffectDispatcher", "effects dispatcher", EffectDispatcher);
 
-	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer, timerColor);
+	INIT_COMPONENT("EffectDispatchTimer", "effects dispatch timer", EffectDispatchTimer);
 
 	INIT_COMPONENT("DebugMenu", "debug menu", DebugMenu);
 
@@ -204,7 +185,7 @@ static void Init()
 
 	INIT_COMPONENT("KeyStates", "key state handler", KeyStates);
 
-	INIT_COMPONENT("Voting", "voting", Voting, textColor);
+	INIT_COMPONENT("Voting", "voting", Voting);
 
 	INIT_COMPONENT("Failsafe", "Failsafe", Failsafe);
 
@@ -234,6 +215,17 @@ static void MainRun()
 	g_MainThread            = GetCurrentFiber();
 
 	ms_Flags.ToggleModState = g_OptionsManager.GetConfigValue({ "DisableStartup" }, OPTION_DEFAULT_DISABLE_STARTUP);
+
+	if (ComponentExists<EffectDispatcher>())
+	{
+		const auto dispatcher = GetComponent<EffectDispatcher>();
+		dispatcher->ClearEffects();
+		while (dispatcher->IsClearingEffects())
+		{
+			dispatcher->OnRun();
+			WAIT(0);
+		}
+	}
 
 	for (auto &component : g_Components)
 		component->OnModPauseCleanup();
@@ -399,8 +391,8 @@ namespace Main
 			else if (key == VK_OEM_PERIOD)
 			{
 				if (ms_Flags.PauseTimerShortcutEnabled && ComponentExists<EffectDispatchTimer>())
-					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(
-					    !GetComponent<EffectDispatchTimer>()->IsTimerEnabled());
+					GetComponent<EffectDispatchTimer>()->SetTimerPaused(
+					    !GetComponent<EffectDispatchTimer>()->IsTimerPaused());
 			}
 			else if (key == VK_OEM_COMMA)
 			{
