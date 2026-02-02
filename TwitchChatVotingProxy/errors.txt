@@ -1,0 +1,15 @@
+﻿  Determining projects to restore...
+  All projects are up-to-date for restore.
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\VotingReceiver\TwitchVotingReceiver.cs(70,13): error CS0123: No overload for 'OnDisconnect' matches delegate 'EventHandler<OnDisconnectedEventArgs>' [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\ChaosPipe\ChaosPipeClient.cs(95,40): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\ChaosPipe\ChaosPipeClient.cs(75,16): warning CS8618: Non-nullable field 'm_PipeTick' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+
+Build FAILED.
+
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\ChaosPipe\ChaosPipeClient.cs(95,40): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\ChaosPipe\ChaosPipeClient.cs(75,16): warning CS8618: Non-nullable field 'm_PipeTick' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\VotingReceiver\TwitchVotingReceiver.cs(70,13): error CS0123: No overload for 'OnDisconnect' matches delegate 'EventHandler<OnDisconnectedEventArgs>' [C:\Users\harpe\Desktop\ChaosModV\TwitchChatVotingProxy\TwitchChatVotingProxy.csproj]
+    2 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.87

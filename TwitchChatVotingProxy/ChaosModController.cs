@@ -144,7 +144,10 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void OnGetCurrentVotes(object? sender, OnGetCurrentVotesArgs args)
         {
-            args.CurrentVotes = m_ActiveVoteOptions.Select(_ => _.Votes).ToList();
+            lock (m_VoteLock)
+            {
+                args.CurrentVotes = m_ActiveVoteOptions.Select(_ => _.Votes).ToList();
+            }
         }
         /// <summary>
         /// Is called when the chaos mod wants to know the voting result (callback)
@@ -162,17 +165,20 @@ namespace TwitchChatVotingProxy
             }
 
             // Evaluate what result calculation to use
-            switch (m_Config.VotingMode)
+            lock (m_VoteLock)
             {
-            case EVotingMode.MAJORITY:
-                e.ChosenOption = GetVoteResultByMajority();
-                break;
-            case EVotingMode.PERCENTAGE:
-                e.ChosenOption = GetVoteResultByPercentage();
-                break;
-            case EVotingMode.ANTIMAJORITY:
-                e.ChosenOption = GetVoteResultByAntiMajority();
-                break;
+                switch (m_Config.VotingMode)
+                {
+                case EVotingMode.MAJORITY:
+                    e.ChosenOption = GetVoteResultByMajority();
+                    break;
+                case EVotingMode.PERCENTAGE:
+                    e.ChosenOption = GetVoteResultByPercentage();
+                    break;
+                case EVotingMode.ANTIMAJORITY:
+                    e.ChosenOption = GetVoteResultByAntiMajority();
+                    break;
+                }
             }
 
             // Vote round ended
@@ -183,38 +189,46 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private async void OnNewVote(object? sender, OnNewVoteArgs e)
         {
-            m_ActiveVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
+            // Build new vote options under lock to prevent race conditions
+            lock (m_VoteLock)
             {
-                // We want the options to alternate between matches.
-                // If we are on an even round we basically select the index (+1 for non programmers).
-                // If we are on an odd round, we add to the index the option count.
-                // This gives us a pattern like following:
-                // Round 0: [O1, O2, O3, ...]
-                // Round 1: [O4, O5, O6, ...]
-                var match = m_VoteCounter % 2 == 0
-                    ? m_Config.VoteablePrefix + (index + 1)
-                    : m_Config.VoteablePrefix + (index + 1 + m_ActiveVoteOptions.Count);
+                m_ActiveVoteOptions = e.VoteOptionNames.ToList().Select((voteOptionName, index) =>
+                {
+                    // We want the options to alternate between matches.
+                    // If we are on an even round we basically select the index (+1 for non programmers).
+                    // If we are on an odd round, we add to the index the option count.
+                    // This gives us a pattern like following:
+                    // Round 0: [O1, O2, O3, ...]
+                    // Round 1: [O4, O5, O6, ...]
+                    var match = m_VoteCounter % 2 == 0
+                        ? m_Config.VoteablePrefix + (index + 1)
+                        : m_Config.VoteablePrefix + (index + 1 + e.VoteOptionNames.Length);
 
-                return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
-            }).ToList();
-            // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    return (IVoteOption)new VoteOption(voteOptionName, new List<string>() { match });
+                }).ToList();
+            }
+
+            // Depending on the overlay mode either inform the overlay server about the new vote or send a chat message
             switch (m_Config.OverlayMode)
             {
             case EOverlayMode.CHAT_MESSAGES:
                 string msg = "Time for a new effect! Vote between:";
-                foreach (IVoteOption voteOption in m_ActiveVoteOptions)
+                lock (m_VoteLock)
                 {
-                    msg += "\n";
-
-                    bool firstIndex = true;
-                    foreach (string match in voteOption.Matches)
+                    foreach (IVoteOption voteOption in m_ActiveVoteOptions)
                     {
-                        msg += firstIndex ? $"{match} " : $" / {match}";
+                        msg += "\n";
 
-                        firstIndex = true;
+                        bool firstIndex = true;
+                        foreach (string match in voteOption.Matches)
+                        {
+                            msg += firstIndex ? $"{match} " : $" / {match}";
+
+                            firstIndex = true;
+                        }
+
+                        msg += $": {voteOption.Label}";
                     }
-
-                    msg += $": {voteOption.Label}";
                 }
 
                 if (m_Config.VotingMode == EVotingMode.PERCENTAGE)
@@ -225,7 +239,10 @@ namespace TwitchChatVotingProxy
 
                 break;
             case EOverlayMode.OVERLAY_OBS:
-                m_OverlayServer?.NewVoting(m_ActiveVoteOptions);
+                lock (m_VoteLock)
+                {
+                    m_OverlayServer?.NewVoting(m_ActiveVoteOptions);
+                }
                 break;
             }
             // Clear the old voted for information
@@ -269,31 +286,34 @@ namespace TwitchChatVotingProxy
                     return;
             }
 
-            for (int i = 0; i < m_ActiveVoteOptions.Count; i++)
+            lock (m_VoteLock)
             {
-                var voteOption = m_ActiveVoteOptions[i];
-
-                if (voteOption.Matches.Contains(e.Message))
+                for (int i = 0; i < m_ActiveVoteOptions.Count; i++)
                 {
-                    // Check if the player has already voted
-                    if (!m_UserVotedFor.TryGetValue(e.ClientId, out int previousVote))
-                    {
-                        // If they haven't voted, count their vote
-                        if (m_UserVotedFor.TryAdd(e.ClientId, i))
-                            voteOption.Votes++;
-                    }
-                    else if (previousVote != i)
-                    {
-                        // If the player has already voted, and it's not the same as before,
-                        // remove the old vote, and add the new one.
-                        if (m_UserVotedFor.TryRemove(e.ClientId, out _))
-                            m_ActiveVoteOptions[previousVote].Votes--;
+                    var voteOption = m_ActiveVoteOptions[i];
 
-                        if (m_UserVotedFor.TryAdd(e.ClientId, i))
-                            voteOption.Votes++;
-                    }
+                    if (voteOption.Matches.Contains(e.Message))
+                    {
+                        // Check if the player has already voted
+                        if (!m_UserVotedFor.TryGetValue(e.ClientId, out int previousVote))
+                        {
+                            // If they haven't voted, count their vote
+                            if (m_UserVotedFor.TryAdd(e.ClientId, i))
+                                voteOption.Votes++;
+                        }
+                        else if (previousVote != i)
+                        {
+                            // If the player has already voted, and it's not the same as before,
+                            // atomically update the vote to prevent race conditions
+                            if (m_UserVotedFor.TryUpdate(e.ClientId, i, previousVote))
+                            {
+                                m_ActiveVoteOptions[previousVote].Votes--;
+                                voteOption.Votes++;
+                            }
+                        }
 
-                    break;
+                        break;
+                    }
                 }
             }
         }

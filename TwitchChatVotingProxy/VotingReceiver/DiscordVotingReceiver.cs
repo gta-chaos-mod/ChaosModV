@@ -22,7 +22,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private readonly ChaosPipeClient m_ChaosPipe;
         private readonly ILogger m_Logger = Log.Logger.ForContext<DiscordVotingReceiver>();
 
-        private bool m_IsReady = false;
+        private volatile bool m_IsReady = false;
 
         public DiscordVotingReceiver(OptionsFile config, ChaosPipeClient chaosPipe)
         {
@@ -179,19 +179,20 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// <summary>
         /// Called when the discord client disconnects (callback)
         /// </summary>
-        private async Task OnDisconnected(Exception exception)
+        private Task OnDisconnected(Exception exception)
         {
             m_Logger.Warning($"Discord client disconnected: {exception.Message}");
 
             if (exception is HttpException { HttpCode: System.Net.HttpStatusCode.Unauthorized })
             {
                 m_ChaosPipe.SendErrorMessage("Discord bot token is invalid. Please verify your config.");
-                return;
+                return Task.CompletedTask;
             }
 
             // Attempt reconnection after a delay (Discord.Net usually auto-reconnects, but log it)
             m_Logger.Information("Discord will attempt to reconnect automatically...");
             m_IsReady = false;
+            return Task.CompletedTask;
         }
         /// <summary>
         /// Called when the discord client receives a slash command

@@ -7,8 +7,6 @@
         ANTIMAJORITY
     }
 
-    // TODO: instead of doing this (literal) fuckery, we could just use Enum.ToString() and parse
-    // the number back to an enum in typescript.
     static class VotingMode
     {
         private static readonly Dictionary<EVotingMode, string> Dict = new()
@@ -36,18 +34,9 @@
         /// <returns>Voting option or null if the string could not be found</returns>
         public static EVotingMode? ReverseLookup(string str)
         {
-            EVotingMode? votingMode = null;
-
-            foreach (var entry in Dict)
-            {
-                if (entry.Value == str)
-                {
-                    votingMode = entry.Key;
-                    break;
-                }
-            }
-
-            return votingMode;
+            if (Enum.TryParse<EVotingMode>(str, ignoreCase: true, out var mode))
+                return mode;
+            return null;
         }
     }
 }
