@@ -45,7 +45,7 @@ export interface IChaosOverlayClient {
 	 * Removes disconnect listener
 	 * @param listener callback that should be removed
 	 */
-	removeOnDisconnectListener(listener: () => void): void;
+	removeDisconnectListener(listener: () => void): void;
 	/**
 	 * Removes vote end listener
 	 * @param listener callback that should be removed

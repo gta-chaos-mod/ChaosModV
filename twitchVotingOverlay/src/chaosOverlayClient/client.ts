@@ -56,7 +56,7 @@ export class ChaosOverlayClient implements IChaosOverlayClient {
 	public removeConnectListener(listener: () => void): void {
 		this.connectEvent.removeEventListener(listener);
 	}
-	public removeOnDisconnectListener(listener: () => void): void {
+	public removeDisconnectListener(listener: () => void): void {
 		this.disconnectEvent.removeEventListener(listener);
 	}
 	public removeEndVoteListener(listener: TChaosOverlayClientEvent): void {
