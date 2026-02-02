@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Timers;
 using Serilog;
 using TwitchChatVotingProxy.ChaosPipe;
@@ -18,11 +19,12 @@ namespace TwitchChatVotingProxy
         private readonly ChaosModControllerConfig m_Config;
 
         private List<IVoteOption> m_ActiveVoteOptions = new();
+        private readonly object m_VoteLock = new();  // Thread safety lock
         private readonly Timer m_DisplayUpdateTick = new(DISPLAY_UPDATE_TICKRATE);
-        private readonly Dictionary<string, int> m_UserVotedFor = new();
+        private readonly ConcurrentDictionary<string, int> m_UserVotedFor = new();
         private readonly Random m_Random = new();
         private int m_VoteCounter = 0;
-        private bool m_VoteRunning = false;
+        private volatile bool m_VoteRunning = false;
 
         public ChaosModController(IChaosPipeClient chaosPipe, IOverlayServer? overlayServer, IVotingReceiver[] votingReceivers,
             ChaosModControllerConfig config)
@@ -53,7 +55,17 @@ namespace TwitchChatVotingProxy
         /// </summary>
         private void DisplayUpdateTick(object? sender, ElapsedEventArgs e)
         {
-            m_OverlayServer?.UpdateVoting(m_ActiveVoteOptions);
+            try
+            {
+                lock (m_VoteLock)
+                {
+                    m_OverlayServer?.UpdateVoting(m_ActiveVoteOptions);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in display update tick");
+            }
         }
         /// <summary>
         /// Calculate the voting result by counting them, and returning the one
@@ -266,20 +278,19 @@ namespace TwitchChatVotingProxy
                     // Check if the player has already voted
                     if (!m_UserVotedFor.TryGetValue(e.ClientId, out int previousVote))
                     {
-                        // If they haven't voted, count his vote
-                        m_UserVotedFor.Add(e.ClientId, i);
-                        voteOption.Votes++;
-
+                        // If they haven't voted, count their vote
+                        if (m_UserVotedFor.TryAdd(e.ClientId, i))
+                            voteOption.Votes++;
                     }
                     else if (previousVote != i)
                     {
                         // If the player has already voted, and it's not the same as before,
                         // remove the old vote, and add the new one.
-                        m_UserVotedFor.Remove(e.ClientId);
-                        m_ActiveVoteOptions[previousVote].Votes--;
+                        if (m_UserVotedFor.TryRemove(e.ClientId, out _))
+                            m_ActiveVoteOptions[previousVote].Votes--;
 
-                        m_UserVotedFor.Add(e.ClientId, i);
-                        voteOption.Votes++;
+                        if (m_UserVotedFor.TryAdd(e.ClientId, i))
+                            voteOption.Votes++;
                     }
 
                     break;

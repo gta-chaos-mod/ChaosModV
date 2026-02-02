@@ -67,6 +67,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             m_Client.Initialize(new ConnectionCredentials(m_UserName, m_OAuth), m_ChannelName);
 
             m_Client.OnConnected += OnConnected;
+            m_Client.OnDisconnected += OnDisconnect;
             m_Client.OnError += OnError;
             m_Client.OnIncorrectLogin += OnIncorrectLogin;
             m_Client.OnFailureToReceiveJoinConfirmation += OnFailureToReceiveJoinConfirmation;
@@ -79,8 +80,18 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 return false;
             }
 
+            // Wait for ready with 30 second timeout
+            var timeout = DateTime.UtcNow.AddSeconds(30);
             while (!m_IsReady)
+            {
+                if (DateTime.UtcNow > timeout)
+                {
+                    m_Logger.Error("Timed out waiting for Twitch connection to be ready");
+                    m_ChaosPipe.SendErrorMessage("Timed out connecting to Twitch. Please check your connection and try again.");
+                    return false;
+                }
                 await Task.Delay(100);
+            }
 
             return true;
         }

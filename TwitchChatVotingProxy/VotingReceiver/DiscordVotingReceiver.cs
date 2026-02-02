@@ -59,8 +59,18 @@ namespace TwitchChatVotingProxy.VotingReceiver
             await m_Client.LoginAsync(TokenType.Bot, m_BotToken);
             await m_Client.StartAsync();
 
+            // Wait for ready with 30 second timeout
+            var timeout = DateTime.UtcNow.AddSeconds(30);
             while (!m_IsReady)
+            {
+                if (DateTime.UtcNow > timeout)
+                {
+                    m_Logger.Error("Timed out waiting for Discord connection to be ready");
+                    m_ChaosPipe.SendErrorMessage("Timed out connecting to Discord. Please check your bot token and try again.");
+                    return false;
+                }
                 await Task.Delay(100);
+            }
 
             return true;
         }
@@ -169,21 +179,34 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// <summary>
         /// Called when the discord client disconnects (callback)
         /// </summary>
-        private Task OnDisconnected(Exception exception)
+        private async Task OnDisconnected(Exception exception)
         {
-            m_Logger.Information($"Discord client disconnected: {exception}");
+            m_Logger.Warning($"Discord client disconnected: {exception.Message}");
 
-            if (exception is HttpException && exception is HttpException { HttpCode: System.Net.HttpStatusCode.Unauthorized })
+            if (exception is HttpException { HttpCode: System.Net.HttpStatusCode.Unauthorized })
+            {
                 m_ChaosPipe.SendErrorMessage("Discord bot token is invalid. Please verify your config.");
+                return;
+            }
 
-            return Task.CompletedTask;
+            // Attempt reconnection after a delay (Discord.Net usually auto-reconnects, but log it)
+            m_Logger.Information("Discord will attempt to reconnect automatically...");
+            m_IsReady = false;
         }
         /// <summary>
         /// Called when the discord client receives a slash command
         /// </summary>
         public async Task OnSlashCommandExecuted(SocketSlashCommand command)
         {
-            string option = ((string)command.Data.Options.FirstOrDefault()).Trim();
+            // Safely get the option value
+            var optionValue = command.Data.Options.FirstOrDefault()?.Value;
+            if (optionValue == null)
+            {
+                await command.RespondAsync("Missing option", ephemeral: true);
+                return;
+            }
+
+            string option = optionValue.ToString()?.Trim() ?? "";
 
             if (string.IsNullOrEmpty(option))
             {
