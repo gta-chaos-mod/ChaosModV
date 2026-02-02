@@ -45,9 +45,9 @@ namespace TwitchChatVotingProxy.VotingReceiver
 
             m_Client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                // We don't actually need any but the Ready event fires much later without this for whatever reason
-                // So we just enable all unprivileged intents minus the ones the log warns us against using
-                GatewayIntents = GatewayIntents.AllUnprivileged
+                // Enable Guilds intent to properly receive guild data
+                // Also enable all unprivileged intents for proper functionality
+                GatewayIntents = GatewayIntents.Guilds | GatewayIntents.AllUnprivileged
                     & ~(GatewayIntents.GuildScheduledEvents | GatewayIntents.GuildInvites)
             });
 
@@ -77,9 +77,20 @@ namespace TwitchChatVotingProxy.VotingReceiver
                     " Please verify if the server and channel IDs are correct and the bot has permissions to post to that channel.");
             }
 
-            var guild = m_Client.GetGuild(m_GuildId.Value);
+            // Wait for guild to be available (up to 10 seconds)
+            // This fixes the race condition where guild.IsConnected is false right after Ready
+            SocketGuild? guild = null;
+            for (int i = 0; i < 100; i++)
+            {
+                guild = m_Client.GetGuild(m_GuildId.Value);
+                if (guild != null && guild.IsConnected)
+                    break;
+                await Task.Delay(100);
+            }
+
             if (guild == null || !guild.IsConnected)
             {
+                m_Logger.Warning($"Guild {m_GuildId.Value} not found or not connected after waiting.");
                 handleFatal();
                 return;
             }
@@ -87,6 +98,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             var channel = guild.GetTextChannel(m_ChannelId.Value);
             if (channel == null)
             {
+                m_Logger.Warning($"Channel {m_ChannelId.Value} not found in guild.");
                 handleFatal();
                 return;
             }
@@ -95,8 +107,9 @@ namespace TwitchChatVotingProxy.VotingReceiver
             {
                 await channel.SendMessageAsync(message);
             }
-            catch (HttpException)
+            catch (HttpException ex)
             {
+                m_Logger.Warning($"HttpException while sending message: {ex.Message}");
                 handleFatal();
                 return;
             }
