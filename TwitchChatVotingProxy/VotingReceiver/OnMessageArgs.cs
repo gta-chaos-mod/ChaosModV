@@ -1,13 +1,11 @@
-﻿namespace TwitchChatVotingProxy.VotingReceiver
+using System;
+
+namespace TwitchChatVotingProxy.VotingReceiver
 {
-    /// <summary>
-    /// Event which should be dispatched when the voting receiver receives
-    /// a message.
-    /// </summary>
-    class OnMessageArgs
+    public class OnMessageArgs : EventArgs
     {
-        public string? ClientId { get; set; } = null;
-        public string? Message { get; set; } = null;
-        public string? Username { get; set; } = null;
+        public string? ClientId { get; set; }
+        public string? Username { get; set; }
+        public string? Message { get; set; }
     }
 }
