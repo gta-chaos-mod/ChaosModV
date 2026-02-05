@@ -63,7 +63,7 @@ class CrossingChallenge : public Component
 	DWORD m_TickCount              = 0;
 	DWORD m_LastTick               = 0;
 	int m_EffectsCount             = 0;
-	bool m_TimerStarted            = 0;
+	bool m_TimerStarted            = false;
 
 	CHAOS_EVENT_LISTENER(EffectDispatcher::OnPreDispatchEffect) m_OnPreDispatchEffectListener;
 

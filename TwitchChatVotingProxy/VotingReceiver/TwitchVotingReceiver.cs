@@ -26,7 +26,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         private readonly ChaosPipeClient m_ChaosPipe;
         private readonly ILogger m_Logger = Log.Logger.ForContext<TwitchVotingReceiver>();
 
-        private bool m_IsReady = false;
+        private volatile bool m_IsReady = false;
 
         public TwitchVotingReceiver(OptionsFile config, ChaosPipeClient chaosPipe)
         {
@@ -67,6 +67,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
             m_Client.Initialize(new ConnectionCredentials(m_UserName, m_OAuth), m_ChannelName);
 
             m_Client.OnConnected += OnConnected;
+            m_Client.OnDisconnected += OnDisconnect;
             m_Client.OnError += OnError;
             m_Client.OnIncorrectLogin += OnIncorrectLogin;
             m_Client.OnFailureToReceiveJoinConfirmation += OnFailureToReceiveJoinConfirmation;
@@ -79,8 +80,18 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 return false;
             }
 
+            // Wait for ready with 30 second timeout
+            var timeout = DateTime.UtcNow.AddSeconds(30);
             while (!m_IsReady)
+            {
+                if (DateTime.UtcNow > timeout)
+                {
+                    m_Logger.Error("Timed out waiting for Twitch connection to be ready");
+                    m_ChaosPipe.SendErrorMessage("Timed out connecting to Twitch. Please check your connection and try again.");
+                    return false;
+                }
                 await Task.Delay(100);
+            }
 
             return true;
         }
@@ -113,7 +124,7 @@ namespace TwitchChatVotingProxy.VotingReceiver
         /// <summary>
         /// Called when the twitch client disconnects (callback)
         /// </summary>
-        private async void OnDisconnect(object? sender, OnDisconnectedArgs e)
+        private async void OnDisconnect(object? sender, OnDisconnectedEventArgs e)
         {
             m_Logger.Error("Disconnected from the twitch channel, trying to reconnect");
             await Task.Delay(RECONNECT_INTERVAL);

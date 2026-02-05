@@ -82,6 +82,8 @@ REGISTER_EFFECT(OnStartUpNAtomizer, nullptr, nullptr,
 static void OnStartRandom()
 {
 	const auto &weapons = Memory::GetAllWeapons();
+	if (weapons.empty())
+		return;
 	for (Ped ped : GetAllPeds())
 	{
 		Hash wep = weapons[g_Random.GetRandomInt(0, weapons.size() - 1)];

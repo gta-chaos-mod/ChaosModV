@@ -6,14 +6,14 @@
 
 #include "Util/OptionsManager.h"
 
-static bool ms_InitalSplashShown = false;
+static bool ms_InitialSplashShown = false;
 
 SplashTexts::SplashTexts()
 {
 	m_EnableSplashTexts =
 	    g_OptionsManager.GetConfigValue({ "EnableModSplashTexts" }, OPTION_DEFAULT_ENABLE_SPLASH_TEXTS);
 
-	if (ms_InitalSplashShown)
+	if (ms_InitialSplashShown)
 		return;
 
 	ShowSplash("Chaos Mod v" MOD_VERSION "\n\nSee credits.txt for a list of contributors", { .2f, .3f }, .65f,
@@ -22,7 +22,7 @@ SplashTexts::SplashTexts()
 	ShowSplash("DEBUG BUILD!", { .2f, .5f }, .7f, { 255, 0, 0 });
 #endif
 
-	ms_InitalSplashShown = true;
+	ms_InitialSplashShown = true;
 }
 
 void SplashTexts::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)

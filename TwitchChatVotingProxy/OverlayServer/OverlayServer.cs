@@ -10,6 +10,7 @@ namespace TwitchChatVotingProxy.OverlayServer
     {
         private readonly OverlayServerConfig config;
         private readonly List<IWebSocketConnection> connections = new();
+        private readonly object connectionsLock = new();  // Thread safety lock
         private readonly ILogger logger = Log.Logger.ForContext<OverlayServer>();
 
         public OverlayServer(OverlayServerConfig config)
@@ -28,7 +29,7 @@ namespace TwitchChatVotingProxy.OverlayServer
             }
             catch (Exception e)
             {
-                logger.Fatal(e, "Failed so start websocket server");
+                logger.Fatal(e, "Failed to start websocket server");
             }
         }
 
@@ -58,14 +59,28 @@ namespace TwitchChatVotingProxy.OverlayServer
         /// <param name="message">Message which should be broadcast</param>
         private void Broadcast(string message)
         {
-            connections.ForEach(connection =>
+            // Copy list under lock to avoid modification during iteration
+            IWebSocketConnection[] connectionsCopy;
+            lock (connectionsLock)
             {
-                // If the connection is not available for some reason, we just close it
-                if (!connection.IsAvailable)
-                    connection.Close();
-                else
-                    connection.Send(message);
-            });
+                connectionsCopy = connections.ToArray();
+            }
+
+            foreach (var connection in connectionsCopy)
+            {
+                try
+                {
+                    // If the connection is not available for some reason, we just close it
+                    if (!connection.IsAvailable)
+                        connection.Close();
+                    else
+                        connection.Send(message);
+                }
+                catch (Exception ex)
+                {
+                    logger.Warning(ex, $"Failed to send message to client {connection.ConnectionInfo.ClientIpAddress}");
+                }
+            }
         }
         /// <summary>
         /// Is called when a client disconnects from the websocket
@@ -76,7 +91,10 @@ namespace TwitchChatVotingProxy.OverlayServer
             try
             {
                 logger.Information($"Websocket client disconnected {connection.ConnectionInfo.ClientIpAddress}");
-                connections.Remove(connection);
+                lock (connectionsLock)
+                {
+                    connections.Remove(connection);
+                }
             }
             catch (Exception e)
             {
@@ -92,7 +110,10 @@ namespace TwitchChatVotingProxy.OverlayServer
             try
             {
                 logger.Information($"New websocket client {connection.ConnectionInfo.ClientIpAddress}");
-                connections.Add(connection);
+                lock (connectionsLock)
+                {
+                    connections.Add(connection);
+                }
             }
             catch (Exception e)
             {

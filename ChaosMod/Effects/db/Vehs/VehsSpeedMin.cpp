@@ -23,14 +23,12 @@ static inline bool Beepable(DWORD64 reserveValue)
 
 static std::string FormatSpeed(float ms)
 {
-	static constexpr int RESERVE = 16;
-	std::string ret;
-	ret.reserve(RESERVE);
+	char buf[16];
 	if (MISC::SHOULD_USE_METRIC_MEASUREMENTS())
-		std::snprintf(ret.data(), RESERVE, "%.1f kmh", ms * 3.6);
+		std::snprintf(buf, sizeof(buf), "%.1f kmh", ms * 3.6);
 	else
-		std::snprintf(ret.data(), RESERVE, "%.1f mph", ms * 2.236936);
-	return ret;
+		std::snprintf(buf, sizeof(buf), "%.1f mph", ms * 2.236936);
+	return std::string(buf);
 }
 
 static void OnTick()

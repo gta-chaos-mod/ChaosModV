@@ -5,5 +5,5 @@ export interface IChaosOverlayClientMessage {
 	request: 'CREATE' | 'END' | 'NO_VOTING_ROUND' | 'UPDATE';
 	totalVotes: number;
 	voteOptions: IChaosOverlayVoteOption[];
-	votingMode: 'MAJORITY' | 'PERCENTAGE';
+	votingMode: 'MAJORITY' | 'PERCENTAGE' | 'ANTIMAJORITY';
 }

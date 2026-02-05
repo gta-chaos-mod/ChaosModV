@@ -24,23 +24,27 @@ static void QueueDelegate(DebugSocket *debugSocket, std::function<void()> delega
 static void OnFetchEffects(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
                            ix::WebSocket &webSocket, const json &payloadJson)
 {
-	// TODO: This isn't thread safe currently!
+	// Queue to main thread for thread safety (g_EnabledEffects is not thread-safe)
+	auto *webSocketPtr = &webSocket;
+	QueueDelegate(debugSocket,
+	              [webSocketPtr]()
+	              {
+		              json effectsJson;
+		              effectsJson["command"] = "result_fetch_effects";
+		              for (const auto &[effectId, effectData] : g_EnabledEffects)
+		              {
+			              if (effectData.TimedType == EffectTimedType::Permanent || effectData.IsHidden())
+				              continue;
 
-	json effectsJson;
-	effectsJson["command"] = "result_fetch_effects";
-	for (const auto &[effectId, effectData] : g_EnabledEffects)
-	{
-		if (effectData.TimedType == EffectTimedType::Permanent || effectData.IsHidden())
-			continue;
+			              json effectInfoJson;
+			              effectInfoJson["id"]   = effectId;
+			              effectInfoJson["name"] = effectData.Name;
 
-		json effectInfoJson;
-		effectInfoJson["id"]   = effectId;
-		effectInfoJson["name"] = effectData.Name;
+			              effectsJson["effects"].push_back(effectInfoJson);
+		              }
 
-		effectsJson["effects"].push_back(effectInfoJson);
-	}
-
-	webSocket.send(effectsJson.dump());
+		              webSocketPtr->send(effectsJson.dump());
+	              });
 }
 
 static void OnTriggerEffect(DebugSocket *debugSocket, std::shared_ptr<ix::ConnectionState> connectionState,
@@ -82,7 +86,10 @@ static void OnExecScript(DebugSocket *debugSocket, std::shared_ptr<ix::Connectio
 	std::string scriptName;
 	scriptName.resize(8);
 	for (int i = 0; i < 8; i++)
-		sprintf(scriptName.data() + i, "%x", g_RandomNoDeterm.GetRandomInt(0, 16));
+	{
+		int val          = g_RandomNoDeterm.GetRandomInt(0, 15);
+		scriptName[i]    = val < 10 ? ('0' + val) : ('a' + val - 10);
+	}
 
 	json json;
 	json["command"]     = "result_exec_script";
@@ -129,8 +136,10 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
 	{
 		if (debugSocket->m_IsProfiling)
 		{
+			// Capture webSocket pointer (not reference) to avoid dangling reference
+			auto *webSocketPtr = &webSocket;
 			QueueDelegate(debugSocket,
-			              [debugSocket, &webSocket]()
+			              [debugSocket, webSocketPtr]()
 			              {
 				              json resultJson;
 				              resultJson["command"]  = "profile_state";
@@ -150,7 +159,7 @@ static void OnSetProfileState(DebugSocket *debugSocket, std::shared_ptr<ix::Conn
 					              resultJson["profiles"][effectId] = profileJson;
 				              }
 
-				              webSocket.send(resultJson.dump());
+				              webSocketPtr->send(resultJson.dump());
 			              });
 		}
 	}
@@ -276,14 +285,11 @@ void DebugSocket::OnModPauseCleanup(PauseCleanupFlags cleanupFlags)
 
 void DebugSocket::OnRun()
 {
-	if (!m_DelegateQueue.empty())
+	std::lock_guard lock(m_DelegateQueueMutex);
+	while (!m_DelegateQueue.empty())
 	{
-		std::lock_guard lock(m_DelegateQueueMutex);
-		while (!m_DelegateQueue.empty())
-		{
-			m_DelegateQueue.front()();
-			m_DelegateQueue.pop();
-		}
+		m_DelegateQueue.front()();
+		m_DelegateQueue.pop();
 	}
 }
 

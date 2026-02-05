@@ -125,7 +125,7 @@ namespace EffectConfig
 	{
 		ConfigValues configValues =
 		    isJson ? GetConfigValuesJson(effectsFile, effectId) : GetConfigValuesIni(effectsFile, effectId);
-		// HACK: Store EffectCustomName seperately
+		// HACK: Store EffectCustomName separately
 
 		if (!configValues.Values.Enabled)
 			return false;

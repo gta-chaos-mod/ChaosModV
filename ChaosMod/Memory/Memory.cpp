@@ -97,9 +97,12 @@ namespace Memory
 			if (!file.fail())
 			{
 				std::string line;
-				line.resize(64);
-				while (file.getline(line.data(), 64))
-					ms_BlacklistedHookNames.insert(StringTrim(line.substr(0, line.find("\n"))));
+				while (std::getline(file, line))
+				{
+					auto trimmed = StringTrim(line);
+					if (!trimmed.empty())
+						ms_BlacklistedHookNames.insert(trimmed);
+				}
 			}
 		}
 

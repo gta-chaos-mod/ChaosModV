@@ -6,6 +6,13 @@
 
 #define ENTITY_POOL_MAX 40
 
+static constexpr int MAX_PED_CONFIG_FLAGS = 411;
+static constexpr int MAX_PED_RESET_FLAGS  = 300;
+static constexpr int PED_COMPONENT_COUNT  = 12;
+static constexpr int PROP_COMPONENT_MAX   = 4;
+static constexpr int VEHICLE_MOD_COUNT    = 50;
+static constexpr Hash FIRING_PATTERN_FULL_AUTO = 0xC6EE6B4C;
+
 static std::list<Entity> m_Entities;
 
 static void HandleEntity(Entity entity)
@@ -78,10 +85,10 @@ Ped CreatePoolClonePed(Ped pedToClone)
 
 	CLONE_PED_TO_TARGET(pedToClone, clone);
 
-	for (int i = 0; i < 411; i++)
+	for (int i = 0; i < MAX_PED_CONFIG_FLAGS; i++)
 		SET_PED_CONFIG_FLAG(clone, i, GET_PED_CONFIG_FLAG(pedToClone, i, 1));
 
-	for (int i = 0; i < 300; i++)
+	for (int i = 0; i < MAX_PED_RESET_FLAGS; i++)
 		SET_PED_RESET_FLAG(clone, i, GET_PED_RESET_FLAG(pedToClone, i));
 
 	SET_PED_RELATIONSHIP_GROUP_HASH(clone, GET_PED_RELATIONSHIP_GROUP_HASH(pedToClone));
@@ -97,7 +104,7 @@ Ped CreatePoolClonePed(Ped pedToClone)
 		GIVE_WEAPON_TO_PED(clone, weaponHash, 9999, false, true);
 
 	SET_PED_ACCURACY(clone, GET_PED_ACCURACY(pedToClone));
-	SET_PED_FIRING_PATTERN(clone, 0xC6EE6B4C);
+	SET_PED_FIRING_PATTERN(clone, FIRING_PATTERN_FULL_AUTO);
 
 	SET_ENTITY_COORDS(clone, pos.x, pos.y, pos.z, false, false, false, false);
 
@@ -133,7 +140,7 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 		SET_ENTITY_HEADING(ped, heading);
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < PED_COMPONENT_COUNT; i++)
 	{
 		int drawableAmount = GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS(ped, i);
 		int drawable       = drawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, drawableAmount - 1);
@@ -143,7 +150,7 @@ Ped CreateRandomPoolPed(float x, float y, float z, float heading)
 
 		SET_PED_COMPONENT_VARIATION(ped, i, drawable, texture, g_RandomNoDeterm.GetRandomInt(0, 3));
 
-		if (i < 4)
+		if (i < PROP_COMPONENT_MAX)
 		{
 			int propDrawableAmount = GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS(ped, i);
 			int propDrawable = propDrawableAmount == 0 ? 0 : g_RandomNoDeterm.GetRandomInt(0, propDrawableAmount - 1);
@@ -185,11 +192,8 @@ Vehicle CreatePoolCloneVehicle(Vehicle vehToClone)
 	SET_ENTITY_VELOCITY(clone, velocity.x, velocity.y, velocity.z);
 
 	SET_VEHICLE_MOD_KIT(clone, 0);
-	for (int i = 0; i < 50; i++)
-	{
-		int max = GET_NUM_VEHICLE_MODS(clone, i);
+	for (int i = 0; i < VEHICLE_MOD_COUNT; i++)
 		SET_VEHICLE_MOD(clone, i, GET_VEHICLE_MOD(vehToClone, i), true);
-	}
 
 	SET_VEHICLE_TYRES_CAN_BURST(clone, GET_VEHICLE_TYRES_CAN_BURST(vehToClone));
 	SET_VEHICLE_WINDOW_TINT(clone, GET_VEHICLE_WINDOW_TINT(vehToClone));

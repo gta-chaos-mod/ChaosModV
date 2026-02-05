@@ -87,3 +87,30 @@ class EffectData
 		         : effectWeight;
 	}
 };
+
+// Utility: Selects a random effect from a collection using weighted random selection.
+// Collection must be iterable with elements having .first (EffectIdentifier) and .second->GetEffectWeight().
+// Returns nullptr if the collection is empty or total weight is zero.
+template <typename Collection>
+inline const EffectIdentifier *SelectWeightedEffect(const Collection &effects, class Random &rng)
+{
+	float totalWeight = 0.f;
+	for (const auto &[effectId, effectData] : effects)
+		totalWeight += effectData->GetEffectWeight();
+
+	if (totalWeight <= 0.f)
+		return nullptr;
+
+	float chosen                           = rng.GetRandomFloat(0.f, totalWeight);
+	totalWeight                            = 0.f;
+
+	const EffectIdentifier *targetEffectId = nullptr;
+	for (const auto &[effectId, effectData] : effects)
+	{
+		totalWeight += effectData->GetEffectWeight();
+		if (!targetEffectId && chosen <= totalWeight)
+			targetEffectId = &effectId;
+	}
+
+	return targetEffectId;
+}

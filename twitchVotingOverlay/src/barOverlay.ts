@@ -102,7 +102,7 @@ export class BarOverlay {
 			bar.fadeOut(ANIMATION_LENGTH, ANIMATION_DELAY);
 			setTimeout(() => {
 				bar.isDisabled = false;
-				bar.fadeIn(ANIMATION_LENGTH), ANIMATION_LENGTH + ANIMATION_DELAY;
+				bar.fadeIn(ANIMATION_LENGTH, ANIMATION_DELAY);
 			}, ANIMATION_LENGTH + ANIMATION_DELAY);
 		});
 	}
@@ -144,9 +144,11 @@ export class BarOverlay {
 			BAR.label = VOTE_OPTION.label;
 			BAR.match = VOTE_OPTION.matches.join('/').concat('.');
 
-			if (votingMode === 'MAJORITY') {
+			if (votingMode === 'MAJORITY' || votingMode === 'ANTIMAJORITY') {
 				BAR.value = VOTE_OPTION.value.toString();
-			} else if (votingMode === 'PERCENTAGE') BAR.value = `${percentage}%`;
+			} else if (votingMode === 'PERCENTAGE') {
+				BAR.value = `${percentage}%`;
+			}
 
 			BAR.width = `${percentage}%`;
 		}
