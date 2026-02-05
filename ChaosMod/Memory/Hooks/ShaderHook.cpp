@@ -78,8 +78,8 @@ namespace Hooks
 			    std::async(std::launch::async,
 			               [&]()
 			               {
-				               ID3DBlob *shader;
-				               ID3DBlob *errorMessages;
+				               ID3DBlob *shader        = nullptr;
+				               ID3DBlob *errorMessages = nullptr;
 				               HRESULT compileResult;
 				               if ((compileResult = D3DCompile(shaderSrc.data(), shaderSrc.size(), NULL, NULL, NULL,
 				                                               "main", "ps_4_0", 0, 0, &shader, &errorMessages))
@@ -89,6 +89,8 @@ namespace Hooks
 					               std::vector<BYTE> shaderBytecode;
 					               shaderBytecode.reserve(shader->GetBufferSize());
 					               std::copy(ptr, ptr + shader->GetBufferSize(), std::back_inserter(shaderBytecode));
+
+					               shader->Release();
 
 					               if (shaderCache.size() > SHADER_CACHE_MAX_ENTRIES)
 						               shaderCache.erase(shaderCache.begin());
@@ -108,9 +110,13 @@ namespace Hooks
 						               std::copy(ptr, ptr + errorMessages->GetBufferSize(), std::back_inserter(buffer));
 
 						               LOG(buffer);
+						               errorMessages->Release();
 						               return;
 					               }
 				               }
+
+				               if (errorMessages)
+					               errorMessages->Release();
 			               });
 
 			using namespace std::chrono_literals;

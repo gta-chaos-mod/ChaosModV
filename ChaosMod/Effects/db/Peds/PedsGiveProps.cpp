@@ -23,6 +23,9 @@ static void OnStart()
 			models.push_back(model);
 	}
 
+	if (models.empty())
+		return;
+
 	for (Ped ped : GetAllPeds())
 	{
 		if (count >= maxCount)

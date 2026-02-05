@@ -405,21 +405,35 @@ void Voting::HandleMsg(std::string_view message)
 	}
 	else
 	{
-		auto receivedJSON = nlohmann::json::parse(message);
-		if (!receivedJSON.empty())
+		nlohmann::json receivedJSON;
+		try
+		{
+			receivedJSON = nlohmann::json::parse(message);
+		}
+		catch (const nlohmann::json::parse_error &e)
+		{
+			LOG("Failed to parse voting message JSON: " << e.what());
+			return;
+		}
+
+		if (!receivedJSON.empty() && receivedJSON.contains("Identifier") && receivedJSON["Identifier"].is_string())
 		{
 			std::string identifier = receivedJSON["Identifier"];
-			if (identifier == "voteresult")
+			if (identifier == "voteresult" && receivedJSON.contains("SelectedOption")
+			    && receivedJSON["SelectedOption"].is_number_integer())
 			{
 				int result          = receivedJSON["SelectedOption"];
 
 				m_HasReceivedResult = true;
 
 				// If random effect voteable (result == 3) won, dispatch random effect later
-				m_ChosenEffectId =
-				    std::make_unique<EffectIdentifier>(result == 3 ? EffectIdentifier() : m_EffectChoices[result]->Id);
+				if (result == 3 || result < 0 || static_cast<size_t>(result) >= m_EffectChoices.size())
+					m_ChosenEffectId = std::make_unique<EffectIdentifier>();
+				else
+					m_ChosenEffectId = std::make_unique<EffectIdentifier>(m_EffectChoices[result]->Id);
 			}
-			else if (identifier == "currentvotes")
+			else if (identifier == "currentvotes" && receivedJSON.contains("Votes")
+			         && receivedJSON["Votes"].is_array())
 			{
 				std::vector<int> options = receivedJSON["Votes"];
 				if (options.size() == m_EffectChoices.size())
@@ -431,10 +445,11 @@ void Voting::HandleMsg(std::string_view message)
 					}
 				}
 			}
-			else if (identifier == "error")
+			else if (identifier == "error" && receivedJSON.contains("Message")
+			         && receivedJSON["Message"].is_string())
 			{
-				std::string message = receivedJSON["Message"];
-				ErrorOutWithMsg(message);
+				std::string errorMessage = receivedJSON["Message"];
+				ErrorOutWithMsg(errorMessage);
 			}
 		}
 	}
@@ -450,9 +465,16 @@ std::string Voting::GetPipeJson(std::string_view identifier, std::vector<std::st
 
 void Voting::SendToPipe(std::string_view identifier, std::vector<std::string> params)
 {
+	if (m_PipeHandle == INVALID_HANDLE_VALUE)
+		return;
+
 	auto msg = GetPipeJson(identifier, params);
 	msg += "\n";
-	WriteFile(m_PipeHandle, msg.c_str(), msg.length(), NULL, NULL);
+	DWORD bytesWritten;
+	if (!WriteFile(m_PipeHandle, msg.c_str(), static_cast<DWORD>(msg.length()), &bytesWritten, NULL))
+	{
+		LOG("Failed to write to voting pipe, error: " << GetLastError());
+	}
 }
 
 void Voting::ErrorOutWithMsg(std::string_view message)

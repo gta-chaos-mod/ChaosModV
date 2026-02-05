@@ -261,7 +261,8 @@ static void MainRun()
 
 				if (ComponentExists<EffectDispatcher>())
 				{
-					GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
+					if (ComponentExists<EffectDispatchTimer>())
+						GetComponent<EffectDispatchTimer>()->SetTimerEnabled(false);
 					GetComponent<EffectDispatcher>()->Reset(
 					    EffectDispatcher::ClearEffectsFlag_NoRestartPermanentEffects);
 					while (GetComponent<EffectDispatcher>()->IsClearingEffects())
@@ -305,7 +306,8 @@ static void MainRun()
 
 			if (ComponentExists<EffectDispatcher>())
 			{
-				GetComponent<EffectDispatchTimer>()->ResetTimer();
+				if (ComponentExists<EffectDispatchTimer>())
+					GetComponent<EffectDispatchTimer>()->ResetTimer();
 				GetComponent<EffectDispatcher>()->Reset();
 				while (GetComponent<EffectDispatcher>()->IsClearingEffects())
 				{

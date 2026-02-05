@@ -11,7 +11,7 @@ class Failsafe : public Component
 	int *m_StateGlobal  = nullptr;
 	int m_LastState     = -1;
 	int m_FailTimestamp = 0;
-	char m_FailCounts   = 0;
+	int m_FailCounts    = 0;
 	bool m_Enabled      = false;
 
   public:

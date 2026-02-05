@@ -421,32 +421,15 @@ void EffectDispatcher::UpdateMetaEffects(float deltaTime)
 
 		std::vector<std::tuple<EffectIdentifier, EffectData *>> availableMetaEffects;
 
-		float totalWeight = 0.f;
 		for (const auto &effectData : GetFilteredEnabledEffects())
 		{
 			if (effectData->IsMeta() && !effectData->IsUtility() && !effectData->IsHidden())
-			{
-				totalWeight += effectData->GetEffectWeight();
-
 				availableMetaEffects.push_back(std::make_tuple(effectData->Id, effectData));
-			}
 		}
 
 		if (!availableMetaEffects.empty())
 		{
-			// TODO: Stop duplicating effect weight logic everywhere
-			float chosen                           = g_Random.GetRandomFloat(0.f, totalWeight);
-
-			totalWeight                            = 0.f;
-
-			const EffectIdentifier *targetEffectId = nullptr;
-			for (const auto &[effectId, effectData] : availableMetaEffects)
-			{
-				totalWeight += effectData->GetEffectWeight();
-
-				if (!targetEffectId && chosen <= totalWeight)
-					targetEffectId = &effectId;
-			}
+			const EffectIdentifier *targetEffectId = SelectWeightedEffect(availableMetaEffects, g_Random);
 
 			if (targetEffectId)
 			{
@@ -546,31 +529,12 @@ void EffectDispatcher::DispatchRandomEffect(DispatchEffectFlags dispatchEffectFl
 	if (!m_EnableNormalEffectDispatch)
 		return;
 
-	std::unordered_map<EffectIdentifier, EffectData, EffectsIdentifierHasher> choosableEffects;
-	for (const auto &effectData : GetFilteredEnabledEffects())
+	std::vector<std::tuple<EffectIdentifier, EffectData *>> choosableEffects;
+	for (auto effectData : GetFilteredEnabledEffects())
 		if (!effectData->IsMeta() && !effectData->IsUtility() && !effectData->IsHidden())
-			choosableEffects.emplace(effectData->Id, *effectData);
+			choosableEffects.push_back(std::make_tuple(effectData->Id, effectData));
 
-	float totalWeight = 0.f;
-	for (const auto &[effectId, effectData] : choosableEffects)
-		totalWeight += effectData.GetEffectWeight();
-
-	float chosen                           = g_Random.GetRandomFloat(0.f, totalWeight);
-
-	totalWeight                            = 0.f;
-
-	const EffectIdentifier *targetEffectId = nullptr;
-	for (const auto &[effectId, effectData] : choosableEffects)
-	{
-		totalWeight += effectData.GetEffectWeight();
-
-		if (chosen <= totalWeight)
-		{
-			targetEffectId = &effectId;
-
-			break;
-		}
-	}
+	const EffectIdentifier *targetEffectId = SelectWeightedEffect(choosableEffects, g_Random);
 
 	if (targetEffectId)
 		DispatchEffect(*targetEffectId, dispatchEffectFlags, suffix);

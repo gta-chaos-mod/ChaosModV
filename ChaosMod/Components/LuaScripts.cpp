@@ -103,10 +103,13 @@ _LUAFUNC static char *_TryParseString(void *str)
 
 _LUAFUNC static bool _TryParseVector3(void **vector, float &x, float &y, float &z)
 {
+	// GTA V native Vector3 layout: float x, pad, float y, pad, float z, pad
+	// Each component is at 8-byte (sizeof(void*)) intervals on x64
 	MAGIC_CATCH_BEGIN
-	x = *reinterpret_cast<float *>(vector);
-	y = *reinterpret_cast<float *>(vector + 1);
-	z = *reinterpret_cast<float *>(vector + 2);
+	auto base = reinterpret_cast<uintptr_t>(vector);
+	x         = *reinterpret_cast<float *>(base);
+	y         = *reinterpret_cast<float *>(base + sizeof(void *));
+	z         = *reinterpret_cast<float *>(base + sizeof(void *) * 2);
 	MAGIC_CATCH_END(return false)
 
 	return true;
@@ -306,12 +309,13 @@ LuaScripts::LuaScripts()
 
 		if (!strcmp(dir, "chaosmod\\workshop"))
 		{
-			for (const auto &entry : std::filesystem::directory_iterator(dir))
+			for (const auto &dirEntry : std::filesystem::directory_iterator(dir))
 			{
-				if (entry.is_directory() && ComponentExists<Workshop>())
-					for (const auto &entry : GetComponent<Workshop>()->GetSubmissionFiles(entry.path().string(),
-					                                                                      Workshop::FileType::Script))
-						parseScript(entry);
+				if (dirEntry.is_directory() && ComponentExists<Workshop>())
+					for (const auto &scriptEntry :
+					     GetComponent<Workshop>()->GetSubmissionFiles(dirEntry.path().string(),
+					                                                  Workshop::FileType::Script))
+						parseScript(scriptEntry);
 			}
 		}
 		else

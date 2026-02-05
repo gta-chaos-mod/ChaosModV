@@ -42,7 +42,8 @@ static void OnTick()
 			if (std::find(goneThroughPeds.begin(), goneThroughPeds.end(), ped) == goneThroughPeds.end())
 			{
 				static const std::vector<Hash> &weps = Memory::GetAllWeapons();
-				GIVE_WEAPON_TO_PED(ped, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
+				if (!weps.empty())
+					GIVE_WEAPON_TO_PED(ped, weps[g_Random.GetRandomInt(0, weps.size() - 1)], 9999, false, true);
 
 				goneThroughPeds.push_back(ped);
 			}

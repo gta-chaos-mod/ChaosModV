@@ -65,6 +65,9 @@ static void OnStart()
 				if (IS_VEHICLE_SEAT_FREE(veh, i, false) || GET_PED_IN_VEHICLE_SEAT(veh, i, false) != playerPed)
 					choosableSeats.push_back(i);
 
+			if (choosableSeats.empty())
+				return;
+
 			int seat = choosableSeats[g_Random.GetRandomInt(0, choosableSeats.size() - 1)];
 			if (!IS_VEHICLE_SEAT_FREE(veh, seat, false))
 			{
