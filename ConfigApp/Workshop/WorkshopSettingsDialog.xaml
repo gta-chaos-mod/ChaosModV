@@ -14,13 +14,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            
             <RowDefinition />
         </Grid.RowDefinitions>
 
-         <TextBlock Text="Workshop Provider URL" Grid.Row="0" Grid.Column="0"
-             HorizontalAlignment="Right" VerticalAlignment="Center" />
-         <TextBox x:Name="workshop_custom_url" Height="25" Width="250" Grid.Column="2"
-               HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <TextBlock
+            Text="Workshop Provider URL" Grid.Row="0" Grid.Column="0"
+            HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox
+            x:Name="workshop_custom_url" Height="25" Width="250" Grid.Column="2"
+            HorizontalAlignment="Left" VerticalAlignment="Center" />
     </Grid>
-    </ContentDialog>
+</ContentDialog>

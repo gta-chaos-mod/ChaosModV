@@ -17,14 +17,16 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBox x:Name="effects_user_effects_search"
-                             Width="300"
-                             HorizontalAlignment="Left"
-                             PlaceholderText="Search for effect..."
-                             TextChanged="OnUserEffectSearchTextChanged" />
-                    <TreeView x:Name="effects_user_effects_tree_view"
-                              Grid.Row="1"
-                              SelectionMode="None" />
+                    <TextBox
+                        x:Name="effects_user_effects_search"
+                        Width="300"
+                        HorizontalAlignment="Left"
+                        PlaceholderText="Search for effect..."
+                        TextChanged="OnUserEffectSearchTextChanged" />
+                    <TreeView
+                        x:Name="effects_user_effects_tree_view"
+                        Grid.Row="1"
+                        SelectionMode="None" />
                 </Grid>
             </TabViewItem>
 
@@ -35,9 +37,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Meta effects modify various aspects of mod itself on a regular basis to add more variety.&#x0a;They are not a part of the normal effects pool; instead, they are automatically dispatched by the mod on a fixed interval (configurable below)."
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Center" />
+                    <TextBlock
+                        Text="Meta effects modify various aspects of mod itself on a regular basis to add more variety.&#x0a;They are not a part of the normal effects pool; instead, they are automatically dispatched by the mod on a fixed interval (configurable below)."
+                        TextWrapping="Wrap"
+                        HorizontalAlignment="Center" />
 
                     <Grid Grid.Row="1" ColumnSpacing="24">
                         <Grid.ColumnDefinitions>
@@ -66,9 +69,7 @@
                             <TextBox x:Name="meta_effects_short_timed_dur" Grid.Row="2" Grid.Column="1" Width="80" MaxLength="6" HorizontalAlignment="Left" />
                         </Grid>
 
-                        <TreeView x:Name="meta_effects_tree_view"
-                                  Grid.Column="1"
-                                  SelectionMode="None" />
+                        <TreeView x:Name="meta_effects_tree_view" Grid.Column="1" SelectionMode="None" />
                     </Grid>
                 </Grid>
             </TabViewItem>
@@ -83,14 +84,16 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock x:Name="update_available_label"
-                           VerticalAlignment="Center"
-                           Text="A new version is available! Visit the GTA5-Mods thread for a download and changelogs."
-                           TextWrapping="Wrap" />
-                <Button x:Name="update_available_button"
-                        Content="GTA5-Mods"
-                        Visibility="Collapsed"
-                        Click="OpenModPageEvent" />
+                <TextBlock
+                    x:Name="update_available_label"
+                    VerticalAlignment="Center"
+                    Text="A new version is available! Visit the GTA5-Mods thread for a download and changelogs."
+                    TextWrapping="Wrap" />
+                <Button
+                    x:Name="update_available_button"
+                    Content="GTA5-Mods"
+                    Visibility="Collapsed"
+                    Click="OpenModPageEvent" />
             </StackPanel>
 
             <Button x:Name="user_reset" Grid.Column="2" Content="Reset" Click="OnUserResetClick" />

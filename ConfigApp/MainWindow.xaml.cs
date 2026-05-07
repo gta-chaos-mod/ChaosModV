@@ -428,7 +428,7 @@ namespace ConfigApp
 
         public void OpenModPageEvent(object sender, RoutedEventArgs eventArgs)
         {
-            Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+            Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v");
         }
     }
 }
