@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Windows;
+using ConfigApp.Infrastructure;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp
 {
@@ -69,26 +71,34 @@ namespace ConfigApp
         }
     }
 
-    public partial class WorkshopEditDialog : Window
+    public partial class WorkshopEditDialog : ContentDialog
     {
         public List<WorkshopSubmissionFileState> FileStates { get; private set; } = new List<WorkshopSubmissionFileState>();
 
         private readonly WorkshopEditDialogMode m_DialogMode;
+        private readonly List<TreeMenuItem> m_RootItems = new();
 
         public WorkshopEditDialog(List<WorkshopSubmissionFile> files, WorkshopEditDialogMode dialogMode, string? path = null, List<string>? highlightedFiles = null)
         {
             InitializeComponent();
 
             m_DialogMode = dialogMode;
+            DefaultButton = ContentDialogButton.Primary;
 
             if (m_DialogMode == WorkshopEditDialogMode.Install)
             {
                 Title = "Install Submission";
+                PrimaryButtonText = "Yes";
+                CloseButtonText = "No";
 
                 files_info_text.Text = "This submission contains the following files";
                 install_confirm_text.Visibility = Visibility.Visible;
-                button_yes.Visibility = Visibility.Visible;
-                button_save_or_no.Content = "No";
+            }
+            else
+            {
+                Title = "Edit Submission";
+                PrimaryButtonText = "Save";
+                CloseButtonText = "Cancel";
             }
 
             TreeMenuItem generateItem(string text, TreeMenuItem? parent = null, bool showCheckbox = true)
@@ -175,7 +185,7 @@ namespace ConfigApp
                 var menuItem = generateItem(handleEffectId(pathFragments.Last()), targetItem, file.Type != WorkshopSubmissionFileType.Text);
                 var fileState = new WorkshopSubmissionFileState(menuItem, pathName, file.EffectData);
                 menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit;
-                menuItem.OnConfigureClick = () =>
+                menuItem.OnConfigureClickAsync = async () =>
                 {
                     if (file.Type == WorkshopSubmissionFileType.Script)
                     {
@@ -184,7 +194,7 @@ namespace ConfigApp
                             Name = pathName,
                             IsTimed = true
                         });
-                        effectConfig.ShowDialog();
+                        await effectConfig.ShowAsync();
 
                         if (!effectConfig.IsSaved)
                             return;
@@ -199,7 +209,7 @@ namespace ConfigApp
                         }
                         catch (Win32Exception)
                         {
-                            MessageBox.Show("Error: File not found", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                            await AppDialog.ShowMessageAsync("Error: File not found");
                         }
                     }
                 };
@@ -215,34 +225,20 @@ namespace ConfigApp
                 menuItem.IsChecked = file.IsEnabled;
             }
 
-            files_tree_view.Items.Clear();
-            files_tree_view.Items.Add(luaParentItem);
-            files_tree_view.Items.Add(mp3ParentItem);
-            files_tree_view.Items.Add(txtParentItem);
+            m_RootItems.Clear();
+            if (luaParentItem.Children.Count > 0)
+                m_RootItems.Add(luaParentItem);
+            if (mp3ParentItem.Children.Count > 0)
+                m_RootItems.Add(mp3ParentItem);
+            if (txtParentItem.Children.Count > 0)
+                m_RootItems.Add(txtParentItem);
 
-            for (int i = files_tree_view.Items.Count - 1; i >= 0; i--)
-            {
-                var child = (TreeMenuItem)files_tree_view.Items.GetItemAt(i);
-                if (child.Children.Count == 0)
-                    files_tree_view.Items.RemoveAt(i);
-            }
+            RefreshTree();
         }
 
-        private void OnWindowClosed(object sender, EventArgs e)
+        private void RefreshTree()
         {
-            DialogResult ??= false;
-        }
-
-        private void OnWorkshopEditYesClick(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-            Close();
-        }
-
-        private void OnWorkshopEditNoOrSaveClick(object sender, RoutedEventArgs e)
-        {
-            DialogResult = m_DialogMode == WorkshopEditDialogMode.Edit;
-            Close();
+            TreeViewBuilder.Populate(files_tree_view, m_RootItems, RefreshTree);
         }
     }
 }

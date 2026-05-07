@@ -1,36 +1,10 @@
 ﻿using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
+using Microsoft.UI.Xaml;
 
 namespace ConfigApp
 {
     public class TreeMenuItem : INotifyPropertyChanged
     {
-        private class TreeMenuItemAction : ICommand
-        {
-            public event EventHandler? CanExecuteChanged = null;
-
-            private readonly Action? m_Action = null;
-
-            public TreeMenuItemAction(Action? action)
-            {
-                m_Action = action;
-            }
-
-            public bool CanExecute(object? parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object? parameter)
-            {
-                if (m_Action is null)
-                    return;
-
-                m_Action();
-            }
-        }
-
         public string Text { get; private set; }
         public string BaseText { get; private set; }
         public TreeMenuItem? Parent = null;
@@ -71,9 +45,9 @@ namespace ConfigApp
             }
         }
         private bool m_ForceConfigHidden = false;
-        public string IsConfigVisible
+        public Visibility ConfigButtonVisibility
         {
-            get => Children.Count == 0 && !m_ForceConfigHidden ? "Visible" : "Hidden";
+            get => Children.Count == 0 && !m_ForceConfigHidden ? Visibility.Visible : Visibility.Collapsed;
         }
         public bool ForceConfigHidden
         {
@@ -86,17 +60,9 @@ namespace ConfigApp
         {
             get => IsChecked;
         }
-        public Action? OnConfigureClick { get; set; }
-        public ICommand OnConfigureCommand
-        {
-            get => new TreeMenuItemAction(OnConfigureClick);
-        }
+        public Func<Task>? OnConfigureClickAsync { get; set; }
 
         public Action? OnCheckedClick { get; set; }
-        public ICommand OnCheckedCommand
-        {
-            get => new TreeMenuItemAction(OnCheckedClick);
-        }
 
         public TreeMenuItem(string text, TreeMenuItem? parent = null)
         {
@@ -150,7 +116,7 @@ namespace ConfigApp
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsConfigVisible)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ConfigButtonVisibility)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsConfigEnabled)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsColored)));
         }

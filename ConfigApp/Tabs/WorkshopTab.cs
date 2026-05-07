@@ -1,20 +1,17 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Markup;
-using System.Windows.Media;
 using ConfigApp.Workshop;
+using ConfigApp.Infrastructure;
 using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xceed.Wpf.Toolkit;
 using ZstdSharp;
-using MessageBox = System.Windows.MessageBox;
 
 namespace ConfigApp.Tabs
 {
@@ -36,67 +33,155 @@ namespace ConfigApp.Tabs
         };
         private SortingMode m_SortingMode = SortingMode.Name;
 
-        private ObservableCollection<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new();
+        private readonly List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new();
+        private bool m_HasLoaded = false;
 
         private CheckBox? m_SortIntalledFirstToggle = null;
-        private WatermarkTextBox? m_SearchBox = null;
-        private ItemsControl? m_ItemsControl = null;
+        private TextBox? m_SearchBox = null;
+        private StackPanel? m_ItemsPanel = null;
 
-        private void SortSubmissionItems()
+        private void ApplySortAndFilter()
         {
-            IOrderedEnumerable<WorkshopSubmissionItem>? items = null;
-
-            items = m_SortingMode switch
-            {
-                SortingMode.Name => m_WorkshopSubmissionItems.OrderBy(item => item.Name?.ToLower()),
-                SortingMode.LastUpdated => m_WorkshopSubmissionItems.OrderByDescending(item => item.LastUpdated),
-                SortingMode.Author => m_WorkshopSubmissionItems.OrderBy(item => item.Author?.ToLower()),
-                _ => throw new NotImplementedException(),
-            };
-            if (m_SortIntalledFirstToggle == null || m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
-                items = items.OrderBy(item => item.InstallState);
-
-            m_WorkshopSubmissionItems = new ObservableCollection<WorkshopSubmissionItem>(items);
-            if (m_ItemsControl is not null)
-                m_ItemsControl.ItemsSource = m_WorkshopSubmissionItems;
-        }
-
-        private void HandleWorkshopSubmissionsSearchFilter()
-        {
-            var transformedText = m_SearchBox?.Text.Trim().ToLower();
-            var view = CollectionViewSource.GetDefaultView(m_WorkshopSubmissionItems);
-            view.Filter = (submissionItem) =>
-            {
-                if (submissionItem is not WorkshopSubmissionItem item || transformedText is null || transformedText == "")
-                    return true;
-
-                foreach (var term in item.SearchTerms)
-                {
-                    if (term.Term.ToLower().Contains(transformedText))
-                        return true;
-                }
-
-                return false;
-            };
+            var filteredText = m_SearchBox?.Text.Trim().ToLowerInvariant();
 
             foreach (var item in m_WorkshopSubmissionItems)
             {
                 item.HighlightedFiles.Clear();
-                if (transformedText is not null && transformedText != "")
+
+                if (!string.IsNullOrWhiteSpace(filteredText))
                 {
                     foreach (var term in item.SearchTerms)
                     {
-                        if (term.Term.ToLower().Contains(transformedText))
+                        if (term.Term.ToLowerInvariant().Contains(filteredText))
                         {
-                            if (term.IsInFile)
+                            if (term.IsInFile && !item.HighlightedFiles.Contains(term.FileName))
                                 item.HighlightedFiles.Add(term.FileName);
                         }
                     }
                 }
             }
+
+            IEnumerable<WorkshopSubmissionItem> items = string.IsNullOrWhiteSpace(filteredText)
+                ? m_WorkshopSubmissionItems
+                : m_WorkshopSubmissionItems.Where(item => item.SearchTerms.Any(term => term.Term.ToLowerInvariant().Contains(filteredText)));
+
+            items = m_SortingMode switch
+            {
+                SortingMode.Name => items.OrderBy(item => item.Name?.ToLowerInvariant()),
+                SortingMode.LastUpdated => items.OrderByDescending(item => item.LastUpdated),
+                SortingMode.Author => items.OrderBy(item => item.Author?.ToLowerInvariant()),
+                _ => throw new NotImplementedException(),
+            };
+
+            if (m_SortIntalledFirstToggle == null || m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
+                items = items.OrderBy(item => item.InstallState);
+
+            RenderSubmissionItems(items.ToList());
         }
 
-        private void ParseWorkshopSubmissionsFile(byte[] compressedFileContent)
+        private void RenderSubmissionItems(List<WorkshopSubmissionItem> items)
+        {
+            if (m_ItemsPanel is null)
+                return;
+
+            m_ItemsPanel.Children.Clear();
+
+            if (items.Count == 0)
+            {
+                m_ItemsPanel.Children.Add(new TextBlock
+                {
+                    Text = "No workshop submissions match the current filter.",
+                    Margin = new Thickness(0, 12, 0, 0)
+                });
+                return;
+            }
+
+            foreach (var item in items)
+            {
+                var headerText = new TextBlock
+                {
+                    Text = item.Name ?? "Unnamed submission",
+                    FontSize = 18,
+                    FontWeight = FontWeights.SemiBold,
+                    TextWrapping = TextWrapping.Wrap
+                };
+
+                var stack = new StackPanel
+                {
+                    Spacing = 8
+                };
+                stack.Children.Add(headerText);
+                stack.Children.Add(new TextBlock
+                {
+                    Text = $"By {item.Author ?? "Unknown"} • {item.Version ?? "Unknown version"}",
+                    Opacity = 0.8
+                });
+
+                if (item.LastUpdated.HasValue)
+                {
+                    stack.Children.Add(new TextBlock
+                    {
+                        Text = $"Last Updated: {DateTimeOffset.FromUnixTimeSeconds(item.LastUpdated.Value):u}",
+                        Opacity = 0.8
+                    });
+                }
+
+                stack.Children.Add(new TextBlock
+                {
+                    Text = item.Description ?? "No description",
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                if (item.HighlightedFiles.Count > 0)
+                {
+                    stack.Children.Add(new TextBlock
+                    {
+                        Text = $"Matches in files: {string.Join(", ", item.HighlightedFiles)}",
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = new SolidColorBrush(Microsoft.UI.Colors.DarkGoldenrod)
+                    });
+                }
+
+                var buttonRow = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 8,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+
+                var infoButton = new Button { Content = "Info" };
+                infoButton.Click += (_, _) => item.InfoButtonCommand.Execute(null);
+                buttonRow.Children.Add(infoButton);
+
+                if (item.SettingsButtonVisibility == Visibility.Visible)
+                {
+                    var settingsButton = new Button { Content = "Settings" };
+                    settingsButton.Click += (_, _) => item.SettingsButtonCommand.Execute(null);
+                    buttonRow.Children.Add(settingsButton);
+                }
+
+                var installButton = new Button
+                {
+                    Content = item.InstallButtonText,
+                    IsEnabled = item.InstallButtonEnabled
+                };
+                installButton.Click += (_, _) => item.InstallButtonCommand.Execute(null);
+                buttonRow.Children.Add(installButton);
+                stack.Children.Add(buttonRow);
+
+                m_ItemsPanel.Children.Add(new Border
+                {
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = new SolidColorBrush(Microsoft.UI.Colors.LightGray),
+                    CornerRadius = new CornerRadius(8),
+                    Padding = new Thickness(12),
+                    Margin = new Thickness(0, 0, 0, 12),
+                    Child = stack
+                });
+            }
+        }
+
+        private async Task ParseWorkshopSubmissionsFileAsync(byte[] compressedFileContent)
         {
             void submitWorkshopSubmissionData(dynamic submissionData, bool isLocal)
             {
@@ -153,6 +238,8 @@ namespace ConfigApp.Tabs
                     submissionItem.IsAlien = true;
                 }
 
+                submissionItem.PropertyChanged += (_, _) => ApplySortAndFilter();
+
                 m_WorkshopSubmissionItems.Add(submissionItem);
             }
 
@@ -185,11 +272,11 @@ namespace ConfigApp.Tabs
 
             foreach (var directory in Directory.GetDirectories("workshop/"))
             {
-                var id = directory.Split('/')[1];
+                var id = Path.GetFileName(directory);
 
                 if (!File.Exists($"{directory}/metadata.json"))
                 {
-                    MessageBox.Show($"Local submission \"{id}\" is missing a metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    await AppDialog.ShowMessageAsync($"Local submission \"{id}\" is missing a metadata.json.");
                     continue;
                 }
 
@@ -206,14 +293,12 @@ namespace ConfigApp.Tabs
                 }
                 catch (Exception exception) when (exception is JsonException || exception is ZstdException)
                 {
-                    MessageBox.Show($"Local submission \"{id}\" has a corrupt metadata.json.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    await AppDialog.ShowMessageAsync($"Local submission \"{id}\" has a corrupt metadata.json.");
                     continue;
                 }
             }
 
-            SortSubmissionItems();
-
-            HandleWorkshopSubmissionsSearchFilter();
+            ApplySortAndFilter();
         }
 
         private async Task ForceRefreshWorkshopContentFromRemote()
@@ -233,7 +318,7 @@ namespace ConfigApp.Tabs
                         using var sha256 = SHA256.Create();
                         if (remoteHash.ToLower() == Convert.ToHexString(sha256.ComputeHash(localContent)).ToLower())
                         {
-                            ParseWorkshopSubmissionsFile(localContent);
+                            await ParseWorkshopSubmissionsFileAsync(localContent);
                             return;
                         }
                     }
@@ -241,12 +326,12 @@ namespace ConfigApp.Tabs
 
                 var submissionsResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
                 if (!submissionsResult.IsSuccessStatusCode)
-                    MessageBox.Show("Remote server provided no master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await AppDialog.ShowMessageAsync("Remote server provided no master submissions file! Can not fetch available submissions.");
                 else
                 {
                     var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
 
-                    ParseWorkshopSubmissionsFile(submissionsCompressedResult);
+                    await ParseWorkshopSubmissionsFileAsync(submissionsCompressedResult);
 
                     // Cache submissions
                     File.WriteAllBytes(SUBMISSIONS_CACHED_FILENAME, submissionsCompressedResult);
@@ -254,22 +339,22 @@ namespace ConfigApp.Tabs
             }
             catch (HttpRequestException)
             {
-                MessageBox.Show("Error occured while trying to fetch submissions from server! Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync("Error occured while trying to fetch submissions from server! Please try again!");
             }
             catch (InvalidOperationException)
             {
-                MessageBox.Show($"Specified workshop URL ({domain}) is invalid!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync($"Specified workshop URL ({domain}) is invalid!");
             }
             catch (Exception exception) when (exception is JsonException || exception is ZstdException)
             {
-                MessageBox.Show("Remote server provided a malformed master submissions file! Can not fetch available submissions.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync("Remote server provided a malformed master submissions file! Can not fetch available submissions.");
             }
         }
 
         private async void OnSettingsClick(object sender, RoutedEventArgs eventArgs)
         {
             var dialog = new WorkshopSettingsDialog();
-            dialog.ShowDialog();
+            await dialog.ShowAsync();
             if (dialog.IsSaved)
                 await ForceRefreshWorkshopContentFromRemote();
         }
@@ -280,16 +365,15 @@ namespace ConfigApp.Tabs
 
             button.IsEnabled = false;
             foreach (var item in m_WorkshopSubmissionItems)
-            {
                 item.Refresh();
-            }
+
             await ForceRefreshWorkshopContentFromRemote();
             button.IsEnabled = true;
         }
 
         private void OnTextChangeSearch(object sender, TextChangedEventArgs eventArgs)
         {
-            HandleWorkshopSubmissionsSearchFilter();
+            ApplySortAndFilter();
         }
 
         private void OnSortingModeBoxSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
@@ -297,7 +381,7 @@ namespace ConfigApp.Tabs
             var box = (ComboBox)sender;
 
             m_SortingMode = (SortingMode)box.SelectedIndex;
-            SortSubmissionItems();
+            ApplySortAndFilter();
         }
 
         protected override void InitContent()
@@ -307,77 +391,72 @@ namespace ConfigApp.Tabs
             SetRowHeight(new GridLength());
 
             var headerGrid = new Grid();
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            var sortingModeText = new TextBlock()
+            var controlsRow = new StackPanel
             {
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(2f, 3f, 0f, 0f),
-                Text = "Sort By:"
+                Orientation = Orientation.Horizontal,
+                Spacing = 8,
+                HorizontalAlignment = HorizontalAlignment.Left
             };
-            headerGrid.Children.Add(sortingModeText);
+            controlsRow.Children.Add(new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Text = "Sort By:"
+            });
             var sortingModeBox = new ComboBox()
             {
-                HorizontalAlignment = HorizontalAlignment.Left,
                 Width = 100f,
-                Margin = new Thickness(55f, 0f, 0f, 0f),
-                ItemsSource = m_SortingModeLabels.Values,
                 SelectedIndex = 0
             };
+            foreach (var value in m_SortingModeLabels.Values)
+                sortingModeBox.Items.Add(value);
             sortingModeBox.SelectionChanged += OnSortingModeBoxSelectionChanged;
-            headerGrid.Children.Add(sortingModeBox);
+            controlsRow.Children.Add(sortingModeBox);
 
             m_SortIntalledFirstToggle = new CheckBox()
             {
-                HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(165f, 0f, 0f, 0f),
                 IsChecked = true,
                 Content = "Show installed first"
             };
             m_SortIntalledFirstToggle.Click += (sender, eventArgs) => { SortSubmissionItems(); };
-            headerGrid.Children.Add(m_SortIntalledFirstToggle);
+            controlsRow.Children.Add(m_SortIntalledFirstToggle);
+            headerGrid.Children.Add(controlsRow);
 
-            m_SearchBox = new WatermarkTextBox()
+            var rightHeader = new StackPanel
             {
-                HorizontalAlignment = HorizontalAlignment.Right,
+                Orientation = Orientation.Horizontal,
+                Spacing = 8,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            rightHeader.SetValue(Grid.ColumnProperty, 1);
+
+            m_SearchBox = new TextBox()
+            {
                 Width = 250f,
-                Margin = new Thickness(0f, 0f, 70f, 0f),
-                Watermark = "Search",
-                KeepWatermarkOnGotFocus = true
+                PlaceholderText = "Search"
             };
             m_SearchBox.TextChanged += OnTextChangeSearch;
-            headerGrid.Children.Add(m_SearchBox);
+            rightHeader.Children.Add(m_SearchBox);
 
             var settingsButton = new Button()
             {
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Width = 25f,
-                Margin = new Thickness(0f, 0f, 35f, 0f),
-                ToolTip = "Settings",
-                FontFamily = new FontFamily("Wingdings"),
-                Content = new TextBlock()
-                {
-                    Text = "]",
-                    FontSize = 19
-                }
+                Content = "Settings"
             };
+            ToolTipService.SetToolTip(settingsButton, "Settings");
             settingsButton.Click += OnSettingsClick;
-            headerGrid.Children.Add(settingsButton);
+            rightHeader.Children.Add(settingsButton);
 
             var refreshButton = new Button()
             {
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Width = 25f,
-                ToolTip = "Refresh",
-                Content = new TextBlock()
-                {
-                    Text = "⟳",
-                    FontSize = 19,
-                    Margin = new Thickness(0f, -4f, 0f, 0f)
-                }
+                Content = "Refresh"
             };
+            ToolTipService.SetToolTip(refreshButton, "Refresh");
             refreshButton.Click += OnRefreshClick;
-            headerGrid.Children.Add(refreshButton);
+            rightHeader.Children.Add(refreshButton);
+            headerGrid.Children.Add(rightHeader);
 
             PushRowElement(headerGrid);
             PopRow();
@@ -390,65 +469,23 @@ namespace ConfigApp.Tabs
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            m_ItemsControl = new ItemsControl()
+            m_ItemsPanel = new StackPanel()
             {
-                ItemsPanel = (ItemsPanelTemplate)XamlReader.Parse(@"
-                <ItemsPanelTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
-                    <WrapPanel Orientation=""Horizontal"" VerticalAlignment=""Top"" Width=""{Binding ElementName=MainGrid, Path=ActualWidth}""/>
-                </ItemsPanelTemplate>
-                "),
-                ItemTemplate = (DataTemplate)XamlReader.Parse(@"
-                <DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height=""40"" />
-                            <RowDefinition Height=""*"" />
-                            <RowDefinition Height=""40"" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width=""50"" />
-                            <ColumnDefinition Width=""340"" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <Image Grid.Row=""0"" Grid.Column=""0"" Width=""20"" Height=""20"" HorizontalAlignment=""Left"" Source=""{Binding SubmissionIcon}"" />
-                        <TextBlock Grid.Row=""0"" Grid.Column=""1"" TextWrapping=""Wrap"" TextTrimming=""CharacterEllipsis"">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat=""{}{0}&#x0a;By {1}"">
-                                    <Binding Path=""Name"" />
-                                    <Binding Path=""Author"" />
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                        <TextBlock Grid.Row=""1"" Grid.Column=""0"" TextWrapping=""Wrap"" Text=""{Binding Version}"" />
-                        <TextBlock Grid.Row=""1"" Grid.Column=""1"" MinHeight=""70"" MaxHeight=""150"" TextWrapping=""Wrap"" TextTrimming=""CharacterEllipsis""
-                            Text=""{Binding Description}"" />
-                        <Button Grid.Row=""2"" Grid.Column=""1"" HorizontalAlignment=""Right"" VerticalAlignment=""Top"" Width=""30"" Height=""30""
-                            Margin=""0,0,50,0"" Content=""]"" FontFamily=""Wingdings"" Visibility=""{Binding SettingsButtonVisibility}""
-                            Command=""{Binding SettingsButtonCommand}"" />
-                        <Button Grid.Row=""2"" Grid.Column=""1"" HorizontalAlignment=""Right"" VerticalAlignment=""Top"" Width=""30"" Height=""30""
-                            Margin=""0,0,10,0"" Content=""i"" FontFamily=""Webdings"" Command=""{Binding InfoButtonCommand}"" />
-                        <Button Grid.Row=""2"" Grid.Column=""2"" HorizontalAlignment=""Right"" VerticalAlignment=""Top"" Width=""60"" Height=""30""
-                            Margin=""0,0,10,0"" Content=""{Binding InstallButtonText}"" IsEnabled=""{Binding InstallButtonEnabled}""
-                            Command=""{Binding InstallButtonCommand}"" />
-                    </Grid>
-                </DataTemplate>
-")
+                Spacing = 0
             };
-            scrollViewer.Content = m_ItemsControl;
+            scrollViewer.Content = m_ItemsPanel;
 
             PushRowElement(scrollViewer);
         }
 
         public async override void OnTabSelected()
         {
-            // Only fetch them once
-            if (m_WorkshopSubmissionItems.Count > 0)
+            if (m_HasLoaded)
                 return;
 
+            m_HasLoaded = true;
+
             byte[]? fileContent = null;
-            // Use cached content if existing (and accessible), otherwise fall back to server request
             if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
                 try
                 {
@@ -462,15 +499,19 @@ namespace ConfigApp.Tabs
             if (fileContent != null)
                 try
                 {
-                    ParseWorkshopSubmissionsFile(fileContent);
+                    await ParseWorkshopSubmissionsFileAsync(fileContent);
                 }
                 catch (JsonException)
                 {
-                    // Cached file is corrupt, force reload
                     await ForceRefreshWorkshopContentFromRemote();
                 }
             else
                 await ForceRefreshWorkshopContentFromRemote();
+        }
+
+        private void SortSubmissionItems()
+        {
+            ApplySortAndFilter();
         }
     }
 }

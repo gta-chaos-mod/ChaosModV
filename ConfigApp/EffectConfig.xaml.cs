@@ -1,12 +1,15 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
+using Windows.UI.Core;
 
 using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
-    public partial class EffectConfig : Window
+    public partial class EffectConfig : ContentDialog
     {
         private readonly EffectData m_EffectData;
         private readonly bool m_IsTimedEffect = false;
@@ -24,6 +27,7 @@ namespace ConfigApp
         public EffectConfig(string? effectId, EffectData? effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
+            Utils.AttachNumericTextBoxBehavior(effectconf_timer_time);
 
             effectData ??= new EffectData();
 
@@ -90,8 +94,8 @@ namespace ConfigApp
 
             if (effectInfo.EffectCategory == EffectCategory.Meta)
             {
-                effectconf_exclude_voting_enable_title.Visibility = Visibility.Hidden;
-                effectconf_exclude_voting_state.Visibility = Visibility.Hidden;
+                effectconf_exclude_voting_enable_title.Visibility = Visibility.Collapsed;
+                effectconf_exclude_voting_state.Visibility = Visibility.Collapsed;
                 effectconf_exclude_voting_state.SelectedIndex = 0;
             }
 
@@ -122,22 +126,12 @@ namespace ConfigApp
                     effectconf_effect_shortcut_input.Text = "None";
                 else
                 {
-                    Key key = KeyInterop.KeyFromVirtualKey(savedWin32Key % 256);
-                    var modifiers = ModifierKeys.None;
-                    if ((savedWin32Key & (1 << 10)) != 0)
-                    {
-                        modifiers |= ModifierKeys.Control;
-                    }
-                    if ((savedWin32Key & (1 << 9)) != 0)
-                    {
-                        modifiers |= ModifierKeys.Shift;
-                    }
-                    if ((savedWin32Key & (1 << 8)) != 0)
-                    {
-                        modifiers |= ModifierKeys.Alt;
-                    }
+                    var key = (VirtualKey)(savedWin32Key % 256);
+                    var ctrl = (savedWin32Key & (1 << 10)) != 0;
+                    var shift = (savedWin32Key & (1 << 9)) != 0;
+                    var alt = (savedWin32Key & (1 << 8)) != 0;
 
-                    SetEffectShortcut(key, modifiers);
+                    SetEffectShortcut(key, ctrl, shift, alt);
                 }
             }
 
@@ -150,58 +144,49 @@ namespace ConfigApp
         }
 
         // PreviewKeyDown so that text editing shortcuts such as "CTRL+C" are possible
-        private void EffectShortcutTextFieldPreviewKeyDown(object sender, KeyEventArgs e)
+        private void EffectShortcutTextFieldKeyDown(object sender, KeyRoutedEventArgs e)
         {
             e.Handled = true;
 
             var key = e.Key;
-            var modifiers = Keyboard.Modifiers;
+            var ctrl = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+            var shift = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
+            var alt = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Menu).HasFlag(CoreVirtualKeyStates.Down);
 
-            if (key == Key.Escape || key == Key.Back)
+            if (key == VirtualKey.Escape || key == VirtualKey.Back)
             {
                 effectconf_effect_shortcut_input.Text = "None";
                 m_EffectShortcut = 0;
                 return;
             }
 
-            if (key == Key.System)
-                key = e.SystemKey;
-
             // Don't want a shortcut with any of these as the main key
-            if (key == Key.LeftCtrl || key == Key.RightCtrl || key == Key.LeftShift
-                || key == Key.RightShift || key == Key.LeftAlt || key == Key.RightAlt
-                || key == Key.LWin || key == Key.RWin || key == Key.Apps)
+            if (key == VirtualKey.Control || key == VirtualKey.Shift || key == VirtualKey.Menu
+                || key == VirtualKey.LeftWindows || key == VirtualKey.RightWindows)
                 return;
 
-            SetEffectShortcut(key, modifiers);
+            SetEffectShortcut(key, ctrl, shift, alt);
         }
 
-        private void SetEffectShortcut(Key key, ModifierKeys modifiers)
+        private void SetEffectShortcut(VirtualKey key, bool ctrl, bool shift, bool alt)
         {
             m_EffectShortcut = 0;
-            var text = new System.Text.StringBuilder();
 
-            // CTRL is marked as true even if only the AltGr Key is pressed
-            if (modifiers.HasFlag(ModifierKeys.Control))
+            if (ctrl)
             {
-                text.Append("Ctrl + ");
                 m_EffectShortcut += 1 << 10;
             }
-            if (modifiers.HasFlag(ModifierKeys.Shift))
+            if (shift)
             {
-                text.Append("Shift + ");
                 m_EffectShortcut += 1 << 9;
             }
-            if (modifiers.HasFlag(ModifierKeys.Alt))
+            if (alt)
             {
-                text.Append("Alt + ");
                 m_EffectShortcut += 1 << 8;
             }
 
-            text.Append(new KeyConverter().ConvertToString(key));
-
-            effectconf_effect_shortcut_input.Text = text.ToString();
-            m_EffectShortcut += KeyInterop.VirtualKeyFromKey(key);
+            effectconf_effect_shortcut_input.Text = Utils.FormatShortcutDisplay(key, ctrl, shift, alt);
+            m_EffectShortcut += (int)key;
         }
 
         private void CheckEnableConfigurables()
@@ -220,7 +205,7 @@ namespace ConfigApp
         {
             var checkBox = (CheckBox)sender;
 
-            if (checkBox == effectconf_effect_shortcut_enable)
+            if (ReferenceEquals(checkBox, effectconf_effect_shortcut_enable))
             {
                 effectconf_effect_shortcut_input.IsEnabled = checkBox.IsChecked.GetValueOrDefault(false);
 
@@ -229,28 +214,13 @@ namespace ConfigApp
 
             if (checkBox.IsChecked.GetValueOrDefault(false))
             {
-                if (sender == effectconf_timer_type_enable)
+                if (ReferenceEquals(sender, effectconf_timer_type_enable))
                     effectconf_timer_time_enable.IsChecked = false;
-                else if (sender == effectconf_timer_time_enable)
+                else if (ReferenceEquals(sender, effectconf_timer_time_enable))
                     effectconf_timer_type_enable.IsChecked = false;
             }
 
             CheckEnableConfigurables();
-        }
-
-        private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            Utils.HandleOnlyNumbersPreviewTextInput(sender, e);
-        }
-
-        private void NoSpacePreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Utils.HandleNoSpacePreviewKeyDown(sender, e);
-        }
-
-        private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            Utils.HandleNoCopyPastePreviewExecuted(sender, e);
         }
 
         public EffectData GetNewData()
@@ -282,11 +252,9 @@ namespace ConfigApp
             return m_EffectData;
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
+        private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             m_IsSaved = true;
-
-            Close();
         }
     }
 }

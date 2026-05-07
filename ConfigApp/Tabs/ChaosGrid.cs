@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Tabs
 {
@@ -71,9 +71,7 @@ namespace ConfigApp.Tabs
                 textBlock.SetValue(Grid.ColumnProperty, m_CurrentColumn);
                 textBlock.SetValue(Grid.RowProperty, m_CurrentRow);
                 if (tooltip != null)
-                {
-                    textBlock.ToolTip = new ToolTip { Content = tooltip };
-                }
+                    ToolTipService.SetToolTip(textBlock, tooltip);
                 Grid.Children.Add(textBlock);
 
                 m_CurrentColumn++;
@@ -94,9 +92,7 @@ namespace ConfigApp.Tabs
                 control.SetValue(Grid.ColumnProperty, m_CurrentColumn);
                 control.SetValue(Grid.RowProperty, m_CurrentRow);
                 if (tooltip != null)
-                {
-                    control.ToolTip = new ToolTip { Content = tooltip };
-                }
+                    ToolTipService.SetToolTip(control, tooltip);
                 Grid.Children.Add(control);
 
                 m_CurrentColumn++;
@@ -137,11 +133,9 @@ namespace ConfigApp.Tabs
 
         public void PushRowExpandElement(FrameworkElement element)
         {
-            element.ClipToBounds = false;
-
-            var canvas = new Canvas();
-            canvas.Children.Add(element);
-            PushRow(null, canvas);
+            var container = new Grid();
+            container.Children.Add(element);
+            PushRow(null, container);
         }
 
         public void PushRowPair(string text, FrameworkElement element)

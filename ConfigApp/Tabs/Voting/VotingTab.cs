@@ -1,6 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Tabs.Voting
 {
@@ -18,20 +17,13 @@ namespace ConfigApp.Tabs.Voting
             PushNewColumn(new GridLength(1f, GridUnitType.Star));
             SetRowHeight(new GridLength(1f, GridUnitType.Star));
 
-            var tabControl = new TabControl()
-            {
-                Background = null,
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3)),
-                BorderThickness = new Thickness(0f, 1f, 0f, 0f)
-            };
+            var tabControl = new TabView();
 
             foreach (var tab in m_Tabs)
             {
-                var tabItem = new TabItem()
+                var tabItem = new TabViewItem()
                 {
                     Header = tab.Key,
-                    Background = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0)),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3))
                 };
 
                 var grid = new Grid();
@@ -40,7 +32,7 @@ namespace ConfigApp.Tabs.Voting
 
                 tabItem.Content = grid;
 
-                tabControl.Items.Add(tabItem);
+                tabControl.TabItems.Add(tabItem);
             }
 
             PushRowElement(tabControl);

@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.IO.Compression;
-using System.Media;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
+using ConfigApp.Infrastructure;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json.Linq;
 using ZstdSharp;
 
@@ -13,7 +13,11 @@ namespace ConfigApp.Workshop
 {
     public class WorkshopInstallHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged = null;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -38,10 +42,9 @@ namespace ConfigApp.Workshop
 
             if (origInstallState == WorkshopSubmissionItem.SubmissionInstallState.Installed)
             {
-                // Remove submission
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Removing;
 
-                if (MessageBox.Show("Are you sure you want to remove this submission?", "ChaosModV", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                if (!await AppDialog.ShowYesNoAsync("Are you sure you want to remove this submission?"))
                 {
                     m_SubmissionItem.InstallState = origInstallState;
                     return;
@@ -62,14 +65,14 @@ namespace ConfigApp.Workshop
                 }
                 catch (IOException)
                 {
-                    MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await AppDialog.ShowMessageAsync($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!");
                     m_SubmissionItem.InstallState = origInstallState;
                     return;
                 }
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
 
-                SystemSounds.Beep.Play();
+                Console.Beep();
 
                 return;
             }
@@ -81,7 +84,7 @@ namespace ConfigApp.Workshop
 
             if (m_SubmissionItem.Id is null || !m_SubmissionItem.Id.All((c) => char.IsLetterOrDigit(c) && (char.IsNumber(c) || char.IsLower(c))))
             {
-                MessageBox.Show($"Invalid submission id! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync("Invalid submission id! Refusing to install.");
                 fatalCleanup();
                 return;
             }
@@ -128,7 +131,7 @@ namespace ConfigApp.Workshop
                     var result = await httpClient.GetAsync($"{domain}/workshop/fetch_submission_data?submission_id={m_SubmissionItem.Id}");
                     if (!result.IsSuccessStatusCode)
                     {
-                        MessageBox.Show("Error while fetching submission. Please try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        await AppDialog.ShowMessageAsync("Error while fetching submission. Please try again!");
                         fatalCleanup();
                         return;
                     }
@@ -137,7 +140,7 @@ namespace ConfigApp.Workshop
                     var fileHash = getFileSha256(fileContent);
                     if (fileHash != m_SubmissionItem.Sha256)
                     {
-                        MessageBox.Show("SHA256 mismatch! Please refresh submissions and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        await AppDialog.ShowMessageAsync("SHA256 mismatch! Please refresh submissions and try again!");
                         fatalCleanup();
                         return;
                     }
@@ -147,7 +150,7 @@ namespace ConfigApp.Workshop
 
                 if (fileContent == null)
                 {
-                    MessageBox.Show($"File is invalid. Refusing to install!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await AppDialog.ShowMessageAsync("File is invalid. Refusing to install!");
                     fatalCleanup();
                     return;
                 }
@@ -190,7 +193,7 @@ namespace ConfigApp.Workshop
                     using ZipArchive archive = new(fileStream);
                     if (archive.Entries.Count == 0)
                     {
-                        MessageBox.Show("Submission contains no data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        await AppDialog.ShowMessageAsync("Submission contains no data! Refusing to install.");
                         fatalCleanup();
                         return;
                     }
@@ -205,7 +208,7 @@ namespace ConfigApp.Workshop
                     files.Sort();
 
                     var installConfirmationWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Install);
-                    if (!installConfirmationWindow.ShowDialog().GetValueOrDefault(false))
+                    if (await installConfirmationWindow.ShowAsync() != ContentDialogResult.Primary)
                     {
                         fatalCleanup();
                         return;
@@ -222,7 +225,7 @@ namespace ConfigApp.Workshop
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                        await AppDialog.ShowMessageAsync($"Couldn't access \"{targetDirName}\". Please delete that directory and try again!");
                         fatalCleanup();
                         return;
                     }
@@ -231,7 +234,7 @@ namespace ConfigApp.Workshop
                 }
                 catch (Exception exception) when (exception is IOException || exception is InvalidDataException)
                 {
-                    MessageBox.Show("Submission contains invalid data! Refusing to install.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                    await AppDialog.ShowMessageAsync("Submission contains invalid data! Refusing to install.");
                     fatalCleanup();
                     return;
                 }
@@ -249,11 +252,11 @@ namespace ConfigApp.Workshop
 
                 m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
 
-                SystemSounds.Beep.Play();
+                Console.Beep();
             }
             catch (HttpRequestException)
             {
-                MessageBox.Show("Error while fetching submission. Submission might have been removed by remote. Please refresh and try again!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync("Error while fetching submission. Submission might have been removed by remote. Please refresh and try again!");
                 fatalCleanup();
                 return;
             }

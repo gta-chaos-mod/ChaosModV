@@ -1,6 +1,7 @@
 ﻿using System.IO;
-using System.Windows;
 using System.Windows.Input;
+using ConfigApp.Infrastructure;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,7 +9,11 @@ namespace ConfigApp.Workshop
 {
     public class WorkshopSettingsHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged = null;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
@@ -24,7 +29,7 @@ namespace ConfigApp.Workshop
             return true;
         }
 
-        public void Execute(object? parameter)
+        public async void Execute(object? parameter)
         {
             List<WorkshopSubmissionFile> files;
 
@@ -36,12 +41,13 @@ namespace ConfigApp.Workshop
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync(ex.Message);
                 return;
             }
 
             var editWindow = new WorkshopEditDialog(files, WorkshopEditDialogMode.Edit, m_FileHandler.SubmissionDirectory, m_SubmissionItem.HighlightedFiles);
-            editWindow.ShowDialog();
+            if (await editWindow.ShowAsync() != ContentDialogResult.Primary)
+                return;
 
             try
             {
@@ -50,7 +56,7 @@ namespace ConfigApp.Workshop
             }
             catch (Exception)
             {
-                MessageBox.Show("Error while saving settings! Check that workshop folder has write permissions", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Error);
+                await AppDialog.ShowMessageAsync("Error while saving settings! Check that workshop folder has write permissions");
             }
         }
     }

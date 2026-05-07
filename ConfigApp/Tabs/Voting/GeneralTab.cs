@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Tabs.Voting
 {
@@ -29,7 +29,10 @@ namespace ConfigApp.Tabs.Voting
         private void SetGridsEnabled(bool state)
         {
             foreach (var grid in m_Grids)
-                grid.IsEnabled = state;
+            {
+                grid.IsHitTestVisible = state;
+                grid.Opacity = state ? 1.0 : 0.55;
+            }
         }
 
         protected override void InitContent()

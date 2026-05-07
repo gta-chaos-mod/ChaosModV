@@ -1,13 +1,15 @@
 ﻿using System.IO;
 using System.Net.Http;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using ConfigApp.Infrastructure;
 using ConfigApp.Tabs;
 using ConfigApp.Tabs.Settings;
 using ConfigApp.Tabs.Voting;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json.Linq;
+using Windows.Graphics;
+using WinRT.Interop;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
@@ -16,44 +18,56 @@ namespace ConfigApp
     {
         private readonly Dictionary<string, Tab> m_Tabs = new()
         {
-            //{ "Meta", new MetaTab() },
             { "Settings", new SettingsTab() },
             { "Voting", new VotingTab() },
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }
         };
-        private readonly Dictionary<string, TabItem> m_TabItems = new();
-
-        private bool m_bInitializedTitle = false;
+        private readonly Dictionary<string, TabViewItem> m_TabItems = new();
 
         private Dictionary<string, TreeMenuItem>? m_TreeMenuItemsMap = null;
         private List<TreeMenuItem>? m_TreeMenuItemsAll = null;
         private List<TreeMenuItem>? m_TreeMenuItemsFiltered = null;
+        private TreeMenuItem? m_MetaParentItem = null;
 
         private Dictionary<string, EffectData>? m_EffectDataMap = null;
 
         private bool m_InitializedTabs = false;
+        private bool m_StartupCompleted = false;
 
         public MainWindow()
         {
-            Init();
+            InitializeComponent();
+            InitializeWindow();
+            InitializeTabs();
+
+            Utils.AttachNumericTextBoxBehavior(meta_effects_spawn_dur);
+            Utils.AttachNumericTextBoxBehavior(meta_effects_timed_dur);
+            Utils.AttachNumericTextBoxBehavior(meta_effects_short_timed_dur);
+
+            Title = $"ChaosModV Configuration (v{Info.VERSION})";
+            MainRoot.Loaded += OnLoaded;
         }
 
-        private void Init()
+        private void InitializeWindow()
         {
-            InitializeComponent();
+            var hwnd = WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+            appWindow.Resize(new SizeInt32(1060, 720));
+        }
 
+        private void InitializeTabs()
+        {
             if (!m_InitializedTabs)
             {
                 m_InitializedTabs = true;
 
                 foreach (var tab in m_Tabs)
                 {
-                    var tabItem = new TabItem()
+                    var tabItem = new TabViewItem()
                     {
                         Header = tab.Key,
-                        Background = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0)),
-                        BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3))
                     };
 
                     var grid = new Grid();
@@ -62,19 +76,24 @@ namespace ConfigApp
 
                     tabItem.Content = grid;
 
-                    root_tabcontrol.Items.Add(tabItem);
+                    root_tabcontrol.TabItems.Add(tabItem);
 
                     m_TabItems[tab.Key] = tabItem;
                 }
             }
+        }
 
-            if (!m_bInitializedTitle)
-            {
-                m_bInitializedTitle = true;
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (m_StartupCompleted)
+                return;
 
-                Title += " (v" + Info.VERSION + ")";
-            }
+            m_StartupCompleted = true;
+            await InitializeAsync();
+        }
 
+        private async Task InitializeAsync()
+        {
             CheckForUpdates();
 
             OptionsManager.ReadFiles();
@@ -85,19 +104,15 @@ namespace ConfigApp
             m_EffectDataMap = new Dictionary<string, EffectData>();
 
             ParseConfigFile();
-
             ParseEffectsFile();
-
             InitEffectsTreeView();
 
-            // Check write permissions
             try
             {
                 if (!File.Exists(".writetest"))
                 {
                     using (File.Create(".writetest"))
                     {
-
                     }
 
                     File.Delete(".writetest");
@@ -105,26 +120,18 @@ namespace ConfigApp
             }
             catch (Exception e) when (e is UnauthorizedAccessException || e is FileNotFoundException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.",
-                    "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                Application.Current.Shutdown();
+                await AppDialog.ShowMessageAsync("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.", "No Write Access");
+                Application.Current.Exit();
             }
         }
 
         private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
         {
-            if (eventArgs.OriginalSource is not TabControl)
+            if (root_tabcontrol.SelectedItem is not TabViewItem selectedTab || selectedTab.Header is not string selectedHeader)
                 return;
 
-            foreach (var tab in m_TabItems)
-            {
-                if (tab.Value.IsSelected)
-                {
-                    m_Tabs[tab.Key].OnTabSelected();
-                    break;
-                }
-            }
+            if (m_Tabs.TryGetValue(selectedHeader, out var tab))
+                tab.OnTabSelected();
         }
 
         private async void CheckForUpdates()
@@ -223,7 +230,7 @@ namespace ConfigApp
 
         private void InitEffectsTreeView()
         {
-            effects_user_effects_search.Clear();
+            effects_user_effects_search.Text = string.Empty;
 
             m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
             m_TreeMenuItemsAll = new List<TreeMenuItem>();
@@ -254,12 +261,12 @@ namespace ConfigApp
                 var effectData = GetEffectData(effectMisc.EffectId);
 
                 var menuItem = new TreeMenuItem(effectName);
-                menuItem.OnConfigureClick = () =>
+                menuItem.OnConfigureClickAsync = async () =>
                 {
                     var effectInfo = EffectsMap[effectMisc.EffectId];
 
                     var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
-                    effectConfig.ShowDialog();
+                    await effectConfig.ShowAsync();
 
                     if (!effectConfig.IsSaved)
                         return;
@@ -313,15 +320,23 @@ namespace ConfigApp
             m_TreeMenuItemsAll.Add(timeParentItem);
             m_TreeMenuItemsAll.Add(weatherParentItem);
             m_TreeMenuItemsAll.Add(miscParentItem);
+            m_MetaParentItem = metaParentItem;
 
             m_TreeMenuItemsFiltered = m_TreeMenuItemsAll.ToList();
-            effects_user_effects_tree_view.ItemsSource = m_TreeMenuItemsFiltered;
-
-            meta_effects_tree_view.Items.Clear();
-            meta_effects_tree_view.Items.Add(metaParentItem);
 
             foreach (var treeMenuItem in m_TreeMenuItemsAll.Append(metaParentItem))
                 treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
+
+            RefreshEffectsTrees();
+        }
+
+        private void RefreshEffectsTrees()
+        {
+            if (m_TreeMenuItemsFiltered is not null)
+                TreeViewBuilder.Populate(effects_user_effects_tree_view, m_TreeMenuItemsFiltered, RefreshEffectsTrees);
+
+            if (m_MetaParentItem is not null)
+                TreeViewBuilder.Populate(meta_effects_tree_view, new[] { m_MetaParentItem }, RefreshEffectsTrees);
         }
 
         private void OnUserEffectSearchTextChanged(object sender, TextChangedEventArgs e)
@@ -349,35 +364,17 @@ namespace ConfigApp
                     }
                 }
             }
-            effects_user_effects_tree_view.Items.Refresh();
+            RefreshEffectsTrees();
         }
 
-        private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
+        private async void OnUserSaveClick(object sender, RoutedEventArgs e)
         {
-            Utils.HandleOnlyNumbersPreviewTextInput(sender, e);
-        }
-
-        private void NoSpacePreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Utils.HandleNoSpacePreviewKeyDown(sender, e);
-        }
-
-        private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            Utils.HandleNoCopyPastePreviewExecuted(sender, e);
-        }
-
-        private void OnUserSaveClick(object sender, RoutedEventArgs e)
-        {
-            // Config migration stuff
             bool oldIniFilesExist = false;
             if (OptionsManager.ConfigFile.FoundFilePath == "config.ini" || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
                 || OptionsManager.EffectsFile.FoundFilePath == "effects.ini")
             {
                 oldIniFilesExist = true;
-                if (MessageBox.Show("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. " +
-                    "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
-                    != MessageBoxResult.OK)
+                if (!await AppDialog.ShowOkCancelAsync("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. If you want to play older versions of the mod you will have to move them back. Continue?"))
                     return;
             }
 
@@ -385,9 +382,7 @@ namespace ConfigApp
                 || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini")
             {
                 oldIniFilesExist = true;
-                if (MessageBox.Show("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. " +
-                    "This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
-                 != MessageBoxResult.OK)
+                if (!await AppDialog.ShowOkCancelAsync("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?"))
                     return;
             }
 
@@ -413,27 +408,21 @@ namespace ConfigApp
 
             OptionsManager.DeleteCompatFiles();
 
-            MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+            await AppDialog.ShowMessageAsync("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.");
         }
 
-        private void OnUserResetClick(object sender, RoutedEventArgs e)
+        private async void OnUserResetClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your config?", "ChaosModV",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            if (await AppDialog.ShowYesNoAsync("Are you sure you want to reset your config?"))
             {
                 OptionsManager.ResetFiles();
 
-                result = MessageBox.Show("Do you want to reset your voting settings too?", "ChaosModV",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
+                if (await AppDialog.ShowYesNoAsync("Do you want to reset your voting settings too?"))
                     OptionsManager.VotingFile.ResetFile();
 
-                Init();
+                await InitializeAsync();
 
-                MessageBox.Show("Config has been reverted to default settings!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AppDialog.ShowMessageAsync("Config has been reverted to default settings!");
             }
         }
 

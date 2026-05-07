@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
 using Newtonsoft.Json.Linq;
 
 namespace ConfigApp
@@ -68,22 +69,20 @@ namespace ConfigApp
             return effectData;
         }
 
-        public static void HandleOnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs eventArgs)
+        public static void AttachNumericTextBoxBehavior(TextBox textBox)
         {
-            if (eventArgs.Text.Length == 0 || !char.IsDigit(eventArgs.Text[0]))
-                eventArgs.Handled = true;
+            textBox.BeforeTextChanging += (_, eventArgs) =>
+            {
+                if (eventArgs.NewText.Any(character => !char.IsDigit(character)))
+                    eventArgs.Cancel = true;
+            };
+
+            textBox.KeyDown += HandleNoSpaceKeyDown;
         }
 
-        public static void HandleNoSpacePreviewKeyDown(object sender, KeyEventArgs eventArgs)
+        public static void HandleNoSpaceKeyDown(object sender, KeyRoutedEventArgs eventArgs)
         {
-            if (eventArgs.Key == Key.Space)
-                eventArgs.Handled = true;
-        }
-
-        public static void HandleNoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs eventArgs)
-        {
-            if (eventArgs.Command == ApplicationCommands.Copy || eventArgs.Command == ApplicationCommands.Cut
-                || eventArgs.Command == ApplicationCommands.Paste)
+            if (eventArgs.Key == VirtualKey.Space)
                 eventArgs.Handled = true;
         }
 
@@ -103,14 +102,47 @@ namespace ConfigApp
             {
                 Width = width,
                 Height = height,
-                MaxLength = maxLength
+                MaxLength = maxLength,
+                InputScope = new InputScope
+                {
+                    Names = { new InputScopeName(InputScopeNameValue.Number) }
+                }
             };
-            textBox.PreviewTextInput += HandleOnlyNumbersPreviewTextInput;
-            textBox.AddHandler(CommandManager.PreviewExecutedEvent, new ExecutedRoutedEventHandler(HandleNoCopyPastePreviewExecuted));
-            textBox.ContextMenu = null;
-            textBox.AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(HandleNoSpacePreviewKeyDown));
+            AttachNumericTextBoxBehavior(textBox);
 
             return textBox;
+        }
+
+        public static string FormatShortcutDisplay(VirtualKey key, bool ctrl, bool shift, bool alt)
+        {
+            var values = new List<string>();
+
+            if (ctrl)
+                values.Add("Ctrl");
+            if (shift)
+                values.Add("Shift");
+            if (alt)
+                values.Add("Alt");
+
+            values.Add(key switch
+            {
+                VirtualKey.Number0 => "0",
+                VirtualKey.Number1 => "1",
+                VirtualKey.Number2 => "2",
+                VirtualKey.Number3 => "3",
+                VirtualKey.Number4 => "4",
+                VirtualKey.Number5 => "5",
+                VirtualKey.Number6 => "6",
+                VirtualKey.Number7 => "7",
+                VirtualKey.Number8 => "8",
+                VirtualKey.Number9 => "9",
+                VirtualKey.Control => "Ctrl",
+                VirtualKey.Shift => "Shift",
+                VirtualKey.Menu => "Alt",
+                _ => key.ToString()
+            });
+
+            return string.Join(" + ", values);
         }
 
         public static bool IsNumeric<T>(this T value)

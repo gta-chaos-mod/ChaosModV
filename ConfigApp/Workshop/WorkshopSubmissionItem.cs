@@ -1,13 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
+using Microsoft.UI.Xaml;
 
 namespace ConfigApp.Workshop
 {
@@ -37,8 +32,6 @@ namespace ConfigApp.Workshop
 
     public class WorkshopSubmissionItem : INotifyPropertyChanged
     {
-        private static BitmapSource? ms_DefaultIcon = null;
-
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
 
         public event PropertyChangedEventHandler? PropertyChanged = null;
@@ -50,7 +43,6 @@ namespace ConfigApp.Workshop
         public string? Version { get; init; } = null;
         public int? LastUpdated { get; init; } = null;
         public string? Sha256 { get; init; } = null;
-        public BitmapSource? SubmissionIcon { get; init; } = null;
         public bool IsAlien { get; set; } = false;
         public List<SearchTerm> SearchTerms { get; } = new();
         public List<string> HighlightedFiles { get; } = new List<string>();
@@ -78,7 +70,7 @@ namespace ConfigApp.Workshop
                 case SubmissionInstallState.NotInstalled:
                     InstallButtonText = "Install";
                     InstallButtonEnabled = !IsAlien;
-                    SettingsButtonVisibility = Visibility.Hidden;
+                    SettingsButtonVisibility = Visibility.Collapsed;
                     break;
                 case SubmissionInstallState.Installed:
                     InstallButtonText = "Remove";
@@ -123,7 +115,7 @@ namespace ConfigApp.Workshop
         {
             get => new WorkshopSettingsHandler(this, m_FileHandler);
         }
-        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Hidden;
+        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Collapsed;
 
         public void Refresh()
         {
@@ -173,26 +165,6 @@ namespace ConfigApp.Workshop
 
         public WorkshopSubmissionItem(string id)
         {
-            if (ms_DefaultIcon == null)
-            {
-                var fileName = Process.GetCurrentProcess().MainModule?.FileName;
-                if (fileName is not null)
-                {
-                    try
-                    {
-                        using var ico = Icon.ExtractAssociatedIcon(fileName);
-                        if (ico is not null)
-                            ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    }
-                    catch (System.PlatformNotSupportedException)
-                    {
-
-                    }
-                }
-            }
-
-            SubmissionIcon = ms_DefaultIcon;
-
             Id = id;
 
             m_FileHandler = new(this);
