@@ -3,15 +3,47 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="ChaosModV Configuration">
-    <Grid x:Name="MainRoot" Padding="12" RowSpacing="12">
+    <Grid x:Name="MainRoot" Padding="16" RowSpacing="12">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TabView x:Name="root_tabcontrol" SelectionChanged="OnTabSelectionChanged">
+        <Border x:Name="AppTitleBar"
+                Grid.Row="0"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,10">
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical" Spacing="2">
+                    <TextBlock Text="ChaosModV Configuration"
+                               Style="{ThemeResource TitleTextBlockStyle}" />
+                    <TextBlock Text="Manage effects, gameplay modes, voting, workshop content, and advanced settings"
+                               Opacity="0.72"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <TextBlock Grid.Column="1"
+                           VerticalAlignment="Center"
+                           Text="WinUI"
+                           Opacity="0.7" />
+            </Grid>
+        </Border>
+
+        <TabView x:Name="root_tabcontrol"
+                 Grid.Row="1"
+                 IsAddTabButtonVisible="False"
+                 SelectionChanged="OnTabSelectionChanged">
             <TabViewItem Header="Effects">
-                <Grid RowSpacing="8">
+                <Grid RowSpacing="10" Padding="4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -19,85 +51,111 @@
 
                     <TextBox
                         x:Name="effects_user_effects_search"
-                        Width="300"
+                        Width="340"
                         HorizontalAlignment="Left"
-                        PlaceholderText="Search for effect..."
+                        PlaceholderText="Search effects"
                         TextChanged="OnUserEffectSearchTextChanged" />
-                    <TreeView
-                        x:Name="effects_user_effects_tree_view"
-                        Grid.Row="1"
-                        SelectionMode="None" />
+
+                    <Border Grid.Row="1"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="8">
+                        <TreeView
+                            x:Name="effects_user_effects_tree_view"
+                            SelectionMode="None" />
+                    </Border>
                 </Grid>
             </TabViewItem>
 
             <TabViewItem x:Name="meta_tab" Header="Meta">
-                <Grid RowSpacing="12">
+                <Grid RowSpacing="12" Padding="4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <TextBlock
-                        Text="Meta effects modify various aspects of mod itself on a regular basis to add more variety.&#x0a;They are not a part of the normal effects pool; instead, they are automatically dispatched by the mod on a fixed interval (configurable below)."
-                        TextWrapping="Wrap"
-                        HorizontalAlignment="Center" />
+                        Text="Meta effects periodically modify how the mod behaves to increase variety. They are dispatched automatically and configured separately from the regular effects pool."
+                        TextWrapping="Wrap" />
 
-                    <Grid Grid.Row="1" ColumnSpacing="24">
+                    <Grid Grid.Row="1" ColumnSpacing="16">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="520" />
+                            <ColumnDefinition Width="460" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0" RowSpacing="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="360" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
+                            <Grid RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="How often should a new meta start (in seconds)?" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_spawn_dur" Grid.Row="0" Grid.Column="1" Width="80" MaxLength="6" HorizontalAlignment="Left" />
+                                <TextBlock Grid.Row="0" Text="Spawn interval (seconds)" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_spawn_dur" Grid.Row="0" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
 
-                            <TextBlock Grid.Row="1" Text="How long should meta effects last (in seconds)?" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_timed_dur" Grid.Row="1" Grid.Column="1" Width="80" MaxLength="6" HorizontalAlignment="Left" />
+                                <TextBlock Grid.Row="1" Text="Default timed duration (seconds)" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_timed_dur" Grid.Row="1" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
 
-                            <TextBlock Grid.Row="2" Text="How long should short timed meta effects last (in seconds)?" VerticalAlignment="Center" />
-                            <TextBox x:Name="meta_effects_short_timed_dur" Grid.Row="2" Grid.Column="1" Width="80" MaxLength="6" HorizontalAlignment="Left" />
-                        </Grid>
+                                <TextBlock Grid.Row="2" Text="Short timed duration (seconds)" VerticalAlignment="Center" />
+                                <TextBox x:Name="meta_effects_short_timed_dur" Grid.Row="2" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
+                            </Grid>
+                        </Border>
 
-                        <TreeView x:Name="meta_effects_tree_view" Grid.Column="1" SelectionMode="None" />
+                        <Border Grid.Column="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="8">
+                            <TreeView x:Name="meta_effects_tree_view" SelectionMode="None" />
+                        </Border>
                     </Grid>
                 </Grid>
             </TabViewItem>
         </TabView>
 
-        <Grid Grid.Row="1" ColumnSpacing="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Border Grid.Row="2"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,8">
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock
-                    x:Name="update_available_label"
-                    VerticalAlignment="Center"
-                    Text="A new version is available! Visit the GTA5-Mods thread for a download and changelogs."
-                    TextWrapping="Wrap" />
-                <Button
-                    x:Name="update_available_button"
-                    Content="GTA5-Mods"
-                    Visibility="Collapsed"
-                    Click="OpenModPageEvent" />
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="update_available_label"
+                        VerticalAlignment="Center"
+                        Text="Checking for updates..."
+                        TextWrapping="Wrap" />
+                    <Button
+                        x:Name="update_available_button"
+                        Content="Open GTA5-Mods"
+                        Visibility="Collapsed"
+                        Click="OpenModPageEvent" />
+                </StackPanel>
 
-            <Button x:Name="user_reset" Grid.Column="2" Content="Reset" Click="OnUserResetClick" />
-            <Button x:Name="user_save" Grid.Column="3" Content="Save" Click="OnUserSaveClick" />
-        </Grid>
+                <Button x:Name="user_reset" Grid.Column="1" Content="Reset" Click="OnUserResetClick" />
+                <Button x:Name="user_save" Grid.Column="2" Content="Save" Click="OnUserSaveClick" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>

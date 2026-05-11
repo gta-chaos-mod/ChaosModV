@@ -81,6 +81,7 @@ namespace ConfigApp
         public WorkshopEditDialog(List<WorkshopSubmissionFile> files, WorkshopEditDialogMode dialogMode, string? path = null, List<string>? highlightedFiles = null)
         {
             InitializeComponent();
+            AppDialog.ApplyToDialog(this);
 
             m_DialogMode = dialogMode;
             DefaultButton = ContentDialogButton.Primary;

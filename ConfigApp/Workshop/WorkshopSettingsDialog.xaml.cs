@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using ConfigApp.Infrastructure;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp
 {
@@ -14,6 +15,7 @@ namespace ConfigApp
         public WorkshopSettingsDialog()
         {
             InitializeComponent();
+            AppDialog.ApplyToDialog(this);
 
             workshop_custom_url.Text = OptionsManager.WorkshopFile.ReadValue<string>("WorkshopCustomUrl");
             workshop_custom_url.PlaceholderText = Info.WORKSHOP_DEFAULT_URL;

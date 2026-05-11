@@ -12,6 +12,11 @@ namespace ConfigApp.Infrastructure
             s_XamlRoot = xamlRoot;
         }
 
+        public static void ApplyToDialog(ContentDialog dialog)
+        {
+            ApplyXamlRoot(dialog);
+        }
+
         public static async Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
         {
             var dialog = new ContentDialog

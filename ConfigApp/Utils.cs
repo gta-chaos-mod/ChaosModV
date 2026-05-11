@@ -145,15 +145,6 @@ namespace ConfigApp
             return string.Join(" + ", values);
         }
 
-        public static bool IsNumeric<T>(this T value)
-        {
-            if (value is null)
-                return false;
-
-            var t = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
-            return t.IsPrimitive || t == typeof(decimal);
-        }
-
         public static void OpenURL(string url)
         {
             Process.Start(new ProcessStartInfo

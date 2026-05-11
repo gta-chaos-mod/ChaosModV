@@ -7,7 +7,7 @@ namespace ConfigApp.Tabs
     {
         private static Button GenerateInfoButton(string text, RoutedEventHandler eventHandler)
         {
-            var button = new Button()
+            var button = new Button
             {
                 Content = text,
                 Width = 75f,
@@ -25,28 +25,19 @@ namespace ConfigApp.Tabs
             PushNewColumn(new GridLength(310f));
             PushNewColumn(new GridLength(85f));
 
-            PushRowPair("Visit the mod page for more information", GenerateInfoButton("GTA5-Mods", (sender, eventArgs) =>
+            var rows = new (string Text, string ButtonText, string Url)[]
             {
-                Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v");
-            }));
-            PopRow();
+                ("Visit the mod page for more information", "GTA5-Mods", "https://www.gta5-mods.com/scripts/chaos-mod-v"),
+                ("Enjoying the mod? Buy me a coffee! :)", "PayPal", "https://paypal.me/EmrCue"),
+                ("Want to contribute to the mod? It's open source!", "GitHub", "https://github.com/gta-chaos-mod/ChaosModV"),
+                ("Join our Discord for announcements, support and more!", "Discord", "https://discord.gg/w2tDeKVaF9")
+            };
 
-            PushRowPair("Enjoying the mod? Buy me a coffee! :)", GenerateInfoButton("PayPal", (sender, eventArgs) =>
+            foreach (var row in rows)
             {
-                Utils.OpenURL("https://paypal.me/EmrCue");
-            }));
-            PopRow();
-
-            PushRowPair("Want to contribute to the mod? It's open source!", GenerateInfoButton("GitHub", (sender, eventArgs) =>
-            {
-                Utils.OpenURL("https://github.com/gta-chaos-mod/ChaosModV");
-            }));
-            PopRow();
-
-            PushRowPair("Join our Discord for announcements, support and more!", GenerateInfoButton("Discord", (sender, eventArgs) =>
-            {
-                Utils.OpenURL("https://discord.gg/w2tDeKVaF9");
-            }));
+                PushRowPair(row.Text, GenerateInfoButton(row.ButtonText, (_, _) => Utils.OpenURL(row.Url)));
+                PopRow();
+            }
         }
     }
 }

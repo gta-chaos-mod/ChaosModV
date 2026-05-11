@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Input;
+﻿using ConfigApp.Infrastructure;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -27,6 +28,7 @@ namespace ConfigApp
         public EffectConfig(string? effectId, EffectData? effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
+            AppDialog.ApplyToDialog(this);
             Utils.AttachNumericTextBoxBehavior(effectconf_timer_time);
 
             effectData ??= new EffectData();

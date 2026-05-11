@@ -2,8 +2,8 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using ConfigApp.Workshop;
 using ConfigApp.Infrastructure;
+using ConfigApp.Workshop;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -19,74 +19,95 @@ namespace ConfigApp.Tabs
     {
         public const string SUBMISSIONS_CACHED_FILENAME = "workshop/submissions_cached.json.zst";
 
-        enum SortingMode
+        private enum SortingMode
         {
             Name,
             LastUpdated,
             Author
         }
-        private readonly Dictionary<SortingMode, string> m_SortingModeLabels = new()
-        {
-            { SortingMode.Name, "Name" },
-            { SortingMode.LastUpdated, "Last Updated" },
-            { SortingMode.Author, "Author" }
-        };
-        private SortingMode m_SortingMode = SortingMode.Name;
 
-        private readonly List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = new();
+        private static readonly string[] s_SortingModeLabels =
+        [
+            "Name",
+            "Last Updated",
+            "Author"
+        ];
+
+        private SortingMode m_SortingMode = SortingMode.Name;
+        private readonly List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = [];
         private bool m_HasLoaded = false;
 
-        private CheckBox? m_SortIntalledFirstToggle = null;
+        private CheckBox? m_SortInstalledFirstToggle = null;
         private TextBox? m_SearchBox = null;
         private StackPanel? m_ItemsPanel = null;
 
         private void ApplySortAndFilter()
         {
-            var filteredText = m_SearchBox?.Text.Trim().ToLowerInvariant();
+            var normalizedSearchText = NormalizeSearchText(m_SearchBox?.Text);
 
-            foreach (var item in m_WorkshopSubmissionItems)
-            {
-                item.HighlightedFiles.Clear();
+            UpdateHighlightedFiles(normalizedSearchText);
 
-                if (!string.IsNullOrWhiteSpace(filteredText))
-                {
-                    foreach (var term in item.SearchTerms)
-                    {
-                        if (term.Term.ToLowerInvariant().Contains(filteredText))
-                        {
-                            if (term.IsInFile && !item.HighlightedFiles.Contains(term.FileName))
-                                item.HighlightedFiles.Add(term.FileName);
-                        }
-                    }
-                }
-            }
-
-            IEnumerable<WorkshopSubmissionItem> items = string.IsNullOrWhiteSpace(filteredText)
+            IEnumerable<WorkshopSubmissionItem> items = string.IsNullOrWhiteSpace(normalizedSearchText)
                 ? m_WorkshopSubmissionItems
-                : m_WorkshopSubmissionItems.Where(item => item.SearchTerms.Any(term => term.Term.ToLowerInvariant().Contains(filteredText)));
+                : m_WorkshopSubmissionItems.Where(item => IsSearchMatch(item, normalizedSearchText));
 
             items = m_SortingMode switch
             {
                 SortingMode.Name => items.OrderBy(item => item.Name?.ToLowerInvariant()),
                 SortingMode.LastUpdated => items.OrderByDescending(item => item.LastUpdated),
                 SortingMode.Author => items.OrderBy(item => item.Author?.ToLowerInvariant()),
-                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
             };
 
-            if (m_SortIntalledFirstToggle == null || m_SortIntalledFirstToggle.IsChecked.GetValueOrDefault(true))
+            if (m_SortInstalledFirstToggle is null || m_SortInstalledFirstToggle.IsChecked.GetValueOrDefault(true))
                 items = items.OrderBy(item => item.InstallState);
 
-            RenderSubmissionItems(items.ToList());
+            RenderSubmissionItems(items);
         }
 
-        private void RenderSubmissionItems(List<WorkshopSubmissionItem> items)
+        private static string NormalizeSearchText(string? searchText)
+        {
+            return searchText?.Trim().ToLowerInvariant() ?? string.Empty;
+        }
+
+        private static bool IsSearchMatch(WorkshopSubmissionItem item, string normalizedSearchText)
+        {
+            return item.SearchTerms.Any(term => term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        private static bool IsFileMatch(SearchTerm term, string normalizedSearchText)
+        {
+            return term.IsInFile && term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private void UpdateHighlightedFiles(string normalizedSearchText)
+        {
+            foreach (var item in m_WorkshopSubmissionItems)
+            {
+                item.HighlightedFiles.Clear();
+
+                if (string.IsNullOrWhiteSpace(normalizedSearchText))
+                    continue;
+
+                foreach (var term in item.SearchTerms)
+                {
+                    if (!IsFileMatch(term, normalizedSearchText) || item.HighlightedFiles.Contains(term.FileName))
+                        continue;
+
+                    item.HighlightedFiles.Add(term.FileName);
+                }
+            }
+        }
+
+        private void RenderSubmissionItems(IEnumerable<WorkshopSubmissionItem> items)
         {
             if (m_ItemsPanel is null)
                 return;
 
             m_ItemsPanel.Children.Clear();
 
-            if (items.Count == 0)
+            var itemsList = items.ToList();
+            if (itemsList.Count == 0)
             {
                 m_ItemsPanel.Children.Add(new TextBlock
                 {
@@ -96,185 +117,141 @@ namespace ConfigApp.Tabs
                 return;
             }
 
-            foreach (var item in items)
-            {
-                var headerText = new TextBlock
-                {
-                    Text = item.Name ?? "Unnamed submission",
-                    FontSize = 18,
-                    FontWeight = FontWeights.SemiBold,
-                    TextWrapping = TextWrapping.Wrap
-                };
+            foreach (var item in itemsList)
+                m_ItemsPanel.Children.Add(CreateSubmissionCard(item));
+        }
 
-                var stack = new StackPanel
-                {
-                    Spacing = 8
-                };
-                stack.Children.Add(headerText);
+        private static Border CreateSubmissionCard(WorkshopSubmissionItem item)
+        {
+            var stack = new StackPanel
+            {
+                Spacing = 8
+            };
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = item.Name ?? "Unnamed submission",
+                FontSize = 18,
+                FontWeight = FontWeights.SemiBold,
+                TextWrapping = TextWrapping.Wrap
+            });
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = $"By {item.Author ?? "Unknown"} • {item.Version ?? "Unknown version"}",
+                Opacity = 0.8
+            });
+
+            if (item.LastUpdated.HasValue)
+            {
                 stack.Children.Add(new TextBlock
                 {
-                    Text = $"By {item.Author ?? "Unknown"} • {item.Version ?? "Unknown version"}",
+                    Text = $"Last Updated: {DateTimeOffset.FromUnixTimeSeconds(item.LastUpdated.Value):u}",
                     Opacity = 0.8
                 });
+            }
 
-                if (item.LastUpdated.HasValue)
-                {
-                    stack.Children.Add(new TextBlock
-                    {
-                        Text = $"Last Updated: {DateTimeOffset.FromUnixTimeSeconds(item.LastUpdated.Value):u}",
-                        Opacity = 0.8
-                    });
-                }
+            stack.Children.Add(new TextBlock
+            {
+                Text = item.Description ?? "No description",
+                TextWrapping = TextWrapping.Wrap
+            });
 
+            if (item.HighlightedFiles.Count > 0)
+            {
                 stack.Children.Add(new TextBlock
                 {
-                    Text = item.Description ?? "No description",
-                    TextWrapping = TextWrapping.Wrap
-                });
-
-                if (item.HighlightedFiles.Count > 0)
-                {
-                    stack.Children.Add(new TextBlock
-                    {
-                        Text = $"Matches in files: {string.Join(", ", item.HighlightedFiles)}",
-                        TextWrapping = TextWrapping.Wrap,
-                        Foreground = new SolidColorBrush(Microsoft.UI.Colors.DarkGoldenrod)
-                    });
-                }
-
-                var buttonRow = new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    Spacing = 8,
-                    HorizontalAlignment = HorizontalAlignment.Right
-                };
-
-                var infoButton = new Button { Content = "Info" };
-                infoButton.Click += (_, _) => item.InfoButtonCommand.Execute(null);
-                buttonRow.Children.Add(infoButton);
-
-                if (item.SettingsButtonVisibility == Visibility.Visible)
-                {
-                    var settingsButton = new Button { Content = "Settings" };
-                    settingsButton.Click += (_, _) => item.SettingsButtonCommand.Execute(null);
-                    buttonRow.Children.Add(settingsButton);
-                }
-
-                var installButton = new Button
-                {
-                    Content = item.InstallButtonText,
-                    IsEnabled = item.InstallButtonEnabled
-                };
-                installButton.Click += (_, _) => item.InstallButtonCommand.Execute(null);
-                buttonRow.Children.Add(installButton);
-                stack.Children.Add(buttonRow);
-
-                m_ItemsPanel.Children.Add(new Border
-                {
-                    BorderThickness = new Thickness(1),
-                    BorderBrush = new SolidColorBrush(Microsoft.UI.Colors.LightGray),
-                    CornerRadius = new CornerRadius(8),
-                    Padding = new Thickness(12),
-                    Margin = new Thickness(0, 0, 0, 12),
-                    Child = stack
+                    Text = $"Matches in files: {string.Join(", ", item.HighlightedFiles)}",
+                    TextWrapping = TextWrapping.Wrap,
+                    Foreground = new SolidColorBrush(Microsoft.UI.Colors.DarkGoldenrod)
                 });
             }
+
+            stack.Children.Add(CreateButtonRow(item));
+
+            return new Border
+            {
+                BorderThickness = new Thickness(1),
+                BorderBrush = new SolidColorBrush(Microsoft.UI.Colors.LightGray),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(12),
+                Margin = new Thickness(0, 0, 0, 12),
+                Child = stack
+            };
+        }
+
+        private static StackPanel CreateButtonRow(WorkshopSubmissionItem item)
+        {
+            var buttonRow = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 8,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+
+            buttonRow.Children.Add(CreateActionButton("Info", () => item.InfoButtonCommand.Execute(null)));
+
+            if (item.SettingsButtonVisibility == Visibility.Visible)
+                buttonRow.Children.Add(CreateActionButton("Settings", () => item.SettingsButtonCommand.Execute(null)));
+
+            buttonRow.Children.Add(new Button
+            {
+                Content = item.InstallButtonText,
+                IsEnabled = item.InstallButtonEnabled
+            });
+            ((Button)buttonRow.Children[^1]).Click += (_, _) => item.InstallButtonCommand.Execute(null);
+
+            return buttonRow;
+        }
+
+        private static Button CreateActionButton(string content, Action onClick)
+        {
+            var button = new Button
+            {
+                Content = content
+            };
+            button.Click += (_, _) => onClick();
+            return button;
         }
 
         private async Task ParseWorkshopSubmissionsFileAsync(byte[] compressedFileContent)
         {
-            void submitWorkshopSubmissionData(dynamic submissionData, bool isLocal)
+            ParseRemoteSubmissionEntries(compressedFileContent);
+            await ParseLocalSubmissionEntriesAsync();
+            ApplySortAndFilter();
+        }
+
+        private void ParseRemoteSubmissionEntries(byte[] compressedFileContent)
+        {
+            var decompressor = new Decompressor();
+            var decompressed = decompressor.Unwrap(compressedFileContent);
+            var fileContent = Encoding.UTF8.GetString(decompressed.ToArray());
+            var json = JObject.Parse(fileContent);
+
+            m_WorkshopSubmissionItems.Clear();
+
+            var dict = json["submissions"]?.ToObject<Dictionary<string, dynamic>?>();
+            if (dict is null)
+                return;
+
+            foreach (var submissionObject in dict)
             {
-                T getDataItem<T>(dynamic item, T defaultValue)
-                {
-                    try
-                    {
-                        return item;
-                    }
-                    catch (RuntimeBinderException)
-                    {
-                        return defaultValue;
-                    }
-                }
-
-                var id = getDataItem<string>(submissionData.id, string.Empty);
-                if (string.IsNullOrEmpty(id))
-                    return;
-
-                var version = getDataItem<string>(submissionData.version, string.Empty);
-                if (string.IsNullOrEmpty(version))
-                    return;
-
-                var lastUpdated = getDataItem<int>(submissionData.lastupdated, 0);
-                var sha256 = getDataItem<string>(submissionData.sha256, string.Empty);
-
-                var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault((submissionItem) => { return submissionItem.Id == id; });
-                if (duplicateSubmissionItem != null)
-                {
-                    if (isLocal)
-                        if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
-                            duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                        else
-                            duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                    return;
-                }
-
-                var submissionItem = new WorkshopSubmissionItem(id)
-                {
-                    Name = getDataItem<string>(submissionData.name, "No Name"),
-                    Author = getDataItem<string>(submissionData.author, "No Author"),
-                    Description = getDataItem<string>(submissionData.description, "No Description"),
-                    Version = $"v{version}",
-                    LastUpdated = lastUpdated,
-                    Sha256 = sha256,
-                };
-
-                submissionItem.UpdateSearchTerms();
-
-                // Remote submissions are fetched before local ones so this submission only exists locally
-                if (isLocal)
-                {
-                    submissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                    submissionItem.IsAlien = true;
-                }
-
-                submissionItem.PropertyChanged += (_, _) => ApplySortAndFilter();
-
-                m_WorkshopSubmissionItems.Add(submissionItem);
+                var submissionData = submissionObject.Value;
+                submissionData.id = submissionObject.Key;
+                SubmitWorkshopSubmissionData(submissionData, false);
             }
+        }
 
-            {
-                var decompressor = new Decompressor();
-                var decompressed = decompressor.Unwrap(compressedFileContent);
-                var fileContent = Encoding.UTF8.GetString(decompressed.ToArray());
-
-                var json = JObject.Parse(fileContent);
-
-                // Only clear after trying to parse
-                m_WorkshopSubmissionItems.Clear();
-
-                var dict = json["submissions"]?.ToObject<Dictionary<string, dynamic>?>();
-                if (dict is not null)
-                {
-                    foreach (var submissionObject in dict)
-                    {
-                        var submissionId = submissionObject.Key;
-
-                        var submissionData = submissionObject.Value;
-                        submissionData.id = submissionId;
-
-                        submitWorkshopSubmissionData(submissionData, false);
-                    }
-                }
-            }
-
+        private async Task ParseLocalSubmissionEntriesAsync()
+        {
             Directory.CreateDirectory("workshop");
 
             foreach (var directory in Directory.GetDirectories("workshop/"))
             {
                 var id = Path.GetFileName(directory);
+                var metadataPath = $"{directory}/metadata.json";
 
-                if (!File.Exists($"{directory}/metadata.json"))
+                if (!File.Exists(metadataPath))
                 {
                     await AppDialog.ShowMessageAsync($"Local submission \"{id}\" is missing a metadata.json.");
                     continue;
@@ -282,60 +259,92 @@ namespace ConfigApp.Tabs
 
                 try
                 {
-                    var json = JObject.Parse(File.ReadAllText($"{directory}/metadata.json"));
-
+                    var json = JObject.Parse(File.ReadAllText(metadataPath));
                     var submissionData = json.ToObject<dynamic>();
-                    if (submissionData == null)
+                    if (submissionData is null)
                         continue;
-                    submissionData.id = id;
 
-                    submitWorkshopSubmissionData(submissionData, true);
+                    submissionData.id = id;
+                    SubmitWorkshopSubmissionData(submissionData, true);
                 }
                 catch (Exception exception) when (exception is JsonException || exception is ZstdException)
                 {
                     await AppDialog.ShowMessageAsync($"Local submission \"{id}\" has a corrupt metadata.json.");
-                    continue;
                 }
             }
+        }
 
-            ApplySortAndFilter();
+        private void SubmitWorkshopSubmissionData(dynamic submissionData, bool isLocal)
+        {
+            var id = GetDataItem(submissionData.id, string.Empty);
+            if (string.IsNullOrEmpty(id))
+                return;
+
+            var version = GetDataItem(submissionData.version, string.Empty);
+            if (string.IsNullOrEmpty(version))
+                return;
+
+            var lastUpdated = GetDataItem(submissionData.lastupdated, 0);
+            var sha256 = GetDataItem(submissionData.sha256, string.Empty);
+
+            var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault(submissionItem => submissionItem.Id == id);
+            if (duplicateSubmissionItem is not null)
+            {
+                if (isLocal)
+                {
+                    if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
+                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
+                    else
+                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                }
+                return;
+            }
+
+            var submissionItem = new WorkshopSubmissionItem(id)
+            {
+                Name = GetDataItem(submissionData.name, "No Name"),
+                Author = GetDataItem(submissionData.author, "No Author"),
+                Description = GetDataItem(submissionData.description, "No Description"),
+                Version = $"v{version}",
+                LastUpdated = lastUpdated,
+                Sha256 = sha256
+            };
+
+            submissionItem.UpdateSearchTerms();
+
+            if (isLocal)
+            {
+                submissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
+                submissionItem.IsAlien = true;
+            }
+
+            submissionItem.PropertyChanged += (_, _) => ApplySortAndFilter();
+            m_WorkshopSubmissionItems.Add(submissionItem);
+        }
+
+        private static T GetDataItem<T>(dynamic item, T defaultValue)
+        {
+            try
+            {
+                return item;
+            }
+            catch (RuntimeBinderException)
+            {
+                return defaultValue;
+            }
         }
 
         private async Task ForceRefreshWorkshopContentFromRemote()
         {
             var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
 
-            HttpClient httpClient = new();
+            using HttpClient httpClient = new();
             try
             {
-                if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
-                {
-                    var hashResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissionshash");
-                    if (hashResult.IsSuccessStatusCode)
-                    {
-                        var remoteHash = await hashResult.Content.ReadAsStringAsync();
-                        var localContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
-                        using var sha256 = SHA256.Create();
-                        if (remoteHash.ToLower() == Convert.ToHexString(sha256.ComputeHash(localContent)).ToLower())
-                        {
-                            await ParseWorkshopSubmissionsFileAsync(localContent);
-                            return;
-                        }
-                    }
-                }
+                if (await TryLoadUnchangedCachedSubmissionsAsync(domain, httpClient))
+                    return;
 
-                var submissionsResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
-                if (!submissionsResult.IsSuccessStatusCode)
-                    await AppDialog.ShowMessageAsync("Remote server provided no master submissions file! Can not fetch available submissions.");
-                else
-                {
-                    var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
-
-                    await ParseWorkshopSubmissionsFileAsync(submissionsCompressedResult);
-
-                    // Cache submissions
-                    File.WriteAllBytes(SUBMISSIONS_CACHED_FILENAME, submissionsCompressedResult);
-                }
+                await DownloadAndCacheSubmissionsAsync(domain, httpClient);
             }
             catch (HttpRequestException)
             {
@@ -351,6 +360,40 @@ namespace ConfigApp.Tabs
             }
         }
 
+        private async Task<bool> TryLoadUnchangedCachedSubmissionsAsync(string domain, HttpClient httpClient)
+        {
+            if (!File.Exists(SUBMISSIONS_CACHED_FILENAME))
+                return false;
+
+            var hashResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissionshash");
+            if (!hashResult.IsSuccessStatusCode)
+                return false;
+
+            var remoteHash = await hashResult.Content.ReadAsStringAsync();
+            var localContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
+            var localHash = Convert.ToHexString(SHA256.HashData(localContent));
+
+            if (!string.Equals(remoteHash, localHash, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            await ParseWorkshopSubmissionsFileAsync(localContent);
+            return true;
+        }
+
+        private async Task DownloadAndCacheSubmissionsAsync(string domain, HttpClient httpClient)
+        {
+            var submissionsResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissions");
+            if (!submissionsResult.IsSuccessStatusCode)
+            {
+                await AppDialog.ShowMessageAsync("Remote server provided no master submissions file! Can not fetch available submissions.");
+                return;
+            }
+
+            var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
+            await ParseWorkshopSubmissionsFileAsync(submissionsCompressedResult);
+            File.WriteAllBytes(SUBMISSIONS_CACHED_FILENAME, submissionsCompressedResult);
+        }
+
         private async void OnSettingsClick(object sender, RoutedEventArgs eventArgs)
         {
             var dialog = new WorkshopSettingsDialog();
@@ -362,13 +405,19 @@ namespace ConfigApp.Tabs
         private async void OnRefreshClick(object sender, RoutedEventArgs eventArgs)
         {
             var button = (Button)sender;
-
             button.IsEnabled = false;
-            foreach (var item in m_WorkshopSubmissionItems)
-                item.Refresh();
 
-            await ForceRefreshWorkshopContentFromRemote();
-            button.IsEnabled = true;
+            try
+            {
+                foreach (var item in m_WorkshopSubmissionItems)
+                    item.Refresh();
+
+                await ForceRefreshWorkshopContentFromRemote();
+            }
+            finally
+            {
+                button.IsEnabled = true;
+            }
         }
 
         private void OnTextChangeSearch(object sender, TextChangedEventArgs eventArgs)
@@ -379,7 +428,6 @@ namespace ConfigApp.Tabs
         private void OnSortingModeBoxSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
         {
             var box = (ComboBox)sender;
-
             m_SortingMode = (SortingMode)box.SelectedIndex;
             ApplySortAndFilter();
         }
@@ -388,8 +436,16 @@ namespace ConfigApp.Tabs
         {
             PushNewColumn(new GridLength(1f, GridUnitType.Star));
 
-            SetRowHeight(new GridLength());
+            SetRowHeight(new GridLength(1, GridUnitType.Auto));
+            PushRowElement(BuildHeaderGrid());
+            PopRow();
 
+            SetRowHeight(new GridLength(1f, GridUnitType.Star));
+            PushRowElement(BuildItemsScrollViewer());
+        }
+
+        private Grid BuildHeaderGrid()
+        {
             var headerGrid = new Grid();
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -405,24 +461,25 @@ namespace ConfigApp.Tabs
                 VerticalAlignment = VerticalAlignment.Center,
                 Text = "Sort By:"
             });
-            var sortingModeBox = new ComboBox()
+
+            var sortingModeBox = new ComboBox
             {
                 Width = 100f,
                 SelectedIndex = 0
             };
-            foreach (var value in m_SortingModeLabels.Values)
+            foreach (var value in s_SortingModeLabels)
                 sortingModeBox.Items.Add(value);
             sortingModeBox.SelectionChanged += OnSortingModeBoxSelectionChanged;
             controlsRow.Children.Add(sortingModeBox);
 
-            m_SortIntalledFirstToggle = new CheckBox()
+            m_SortInstalledFirstToggle = new CheckBox
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 IsChecked = true,
                 Content = "Show installed first"
             };
-            m_SortIntalledFirstToggle.Click += (sender, eventArgs) => { SortSubmissionItems(); };
-            controlsRow.Children.Add(m_SortIntalledFirstToggle);
+            m_SortInstalledFirstToggle.Click += (_, _) => ApplySortAndFilter();
+            controlsRow.Children.Add(m_SortInstalledFirstToggle);
             headerGrid.Children.Add(controlsRow);
 
             var rightHeader = new StackPanel
@@ -433,7 +490,7 @@ namespace ConfigApp.Tabs
             };
             rightHeader.SetValue(Grid.ColumnProperty, 1);
 
-            m_SearchBox = new TextBox()
+            m_SearchBox = new TextBox
             {
                 Width = 250f,
                 PlaceholderText = "Search"
@@ -441,7 +498,7 @@ namespace ConfigApp.Tabs
             m_SearchBox.TextChanged += OnTextChangeSearch;
             rightHeader.Children.Add(m_SearchBox);
 
-            var settingsButton = new Button()
+            var settingsButton = new Button
             {
                 Content = "Settings"
             };
@@ -449,33 +506,33 @@ namespace ConfigApp.Tabs
             settingsButton.Click += OnSettingsClick;
             rightHeader.Children.Add(settingsButton);
 
-            var refreshButton = new Button()
+            var refreshButton = new Button
             {
                 Content = "Refresh"
             };
             ToolTipService.SetToolTip(refreshButton, "Refresh");
             refreshButton.Click += OnRefreshClick;
             rightHeader.Children.Add(refreshButton);
+
             headerGrid.Children.Add(rightHeader);
+            return headerGrid;
+        }
 
-            PushRowElement(headerGrid);
-            PopRow();
-
-            SetRowHeight(new GridLength(1f, GridUnitType.Star));
-
-            var scrollViewer = new ScrollViewer()
+        private ScrollViewer BuildItemsScrollViewer()
+        {
+            var scrollViewer = new ScrollViewer
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            m_ItemsPanel = new StackPanel()
+            m_ItemsPanel = new StackPanel
             {
                 Spacing = 0
             };
             scrollViewer.Content = m_ItemsPanel;
 
-            PushRowElement(scrollViewer);
+            return scrollViewer;
         }
 
         public async override void OnTabSelected()
@@ -484,34 +541,42 @@ namespace ConfigApp.Tabs
                 return;
 
             m_HasLoaded = true;
-
-            byte[]? fileContent = null;
-            if (File.Exists(SUBMISSIONS_CACHED_FILENAME))
-                try
-                {
-                    fileContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
-                }
-                catch (IOException)
-                {
-
-                }
-
-            if (fileContent != null)
-                try
-                {
-                    await ParseWorkshopSubmissionsFileAsync(fileContent);
-                }
-                catch (JsonException)
-                {
-                    await ForceRefreshWorkshopContentFromRemote();
-                }
-            else
-                await ForceRefreshWorkshopContentFromRemote();
+            await LoadInitialWorkshopContentAsync();
         }
 
-        private void SortSubmissionItems()
+        private async Task LoadInitialWorkshopContentAsync()
         {
-            ApplySortAndFilter();
+            var cachedFileContent = TryReadCachedSubmissions();
+
+            if (cachedFileContent is null)
+            {
+                await ForceRefreshWorkshopContentFromRemote();
+                return;
+            }
+
+            try
+            {
+                await ParseWorkshopSubmissionsFileAsync(cachedFileContent);
+            }
+            catch (JsonException)
+            {
+                await ForceRefreshWorkshopContentFromRemote();
+            }
+        }
+
+        private static byte[]? TryReadCachedSubmissions()
+        {
+            if (!File.Exists(SUBMISSIONS_CACHED_FILENAME))
+                return null;
+
+            try
+            {
+                return File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
+            }
+            catch (IOException)
+            {
+                return null;
+            }
         }
     }
 }

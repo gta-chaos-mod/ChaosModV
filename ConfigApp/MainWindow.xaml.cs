@@ -46,6 +46,7 @@ namespace ConfigApp
             Utils.AttachNumericTextBoxBehavior(meta_effects_short_timed_dur);
 
             Title = $"ChaosModV Configuration (v{Info.VERSION})";
+            user_save.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
             MainRoot.Loaded += OnLoaded;
         }
 
@@ -54,7 +55,13 @@ namespace ConfigApp
             var hwnd = WindowNative.GetWindowHandle(this);
             var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
-            appWindow.Resize(new SizeInt32(1060, 720));
+            appWindow.Resize(new SizeInt32(1200, 780));
+
+            if (AppWindowTitleBar.IsCustomizationSupported())
+            {
+                ExtendsContentIntoTitleBar = true;
+                SetTitleBar(AppTitleBar);
+            }
         }
 
         private void InitializeTabs()
@@ -140,16 +147,21 @@ namespace ConfigApp
 
             try
             {
-                string newVersion = await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt");
+                string newVersion = (await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt")).Trim();
 
                 if (Info.VERSION != newVersion)
+                {
+                    update_available_label.Text = $"Update available: v{newVersion}";
                     update_available_button.Visibility = Visibility.Visible;
+                }
                 else
-                    update_available_label.Text = "You are on the newest version of the mod!";
+                {
+                    update_available_label.Text = "You are running the latest version.";
+                }
             }
             catch (HttpRequestException)
             {
-                update_available_label.Text = "Unable to check for new updates!";
+                update_available_label.Text = "Could not check for updates.";
             }
         }
 
@@ -367,48 +379,78 @@ namespace ConfigApp
             RefreshEffectsTrees();
         }
 
-        private async void OnUserSaveClick(object sender, RoutedEventArgs e)
+        private void SetSaveControlsEnabled(bool isEnabled)
         {
-            bool oldIniFilesExist = false;
-            if (OptionsManager.ConfigFile.FoundFilePath == "config.ini" || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
-                || OptionsManager.EffectsFile.FoundFilePath == "effects.ini")
+            user_save.IsEnabled = isEnabled;
+            user_reset.IsEnabled = isEnabled;
+        }
+
+        private bool IsLegacyConfigInRoot()
+        {
+            return OptionsManager.ConfigFile.FoundFilePath == "config.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "effects.ini";
+        }
+
+        private bool IsLegacyConfigFormatPresent()
+        {
+            return IsLegacyConfigInRoot()
+                || OptionsManager.ConfigFile.FoundFilePath == "configs/config.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "configs/twitch.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "configs/voting.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini";
+        }
+
+        private async Task<bool> TryHandleConfigMigrationWarningsAsync()
+        {
+            if (IsLegacyConfigInRoot())
             {
-                oldIniFilesExist = true;
                 if (!await AppDialog.ShowOkCancelAsync("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. If you want to play older versions of the mod you will have to move them back. Continue?"))
-                    return;
+                    return false;
             }
 
-            if (oldIniFilesExist || OptionsManager.ConfigFile.FoundFilePath == "configs/config.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/twitch.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/voting.ini"
-                || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini")
+            if (IsLegacyConfigFormatPresent())
             {
-                oldIniFilesExist = true;
                 if (!await AppDialog.ShowOkCancelAsync("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?"))
-                    return;
-            }
+                    return false;
 
-            if (oldIniFilesExist)
-            {
                 Directory.CreateDirectory("configs/old");
                 File.Move(OptionsManager.ConfigFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.ConfigFile.FoundFilePath)}", true);
                 File.Move(OptionsManager.VotingFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.VotingFile.FoundFilePath)}", true);
                 File.Move(OptionsManager.EffectsFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.EffectsFile.FoundFilePath)}", true);
             }
 
-            WriteConfigFile();
-            WriteEffectsFile();
+            return true;
+        }
 
-            foreach (var tab in m_Tabs)
-                tab.Value.OnSaveValues();
+        private async void OnUserSaveClick(object sender, RoutedEventArgs e)
+        {
+            SetSaveControlsEnabled(false);
 
-            OptionsManager.WriteFiles();
+            try
+            {
+                if (!await TryHandleConfigMigrationWarningsAsync())
+                    return;
 
-            // Reload saved config to show the "new" (saved) settings
-            foreach (var tab in m_Tabs)
-                tab.Value.OnLoadValues();
+                WriteConfigFile();
+                WriteEffectsFile();
 
-            OptionsManager.DeleteCompatFiles();
+                foreach (var tab in m_Tabs.Values)
+                    tab.OnSaveValues();
 
-            await AppDialog.ShowMessageAsync("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.");
+                OptionsManager.WriteFiles();
+
+                foreach (var tab in m_Tabs.Values)
+                    tab.OnLoadValues();
+
+                OptionsManager.DeleteCompatFiles();
+
+                await AppDialog.ShowMessageAsync("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.");
+            }
+            finally
+            {
+                SetSaveControlsEnabled(true);
+            }
         }
 
         private async void OnUserResetClick(object sender, RoutedEventArgs e)

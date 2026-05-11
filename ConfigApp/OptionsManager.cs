@@ -12,12 +12,21 @@ namespace ConfigApp
         // These are written to manually
         public static OptionsFile WorkshopFile { get; } = new OptionsFile("configs/workshop.json", "configs/workshop.ini");
 
+        private static IEnumerable<OptionsFile> ConfigFiles
+        {
+            get
+            {
+                yield return ConfigFile;
+                yield return VotingFile;
+                yield return EffectsFile;
+                yield return WorkshopFile;
+            }
+        }
+
         public static void ReadFiles()
         {
-            ConfigFile.ReadFile();
-            VotingFile.ReadFile();
-            EffectsFile.ReadFile();
-            WorkshopFile.ReadFile();
+            foreach (var file in ConfigFiles)
+                file.ReadFile();
         }
 
         public static void WriteFiles()
@@ -36,15 +45,14 @@ namespace ConfigApp
 
         public static void DeleteCompatFiles()
         {
-            static void deleteFiles(string[] files)
-            {
-                foreach (var file in files)
-                    File.Delete(file);
-            }
+            foreach (var file in new[] { ConfigFile, VotingFile, EffectsFile })
+                DeleteFiles(file.CompatFilePaths);
+        }
 
-            deleteFiles(ConfigFile.CompatFilePaths);
-            deleteFiles(VotingFile.CompatFilePaths);
-            deleteFiles(EffectsFile.CompatFilePaths);
+        private static void DeleteFiles(IEnumerable<string> files)
+        {
+            foreach (var file in files)
+                File.Delete(file);
         }
     }
 }
