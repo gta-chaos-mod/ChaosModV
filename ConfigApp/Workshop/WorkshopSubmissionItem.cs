@@ -125,29 +125,29 @@ namespace ConfigApp.Workshop
         {
             switch (value)
             {
-                case SubmissionInstallState.NotInstalled:
-                    InstallButtonText = "Install";
-                    InstallButtonEnabled = !IsAlien;
-                    SettingsButtonVisibility = Visibility.Collapsed;
-                    break;
-                case SubmissionInstallState.Installed:
-                    InstallButtonText = "Remove";
-                    InstallButtonEnabled = true;
-                    SettingsButtonVisibility = Visibility.Visible;
-                    break;
-                case SubmissionInstallState.Installing:
-                    InstallButtonText = "Installing";
-                    InstallButtonEnabled = false;
-                    break;
-                case SubmissionInstallState.UpdateAvailable:
-                    InstallButtonText = "Update";
-                    InstallButtonEnabled = !IsAlien;
-                    SettingsButtonVisibility = Visibility.Visible;
-                    break;
-                case SubmissionInstallState.Removing:
-                    InstallButtonText = "Removing";
-                    InstallButtonEnabled = false;
-                    break;
+            case SubmissionInstallState.NotInstalled:
+                InstallButtonText = "Install";
+                InstallButtonEnabled = !IsAlien;
+                SettingsButtonVisibility = Visibility.Collapsed;
+                break;
+            case SubmissionInstallState.Installed:
+                InstallButtonText = "Remove";
+                InstallButtonEnabled = true;
+                SettingsButtonVisibility = Visibility.Visible;
+                break;
+            case SubmissionInstallState.Installing:
+                InstallButtonText = "Installing";
+                InstallButtonEnabled = false;
+                break;
+            case SubmissionInstallState.UpdateAvailable:
+                InstallButtonText = "Update";
+                InstallButtonEnabled = !IsAlien;
+                SettingsButtonVisibility = Visibility.Visible;
+                break;
+            case SubmissionInstallState.Removing:
+                InstallButtonText = "Removing";
+                InstallButtonEnabled = false;
+                break;
             }
         }
 

@@ -10,8 +10,6 @@ namespace ConfigApp.Tabs
             var button = new Button
             {
                 Content = text,
-                Width = 75f,
-                Height = 20f,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center
             };

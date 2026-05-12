@@ -94,7 +94,6 @@ namespace ConfigApp.Infrastructure
             {
                 Content = "...",
                 Width = 32,
-                Height = 24,
                 IsEnabled = item.IsConfigEnabled,
                 VerticalAlignment = VerticalAlignment.Center
             };
