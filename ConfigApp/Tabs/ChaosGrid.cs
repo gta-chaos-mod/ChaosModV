@@ -5,7 +5,7 @@ namespace ConfigApp.Tabs
 {
     public class ChaosGrid
     {
-        public Grid Grid { get; private set; } = new Grid();
+        public Grid Grid { get; private set; } = new();
 
         private int m_CurrentRow = -1;
         private int m_CurrentColumn = 0;
@@ -23,22 +23,16 @@ namespace ConfigApp.Tabs
                 return;
 
             Grid = grid ?? new Grid();
-
             m_CurrentRow = -1;
             m_CurrentColumn = 0;
-
             m_RowDefinitions.Clear();
             m_ColumnDefinitions.Clear();
-
             PopRow();
         }
 
         public void PushNewColumn(GridLength gridLength)
         {
-            var columnDefinition = new ColumnDefinition()
-            {
-                Width = gridLength,
-            };
+            var columnDefinition = new ColumnDefinition { Width = gridLength };
             m_ColumnDefinitions.Add(columnDefinition);
             Grid.ColumnDefinitions.Add(columnDefinition);
         }
@@ -46,7 +40,7 @@ namespace ConfigApp.Tabs
         private void CheckColumnValidity()
         {
             if (m_ColumnDefinitions.Count <= m_CurrentColumn)
-                throw new System.IndexOutOfRangeException("m_CurrentColumn > max columns!");
+                throw new IndexOutOfRangeException("m_CurrentColumn > max columns!");
         }
 
         public void SetRowHeight(GridLength gridLength)
@@ -56,47 +50,59 @@ namespace ConfigApp.Tabs
 
         private void PushRow(string? text, FrameworkElement? control, string? tooltip = null)
         {
-            if (text != null)
+            if (text is not null)
             {
                 CheckColumnValidity();
-
-                var textBlock = new TextBlock
-                {
-                    Text = text,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = control != null && control.GetValue(FrameworkElement.VerticalAlignmentProperty) != null
-                        ? (VerticalAlignment)control.GetValue(FrameworkElement.VerticalAlignmentProperty) : VerticalAlignment.Center
-                };
-
-                textBlock.SetValue(Grid.ColumnProperty, m_CurrentColumn);
-                textBlock.SetValue(Grid.RowProperty, m_CurrentRow);
-                if (tooltip != null)
-                    ToolTipService.SetToolTip(textBlock, tooltip);
+                var textBlock = CreateTextBlock(text, control);
+                SetGridPosition(textBlock);
+                ApplyToolTip(textBlock, tooltip);
                 Grid.Children.Add(textBlock);
-
                 m_CurrentColumn++;
             }
 
-            if (control != null)
+            if (control is null)
+                return;
+
+            CheckColumnValidity();
+            if (text is not null)
+                ApplyDefaultAlignment(control);
+
+            SetGridPosition(control);
+            ApplyToolTip(control, tooltip);
+            Grid.Children.Add(control);
+            m_CurrentColumn++;
+        }
+
+        private static TextBlock CreateTextBlock(string text, FrameworkElement? control)
+        {
+            return new TextBlock
             {
-                CheckColumnValidity();
+                Text = text,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = control?.GetValue(FrameworkElement.VerticalAlignmentProperty) is VerticalAlignment alignment
+                    ? alignment
+                    : VerticalAlignment.Center
+            };
+        }
 
-                if (text != null)
-                {
-                    if (control.GetValue(FrameworkElement.HorizontalAlignmentProperty) == null)
-                        control.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-                    if (control.GetValue(FrameworkElement.VerticalAlignmentProperty) == null)
-                        control.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
-                }
+        private static void ApplyDefaultAlignment(FrameworkElement control)
+        {
+            if (control.GetValue(FrameworkElement.HorizontalAlignmentProperty) is null)
+                control.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
+            if (control.GetValue(FrameworkElement.VerticalAlignmentProperty) is null)
+                control.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
+        }
 
-                control.SetValue(Grid.ColumnProperty, m_CurrentColumn);
-                control.SetValue(Grid.RowProperty, m_CurrentRow);
-                if (tooltip != null)
-                    ToolTipService.SetToolTip(control, tooltip);
-                Grid.Children.Add(control);
+        private void SetGridPosition(FrameworkElement element)
+        {
+            element.SetValue(Grid.ColumnProperty, m_CurrentColumn);
+            element.SetValue(Grid.RowProperty, m_CurrentRow);
+        }
 
-                m_CurrentColumn++;
-            }
+        private static void ApplyToolTip(FrameworkElement element, string? tooltip)
+        {
+            if (tooltip is not null)
+                ToolTipService.SetToolTip(element, tooltip);
         }
 
         public void PopRow()
@@ -104,10 +110,7 @@ namespace ConfigApp.Tabs
             m_CurrentColumn = 0;
             m_CurrentRow++;
 
-            var rowDefinition = new RowDefinition()
-            {
-                Height = new GridLength(40f)
-            };
+            var rowDefinition = new RowDefinition { Height = new GridLength(40f) };
             m_RowDefinitions.Add(rowDefinition);
             Grid.RowDefinitions.Add(rowDefinition);
         }
@@ -115,14 +118,12 @@ namespace ConfigApp.Tabs
         public void PushRowEmpty()
         {
             CheckColumnValidity();
-
             m_CurrentColumn++;
         }
 
         public void PushRowEmptyPair()
         {
             CheckColumnValidity();
-
             m_CurrentColumn += 3;
         }
 
@@ -147,10 +148,8 @@ namespace ConfigApp.Tabs
         {
             PushRow(text, null, tooltip);
             PushRowEmpty();
-
             element.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Left);
             element.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
-
             PushRow(null, element, tooltip);
         }
 

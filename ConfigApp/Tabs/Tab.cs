@@ -22,7 +22,6 @@ namespace ConfigApp.Tabs
         public override void Init(Grid? grid)
         {
             base.Init(grid);
-
             InitContent();
         }
     }
@@ -37,14 +36,9 @@ namespace ConfigApp.Tabs
             SetRowHeight(new GridLength(1f, GridUnitType.Star));
 
             var tabControl = new TabView();
-
             foreach (var childTab in ChildTabs)
             {
-                var tabItem = new TabViewItem
-                {
-                    Header = childTab.Key
-                };
-
+                var tabItem = new TabViewItem { Header = childTab.Key };
                 var grid = new Grid();
                 childTab.Value.Init(grid);
                 tabItem.Content = grid;

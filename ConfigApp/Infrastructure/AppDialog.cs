@@ -14,10 +14,25 @@ namespace ConfigApp.Infrastructure
 
         public static void ApplyToDialog(ContentDialog dialog)
         {
-            ApplyXamlRoot(dialog);
+            dialog.XamlRoot = ResolveXamlRoot();
         }
 
-        public static async Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
+        public static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
+        {
+            return ShowDialogAsync(content, title, closeButtonText: closeButtonText);
+        }
+
+        public static Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
+        {
+            return ShowDialogAsync(content, title, yesButtonText, noButtonText);
+        }
+
+        public static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "OK", string cancelButtonText = "Cancel")
+        {
+            return ShowDialogAsync(content, title, okButtonText, cancelButtonText);
+        }
+
+        private static async Task<bool> ShowDialogAsync(string content, string title, string primaryButtonText = "", string closeButtonText = "OK")
         {
             var dialog = new ContentDialog
             {
@@ -28,58 +43,26 @@ namespace ConfigApp.Infrastructure
                     TextWrapping = TextWrapping.Wrap,
                     MaxWidth = 560
                 },
-                CloseButtonText = closeButtonText,
-                DefaultButton = ContentDialogButton.Close
+                DefaultButton = string.IsNullOrEmpty(primaryButtonText) ? ContentDialogButton.Close : ContentDialogButton.Primary,
+                CloseButtonText = closeButtonText
             };
 
-            ApplyXamlRoot(dialog);
-            await dialog.ShowAsync();
-        }
+            if (!string.IsNullOrEmpty(primaryButtonText))
+                dialog.PrimaryButtonText = primaryButtonText;
 
-        public static async Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
-        {
-            var dialog = new ContentDialog
-            {
-                Title = title,
-                Content = new TextBlock
-                {
-                    Text = content,
-                    TextWrapping = TextWrapping.Wrap,
-                    MaxWidth = 560
-                },
-                PrimaryButtonText = yesButtonText,
-                CloseButtonText = noButtonText,
-                DefaultButton = ContentDialogButton.Primary
-            };
-
-            ApplyXamlRoot(dialog);
+            ApplyToDialog(dialog);
             return await dialog.ShowAsync() == ContentDialogResult.Primary;
         }
 
-        public static async Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "OK", string cancelButtonText = "Cancel")
-        {
-            var dialog = new ContentDialog
-            {
-                Title = title,
-                Content = new TextBlock
-                {
-                    Text = content,
-                    TextWrapping = TextWrapping.Wrap,
-                    MaxWidth = 560
-                },
-                PrimaryButtonText = okButtonText,
-                CloseButtonText = cancelButtonText,
-                DefaultButton = ContentDialogButton.Primary
-            };
-
-            ApplyXamlRoot(dialog);
-            return await dialog.ShowAsync() == ContentDialogResult.Primary;
-        }
-
-        private static void ApplyXamlRoot(ContentDialog dialog)
+        private static XamlRoot? ResolveXamlRoot()
         {
             if (s_XamlRoot is not null)
-                dialog.XamlRoot = s_XamlRoot;
+                return s_XamlRoot;
+
+            if (App.MainWindow?.Content is FrameworkElement rootElement)
+                return rootElement.XamlRoot;
+
+            return null;
         }
     }
 }

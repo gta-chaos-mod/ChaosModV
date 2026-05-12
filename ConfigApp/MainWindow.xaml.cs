@@ -23,7 +23,6 @@ namespace ConfigApp
             { "Workshop", new WorkshopTab() },
             { "More", new MoreTab() }
         };
-        private readonly Dictionary<string, TabViewItem> m_TabItems = new();
 
         private Dictionary<string, TreeMenuItem>? m_TreeMenuItemsMap = null;
         private List<TreeMenuItem>? m_TreeMenuItemsAll = null;
@@ -66,27 +65,22 @@ namespace ConfigApp
 
         private void InitializeTabs()
         {
-            if (!m_InitializedTabs)
+            if (m_InitializedTabs)
+                return;
+
+            m_InitializedTabs = true;
+
+            foreach (var tab in m_Tabs)
             {
-                m_InitializedTabs = true;
-
-                foreach (var tab in m_Tabs)
+                var tabItem = new TabViewItem
                 {
-                    var tabItem = new TabViewItem()
-                    {
-                        Header = tab.Key,
-                    };
+                    Header = tab.Key
+                };
 
-                    var grid = new Grid();
-
-                    tab.Value.Init(grid);
-
-                    tabItem.Content = grid;
-
-                    root_tabcontrol.TabItems.Add(tabItem);
-
-                    m_TabItems[tab.Key] = tabItem;
-                }
+                var grid = new Grid();
+                tab.Value.Init(grid);
+                tabItem.Content = grid;
+                root_tabcontrol.TabItems.Add(tabItem);
             }
         }
 
@@ -101,12 +95,11 @@ namespace ConfigApp
 
         private async Task InitializeAsync()
         {
-            CheckForUpdates();
-
+            await CheckForUpdatesAsync();
             OptionsManager.ReadFiles();
 
-            foreach (var tab in m_Tabs)
-                tab.Value.OnLoadValues();
+            foreach (var tab in m_Tabs.Values)
+                tab.OnLoadValues();
 
             m_EffectDataMap = new Dictionary<string, EffectData>();
 
@@ -141,23 +134,15 @@ namespace ConfigApp
                 tab.OnTabSelected();
         }
 
-        private async void CheckForUpdates()
+        private async Task CheckForUpdatesAsync()
         {
-            var httpClient = new HttpClient();
+            using var httpClient = new HttpClient();
 
             try
             {
-                string newVersion = (await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt")).Trim();
-
-                if (Info.VERSION != newVersion)
-                {
-                    update_available_label.Text = $"Update available: v{newVersion}";
-                    update_available_button.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    update_available_label.Text = "You are running the latest version.";
-                }
+                var newVersion = (await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt")).Trim();
+                update_available_label.Text = Info.VERSION != newVersion ? $"Update available: v{newVersion}" : "You are running the latest version.";
+                update_available_button.Visibility = Info.VERSION != newVersion ? Visibility.Visible : Visibility.Collapsed;
             }
             catch (HttpRequestException)
             {
@@ -167,7 +152,6 @@ namespace ConfigApp
 
         private EffectData GetEffectData(string effectId)
         {
-            // Create EffectData in case effect wasn't saved yet
             if (m_EffectDataMap?.TryGetValue(effectId, out EffectData? effectData) is not true)
             {
                 effectData = new EffectData();
@@ -179,7 +163,6 @@ namespace ConfigApp
 
         private void ParseConfigFile()
         {
-            // Meta Effects
             meta_effects_spawn_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600)}";
             meta_effects_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95)}";
             meta_effects_short_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65)}";
@@ -187,7 +170,6 @@ namespace ConfigApp
 
         private void WriteConfigFile()
         {
-            // Meta Effects
             OptionsManager.ConfigFile.WriteValueAsInt("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
             OptionsManager.ConfigFile.WriteValueAsInt("MetaEffectDur", meta_effects_timed_dur.Text);
             OptionsManager.ConfigFile.WriteValueAsInt("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
@@ -195,14 +177,12 @@ namespace ConfigApp
 
         private void ParseEffectsFile()
         {
-            bool isJson = OptionsManager.EffectsFile.FoundFilePath.EndsWith(".json");
-            foreach (string key in OptionsManager.EffectsFile.GetKeys())
+            var isJson = OptionsManager.EffectsFile.FoundFilePath.EndsWith(".json");
+            foreach (var key in OptionsManager.EffectsFile.GetKeys())
             {
-                EffectData effectData;
-                if (isJson)
-                    effectData = Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key));
-                else
-                    effectData = Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
+                var effectData = isJson
+                    ? Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key))
+                    : Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
 
                 m_EffectDataMap?.Add(key, effectData);
             }
@@ -213,31 +193,34 @@ namespace ConfigApp
             OptionsManager.EffectsFile.ResetFile();
 
             foreach (var (effectId, _) in EffectsMap)
-            {
-                var effectData = GetEffectData(effectId);
-
-                var json = new JObject();
-                if (effectData.Enabled is not null)
-                    json["enabled"] = effectData.Enabled;
-                if (effectData.CustomTime is not null)
-                    json["customTime"] = effectData.CustomTime;
-                if (effectData.ExcludedFromVoting is not null)
-                    json["excludedFromVoting"] = effectData.ExcludedFromVoting;
-                if (effectData.TimedType is not null)
-                    json["permanent"] = effectData.TimedType == EffectTimedType.Permanent;
-                if (effectData.ShortcutKeycode is not null)
-                    json["shortcutKeycode"] = effectData.ShortcutKeycode;
-                if (effectData.TimedType is not null)
-                    json["timedType"] = (int)effectData.TimedType;
-                if (effectData.WeightMult is not null)
-                    json["weightMult"] = effectData.WeightMult;
-                if (effectData.CustomName is not null)
-                    json["customName"] = effectData.CustomName;
-
-                OptionsManager.EffectsFile.WriteValue(effectId, json);
-            }
+                OptionsManager.EffectsFile.WriteValue(effectId, BuildEffectJson(effectId));
 
             OptionsManager.EffectsFile.WriteFile();
+        }
+
+        private JObject BuildEffectJson(string effectId)
+        {
+            var effectData = GetEffectData(effectId);
+            var json = new JObject();
+
+            if (effectData.Enabled is not null)
+                json["enabled"] = effectData.Enabled;
+            if (effectData.CustomTime is not null)
+                json["customTime"] = effectData.CustomTime;
+            if (effectData.ExcludedFromVoting is not null)
+                json["excludedFromVoting"] = effectData.ExcludedFromVoting;
+            if (effectData.TimedType is not null)
+                json["permanent"] = effectData.TimedType == EffectTimedType.Permanent;
+            if (effectData.ShortcutKeycode is not null)
+                json["shortcutKeycode"] = effectData.ShortcutKeycode;
+            if (effectData.TimedType is not null)
+                json["timedType"] = (int)effectData.TimedType;
+            if (effectData.WeightMult is not null)
+                json["weightMult"] = effectData.WeightMult;
+            if (effectData.CustomName is not null)
+                json["customName"] = effectData.CustomName;
+
+            return json;
         }
 
         private void InitEffectsTreeView()
@@ -247,15 +230,47 @@ namespace ConfigApp
             m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
             m_TreeMenuItemsAll = new List<TreeMenuItem>();
 
-            var playerParentItem = new TreeMenuItem("Player");
-            var vehicleParentItem = new TreeMenuItem("Vehicle");
-            var pedsParentItem = new TreeMenuItem("Peds");
-            var screenParentItem = new TreeMenuItem("Screen");
-            var timeParentItem = new TreeMenuItem("Time");
-            var weatherParentItem = new TreeMenuItem("Weather");
-            var miscParentItem = new TreeMenuItem("Misc");
-            var metaParentItem = new TreeMenuItem("Meta");
+            var categoryMap = CreateEffectCategoryMap();
 
+            foreach (var pair in GetSortedEffects())
+            {
+                var effectName = pair.Key;
+                var effectId = pair.Value.EffectId;
+                var effectCategory = pair.Value.EffectCategory;
+                var effectData = GetEffectData(effectId);
+
+                var menuItem = CreateEffectMenuItem(effectName, effectId, effectData);
+                categoryMap[effectCategory].AddChild(menuItem);
+                m_TreeMenuItemsMap.Add(effectId, menuItem);
+            }
+
+            m_TreeMenuItemsAll.AddRange(categoryMap.Values);
+            m_MetaParentItem = categoryMap[EffectCategory.Meta];
+            m_TreeMenuItemsFiltered = m_TreeMenuItemsAll.ToList();
+
+            foreach (var treeMenuItem in m_TreeMenuItemsAll)
+                treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
+
+            RefreshEffectsTrees();
+        }
+
+        private static Dictionary<EffectCategory, TreeMenuItem> CreateEffectCategoryMap()
+        {
+            return new Dictionary<EffectCategory, TreeMenuItem>
+            {
+                [EffectCategory.Player] = new TreeMenuItem("Player"),
+                [EffectCategory.Vehicle] = new TreeMenuItem("Vehicle"),
+                [EffectCategory.Peds] = new TreeMenuItem("Peds"),
+                [EffectCategory.Screen] = new TreeMenuItem("Screen"),
+                [EffectCategory.Time] = new TreeMenuItem("Time"),
+                [EffectCategory.Weather] = new TreeMenuItem("Weather"),
+                [EffectCategory.Misc] = new TreeMenuItem("Misc"),
+                [EffectCategory.Meta] = new TreeMenuItem("Meta")
+            };
+        }
+
+        private static SortedDictionary<string, (string EffectId, EffectCategory EffectCategory)> GetSortedEffects()
+        {
             var sortedEffects = new SortedDictionary<string, (string EffectId, EffectCategory EffectCategory)>();
 
             foreach (var pair in EffectsMap)
@@ -263,83 +278,32 @@ namespace ConfigApp
                 if (pair.Value.Name is null)
                     continue;
 
-                sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, pair.Value.EffectCategory));
+                sortedEffects.Add(pair.Value.Name, (pair.Key, pair.Value.EffectCategory));
             }
 
-            foreach (var effect in sortedEffects)
+            return sortedEffects;
+        }
+
+        private static TreeMenuItem CreateEffectMenuItem(string effectName, string effectId, EffectData effectData)
+        {
+            var menuItem = new TreeMenuItem(effectName);
+            menuItem.OnConfigureClickAsync = async () =>
             {
-                var effectName = effect.Key;
-                var effectMisc = effect.Value;
-                var effectData = GetEffectData(effectMisc.EffectId);
+                var effectInfo = EffectsMap[effectId];
+                var effectConfig = new EffectConfig(effectId, effectData, effectInfo);
+                await effectConfig.ShowAsync();
 
-                var menuItem = new TreeMenuItem(effectName);
-                menuItem.OnConfigureClickAsync = async () =>
-                {
-                    var effectInfo = EffectsMap[effectMisc.EffectId];
+                if (!effectConfig.IsSaved)
+                    return;
 
-                    var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
-                    await effectConfig.ShowAsync();
-
-                    if (!effectConfig.IsSaved)
-                        return;
-
-                    effectData = effectConfig.GetNewData();
-                    if (m_EffectDataMap is not null)
-                        m_EffectDataMap[effectMisc.EffectId] = effectData;
-                    menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
-                };
-                menuItem.OnCheckedClick = () =>
-                {
-                    effectData.Enabled = menuItem.IsChecked;
-                };
-                menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
-                menuItem.IsChecked = effectData.Enabled ?? true;
-                m_TreeMenuItemsMap.Add(effectMisc.EffectId, menuItem);
-
-                switch (effectMisc.EffectCategory)
-                {
-                case EffectCategory.Player:
-                    playerParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Vehicle:
-                    vehicleParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Peds:
-                    pedsParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Screen:
-                    screenParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Time:
-                    timeParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Weather:
-                    weatherParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Misc:
-                    miscParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Meta:
-                    metaParentItem.AddChild(menuItem);
-                    break;
-                }
-            }
-
-            m_TreeMenuItemsAll.Add(playerParentItem);
-            m_TreeMenuItemsAll.Add(vehicleParentItem);
-            m_TreeMenuItemsAll.Add(pedsParentItem);
-            m_TreeMenuItemsAll.Add(screenParentItem);
-            m_TreeMenuItemsAll.Add(timeParentItem);
-            m_TreeMenuItemsAll.Add(weatherParentItem);
-            m_TreeMenuItemsAll.Add(miscParentItem);
-            m_MetaParentItem = metaParentItem;
-
-            m_TreeMenuItemsFiltered = m_TreeMenuItemsAll.ToList();
-
-            foreach (var treeMenuItem in m_TreeMenuItemsAll.Append(metaParentItem))
-                treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
-
-            RefreshEffectsTrees();
+                effectData = effectConfig.GetNewData();
+                if (effectData.TimedType == EffectTimedType.Permanent)
+                    menuItem.IsColored = true;
+            };
+            menuItem.OnCheckedClick = () => effectData.Enabled = menuItem.IsChecked;
+            menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
+            menuItem.IsChecked = effectData.Enabled ?? true;
+            return menuItem;
         }
 
         private void RefreshEffectsTrees()

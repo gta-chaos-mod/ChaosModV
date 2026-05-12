@@ -25,13 +25,18 @@ namespace ConfigApp.Workshop
 
         public async void Execute(object? parameter)
         {
-            await AppDialog.ShowMessageAsync($@"Name: {m_SubmissionItem.Name}
+            await AppDialog.ShowMessageAsync(BuildInfoMessage(), "Submission Info");
+        }
+
+        private string BuildInfoMessage()
+        {
+            return $@"Name: {m_SubmissionItem.Name}
 Author: {m_SubmissionItem.Author}
 Version: {m_SubmissionItem.Version}
 Id: {m_SubmissionItem.Id}
 SHA256: {m_SubmissionItem.Sha256}
 
-Description: {m_SubmissionItem.Description}", "Submission Info");
+Description: {m_SubmissionItem.Description}";
         }
     }
 }

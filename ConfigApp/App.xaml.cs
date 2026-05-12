@@ -1,7 +1,5 @@
 ﻿using ConfigApp.Infrastructure;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace ConfigApp
 {
@@ -18,9 +16,6 @@ namespace ConfigApp
         {
             MainWindow = new MainWindow();
             MainWindow.Activate();
-
-            if (MainWindow.Content is FrameworkElement rootElement)
-                AppDialog.Initialize(rootElement.XamlRoot);
 
             base.OnLaunched(args);
         }

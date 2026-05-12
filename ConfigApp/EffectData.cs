@@ -14,17 +14,21 @@ namespace ConfigApp
                 if (value is null)
                     return;
 
-                if (value is bool v)
-                    writer.WriteValue(v ? 1 : 0);
-                else
-                    writer.WriteValue((int)value);
+                if (value is bool boolValue)
+                {
+                    writer.WriteValue(boolValue ? 1 : 0);
+                    return;
+                }
+
+                writer.WriteValue((int)value);
             }
 
             public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 if (typeof(T) == typeof(bool))
-                    return $"{reader.Value}" != "0";
-                else if (typeof(T) == typeof(EffectTimedType) && reader.Value is not null)
+                    return reader.Value?.ToString() != "0";
+
+                if (typeof(T) == typeof(EffectTimedType) && reader.Value is not null)
                     return Enum.ToObject(typeof(EffectTimedType), reader.Value);
 
                 return null;

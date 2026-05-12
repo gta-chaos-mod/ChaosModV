@@ -15,16 +15,8 @@ namespace ConfigApp.Workshop
         public SearchTerm(string term, string? filename = null)
         {
             Term = term;
-            if (filename is not null)
-            {
-                IsInFile = true;
-                FileName = filename;
-            }
-            else
-            {
-                IsInFile = false;
-                FileName = "";
-            }
+            IsInFile = filename is not null;
+            FileName = filename ?? string.Empty;
         }
 
         public static implicit operator SearchTerm(string term) => new(term);
@@ -45,9 +37,8 @@ namespace ConfigApp.Workshop
         public string? Sha256 { get; init; } = null;
         public bool IsAlien { get; set; } = false;
         public List<SearchTerm> SearchTerms { get; } = new();
-        public List<string> HighlightedFiles { get; } = new List<string>();
+        public List<string> HighlightedFiles { get; } = new();
 
-        // In order for sorting
         public enum SubmissionInstallState
         {
             UpdateAvailable,
@@ -56,6 +47,7 @@ namespace ConfigApp.Workshop
             Installing,
             Removing
         }
+
         private SubmissionInstallState m_InstallState = SubmissionInstallState.NotInstalled;
 
         public SubmissionInstallState InstallState
@@ -64,9 +56,75 @@ namespace ConfigApp.Workshop
             set
             {
                 m_InstallState = value;
+                UpdateInstallUi(value);
+                NotifyInstallPropertiesChanged();
+            }
+        }
 
-                switch (value)
+        public ICommand InstallButtonCommand => new WorkshopInstallHandler(this);
+        public string InstallButtonText { get; private set; } = "Install";
+        public bool InstallButtonEnabled { get; private set; } = true;
+        public ICommand InfoButtonCommand => new WorkshopInfoHandler(this);
+        public ICommand SettingsButtonCommand => new WorkshopSettingsHandler(this, m_FileHandler);
+        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Collapsed;
+
+        public WorkshopSubmissionItem(string id)
+        {
+            Id = id;
+            m_FileHandler = new(this);
+        }
+
+        public void Refresh()
+        {
+            m_FileHandler.ReloadFiles();
+            UpdateSearchTerms();
+        }
+
+        public void UpdateSearchTerms()
+        {
+            SearchTerms.Clear();
+
+            AddSearchTermIfPresent(Name);
+            AddSearchTermIfPresent(Description);
+            AddSearchTermIfPresent(Author);
+
+            foreach (var file in m_FileHandler.GetSubmissionFiles())
+            {
+                SearchTerms.Add(new(file.Name, file.Name));
+                if (file.EffectData?.CustomName is not null)
+                    SearchTerms.Add(new(file.EffectData.CustomName, file.Name));
+
+                if (file.Type != WorkshopSubmissionFileType.Script)
+                    continue;
+
+                try
                 {
+                    foreach (var line in File.ReadAllLines(m_FileHandler.SubmissionDirectory + file.Name))
+                    {
+                        var match = Regex.Match(line, @"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])+)""");
+                        if (match.Success)
+                            SearchTerms.Add(new(match.Groups[1].Value, file.Name));
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                }
+                catch (IOException)
+                {
+                }
+            }
+        }
+
+        private void AddSearchTermIfPresent(string? value)
+        {
+            if (value is not null)
+                SearchTerms.Add(value);
+        }
+
+        private void UpdateInstallUi(SubmissionInstallState value)
+        {
+            switch (value)
+            {
                 case SubmissionInstallState.NotInstalled:
                     InstallButtonText = "Install";
                     InstallButtonEnabled = !IsAlien;
@@ -90,84 +148,14 @@ namespace ConfigApp.Workshop
                     InstallButtonText = "Removing";
                     InstallButtonEnabled = false;
                     break;
-                }
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonText)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonEnabled)));
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SettingsButtonVisibility)));
             }
         }
 
-        public ICommand InstallButtonCommand
+        private void NotifyInstallPropertiesChanged()
         {
-            get => new WorkshopInstallHandler(this);
-        }
-        public string InstallButtonText { get; private set; } = "Install";
-        public bool InstallButtonEnabled { get; private set; } = true;
-
-        public ICommand InfoButtonCommand
-        {
-            get => new WorkshopInfoHandler(this);
-        }
-
-        public ICommand SettingsButtonCommand
-        {
-            get => new WorkshopSettingsHandler(this, m_FileHandler);
-        }
-        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Collapsed;
-
-        public void Refresh()
-        {
-            m_FileHandler.ReloadFiles();
-            UpdateSearchTerms();
-        }
-
-        public void UpdateSearchTerms()
-        {
-            SearchTerms.Clear();
-
-            if (Name is not null)
-                SearchTerms.Add(Name);
-            if (Description is not null)
-                SearchTerms.Add(Description);
-            if (Author is not null)
-                SearchTerms.Add(Author);
-
-            foreach (var file in m_FileHandler.GetSubmissionFiles())
-            {
-                SearchTerms.Add(new(file.Name, file.Name));
-                if (file.EffectData?.CustomName is not null)
-                {
-                    SearchTerms.Add(new(file.EffectData.CustomName, file.Name));
-                }
-
-                if (file.Type == WorkshopSubmissionFileType.Script)
-                {
-                    try
-                    {
-                        foreach (var line in File.ReadAllLines(m_FileHandler.SubmissionDirectory + file.Name))
-                        {
-                            var match = Regex.Match(line, @"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])+)""");
-                            if (match.Success)
-                            {
-                                SearchTerms.Add(new(match.Groups[1].Value, file.Name));
-                            }
-                        }
-                    }
-                    catch (Exception exception) when (exception is IOException || exception is FileNotFoundException)
-                    {
-                        continue;
-                    }
-                }
-            }
-        }
-
-        public WorkshopSubmissionItem(string id)
-        {
-            Id = id;
-
-            m_FileHandler = new(this);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonEnabled)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SettingsButtonVisibility)));
         }
     }
 }

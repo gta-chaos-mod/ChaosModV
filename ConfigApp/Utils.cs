@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,56 +14,75 @@ namespace ConfigApp
         public static EffectData ValueStringToEffectData(string? value)
         {
             var effectData = new EffectData();
-
             if (value is null)
                 return effectData;
 
-            // Split by comma, ignoring commas in between quotation marks
-            var values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
-            /* Has compatibility checks as previous mod versions had less options */
-
+            var values = SplitCsvRespectingQuotes(value);
             if (values.Length >= 4)
             {
-                if (int.TryParse(values[0], out int enabled))
-                    effectData.Enabled = enabled != 0;
-
-                if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
-                    effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
-                if (int.TryParse(values[2], out int customTime))
-                    effectData.CustomTime = customTime;
-                if (int.TryParse(values[3], out int weightMult))
-                    effectData.WeightMult = weightMult;
+                effectData.Enabled = TryParseBoolFromInt(values[0]);
+                effectData.TimedType = TryParseTimedType(values[1]);
+                effectData.CustomTime = TryParseInt(values[2]);
+                effectData.WeightMult = TryParseInt(values[3]);
             }
 
-            if (values.Length >= 5 && int.TryParse(values[4], out int tmp) && tmp != 0)
+            if (values.Length >= 5 && TryParseInt(values[4]) is int permanent && permanent != 0)
                 effectData.TimedType = Effects.EffectTimedType.Permanent;
 
-            if (values.Length >= 6 && int.TryParse(values[5], out tmp))
-                effectData.ExcludedFromVoting = tmp != 0;
+            if (values.Length >= 6 && TryParseInt(values[5]) is int excluded)
+                effectData.ExcludedFromVoting = excluded != 0;
 
             if (values.Length >= 7)
-                effectData.CustomName = values[6] == "0" ? null : values[6].Trim('\"');
+                effectData.CustomName = values[6] == "0" ? null : values[6].Trim('"');
 
-            if (values.Length >= 8 && int.TryParse(values[7], out int shortcut))
-                effectData.ShortcutKeycode = shortcut;
+            if (values.Length >= 8)
+                effectData.ShortcutKeycode = TryParseInt(values[7]);
 
             return effectData;
+        }
+
+        private static string[] SplitCsvRespectingQuotes(string value)
+        {
+            var values = new List<string>();
+            var current = new StringBuilder();
+            var inQuotes = false;
+
+            foreach (var character in value)
+            {
+                if (character == '"')
+                {
+                    inQuotes = !inQuotes;
+                    current.Append(character);
+                    continue;
+                }
+
+                if (character == ',' && !inQuotes)
+                {
+                    values.Add(current.ToString());
+                    current.Clear();
+                    continue;
+                }
+
+                current.Append(character);
+            }
+
+            values.Add(current.ToString());
+            return values.ToArray();
         }
 
         public static EffectData ValueObjectToEffectData(JObject? value)
         {
             var effectData = new EffectData();
-
             if (value is null)
                 return effectData;
 
             effectData.Enabled = value["enabled"]?.ToObject<bool?>();
             effectData.CustomTime = value["customTime"]?.ToObject<int?>();
             effectData.ExcludedFromVoting = value["excludedFromVoting"]?.ToObject<bool?>();
-            bool permanent = value["permanent"]?.ToObject<bool?>() ?? false;
+            effectData.TimedType = (value["permanent"]?.ToObject<bool?>() ?? false)
+                ? Effects.EffectTimedType.Permanent
+                : (Effects.EffectTimedType?)value["timedType"]?.ToObject<int?>();
             effectData.ShortcutKeycode = value["shortcutKeycode"]?.ToObject<int?>();
-            effectData.TimedType = permanent ? Effects.EffectTimedType.Permanent : (Effects.EffectTimedType?)value["timedType"]?.ToObject<int?>();
             effectData.WeightMult = value["weightMult"]?.ToObject<int?>();
             effectData.CustomName = value["customName"]?.ToObject<string?>();
 
@@ -88,7 +108,7 @@ namespace ConfigApp
 
         public static CheckBox GenerateCommonCheckBox()
         {
-            return new CheckBox()
+            return new CheckBox
             {
                 Width = 60f,
                 Height = 20f,
@@ -98,7 +118,7 @@ namespace ConfigApp
 
         public static TextBox GenerateCommonNumericOnlyTextBox(int maxLength = 6, double width = 60f, double height = 20f)
         {
-            var textBox = new TextBox()
+            var textBox = new TextBox
             {
                 Width = width,
                 Height = height,
@@ -109,7 +129,6 @@ namespace ConfigApp
                 }
             };
             AttachNumericTextBoxBehavior(textBox);
-
             return textBox;
         }
 
@@ -152,6 +171,23 @@ namespace ConfigApp
                 FileName = url,
                 UseShellExecute = true
             });
+        }
+
+        private static Effects.EffectTimedType? TryParseTimedType(string value)
+        {
+            return Enum.TryParse(value, out Effects.EffectTimedType timedType) && timedType != Effects.EffectTimedType.NotTimed
+                ? timedType
+                : null;
+        }
+
+        private static bool? TryParseBoolFromInt(string value)
+        {
+            return TryParseInt(value) is int intValue ? intValue != 0 : null;
+        }
+
+        private static int? TryParseInt(string value)
+        {
+            return int.TryParse(value, out var parsedValue) ? parsedValue : null;
         }
     }
 }

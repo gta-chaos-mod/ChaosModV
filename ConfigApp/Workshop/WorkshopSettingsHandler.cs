@@ -2,8 +2,6 @@
 using System.Windows.Input;
 using ConfigApp.Infrastructure;
 using Microsoft.UI.Xaml.Controls;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ConfigApp.Workshop
 {
@@ -35,9 +33,7 @@ namespace ConfigApp.Workshop
 
             try
             {
-                m_FileHandler.ReloadFiles();
-                files = m_FileHandler.GetSubmissionFiles();
-                m_SubmissionItem.UpdateSearchTerms();
+                files = LoadSubmissionFiles();
             }
             catch (Exception ex)
             {
@@ -49,6 +45,18 @@ namespace ConfigApp.Workshop
             if (await editWindow.ShowAsync() != ContentDialogResult.Primary)
                 return;
 
+            await SaveSubmissionSettingsAsync(editWindow);
+        }
+
+        private List<WorkshopSubmissionFile> LoadSubmissionFiles()
+        {
+            m_FileHandler.ReloadFiles();
+            m_SubmissionItem.UpdateSearchTerms();
+            return m_FileHandler.GetSubmissionFiles();
+        }
+
+        private async Task SaveSubmissionSettingsAsync(WorkshopEditDialog editWindow)
+        {
             try
             {
                 m_FileHandler.SetSettings(editWindow.FileStates);

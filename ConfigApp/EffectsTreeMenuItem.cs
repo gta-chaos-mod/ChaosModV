@@ -11,7 +11,14 @@ namespace ConfigApp
         public List<TreeMenuItem> Children { get; private set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Visibility CheckBoxVisiblity { get; set; } = Visibility.Visible;
+        public Visibility CheckBoxVisibility { get; set; } = Visibility.Visible;
+
+        [Obsolete("Use CheckBoxVisibility instead.")]
+        public Visibility CheckBoxVisiblity
+        {
+            get => CheckBoxVisibility;
+            set => CheckBoxVisibility = value;
+        }
 
         private bool m_isChecked;
         public bool IsChecked
@@ -20,19 +27,18 @@ namespace ConfigApp
             set
             {
                 m_isChecked = value;
-
                 NotifyFieldsUpdated();
 
-                foreach (TreeMenuItem menuItem in Children)
+                foreach (var menuItem in Children)
                 {
                     menuItem.IsChecked = value;
-                    if (menuItem.OnCheckedClick != null)
-                        menuItem.OnCheckedClick();
+                    menuItem.OnCheckedClick?.Invoke();
                 }
 
                 Parent?.UpdateCheckedAccordingToChildrenStatus();
             }
         }
+
         private bool m_isColored;
         public bool IsColored
         {
@@ -40,28 +46,18 @@ namespace ConfigApp
             set
             {
                 m_isColored = value;
-
                 NotifyFieldsUpdated();
             }
         }
+
         private bool m_ForceConfigHidden = false;
-        public Visibility ConfigButtonVisibility
-        {
-            get => Children.Count == 0 && !m_ForceConfigHidden ? Visibility.Visible : Visibility.Collapsed;
-        }
+        public Visibility ConfigButtonVisibility => Children.Count == 0 && !m_ForceConfigHidden ? Visibility.Visible : Visibility.Collapsed;
         public bool ForceConfigHidden
         {
-            set
-            {
-                m_ForceConfigHidden = value;
-            }
+            set => m_ForceConfigHidden = value;
         }
-        public bool IsConfigEnabled
-        {
-            get => IsChecked;
-        }
+        public bool IsConfigEnabled => IsChecked;
         public Func<Task>? OnConfigureClickAsync { get; set; }
-
         public Action? OnCheckedClick { get; set; }
 
         public TreeMenuItem(string text, TreeMenuItem? parent = null)
@@ -84,32 +80,40 @@ namespace ConfigApp
 
         public void UpdateCheckedAccordingToChildrenStatus()
         {
-            int totalChildren = 0, enabledChildren = 0;
-            void countChildrenRecursive(TreeMenuItem menuItem)
+            var (totalChildren, enabledChildren) = CountLeafChildren();
+
+            Text = CheckBoxVisibility == Visibility.Visible
+                ? $"{BaseText} ({enabledChildren}/{totalChildren})"
+                : $"{BaseText} ({totalChildren})";
+
+            m_isChecked = enabledChildren > 0;
+            NotifyFieldsUpdated();
+            Parent?.UpdateCheckedAccordingToChildrenStatus();
+        }
+
+        private (int Total, int Enabled) CountLeafChildren()
+        {
+            var totalChildren = 0;
+            var enabledChildren = 0;
+
+            void CountRecursive(TreeMenuItem menuItem)
             {
                 if (menuItem.Children.Count == 0)
                 {
                     totalChildren++;
                     if (menuItem.IsChecked)
                         enabledChildren++;
+                    return;
                 }
 
-                foreach (var _menuItem in menuItem.Children)
-                    countChildrenRecursive(_menuItem);
+                foreach (var child in menuItem.Children)
+                    CountRecursive(child);
             }
 
             foreach (var menuItem in Children)
-                countChildrenRecursive(menuItem);
+                CountRecursive(menuItem);
 
-            if (CheckBoxVisiblity == Visibility.Visible)
-                Text = $"{BaseText} ({enabledChildren}/{totalChildren})";
-            else
-                Text = $"{BaseText} ({totalChildren})";
-            m_isChecked = enabledChildren > 0;
-
-            NotifyFieldsUpdated();
-
-            Parent?.UpdateCheckedAccordingToChildrenStatus();
+            return (totalChildren, enabledChildren);
         }
 
         private void NotifyFieldsUpdated()
