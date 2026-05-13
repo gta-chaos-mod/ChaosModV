@@ -1,0 +1,22 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Voting.TwitchTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="6">
+        <StackPanel Spacing="10">
+            <CheckBox x:Name="EnableTwitchVotingCheckBox" Content="Enable Twitch Voting" Click="OnEnableTwitchVotingClick" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Channel Name" Width="140" />
+                <TextBox x:Name="ChannelNameTextBox" Width="180" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Username" Width="140" />
+                <TextBox x:Name="UserNameTextBox" Width="180" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="OAuth Token" Width="140" />
+                <PasswordBox x:Name="TokenPasswordBox" Width="180" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -5,13 +5,13 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp
 {
-    public enum WorkshopEditDialogMode
+    internal enum WorkshopEditDialogMode
     {
         Edit,
         Install
     }
 
-    public enum WorkshopSubmissionFileType
+    internal enum WorkshopSubmissionFileType
     {
         Script,
         Sound,
@@ -19,7 +19,7 @@ namespace ConfigApp
         Undefined
     }
 
-    public class WorkshopSubmissionFile : IComparable<WorkshopSubmissionFile>
+    internal sealed class WorkshopSubmissionFile : IComparable<WorkshopSubmissionFile>
     {
         public string Name { get; }
         public bool IsEnabled { get; }
@@ -54,7 +54,7 @@ namespace ConfigApp
         }
     }
 
-    public class WorkshopSubmissionFileState
+    internal class WorkshopSubmissionFileState
     {
         public TreeMenuItem Item { get; }
         public string FullPath { get; }
@@ -68,9 +68,9 @@ namespace ConfigApp
         }
     }
 
-    public partial class WorkshopEditDialog : ContentDialog
+    internal partial class WorkshopEditDialog : ContentDialog
     {
-        public List<WorkshopSubmissionFileState> FileStates { get; } = new();
+        internal List<WorkshopSubmissionFileState> FileStates { get; } = new();
 
         private readonly WorkshopEditDialogMode m_DialogMode;
         private readonly List<TreeMenuItem> m_RootItems = new();
@@ -172,12 +172,17 @@ namespace ConfigApp
             return item;
         }
 
-        private TreeMenuItem CreateItem(string text, TreeMenuItem? parent = null, bool showCheckbox = true)
+        private TreeMenuItem CreateLeafItem(string text, TreeMenuItem parent, bool showCheckbox, WorkshopSubmissionFile file, string pathName, string? path, List<string>? highlightedFiles)
         {
-            var item = new TreeMenuItem(text, parent);
-            if (m_DialogMode == WorkshopEditDialogMode.Install || !showCheckbox)
-                item.CheckBoxVisibility = Visibility.Collapsed;
-            return item;
+            var menuItem = CreateTreeItem(GetDisplayName(text, file.Type), parent, showCheckbox);
+            menuItem.SetForceConfigHidden(m_DialogMode != WorkshopEditDialogMode.Edit);
+            menuItem.OnConfigureClickAsync = CreateConfigureHandler(file, pathName, path, menuItem);
+
+            if (highlightedFiles?.Contains(pathName) ?? false)
+                menuItem.IsColored = true;
+
+            menuItem.IsChecked = file.IsEnabled;
+            return menuItem;
         }
 
         private TreeMenuItem CreateFolderHierarchy(string[] fragments, TreeMenuItem root, Dictionary<string, TreeMenuItem> folderCache, WorkshopSubmissionFileType fileType)
@@ -200,19 +205,6 @@ namespace ConfigApp
             }
 
             return current;
-        }
-
-        private TreeMenuItem CreateLeafItem(string text, TreeMenuItem parent, bool showCheckbox, WorkshopSubmissionFile file, string pathName, string? path, List<string>? highlightedFiles)
-        {
-            var menuItem = CreateTreeItem(GetDisplayName(text, file.Type), parent, showCheckbox);
-            menuItem.ForceConfigHidden = m_DialogMode != WorkshopEditDialogMode.Edit;
-            menuItem.OnConfigureClickAsync = CreateConfigureHandler(file, pathName, path, menuItem);
-
-            if (highlightedFiles?.Contains(pathName) ?? false)
-                menuItem.IsColored = true;
-
-            menuItem.IsChecked = file.IsEnabled;
-            return menuItem;
         }
 
         private Func<Task> CreateConfigureHandler(WorkshopSubmissionFile file, string pathName, string? path, TreeMenuItem menuItem)
@@ -238,7 +230,7 @@ namespace ConfigApp
                 try
                 {
                     var fullPath = path is not null ? Path.Combine(path.Replace('/', '\\'), pathName) : pathName;
-                    Utils.OpenURL(fullPath);
+                    Utils.OpenUrl(fullPath);
                 }
                 catch (Win32Exception)
                 {

@@ -7,8 +7,10 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    public class WorkshopSubmissionFileHandler
+    internal sealed class WorkshopSubmissionFileHandler
     {
+        private const string CorruptSettingsMessage = "Submission settings file is corrupt, assuming default settings!";
+
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
         public string SubmissionDirectory => $"workshop/{m_SubmissionItem.Id}/";
@@ -28,7 +30,7 @@
             return m_Files;
         }
 
-        public void SetSettings(List<WorkshopSubmissionFileState> states)
+        internal void SetSettings(List<WorkshopSubmissionFileState> states)
         {
             var disabledFiles = new JArray();
             var effectSettings = new JObject();
@@ -88,10 +90,19 @@
                 LoadEffectSettings(json, effectSettings);
                 return (disabledFiles, effectSettings);
             }
-            catch (JsonException)
+            catch (JsonReaderException ex)
             {
-                throw new Exception("Submission settings file is corrupt, assuming default settings!");
+                throw CreateCorruptSettingsException(ex);
             }
+            catch (JsonSerializationException ex)
+            {
+                throw CreateCorruptSettingsException(ex);
+            }
+        }
+
+        private static Exception CreateCorruptSettingsException(Exception innerException)
+        {
+            return new Exception(CorruptSettingsMessage, innerException);
         }
 
         private static void LoadDisabledFiles(JObject json, ISet<string> disabledFiles)
@@ -121,7 +132,13 @@
 
         private static bool IsDefaultEffectData(EffectData effectData)
         {
-            return JsonConvert.SerializeObject(effectData) == JsonConvert.SerializeObject(new EffectData());
+            return effectData.Enabled is null
+                && effectData.TimedType is null
+                && effectData.CustomTime is null
+                && effectData.WeightMult is null
+                && effectData.ExcludedFromVoting is null
+                && effectData.CustomName is null
+                && effectData.ShortcutKeycode is null;
         }
 
         private void DeleteSettingsFile()

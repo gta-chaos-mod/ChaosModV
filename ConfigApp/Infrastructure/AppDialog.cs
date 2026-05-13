@@ -3,31 +3,24 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Infrastructure
 {
-    public static class AppDialog
+    internal static class AppDialog
     {
-        private static XamlRoot? s_XamlRoot;
-
-        public static void Initialize(XamlRoot? xamlRoot)
+        internal static void ApplyToDialog(ContentDialog dialog)
         {
-            s_XamlRoot = xamlRoot;
+            dialog.XamlRoot = GetXamlRoot();
         }
 
-        public static void ApplyToDialog(ContentDialog dialog)
-        {
-            dialog.XamlRoot = ResolveXamlRoot();
-        }
-
-        public static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
+        internal static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
         {
             return ShowDialogAsync(content, title, closeButtonText: closeButtonText);
         }
 
-        public static Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
+        internal static Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
         {
             return ShowDialogAsync(content, title, yesButtonText, noButtonText);
         }
 
-        public static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "OK", string cancelButtonText = "Cancel")
+        internal static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "OK", string cancelButtonText = "Cancel")
         {
             return ShowDialogAsync(content, title, okButtonText, cancelButtonText);
         }
@@ -44,25 +37,19 @@ namespace ConfigApp.Infrastructure
                     MaxWidth = 560
                 },
                 DefaultButton = string.IsNullOrEmpty(primaryButtonText) ? ContentDialogButton.Close : ContentDialogButton.Primary,
-                CloseButtonText = closeButtonText
+                CloseButtonText = closeButtonText,
+                XamlRoot = GetXamlRoot()
             };
 
             if (!string.IsNullOrEmpty(primaryButtonText))
                 dialog.PrimaryButtonText = primaryButtonText;
 
-            ApplyToDialog(dialog);
             return await dialog.ShowAsync() == ContentDialogResult.Primary;
         }
 
-        private static XamlRoot? ResolveXamlRoot()
+        private static XamlRoot? GetXamlRoot()
         {
-            if (s_XamlRoot is not null)
-                return s_XamlRoot;
-
-            if (App.MainWindow?.Content is FrameworkElement rootElement)
-                return rootElement.XamlRoot;
-
-            return null;
+            return (App.MainWindow?.Content as FrameworkElement)?.XamlRoot;
         }
     }
 }

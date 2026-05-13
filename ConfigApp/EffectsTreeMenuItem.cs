@@ -3,24 +3,20 @@ using Microsoft.UI.Xaml;
 
 namespace ConfigApp
 {
-    public class TreeMenuItem : INotifyPropertyChanged
+    internal class TreeMenuItem : INotifyPropertyChanged
     {
+        private bool m_isChecked;
+        private bool m_isColored;
+        private bool m_forceConfigHidden;
+
         public string Text { get; private set; }
-        public string BaseText { get; private set; }
-        public TreeMenuItem? Parent = null;
-        public List<TreeMenuItem> Children { get; private set; }
+        public string BaseText { get; }
+        public TreeMenuItem? Parent { get; set; }
+        public List<TreeMenuItem> Children { get; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Visibility CheckBoxVisibility { get; set; } = Visibility.Visible;
 
-        [Obsolete("Use CheckBoxVisibility instead.")]
-        public Visibility CheckBoxVisiblity
-        {
-            get => CheckBoxVisibility;
-            set => CheckBoxVisibility = value;
-        }
-
-        private bool m_isChecked;
         public bool IsChecked
         {
             get => m_isChecked;
@@ -39,7 +35,6 @@ namespace ConfigApp
             }
         }
 
-        private bool m_isColored;
         public bool IsColored
         {
             get => m_isColored;
@@ -50,12 +45,7 @@ namespace ConfigApp
             }
         }
 
-        private bool m_ForceConfigHidden = false;
-        public Visibility ConfigButtonVisibility => Children.Count == 0 && !m_ForceConfigHidden ? Visibility.Visible : Visibility.Collapsed;
-        public bool ForceConfigHidden
-        {
-            set => m_ForceConfigHidden = value;
-        }
+        public Visibility ConfigButtonVisibility => (Children.Count == 0 && !m_forceConfigHidden) ? Visibility.Visible : Visibility.Collapsed;
         public bool IsConfigEnabled => IsChecked;
         public Func<Task>? OnConfigureClickAsync { get; set; }
         public Action? OnCheckedClick { get; set; }
@@ -66,16 +56,17 @@ namespace ConfigApp
             BaseText = text;
             Parent = parent;
             Children = new List<TreeMenuItem>();
-            m_isChecked = false;
         }
 
         public void AddChild(TreeMenuItem menuItem)
         {
-            if (menuItem != null)
-            {
-                menuItem.Parent = this;
-                Children.Add(menuItem);
-            }
+            menuItem.Parent = this;
+            Children.Add(menuItem);
+        }
+
+        public void SetForceConfigHidden(bool value)
+        {
+            m_forceConfigHidden = value;
         }
 
         public void UpdateCheckedAccordingToChildrenStatus()
@@ -103,11 +94,12 @@ namespace ConfigApp
                     totalChildren++;
                     if (menuItem.IsChecked)
                         enabledChildren++;
-                    return;
                 }
-
-                foreach (var child in menuItem.Children)
-                    CountRecursive(child);
+                else
+                {
+                    foreach (var child in menuItem.Children)
+                        CountRecursive(child);
+                }
             }
 
             foreach (var menuItem in Children)

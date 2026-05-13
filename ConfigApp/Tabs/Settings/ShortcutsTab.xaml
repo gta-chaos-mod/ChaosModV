@@ -1,0 +1,29 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Settings.ShortcutsTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <StackPanel Spacing="10" Padding="6">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Enable toggle mod shortcut (CTRL + L)" Width="420" TextWrapping="Wrap" />
+                <CheckBox x:Name="EnableToggleModShortcutCheckBox" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Enable clear active effects shortcut (CTRL + -)" Width="420" TextWrapping="Wrap" />
+                <CheckBox x:Name="EnableClearActiveEffectsShortcutCheckBox" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Enable pause timer shortcut (CTRL + .)" Width="420" TextWrapping="Wrap" />
+                <CheckBox x:Name="EnablePauseTimerShortcutCheckBox" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Enable effects menu (allows you to choose effects manually, CTRL + ,)" Width="420" TextWrapping="Wrap" />
+                <CheckBox x:Name="EnableEffectsMenuCheckBox" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Enable black screen softlock prevention shortcut (CTRL + SHIFT + K)" Width="420" TextWrapping="Wrap" />
+                <CheckBox x:Name="EnableAntiSoftlockShortcutCheckBox" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

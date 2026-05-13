@@ -6,7 +6,7 @@ using WinRT;
 
 namespace ConfigApp
 {
-    public class EntryPoint
+    public sealed class EntryPoint
     {
         [STAThread]
         public static void Main()
@@ -17,16 +17,14 @@ namespace ConfigApp
             Mutex mutex = new(false, "ChaosModVConfigMutex");
 
             if (!mutex.WaitOne(100))
-            {
                 return;
-            }
 
             try
             {
-                Application.Start((applicationInitializationCallbackParams) =>
+                Application.Start(_ =>
                 {
                     SynchronizationContext.SetSynchronizationContext(new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread()));
-                    var app = new App();
+                    App app = new App();
                 });
             }
             finally

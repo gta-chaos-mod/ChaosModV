@@ -1,9 +1,9 @@
 ﻿namespace ConfigApp
 {
-    public static class Info
+    internal static class Info
     {
-        public static string VERSION = Properties.Resources.MOD_VERSION;
+        public static readonly string VERSION = Properties.Resources.MOD_VERSION;
 
-        public static string WORKSHOP_DEFAULT_URL = Properties.Resources.WORKSHOP_DEFAULT_URL;
+        public static readonly string WORKSHOP_DEFAULT_URL = Properties.Resources.WORKSHOP_DEFAULT_URL;
     }
 }

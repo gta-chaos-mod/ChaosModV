@@ -1,0 +1,24 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Voting.DiscordTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="6">
+        <StackPanel Spacing="10">
+            <TextBlock Text="NOTE: This is still an experimental feature!" />
+            <CheckBox x:Name="EnableDiscordVotingCheckBox" Content="Enable Discord Voting" Click="OnEnableDiscordVotingClick" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Bot Token" Width="180" />
+                <PasswordBox x:Name="TokenPasswordBox" Width="180" />
+            </StackPanel>
+            <TextBlock Text="The options below are only required if you want bot messages (e.g. if you have the Chat Messages voting overlay mode option set)" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Server ID" Width="180" />
+                <TextBox x:Name="GuildIdTextBox" Width="180" MaxLength="20" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Channel ID" Width="180" />
+                <TextBox x:Name="ChannelIdTextBox" Width="180" MaxLength="20" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

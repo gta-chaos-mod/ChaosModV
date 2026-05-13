@@ -1,0 +1,21 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Settings.ColorsTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <StackPanel Orientation="Horizontal" Spacing="20" Padding="6">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Timer bar color" />
+                <ColorPicker x:Name="TimerBarColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <TextBlock Text="Effect text color" />
+                <ColorPicker x:Name="EffectTextColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <TextBlock Text="Effect timer bar color" />
+                <ColorPicker x:Name="EffectTimerBarColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

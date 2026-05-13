@@ -1,0 +1,51 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Voting.GeneralTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <StackPanel Spacing="12" Padding="6">
+            <TextBlock Text="This feature allows viewers to vote for an effect from a collection of random ones each time the timer runs out by making use of respective platform's chat feature. There are specific options you can / must configure below. Consult the chaosmod/README/voting/voting.txt file for more information." TextWrapping="Wrap" />
+
+            <CheckBox x:Name="EnableVotingCheckBox" Content="Enable Voting" Click="OnEnableVotingClick" />
+
+            <StackPanel x:Name="MainVotingPanel" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Voting Overlay Mode" Width="340" TextWrapping="Wrap" />
+                    <ComboBox x:Name="OverlayModeComboBox" Width="220">
+                        <x:String>Chat Messages</x:String>
+                        <x:String>In-Game Overlay</x:String>
+                        <x:String>OBS Overlay</x:String>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Enable Random Effect voteable option" Width="340" TextWrapping="Wrap" />
+                    <CheckBox x:Name="EnableRandomEffectCheckBox" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Only enable chat voting X seconds before new effect triggers" Width="340" TextWrapping="Wrap" />
+                    <TextBox x:Name="SecsBeforeVotingTextBox" Width="100" MaxLength="6" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Limit voting to usernames (separated by , )" Width="340" TextWrapping="Wrap" />
+                    <TextBox x:Name="PermittedUserNamesTextBox" Width="220" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Use character as prefix for voteable options" Width="340" TextWrapping="Wrap" />
+                    <TextBox x:Name="VoteablePrefixTextBox" Width="60" MaxLength="1" />
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="---------- Proportional Voting Mode ----------" HorizontalAlignment="Center" />
+            <StackPanel x:Name="ProportionalVotingPanel" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Enable proportional voting mode" Width="340" TextWrapping="Wrap" />
+                    <CheckBox x:Name="EnableProportionalVotingCheckBox" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Include initial chance in evaluation" Width="340" TextWrapping="Wrap" />
+                    <CheckBox x:Name="EnableProportionalVotingRetainInitialChanceCheckBox" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -3,13 +3,9 @@ using ConfigApp.Infrastructure;
 
 namespace ConfigApp.Workshop
 {
-    public class WorkshopInfoHandler : ICommand
+    internal sealed class WorkshopInfoHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler? CanExecuteChanged;
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -18,25 +14,17 @@ namespace ConfigApp.Workshop
             m_SubmissionItem = submissionItem;
         }
 
-        public bool CanExecute(object? parameter)
-        {
-            return true;
-        }
+        public bool CanExecute(object? parameter) => true;
 
         public async void Execute(object? parameter)
         {
-            await AppDialog.ShowMessageAsync(BuildInfoMessage(), "Submission Info");
-        }
-
-        private string BuildInfoMessage()
-        {
-            return $@"Name: {m_SubmissionItem.Name}
+            await AppDialog.ShowMessageAsync($@"Name: {m_SubmissionItem.Name}
 Author: {m_SubmissionItem.Author}
 Version: {m_SubmissionItem.Version}
 Id: {m_SubmissionItem.Id}
 SHA256: {m_SubmissionItem.Sha256}
 
-Description: {m_SubmissionItem.Description}";
+Description: {m_SubmissionItem.Description}", "Submission Info");
         }
     }
 }

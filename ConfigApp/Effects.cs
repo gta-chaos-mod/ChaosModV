@@ -4,16 +4,11 @@
     {
         public struct EffectInfo
         {
-            public string? Name { get; set; } = null;
-            public string? Description { get; set; } = null;
-            public EffectCategory EffectCategory { get; set; } = EffectCategory.Unknown;
-            public bool IsTimed { get; set; } = false;
-            public bool IsShort { get; set; } = false;
-
-            public EffectInfo()
-            {
-
-            }
+            public string? Name { get; set; }
+            public string? Description { get; set; }
+            public EffectCategory EffectCategory { get; set; }
+            public bool IsTimed { get; set; }
+            public bool IsShort { get; set; }
 
             public EffectInfo(string name, string description, EffectCategory effectCategory = EffectCategory.Unknown, bool isTimed = false, bool isShort = false)
             {

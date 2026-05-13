@@ -3,78 +3,165 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     DefaultButton="Primary"
+    Title="Effect Configuration"
     PrimaryButtonText="Save"
     CloseButtonText="Cancel"
-    PrimaryButtonClick="OnPrimaryButtonClick">
-    <ScrollViewer>
-        <Grid ColumnSpacing="10" RowSpacing="10" MinWidth="680">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="370" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="30" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+    PrimaryButtonClick="OnPrimaryButtonClick"
+    CornerRadius="8">
 
-            <TextBlock 
-                Text="Rename Effect" Grid.Row="0" Grid.Column="0"
-                HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <TextBox
-                x:Name="effectconf_effect_custom_name" Height="20" Width="120" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" MaxLength="30" />
-            <TextBlock
-                Text="Override Timed Effect Type" Grid.Row="1" Grid.Column="0"
-                HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <CheckBox
-                x:Name="effectconf_timer_type_enable" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left"
-                VerticalAlignment="Center" Click="OnClicked" />
-            <ComboBox
-                x:Name="effectconf_timer_type" Height="25" Width="120" Margin="40,0,0,0" Grid.Row="1" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" />
-            <TextBlock
-                Text="Override Timed Effect Timer Length (Seconds)" Grid.Row="2" Grid.Column="0"
-                HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <CheckBox
-                x:Name="effectconf_timer_time_enable" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left"
-                VerticalAlignment="Center" Click="OnClicked" />
-            <TextBox
-                x:Name="effectconf_timer_time" Height="20" Width="60" Margin="40,0,0,0" Grid.Row="2" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" MaxLength="6" />
-            <TextBlock
-                x:Name="effectconf_effect_weight_mult_title"
-                Text="Set Effect Weight Multiplier (Affects chances of this effect occuring)&#x0a;lowest: 1, highest: 10, default: 5"
-                Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" TextWrapping="Wrap" />
-            <ComboBox
-                x:Name="effectconf_effect_weight_mult" Height="25" Width="100" Grid.Row="3" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <TextBlock
-                x:Name="effectconf_exclude_voting_enable_title" Text="Exclude Effect from Voting" Grid.Row="4" Grid.Column="0"
-                HorizontalAlignment="Right" VerticalAlignment="Center" />
-            <ComboBox
-                x:Name="effectconf_exclude_voting_state" Height="25" Width="100" Grid.Row="4" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <TextBlock
-                x:Name="effectconf_effect_shortcut_key_title" Text="Shortcut (ESC to reset)"
-                Grid.Row="5" Grid.Column="0" Margin="0,5,0,10" HorizontalAlignment="Right" Width="360" TextAlignment="Right" />
-            <CheckBox
-                x:Name="effectconf_effect_shortcut_enable" Grid.Row="5" Grid.Column="2"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Click="OnClicked" />
-            <TextBox
-                x:Name="effectconf_effect_shortcut_input" Grid.Row="5" Grid.Column="2" Margin="40,10,0,10" Height="20"
-                IsReadOnly="True" KeyDown="EffectShortcutTextFieldKeyDown" TextAlignment="Center"
-                HorizontalAlignment="Left" Text="None" MinWidth="120" IsEnabled="False" />
-            <TextBlock
-                x:Name="effectconf_mp3_label" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" FontSize="10"
-                HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Grid>
-    </ScrollViewer>
+    <StackPanel Spacing="12">
+        <TextBlock
+            Text="Customize this effect’s behavior, duration, voting availability, and shortcut."
+            TextWrapping="Wrap"
+            Opacity="0.8" />
+
+        <!-- Basic settings -->
+        <StackPanel Spacing="6">
+            <TextBlock Text="Basic" FontSize="16" FontWeight="SemiBold" />
+
+            <Grid RowSpacing="6" ColumnSpacing="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Rename Effect -->
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Rename Effect" />
+                <TextBox
+                    x:Name="effectconf_effect_custom_name"
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    PlaceholderText="Optional Custom Name"
+                    MaxLength="64" />
+
+                <!-- Timed Effect Type -->
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Timed Effect Type" />
+                <CheckBox
+                    x:Name="effectconf_timer_type_enable"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Content="Override"
+                    Click="OnClicked" />
+                <ComboBox
+                    x:Name="effectconf_timer_type"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    IsEnabled="False" />
+
+                <!-- Timer Length -->
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Timer Length" />
+                <CheckBox
+                    x:Name="effectconf_timer_time_enable"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Content="Override"
+                    Click="OnClicked" />
+                <TextBox
+                    x:Name="effectconf_timer_time"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    PlaceholderText="Time in Seconds"
+                    IsEnabled="False" />
+
+                <!-- Weight -->
+                <TextBlock
+                    x:Name="effectconf_effect_weight_mult_title"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Effect Weight Multiplier" />
+                <ComboBox
+                    x:Name="effectconf_effect_weight_mult"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    HorizontalAlignment="Left" />
+
+                <!-- Voting -->
+                <TextBlock
+                    x:Name="effectconf_exclude_voting_enable_title"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Exclude from Voting" />
+                <ComboBox
+                    x:Name="effectconf_exclude_voting_state"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    HorizontalAlignment="Left" />
+
+                <!-- Shortcut -->
+                <TextBlock
+                    x:Name="effectconf_effect_shortcut_key_title"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Shortcut" />
+                <CheckBox
+                    x:Name="effectconf_effect_shortcut_enable"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Content="Enable"
+                    Click="OnClicked" />
+                <TextBox
+                    x:Name="effectconf_effect_shortcut_input"
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    IsReadOnly="True"
+                    IsEnabled="False"
+                    Text="None"
+                    PlaceholderText="Press shortcut keys"
+                    KeyDown="EffectShortcutTextFieldKeyDown" />
+
+                <!-- Hotkey Hint -->
+                <TextBlock
+                    Text="Press a key combination. Use Backspace or Escape to clear."
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    FontSize="12"
+                    Opacity="0.7"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </StackPanel>
+
+        <!-- Audio section -->
+        <StackPanel x:Name="effectconf_audio_section" Spacing="6">
+            <TextBlock Text="Audio" FontSize="16" FontWeight="SemiBold" />
+
+            <Border
+                Padding="12"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8">
+                <TextBlock
+                    x:Name="effectconf_mp3_label"
+                    TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+    </StackPanel>
 </ContentDialog>

@@ -2,7 +2,6 @@
 using System.IO.Compression;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text;
 using System.Windows.Input;
 using ConfigApp.Infrastructure;
 using Microsoft.UI.Xaml.Controls;
@@ -11,16 +10,12 @@ using ZstdSharp;
 
 namespace ConfigApp.Workshop
 {
-    public class WorkshopInstallHandler : ICommand
+    internal sealed class WorkshopInstallHandler : ICommand
     {
         private const string WorkshopDirectory = "workshop";
         private const string WorkshopCacheDirectory = "workshopcache";
 
-        public event EventHandler? CanExecuteChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler? CanExecuteChanged;
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -100,11 +95,9 @@ namespace ConfigApp.Workshop
             if (!TryDeleteDirectory(targetDirName, originalInstallState))
                 return;
 
-            try
-            {
-                File.Delete($"{targetDirName}.json");
-            }
-            catch (FileNotFoundException) { }
+            var settingsPath = $"{targetDirName}.json";
+            if (File.Exists(settingsPath))
+                File.Delete(settingsPath);
 
             m_SubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.NotInstalled;
             Console.Beep();
@@ -260,11 +253,8 @@ namespace ConfigApp.Workshop
 
         private static string GetFileSha256(byte[] buffer)
         {
-            var builder = new StringBuilder();
             using var hash = SHA256.Create();
-            foreach (var b in hash.ComputeHash(buffer))
-                builder.Append(b.ToString("x2"));
-            return builder.ToString();
+            return Convert.ToHexString(hash.ComputeHash(buffer)).ToLowerInvariant();
         }
     }
 }

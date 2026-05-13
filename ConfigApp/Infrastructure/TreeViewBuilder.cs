@@ -6,8 +6,12 @@ using Microsoft.UI.Xaml.Media;
 
 namespace ConfigApp.Infrastructure
 {
-    public static class TreeViewBuilder
+    internal static class TreeViewBuilder
     {
+        private const int ConfigButtonWidth = 32;
+        private const int PanelMinHeight = 24;
+        private const int PanelSpacing = 8;
+        
         private static DataTemplate? s_NodeTemplate;
 
         public static void Populate(TreeView treeView, IEnumerable<TreeMenuItem> rootItems, Action refresh)
@@ -42,14 +46,14 @@ namespace ConfigApp.Infrastructure
             return node;
         }
 
-        private static FrameworkElement BuildNodeContent(TreeMenuItem item, Action refresh)
+        private static StackPanel BuildNodeContent(TreeMenuItem item, Action refresh)
         {
             var panel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                Spacing = 8,
-                MinHeight = 24,
-                Background = new SolidColorBrush(item.IsColored ? ColorHelper.FromArgb(0xFF, 0xF6, 0xF6, 0x53) : Colors.Transparent)
+                Spacing = PanelSpacing,
+                MinHeight = PanelMinHeight,
+                Background = GetBackgroundBrush(item.IsColored)
             };
 
             if (item.CheckBoxVisibility == Visibility.Visible)
@@ -68,6 +72,13 @@ namespace ConfigApp.Infrastructure
             return panel;
         }
 
+        private static SolidColorBrush GetBackgroundBrush(bool isColored)
+        {
+            return isColored
+                ? new SolidColorBrush(ColorHelper.FromArgb(0xFF, 0xF6, 0xF6, 0x53))
+                : new SolidColorBrush(Colors.Transparent);
+        }
+
         private static CheckBox CreateCheckBox(TreeMenuItem item, Action refresh)
         {
             var checkBox = new CheckBox
@@ -76,12 +87,12 @@ namespace ConfigApp.Infrastructure
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            checkBox.Checked += (_, _) => UpdateCheckState(item, true, refresh);
-            checkBox.Unchecked += (_, _) => UpdateCheckState(item, false, refresh);
+            checkBox.Checked += (_, _) => HandleCheckStateChanged(item, true, refresh);
+            checkBox.Unchecked += (_, _) => HandleCheckStateChanged(item, false, refresh);
             return checkBox;
         }
 
-        private static void UpdateCheckState(TreeMenuItem item, bool isChecked, Action refresh)
+        private static void HandleCheckStateChanged(TreeMenuItem item, bool isChecked, Action refresh)
         {
             item.IsChecked = isChecked;
             item.OnCheckedClick?.Invoke();
@@ -93,7 +104,7 @@ namespace ConfigApp.Infrastructure
             var button = new Button
             {
                 Content = "...",
-                Width = 32,
+                Width = ConfigButtonWidth,
                 IsEnabled = item.IsConfigEnabled,
                 VerticalAlignment = VerticalAlignment.Center
             };

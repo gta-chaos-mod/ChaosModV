@@ -3,7 +3,7 @@ using Shared;
 
 namespace ConfigApp
 {
-    public static class OptionsManager
+    internal static class OptionsManager
     {
         public static OptionsFile ConfigFile { get; } = new("configs/config.json", "configs/config.ini", "config.ini");
         public static OptionsFile VotingFile { get; } = new("configs/voting.json", "configs/voting.ini", "configs/twitch.ini", "twitch.ini");
@@ -12,8 +12,10 @@ namespace ConfigApp
 
         public static void ReadFiles()
         {
-            foreach (var file in GetAllFiles())
-                file.ReadFile();
+            ConfigFile.ReadFile();
+            VotingFile.ReadFile();
+            EffectsFile.ReadFile();
+            WorkshopFile.ReadFile();
         }
 
         public static void WriteFiles()
@@ -31,22 +33,7 @@ namespace ConfigApp
 
         public static void DeleteCompatFiles()
         {
-            DeleteFiles(ConfigFile.CompatFilePaths);
-            DeleteFiles(VotingFile.CompatFilePaths);
-            DeleteFiles(EffectsFile.CompatFilePaths);
-        }
-
-        private static IEnumerable<OptionsFile> GetAllFiles()
-        {
-            yield return ConfigFile;
-            yield return VotingFile;
-            yield return EffectsFile;
-            yield return WorkshopFile;
-        }
-
-        private static void DeleteFiles(IEnumerable<string> files)
-        {
-            foreach (var file in files)
+            foreach (var file in ConfigFile.CompatFilePaths.Concat(VotingFile.CompatFilePaths).Concat(EffectsFile.CompatFilePaths))
                 File.Delete(file);
         }
     }

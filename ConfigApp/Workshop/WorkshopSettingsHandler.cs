@@ -5,13 +5,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Workshop
 {
-    public class WorkshopSettingsHandler : ICommand
+    internal sealed class WorkshopSettingsHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler? CanExecuteChanged;
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
@@ -22,10 +18,7 @@ namespace ConfigApp.Workshop
             m_FileHandler = fileHandler;
         }
 
-        public bool CanExecute(object? parameter)
-        {
-            return true;
-        }
+        public bool CanExecute(object? parameter) => true;
 
         public async void Execute(object? parameter)
         {
@@ -33,7 +26,9 @@ namespace ConfigApp.Workshop
 
             try
             {
-                files = LoadSubmissionFiles();
+                m_FileHandler.ReloadFiles();
+                m_SubmissionItem.UpdateSearchTerms();
+                files = m_FileHandler.GetSubmissionFiles();
             }
             catch (Exception ex)
             {
@@ -45,18 +40,6 @@ namespace ConfigApp.Workshop
             if (await editWindow.ShowAsync() != ContentDialogResult.Primary)
                 return;
 
-            await SaveSubmissionSettingsAsync(editWindow);
-        }
-
-        private List<WorkshopSubmissionFile> LoadSubmissionFiles()
-        {
-            m_FileHandler.ReloadFiles();
-            m_SubmissionItem.UpdateSearchTerms();
-            return m_FileHandler.GetSubmissionFiles();
-        }
-
-        private async Task SaveSubmissionSettingsAsync(WorkshopEditDialog editWindow)
-        {
             try
             {
                 m_FileHandler.SetSettings(editWindow.FileStates);

@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using ConfigApp.Infrastructure;
 using ConfigApp.Workshop;
-using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,9 +14,9 @@ using ZstdSharp;
 
 namespace ConfigApp.Tabs
 {
-    public class WorkshopTab : Tab
+    public sealed partial class WorkshopTab : UserControl, ITabLifecycle
     {
-        public const string SUBMISSIONS_CACHED_FILENAME = "workshop/submissions_cached.json.zst";
+        private const string SUBMISSIONS_CACHED_FILENAME = "workshop/submissions_cached.json.zst";
 
         private enum SortingMode
         {
@@ -26,24 +25,21 @@ namespace ConfigApp.Tabs
             Author
         }
 
-        private static readonly string[] s_SortingModeLabels =
-        [
-            "Name",
-            "Last Updated",
-            "Author"
-        ];
-
         private SortingMode m_SortingMode = SortingMode.Name;
         private readonly List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = [];
         private bool m_HasLoaded = false;
 
-        private CheckBox? m_SortInstalledFirstToggle = null;
-        private TextBox? m_SearchBox = null;
-        private StackPanel? m_ItemsPanel = null;
+        public WorkshopTab()
+        {
+            InitializeComponent();
+        }
 
         private void ApplySortAndFilter()
         {
-            var normalizedSearchText = NormalizeSearchText(m_SearchBox?.Text);
+            if (SearchBox is null || SortInstalledFirstToggle is null || ItemsPanel is null)
+                return;
+
+            var normalizedSearchText = SearchBox.Text?.Trim().ToLowerInvariant() ?? string.Empty;
 
             UpdateHighlightedFiles(normalizedSearchText);
 
@@ -59,25 +55,15 @@ namespace ConfigApp.Tabs
                 _ => throw new NotImplementedException()
             };
 
-            if (m_SortInstalledFirstToggle is null || m_SortInstalledFirstToggle.IsChecked.GetValueOrDefault(true))
+            if (SortInstalledFirstToggle.IsChecked.GetValueOrDefault(true))
                 items = items.OrderBy(item => item.InstallState);
 
             RenderSubmissionItems(items);
         }
 
-        private static string NormalizeSearchText(string? searchText)
-        {
-            return searchText?.Trim().ToLowerInvariant() ?? string.Empty;
-        }
-
         private static bool IsSearchMatch(WorkshopSubmissionItem item, string normalizedSearchText)
         {
             return item.SearchTerms.Any(term => term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        private static bool IsFileMatch(SearchTerm term, string normalizedSearchText)
-        {
-            return term.IsInFile && term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void UpdateHighlightedFiles(string normalizedSearchText)
@@ -89,27 +75,24 @@ namespace ConfigApp.Tabs
                 if (string.IsNullOrWhiteSpace(normalizedSearchText))
                     continue;
 
-                foreach (var term in item.SearchTerms)
+                foreach (var fileName in item.SearchTerms
+                    .Where(term => term.IsInFile && term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase))
+                    .Select(term => term.FileName)
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!IsFileMatch(term, normalizedSearchText) || item.HighlightedFiles.Contains(term.FileName))
-                        continue;
-
-                    item.HighlightedFiles.Add(term.FileName);
+                    item.HighlightedFiles.Add(fileName);
                 }
             }
         }
 
         private void RenderSubmissionItems(IEnumerable<WorkshopSubmissionItem> items)
         {
-            if (m_ItemsPanel is null)
-                return;
-
-            m_ItemsPanel.Children.Clear();
+            ItemsPanel.Children.Clear();
 
             var itemsList = items.ToList();
             if (itemsList.Count == 0)
             {
-                m_ItemsPanel.Children.Add(new TextBlock
+                ItemsPanel.Children.Add(new TextBlock
                 {
                     Text = "No workshop submissions match the current filter.",
                     Margin = new Thickness(0, 12, 0, 0)
@@ -118,7 +101,7 @@ namespace ConfigApp.Tabs
             }
 
             foreach (var item in itemsList)
-                m_ItemsPanel.Children.Add(CreateSubmissionCard(item));
+                ItemsPanel.Children.Add(CreateSubmissionCard(item));
         }
 
         private static Border CreateSubmissionCard(WorkshopSubmissionItem item)
@@ -194,12 +177,13 @@ namespace ConfigApp.Tabs
             if (item.SettingsButtonVisibility == Visibility.Visible)
                 buttonRow.Children.Add(CreateActionButton("Settings", () => item.SettingsButtonCommand.Execute(null)));
 
-            buttonRow.Children.Add(new Button
+            var installButton = new Button
             {
                 Content = item.InstallButtonText,
                 IsEnabled = item.InstallButtonEnabled
-            });
-            ((Button)buttonRow.Children[^1]).Click += (_, _) => item.InstallButtonCommand.Execute(null);
+            };
+            installButton.Click += (_, _) => item.InstallButtonCommand.Execute(null);
+            buttonRow.Children.Add(installButton);
 
             return buttonRow;
         }
@@ -230,16 +214,11 @@ namespace ConfigApp.Tabs
 
             m_WorkshopSubmissionItems.Clear();
 
-            var dict = json["submissions"]?.ToObject<Dictionary<string, dynamic>?>();
-            if (dict is null)
+            if (json["submissions"] is not JObject submissions)
                 return;
 
-            foreach (var submissionObject in dict)
-            {
-                var submissionData = submissionObject.Value;
-                submissionData.id = submissionObject.Key;
-                SubmitWorkshopSubmissionData(submissionData, false);
-            }
+            foreach (var submission in submissions)
+                SubmitWorkshopSubmissionData(submission.Key, submission.Value as JObject, false);
         }
 
         private async Task ParseLocalSubmissionEntriesAsync()
@@ -260,32 +239,26 @@ namespace ConfigApp.Tabs
                 try
                 {
                     var json = JObject.Parse(File.ReadAllText(metadataPath));
-                    var submissionData = json.ToObject<dynamic>();
-                    if (submissionData is null)
-                        continue;
-
-                    submissionData.id = id;
-                    SubmitWorkshopSubmissionData(submissionData, true);
+                    SubmitWorkshopSubmissionData(id, json, true);
                 }
-                catch (Exception exception) when (exception is JsonException || exception is ZstdException)
+                catch (JsonException)
                 {
                     await AppDialog.ShowMessageAsync($"Local submission \"{id}\" has a corrupt metadata.json.");
                 }
             }
         }
 
-        private void SubmitWorkshopSubmissionData(dynamic submissionData, bool isLocal)
+        private void SubmitWorkshopSubmissionData(string id, JObject? submissionData, bool isLocal)
         {
-            var id = GetDataItem(submissionData.id, string.Empty);
-            if (string.IsNullOrEmpty(id))
+            if (submissionData is null || string.IsNullOrWhiteSpace(id))
                 return;
 
-            var version = GetDataItem(submissionData.version, string.Empty);
+            var version = GetDataItem(submissionData, "version", string.Empty);
             if (string.IsNullOrEmpty(version))
                 return;
 
-            var lastUpdated = GetDataItem(submissionData.lastupdated, 0);
-            var sha256 = GetDataItem(submissionData.sha256, string.Empty);
+            var lastUpdated = GetDataItem(submissionData, "lastupdated", 0);
+            var sha256 = GetDataItem(submissionData, "sha256", string.Empty);
 
             var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault(submissionItem => submissionItem.Id == id);
             if (duplicateSubmissionItem is not null)
@@ -302,9 +275,9 @@ namespace ConfigApp.Tabs
 
             var submissionItem = new WorkshopSubmissionItem(id)
             {
-                Name = GetDataItem(submissionData.name, "No Name"),
-                Author = GetDataItem(submissionData.author, "No Author"),
-                Description = GetDataItem(submissionData.description, "No Description"),
+                Name = GetDataItem(submissionData, "name", "No Name"),
+                Author = GetDataItem(submissionData, "author", "No Author"),
+                Description = GetDataItem(submissionData, "description", "No Description"),
                 Version = $"v{version}",
                 LastUpdated = lastUpdated,
                 Sha256 = sha256
@@ -322,13 +295,18 @@ namespace ConfigApp.Tabs
             m_WorkshopSubmissionItems.Add(submissionItem);
         }
 
-        private static T GetDataItem<T>(dynamic item, T defaultValue)
+        private static T GetDataItem<T>(JObject submissionData, string key, T defaultValue)
         {
+            var token = submissionData[key];
+            if (token is null || token.Type == JTokenType.Null)
+                return defaultValue;
+
             try
             {
-                return item;
+                var value = token.ToObject<T>();
+                return value is null ? defaultValue : value;
             }
-            catch (RuntimeBinderException)
+            catch (JsonException)
             {
                 return defaultValue;
             }
@@ -404,8 +382,7 @@ namespace ConfigApp.Tabs
 
         private async void OnRefreshClick(object sender, RoutedEventArgs eventArgs)
         {
-            var button = (Button)sender;
-            button.IsEnabled = false;
+            RefreshButton.IsEnabled = false;
 
             try
             {
@@ -416,7 +393,7 @@ namespace ConfigApp.Tabs
             }
             finally
             {
-                button.IsEnabled = true;
+                RefreshButton.IsEnabled = true;
             }
         }
 
@@ -427,121 +404,30 @@ namespace ConfigApp.Tabs
 
         private void OnSortingModeBoxSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
         {
-            var box = (ComboBox)sender;
-            m_SortingMode = (SortingMode)box.SelectedIndex;
+            m_SortingMode = (SortingMode)SortingModeBox.SelectedIndex;
             ApplySortAndFilter();
         }
 
-        protected override void InitContent()
+        private void OnSortInstalledFirstClick(object sender, RoutedEventArgs e)
         {
-            PushNewColumn(new GridLength(1f, GridUnitType.Star));
-
-            SetRowHeight(new GridLength(1, GridUnitType.Auto));
-            PushRowElement(BuildHeaderGrid());
-            PopRow();
-
-            SetRowHeight(new GridLength(1f, GridUnitType.Star));
-            PushRowElement(BuildItemsScrollViewer());
+            ApplySortAndFilter();
         }
 
-        private Grid BuildHeaderGrid()
-        {
-            var headerGrid = new Grid();
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-            var controlsRow = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 8,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-            controlsRow.Children.Add(new TextBlock
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                Text = "Sort By:"
-            });
-
-            var sortingModeBox = new ComboBox
-            {
-                Width = 100f,
-                SelectedIndex = 0
-            };
-            foreach (var value in s_SortingModeLabels)
-                sortingModeBox.Items.Add(value);
-            sortingModeBox.SelectionChanged += OnSortingModeBoxSelectionChanged;
-            controlsRow.Children.Add(sortingModeBox);
-
-            m_SortInstalledFirstToggle = new CheckBox
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                IsChecked = true,
-                Content = "Show installed first"
-            };
-            m_SortInstalledFirstToggle.Click += (_, _) => ApplySortAndFilter();
-            controlsRow.Children.Add(m_SortInstalledFirstToggle);
-            headerGrid.Children.Add(controlsRow);
-
-            var rightHeader = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 8,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-            rightHeader.SetValue(Grid.ColumnProperty, 1);
-
-            m_SearchBox = new TextBox
-            {
-                Width = 250f,
-                PlaceholderText = "Search"
-            };
-            m_SearchBox.TextChanged += OnTextChangeSearch;
-            rightHeader.Children.Add(m_SearchBox);
-
-            var settingsButton = new Button
-            {
-                Content = "Settings"
-            };
-            ToolTipService.SetToolTip(settingsButton, "Settings");
-            settingsButton.Click += OnSettingsClick;
-            rightHeader.Children.Add(settingsButton);
-
-            var refreshButton = new Button
-            {
-                Content = "Refresh"
-            };
-            ToolTipService.SetToolTip(refreshButton, "Refresh");
-            refreshButton.Click += OnRefreshClick;
-            rightHeader.Children.Add(refreshButton);
-
-            headerGrid.Children.Add(rightHeader);
-            return headerGrid;
-        }
-
-        private ScrollViewer BuildItemsScrollViewer()
-        {
-            var scrollViewer = new ScrollViewer
-            {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch
-            };
-
-            m_ItemsPanel = new StackPanel
-            {
-                Spacing = 0
-            };
-            scrollViewer.Content = m_ItemsPanel;
-
-            return scrollViewer;
-        }
-
-        public async override void OnTabSelected()
+        public async void OnTabSelected()
         {
             if (m_HasLoaded)
                 return;
 
             m_HasLoaded = true;
             await LoadInitialWorkshopContentAsync();
+        }
+
+        public void OnLoadValues()
+        {
+        }
+
+        public void OnSaveValues()
+        {
         }
 
         private async Task LoadInitialWorkshopContentAsync()

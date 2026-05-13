@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Settings.SettingsTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:settingsTabs="using:ConfigApp.Tabs.Settings">
+    <TabView x:Name="settings_tabs" IsAddTabButtonVisible="False" SelectionChanged="OnSelectionChanged">
+        <TabViewItem Header="General">
+            <settingsTabs:GeneralTab x:Name="general_tab" />
+        </TabViewItem>
+        <TabViewItem Header="Modes">
+            <settingsTabs:ModesTab x:Name="modes_tab" />
+        </TabViewItem>
+        <TabViewItem Header="Shortcuts">
+            <settingsTabs:ShortcutsTab x:Name="shortcuts_tab" />
+        </TabViewItem>
+        <TabViewItem Header="Colors">
+            <settingsTabs:ColorsTab x:Name="colors_tab" />
+        </TabViewItem>
+        <TabViewItem Header="Sounds">
+            <settingsTabs:SoundsTab x:Name="sounds_tab" />
+        </TabViewItem>
+    </TabView>
+</UserControl>

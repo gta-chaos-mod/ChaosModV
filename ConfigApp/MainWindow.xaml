@@ -2,6 +2,9 @@
     x:Class="ConfigApp.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tabs="using:ConfigApp.Tabs"
+    xmlns:settingsTabs="using:ConfigApp.Tabs.Settings"
+    xmlns:votingTabs="using:ConfigApp.Tabs.Voting"
     Title="ChaosModV Configuration">
     <Grid x:Name="MainRoot" Padding="16" RowSpacing="12">
         <Grid.RowDefinitions>
@@ -124,6 +127,22 @@
                         </Border>
                     </Grid>
                 </Grid>
+            </TabViewItem>
+
+            <TabViewItem Header="Settings">
+                <settingsTabs:SettingsTab x:Name="settings_tab" />
+            </TabViewItem>
+
+            <TabViewItem Header="Voting">
+                <votingTabs:VotingTab x:Name="voting_tab" />
+            </TabViewItem>
+
+            <TabViewItem Header="Workshop">
+                <tabs:WorkshopTab x:Name="workshop_tab" />
+            </TabViewItem>
+
+            <TabViewItem Header="More">
+                <tabs:MoreTab x:Name="more_tab" />
             </TabViewItem>
         </TabView>
 

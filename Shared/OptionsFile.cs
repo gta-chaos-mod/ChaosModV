@@ -7,7 +7,7 @@ namespace Shared
     public class OptionsFile(string filePath, params string[] compatFilePaths)
     {
         public string FoundFilePath { get; private set; } = string.Empty;
-        public string[] CompatFilePaths { get; private set; } = compatFilePaths;
+        public string[] CompatFilePaths { get; } = compatFilePaths;
 
         private readonly string m_FilePath = filePath;
         private bool m_IsJson = false;
@@ -20,8 +20,7 @@ namespace Shared
 
         public IEnumerable<string> GetKeys()
         {
-            foreach (var option in m_Options)
-                yield return option.Key;
+            return m_Options.Keys;
         }
 
         public T? ReadValue<T>(string key, T? defaultValue = default, params string[] compatKeys)
