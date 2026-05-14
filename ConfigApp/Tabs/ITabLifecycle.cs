@@ -2,8 +2,8 @@
 {
     internal interface ITabLifecycle
     {
+        void OnTabSelected();
         void OnLoadValues();
         void OnSaveValues();
-        void OnTabSelected();
     }
 }

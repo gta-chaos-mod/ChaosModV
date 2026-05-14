@@ -14,7 +14,8 @@ namespace ConfigApp.Tabs
 {
     public sealed partial class WorkshopTab : UserControl, ITabLifecycle
     {
-        private const string SUBMISSIONS_CACHED_FILENAME = "workshop/submissions_cached.json.zst";
+        private const string SubmissionsCachedFileName = "workshop/submissions_cached.json.zst";
+        private const string WorkshopDirectory = "workshop";
 
         private enum SortingMode
         {
@@ -25,7 +26,7 @@ namespace ConfigApp.Tabs
 
         private SortingMode m_SortingMode = SortingMode.Name;
         private readonly List<WorkshopSubmissionItem> m_WorkshopSubmissionItems = [];
-        private bool m_HasLoaded = false;
+        private bool m_HasLoaded;
 
         public WorkshopTab()
         {
@@ -37,13 +38,13 @@ namespace ConfigApp.Tabs
             if (SearchBox is null || SortInstalledFirstToggle is null || ItemsPanel is null)
                 return;
 
-            var normalizedSearchText = SearchBox.Text?.Trim().ToLowerInvariant() ?? string.Empty;
+            var searchText = SearchBox.Text?.Trim() ?? string.Empty;
 
-            UpdateHighlightedFiles(normalizedSearchText);
+            UpdateHighlightedFiles(searchText);
 
-            IEnumerable<WorkshopSubmissionItem> items = string.IsNullOrWhiteSpace(normalizedSearchText)
+            IEnumerable<WorkshopSubmissionItem> items = string.IsNullOrWhiteSpace(searchText)
                 ? m_WorkshopSubmissionItems
-                : m_WorkshopSubmissionItems.Where(item => IsSearchMatch(item, normalizedSearchText));
+                : m_WorkshopSubmissionItems.Where(item => IsSearchMatch(item, searchText));
 
             items = m_SortingMode switch
             {
@@ -59,23 +60,23 @@ namespace ConfigApp.Tabs
             RenderSubmissionItems(items);
         }
 
-        private static bool IsSearchMatch(WorkshopSubmissionItem item, string normalizedSearchText)
+        private static bool IsSearchMatch(WorkshopSubmissionItem item, string searchText)
         {
-            return item.SearchTerms.Any(term => term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase));
+            return item.SearchTerms.Any(term => term.Term.Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private void UpdateHighlightedFiles(string normalizedSearchText)
+        private void UpdateHighlightedFiles(string searchText)
         {
             foreach (var item in m_WorkshopSubmissionItems)
             {
                 item.HighlightedFiles.Clear();
 
-                if (string.IsNullOrWhiteSpace(normalizedSearchText))
+                if (string.IsNullOrWhiteSpace(searchText))
                     continue;
 
                 foreach (var fileName in item.SearchTerms
-                    .Where(term => term.IsInFile && term.Term.Contains(normalizedSearchText, StringComparison.InvariantCultureIgnoreCase))
-                    .Select(term => term.FileName)
+                    .Where(term => term.FileName is not null && term.Term.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
+                    .Select(term => term.FileName!)
                     .Distinct(StringComparer.OrdinalIgnoreCase))
                 {
                     item.HighlightedFiles.Add(fileName);
@@ -221,12 +222,12 @@ namespace ConfigApp.Tabs
 
         private async Task ParseLocalSubmissionEntriesAsync()
         {
-            Directory.CreateDirectory("workshop");
+            Directory.CreateDirectory(WorkshopDirectory);
 
-            foreach (var directory in Directory.GetDirectories("workshop/"))
+            foreach (var directory in Directory.GetDirectories(WorkshopDirectory))
             {
                 var id = Path.GetFileName(directory);
-                var metadataPath = $"{directory}/metadata.json";
+                var metadataPath = Path.Combine(directory, "metadata.json");
 
                 if (!File.Exists(metadataPath))
                 {
@@ -261,13 +262,7 @@ namespace ConfigApp.Tabs
             var duplicateSubmissionItem = m_WorkshopSubmissionItems.FirstOrDefault(submissionItem => submissionItem.Id == id);
             if (duplicateSubmissionItem is not null)
             {
-                if (isLocal)
-                {
-                    if (duplicateSubmissionItem.Version != version || duplicateSubmissionItem.LastUpdated != lastUpdated || duplicateSubmissionItem.Sha256 != sha256)
-                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
-                    else
-                        duplicateSubmissionItem.InstallState = WorkshopSubmissionItem.SubmissionInstallState.Installed;
-                }
+                UpdateInstallStateFromLocalSubmission(duplicateSubmissionItem, isLocal, version, lastUpdated, sha256);
                 return;
             }
 
@@ -293,6 +288,20 @@ namespace ConfigApp.Tabs
             m_WorkshopSubmissionItems.Add(submissionItem);
         }
 
+        private static void UpdateInstallStateFromLocalSubmission(WorkshopSubmissionItem submissionItem, bool isLocal, string version, int lastUpdated, string sha256)
+        {
+            if (!isLocal)
+                return;
+
+            var isUpToDate = submissionItem.Version == version
+                && submissionItem.LastUpdated == lastUpdated
+                && submissionItem.Sha256 == sha256;
+
+            submissionItem.InstallState = isUpToDate
+                ? WorkshopSubmissionItem.SubmissionInstallState.Installed
+                : WorkshopSubmissionItem.SubmissionInstallState.UpdateAvailable;
+        }
+
         private static T GetDataItem<T>(JObject submissionData, string key, T defaultValue)
         {
             var token = submissionData[key];
@@ -301,7 +310,10 @@ namespace ConfigApp.Tabs
 
             try
             {
-                var value = token.ToObject<T>();
+                if (token is T typedToken)
+                    return typedToken;
+
+                var value = token.Value<T>();
                 return value is null ? defaultValue : value;
             }
             catch (JsonException)
@@ -312,7 +324,7 @@ namespace ConfigApp.Tabs
 
         private async Task ForceRefreshWorkshopContentFromRemote()
         {
-            var domain = OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL);
+            var domain = GetWorkshopDomain();
 
             using HttpClient httpClient = new();
             try
@@ -336,9 +348,15 @@ namespace ConfigApp.Tabs
             }
         }
 
+        private static string GetWorkshopDomain()
+        {
+            return OptionsManager.WorkshopFile.ReadValue("WorkshopCustomUrl", Info.WORKSHOP_DEFAULT_URL)
+                ?? Info.WORKSHOP_DEFAULT_URL;
+        }
+
         private async Task<bool> TryLoadUnchangedCachedSubmissionsAsync(string domain, HttpClient httpClient)
         {
-            if (!File.Exists(SUBMISSIONS_CACHED_FILENAME))
+            if (!File.Exists(SubmissionsCachedFileName))
                 return false;
 
             var hashResult = await httpClient.GetAsync($"{domain}/workshop/fetch_submissionshash");
@@ -346,7 +364,7 @@ namespace ConfigApp.Tabs
                 return false;
 
             var remoteHash = await hashResult.Content.ReadAsStringAsync();
-            var localContent = File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
+            var localContent = File.ReadAllBytes(SubmissionsCachedFileName);
             var localHash = Convert.ToHexString(SHA256.HashData(localContent));
 
             if (!string.Equals(remoteHash, localHash, StringComparison.OrdinalIgnoreCase))
@@ -367,7 +385,7 @@ namespace ConfigApp.Tabs
 
             var submissionsCompressedResult = await submissionsResult.Content.ReadAsByteArrayAsync();
             await ParseWorkshopSubmissionsFileAsync(submissionsCompressedResult);
-            File.WriteAllBytes(SUBMISSIONS_CACHED_FILENAME, submissionsCompressedResult);
+            File.WriteAllBytes(SubmissionsCachedFileName, submissionsCompressedResult);
         }
 
         private async void OnSettingsClick(object sender, RoutedEventArgs eventArgs)
@@ -384,8 +402,7 @@ namespace ConfigApp.Tabs
 
             try
             {
-                foreach (var item in m_WorkshopSubmissionItems)
-                    item.Refresh();
+                RefreshSubmissionItems();
 
                 await ForceRefreshWorkshopContentFromRemote();
             }
@@ -393,6 +410,12 @@ namespace ConfigApp.Tabs
             {
                 RefreshButton.IsEnabled = true;
             }
+        }
+
+        private void RefreshSubmissionItems()
+        {
+            foreach (var item in m_WorkshopSubmissionItems)
+                item.Refresh();
         }
 
         private void OnTextChangeSearch(object sender, TextChangedEventArgs eventArgs)
@@ -420,13 +443,9 @@ namespace ConfigApp.Tabs
             await LoadInitialWorkshopContentAsync();
         }
 
-        public void OnLoadValues()
-        {
-        }
+        public void OnLoadValues() { }
 
-        public void OnSaveValues()
-        {
-        }
+        public void OnSaveValues() { }
 
         private async Task LoadInitialWorkshopContentAsync()
         {
@@ -442,7 +461,7 @@ namespace ConfigApp.Tabs
             {
                 await ParseWorkshopSubmissionsFileAsync(cachedFileContent);
             }
-            catch (JsonException)
+            catch (Exception exception) when (exception is JsonException || exception is ZstdException)
             {
                 await ForceRefreshWorkshopContentFromRemote();
             }
@@ -450,12 +469,12 @@ namespace ConfigApp.Tabs
 
         private static byte[]? TryReadCachedSubmissions()
         {
-            if (!File.Exists(SUBMISSIONS_CACHED_FILENAME))
+            if (!File.Exists(SubmissionsCachedFileName))
                 return null;
 
             try
             {
-                return File.ReadAllBytes(SUBMISSIONS_CACHED_FILENAME);
+                return File.ReadAllBytes(SubmissionsCachedFileName);
             }
             catch (IOException)
             {

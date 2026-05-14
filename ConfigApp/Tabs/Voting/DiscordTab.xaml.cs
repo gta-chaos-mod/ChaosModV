@@ -19,9 +19,7 @@ namespace ConfigApp.Tabs.Voting
             ChannelIdTextBox.IsEnabled = state;
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {

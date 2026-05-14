@@ -74,15 +74,15 @@ namespace ConfigApp
             if (value is null)
                 return effectData;
 
-            effectData.Enabled = value["enabled"]?.ToObject<bool?>();
-            effectData.CustomTime = value["customTime"]?.ToObject<int?>();
-            effectData.ExcludedFromVoting = value["excludedFromVoting"]?.ToObject<bool?>();
-            effectData.TimedType = (value["permanent"]?.ToObject<bool?>() ?? false)
+            effectData.Enabled = value["enabled"]?.Value<bool?>();
+            effectData.CustomTime = value["customTime"]?.Value<int?>();
+            effectData.ExcludedFromVoting = value["excludedFromVoting"]?.Value<bool?>();
+            effectData.TimedType = (value["permanent"]?.Value<bool?>() ?? false)
                 ? Effects.EffectTimedType.Permanent
-                : (Effects.EffectTimedType?)value["timedType"]?.ToObject<int?>();
-            effectData.ShortcutKeycode = value["shortcutKeycode"]?.ToObject<int?>();
-            effectData.WeightMult = value["weightMult"]?.ToObject<int?>();
-            effectData.CustomName = value["customName"]?.ToObject<string?>();
+                : (Effects.EffectTimedType?)value["timedType"]?.Value<int?>();
+            effectData.ShortcutKeycode = value["shortcutKeycode"]?.Value<int?>();
+            effectData.WeightMult = value["weightMult"]?.Value<int?>();
+            effectData.CustomName = value["customName"]?.Value<string?>();
 
             return effectData;
         }

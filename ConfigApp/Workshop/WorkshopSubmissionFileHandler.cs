@@ -37,7 +37,7 @@ namespace ConfigApp.Workshop
                     disabledFiles.Add(state.FullPath);
 
                 if (state.EffectData is not null && !IsDefaultEffectData(state.EffectData))
-                    effectSettings[state.FullPath] = JToken.FromObject(state.EffectData);
+                    effectSettings[state.FullPath] = CreateEffectDataJson(state.EffectData);
             }
 
             var json = new JObject();
@@ -118,12 +118,16 @@ namespace ConfigApp.Workshop
             if (!json.TryGetValue("effect_settings", out var effectSettingsToken) || effectSettingsToken is null)
                 return;
 
-            var parsedSettings = effectSettingsToken.ToObject<Dictionary<string, EffectData>>();
-            if (parsedSettings is null)
+            if (effectSettingsToken is not JObject settingsObject)
                 return;
 
-            foreach (var setting in parsedSettings)
-                effectSettings[setting.Key] = setting.Value;
+            foreach (var setting in settingsObject)
+            {
+                if (setting.Value is null || setting.Value.Type != JTokenType.Object)
+                    continue;
+
+                effectSettings[setting.Key] = Utils.ValueObjectToEffectData((JObject)setting.Value);
+            }
         }
 
         private static bool IsDefaultEffectData(EffectData effectData)
@@ -135,6 +139,28 @@ namespace ConfigApp.Workshop
                 && effectData.ExcludedFromVoting is null
                 && effectData.CustomName is null
                 && effectData.ShortcutKeycode is null;
+        }
+
+        private static JObject CreateEffectDataJson(EffectData effectData)
+        {
+            var json = new JObject();
+
+            if (effectData.Enabled is not null)
+                json["Enabled"] = new JValue(effectData.Enabled.Value ? 1 : 0);
+            if (effectData.TimedType is not null)
+                json["TimedType"] = new JValue((int)effectData.TimedType.Value);
+            if (effectData.CustomTime is not null)
+                json["CustomTime"] = new JValue(effectData.CustomTime.Value);
+            if (effectData.WeightMult is not null)
+                json["WeightMult"] = new JValue(effectData.WeightMult.Value);
+            if (effectData.ExcludedFromVoting is not null)
+                json["ExcludedFromVoting"] = new JValue(effectData.ExcludedFromVoting.Value ? 1 : 0);
+            if (effectData.CustomName is not null)
+                json["CustomName"] = new JValue(effectData.CustomName);
+            if (effectData.ShortcutKeycode is not null)
+                json["ShortcutKeycode"] = new JValue(effectData.ShortcutKeycode.Value);
+
+            return json;
         }
 
         private void DeleteSettingsFile()

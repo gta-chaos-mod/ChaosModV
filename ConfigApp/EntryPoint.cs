@@ -14,15 +14,17 @@ namespace ConfigApp
             ComWrappersSupport.InitializeComWrappers();
 
             Mutex mutex = new(false, "ChaosModVConfigMutex");
-
-            if (!mutex.WaitOne(100))
-                return;
+            if (!mutex.WaitOne(100)) return;
 
             try
             {
                 Application.Start(_ =>
                 {
-                    SynchronizationContext.SetSynchronizationContext(new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread()));
+                    SynchronizationContext.SetSynchronizationContext(
+                        new DispatcherQueueSynchronizationContext(
+                            DispatcherQueue.GetForCurrentThread()
+                        )
+                    );
                     App app = new App();
                 });
             }

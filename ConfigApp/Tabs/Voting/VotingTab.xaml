@@ -3,15 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:votingTabs="using:ConfigApp.Tabs.Voting">
-    <TabView x:Name="voting_tabs" IsAddTabButtonVisible="False" SelectionChanged="OnSelectionChanged">
-        <TabViewItem Header="General">
-            <votingTabs:GeneralTab x:Name="general_tab" />
-        </TabViewItem>
-        <TabViewItem Header="Twitch">
-            <votingTabs:TwitchTab x:Name="twitch_tab" />
-        </TabViewItem>
-        <TabViewItem Header="Discord">
-            <votingTabs:DiscordTab x:Name="discord_tab" />
-        </TabViewItem>
-    </TabView>
+    <Grid>
+        <votingTabs:GeneralTab x:Name="general_tab" />
+        <votingTabs:TwitchTab x:Name="twitch_tab" Visibility="Collapsed" />
+        <votingTabs:DiscordTab x:Name="discord_tab" Visibility="Collapsed" />
+    </Grid>
 </UserControl>

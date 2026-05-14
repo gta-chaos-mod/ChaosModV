@@ -5,22 +5,22 @@ namespace ConfigApp.Infrastructure
 {
     internal static class AppDialog
     {
-        internal static void ApplyToDialog(ContentDialog dialog)
+        public static void ApplyToDialog(ContentDialog dialog)
         {
             dialog.XamlRoot = GetXamlRoot();
         }
 
-        internal static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "Ok")
+        public static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "Ok")
         {
             return ShowDialogAsync(content, title, closeButtonText: closeButtonText);
         }
 
-        internal static Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
+        public static Task<bool> ShowYesNoAsync(string content, string title = "ChaosModV", string yesButtonText = "Yes", string noButtonText = "No")
         {
             return ShowDialogAsync(content, title, yesButtonText, noButtonText);
         }
 
-        internal static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "Ok", string cancelButtonText = "Cancel")
+        public static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "Ok", string cancelButtonText = "Cancel")
         {
             return ShowDialogAsync(content, title, okButtonText, cancelButtonText);
         }

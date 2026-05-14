@@ -9,9 +9,7 @@ namespace ConfigApp.Tabs.Settings
             InitializeComponent();
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {

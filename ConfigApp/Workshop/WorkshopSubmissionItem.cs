@@ -9,19 +9,19 @@ namespace ConfigApp.Workshop
     internal sealed class SearchTerm
     {
         public string Term { get; }
-        public bool IsInFile { get; }
-        public string FileName { get; }
+        public string? FileName { get; }
 
         public SearchTerm(string term, string? filename = null)
         {
             Term = term;
-            IsInFile = filename is not null;
-            FileName = filename ?? string.Empty;
+            FileName = filename;
         }
     }
 
     internal sealed class WorkshopSubmissionItem : INotifyPropertyChanged
     {
+        private static readonly Regex s_SearchFieldRegex = new(@"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])*)""", RegexOptions.Compiled);
+
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
         private readonly ICommand m_InstallButtonCommand;
         private readonly ICommand m_InfoButtonCommand;
@@ -30,12 +30,12 @@ namespace ConfigApp.Workshop
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string? Id { get; private init; }
-        public string? Name { get; init; } = null;
-        public string? Author { get; init; } = null;
-        public string? Description { get; init; } = null;
-        public string? Version { get; init; } = null;
-        public int? LastUpdated { get; init; } = null;
-        public string? Sha256 { get; init; } = null;
+        public string? Name { get; init; }
+        public string? Author { get; init; }
+        public string? Description { get; init; }
+        public string? Version { get; init; }
+        public int? LastUpdated { get; init; }
+        public string? Sha256 { get; init; }
         public bool IsAlien { get; set; }
         public List<SearchTerm> SearchTerms { get; } = new();
         public List<string> HighlightedFiles { get; } = new();
@@ -88,14 +88,9 @@ namespace ConfigApp.Workshop
         {
             SearchTerms.Clear();
 
-            if (Name is not null)
-                SearchTerms.Add(new SearchTerm(Name));
-
-            if (Description is not null)
-                SearchTerms.Add(new SearchTerm(Description));
-
-            if (Author is not null)
-                SearchTerms.Add(new SearchTerm(Author));
+            AddSearchTermIfNotEmpty(Name);
+            AddSearchTermIfNotEmpty(Description);
+            AddSearchTermIfNotEmpty(Author);
 
             foreach (var file in m_FileHandler.GetSubmissionFiles())
             {
@@ -108,20 +103,24 @@ namespace ConfigApp.Workshop
 
                 try
                 {
-                    foreach (var line in File.ReadAllLines(m_FileHandler.SubmissionDirectory + file.Name))
+                    var fullPath = Path.Combine(m_FileHandler.SubmissionDirectory, file.Name);
+                    foreach (var line in File.ReadAllLines(fullPath))
                     {
-                        var match = Regex.Match(line, @"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])+)""");
+                        var match = s_SearchFieldRegex.Match(line);
                         if (match.Success)
                             SearchTerms.Add(new(match.Groups[1].Value, file.Name));
                     }
-                }
-                catch (FileNotFoundException)
-                {
                 }
                 catch (IOException)
                 {
                 }
             }
+        }
+
+        private void AddSearchTermIfNotEmpty(string? term)
+        {
+            if (!string.IsNullOrWhiteSpace(term))
+                SearchTerms.Add(new SearchTerm(term));
         }
 
         private void UpdateInstallUi(SubmissionInstallState value)

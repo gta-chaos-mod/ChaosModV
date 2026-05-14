@@ -6,7 +6,11 @@ namespace ConfigApp.Workshop
 {
     internal sealed class WorkshopSettingsHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
@@ -20,6 +24,11 @@ namespace ConfigApp.Workshop
         public bool CanExecute(object? parameter) => true;
 
         public async void Execute(object? parameter)
+        {
+            await ExecuteAsync();
+        }
+
+        private async Task ExecuteAsync()
         {
             List<WorkshopSubmissionFile> files;
 

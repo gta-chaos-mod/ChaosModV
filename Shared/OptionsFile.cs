@@ -35,7 +35,11 @@ namespace Shared
 
                 try
                 {
-                    return token.ToObject<T>();
+                    if (token is T typedToken)
+                        return typedToken;
+
+                    var value = token.Value<T>();
+                    return value is null ? defaultValue : value;
                 }
                 catch
                 {
@@ -159,7 +163,7 @@ namespace Shared
             foreach (var (key, value) in m_Options)
                 json[key] = value;
 
-            File.WriteAllText(m_FilePath, JsonConvert.SerializeObject(json));
+            File.WriteAllText(m_FilePath, json.ToString(Formatting.None));
         }
 
         public void ResetFile()

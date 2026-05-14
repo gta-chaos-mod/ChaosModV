@@ -13,13 +13,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border x:Name="AppTitleBar"
-                Grid.Row="0"
-                Background="{ThemeResource LayerFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="12,10">
+        <Border
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="12,10">
             <Grid ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -27,26 +28,79 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Vertical" Spacing="2">
-                    <TextBlock Text="ChaosModV Configuration"
-                               Style="{ThemeResource TitleTextBlockStyle}" />
-                    <TextBlock Text="Manage effects, gameplay modes, voting, workshop content, and advanced settings"
-                               Opacity="0.72"
-                               TextWrapping="Wrap" />
+                    <TextBlock
+                        Text="ChaosModV Configuration"
+                        Style="{ThemeResource TitleTextBlockStyle}" />
+                    <TextBlock
+                        Text="Manage effects, gameplay modes, voting, workshop content, and advanced settings"
+                        Opacity="0.72"
+                        TextWrapping="Wrap" />
                 </StackPanel>
 
-                <TextBlock Grid.Column="1"
-                           VerticalAlignment="Center"
-                           Text="WinUI"
-                           Opacity="0.7" />
+                <TextBlock
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Text="WinUI"
+                    Opacity="0.7" />
             </Grid>
         </Border>
 
-        <TabView x:Name="root_tabcontrol"
-                 Grid.Row="1"
-                 IsAddTabButtonVisible="False"
-                 SelectionChanged="OnTabSelectionChanged">
-            <TabViewItem Header="Effects">
-                <Grid RowSpacing="10" Padding="4">
+        <NavigationView
+            x:Name="rootNavigationView"
+            Grid.Row="1"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            IsPaneToggleButtonVisible="False"
+            IsPaneOpen="True"
+            PaneDisplayMode="Left"
+            SelectionChanged="OnNavigationSelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Effects" Tag="Effects" IsSelected="True">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Library" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Meta" Tag="Meta">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Switch" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Settings" Tag="Settings">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Setting" />
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="General" Tag="Settings:General" />
+                        <NavigationViewItem Content="Modes" Tag="Settings:Modes" />
+                        <NavigationViewItem Content="Shortcuts" Tag="Settings:Shortcuts" />
+                        <NavigationViewItem Content="Colors" Tag="Settings:Colors" />
+                        <NavigationViewItem Content="Sounds" Tag="Settings:Sounds" />
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Voting" Tag="Voting">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Like" />
+                    </NavigationViewItem.Icon>
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="General" Tag="Voting:General" />
+                        <NavigationViewItem Content="Twitch" Tag="Voting:Twitch" />
+                        <NavigationViewItem Content="Discord" Tag="Voting:Discord" />
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Workshop" Tag="Workshop">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Shop" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="More" Tag="More">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="More" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <Grid x:Name="NavigationContentRoot" Padding="4">
+                <Grid x:Name="EffectsSection" RowSpacing="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -59,21 +113,20 @@
                         PlaceholderText="Search effects"
                         TextChanged="OnUserEffectSearchTextChanged" />
 
-                    <Border Grid.Row="1"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="8">
+                    <Border
+                        Grid.Row="1"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="8">
                         <TreeView
                             x:Name="effects_user_effects_tree_view"
                             SelectionMode="None" />
                     </Border>
                 </Grid>
-            </TabViewItem>
 
-            <TabViewItem x:Name="meta_tab" Header="Meta">
-                <Grid RowSpacing="12" Padding="4">
+                <Grid x:Name="MetaSection" RowSpacing="12" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -89,12 +142,13 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="12">
+                        <Border
+                            Grid.Column="0"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12">
                             <Grid RowSpacing="10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -106,52 +160,64 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Row="0" Text="Spawn interval (seconds)" VerticalAlignment="Center" />
-                                <TextBox x:Name="meta_effects_spawn_dur" Grid.Row="0" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Text="Spawn interval (seconds)"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    x:Name="meta_effects_spawn_dur"
+                                    Grid.Row="0" Grid.Column="1"
+                                    Width="90" MaxLength="6"
+                                    HorizontalAlignment="Left" />
 
-                                <TextBlock Grid.Row="1" Text="Default timed duration (seconds)" VerticalAlignment="Center" />
-                                <TextBox x:Name="meta_effects_timed_dur" Grid.Row="1" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Text="Default timed duration (seconds)"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    x:Name="meta_effects_timed_dur"
+                                    Grid.Row="1" Grid.Column="1"
+                                    Width="90" MaxLength="6"
+                                    HorizontalAlignment="Left" />
 
-                                <TextBlock Grid.Row="2" Text="Short timed duration (seconds)" VerticalAlignment="Center" />
-                                <TextBox x:Name="meta_effects_short_timed_dur" Grid.Row="2" Grid.Column="1" Width="90" MaxLength="6" HorizontalAlignment="Left" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Text="Short timed duration (seconds)"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    x:Name="meta_effects_short_timed_dur"
+                                    Grid.Row="2" Grid.Column="1"
+                                    Width="90" MaxLength="6"
+                                    HorizontalAlignment="Left" />
                             </Grid>
                         </Border>
 
-                        <Border Grid.Column="1"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="8">
+                        <Border
+                            Grid.Column="1"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="8">
                             <TreeView x:Name="meta_effects_tree_view" SelectionMode="None" />
                         </Border>
                     </Grid>
                 </Grid>
-            </TabViewItem>
 
-            <TabViewItem Header="Settings">
-                <settingsTabs:SettingsTab x:Name="settings_tab" />
-            </TabViewItem>
+                <settingsTabs:SettingsTab x:Name="settings_tab" Visibility="Collapsed" />
+                <votingTabs:VotingTab x:Name="voting_tab" Visibility="Collapsed" />
+                <tabs:WorkshopTab x:Name="workshop_tab" Visibility="Collapsed" />
+                <tabs:MoreTab x:Name="more_tab" Visibility="Collapsed" />
+            </Grid>
+        </NavigationView>
 
-            <TabViewItem Header="Voting">
-                <votingTabs:VotingTab x:Name="voting_tab" />
-            </TabViewItem>
-
-            <TabViewItem Header="Workshop">
-                <tabs:WorkshopTab x:Name="workshop_tab" />
-            </TabViewItem>
-
-            <TabViewItem Header="More">
-                <tabs:MoreTab x:Name="more_tab" />
-            </TabViewItem>
-        </TabView>
-
-        <Border Grid.Row="2"
-                Background="{ThemeResource LayerFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="12,8">
+        <Border
+            Grid.Row="2"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="12,8">
             <Grid ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

@@ -10,16 +10,14 @@ namespace ConfigApp.Tabs.Settings
             Utils.AttachNumericTextBoxBehavior(MaxRunningEffectsTextBox);
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {
             DisableDrawTimerCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableTimerBarDraw", false);
             DisableDrawEffectTextCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableEffectTextDraw", false);
             RandomSeedTextBox.Text = OptionsManager.ConfigFile.ReadValue<string>("Seed");
-            MaxRunningEffectsTextBox.Text = $"{OptionsManager.ConfigFile.ReadValue("MaxParallelRunningEffects", 99)}";
+            MaxRunningEffectsTextBox.Text = OptionsManager.ConfigFile.ReadValue("MaxParallelRunningEffects", 99).ToString();
             EnableEffectGroupWeightingCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableGroupWeightingAdjustments", true);
             DisableModOnStartupCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("DisableStartup", false);
             EnableFailsafeCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableFailsafe", true);

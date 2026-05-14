@@ -213,7 +213,7 @@ namespace ConfigApp
             {
                 if (file.Type == WorkshopSubmissionFileType.Script)
                 {
-                    var effectConfig = new EffectConfig(null, menuItem.Parent?.Children.Count > 0 ? null : file.EffectData, new Effects.EffectInfo
+                    var effectConfig = new EffectConfigDialog(null, menuItem.Parent?.Children.Count > 0 ? null : file.EffectData, new Effects.EffectInfo
                     {
                         Name = pathName,
                         IsTimed = true

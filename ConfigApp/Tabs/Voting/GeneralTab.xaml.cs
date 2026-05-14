@@ -19,9 +19,7 @@ namespace ConfigApp.Tabs.Voting
             ProportionalVotingPanel.Opacity = state ? 1.0 : 0.55;
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {
@@ -29,7 +27,7 @@ namespace ConfigApp.Tabs.Voting
             SetPanelsEnabled(EnableVotingCheckBox.IsChecked.GetValueOrDefault());
             OverlayModeComboBox.SelectedIndex = OptionsManager.VotingFile.ReadValue("VotingOverlayMode", 0, "TwitchVotingOverlayMode");
             EnableRandomEffectCheckBox.IsChecked = OptionsManager.VotingFile.ReadValue("RandomEffectVoteableEnable", true, "TwitchRandomEffectVoteableEnable");
-            SecsBeforeVotingTextBox.Text = $"{OptionsManager.VotingFile.ReadValue("VotingSecsBeforeVoting", 0, "TwitchVotingSecsBeforeVoting")}";
+            SecsBeforeVotingTextBox.Text = OptionsManager.VotingFile.ReadValue("VotingSecsBeforeVoting", 0, "TwitchVotingSecsBeforeVoting").ToString();
             PermittedUserNamesTextBox.Text = OptionsManager.VotingFile.ReadValue<string>("PermittedUsernames", null, "TwitchPermittedUsernames");
             VoteablePrefixTextBox.Text = OptionsManager.VotingFile.ReadValue("VoteablePrefix", "");
             EnableProportionalVotingCheckBox.IsChecked = OptionsManager.VotingFile.ReadValue("VotingChanceSystem", false, "TwitchVotingChanceSystem");

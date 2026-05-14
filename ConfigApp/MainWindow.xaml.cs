@@ -14,7 +14,9 @@ namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        private readonly Dictionary<string, ITabLifecycle> m_Tabs = [];
+        private const string VersionUrl = "https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt";
+
+        private readonly ITabLifecycle[] m_Tabs;
 
         private readonly List<TreeMenuItem> m_TreeMenuItemsAll = [];
         private readonly List<TreeMenuItem> m_TreeMenuItemsFiltered = [];
@@ -28,10 +30,7 @@ namespace ConfigApp
             InitializeComponent();
             InitializeWindow();
 
-            m_Tabs["Settings"] = settings_tab;
-            m_Tabs["Voting"] = voting_tab;
-            m_Tabs["Workshop"] = workshop_tab;
-            m_Tabs["More"] = more_tab;
+            m_Tabs = [settings_tab, voting_tab, workshop_tab, more_tab];
 
             Utils.AttachNumericTextBoxBehavior(meta_effects_spawn_dur);
             Utils.AttachNumericTextBoxBehavior(meta_effects_timed_dur);
@@ -40,6 +39,8 @@ namespace ConfigApp
             Title = $"ChaosModV Configuration (v{Info.VERSION})";
             user_save.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
             MainRoot.Loaded += OnLoaded;
+
+            ShowSection("Effects");
         }
 
         private void InitializeWindow()
@@ -70,7 +71,7 @@ namespace ConfigApp
             await CheckForUpdatesAsync();
             OptionsManager.ReadFiles();
 
-            foreach (var tab in m_Tabs.Values)
+            foreach (var tab in m_Tabs)
                 tab.OnLoadValues();
 
             ParseConfigFile();
@@ -101,13 +102,75 @@ namespace ConfigApp
             }
         }
 
-        private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
+        private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs eventArgs)
         {
-            if (root_tabcontrol.SelectedItem is not TabViewItem selectedTab || selectedTab.Header is not string selectedHeader)
+            if (eventArgs.SelectedItem is not NavigationViewItem selectedItem || selectedItem.Tag is not string selectedTag)
                 return;
 
-            if (m_Tabs.TryGetValue(selectedHeader, out var tab))
-                tab.OnTabSelected();
+            switch (selectedTag)
+            {
+            case "Settings":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("General");
+                break;
+            case "Settings:General":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("General");
+                break;
+            case "Settings:Modes":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Modes");
+                break;
+            case "Settings:Shortcuts":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Shortcuts");
+                break;
+            case "Settings:Colors":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Colors");
+                break;
+            case "Settings:Sounds":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Sounds");
+                break;
+            case "Voting":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("General");
+                break;
+            case "Voting:General":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("General");
+                break;
+            case "Voting:Twitch":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("Twitch");
+                break;
+            case "Voting:Discord":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("Discord");
+                break;
+            case "Workshop":
+                ShowSection("Workshop");
+                workshop_tab.OnTabSelected();
+                break;
+            case "More":
+                ShowSection("More");
+                more_tab.OnTabSelected();
+                break;
+            default:
+                ShowSection(selectedTag);
+                break;
+            }
+        }
+
+        private void ShowSection(string section)
+        {
+            EffectsSection.Visibility = section == "Effects" ? Visibility.Visible : Visibility.Collapsed;
+            MetaSection.Visibility = section == "Meta" ? Visibility.Visible : Visibility.Collapsed;
+            settings_tab.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
+            voting_tab.Visibility = section == "Voting" ? Visibility.Visible : Visibility.Collapsed;
+            workshop_tab.Visibility = section == "Workshop" ? Visibility.Visible : Visibility.Collapsed;
+            more_tab.Visibility = section == "More" ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private async Task CheckForUpdatesAsync()
@@ -116,7 +179,7 @@ namespace ConfigApp
 
             try
             {
-                var newVersion = (await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt")).Trim();
+                var newVersion = (await httpClient.GetStringAsync(VersionUrl)).Trim();
                 var isUpdateAvailable = Info.VERSION != newVersion;
                 update_available_label.Text = isUpdateAvailable ? $"Update available: v{newVersion}" : "You are running the latest version.";
                 update_available_button.Visibility = isUpdateAvailable ? Visibility.Visible : Visibility.Collapsed;
@@ -139,9 +202,9 @@ namespace ConfigApp
 
         private void ParseConfigFile()
         {
-            meta_effects_spawn_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600)}";
-            meta_effects_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95)}";
-            meta_effects_short_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65)}";
+            meta_effects_spawn_dur.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600).ToString();
+            meta_effects_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95).ToString();
+            meta_effects_short_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65).ToString();
         }
 
         private void WriteConfigFile()
@@ -179,27 +242,31 @@ namespace ConfigApp
             var data = GetOrCreateEffectData(effectId);
             var json = new JObject();
 
-            AddJsonFieldIfNotNull(json, "enabled", data.Enabled);
-            AddJsonFieldIfNotNull(json, "customTime", data.CustomTime);
-            AddJsonFieldIfNotNull(json, "excludedFromVoting", data.ExcludedFromVoting);
-            
+            if (data.Enabled is not null)
+                json["enabled"] = new JValue(data.Enabled.Value);
+
+            if (data.CustomTime is not null)
+                json["customTime"] = new JValue(data.CustomTime.Value);
+
+            if (data.ExcludedFromVoting is not null)
+                json["excludedFromVoting"] = new JValue(data.ExcludedFromVoting.Value);
+
             if (data.TimedType is not null)
             {
                 json["permanent"] = data.TimedType == EffectTimedType.Permanent;
                 json["timedType"] = (int)data.TimedType;
             }
 
-            AddJsonFieldIfNotNull(json, "shortcutKeycode", data.ShortcutKeycode);
-            AddJsonFieldIfNotNull(json, "weightMult", data.WeightMult);
-            AddJsonFieldIfNotNull(json, "customName", data.CustomName);
+            if (data.ShortcutKeycode is not null)
+                json["shortcutKeycode"] = new JValue(data.ShortcutKeycode.Value);
+
+            if (data.WeightMult is not null)
+                json["weightMult"] = new JValue(data.WeightMult.Value);
+
+            if (data.CustomName is not null)
+                json["customName"] = new JValue(data.CustomName);
 
             return json;
-        }
-
-        private static void AddJsonFieldIfNotNull(JObject json, string key, object? value)
-        {
-            if (value is not null)
-                json[key] = JToken.FromObject(value);
         }
 
         private void InitEffectsTreeView()
@@ -266,7 +333,7 @@ namespace ConfigApp
             menuItem.OnConfigureClickAsync = async () =>
             {
                 var effectInfo = EffectsMap[effectId];
-                var effectConfig = new EffectConfig(effectId, effectData, effectInfo);
+                var effectConfig = new EffectConfigDialog(effectId, effectData, effectInfo);
                 await effectConfig.ShowAsync();
 
                 if (!effectConfig.IsSaved)
@@ -362,10 +429,16 @@ namespace ConfigApp
         {
             const string backupDir = "configs/old";
             Directory.CreateDirectory(backupDir);
-            
-            File.Move(OptionsManager.ConfigFile.FoundFilePath, $"{backupDir}/{Path.GetFileName(OptionsManager.ConfigFile.FoundFilePath)}", true);
-            File.Move(OptionsManager.VotingFile.FoundFilePath, $"{backupDir}/{Path.GetFileName(OptionsManager.VotingFile.FoundFilePath)}", true);
-            File.Move(OptionsManager.EffectsFile.FoundFilePath, $"{backupDir}/{Path.GetFileName(OptionsManager.EffectsFile.FoundFilePath)}", true);
+
+            MoveFileToBackup(OptionsManager.ConfigFile.FoundFilePath, backupDir);
+            MoveFileToBackup(OptionsManager.VotingFile.FoundFilePath, backupDir);
+            MoveFileToBackup(OptionsManager.EffectsFile.FoundFilePath, backupDir);
+        }
+
+        private static void MoveFileToBackup(string filePath, string backupDirectory)
+        {
+            var fileName = Path.GetFileName(filePath);
+            File.Move(filePath, Path.Combine(backupDirectory, fileName), true);
         }
 
         private async void OnUserSaveClick(object sender, RoutedEventArgs e)
@@ -380,12 +453,12 @@ namespace ConfigApp
                 WriteConfigFile();
                 WriteEffectsFile();
 
-                foreach (var tab in m_Tabs.Values)
+                foreach (var tab in m_Tabs)
                     tab.OnSaveValues();
 
                 OptionsManager.WriteFiles();
 
-                foreach (var tab in m_Tabs.Values)
+                foreach (var tab in m_Tabs)
                     tab.OnLoadValues();
 
                 OptionsManager.DeleteCompatFiles();

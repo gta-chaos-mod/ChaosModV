@@ -8,21 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <controls:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
-
             <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
-
-            <Style TargetType="Border" x:Key="CardBorderStyle">
-                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="Padding" Value="12" />
-            </Style>
-
-            <Style TargetType="ContentDialog">
-                <Setter Property="RequestedTheme" Value="Default" />
-                <Setter Property="DefaultButton" Value="Primary" />
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

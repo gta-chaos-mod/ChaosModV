@@ -35,18 +35,16 @@ namespace ConfigApp.Tabs.Settings
             }
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {
             DispatchModeComboBox.SelectedIndex = !OptionsManager.ConfigFile.ReadValue("EffectDispatchMode", false, "EnableDistanceBasedEffectDispatch") ? 0 : 1;
             UpdateDispatchModeGridVisibility();
-            EffectDispatchTimerTextBox.Text = $"{OptionsManager.ConfigFile.ReadValue("NewEffectSpawnTime", 30)}";
-            TimedEffectDurationTextBox.Text = $"{OptionsManager.ConfigFile.ReadValue("EffectTimedDur", 90)}";
-            ShortTimedEffectDurationTextBox.Text = $"{OptionsManager.ConfigFile.ReadValue("EffectTimedShortDur", 30)}";
-            DistanceBasedDispatchDistanceTextBox.Text = $"{OptionsManager.ConfigFile.ReadValue("DistanceToActivateEffect", 250)}";
+            EffectDispatchTimerTextBox.Text = OptionsManager.ConfigFile.ReadValue("NewEffectSpawnTime", 30).ToString();
+            TimedEffectDurationTextBox.Text = OptionsManager.ConfigFile.ReadValue("EffectTimedDur", 90).ToString();
+            ShortTimedEffectDurationTextBox.Text = OptionsManager.ConfigFile.ReadValue("EffectTimedShortDur", 30).ToString();
+            DistanceBasedDispatchDistanceTextBox.Text = OptionsManager.ConfigFile.ReadValue("DistanceToActivateEffect", 250).ToString();
             DistanceBasedDispatchTypeComboBox.SelectedIndex = OptionsManager.ConfigFile.ReadValue("DistanceType", 0);
             EnableCrossingChallengeCheckBox.IsChecked = OptionsManager.ConfigFile.ReadValue("EnableCrossingChallenge", false);
         }

@@ -1,7 +1,7 @@
-﻿using Microsoft.UI;
+﻿using System.Globalization;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI;
-using System.Globalization;
 
 namespace ConfigApp.Tabs.Settings
 {
@@ -15,9 +15,7 @@ namespace ConfigApp.Tabs.Settings
             EffectTimerBarColorPicker.Color = ColorHelper.FromArgb(0xFF, 0xB4, 0xB4, 0xB4);
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {

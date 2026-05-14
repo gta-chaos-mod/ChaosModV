@@ -9,7 +9,7 @@ using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
-    public partial class EffectConfig : ContentDialog
+    public partial class EffectConfigDialog : ContentDialog
     {
         private static readonly string[] s_TimedTypeOptions = ["Normal", "Short", "Permanent"];
         private static readonly string[] s_WeightMultiplierOptions = ["Default", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -27,7 +27,7 @@ namespace ConfigApp
 
         public bool IsSaved => m_IsSaved;
 
-        public EffectConfig(string? effectId, EffectData? effectData, EffectInfo effectInfo)
+        public EffectConfigDialog(string? effectId, EffectData? effectData, EffectInfo effectInfo)
         {
             InitializeComponent();
 

@@ -17,9 +17,7 @@ namespace ConfigApp.Tabs.Voting
             TokenPasswordBox.IsEnabled = state;
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
         public void OnLoadValues()
         {

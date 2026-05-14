@@ -8,10 +8,9 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <PublishSingleFile>false</PublishSingleFile>
-    <SelfContained>false</SelfContained>
+    <EnableMsixTooling>true</EnableMsixTooling>
     <StartupObject>ConfigApp.EntryPoint</StartupObject>
     <UseWinUI>true</UseWinUI>
-    <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
     <Platforms>x64</Platforms>
     <PlatformTarget>x64</PlatformTarget>
@@ -20,6 +19,9 @@
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,19 +48,19 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Page Update="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  
+
   <ItemGroup>
-    <Page Update="EffectConfig.xaml">
+    <Page Update="EffectConfigDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Page Update="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

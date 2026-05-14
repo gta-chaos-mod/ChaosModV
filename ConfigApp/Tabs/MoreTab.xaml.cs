@@ -10,17 +10,11 @@ namespace ConfigApp.Tabs
             InitializeComponent();
         }
 
-        public void OnTabSelected()
-        {
-        }
+        public void OnTabSelected() { }
 
-        public void OnLoadValues()
-        {
-        }
+        public void OnLoadValues() { }
 
-        public void OnSaveValues()
-        {
-        }
+        public void OnSaveValues() { }
 
         private void OnModPageClick(object sender, RoutedEventArgs e)
         {

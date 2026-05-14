@@ -13,7 +13,11 @@ namespace ConfigApp.Workshop
         private const string WorkshopDirectory = "workshop";
         private const string WorkshopCacheDirectory = "workshopcache";
 
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -29,6 +33,11 @@ namespace ConfigApp.Workshop
         }
 
         public async void Execute(object? parameter)
+        {
+            await ExecuteAsync();
+        }
+
+        private async Task ExecuteAsync()
         {
             Directory.CreateDirectory(WorkshopDirectory);
 
@@ -93,7 +102,7 @@ namespace ConfigApp.Workshop
             if (!TryDeleteDirectory(targetDirName, originalInstallState))
                 return;
 
-            var settingsPath = $"{targetDirName}.json";
+            var settingsPath = targetDirName + ".json";
             if (File.Exists(settingsPath))
                 File.Delete(settingsPath);
 
@@ -128,7 +137,10 @@ namespace ConfigApp.Workshop
                 return null;
             }
 
-            TryCacheSubmission(cacheFilePath, fileContent, result.Headers.Contains("Compressed") && result.Headers.GetValues("Compressed").Contains("yes"));
+            var isCompressed = result.Headers.TryGetValues("Compressed", out var compressedHeaderValues)
+                && compressedHeaderValues.Contains("yes", StringComparer.OrdinalIgnoreCase);
+
+            TryCacheSubmission(cacheFilePath, fileContent, isCompressed);
             return fileContent;
         }
 

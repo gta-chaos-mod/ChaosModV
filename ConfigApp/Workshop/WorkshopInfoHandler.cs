@@ -5,7 +5,11 @@ namespace ConfigApp.Workshop
 {
     internal sealed class WorkshopInfoHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -18,7 +22,12 @@ namespace ConfigApp.Workshop
 
         public async void Execute(object? parameter)
         {
-            await AppDialog.ShowMessageAsync($@"Name: {m_SubmissionItem.Name}
+            await ExecuteAsync();
+        }
+
+        private Task ExecuteAsync()
+        {
+            return AppDialog.ShowMessageAsync($@"Name: {m_SubmissionItem.Name}
 Author: {m_SubmissionItem.Author}
 Version: {m_SubmissionItem.Version}
 Id: {m_SubmissionItem.Id}

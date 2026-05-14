@@ -5,7 +5,8 @@
     Title="Workshop Settings"
     PrimaryButtonText="Save"
     CloseButtonText="Cancel"
-    PrimaryButtonClick="OnPrimaryButtonClick">
+    PrimaryButtonClick="OnPrimaryButtonClick"
+    CornerRadius="8">
     <Grid ColumnSpacing="10" RowSpacing="10" MinWidth="460">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="170" />

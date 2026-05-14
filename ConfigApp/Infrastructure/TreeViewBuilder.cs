@@ -11,6 +11,8 @@ namespace ConfigApp.Infrastructure
         private const int ConfigButtonWidth = 42;
         private const int PanelMinHeight = 24;
         private const int PanelSpacing = 8;
+        private static readonly SolidColorBrush s_HighlightBrush = new(ColorHelper.FromArgb(0xFF, 0xF6, 0xF6, 0x53));
+        private static readonly SolidColorBrush s_TransparentBrush = new(Colors.Transparent);
 
         private static DataTemplate? s_NodeTemplate;
 
@@ -74,9 +76,7 @@ namespace ConfigApp.Infrastructure
 
         private static SolidColorBrush GetBackgroundBrush(bool isColored)
         {
-            return isColored
-                ? new SolidColorBrush(ColorHelper.FromArgb(0xFF, 0xF6, 0xF6, 0x53))
-                : new SolidColorBrush(Colors.Transparent);
+            return isColored ? s_HighlightBrush : s_TransparentBrush;
         }
 
         private static CheckBox CreateCheckBox(TreeMenuItem item, Action refresh)
