@@ -77,8 +77,8 @@ namespace Memory
 		}
 	}
 
-	inline void DrawLine(ChaosVector2 firstPos, ChaosVector2 secondPos, Color &color, float thickness)
+	inline void DrawLine(fChaosVector2 firstPos, fChaosVector2 secondPos, Color &color, float thickness)
 	{
-		DrawLine(firstPos.x, firstPos.y, secondPos.x, secondPos.y, thickness, color.Get());
+		DrawLine(firstPos.X, firstPos.Y, secondPos.X, secondPos.Y, thickness, color.Get());
 	}
 }
