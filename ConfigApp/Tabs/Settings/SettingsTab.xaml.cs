@@ -1,5 +1,4 @@
-﻿using ConfigApp.Tabs;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp.Tabs.Settings
 {

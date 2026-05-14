@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Threading;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using WinRT;

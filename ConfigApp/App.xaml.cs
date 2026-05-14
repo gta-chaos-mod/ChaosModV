@@ -1,5 +1,4 @@
-﻿using ConfigApp.Infrastructure;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 
 namespace ConfigApp
 {

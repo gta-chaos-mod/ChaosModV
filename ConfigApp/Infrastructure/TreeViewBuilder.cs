@@ -11,7 +11,7 @@ namespace ConfigApp.Infrastructure
         private const int ConfigButtonWidth = 32;
         private const int PanelMinHeight = 24;
         private const int PanelSpacing = 8;
-        
+
         private static DataTemplate? s_NodeTemplate;
 
         public static void Populate(TreeView treeView, IEnumerable<TreeMenuItem> rootItems, Action refresh)

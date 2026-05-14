@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Net.Http;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using ConfigApp.Infrastructure;
 using ConfigApp.Workshop;

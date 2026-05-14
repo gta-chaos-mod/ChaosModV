@@ -6,15 +6,30 @@
         <StackPanel Orientation="Horizontal" Spacing="20" Padding="6">
             <StackPanel Spacing="8">
                 <TextBlock Text="Timer bar color" />
-                <ColorPicker x:Name="TimerBarColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+                <ColorPicker
+                    x:Name="TimerBarColorPicker"
+                    Width="240" Height="320"
+                    IsAlphaEnabled="False"
+                    IsColorSpectrumVisible="True"
+                    IsColorPreviewVisible="True" />
             </StackPanel>
             <StackPanel Spacing="8">
                 <TextBlock Text="Effect text color" />
-                <ColorPicker x:Name="EffectTextColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+                <ColorPicker
+                    x:Name="EffectTextColorPicker"
+                    Width="240" Height="320"
+                    IsAlphaEnabled="False"
+                    IsColorSpectrumVisible="True"
+                    IsColorPreviewVisible="True" />
             </StackPanel>
             <StackPanel Spacing="8">
                 <TextBlock Text="Effect timer bar color" />
-                <ColorPicker x:Name="EffectTimerBarColorPicker" Width="240" Height="320" IsAlphaEnabled="False" IsColorSpectrumVisible="True" IsColorPreviewVisible="True" />
+                <ColorPicker
+                    x:Name="EffectTimerBarColorPicker"
+                    Width="240" Height="320"
+                    IsAlphaEnabled="False"
+                    IsColorSpectrumVisible="True"
+                    IsColorPreviewVisible="True" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

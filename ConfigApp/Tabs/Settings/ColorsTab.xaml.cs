@@ -1,7 +1,7 @@
-﻿using ConfigApp.Tabs;
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI;
+using System.Globalization;
 
 namespace ConfigApp.Tabs.Settings
 {
@@ -22,33 +22,64 @@ namespace ConfigApp.Tabs.Settings
         public void OnLoadValues()
         {
             if (OptionsManager.ConfigFile.HasKey("EffectTimerColor"))
-                TimerBarColorPicker.Color = ParseColor(OptionsManager.ConfigFile.ReadValue<string>("EffectTimerColor"), TimerBarColorPicker.Color);
+            {
+                TimerBarColorPicker.Color = ParseColor(
+                    OptionsManager.ConfigFile.ReadValue<string>("EffectTimerColor"),
+                    TimerBarColorPicker.Color
+                );
+            }
             if (OptionsManager.ConfigFile.HasKey("EffectTextColor"))
-                EffectTextColorPicker.Color = ParseColor(OptionsManager.ConfigFile.ReadValue<string>("EffectTextColor"), EffectTextColorPicker.Color);
+            {
+                EffectTextColorPicker.Color = ParseColor(
+                    OptionsManager.ConfigFile.ReadValue<string>("EffectTextColor"),
+                    EffectTextColorPicker.Color
+                );
+            }
             if (OptionsManager.ConfigFile.HasKey("EffectTimedTimerColor"))
-                EffectTimerBarColorPicker.Color = ParseColor(OptionsManager.ConfigFile.ReadValue<string>("EffectTimedTimerColor"), EffectTimerBarColorPicker.Color);
+            {
+                EffectTimerBarColorPicker.Color = ParseColor(
+                    OptionsManager.ConfigFile.ReadValue<string>("EffectTimedTimerColor"),
+                    EffectTimerBarColorPicker.Color
+                );
+            }
         }
 
         public void OnSaveValues()
         {
-            OptionsManager.ConfigFile.WriteValue("EffectTimerColor", FormatColor(TimerBarColorPicker.Color));
-            OptionsManager.ConfigFile.WriteValue("EffectTextColor", FormatColor(EffectTextColorPicker.Color));
-            OptionsManager.ConfigFile.WriteValue("EffectTimedTimerColor", FormatColor(EffectTimerBarColorPicker.Color));
+            OptionsManager.ConfigFile.WriteValue(
+                "EffectTimerColor",
+                FormatColor(TimerBarColorPicker.Color)
+            );
+            OptionsManager.ConfigFile.WriteValue(
+                "EffectTextColor",
+                FormatColor(EffectTextColorPicker.Color)
+            );
+            OptionsManager.ConfigFile.WriteValue(
+                "EffectTimedTimerColor",
+                FormatColor(EffectTimerBarColorPicker.Color)
+            );
         }
 
         private static Color ParseColor(string? value, Color fallback)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return fallback;
+            if (string.IsNullOrWhiteSpace(value)) return fallback;
 
             var normalized = value.Trim();
-            if (normalized.StartsWith("#"))
+            if (normalized.StartsWith('#'))
+            {
                 normalized = normalized[1..];
+            }
             if (normalized.Length == 6)
+            {
                 normalized = $"FF{normalized}";
+            }
 
-            return uint.TryParse(normalized, System.Globalization.NumberStyles.HexNumber, null, out var raw)
-                ? ColorHelper.FromArgb((byte)((raw >> 24) & 0xFF), (byte)((raw >> 16) & 0xFF), (byte)((raw >> 8) & 0xFF), (byte)(raw & 0xFF))
+            return uint.TryParse(normalized, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var raw)
+                ? ColorHelper.FromArgb(
+                    (byte)((raw >> 24) & 0xFF),
+                    (byte)((raw >> 16) & 0xFF),
+                    (byte)((raw >> 08) & 0xFF),
+                    (byte)(raw & 0xFF))
                 : fallback;
         }
 

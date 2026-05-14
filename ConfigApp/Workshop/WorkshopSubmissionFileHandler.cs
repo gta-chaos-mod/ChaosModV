@@ -1,12 +1,8 @@
-﻿namespace ConfigApp.Workshop
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
+namespace ConfigApp.Workshop
+{
     internal sealed class WorkshopSubmissionFileHandler
     {
         private const string CorruptSettingsMessage = "Submission settings file is corrupt, assuming default settings!";

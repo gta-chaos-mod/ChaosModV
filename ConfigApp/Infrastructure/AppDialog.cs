@@ -10,7 +10,7 @@ namespace ConfigApp.Infrastructure
             dialog.XamlRoot = GetXamlRoot();
         }
 
-        internal static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "OK")
+        internal static Task ShowMessageAsync(string content, string title = "ChaosModV", string closeButtonText = "Ok")
         {
             return ShowDialogAsync(content, title, closeButtonText: closeButtonText);
         }
@@ -20,12 +20,12 @@ namespace ConfigApp.Infrastructure
             return ShowDialogAsync(content, title, yesButtonText, noButtonText);
         }
 
-        internal static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "OK", string cancelButtonText = "Cancel")
+        internal static Task<bool> ShowOkCancelAsync(string content, string title = "ChaosModV", string okButtonText = "Ok", string cancelButtonText = "Cancel")
         {
             return ShowDialogAsync(content, title, okButtonText, cancelButtonText);
         }
 
-        private static async Task<bool> ShowDialogAsync(string content, string title, string primaryButtonText = "", string closeButtonText = "OK")
+        private static async Task<bool> ShowDialogAsync(string content, string title, string primaryButtonText = "", string closeButtonText = "Ok")
         {
             var dialog = new ContentDialog
             {
