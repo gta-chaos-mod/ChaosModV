@@ -8,7 +8,7 @@ namespace ConfigApp.Infrastructure
 {
     internal static class TreeViewBuilder
     {
-        private const int ConfigButtonWidth = 32;
+        private const int ConfigButtonWidth = 42;
         private const int PanelMinHeight = 24;
         private const int PanelSpacing = 8;
 
@@ -103,7 +103,7 @@ namespace ConfigApp.Infrastructure
         {
             var button = new Button
             {
-                Content = "...",
+                Content = new SymbolIcon(Symbol.Bullets),
                 Width = ConfigButtonWidth,
                 IsEnabled = item.IsConfigEnabled,
                 VerticalAlignment = VerticalAlignment.Center

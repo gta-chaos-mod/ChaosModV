@@ -9,7 +9,7 @@
                 <controls:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="PagePadding">16</Thickness>
+            <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
 
             <Style TargetType="Border" x:Key="CardBorderStyle">
                 <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />

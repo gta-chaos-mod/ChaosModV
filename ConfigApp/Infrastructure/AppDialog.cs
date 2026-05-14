@@ -36,6 +36,7 @@ namespace ConfigApp.Infrastructure
                     TextWrapping = TextWrapping.Wrap,
                     MaxWidth = 560
                 },
+                CornerRadius = new CornerRadius(8),
                 DefaultButton = string.IsNullOrEmpty(primaryButtonText) ? ContentDialogButton.Close : ContentDialogButton.Primary,
                 CloseButtonText = closeButtonText,
                 XamlRoot = GetXamlRoot()
