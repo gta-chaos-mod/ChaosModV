@@ -1,134 +1,163 @@
 ﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+using System.Text;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
 using Newtonsoft.Json.Linq;
 
 namespace ConfigApp
 {
-    public static class Utils
+    internal static class Utils
     {
         public static EffectData ValueStringToEffectData(string? value)
         {
             var effectData = new EffectData();
-
             if (value is null)
                 return effectData;
 
-            // Split by comma, ignoring commas in between quotation marks
-            var values = Regex.Split(value, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
-            /* Has compatibility checks as previous mod versions had less options */
-
-            if (values.Length >= 4)
+            var fields = SplitCsvRespectingQuotes(value);
+            if (fields.Length >= 4)
             {
-                if (int.TryParse(values[0], out int enabled))
-                    effectData.Enabled = enabled != 0;
-
-                if (Enum.TryParse(values[1], out Effects.EffectTimedType timedType))
-                    effectData.TimedType = timedType != Effects.EffectTimedType.NotTimed ? timedType : null;
-                if (int.TryParse(values[2], out int customTime))
-                    effectData.CustomTime = customTime;
-                if (int.TryParse(values[3], out int weightMult))
-                    effectData.WeightMult = weightMult;
+                effectData.Enabled = ParseBoolFromInt(fields[0]);
+                effectData.TimedType = ParseTimedType(fields[1]);
+                effectData.CustomTime = ParseInt(fields[2]);
+                effectData.WeightMult = ParseInt(fields[3]);
             }
 
-            if (values.Length >= 5 && int.TryParse(values[4], out int tmp) && tmp != 0)
+            if (fields.Length >= 5 && ParseInt(fields[4]) is int permanent && permanent != 0)
                 effectData.TimedType = Effects.EffectTimedType.Permanent;
 
-            if (values.Length >= 6 && int.TryParse(values[5], out tmp))
-                effectData.ExcludedFromVoting = tmp != 0;
+            if (fields.Length >= 6 && ParseInt(fields[5]) is int excluded)
+                effectData.ExcludedFromVoting = excluded != 0;
 
-            if (values.Length >= 7)
-                effectData.CustomName = values[6] == "0" ? null : values[6].Trim('\"');
+            if (fields.Length >= 7)
+                effectData.CustomName = fields[6] == "0" ? null : fields[6].Trim('"');
 
-            if (values.Length >= 8 && int.TryParse(values[7], out int shortcut))
-                effectData.ShortcutKeycode = shortcut;
+            if (fields.Length >= 8)
+                effectData.ShortcutKeycode = ParseInt(fields[7]);
 
             return effectData;
+        }
+
+        private static string[] SplitCsvRespectingQuotes(string value)
+        {
+            var fields = new List<string>();
+            var current = new StringBuilder();
+            var inQuotes = false;
+
+            foreach (var character in value)
+            {
+                if (character == '"')
+                {
+                    inQuotes = !inQuotes;
+                    current.Append(character);
+                }
+                else if (character == ',' && !inQuotes)
+                {
+                    fields.Add(current.ToString());
+                    current.Clear();
+                }
+                else
+                {
+                    current.Append(character);
+                }
+            }
+
+            fields.Add(current.ToString());
+            return fields.ToArray();
         }
 
         public static EffectData ValueObjectToEffectData(JObject? value)
         {
             var effectData = new EffectData();
-
             if (value is null)
                 return effectData;
 
-            effectData.Enabled = value["enabled"]?.ToObject<bool?>();
-            effectData.CustomTime = value["customTime"]?.ToObject<int?>();
-            effectData.ExcludedFromVoting = value["excludedFromVoting"]?.ToObject<bool?>();
-            bool permanent = value["permanent"]?.ToObject<bool?>() ?? false;
-            effectData.ShortcutKeycode = value["shortcutKeycode"]?.ToObject<int?>();
-            effectData.TimedType = permanent ? Effects.EffectTimedType.Permanent : (Effects.EffectTimedType?)value["timedType"]?.ToObject<int?>();
-            effectData.WeightMult = value["weightMult"]?.ToObject<int?>();
-            effectData.CustomName = value["customName"]?.ToObject<string?>();
+            effectData.Enabled = value["enabled"]?.Value<bool?>();
+            effectData.CustomTime = value["customTime"]?.Value<int?>();
+            effectData.ExcludedFromVoting = value["excludedFromVoting"]?.Value<bool?>();
+            effectData.TimedType = (value["permanent"]?.Value<bool?>() ?? false)
+                ? Effects.EffectTimedType.Permanent
+                : (Effects.EffectTimedType?)value["timedType"]?.Value<int?>();
+            effectData.ShortcutKeycode = value["shortcutKeycode"]?.Value<int?>();
+            effectData.WeightMult = value["weightMult"]?.Value<int?>();
+            effectData.CustomName = value["customName"]?.Value<string?>();
 
             return effectData;
         }
 
-        public static void HandleOnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs eventArgs)
+        public static void AttachNumericTextBoxBehavior(TextBox textBox)
         {
-            if (eventArgs.Text.Length == 0 || !char.IsDigit(eventArgs.Text[0]))
-                eventArgs.Handled = true;
-        }
-
-        public static void HandleNoSpacePreviewKeyDown(object sender, KeyEventArgs eventArgs)
-        {
-            if (eventArgs.Key == Key.Space)
-                eventArgs.Handled = true;
-        }
-
-        public static void HandleNoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs eventArgs)
-        {
-            if (eventArgs.Command == ApplicationCommands.Copy || eventArgs.Command == ApplicationCommands.Cut
-                || eventArgs.Command == ApplicationCommands.Paste)
-                eventArgs.Handled = true;
-        }
-
-        public static CheckBox GenerateCommonCheckBox()
-        {
-            return new CheckBox()
+            textBox.BeforeTextChanging += (_, eventArgs) =>
             {
-                Width = 60f,
-                Height = 20f,
-                VerticalContentAlignment = VerticalAlignment.Center
+                eventArgs.Cancel = eventArgs.NewText.Any(character => !char.IsDigit(character));
+            };
+
+            textBox.KeyDown += (_, eventArgs) =>
+            {
+                if (eventArgs.Key == VirtualKey.Space)
+                    eventArgs.Handled = true;
             };
         }
 
-        public static TextBox GenerateCommonNumericOnlyTextBox(int maxLength = 6, double width = 60f, double height = 20f)
+        public static string FormatShortcutDisplay(VirtualKey key, bool ctrl, bool shift, bool alt)
         {
-            var textBox = new TextBox()
+            var parts = new List<string>();
+
+            if (ctrl) parts.Add("Ctrl");
+            if (shift) parts.Add("Shift");
+            if (alt) parts.Add("Alt");
+
+            parts.Add(GetKeyDisplayName(key));
+            return string.Join(" + ", parts);
+        }
+
+        private static string GetKeyDisplayName(VirtualKey key)
+        {
+            return key switch
             {
-                Width = width,
-                Height = height,
-                MaxLength = maxLength
+                VirtualKey.Number0 => "0",
+                VirtualKey.Number1 => "1",
+                VirtualKey.Number2 => "2",
+                VirtualKey.Number3 => "3",
+                VirtualKey.Number4 => "4",
+                VirtualKey.Number5 => "5",
+                VirtualKey.Number6 => "6",
+                VirtualKey.Number7 => "7",
+                VirtualKey.Number8 => "8",
+                VirtualKey.Number9 => "9",
+                VirtualKey.Control => "Ctrl",
+                VirtualKey.Shift => "Shift",
+                VirtualKey.Menu => "Alt",
+                _ => key.ToString()
             };
-            textBox.PreviewTextInput += HandleOnlyNumbersPreviewTextInput;
-            textBox.AddHandler(CommandManager.PreviewExecutedEvent, new ExecutedRoutedEventHandler(HandleNoCopyPastePreviewExecuted));
-            textBox.ContextMenu = null;
-            textBox.AddHandler(Keyboard.PreviewKeyDownEvent, new KeyEventHandler(HandleNoSpacePreviewKeyDown));
-
-            return textBox;
         }
 
-        public static bool IsNumeric<T>(this T value)
-        {
-            if (value is null)
-                return false;
-
-            var t = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
-            return t.IsPrimitive || t == typeof(decimal);
-        }
-
-        public static void OpenURL(string url)
+        public static void OpenUrl(string url)
         {
             Process.Start(new ProcessStartInfo
             {
                 FileName = url,
                 UseShellExecute = true
             });
+        }
+
+        private static Effects.EffectTimedType? ParseTimedType(string value)
+        {
+            return Enum.TryParse(value, out Effects.EffectTimedType timedType) && timedType != Effects.EffectTimedType.NotTimed
+                ? timedType
+                : null;
+        }
+
+        private static bool? ParseBoolFromInt(string value)
+        {
+            return ParseInt(value) is int intValue ? intValue != 0 : null;
+        }
+
+        private static int? ParseInt(string value)
+        {
+            return int.TryParse(value, out var parsedValue) ? parsedValue : null;
         }
     }
 }

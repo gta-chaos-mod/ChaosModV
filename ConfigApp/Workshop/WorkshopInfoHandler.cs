@@ -1,11 +1,15 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using ConfigApp.Infrastructure;
 
 namespace ConfigApp.Workshop
 {
-    public class WorkshopInfoHandler : ICommand
+    internal sealed class WorkshopInfoHandler : ICommand
     {
-        public event EventHandler? CanExecuteChanged = null;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
 
         private readonly WorkshopSubmissionItem m_SubmissionItem;
 
@@ -14,20 +18,22 @@ namespace ConfigApp.Workshop
             m_SubmissionItem = submissionItem;
         }
 
-        public bool CanExecute(object? parameter)
+        public bool CanExecute(object? parameter) => true;
+
+        public async void Execute(object? parameter)
         {
-            return true;
+            await ExecuteAsync();
         }
 
-        public void Execute(object? parameter)
+        private Task ExecuteAsync()
         {
-            MessageBox.Show($@"Name: {m_SubmissionItem.Name}
+            return AppDialog.ShowMessageAsync($@"Name: {m_SubmissionItem.Name}
 Author: {m_SubmissionItem.Author}
 Version: {m_SubmissionItem.Version}
 Id: {m_SubmissionItem.Id}
 SHA256: {m_SubmissionItem.Sha256}
 
-Description: {m_SubmissionItem.Description}", "Submission Info", MessageBoxButton.OK, MessageBoxImage.None);
+Description: {m_SubmissionItem.Description}", "Submission Info");
         }
     }
 }

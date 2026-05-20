@@ -1,32 +1,27 @@
-﻿using System.Windows;
+﻿using ConfigApp.Infrastructure;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ConfigApp
 {
-    public partial class WorkshopSettingsDialog : Window
+    internal partial class WorkshopSettingsDialog : ContentDialog
     {
-        private bool m_IsSaved = false;
-
-        public bool IsSaved
-        {
-            get => m_IsSaved;
-        }
+        public bool IsSaved { get; private set; }
 
         public WorkshopSettingsDialog()
         {
             InitializeComponent();
+            AppDialog.ApplyToDialog(this);
 
             workshop_custom_url.Text = OptionsManager.WorkshopFile.ReadValue<string>("WorkshopCustomUrl");
-            workshop_custom_url.Watermark = Info.WORKSHOP_DEFAULT_URL;
+            workshop_custom_url.PlaceholderText = Info.WORKSHOP_DEFAULT_URL;
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
+        private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            m_IsSaved = true;
+            IsSaved = true;
 
             OptionsManager.WorkshopFile.WriteValue("WorkshopCustomUrl", workshop_custom_url.Text);
             OptionsManager.WorkshopFile.WriteFile();
-
-            Close();
         }
     }
 }

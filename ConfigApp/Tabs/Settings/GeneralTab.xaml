@@ -1,0 +1,55 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Settings.GeneralTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <Grid ColumnSpacing="24" RowSpacing="10" Padding="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Disable mod on startup by default" VerticalAlignment="Center" />
+                <CheckBox x:Name="DisableModOnStartupCheckBox" />
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Max amount of simultaneously running effects" VerticalAlignment="Center" />
+                <TextBox x:Name="MaxRunningEffectsTextBox" Width="70" MaxLength="2" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Don't draw timer bar" VerticalAlignment="Center" />
+                <CheckBox x:Name="DisableDrawTimerCheckBox" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Don't draw effect text" VerticalAlignment="Center" />
+                <CheckBox x:Name="DisableDrawEffectTextCheckBox" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Random Seed" VerticalAlignment="Center" />
+                <TextBox x:Name="RandomSeedTextBox" Width="200" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Enable effect group weighting" VerticalAlignment="Center" />
+                <CheckBox x:Name="EnableEffectGroupWeightingCheckBox" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Show mod splash texts" VerticalAlignment="Center" />
+                <CheckBox x:Name="EnableModSplashTextsCheckBox" />
+            </StackPanel>
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Allow prevention of repetitive mission fails (Failsafe)" VerticalAlignment="Center" TextWrapping="Wrap" Width="300" />
+                <CheckBox x:Name="EnableFailsafeCheckBox" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

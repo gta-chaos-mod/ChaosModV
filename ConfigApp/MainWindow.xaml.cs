@@ -1,174 +1,214 @@
 ﻿using System.IO;
 using System.Net.Http;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using ConfigApp.Infrastructure;
 using ConfigApp.Tabs;
-using ConfigApp.Tabs.Settings;
-using ConfigApp.Tabs.Voting;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json.Linq;
+using Windows.Graphics;
+using WinRT.Interop;
 using static ConfigApp.Effects;
 
 namespace ConfigApp
 {
     public partial class MainWindow : Window
     {
-        private readonly Dictionary<string, Tab> m_Tabs = new()
-        {
-            //{ "Meta", new MetaTab() },
-            { "Settings", new SettingsTab() },
-            { "Voting", new VotingTab() },
-            { "Workshop", new WorkshopTab() },
-            { "More", new MoreTab() }
-        };
-        private readonly Dictionary<string, TabItem> m_TabItems = new();
+        private const string VersionUrl = "https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt";
 
-        private bool m_bInitializedTitle = false;
+        private readonly ITabLifecycle[] m_Tabs;
 
-        private Dictionary<string, TreeMenuItem>? m_TreeMenuItemsMap = null;
-        private List<TreeMenuItem>? m_TreeMenuItemsAll = null;
-        private List<TreeMenuItem>? m_TreeMenuItemsFiltered = null;
+        private readonly List<TreeMenuItem> m_TreeMenuItemsAll = [];
+        private readonly List<TreeMenuItem> m_TreeMenuItemsFiltered = [];
+        private TreeMenuItem? m_MetaParentItem;
+        private readonly Dictionary<string, EffectData> m_EffectDataMap = [];
 
-        private Dictionary<string, EffectData>? m_EffectDataMap = null;
-
-        private bool m_InitializedTabs = false;
+        private bool m_StartupCompleted;
 
         public MainWindow()
         {
-            Init();
+            InitializeComponent();
+            InitializeWindow();
+
+            m_Tabs = [settings_tab, voting_tab, workshop_tab, more_tab];
+
+            Utils.AttachNumericTextBoxBehavior(meta_effects_spawn_dur);
+            Utils.AttachNumericTextBoxBehavior(meta_effects_timed_dur);
+            Utils.AttachNumericTextBoxBehavior(meta_effects_short_timed_dur);
+
+            Title = $"ChaosModV Configuration (v{Info.VERSION})";
+            user_save.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
+            MainRoot.Loaded += OnLoaded;
+
+            ShowSection("Effects");
         }
 
-        private void Init()
+        private void InitializeWindow()
         {
-            InitializeComponent();
+            var hwnd = WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+            appWindow.Resize(new SizeInt32(1200, 780));
 
-            if (!m_InitializedTabs)
+            if (AppWindowTitleBar.IsCustomizationSupported())
             {
-                m_InitializedTabs = true;
-
-                foreach (var tab in m_Tabs)
-                {
-                    var tabItem = new TabItem()
-                    {
-                        Header = tab.Key,
-                        Background = new SolidColorBrush(Color.FromRgb(0xF0, 0xF0, 0xF0)),
-                        BorderBrush = new SolidColorBrush(Color.FromRgb(0xD3, 0xD3, 0xD3))
-                    };
-
-                    var grid = new Grid();
-
-                    tab.Value.Init(grid);
-
-                    tabItem.Content = grid;
-
-                    root_tabcontrol.Items.Add(tabItem);
-
-                    m_TabItems[tab.Key] = tabItem;
-                }
+                ExtendsContentIntoTitleBar = true;
+                SetTitleBar(AppTitleBar);
             }
+        }
 
-            if (!m_bInitializedTitle)
-            {
-                m_bInitializedTitle = true;
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (m_StartupCompleted)
+                return;
 
-                Title += " (v" + Info.VERSION + ")";
-            }
+            m_StartupCompleted = true;
+            await InitializeAsync();
+        }
 
-            CheckForUpdates();
-
+        private async Task InitializeAsync()
+        {
+            await CheckForUpdatesAsync();
             OptionsManager.ReadFiles();
 
             foreach (var tab in m_Tabs)
-                tab.Value.OnLoadValues();
-
-            m_EffectDataMap = new Dictionary<string, EffectData>();
+                tab.OnLoadValues();
 
             ParseConfigFile();
-
             ParseEffectsFile();
-
             InitEffectsTreeView();
 
-            // Check write permissions
             try
             {
-                if (!File.Exists(".writetest"))
-                {
-                    using (File.Create(".writetest"))
-                    {
-
-                    }
-
-                    File.Delete(".writetest");
-                }
+                VerifyWriteAccess();
             }
-            catch (Exception e) when (e is UnauthorizedAccessException || e is FileNotFoundException)
+            catch (Exception ex) when (ex is UnauthorizedAccessException or FileNotFoundException)
             {
-                MessageBox.Show("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.",
-                    "No Write Access", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                Application.Current.Shutdown();
+                await AppDialog.ShowMessageAsync("No permissions to write in the current directory. Try to either run the program with admin privileges or allow write access to the current directory.", "No Write Access");
+                Application.Current.Exit();
             }
         }
 
-        private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs eventArgs)
+        private static void VerifyWriteAccess()
         {
-            if (eventArgs.OriginalSource is not TabControl)
+            const string testFile = ".writetest";
+            if (!File.Exists(testFile))
+            {
+                using (File.Create(testFile))
+                {
+                }
+
+                File.Delete(testFile);
+            }
+        }
+
+        private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs eventArgs)
+        {
+            if (eventArgs.SelectedItem is not NavigationViewItem selectedItem || selectedItem.Tag is not string selectedTag)
                 return;
 
-            foreach (var tab in m_TabItems)
+            switch (selectedTag)
             {
-                if (tab.Value.IsSelected)
-                {
-                    m_Tabs[tab.Key].OnTabSelected();
-                    break;
-                }
+            case "Settings":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("General");
+                break;
+            case "Settings:General":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("General");
+                break;
+            case "Settings:Modes":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Modes");
+                break;
+            case "Settings:Shortcuts":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Shortcuts");
+                break;
+            case "Settings:Colors":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Colors");
+                break;
+            case "Settings:Sounds":
+                ShowSection("Settings");
+                settings_tab.SelectSubSection("Sounds");
+                break;
+            case "Voting":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("General");
+                break;
+            case "Voting:General":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("General");
+                break;
+            case "Voting:Twitch":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("Twitch");
+                break;
+            case "Voting:Discord":
+                ShowSection("Voting");
+                voting_tab.SelectSubSection("Discord");
+                break;
+            case "Workshop":
+                ShowSection("Workshop");
+                workshop_tab.OnTabSelected();
+                break;
+            case "More":
+                ShowSection("More");
+                more_tab.OnTabSelected();
+                break;
+            default:
+                ShowSection(selectedTag);
+                break;
             }
         }
 
-        private async void CheckForUpdates()
+        private void ShowSection(string section)
         {
-            var httpClient = new HttpClient();
+            EffectsSection.Visibility = section == "Effects" ? Visibility.Visible : Visibility.Collapsed;
+            MetaSection.Visibility = section == "Meta" ? Visibility.Visible : Visibility.Collapsed;
+            settings_tab.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
+            voting_tab.Visibility = section == "Voting" ? Visibility.Visible : Visibility.Collapsed;
+            workshop_tab.Visibility = section == "Workshop" ? Visibility.Visible : Visibility.Collapsed;
+            more_tab.Visibility = section == "More" ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async Task CheckForUpdatesAsync()
+        {
+            using var httpClient = new HttpClient();
 
             try
             {
-                string newVersion = await httpClient.GetStringAsync("https://raw.githubusercontent.com/gta-chaos-mod/ChaosModV/refs/heads/master/version.txt");
-
-                if (Info.VERSION != newVersion)
-                    update_available_button.Visibility = Visibility.Visible;
-                else
-                    update_available_label.Text = "You are on the newest version of the mod!";
+                var newVersion = (await httpClient.GetStringAsync(VersionUrl)).Trim();
+                var isUpdateAvailable = Info.VERSION != newVersion;
+                update_available_label.Text = isUpdateAvailable ? $"Update available: v{newVersion}" : "You are running the latest version.";
+                update_available_button.Visibility = isUpdateAvailable ? Visibility.Visible : Visibility.Collapsed;
             }
             catch (HttpRequestException)
             {
-                update_available_label.Text = "Unable to check for new updates!";
+                update_available_label.Text = "Could not check for updates.";
             }
         }
 
-        private EffectData GetEffectData(string effectId)
+        private EffectData GetOrCreateEffectData(string effectId)
         {
-            // Create EffectData in case effect wasn't saved yet
-            if (m_EffectDataMap?.TryGetValue(effectId, out EffectData? effectData) is not true)
-            {
-                effectData = new EffectData();
-                m_EffectDataMap?.Add(effectId, effectData);
-            }
+            if (m_EffectDataMap.TryGetValue(effectId, out var effectData))
+                return effectData;
 
+            effectData = new EffectData();
+            m_EffectDataMap.Add(effectId, effectData);
             return effectData;
         }
 
         private void ParseConfigFile()
         {
-            // Meta Effects
-            meta_effects_spawn_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600)}";
-            meta_effects_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95)}";
-            meta_effects_short_timed_dur.Text = $"{OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65)}";
+            meta_effects_spawn_dur.Text = OptionsManager.ConfigFile.ReadValue("NewMetaEffectSpawnTime", 600).ToString();
+            meta_effects_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaEffectDur", 95).ToString();
+            meta_effects_short_timed_dur.Text = OptionsManager.ConfigFile.ReadValue("MetaShortEffectDur", 65).ToString();
         }
 
         private void WriteConfigFile()
         {
-            // Meta Effects
             OptionsManager.ConfigFile.WriteValueAsInt("NewMetaEffectSpawnTime", meta_effects_spawn_dur.Text);
             OptionsManager.ConfigFile.WriteValueAsInt("MetaEffectDur", meta_effects_timed_dur.Text);
             OptionsManager.ConfigFile.WriteValueAsInt("MetaShortEffectDur", meta_effects_short_timed_dur.Text);
@@ -176,16 +216,14 @@ namespace ConfigApp
 
         private void ParseEffectsFile()
         {
-            bool isJson = OptionsManager.EffectsFile.FoundFilePath.EndsWith(".json");
-            foreach (string key in OptionsManager.EffectsFile.GetKeys())
+            var isJson = OptionsManager.EffectsFile.FoundFilePath.EndsWith(".json");
+            foreach (var key in OptionsManager.EffectsFile.GetKeys())
             {
-                EffectData effectData;
-                if (isJson)
-                    effectData = Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key));
-                else
-                    effectData = Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
+                var effectData = isJson
+                    ? Utils.ValueObjectToEffectData(OptionsManager.EffectsFile.ReadValue<JObject>(key))
+                    : Utils.ValueStringToEffectData(OptionsManager.EffectsFile.ReadValue<string>(key));
 
-                m_EffectDataMap?.Add(key, effectData);
+                m_EffectDataMap[key] = effectData;
             }
         }
 
@@ -194,252 +232,262 @@ namespace ConfigApp
             OptionsManager.EffectsFile.ResetFile();
 
             foreach (var (effectId, _) in EffectsMap)
-            {
-                var effectData = GetEffectData(effectId);
-
-                var json = new JObject();
-                if (effectData.Enabled is not null)
-                    json["enabled"] = effectData.Enabled;
-                if (effectData.CustomTime is not null)
-                    json["customTime"] = effectData.CustomTime;
-                if (effectData.ExcludedFromVoting is not null)
-                    json["excludedFromVoting"] = effectData.ExcludedFromVoting;
-                if (effectData.TimedType is not null)
-                    json["permanent"] = effectData.TimedType == EffectTimedType.Permanent;
-                if (effectData.ShortcutKeycode is not null)
-                    json["shortcutKeycode"] = effectData.ShortcutKeycode;
-                if (effectData.TimedType is not null)
-                    json["timedType"] = (int)effectData.TimedType;
-                if (effectData.WeightMult is not null)
-                    json["weightMult"] = effectData.WeightMult;
-                if (effectData.CustomName is not null)
-                    json["customName"] = effectData.CustomName;
-
-                OptionsManager.EffectsFile.WriteValue(effectId, json);
-            }
+                OptionsManager.EffectsFile.WriteValue(effectId, BuildEffectJson(effectId));
 
             OptionsManager.EffectsFile.WriteFile();
         }
 
+        private JObject BuildEffectJson(string effectId)
+        {
+            var data = GetOrCreateEffectData(effectId);
+            var json = new JObject();
+
+            if (data.Enabled is not null)
+                json["enabled"] = new JValue(data.Enabled.Value);
+
+            if (data.CustomTime is not null)
+                json["customTime"] = new JValue(data.CustomTime.Value);
+
+            if (data.ExcludedFromVoting is not null)
+                json["excludedFromVoting"] = new JValue(data.ExcludedFromVoting.Value);
+
+            if (data.TimedType is not null)
+            {
+                json["permanent"] = data.TimedType == EffectTimedType.Permanent;
+                json["timedType"] = (int)data.TimedType;
+            }
+
+            if (data.ShortcutKeycode is not null)
+                json["shortcutKeycode"] = new JValue(data.ShortcutKeycode.Value);
+
+            if (data.WeightMult is not null)
+                json["weightMult"] = new JValue(data.WeightMult.Value);
+
+            if (data.CustomName is not null)
+                json["customName"] = new JValue(data.CustomName);
+
+            return json;
+        }
+
         private void InitEffectsTreeView()
         {
-            effects_user_effects_search.Clear();
+            effects_user_effects_search.Text = string.Empty;
 
-            m_TreeMenuItemsMap = new Dictionary<string, TreeMenuItem>();
-            m_TreeMenuItemsAll = new List<TreeMenuItem>();
+            m_TreeMenuItemsAll.Clear();
 
-            var playerParentItem = new TreeMenuItem("Player");
-            var vehicleParentItem = new TreeMenuItem("Vehicle");
-            var pedsParentItem = new TreeMenuItem("Peds");
-            var screenParentItem = new TreeMenuItem("Screen");
-            var timeParentItem = new TreeMenuItem("Time");
-            var weatherParentItem = new TreeMenuItem("Weather");
-            var miscParentItem = new TreeMenuItem("Misc");
-            var metaParentItem = new TreeMenuItem("Meta");
+            var categoryMap = CreateEffectCategoryMap();
 
+            foreach (var pair in GetSortedEffects())
+            {
+                var effectName = pair.Key;
+                var effectId = pair.Value.EffectId;
+                var effectCategory = pair.Value.EffectCategory;
+                var effectData = GetOrCreateEffectData(effectId);
+
+                var menuItem = CreateEffectMenuItem(effectName, effectId, effectData);
+                categoryMap[effectCategory].AddChild(menuItem);
+            }
+
+            m_TreeMenuItemsAll.AddRange(categoryMap.Values);
+            m_MetaParentItem = categoryMap[EffectCategory.Meta];
+            m_TreeMenuItemsFiltered.Clear();
+            m_TreeMenuItemsFiltered.AddRange(m_TreeMenuItemsAll);
+
+            foreach (var treeMenuItem in m_TreeMenuItemsAll)
+                treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
+
+            RefreshEffectsTrees();
+        }
+
+        private static Dictionary<EffectCategory, TreeMenuItem> CreateEffectCategoryMap()
+        {
+            return new Dictionary<EffectCategory, TreeMenuItem>
+            {
+                [EffectCategory.Player] = new TreeMenuItem("Player"),
+                [EffectCategory.Vehicle] = new TreeMenuItem("Vehicle"),
+                [EffectCategory.Peds] = new TreeMenuItem("Peds"),
+                [EffectCategory.Screen] = new TreeMenuItem("Screen"),
+                [EffectCategory.Time] = new TreeMenuItem("Time"),
+                [EffectCategory.Weather] = new TreeMenuItem("Weather"),
+                [EffectCategory.Misc] = new TreeMenuItem("Misc"),
+                [EffectCategory.Meta] = new TreeMenuItem("Meta")
+            };
+        }
+
+        private static SortedDictionary<string, (string EffectId, EffectCategory EffectCategory)> GetSortedEffects()
+        {
             var sortedEffects = new SortedDictionary<string, (string EffectId, EffectCategory EffectCategory)>();
 
             foreach (var pair in EffectsMap)
             {
-                if (pair.Value.Name is null)
-                    continue;
-
-                sortedEffects.Add(pair.Value.Name, (EffectId: pair.Key, pair.Value.EffectCategory));
+                if (pair.Value.Name is not null)
+                    sortedEffects.Add(pair.Value.Name, (pair.Key, pair.Value.EffectCategory));
             }
 
-            foreach (var effect in sortedEffects)
+            return sortedEffects;
+        }
+
+        private static TreeMenuItem CreateEffectMenuItem(string effectName, string effectId, EffectData effectData)
+        {
+            var menuItem = new TreeMenuItem(effectName);
+            menuItem.OnConfigureClickAsync = async () =>
             {
-                var effectName = effect.Key;
-                var effectMisc = effect.Value;
-                var effectData = GetEffectData(effectMisc.EffectId);
+                var effectInfo = EffectsMap[effectId];
+                var effectConfig = new EffectConfigDialog(effectId, effectData, effectInfo);
+                await effectConfig.ShowAsync();
 
-                var menuItem = new TreeMenuItem(effectName);
-                menuItem.OnConfigureClick = () =>
-                {
-                    var effectInfo = EffectsMap[effectMisc.EffectId];
+                if (!effectConfig.IsSaved)
+                    return;
 
-                    var effectConfig = new EffectConfig(effectMisc.EffectId, effectData, effectInfo);
-                    effectConfig.ShowDialog();
-
-                    if (!effectConfig.IsSaved)
-                        return;
-
-                    effectData = effectConfig.GetNewData();
-                    if (m_EffectDataMap is not null)
-                        m_EffectDataMap[effectMisc.EffectId] = effectData;
-                    menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
-                };
-                menuItem.OnCheckedClick = () =>
-                {
-                    effectData.Enabled = menuItem.IsChecked;
-                };
+                effectConfig.GetNewData();
                 menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
-                menuItem.IsChecked = effectData.Enabled ?? true;
-                m_TreeMenuItemsMap.Add(effectMisc.EffectId, menuItem);
+            };
+            menuItem.OnCheckedClick = () => effectData.Enabled = menuItem.IsChecked;
+            menuItem.IsColored = effectData.TimedType == EffectTimedType.Permanent;
+            menuItem.IsChecked = effectData.Enabled ?? true;
+            return menuItem;
+        }
 
-                switch (effectMisc.EffectCategory)
-                {
-                case EffectCategory.Player:
-                    playerParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Vehicle:
-                    vehicleParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Peds:
-                    pedsParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Screen:
-                    screenParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Time:
-                    timeParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Weather:
-                    weatherParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Misc:
-                    miscParentItem.AddChild(menuItem);
-                    break;
-                case EffectCategory.Meta:
-                    metaParentItem.AddChild(menuItem);
-                    break;
-                }
-            }
+        private void RefreshEffectsTrees()
+        {
+            TreeViewBuilder.Populate(effects_user_effects_tree_view, m_TreeMenuItemsFiltered, RefreshEffectsTrees);
 
-            m_TreeMenuItemsAll.Add(playerParentItem);
-            m_TreeMenuItemsAll.Add(vehicleParentItem);
-            m_TreeMenuItemsAll.Add(pedsParentItem);
-            m_TreeMenuItemsAll.Add(screenParentItem);
-            m_TreeMenuItemsAll.Add(timeParentItem);
-            m_TreeMenuItemsAll.Add(weatherParentItem);
-            m_TreeMenuItemsAll.Add(miscParentItem);
-
-            m_TreeMenuItemsFiltered = m_TreeMenuItemsAll.ToList();
-            effects_user_effects_tree_view.ItemsSource = m_TreeMenuItemsFiltered;
-
-            meta_effects_tree_view.Items.Clear();
-            meta_effects_tree_view.Items.Add(metaParentItem);
-
-            foreach (var treeMenuItem in m_TreeMenuItemsAll.Append(metaParentItem))
-                treeMenuItem.UpdateCheckedAccordingToChildrenStatus();
+            if (m_MetaParentItem is not null)
+                TreeViewBuilder.Populate(meta_effects_tree_view, [m_MetaParentItem], RefreshEffectsTrees);
         }
 
         private void OnUserEffectSearchTextChanged(object sender, TextChangedEventArgs e)
         {
-            var filterText = effects_user_effects_search.Text?.Trim();
+            FilterEffectsBySearchText(effects_user_effects_search.Text?.Trim());
+        }
 
-            if (m_TreeMenuItemsAll is not null && m_TreeMenuItemsFiltered is not null)
+        private void FilterEffectsBySearchText(string? filterText)
+        {
+            m_TreeMenuItemsFiltered.Clear();
+
+            if (string.IsNullOrWhiteSpace(filterText))
             {
-                m_TreeMenuItemsFiltered.Clear();
-                foreach (var parentMenuItem in m_TreeMenuItemsAll)
+                m_TreeMenuItemsFiltered.AddRange(m_TreeMenuItemsAll);
+            }
+            else
+            {
+                foreach (var parentItem in m_TreeMenuItemsAll)
                 {
-                    if (string.IsNullOrWhiteSpace(filterText))
+                    foreach (var childItem in parentItem.Children)
                     {
-                        m_TreeMenuItemsFiltered.Add(parentMenuItem);
-                        continue;
-                    }
-
-                    if (parentMenuItem.Children == null)
-                        continue;
-
-                    foreach (var childMenuItem in parentMenuItem.Children)
-                    {
-                        if (childMenuItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
-                            m_TreeMenuItemsFiltered.Add(childMenuItem);
+                        if (childItem.Text.Contains(filterText, StringComparison.InvariantCultureIgnoreCase))
+                            m_TreeMenuItemsFiltered.Add(childItem);
                     }
                 }
             }
-            effects_user_effects_tree_view.Items.Refresh();
+
+            RefreshEffectsTrees();
         }
 
-        private void OnlyNumbersPreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void SetSaveControlsEnabled(bool isEnabled)
         {
-            Utils.HandleOnlyNumbersPreviewTextInput(sender, e);
+            user_save.IsEnabled = isEnabled;
+            user_reset.IsEnabled = isEnabled;
         }
 
-        private void NoSpacePreviewKeyDown(object sender, KeyEventArgs e)
+        private static bool IsLegacyConfigInRoot()
         {
-            Utils.HandleNoSpacePreviewKeyDown(sender, e);
+            return OptionsManager.ConfigFile.FoundFilePath == "config.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "effects.ini";
         }
 
-        private void NoCopyPastePreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        private static bool IsLegacyConfigFormatPresent()
         {
-            Utils.HandleNoCopyPastePreviewExecuted(sender, e);
+            return IsLegacyConfigInRoot()
+                || OptionsManager.ConfigFile.FoundFilePath == "configs/config.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "configs/twitch.ini"
+                || OptionsManager.VotingFile.FoundFilePath == "configs/voting.ini"
+                || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini";
         }
 
-        private void OnUserSaveClick(object sender, RoutedEventArgs e)
+        private static async Task<bool> TryHandleConfigMigrationWarningsAsync()
         {
-            // Config migration stuff
-            bool oldIniFilesExist = false;
-            if (OptionsManager.ConfigFile.FoundFilePath == "config.ini" || OptionsManager.VotingFile.FoundFilePath == "twitch.ini"
-                || OptionsManager.EffectsFile.FoundFilePath == "effects.ini")
+            if (IsLegacyConfigInRoot())
             {
-                oldIniFilesExist = true;
-                if (MessageBox.Show("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. " +
-                    "If you want to play older versions of the mod you will have to move them back. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
-                    != MessageBoxResult.OK)
+                if (!await AppDialog.ShowOkCancelAsync("Config files reside inside the configs/ subdirectory now. Clicking OK will move the config files there. If you want to play older versions of the mod you will have to move them back. Continue?"))
+                    return false;
+            }
+
+            if (IsLegacyConfigFormatPresent())
+            {
+                if (!await AppDialog.ShowOkCancelAsync("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?"))
+                    return false;
+
+                BackupLegacyConfigFiles();
+            }
+
+            return true;
+        }
+
+        private static void BackupLegacyConfigFiles()
+        {
+            const string backupDir = "configs/old";
+            Directory.CreateDirectory(backupDir);
+
+            MoveFileToBackup(OptionsManager.ConfigFile.FoundFilePath, backupDir);
+            MoveFileToBackup(OptionsManager.VotingFile.FoundFilePath, backupDir);
+            MoveFileToBackup(OptionsManager.EffectsFile.FoundFilePath, backupDir);
+        }
+
+        private static void MoveFileToBackup(string filePath, string backupDirectory)
+        {
+            var fileName = Path.GetFileName(filePath);
+            File.Move(filePath, Path.Combine(backupDirectory, fileName), true);
+        }
+
+        private async void OnUserSaveClick(object sender, RoutedEventArgs e)
+        {
+            SetSaveControlsEnabled(false);
+
+            try
+            {
+                if (!await TryHandleConfigMigrationWarningsAsync())
                     return;
+
+                WriteConfigFile();
+                WriteEffectsFile();
+
+                foreach (var tab in m_Tabs)
+                    tab.OnSaveValues();
+
+                OptionsManager.WriteFiles();
+
+                foreach (var tab in m_Tabs)
+                    tab.OnLoadValues();
+
+                OptionsManager.DeleteCompatFiles();
+
+                await AppDialog.ShowMessageAsync("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.");
             }
-
-            if (oldIniFilesExist || OptionsManager.ConfigFile.FoundFilePath == "configs/config.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/twitch.ini" || OptionsManager.VotingFile.FoundFilePath == "configs/voting.ini"
-                || OptionsManager.EffectsFile.FoundFilePath == "configs/effects.ini")
+            finally
             {
-                oldIniFilesExist = true;
-                if (MessageBox.Show("WARNING: Starting with mod version 2.2 config files are automatically migrated to the new JSON format. Clicking OK will migrate your config files. " +
-                    "This will prevent you from using earlier mod versions with your existing config. Your old config files will be backed up to the configs/old/ directory. Continue?", "ChaosModV", MessageBoxButton.OKCancel, MessageBoxImage.Warning)
-                 != MessageBoxResult.OK)
-                    return;
-            }
-
-            if (oldIniFilesExist)
-            {
-                Directory.CreateDirectory("configs/old");
-                File.Move(OptionsManager.ConfigFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.ConfigFile.FoundFilePath)}", true);
-                File.Move(OptionsManager.VotingFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.VotingFile.FoundFilePath)}", true);
-                File.Move(OptionsManager.EffectsFile.FoundFilePath, $"configs/old/{Path.GetFileName(OptionsManager.EffectsFile.FoundFilePath)}", true);
-            }
-
-            WriteConfigFile();
-            WriteEffectsFile();
-
-            foreach (var tab in m_Tabs)
-                tab.Value.OnSaveValues();
-
-            OptionsManager.WriteFiles();
-
-            // Reload saved config to show the "new" (saved) settings
-            foreach (var tab in m_Tabs)
-                tab.Value.OnLoadValues();
-
-            OptionsManager.DeleteCompatFiles();
-
-            MessageBox.Show("Saved config!\nMake sure to press CTRL + L in-game twice if mod is already running to reload the config.", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void OnUserResetClick(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to reset your config?", "ChaosModV",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                OptionsManager.ResetFiles();
-
-                result = MessageBox.Show("Do you want to reset your voting settings too?", "ChaosModV",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                    OptionsManager.VotingFile.ResetFile();
-
-                Init();
-
-                MessageBox.Show("Config has been reverted to default settings!", "ChaosModV", MessageBoxButton.OK, MessageBoxImage.Information);
+                SetSaveControlsEnabled(true);
             }
         }
 
-        public void OpenModPageEvent(object sender, RoutedEventArgs eventArgs)
+        private async void OnUserResetClick(object sender, RoutedEventArgs e)
         {
-            Utils.OpenURL("https://www.gta5-mods.com/scripts/chaos-mod-v-beta");
+            if (!await AppDialog.ShowYesNoAsync("Are you sure you want to reset your config?"))
+                return;
+
+            OptionsManager.ResetFiles();
+
+            if (await AppDialog.ShowYesNoAsync("Do you want to reset your voting settings too?"))
+                OptionsManager.VotingFile.ResetFile();
+
+            await InitializeAsync();
+            await AppDialog.ShowMessageAsync("Config has been reverted to default settings!");
+        }
+
+        private void OpenModPageEvent(object sender, RoutedEventArgs eventArgs)
+        {
+            Utils.OpenUrl("https://www.gta5-mods.com/scripts/chaos-mod-v");
         }
     }
 }

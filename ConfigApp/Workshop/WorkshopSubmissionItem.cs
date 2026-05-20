@@ -1,61 +1,45 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
+using Microsoft.UI.Xaml;
 
 namespace ConfigApp.Workshop
 {
-    public class SearchTerm
+    internal sealed class SearchTerm
     {
         public string Term { get; }
-        public bool IsInFile { get; }
-        public string FileName { get; }
+        public string? FileName { get; }
 
         public SearchTerm(string term, string? filename = null)
         {
             Term = term;
-            if (filename is not null)
-            {
-                IsInFile = true;
-                FileName = filename;
-            }
-            else
-            {
-                IsInFile = false;
-                FileName = "";
-            }
+            FileName = filename;
         }
-
-        public static implicit operator SearchTerm(string term) => new(term);
     }
 
-    public class WorkshopSubmissionItem : INotifyPropertyChanged
+    internal sealed class WorkshopSubmissionItem : INotifyPropertyChanged
     {
-        private static BitmapSource? ms_DefaultIcon = null;
+        private static readonly Regex s_SearchFieldRegex = new(@"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])*)""", RegexOptions.Compiled);
 
         private readonly WorkshopSubmissionFileHandler m_FileHandler;
+        private readonly ICommand m_InstallButtonCommand;
+        private readonly ICommand m_InfoButtonCommand;
+        private readonly ICommand m_SettingsButtonCommand;
 
-        public event PropertyChangedEventHandler? PropertyChanged = null;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public string? Id { get; private init; } = null;
-        public string? Name { get; init; } = null;
-        public string? Author { get; init; } = null;
-        public string? Description { get; init; } = null;
-        public string? Version { get; init; } = null;
-        public int? LastUpdated { get; init; } = null;
-        public string? Sha256 { get; init; } = null;
-        public BitmapSource? SubmissionIcon { get; init; } = null;
-        public bool IsAlien { get; set; } = false;
+        public string? Id { get; private init; }
+        public string? Name { get; init; }
+        public string? Author { get; init; }
+        public string? Description { get; init; }
+        public string? Version { get; init; }
+        public int? LastUpdated { get; init; }
+        public string? Sha256 { get; init; }
+        public bool IsAlien { get; set; }
         public List<SearchTerm> SearchTerms { get; } = new();
-        public List<string> HighlightedFiles { get; } = new List<string>();
+        public List<string> HighlightedFiles { get; } = new();
 
-        // In order for sorting
         public enum SubmissionInstallState
         {
             UpdateAvailable,
@@ -64,6 +48,7 @@ namespace ConfigApp.Workshop
             Installing,
             Removing
         }
+
         private SubmissionInstallState m_InstallState = SubmissionInstallState.NotInstalled;
 
         public SubmissionInstallState InstallState
@@ -72,58 +57,26 @@ namespace ConfigApp.Workshop
             set
             {
                 m_InstallState = value;
-
-                switch (value)
-                {
-                case SubmissionInstallState.NotInstalled:
-                    InstallButtonText = "Install";
-                    InstallButtonEnabled = !IsAlien;
-                    SettingsButtonVisibility = Visibility.Hidden;
-                    break;
-                case SubmissionInstallState.Installed:
-                    InstallButtonText = "Remove";
-                    InstallButtonEnabled = true;
-                    SettingsButtonVisibility = Visibility.Visible;
-                    break;
-                case SubmissionInstallState.Installing:
-                    InstallButtonText = "Installing";
-                    InstallButtonEnabled = false;
-                    break;
-                case SubmissionInstallState.UpdateAvailable:
-                    InstallButtonText = "Update";
-                    InstallButtonEnabled = !IsAlien;
-                    SettingsButtonVisibility = Visibility.Visible;
-                    break;
-                case SubmissionInstallState.Removing:
-                    InstallButtonText = "Removing";
-                    InstallButtonEnabled = false;
-                    break;
-                }
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonText)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InstallButtonEnabled)));
-
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SettingsButtonVisibility)));
+                UpdateInstallUi(value);
+                NotifyInstallPropertiesChanged();
             }
         }
 
-        public ICommand InstallButtonCommand
-        {
-            get => new WorkshopInstallHandler(this);
-        }
+        public ICommand InstallButtonCommand => m_InstallButtonCommand;
         public string InstallButtonText { get; private set; } = "Install";
         public bool InstallButtonEnabled { get; private set; } = true;
+        public ICommand InfoButtonCommand => m_InfoButtonCommand;
+        public ICommand SettingsButtonCommand => m_SettingsButtonCommand;
+        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Collapsed;
 
-        public ICommand InfoButtonCommand
+        public WorkshopSubmissionItem(string id)
         {
-            get => new WorkshopInfoHandler(this);
+            Id = id;
+            m_FileHandler = new(this);
+            m_InstallButtonCommand = new WorkshopInstallHandler(this);
+            m_InfoButtonCommand = new WorkshopInfoHandler(this);
+            m_SettingsButtonCommand = new WorkshopSettingsHandler(this, m_FileHandler);
         }
-
-        public ICommand SettingsButtonCommand
-        {
-            get => new WorkshopSettingsHandler(this, m_FileHandler);
-        }
-        public Visibility SettingsButtonVisibility { get; private set; } = Visibility.Hidden;
 
         public void Refresh()
         {
@@ -135,67 +88,81 @@ namespace ConfigApp.Workshop
         {
             SearchTerms.Clear();
 
-            if (Name is not null)
-                SearchTerms.Add(Name);
-            if (Description is not null)
-                SearchTerms.Add(Description);
-            if (Author is not null)
-                SearchTerms.Add(Author);
+            AddSearchTermIfNotEmpty(Name);
+            AddSearchTermIfNotEmpty(Description);
+            AddSearchTermIfNotEmpty(Author);
 
             foreach (var file in m_FileHandler.GetSubmissionFiles())
             {
                 SearchTerms.Add(new(file.Name, file.Name));
                 if (file.EffectData?.CustomName is not null)
-                {
                     SearchTerms.Add(new(file.EffectData.CustomName, file.Name));
-                }
 
-                if (file.Type == WorkshopSubmissionFileType.Script)
+                if (file.Type != WorkshopSubmissionFileType.Script)
+                    continue;
+
+                try
                 {
-                    try
+                    var fullPath = Path.Combine(m_FileHandler.SubmissionDirectory, file.Name);
+                    foreach (var line in File.ReadAllLines(fullPath))
                     {
-                        foreach (var line in File.ReadAllLines(m_FileHandler.SubmissionDirectory + file.Name))
-                        {
-                            var match = Regex.Match(line, @"(?:Name|ScriptId|EffectId)\s*=\s*""((?:\\""|[^""])+)""");
-                            if (match.Success)
-                            {
-                                SearchTerms.Add(new(match.Groups[1].Value, file.Name));
-                            }
-                        }
+                        var match = s_SearchFieldRegex.Match(line);
+                        if (match.Success)
+                            SearchTerms.Add(new(match.Groups[1].Value, file.Name));
                     }
-                    catch (Exception exception) when (exception is IOException || exception is FileNotFoundException)
-                    {
-                        continue;
-                    }
+                }
+                catch (IOException)
+                {
                 }
             }
         }
 
-        public WorkshopSubmissionItem(string id)
+        private void AddSearchTermIfNotEmpty(string? term)
         {
-            if (ms_DefaultIcon == null)
+            if (!string.IsNullOrWhiteSpace(term))
+                SearchTerms.Add(new SearchTerm(term));
+        }
+
+        private void UpdateInstallUi(SubmissionInstallState value)
+        {
+            switch (value)
             {
-                var fileName = Process.GetCurrentProcess().MainModule?.FileName;
-                if (fileName is not null)
-                {
-                    try
-                    {
-                        using var ico = Icon.ExtractAssociatedIcon(fileName);
-                        if (ico is not null)
-                            ms_DefaultIcon = Imaging.CreateBitmapSourceFromHIcon(ico.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    }
-                    catch (System.PlatformNotSupportedException)
-                    {
-
-                    }
-                }
+            case SubmissionInstallState.NotInstalled:
+                InstallButtonText = "Install";
+                InstallButtonEnabled = !IsAlien;
+                SettingsButtonVisibility = Visibility.Collapsed;
+                break;
+            case SubmissionInstallState.Installed:
+                InstallButtonText = "Remove";
+                InstallButtonEnabled = true;
+                SettingsButtonVisibility = Visibility.Visible;
+                break;
+            case SubmissionInstallState.Installing:
+                InstallButtonText = "Installing";
+                InstallButtonEnabled = false;
+                break;
+            case SubmissionInstallState.UpdateAvailable:
+                InstallButtonText = "Update";
+                InstallButtonEnabled = !IsAlien;
+                SettingsButtonVisibility = Visibility.Visible;
+                break;
+            case SubmissionInstallState.Removing:
+                InstallButtonText = "Removing";
+                InstallButtonEnabled = false;
+                break;
             }
+        }
 
-            SubmissionIcon = ms_DefaultIcon;
+        private void NotifyInstallPropertiesChanged()
+        {
+            OnPropertyChanged(nameof(InstallButtonText));
+            OnPropertyChanged(nameof(InstallButtonEnabled));
+            OnPropertyChanged(nameof(SettingsButtonVisibility));
+        }
 
-            Id = id;
-
-            m_FileHandler = new(this);
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

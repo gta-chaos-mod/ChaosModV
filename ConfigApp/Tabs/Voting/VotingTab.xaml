@@ -1,0 +1,11 @@
+<UserControl
+    x:Class="ConfigApp.Tabs.Voting.VotingTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:votingTabs="using:ConfigApp.Tabs.Voting">
+    <Grid>
+        <votingTabs:GeneralTab x:Name="general_tab" />
+        <votingTabs:TwitchTab x:Name="twitch_tab" Visibility="Collapsed" />
+        <votingTabs:DiscordTab x:Name="discord_tab" Visibility="Collapsed" />
+    </Grid>
+</UserControl>

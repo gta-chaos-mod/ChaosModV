@@ -1,27 +1,40 @@
-﻿namespace ConfigApp
+﻿using System.Runtime.InteropServices;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using WinRT;
+
+namespace ConfigApp
 {
-    public class EntryPoint
+    public sealed class EntryPoint
     {
         [STAThread]
         public static void Main()
         {
-            Mutex mutex = new(false, "ChaosModVConfigMutex");
+            XamlCheckProcessRequirements();
+            ComWrappersSupport.InitializeComWrappers();
 
-            if (!mutex.WaitOne(100))
-            {
-                return;
-            }
+            Mutex mutex = new(false, "ChaosModVConfigMutex");
+            if (!mutex.WaitOne(100)) return;
 
             try
             {
-                App app = new();
-                app.InitializeComponent();
-                app.Run();
+                Application.Start(_ =>
+                {
+                    SynchronizationContext.SetSynchronizationContext(
+                        new DispatcherQueueSynchronizationContext(
+                            DispatcherQueue.GetForCurrentThread()
+                        )
+                    );
+                    App app = new App();
+                });
             }
             finally
             {
                 mutex.ReleaseMutex();
             }
         }
+
+        [DllImport("Microsoft.ui.xaml.dll")]
+        private static extern void XamlCheckProcessRequirements();
     }
 }

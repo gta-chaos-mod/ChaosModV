@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
@@ -19,10 +19,10 @@ Global
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Debug|x64.Build.0 = Debug|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.ActiveCfg = Release|x64
 		{0D45DE2D-C8FC-4877-98F2-65EC8B7F9477}.Release|x64.Build.0 = Release|x64
-		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.Build.0 = Debug|Any CPU
-		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.ActiveCfg = Release|Any CPU
-		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.Build.0 = Release|Any CPU
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.ActiveCfg = Debug|x64
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Debug|x64.Build.0 = Debug|x64
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.ActiveCfg = Release|x64
+		{6C0F4E58-1BD1-4E16-AF5F-D743A93C8F9C}.Release|x64.Build.0 = Release|x64
 		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Debug|x64.Build.0 = Debug|Any CPU
 		{D1C25141-4773-424D-90D1-53A2FB9664C0}.Release|x64.ActiveCfg = Release|Any CPU
@@ -40,3 +40,4 @@ Global
 		Shared\Shared.projitems*{e8c71724-789e-46cf-82b9-8a9c0d964e91}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
+
