@@ -53,6 +53,7 @@
             IsPaneToggleButtonVisible="False"
             IsPaneOpen="True"
             PaneDisplayMode="Left"
+            OpenPaneLength="200"
             SelectionChanged="OnNavigationSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Effects" Tag="Effects" IsSelected="True">
