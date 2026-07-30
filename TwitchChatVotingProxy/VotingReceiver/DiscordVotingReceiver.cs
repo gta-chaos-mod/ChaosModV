@@ -94,11 +94,16 @@ namespace TwitchChatVotingProxy.VotingReceiver
                 handleFatal();
                 return;
             }
-
-            var channel = guild.GetTextChannel(m_ChannelId.Value);
+            // falling back to GetChannelAsync if the channel is not found in the guild
+            IMessageChannel? channel = guild.GetTextChannel(m_ChannelId.Value);
             if (channel == null)
             {
-                m_Logger.Warning($"Channel {m_ChannelId.Value} not found in guild.");
+                channel = await m_Client.GetChannelAsync(m_ChannelId.Value) as IMessageChannel;
+            }
+
+            if (channel == null)
+            {
+                m_Logger.Warning($"Channel {m_ChannelId.Value} not found in guild or via API.");
                 handleFatal();
                 return;
             }
